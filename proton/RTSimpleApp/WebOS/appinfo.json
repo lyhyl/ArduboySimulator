@@ -1,0 +1,10 @@
+{
+	"title": "RTSimpleApp",
+	"type": "pdk",
+	"main": "rtsimpleapp",
+	"id": "com.rtsoft.rtsimpleapp",
+	"version": "1.0.0",
+	"vendor": "Robinson Technologies",
+	"icon": "icon.png",
+  "requiredMemory": 20
+}

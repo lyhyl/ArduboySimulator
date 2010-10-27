@@ -1,0 +1,41 @@
+/*
+ *  App.h
+ *  Created by Seth Robinson on 3/6/09.
+ *  For license info, check the license.txt file that should have come with this.
+ *
+ */
+
+#pragma once
+
+#include "BaseApp.h"
+
+class App: public BaseApp
+{
+public:
+	
+	App();
+	virtual ~App();
+	
+	virtual bool Init();
+	virtual void Kill();
+	virtual void Draw();
+	virtual void OnScreenSizeChange();
+	virtual void OnEnterBackground();
+	virtual void OnEnterForeground();
+	virtual void Update();
+	void OnExitApp(VariantList *pVarList);
+	void OnAccel(VariantList *pVList);
+
+private:
+
+	bool m_bDidPostInit;
+	Surface m_surf; //for testing
+};
+
+
+extern App g_App;
+
+App * GetApp();
+const char * GetAppName();
+const char * GetBundlePrefix();
+const char * GetBundleName();

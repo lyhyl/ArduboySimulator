@@ -1,0 +1,185 @@
+#include "PlatformPrecomp.h"
+#include "FileManager.h"
+#include "../util/ResourceUtils.h"
+#include "BaseApp.h"
+#include "FileSystem.h"
+#include "StreamingInstanceFile.h"
+
+FileInstance::FileInstance( const string &fileName )
+{
+	m_pData = NULL;
+	//if it errors out, fine, so be it, hopefully the user checks with IsLoaded()
+	Load(fileName);
+}
+
+FileInstance::FileInstance( const string &fileName, bool bAddBasePath )
+{
+	m_pData = NULL;
+	//if it errors out, fine, so be it, hopefully the user checks with IsLoaded()
+	Load(fileName, bAddBasePath);
+}
+void FileInstance::Kill()
+{
+	SAFE_DELETE_ARRAY(m_pData);
+	m_size = 0;
+}
+
+
+FileInstance::~FileInstance()
+{
+	Kill();
+}
+
+bool FileInstance::Load( string fileName, bool bAddBasePath )
+{
+	Kill();
+	m_pData = GetFileManager()->Get(fileName, &m_size, bAddBasePath);
+
+	return IsLoaded();
+}
+
+FileManager::FileManager()
+{
+	LogMsg("File manager initted");
+}
+
+FileManager::~FileManager()
+{
+	list<FileSystem*>::iterator itor = m_fileSystems.begin();
+
+	while (!m_fileSystems.empty())
+	{
+		FileSystem *pFileSystem = *m_fileSystems.begin();
+		m_fileSystems.pop_front();
+		delete pFileSystem;
+	}
+
+}
+
+StreamingInstance * FileManager::GetStreaming( string fileName, int *pSizeOut, bool bAddBasePath )
+{
+	if (bAddBasePath)
+	{
+		fileName = GetBaseAppPath() + fileName;
+	}
+
+	StreamingInstance *pStreaming = NULL;
+
+	//first check any mounted systems in reverse order of the mounting
+	list<FileSystem*>::reverse_iterator itor = m_fileSystems.rbegin();
+
+	while (itor != m_fileSystems.rend())
+	{
+		//(*itor)->GetDeliveryTime() > m->GetDeliveryTime())
+		pStreaming = (*itor)->GetStreaming(fileName, pSizeOut);
+		if (pStreaming) return pStreaming;
+		itor++;
+	}
+
+	StreamingInstanceFile *pStreamingFile = new StreamingInstanceFile();
+	if (!pStreamingFile->Open(fileName))
+	{
+		delete pStreamingFile;
+		return NULL;
+	}
+
+	return pStreamingFile;
+
+}
+
+byte * FileManager::Get( string fileName, int *pSizeOut, bool bAddBasePath )
+{
+	if (bAddBasePath)
+	{
+		fileName = GetBaseAppPath() + fileName;
+	}
+
+		byte * pData = NULL;
+
+		//first check any mounted systems in reverse order of the mounting
+		list<FileSystem*>::reverse_iterator itor = m_fileSystems.rbegin();
+
+		while (itor != m_fileSystems.rend())
+		{
+			//(*itor)->GetDeliveryTime() > m->GetDeliveryTime())
+			pData = (*itor)->Get(fileName, pSizeOut);
+			if (pData) break; //guess we found it
+			itor++;
+		}
+
+		if (!pData)
+		{
+			//just try to load it from the default filesystem.  Should I create a FileSystemDefault for this to make it cleaner?
+		
+			FILE *fp = fopen(fileName.c_str(), "rb");
+			if (!fp)
+			{
+				
+				LogError("Can't open %s.", fileName.c_str());
+				//file not found	
+				return NULL;
+			}
+
+			fseek(fp, 0, SEEK_END);
+			*pSizeOut = ftell(fp);
+			fseek(fp, 0, SEEK_SET);
+
+			pData = (byte*)new byte[( (*pSizeOut) +1)];
+			if (!pData)
+			{
+				LogError("Out of memory opening %s?", fileName.c_str());
+				return 0;
+			}
+			pData[*pSizeOut] = 0; 
+			fread(pData, *pSizeOut, 1, fp);
+			fclose(fp);
+		}
+	
+
+		if (IsAPackedFile(pData))
+		{
+			//let's decompress it to memory before passing it back
+			byte *pDecompressedData = DecompressRTPackToMemory(pData);
+			SAFE_DELETE_ARRAY(pData);
+			return pDecompressedData;
+			
+		}
+		//also detect and perform any decompression here by checking the header..
+		//we add an extra null at the end to be nice, when loading text files this can be useful
+		return pData;
+}
+
+void FileManager::MountFileSystem( FileSystem* pFileSystem )
+{
+	m_fileSystems.push_back(pFileSystem);
+}
+
+bool FileManager::FileExists( string fileName, bool bAddBasePath)
+{
+	if (bAddBasePath)
+	{
+		fileName = GetBaseAppPath() + fileName;
+	}
+	
+	//first check any mounted systems in reverse order of the mounting
+	list<FileSystem*>::reverse_iterator itor = m_fileSystems.rbegin();
+
+	while (itor != m_fileSystems.rend())
+	{
+		//(*itor)->GetDeliveryTime() > m->GetDeliveryTime())
+		if ((*itor)->FileExists(fileName)) return true;
+		itor++;
+	}
+
+	//vanilla file system version
+
+	FILE *fp = fopen( (fileName).c_str(), "rb");
+	if (!fp)
+	{
+		//file not found	
+		return NULL;
+	}
+
+	fclose(fp);
+	return true;
+}

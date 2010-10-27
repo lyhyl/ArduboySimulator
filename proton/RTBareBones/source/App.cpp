@@ -1,0 +1,230 @@
+/*
+ *  App.cpp
+ *  Created by Seth Robinson on 3/6/09.
+ *  For license info, check the license.txt file that should have come with this.
+ *
+ */
+#include "PlatformPrecomp.h"
+#include "App.h"
+
+#include "Entity/CustomInputComponent.h" //used for the back button (android)
+#include "Entity/FocusInputComponent.h" //needed to let the input component see input messages
+
+MessageManager g_messageManager;
+MessageManager * GetMessageManager() {return &g_messageManager;}
+
+FileManager g_fileManager;
+FileManager * GetFileManager() {return &g_fileManager;}
+
+#include "Audio/AudioManager.h"
+AudioManager g_audioManager; //to disable sound, this is a dummy
+
+AudioManager * GetAudioManager(){return &g_audioManager;}
+
+App *g_pApp = NULL;
+
+BaseApp * GetBaseApp() 
+{
+	if (!g_pApp)
+	{
+		g_pApp = new App;
+	}
+	return g_pApp;
+}
+
+App * GetApp() 
+{
+	assert(g_pApp && "GetBaseApp must be called used first");
+	return g_pApp;
+}
+
+App::App()
+{
+	m_bDidPostInit = false;
+}
+
+App::~App()
+{
+}
+
+bool App::Init()
+{
+	
+	if (m_bInitted)	
+	{
+		return true;
+	}
+	
+	if (!BaseApp::Init()) return false;
+	
+	if (GetEmulatedPlatformID() == PLATFORM_ID_IOS || GetEmulatedPlatformID() == PLATFORM_ID_WEBOS)
+	{
+		//SetLockedLandscape(true); //if we don't allow portrait mode for this game
+		SetManualRotationMode(true);
+	}
+
+	if (GetEmulatedPlatformID() == PLATFORM_ID_ANDROID)
+	{
+		//by doing this, we can pretend the screen is 320X480 in our code, but actually it will be
+		//scaled up/down to whatever the HW is.  Yeah, it stretches it so it's not going to look great.
+		//SetupFakePrimaryScreenSize(320,480);
+	}
+
+	LogMsg("Save path is %s", GetSavePath().c_str());
+	LogMsg("Region string is %s", GetRegionString().c_str());
+
+#ifndef C_NO_ZLIB
+	//fonts need zlib to decompress.  When porting a new platform I define C_NO_ZLIB and add zlib support later sometimes
+	if (!GetFont(FONT_SMALL)->Load("interface/font_trajan.rtfont")) return false;
+#endif
+	
+	GetBaseApp()->SetFPSVisible(true);
+	return true;
+}
+
+void App::Kill()
+{
+	BaseApp::Kill();
+}
+
+void App::OnExitApp(VariantList *pVarList)
+{
+	LogMsg("Exiting the app");
+	OSMessage o;
+	o.m_type = OSMessage::MESSAGE_FINISH_APP;
+	GetBaseApp()->AddOSMessage(o);
+}
+
+#define kFilteringFactor 0.1f
+#define C_DELAY_BETWEEN_SHAKES_MS 500
+
+//testing accelerometer readings. To enable the test, search below for "ACCELTEST"
+void App::OnAccel(VariantList *pVList)
+{
+	
+	if ( int(pVList->m_variant[0].GetFloat()) != MESSAGE_TYPE_GUI_ACCELEROMETER) return;
+
+	CL_Vec3f v = pVList->m_variant[1].GetVector3();
+
+	LogMsg("Accel: %s", PrintVector3(v).c_str());
+
+	v.x = v.x * kFilteringFactor + v.x * (1.0f - kFilteringFactor);
+	v.y = v.y * kFilteringFactor + v.y * (1.0f - kFilteringFactor);
+	v.z = v.z * kFilteringFactor + v.z * (1.0f - kFilteringFactor);
+
+	// Compute values for the three axes of the acceleromater
+	float x = v.x - v.x;
+	float y = v.y - v.x;
+	float z = v.z - v.x;
+
+	//Compute the intensity of the current acceleration 
+	if (sqrt(x * x + y * y + z * z) > 2.0f)
+	{
+		Entity *pEnt = GetEntityRoot()->GetEntityByName("jumble");
+		if (pEnt)
+		{
+			//GetAudioManager()->Play("audio/click.wav");
+			pEnt->GetFunction("OnButtonSelected")->sig_function(&VariantList(CL_Vec2f(), pEnt));
+		}
+		LogMsg("Shake!");
+	}
+}
+
+void App::Update()
+{
+	
+	//game can think here.  The baseApp::Update() will run Update() on all entities, if any are added.  The only one
+	//we use in this example is one that is watching for the Back (android) or Escape key to quit that we setup earlier.
+	
+	BaseApp::Update();
+
+	if (!m_bDidPostInit)
+	{
+		//stuff I want loaded during the first "Update"
+		m_bDidPostInit = true;
+		
+		//for android, so the back key (or escape on windows) will quit out of the game
+		Entity *pEnt = GetEntityRoot()->AddEntity(new Entity);
+		EntityComponent *pComp = pEnt->AddComponent(new CustomInputComponent);
+		//tell the component which key has to be hit for it to be activated
+		pComp->GetVar("keycode")->Set(uint32(VIRTUAL_KEY_BACK));
+		//attach our function so it is called when the back key is hit
+		pComp->GetFunction("OnActivated")->sig_function.connect(1, boost::bind(&App::OnExitApp, this, _1));
+
+		//nothing will happen unless we give it input focus
+		pEnt->AddComponent(new FocusInputComponent);
+
+		//ACCELTEST:  To test the accelerometer uncomment below: (will print values to the debug output)
+		//SetAccelerometerUpdateHz(25); //default is 0, disabled
+		//GetBaseApp()->m_sig_accel.connect(1, boost::bind(&App::OnAccel, this, _1));
+	}
+
+
+	//game is thinking.  
+}
+
+void App::Draw()
+{
+	//Use this to prepare for raw GL calls
+	PrepareForGL();
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
+	//draw our game stuff
+	DrawFilledRect(10,10,GetScreenSizeX()/3,GetScreenSizeY()/3, MAKE_RGBA(255,255,0,255));
+	DrawFilledRect(0,0,64,64, MAKE_RGBA(0,255,0,100));
+
+	//after our 2d rect call above, we need to prepare for raw GL again. (it keeps it in ortho mode if we don't for speed)
+	PrepareForGL();
+	RenderSpinningTriangle();
+	
+	//let's blit a bmp, but first load it if needed
+	if (!m_surf.IsLoaded())
+	{
+		m_surf.LoadFile("interface/test.bmp");
+	}
+
+	m_surf.Blit(50,50);
+	
+	//GetFont(FONT_SMALL)->Draw(0,0, "test");
+	GetFont(FONT_SMALL)->DrawScaled(0,GetScreenSizeYf()-50, "white `2Green `3Cyan `4Red `5Purp ",1+SinGamePulseByMS(3000)*0.7);
+	
+	//the base handles actually drawing the GUI stuff over everything else, if applicable, which in this case it isn't.
+	BaseApp::Draw();
+}
+
+void App::OnScreenSizeChange()
+{
+	BaseApp::OnScreenSizeChange();
+}
+
+void App::OnEnterBackground()
+{
+	//save your game stuff here, as on some devices (Android <cough>) we never get another notification of quitting.
+	LogMsg("Entered background");
+	BaseApp::OnEnterBackground();
+}
+
+void App::OnEnterForeground()
+{
+	LogMsg("Entered foreground");
+	BaseApp::OnEnterForeground();
+}
+
+const char * GetAppName() {return "BareBones";}
+
+//the stuff below is for android/webos builds.  Your app needs to be named like this.
+
+//note: these are put into vars like this to be compatible with my command-line parsing stuff that grabs the vars
+
+const char * GetBundlePrefix()
+{
+	char * bundlePrefix = "com.rtsoft.";
+	return bundlePrefix;
+}
+
+const char * GetBundleName()
+{
+	char * bundleName = "rtbarebones";
+	return bundleName;
+}
