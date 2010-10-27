@@ -61,8 +61,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
 public class Main extends Activity implements SensorEventListener
-
-public class Main extends Activity implements SensorEventListener
 {
 	
 	//********** EDIT THESE! DON'T NEED TO EDIT THE REST **************
