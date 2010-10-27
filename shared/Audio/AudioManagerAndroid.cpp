@@ -1,0 +1,521 @@
+#include "PlatformPrecomp.h"
+
+#include "AudioManagerAndroid.h"
+
+#ifdef ANDROID_NDK
+
+#include "util/MiscUtils.h"
+#include "android/AndroidUtils.h"
+
+AudioManagerAndroid::AudioManagerAndroid()
+{
+	m_lastMusicID = 200000000; //doesn't matter, internal usage
+}
+
+AudioManagerAndroid::~AudioManagerAndroid()
+{
+	Kill();
+}
+
+AudioHandle AudioManagerAndroid::Play( const string fileName )
+{
+	LogMsg("Playing %s", fileName.c_str());
+	assert(!"huh?");
+	return AUDIO_HANDLE_BLANK;
+}
+
+bool AudioManagerAndroid::Init()
+{
+	//initted on the Android side to reduce JNI crap
+	return true;
+}
+
+void AudioManagerAndroid::KillCachedSounds(bool bKillMusic, bool bKillLooping, int ignoreSoundsUsedInLastMS, int killSoundsLowerPriorityThanThis, bool bKillSoundsPlaying)
+{
+	LogMsg("Killing sound cache");
+	list<SoundObject*>::iterator itor = m_soundList.begin();
+
+	while (itor != m_soundList.end())
+	{
+
+		if (!bKillLooping && (*itor)->m_bIsLooping) 
+		{
+			itor++;
+			continue;
+		}
+
+		/*
+		if (!bKillSoundsPlaying)
+		{
+			//are any channels currently using this sound?
+
+			if ((*itor)->m_pLastChannelToUse && IsPlaying( (AudioHandle)(*itor)->m_pLastChannelToUse) )
+			{
+				itor++;
+				continue;
+			}
+		}
+		*/
+
+		if (!bKillMusic && (*itor)->m_fileName == m_lastMusicFileName)
+		{
+			itor++;
+			continue; //skip this one
+		}
+
+		delete (*itor);
+		list<SoundObject*>::iterator itorTemp = itor;
+		itor++;
+		m_soundList.erase(itorTemp);
+	}
+
+	if (bKillMusic)
+	{
+		//m_pMusicChannel = NULL;
+	}
+}
+
+void AudioManagerAndroid::Kill()
+{
+	StopMusic();
+	KillCachedSounds(true, true, 0, 0, false);
+	LogMsg("Shutting down audio system");
+}
+
+bool AudioManagerAndroid::DeleteSoundObjectByFileName(string fName)
+{
+	list<SoundObject*>::iterator itor = m_soundList.begin();
+
+	while (itor != m_soundList.end())
+	{
+		if ( (*itor)->m_fileName == fName)
+		{
+			delete (*itor);
+			m_soundList.erase(itor);
+			return true; //deleted
+		}
+		itor++;
+	}
+
+	return false; //failed
+}
+
+SoundObject * AudioManagerAndroid::GetSoundObjectByFileName(string fName)
+{
+	list<SoundObject*>::iterator itor = m_soundList.begin();
+
+	while (itor != m_soundList.end())
+	{
+		if ( (*itor)->m_fileName == fName)
+		{
+			return (*itor); //found a match
+		}
+		itor++;
+	}
+
+	return 0; //failed
+}
+
+void AudioManagerAndroid::Preload( string fName, bool bLooping /*= false*/, bool bIsMusic /*= false*/, bool bAddBasePath /*= true*/, bool bForceStreaming )
+{
+
+	if (bIsMusic) return;//we don't preload music that way
+
+	string basePath;
+
+	if (bAddBasePath)
+	{
+		basePath = GetBaseAppPath();
+	}
+	SoundObject *pObject = GetSoundObjectByFileName((GetBaseAppPath()+fName).c_str());
+
+	if (!pObject)
+	{
+		//create it
+		pObject = new SoundObject;
+		pObject->m_fileName = fName;
+
+		if (GetFileExtension(fName) == "mp3")
+		{
+			fName = ModifyFileExtension(fName, "ogg");
+		} else
+		if (GetFileExtension(fName) == "wav")
+		{
+			fName = ModifyFileExtension(fName, "ogg");
+			if (!FileExists(fName))
+			{
+				//well, fooey.  change it back
+				fName = ModifyFileExtension(fName, "wav");
+			}
+		}
+
+
+		//tell android to load sound
+
+		JNIEnv *env = GetJavaEnv();
+		if (env)
+		{
+
+		jclass cls = env->FindClass(GetAndroidMainClassName());
+		jmethodID mid = env->GetStaticMethodID(cls,
+			"sound_load",
+			"(Ljava/lang/String;)I");
+		
+
+		
+		jstring mystr = env->NewStringUTF((basePath+fName).c_str());
+
+		jint ret = env->CallStaticIntMethod(cls, mid, mystr);
+		pObject->m_soundID = ret;
+
+		//LogMsg("Got back audio handle %d", pObject->m_soundID);
+
+		}
+
+	
+		if (!pObject->m_soundID)
+		{
+			LogMsg("Error loading %s ", (basePath+fName).c_str());
+			delete pObject;
+			return;
+		}
+		
+
+
+
+//		LogMsg("Caching out %s", fName.c_str());
+
+
+		pObject->m_bIsLooping = bLooping;
+
+		m_soundList.push_back(pObject);
+	}
+}
+
+
+AudioHandle AudioManagerAndroid::Play( string fName, bool bLooping /*= false*/, bool bIsMusic, bool bAddBasePath, bool bForceStreaming)
+{
+
+
+	if (!GetSoundEnabled()) return AUDIO_HANDLE_BLANK;
+
+	if ( !GetMusicEnabled() && bIsMusic )
+	{
+		m_bLastMusicLooping = bLooping;
+		m_lastMusicFileName = fName;
+
+		return AUDIO_HANDLE_BLANK;
+	}
+
+	if (bIsMusic && m_bLastMusicLooping == bLooping && m_lastMusicFileName == fName && m_bLastMusicLooping && IsPlaying((AudioHandle) m_lastMusicID))
+	{
+		return (AudioHandle) m_lastMusicID;
+	}
+
+	if (bIsMusic)
+	{
+		StopMusic();
+	}
+	int loops = 0;
+	if (bLooping) loops = -1;
+
+
+	if (bIsMusic)
+	{
+		string basePath;
+
+		if (bAddBasePath)
+		{
+			basePath = GetBaseAppPath();
+		}
+
+		m_lastMusicFileName = fName;
+		m_bLastMusicLooping = bLooping;
+		
+		if (GetFileExtension(fName) == "mp3")
+		{
+			fName = ModifyFileExtension(fName, "ogg");
+		} else
+			if (GetFileExtension(fName) == "wav")
+			{
+				fName = ModifyFileExtension(fName, "ogg");
+				if (!FileExists(fName))
+				{
+					//well, fooey.  change it back
+					fName = ModifyFileExtension(fName, "wav");
+				}
+			}
+
+		JNIEnv *env = GetJavaEnv();
+		if (env)
+		{
+
+			jclass cls = env->FindClass(GetAndroidMainClassName());
+			jmethodID mid = env->GetStaticMethodID(cls,
+				"music_play",
+				"(Ljava/lang/String;)V");
+			jstring mystr = env->NewStringUTF((basePath+fName).c_str());
+
+			env->CallStaticVoidMethod(cls, mid, mystr);
+		}
+
+	
+		SetMusicVol(m_musicVol);
+		return (AudioHandle) m_lastMusicID;
+
+	}
+
+	//non music
+	SoundObject *pObject = GetSoundObjectByFileName(fName);
+
+	if (!pObject)
+	{
+		//create it
+		Preload(fName, bLooping, bIsMusic, bAddBasePath, bForceStreaming);
+		pObject = GetSoundObjectByFileName(fName);
+		if (!pObject)
+		{
+			LogError("Unable to cache sound %s", fName.c_str());
+			return false;
+		}
+	}
+
+	JNIEnv *env = GetJavaEnv();
+	if (env)
+	{
+
+		jclass cls = env->FindClass(GetAndroidMainClassName());
+		jmethodID mid = env->GetStaticMethodID(cls,
+			"sound_play",
+			"(IFFIIF)I");
+
+		int streamID = env->CallStaticIntMethod(cls, mid, pObject->m_soundID, jfloat(1.0f), jfloat(1.0f), jint(0), jint(loops), jfloat(1.0f));
+		if (streamID == 0)
+		{
+			//something is wrong... probably not loaded.  Reschedule
+			GetMessageManager()->SendGame(MESSAGE_TYPE_PLAY_SOUND, fName, 50);
+		}
+	}
+
+	//play it
+	//pObject->m_pLastChannelToUse = Mix_PlayChannel(-1, pObject->m_pSound, loops);
+
+	return (AudioHandle) 0 ;
+}
+
+AudioHandle AudioManagerAndroid::Play( string fName, int vol, int pan /*= 0*/ )
+{	
+
+	assert(!"We don't support this");
+	return NULL;
+}
+
+void AudioManagerAndroid::Update()
+{
+
+}
+
+void AudioManagerAndroid::Stop( AudioHandle soundID )
+{
+
+	if (!soundID) return;
+
+	if (soundID == m_lastMusicID)
+	{
+		StopMusic();
+		return;
+	}
+	//notify engine to kill it, although it likely already did
+	JNIEnv *env = GetJavaEnv();
+	if (env)
+	{
+		jclass cls = env->FindClass(GetAndroidMainClassName());
+		jmethodID mid = env->GetStaticMethodID(cls,
+			"sound_stop",
+			"(I)V");
+
+		env->CallStaticVoidMethod(cls, mid, jint(soundID));
+	}
+
+}
+
+AudioHandle AudioManagerAndroid::GetMusicChannel()
+{
+	return m_lastMusicID; //(AudioHandle)m_pMusicChannel;
+
+}
+
+bool AudioManagerAndroid::IsPlaying( AudioHandle soundID )
+{
+	if (soundID == 0) return false;
+
+	
+	
+	if (soundID == (AudioHandle) m_lastMusicID)
+	{
+		JNIEnv *env = GetJavaEnv();
+		if (env)
+		{
+			jclass cls = env->FindClass(GetAndroidMainClassName());
+			jmethodID mid = env->GetStaticMethodID(cls,
+				"music_is_playing",
+				"()Z");
+			return env->CallStaticBooleanMethod(cls, mid);
+		}
+
+		
+	}
+	
+	return false;
+	//return Mix_Playing(soundID) != 0;
+}
+
+
+void AudioManagerAndroid::SetMusicEnabled( bool bNew )
+{
+	if (bNew != m_bMusicEnabled)
+	{
+		AudioManager::SetMusicEnabled(bNew);
+		if (bNew)
+		{
+			if (!m_lastMusicFileName.empty())
+			{
+				Play(m_lastMusicFileName, GetLastMusicLooping(), true);
+
+			}
+		} else
+		{
+			//kill the music
+
+			StopMusic();
+		}
+	}
+
+}
+
+void AudioManagerAndroid::StopMusic()
+{
+	//LogMsg("Stop music");
+	JNIEnv *env = GetJavaEnv();
+	if (env)
+	{
+		jclass cls = env->FindClass(GetAndroidMainClassName());
+		jmethodID mid = env->GetStaticMethodID(cls,
+		"music_stop",
+		"()V");
+		env->CallStaticVoidMethod(cls, mid);
+	}
+	
+}
+
+int AudioManagerAndroid::GetMemoryUsed()
+{
+
+	return 0;
+}
+
+void AudioManagerAndroid::SetFrequency( AudioHandle soundID, int freq )
+{
+	assert(soundID);
+	//Android::Channel *pChannel = (Android::Channel*) soundID;
+	//pChannel->setFrequency(float(freq));
+
+}
+
+void AudioManagerAndroid::SetPan( AudioHandle soundID, float pan )
+{
+	assert(soundID);
+	//	Android::Channel *pChannel = (Android::Channel*) soundID;
+	//	pChannel->setPan(pan);
+}
+
+
+void AudioManagerAndroid::SetPos( AudioHandle soundID, uint32 posMS )
+{
+	assert(soundID);
+	if (soundID == m_lastMusicID) 
+	{
+			JNIEnv *env = GetJavaEnv();
+			if (env)
+			{
+				jclass cls = env->FindClass(GetAndroidMainClassName());
+				jmethodID mid = env->GetStaticMethodID(cls,
+					"music_set_pos",
+					"(I)V");
+				env->CallStaticVoidMethod(cls, mid, jint(int(posMS)));
+			}
+	
+		return;
+	}
+	LogMsg("SetPosition is unsupported for sounds");
+}
+
+uint32 AudioManagerAndroid::GetPos( AudioHandle soundID)
+{
+	if (soundID == m_lastMusicID) 
+	{
+		JNIEnv *env = GetJavaEnv();
+		if (env)
+		{
+			jclass cls = env->FindClass(GetAndroidMainClassName());
+			jmethodID mid = env->GetStaticMethodID(cls,
+				"music_get_pos",
+				"()I");
+			return env->CallStaticIntMethod(cls, mid);
+		}
+		return 0;
+	}
+	LogMsg("GetPosition is unsupported for sounds");
+	return 0;
+}
+
+void AudioManagerAndroid::SetVol( AudioHandle soundID, float vol )
+{
+	if (soundID == m_lastMusicID) 
+	{
+		SetMusicVol(vol);
+		return;
+	}
+	assert(soundID);
+	LogMsg("SetVol is unsupported for sounds");
+	//pChannel->setVolume(vol);
+}
+
+void AudioManagerAndroid::SetMusicVol(float vol )
+{
+	JNIEnv *env = GetJavaEnv();
+	if (env)
+	{
+		jclass cls = env->FindClass(GetAndroidMainClassName());
+		jmethodID mid = env->GetStaticMethodID(cls,
+			"music_set_volume",
+			"(F)V");
+		env->CallStaticVoidMethod(cls, mid, jfloat(vol));
+	}
+}
+
+
+
+void AudioManagerAndroid::SetPriority( AudioHandle soundID, int priority )
+{
+
+}
+
+void AudioManagerAndroid::Vibrate()
+{
+	if (!m_bVibrationDisabled)
+	{
+		JNIEnv *env = GetJavaEnv();
+		if (env)
+		{
+			jclass cls = env->FindClass(GetAndroidMainClassName());
+			jmethodID mid = env->GetStaticMethodID(cls,
+				"vibrate",
+				"(I)V");
+			env->CallStaticVoidMethod(cls, mid, jint(300));
+		}
+	}
+}
+
+
+#endif
