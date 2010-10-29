@@ -136,8 +136,8 @@ void BaseApp::Draw()
 			prims = GetIrrlichtManager()->GetDriver()->getPrimitiveCountDrawn();
 		}
 
-		sprintf(stTemp, "FPS: %d - Prims: %d Mem: %.2f MB", m_gameTimer.GetFPS(), 
-			prims, float(GetFreeMemory()/1024)/ 1024);
+		sprintf(stTemp, "FPS: %d - Prims: %d M: %.2f, T: %.2f A: %.2f F: %.2f", m_gameTimer.GetFPS(), 
+			prims,  (float(m_memUsed)/1024)/1024, (float(m_texMemUsed)/1024)/1024,  float(GetAudioManager()->GetMemoryUsed()/1024)/ 1024, float(GetFreeMemory()/1024)/ 1024);
 #else
 		sprintf(stTemp, "fps: %d - M: %.2f, T: %.2f A: %.2f F: %.2f", m_gameTimer.GetFPS(), (float(m_memUsed)/1024)/1024, (float(m_texMemUsed)/1024)/1024,  float(GetAudioManager()->GetMemoryUsed()/1024)/ 1024, float(GetFreeMemory()/1024)/ 1024);
 #endif		

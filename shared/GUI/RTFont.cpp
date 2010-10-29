@@ -5,16 +5,21 @@
 
 RTFont::RTFont()
 {
+	InitDefaults();
+}
+
+void RTFont::InitDefaults()
+{
 	m_spaceBetweenLetters = 0.0f;
 	m_yOffset = 0.0f;
 }
 
 RTFont::RTFont( string fileName )
 {
+	InitDefaults();
 	Load(fileName);
-
-
 }
+
 RTFont::~RTFont()
 {
 }

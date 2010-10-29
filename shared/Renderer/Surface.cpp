@@ -138,6 +138,8 @@ bool Surface::LoadBMPTexture(byte *pMem)
 
 void Surface::IncreaseMemCounter(int mem)
 {
+	if (m_texType == TYPE_NOT_OWNER) return;
+
 	assert(!m_memUsed && "Forgot to clear this somewhere?");
 	m_memUsed = mem;
 	GetBaseApp()->ModTexUsed(m_memUsed);

@@ -108,7 +108,7 @@ bool App::Init()
 		LogMsg("Can't load font 1");
 		return false;
 	}
-	if (!GetFont(FONT_LARGE)->Load("interface/font_trajan_big.rtfont"))
+	if (!GetFont(FONT_LARGE)->Load("interface/font_big.rtfont"))
 	{
 		LogMsg("Can't load font 2");
 		return false;
@@ -135,7 +135,6 @@ void App::Kill()
 	g_pApp = NULL;
 }
 
-
 void App::Update()
 {
 	BaseApp::Update();
@@ -155,56 +154,9 @@ void App::Update()
 
 void App::Draw()
 {
-	//turn normal GL back on
-	//GetBaseApp()->OnScreenSizeChange();
 	PrepareForGL();
+//	glClearColor(0.6,0.6,0.6,1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
-	//draw our game stuff
-	//DrawFilledRect(0,10,GetScreenSizeX(),GetScreenSizeY()/2, MAKE_RGBA(255,255,255,255));
-	PrepareForGL();
-
-	//RenderSpinningTriangle();
-	g_lastBound = 0;
-	//SetupOrtho();
-	
-	/*
-	if (!g_surf.IsLoaded())
-	{
-		SoftSurface surf;
-		surf.LoadFile("game/test.bmp", SoftSurface::COLOR_KEY_WHITE);
-		
-		g_surf.InitBlankSurface(surf.GetWidth(),surf.GetHeight());
-
-		SoftSurface s;
-		s.Init(surf.GetWidth(),surf.GetHeight(), SoftSurface::SURFACE_RGBA);
-		s.FillColor(glColorBytes(0,0,0,0));
-		s.Blit(0,0, &surf);
-		s.FlipY();
-
-		//put it on the GL surface
-		g_surf.UpdateSurfaceRect(rtRect(0,0, s.GetWidth(), s.GetHeight()), s.GetPixelData());
-		g_surf.SetUsesAlpha(surf.GetUsesAlpha());
-		if (s.GetHasPremultipliedAlpha()) 
-		{
-			g_surf.SetBlendingMode(Surface::BLENDING_PREMULTIPLIED_ALPHA);
-		}
-	}
-		 
-	g_surf.BlitScaled(0,0, CL_Vec2f(3,3), ALIGNMENT_UPPER_LEFT);
-	*/
-
-	//DrawFilledRect(0,0,512,512, MAKE_RGBA(0,255,0,255));
-	//GetFont(FONT_SMALL)->Draw(0,0, "`4test");
-	//g_surf.CopyFromScreen();
-	
-	
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//g_surf.Blit(0,0, MAKE_RGBA(255,255,255,255));
-	SetupOrtho();
-	//GetFont(FONT_SMALL)->Draw(0,50, " white `2Green `3Cyan `4Red `5Purp ");
-	//GetFont(FONT_SMALL)->DrawScaled(0,50, "Default - `2Green`` - default",1+SinGamePulseByMS(3000));
-	//the base handles actually drawing the GUI stuff over everything else
 	BaseApp::Draw();
 }
 

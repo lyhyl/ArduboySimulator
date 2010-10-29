@@ -102,7 +102,7 @@ void LogMsg ( const char* traceStr, ... )
 
 string GetBaseAppPath()
 {
-	return ""; //well, according to the docs PDL_GetCallingPath is deprecated
+	return ""; //we mount the assets as zip, there really isn't a base path
 }
 
 JNIEnv * GetJavaEnv()

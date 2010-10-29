@@ -49,7 +49,8 @@ private:
 	
 	void OnUnloadSurfaces();
 	void OnLoadSurfaces();
-	
+	void InitDefaults();
+
 	rtfont_header m_header;
 	vector<FontChar> m_chars;
 	Surface m_surf;

@@ -31,7 +31,7 @@ void InitVideoSize()
 	AddVideoMode("Nexus One Landscape", 800, 480, PLATFORM_ID_ANDROID); //g_landScapeNoNeckHurtMode should be false when testing
 
 	string desiredVideoMode = "iPhone"; //name needs to match one of the ones defined below
-    //g_landScapeNoNeckHurtMode = true; //if true, will rotate the screen so we can play in landscape mode in windows without hurting ourselves
+    g_landScapeNoNeckHurtMode = false; //if true, will rotate the screen so we can play in landscape mode in windows without hurting ourselves
 
 	#ifndef _DEBUG
 		//desiredVideoMode = "Windows"; //so when I build Dink for windows I don't have to worry about this being set right
@@ -139,13 +139,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		// Handles the close message when a user clicks the quit icon of the window
 	case WM_CLOSE:
 		g_bAppFinished = true;
-		if (IsBaseAppInitted())
-		{
-			GetBaseApp()->OnEnterBackground();
-			GetBaseApp()->Kill();
-		}
-
-		PostQuitMessage(0);
+		
+		//PostQuitMessage(0);
 		return 1;
 
 	case WM_LBUTTONDOWN:
@@ -538,8 +533,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 		MessageBox(NULL,"Can't Activate The GL Rendering Context.","ERROR",MB_OK|MB_ICONEXCLAMATION);
 		return FALSE;								// Return FALSE
 	}
-
-
 #endif
 
 	SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(), ORIENTATION_PORTRAIT);
@@ -550,7 +543,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 		MessageBox(NULL, "Error initializing the game.  Did you unzip everything right?", "Unable to load stuff", NULL);
 		goto cleanup;
 	}
-
 
 	//our main loop
 
@@ -594,7 +586,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 			case OSMessage::MESSAGE_FINISH_APP:
 				PostMessage(hWnd, WM_CLOSE, 0, 0);
 				break;
-
 			}
 		}
 #ifdef C_GL_MODE
@@ -619,6 +610,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 	}
 
 cleanup:
+
+	if (IsBaseAppInitted())
+	{
+		GetBaseApp()->OnEnterBackground();
+		GetBaseApp()->Kill();
+	}
+
 
 #ifdef C_GL_MODE
 

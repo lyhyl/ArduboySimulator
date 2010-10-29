@@ -47,11 +47,11 @@ class FileManager
 public:
 	FileManager();
 	virtual ~FileManager();
-	byte * Get(string fileName, int *pSizeOut, bool bAddBasePath = true); //it news' it, up to you to SAFE_DELETE_ARRAY() it
+	byte * Get(string fileName, int *pSizeOut, bool bAddBasePath = true); //it news' it, up to you to SAFE_DELETE_ARRAY()
 	StreamingInstance * GetStreaming(string fileName, int *pSizeOut, bool bAddBasePath = true); //pSizeOut currently always set to 0.  Returns null on fail. You must DELETE !
 	void MountFileSystem(FileSystem* pFileSystem);
-
 	bool FileExists(string fileName, bool bAddBasePath = true);
+
 private:
 
 	list<FileSystem*> m_fileSystems;
