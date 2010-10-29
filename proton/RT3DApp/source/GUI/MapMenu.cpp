@@ -94,7 +94,7 @@ void MapInitScene()
 		}
 			
 		camera->setAspectRatio(GetScreenSizeXf()/GetScreenSizeYf());
-		camera->setFOV((90 * M_PI / 360.0f));
+		camera->setFOV((120 * M_PI / 360.0f));
 
 	return;
 

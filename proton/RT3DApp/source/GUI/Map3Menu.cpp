@@ -107,7 +107,7 @@ void Map3InitScene()
 	//	scene::ICameraSceneNode* camera = smgr->addCameraSceneNodeFPS(0,100.0f,0.5f);
 
 	camera->setAspectRatio(GetScreenSizeXf()/GetScreenSizeYf());
-	camera->setFOV((90 * M_PI / 360.0f));
+	camera->setFOV((120 * M_PI / 360.0f));
     
 	//camera->setFarValue(700.0f);
 	/*
