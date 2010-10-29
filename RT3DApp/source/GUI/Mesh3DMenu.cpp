@@ -81,7 +81,7 @@ void Mesh3DInitScene()
 */
 	ICameraSceneNode *pCam = pScene->addCameraSceneNode(0, vector3df(0,2,-10));
 	pCam->setAspectRatio(GetScreenSizeXf()/GetScreenSizeYf());
-	pCam->setFOV((90 * M_PI / 360.0f));
+	pCam->setFOV((120 * M_PI / 360.0f));
 	
 }
 
