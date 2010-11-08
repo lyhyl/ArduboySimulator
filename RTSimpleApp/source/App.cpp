@@ -108,7 +108,7 @@ bool App::Init()
 		LogMsg("Can't load font 1");
 		return false;
 	}
-	if (!GetFont(FONT_LARGE)->Load("interface/font_big.rtfont"))
+	if (!GetFont(FONT_LARGE)->Load("interface/font_trajan_big.rtfont"))
 	{
 		LogMsg("Can't load font 2");
 		return false;
