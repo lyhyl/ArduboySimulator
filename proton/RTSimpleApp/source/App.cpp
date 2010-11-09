@@ -84,12 +84,21 @@ bool App::Init()
 {
 	//SetDefaultAudioClickSound("audio/enter.wav");
 	SetDefaultButtonStyle(Button2DComponent::BUTTON_STYLE_CLICK_ON_TOUCH_RELEASE);
-	SetLockedLandscape(true); //we don't allow portrait mode for this game
 	SetManualRotationMode(true);
 
 	
-	//if we do this, everything will be stretched/zoomed to fit the screen
-	SetupFakePrimaryScreenSize(320,480); //game will think its this size, and will be scaled up
+	if (GetEmulatedPlatformID() == PLATFORM_ID_ANDROID)
+	{
+		//if we do this, everything will be stretched/zoomed to fit the screen
+		SetupFakePrimaryScreenSize(480,320); //game will think its this size, and will be scaled up
+		SetLockedLandscape(false); //we don't allow portrait mode for this game
+
+	} else
+	{
+		//if we do this, everything will be stretched/zoomed to fit the screen
+		SetLockedLandscape(true); //we don't allow portrait mode for this game
+		SetupFakePrimaryScreenSize(320,480); //game will think its this size, and will be scaled up
+	}
 	
 	L_ParticleSystem::init(2000);
 
