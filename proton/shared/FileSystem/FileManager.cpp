@@ -183,3 +183,25 @@ bool FileManager::FileExists( string fileName, bool bAddBasePath)
 	fclose(fp);
 	return true;
 }
+
+int FileManager::GetFileSize( string fileName, bool bAddBasePath /*= true*/ )
+{
+	if (bAddBasePath)
+	{
+		fileName = GetBaseAppPath() + fileName;
+	}
+
+	//first check any mounted systems in reverse order of the mounting
+	list<FileSystem*>::reverse_iterator itor = m_fileSystems.rbegin();
+
+	while (itor != m_fileSystems.rend())
+	{
+		//(*itor)->GetDeliveryTime() > m->GetDeliveryTime())
+		if ((*itor)->GetFileSize(fileName)) return true;
+		itor++;
+	}
+
+	//vanilla file system version
+
+	return ::GetFileSize(fileName);
+}

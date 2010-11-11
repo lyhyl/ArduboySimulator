@@ -1,5 +1,9 @@
 #include "AndroidUtils.h"
 #include <errno.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <dirent.h>
+
 #include <jni.h>
 #include <android/log.h>
 #include <cstdlib>
@@ -14,6 +18,8 @@ extern JavaVM* g_pJavaVM;
 const char * GetAppName();
 const char * GetBundlePrefix();
 const char * GetBundleName();
+
+bool g_preferSDCardForUserStorage = false;
 
 string g_musicToPlay;
 int g_musicPos = 0;
@@ -96,7 +102,14 @@ void LogMsg ( const char* traceStr, ... )
 	va_start ( argsVA, traceStr );
 	vsnprintf( buffer, logSize, traceStr, argsVA );
 	va_end( argsVA );
+	
+	
 	__android_log_write(ANDROID_LOG_ERROR,GetAppName(), buffer);
+
+	if (g_isLoggerInitted)
+	{
+		GetBaseApp()->GetConsole()->AddLine(buffer);
+	}
 }
 
 
@@ -135,8 +148,22 @@ char * GetAndroidMainClassName()
 
 };
 
+//this isn't really defined anywhere yet, if you need it, make your own header. Better to just use GetAppCachePath()
+//directly.
+void SetPreferSDCardForStorage(bool bNew)
+{
+	g_preferSDCardForUserStorage = bNew;
+}
+
 string GetSavePath()
 {
+
+	if (g_preferSDCardForUserStorage)
+	{
+		string storageDir = GetAppCachePath();
+		if (!storageDir.empty()) return storageDir;
+	}
+
 	JNIEnv *env = GetJavaEnv();
 	if (!env) return "";
 
@@ -150,8 +177,12 @@ string GetSavePath()
 	const char * ss=env->GetStringUTFChars(ret,0);
 	sprintf(r,"%s",ss);
 	env->ReleaseStringUTFChars(ret, ss);
+	LogMsg("Normal dir is %s", string(r).c_str());
+
 	return string(r);
 }
+
+
 
 string GetAPKFile()
 {
@@ -170,10 +201,38 @@ string GetAPKFile()
 	return string(s);
 }
 
+//returns the SD card user save path (will be deleted when app is uninstalled on 2.2+)
+//returns "" if no SD card/external writable storage available
+
 string GetAppCachePath()
 {
-	assert(!"Uh..");
-	return "";
+	JNIEnv *env = GetJavaEnv();
+	if (!env) return "";
+
+		//first see if we can access an external storage method
+		jclass cls = env->FindClass(GetAndroidMainClassName());
+		jmethodID mid = env->GetStaticMethodID(cls,
+			"get_externaldir",
+			"()Ljava/lang/String;");
+		jstring ret;
+		ret = (jstring)env->CallStaticObjectMethod(cls, mid);
+		static char r[512];
+		const char * ss=env->GetStringUTFChars(ret,0);
+		sprintf(r,"%s",ss);
+		env->ReleaseStringUTFChars(ret, ss);
+
+		string retString = string(r);
+
+		if (!retString.empty())
+		{
+			retString += string("/Android/data/")+GetBundlePrefix()+GetBundleName()+"/files/";
+			LogMsg("External dir is %s", retString.c_str());
+
+			//looks valid
+			return retString;
+		}
+	
+		return ""; //invalid
 }
 
 void LaunchEmail(string subject, string content)
@@ -196,7 +255,21 @@ void LaunchURL(string url)
 
 string GetClipboardText()
 {
-	return "";
+
+	JNIEnv *env = GetJavaEnv();
+	if (!env) return "";
+
+	jclass cls = env->FindClass(GetAndroidMainClassName());
+	jmethodID mid = env->GetStaticMethodID(cls,
+		"get_clipboard",
+		"()Ljava/lang/String;");
+	jstring ret;
+	ret = (jstring)env->CallStaticObjectMethod(cls, mid);
+	const char * ss=env->GetStringUTFChars(ret,0);
+	string s = ss;
+	env->ReleaseStringUTFChars(ret, ss);
+	return string(s);
+	
 }
 
 bool IsIPhone3GS()
@@ -343,47 +416,168 @@ int GetDaysSinceDate(int month,int day, int year)
 
 bool RTCreateDirectory(const std::string &dir_name)
 {
-	LogMsg("RTCreateDirectory not supported in android yet");
-	//LogMsg("RTCreateDirectory url not done");
-	assert(!"no!");
-	return 0;
+#ifdef _DEBUG
+	LogMsg("CreateDirectory: %s", dir_name.c_str());
+#endif
+
+	string temp = dir_name;
+	CreateDirectoryRecursively("", temp);
+	return true;
 }
 
 void CreateDirectoryRecursively(string basePath, string path)
 {
-	LogMsg("CreateDirectoryRecursively not supported in android yet");
-	assert(!"no!");
+#ifdef _DEBUG
+	//LogMsg("CreateDirectoryRecursively: %s, path is %s", basePath.c_str(), path.c_str());
+#endif
+	
+	JNIEnv *env = GetJavaEnv();
+	if (!env) return;
+
+	jclass cls = env->FindClass(GetAndroidMainClassName());
+	jmethodID mid = env->GetStaticMethodID(cls,
+		"create_dir_recursively",
+		"(Ljava/lang/String;Ljava/lang/String;)V");
+	jstring ret;
+	env->CallStaticObjectMethod(cls, mid, env->NewStringUTF(basePath.c_str()), env->NewStringUTF(path.c_str()));
+	
 	return;
 	
 }
+
 
 vector<string> GetDirectoriesAtPath(string path)
 {
 	vector<string> v;
 	
-	LogMsg(" GetDirectoriesAtPathurl not done");
-	assert(!"no!");
+#ifdef _DEBUG
+	//LogMsg("GetDirectoriesAtPath: %s", path.c_str());
+#endif
+
+	dirent * buf, * ent;
+	
+	DIR *dp;
+
+	dp = opendir(path.c_str());
+	if (!dp)
+	{
+		LogError("GetDirectoriesAtPath: opendir failed");
+		return v;
+	}
+
+	buf = (dirent*) malloc(sizeof(dirent)+512);
+	while (readdir_r(dp, buf, &ent) == 0 && ent)
+	{
+		if (ent->d_name[0] == '.' && ent->d_name[1] == 0) continue;
+		if (ent->d_name[0] == '.' && ent->d_name[1] == '.' && ent->d_name[2] == 0) continue;
+
+		//LogMsg("Got %s. type %d", ent->d_name, int(ent->d_type));
+		
+		if (ent->d_type == DT_DIR)
+		{
+			v.push_back(ent->d_name);
+		}
+	}
+
+	free (buf);
+	closedir(dp);
 	return v;
 }
 
 vector<string> GetFilesAtPath(string path)
 {
+#ifdef _DEBUG
+	//LogMsg("GetFilesAtPath: %s", path.c_str());
+#endif
+
 	vector<string> v;
-	LogMsg(" GetFilesAtPath not done");
-	assert(!"no!");
+	dirent * buf, * ent;
+
+	DIR *dp;
+
+	dp = opendir(path.c_str());
+	if (!dp)
+	{
+		LogError("GetDirectoriesAtPath: opendir failed");
+		return v;
+	}
+
+	buf = (dirent*) malloc(sizeof(dirent)+512);
+	while (readdir_r(dp, buf, &ent) == 0 && ent)
+	{
+		if (ent->d_name[0] == '.' && ent->d_name[1] == 0) continue;
+		if (ent->d_name[0] == '.' && ent->d_name[1] == '.' && ent->d_name[2] == 0) continue;
+
+		//LogMsg("Got %s. type %d", ent->d_name, int(ent->d_type));
+		if (ent->d_type == DT_REG) //regular file
+		{
+			v.push_back(ent->d_name);
+		}
+	}
+
+	free (buf);
+	closedir(dp);
 	return v;
 }
 
 bool RemoveDirectoryRecursively(string path)
 {
-	LogMsg(" RemoveDirectoryRecursively not done");
-	assert(!"no!");
-	return false;
+	//LogMsg(" RemoveDirectoryRecursively: %s", path.c_str());
+	
+	dirent * buf, * ent;
+
+	DIR *dp;
+
+	dp = opendir(path.c_str());
+	if (!dp)
+	{
+		LogError("RemoveDirectoryRecursively: opendir failed");
+		return false;
+	}
+
+	buf = (dirent*) malloc(sizeof(dirent)+512);
+	while (readdir_r(dp, buf, &ent) == 0 && ent)
+	{
+		
+		if (ent->d_name[0] == '.' && ent->d_name[1] == 0) continue;
+		if (ent->d_name[0] == '.' && ent->d_name[1] == '.' && ent->d_name[2] == 0) continue;
+
+		//LogMsg("Got %s. type %d", ent->d_name, int(ent->d_type));
+		if (ent->d_type == DT_REG) //regular file
+		{
+			string fName = path+string("/")+ent->d_name;
+			LogMsg("Deleting %s", fName.c_str());
+			unlink( fName.c_str());
+		}
+
+		if (ent->d_type == DT_DIR) //regular file
+		{
+			string fName = path+string("/")+ent->d_name;
+			//LogMsg("Entering DIR %s",fName.c_str());
+			if (!RemoveDirectoryRecursively(fName.c_str()))
+			{
+				LogError("Error removing dir %s", fName.c_str());
+				break;
+			}
+		}
+	}
+
+	free (buf);
+	closedir(dp);
+
+	//delete the final dir as well
+	rmdir( path.c_str());
+	return true; //success
 }
 
 bool CheckIfOtherAudioIsPlaying()
 {
 	return false;
+}
+
+void CreateAppCacheDirIfNeeded()
+{
+  //only applicable to iOS
 }
 
 void NotifyOSOfOrientationPreference(eOrientationMode orientation)
@@ -402,7 +596,6 @@ void AppResize( JNIEnv*  env, jobject  thiz, jint w, jint h )
 #ifdef _DEBUG
 	LogMsg("Resizing screen to %d %d", w, h);
 #endif
-
 	
 	if (!GetBaseApp()->IsInitted())
 	{
@@ -432,6 +625,14 @@ void AppResize( JNIEnv*  env, jobject  thiz, jint w, jint h )
 		{
 			LogMsg("Unable to initalize BaseApp");
 		}
+
+
+		//let's also create our save directory on the sd card if needed, so we don't get errors when just assuming we can save
+		//settings later in the app.
+
+		CreateDirectoryRecursively("", GetAppCachePath());
+
+
 	}
 
 	GetBaseApp()->OnScreenSizeChange();
@@ -484,8 +685,6 @@ void AppResume(JNIEnv*  env)
 		GetAudioManager()->Play(g_musicToPlay, GetAudioManager()->GetLastMusicLooping(), true, false, true);
 		GetAudioManager()->SetPos(GetAudioManager()->GetLastMusicID(), g_musicPos);
 	}
-
-	
 }
 
 void AppInit(JNIEnv*  env)
@@ -544,7 +743,6 @@ void AppOnTouch( JNIEnv*  env, jobject jobj,jint action, jfloat x, jfloat y, jin
 	m.type = messageType;
 
 	g_messageCache.push_back(m);
-
 	//GetMessageManager()->SendGUI(messageType, x, y);
 }
 
@@ -626,6 +824,14 @@ int AppOSMessageGet(JNIEnv* env)
 float AppGetLastOSMessageX(JNIEnv* env)
 {
 	return g_lastOSMessage.m_x;
+}
+
+
+
+void AppOnTrackball(JNIEnv* env, jobject jobj, jfloat x, jfloat y)
+{
+	//LogMsg("Got %.2f, %.2f", x, y);
+	GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_TRACKBALL,  Variant(x, y, 0.0f));
 }
 
 void AppOnAccelerometerUpdate(JNIEnv* env, jobject jobj, jfloat x, jfloat y, jfloat z)

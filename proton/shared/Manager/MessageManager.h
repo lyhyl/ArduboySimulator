@@ -43,7 +43,17 @@ enum eVirtualKeys
 	VIRTUAL_KEY_BACK = 500000,
 	VIRTUAL_KEY_PROPERTIES,
 	VIRTUAL_KEY_HOME,
-	VIRTUAL_KEY_SEARCH
+	VIRTUAL_KEY_SEARCH,
+	VIRTUAL_KEY_DIR_UP,
+	VIRTUAL_KEY_DIR_DOWN,
+	VIRTUAL_KEY_DIR_LEFT,
+	VIRTUAL_KEY_DIR_RIGHT
+};
+
+enum eVirtualKeyInfo
+{
+	VIRTUAL_KEY_PRESS,
+	VIRTUAL_KEY_RELEASE
 };
 
 enum eMessageType
@@ -53,6 +63,7 @@ enum eMessageType
 	MESSAGE_TYPE_GUI_CLICK_MOVE, //only send when button/finger is held down
 	MESSAGE_TYPE_GUI_CLICK_MOVE_RAW, //win only, the raw mouse move messages
 	MESSAGE_TYPE_GUI_ACCELEROMETER,
+	MESSAGE_TYPE_GUI_TRACKBALL,
 	MESSAGE_TYPE_GUI_CHAR, //the input box uses it on windows since we don't have a virtual keyboard
 	MESSAGE_TYPE_GUI_COPY,
 	MESSAGE_TYPE_GUI_PASTE,

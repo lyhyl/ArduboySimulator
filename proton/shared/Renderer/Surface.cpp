@@ -39,6 +39,7 @@ void Surface::SetDefaults()
 	m_blendingMode = BLENDING_NORMAL;
 	m_mipMapCount = 0;
 	m_frameBuffer = 0;
+	m_textureCreationMethod = TEXTURE_CREATION_NONE;
 }
 
 Surface::~Surface()
@@ -340,9 +341,18 @@ bool Surface::LoadFileFromMemory( byte *pMem )
 	
 	if (m_texWidth == 0)
 	{
+	
+		if (m_textureCreationMethod = TEXTURE_CREATION_NONE)
+		{
+			m_textureCreationMethod = TEXTURE_CREATION_MEMORY;
+		} else
+		{
+			//load on demand, helps with speed
+		}
+	
+		//unload happens right away though
 		GetBaseApp()->m_sig_unloadSurfaces.connect(1, boost::bind(&Surface::OnUnloadSurfaces, this));
-		//GetBaseApp()->m_sig_loadSurfaces.connect(1, boost::bind(&Surface::OnLoadSurfaces, this));
-
+	
 	}
 
 	if (strncmp((char*)pMem, "BM", 2) == 0)
@@ -364,11 +374,12 @@ bool Surface::LoadFileFromMemory( byte *pMem )
 
 void Surface::Bind()
 {
+	
 	if (m_glTextureID == NO_TEXTURE_LOADED && !m_textureLoaded.empty())
 	{
 		ReloadImage();
 	}
-
+	
 	if (g_lastBound == m_glTextureID)
 	{
 		//believe it or not, I saved 2 FPS on the iphone by doing my own checks
@@ -397,6 +408,7 @@ bool Surface::LoadFile( string fName )
 	if (!f.IsLoaded()) return false;
 	
 	m_textureLoaded = fName;
+	m_textureCreationMethod = TEXTURE_CREATION_FILE;
 	return LoadFileFromMemory(f.GetAsBytes());
 }
 
@@ -879,8 +891,18 @@ bool Surface::InitBlankSurface( int x, int y)
 	GLenum colorFormat = GL_RGBA;
 	GLenum pixelFormat = GL_UNSIGNED_BYTE;
 	int bytesPerPixel = 4;
-
+	m_textureCreationMethod = TEXTURE_CREATION_BLANK;
 	
+	
+	if (m_texWidth == 0)
+	{
+		//load manually, these kinds of surfaces are probably needed right away
+		GetBaseApp()->m_sig_loadSurfaces.connect(1, boost::bind(&Surface::OnLoadSurfaces, this));
+
+		//unload happens right away though
+		GetBaseApp()->m_sig_unloadSurfaces.connect(1, boost::bind(&Surface::OnUnloadSurfaces, this));
+
+	}
 //	g_glesExt.extGlGenFramebuffers(1, &m_frameBuffer);
 //	g_glesExt.extGlBindFramebuffer(GL_FRAMEBUFFER_OES, m_frameBuffer);
 
@@ -951,25 +973,30 @@ void Surface::ReloadImage()
 	LoadFile(m_textureLoaded);
 }
 
-//note, this isn't called anymore by default from OnForeGround, we just load on demand in Bind()
 void Surface::OnLoadSurfaces()
 {
+	if (m_glTextureID != NO_TEXTURE_LOADED) return; //already loaded I guess
 
-	if (m_textureLoaded.empty())
-	{
-		//LogMsg("Can't recreate a texture");
-		//assert(!"Uh.. we can't recreate this");
-	} else
-	{
-		if (m_glTextureID == NO_TEXTURE_LOADED)
+
+		switch (m_textureCreationMethod)
 		{
-#ifdef _DEBUG		
+		case TEXTURE_CREATION_FILE:
+
+			#ifdef _DEBUG		
 			LogMsg("Reloading texture %s", m_textureLoaded.c_str());
-#endif
+			#endif
 			ReloadImage();
+			break;
+
+		case TEXTURE_CREATION_BLANK:
+#ifdef _DEBUG		
+			LogMsg("Recreating surface of %d, %d", m_originalWidth, m_originalHeight);
+#endif
+			InitBlankSurface(m_originalWidth, m_originalHeight);
+			break;
 		}
-	}
 }
+	
 
 void Surface::OnUnloadSurfaces()
 {

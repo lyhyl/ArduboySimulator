@@ -47,6 +47,8 @@ public:
 		BLENDING_ADDITIVE,
 		BLENDING_PREMULTIPLIED_ALPHA
 	};
+
+	
 	Surface();
 	Surface (string fName); //load in an image right away
 	Surface (string fName, eTextureType type); //load in an image right away
@@ -89,6 +91,14 @@ public:
 protected:
 	virtual void ReloadImage();
 
+	enum eTextureCreationMethod //helps me to know how to restore it when losing surfaces
+	{
+		TEXTURE_CREATION_NONE, //we haven't made a texture yet
+		TEXTURE_CREATION_FILE, //we'll reload automatically
+		TEXTURE_CREATION_MEMORY, //we'll lose it, but not restore it
+		TEXTURE_CREATION_BLANK //we'll reinitialize the texture as blank, up to you to redraw it
+	};
+
 private:
 
 	bool LoadBMPTexture(byte *pMem); //handles 32 bit (alpha ok) and 24 bit, no alpha
@@ -108,6 +118,7 @@ private:
 	GLuint m_frameBuffer;
 	int m_memUsed; //for internal memory monitering
 	string m_textureLoaded;
+	eTextureCreationMethod m_textureCreationMethod;
 	
 };
 

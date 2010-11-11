@@ -12,6 +12,7 @@
 
 #include "StreamingInstance.h"
 #include "util/unzip/unzip.h"
+#include "FileSystemZip.h"
 
 class StreamingInstanceZip : public StreamingInstance
 {
@@ -23,9 +24,13 @@ public:
 	virtual bool IsFinished();
 	virtual int Read(byte * pBufferOut, int maxBytesToRead);
 	virtual void Close();
-	bool Init(string zipFileName);
-	void SetRootDirectory(string rootDir);
+	virtual void SeekFromStart(int byteCount);
 
+	bool Init(string zipFileName);
+	
+	void SetRootDirectory(string rootDir);
+	bool OpenWithCacheEntry(ZipCacheEntry *pCacheEntry);
+	
 protected:
 
 private:
@@ -33,7 +38,7 @@ private:
 	static const int BUFFER_SIZE = 1024*8;
 
 	int FillBufferWithCachedBytes(byte *pBufferOut, int maxBytesToRead);
-
+	bool OpenFileAtCurrentLocation();
 	unzFile m_uf;
 	unz_file_info m_file_info;
 
@@ -42,6 +47,9 @@ private:
 	int m_bufferBytesLeft;
 	bool m_bIsFinished;
 	string m_rootDir;
+	string m_zipFileName;
+	FILE *m_pFile; //if the file is uncompressed, we can optionally convert it to a regular file handle internally to do 
+	//seek operations etc, instead of mess with minizip/zlib at all
 };
 
 #endif // StreamingInstanceZip_h__

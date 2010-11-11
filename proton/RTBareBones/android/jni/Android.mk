@@ -26,7 +26,7 @@ LOCAL_C_INCLUDES := $(LOCAL_PATH)/$(SHARED) \
  $(LOCAL_PATH)/$(APP) $(LOCAL_PATH)/$(SHARED)/ClanLib-2.0/Sources $(LOCAL_PATH)/$(SHARED)/util/boost
                 
 LOCAL_SRC_FILES := \
-	$(SHARED)/PlatformSetup.cpp $(SHARED)/android/AndroidUtils.cpp $(SHARED)/Audio/AudioManager.cpp \
+	$(SHARED)/PlatformSetup.cpp $(SHARED)/android/AndroidApp.cpp $(SHARED)/android/AndroidUtils.cpp $(SHARED)/Audio/AudioManager.cpp \
 $(CLANMATH)/angle.cpp $(CLANMATH)/mat3.cpp $(CLANMATH)/mat4.cpp $(CLANMATH)/rect.cpp $(CLANMATH)/vec2.cpp $(CLANMATH)/vec3.cpp $(CLANMATH)/vec4.cpp \
 $(SHARED)/Entity/Entity.cpp $(SHARED)/Entity/Component.cpp $(SHARED)/GUI/RTFont.cpp $(SHARED)/Manager/Console.cpp $(SHARED)/FileSystem/FileManager.cpp \
 $(SHARED)/Manager/GameTimer.cpp $(SHARED)/Manager/MessageManager.cpp $(SHARED)/Manager/ResourceManager.cpp $(SHARED)/Manager/VariantDB.cpp $(SHARED)/Math/rtPlane.cpp \
@@ -38,10 +38,10 @@ $(SHARED)/FileSystem/FileSystemZip.cpp $(SHARED)/util/unzip/unzip.c $(SHARED)/ut
 $(SHARED)/FileSystem/StreamingInstanceZip.cpp $(SHARED)/FileSystem/StreamingInstanceFile.cpp \
 \
 \
-$(COMPPATH)/FocusInputComponent.cpp $(COMPPATH)/CustomInputComponent.cpp \
+$(COMPPATH)/FocusInputComponent.cpp $(COMPPATH)/FocusUpdateComponent.cpp $(COMPPATH)/CustomInputComponent.cpp $(COMPPATH)/ArcadeInputComponent.cpp \
 \
 \
-AndroidApp.cpp $(APP)/App.cpp
+$(APP)/App.cpp
 
 
 LOCAL_LDLIBS := -lGLESv1_CM -ldl -llog -lz

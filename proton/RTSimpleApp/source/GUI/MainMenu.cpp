@@ -4,6 +4,7 @@
 #include "DebugMenu.h"
 #include "EnterNameMenu.h"
 #include "ParticleTestMenu.h"
+#include "Entity/CustomInputComponent.h"
 
 
 void MainMenuOnSelect(VariantList *pVList) //0=vec2 point of click, 1=entity sent from
@@ -15,6 +16,7 @@ void MainMenuOnSelect(VariantList *pVList) //0=vec2 point of click, 1=entity sen
 	if (pEntClicked->GetName() == "ParticleTest")
 	{
 		//slide it off the screen and then kill the whole menu tree
+		pEntClicked->GetParent()->RemoveComponentByName("FocusInput");
 		SlideScreen(pEntClicked->GetParent(), false);
 		GetMessageManager()->CallEntityFunction(pEntClicked->GetParent(), 500, "OnDelete", NULL);
 		ParticleTestCreate(pEntClicked->GetParent()->GetParent());
@@ -23,6 +25,7 @@ void MainMenuOnSelect(VariantList *pVList) //0=vec2 point of click, 1=entity sen
 	if (pEntClicked->GetName() == "InputTest")
 	{
 		//slide it off the screen and then kill the whole menu tree
+		pEntClicked->GetParent()->RemoveComponentByName("FocusInput");
 		SlideScreen(pEntClicked->GetParent(), false);
 		GetMessageManager()->CallEntityFunction(pEntClicked->GetParent(), 500, "OnDelete", NULL);
 		EnterNameMenuCreate(pEntClicked->GetParent()->GetParent());
@@ -35,7 +38,6 @@ void MainMenuOnSelect(VariantList *pVList) //0=vec2 point of click, 1=entity sen
 		DebugMenuCreate(pEntClicked->GetParent());
 	}
 
-
 	GetEntityRoot()->PrintTreeAsText(); //useful for debugging
 }
 
@@ -46,6 +48,13 @@ Entity * MainMenuCreate(Entity *pParentEnt)
 	
 	AddFocusIfNeeded(pBG);
 	
+
+	//for android, so the back key (or escape on windows) will quit out of the game
+	EntityComponent *pComp = pBG->AddComponent(new CustomInputComponent);
+	//tell the component which key has to be hit for it to be activated
+	pComp->GetFunction("OnActivated")->sig_function.connect(1, boost::bind(&App::OnExitApp, GetApp(), _1));
+	pComp->GetVar("keycode")->Set(uint32(VIRTUAL_KEY_BACK));
+
 	Entity *pButtonEntity;
 	float x = 50;
 	float y = 40;
@@ -53,21 +62,14 @@ Entity * MainMenuCreate(Entity *pParentEnt)
 	
 	pButtonEntity = CreateTextButtonEntity(pBG, "ParticleTest", x, y, "ParticleTest"); y += ySpacer;
 	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MainMenuOnSelect);
-	//pButtonEntity->GetVar("alignment")->Set(uint32(ALIGNMENT_CENTER));
-	//BobEntity(pButtonEntity);
 
 	pButtonEntity = CreateTextButtonEntity(pBG, "InputTest", x, y, "Input Test"); y += ySpacer;
 	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MainMenuOnSelect);
-	//pButtonEntity->GetVar("alignment")->Set(uint32(ALIGNMENT_CENTER));
 
 	pButtonEntity = CreateTextButtonEntity(pBG, "Debug", x, y, "Debug and music test"); y += ySpacer;
 	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MainMenuOnSelect);
-	//pButtonEntity->GetVar("alignment")->Set(uint32(ALIGNMENT_CENTER));
-
-
 	
 	SlideScreen(pBG, true);
-
 	return pBG;
 }
 

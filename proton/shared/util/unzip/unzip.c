@@ -1698,3 +1698,19 @@ extern int ZEXPORT unzSetOffset (file, pos)
     s->current_file_ok = (err == UNZ_OK);
     return err;
 }
+
+
+/* Additions by Seth A. Robinson '2010 */
+extern int ZEXPORT unzGetRawFilePos(file)
+unzFile file;
+{
+	unz_s* s;
+
+	if (file==NULL)
+		return 0;
+	s=(unz_s*)file;
+	if (!s->current_file_ok)
+		return 0;
+	
+	return s->pfile_in_zip_read->pos_in_zipfile;
+}

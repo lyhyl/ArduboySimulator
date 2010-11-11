@@ -8,12 +8,10 @@
 ParticleTestComponent::ParticleTestComponent()
 {
 	SetName("ParticleTest");
-	
 }
 
 ParticleTestComponent::~ParticleTestComponent()
 {
-	
 }
 
 void ParticleTestComponent::OnAdd(Entity *pEnt)
@@ -107,6 +105,7 @@ void ParticleTestComponent::OnUpdate(VariantList *pVList)
 	/* it's recommended to use L_ParticleEffect::set_velocity() than just
 	to use L_ParticleEffect::set_position() if the desired position of effect
 	is not static or jumping. */
+
 	m_dropper.set_velocity(vel);
 	m_dropper.run(GetBaseApp()->GetGameDeltaTick());
 	m_explosion.run(GetBaseApp()->GetGameDeltaTick());
@@ -114,9 +113,7 @@ void ParticleTestComponent::OnUpdate(VariantList *pVList)
 	/* set position(although velocity has been set before) to avoid error
 	being accumulated.*/
 	m_dropper.set_position(current_pos.x, current_pos.y);
-
 	m_emitter.run(GetBaseApp()->GetGameDeltaTick(), false);
-
 }
 
 
@@ -124,17 +121,17 @@ void ParticleTestComponent::OnInput( VariantList *pVList )
 {
 	//0 = message type, 1 = parent coordinate offset
 	CL_Vec2f pt = pVList->Get(1).GetVector2();
-	//pt += GetAlignmentOffset(*m_pSize2d, eAlignment(*m_pAlignment));
 
 	switch (eMessageType( int(pVList->Get(0).GetFloat())))
 	{
 	case MESSAGE_TYPE_GUI_CLICK_START:
 		m_emitter.emit(pt.x, pt.y);
-		
 		break;
+
 	case MESSAGE_TYPE_GUI_CLICK_END:
 		m_explodeFire.set_position(pt.x, pt.y);
 		break;
+
 	case MESSAGE_TYPE_GUI_CLICK_MOVE:
 		m_explodeFire.set_position(pt.x, pt.y);
 		break;

@@ -24,7 +24,11 @@ public:
 	virtual void OnEnterForeground();
 	virtual void Update();
 	void OnExitApp(VariantList *pVarList);
+	
+	
+	//we'll wire these to connect to some signals we care about
 	void OnAccel(VariantList *pVList);
+	void OnArcadeInput(VariantList *pVList);
 
 private:
 

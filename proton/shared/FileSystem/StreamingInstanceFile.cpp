@@ -53,3 +53,11 @@ bool StreamingInstanceFile::IsFinished()
 
 	return feof(m_fp) != 0;
 }
+
+void StreamingInstanceFile::SeekFromStart( int byteCount )
+{
+	assert(m_fp);
+	if (!m_fp) return;
+	fseek(m_fp, byteCount, SEEK_SET);
+
+}

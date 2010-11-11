@@ -12,17 +12,19 @@ CLANMATH := $(SHARED)/ClanLib-2.0/Sources/Core/Math
 ZLIBPATH := $(SHARED)/util/zlib
 PPATH := ../../../shared/Renderer/linearparticle/sources
 
-LOCAL_CFLAGS := -DANDROID_NDK -DBUILD_ANDROID\
-                -DGC_BUILD_ANDROID
+#release flags
+LOCAL_CFLAGS := -DANDROID_NDK -DBUILD_ANDROID -DGC_BUILD_ANDROID -DNDEBUG
+LOCAL_CPPFLAGS := -DGC_BUILD_C -DANDROID_NDK -DBUILD_ANDROID -DNDEBUG
 
-
-LOCAL_CPPFLAGS := -DGC_BUILD_C -DANDROID_NDK -DBUILD_ANDROID -D_DEBUG
+#debug flags
+#LOCAL_CFLAGS := -DANDROID_NDK -DBUILD_ANDROID -DGC_BUILD_ANDROID -D_DEBUG
+#LOCAL_CPPFLAGS := -DGC_BUILD_C -DANDROID_NDK -DBUILD_ANDROID -D_DEBUG
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/$(SHARED) \
  $(LOCAL_PATH)/$(APP) $(LOCAL_PATH)/$(SHARED)/ClanLib-2.0/Sources $(LOCAL_PATH)/$(SHARED)/util/boost
                 
 LOCAL_SRC_FILES := \
-	$(SHARED)/PlatformSetup.cpp $(SHARED)/android/AndroidUtils.cpp $(SHARED)/Audio/AudioManager.cpp $(SHARED)/Audio/AudioManagerAndroid.cpp\
+	$(SHARED)/PlatformSetup.cpp $(SHARED)/android/AndroidUtils.cpp $(SHARED)/android/AndroidApp.cpp $(SHARED)/Audio/AudioManager.cpp $(SHARED)/Audio/AudioManagerAndroid.cpp\
 $(CLANMATH)/angle.cpp $(CLANMATH)/mat3.cpp $(CLANMATH)/mat4.cpp $(CLANMATH)/rect.cpp $(CLANMATH)/vec2.cpp $(CLANMATH)/vec3.cpp $(CLANMATH)/vec4.cpp \
 $(SHARED)/Entity/Entity.cpp $(SHARED)/Entity/Component.cpp $(SHARED)/GUI/RTFont.cpp $(SHARED)/Manager/Console.cpp \
 $(SHARED)/Manager/GameTimer.cpp $(SHARED)/Manager/MessageManager.cpp $(SHARED)/Manager/ResourceManager.cpp $(SHARED)/Manager/VariantDB.cpp $(SHARED)/Math/rtPlane.cpp \
@@ -46,7 +48,7 @@ $(COMPPATH)/TouchHandlerComponent.cpp $(COMPPATH)/SelectButtonWithCustomInputCom
 $(PPATH)/L_Defination.cpp $(PPATH)/L_DroppingEffect.cpp $(PPATH)/L_EffectEmitter.cpp $(PPATH)/L_ExplosionEffect.cpp $(PPATH)/L_MotionController.cpp $(PPATH)/L_Particle.cpp \
 $(PPATH)/L_ParticleEffect.cpp $(PPATH)/L_ParticleMem.cpp $(PPATH)/L_ParticleSystem.cpp $(PPATH)/L_ShootingEffect.cpp $(PPATH)/L_EffectManager.cpp \
 \
-AndroidApp.cpp $(APP)/App.cpp $(APP)/Component/ParticleTestComponent.cpp $(APP)/GUI/DebugMenu.cpp $(APP)/GUI/EnterNameMenu.cpp $(APP)/GUI/MainMenu.cpp \
+$(APP)/App.cpp $(APP)/Component/ParticleTestComponent.cpp $(APP)/GUI/DebugMenu.cpp $(APP)/GUI/EnterNameMenu.cpp $(APP)/GUI/MainMenu.cpp \
 $(APP)/GUI/ParticleTestMenu.cpp
 
 

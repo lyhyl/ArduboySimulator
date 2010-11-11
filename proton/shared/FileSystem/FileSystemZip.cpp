@@ -28,7 +28,63 @@ bool FileSystemZip::Init(string zipFileName)
 	LogMsg("Mounted zip as file system: %s", zipFileName.c_str());
 
 	m_zipFileName = zipFileName; //save it in case we need to spawn more zip readers for streaming operations
+	
+	CacheIndex();
 	return true; //success
+}
+
+void FileSystemZip::CacheIndex()
+{
+	assert(m_cache.empty() && "Why would you want to call this twice?");
+
+	uLong i;
+	unz_global_info gi;
+	int err;
+
+	err = unzGetGlobalInfo (m_uf,&gi);
+
+	if (err!=UNZ_OK)
+	{
+		LogError("error %d with zipfile in unzGetGlobalInfo \n",err);
+		return;
+	}
+
+	ZipCacheEntry entry;
+
+	for (i=0;i<gi.number_entry;i++)
+	{
+		char filename_inzip[512];
+		unz_file_info file_info;
+		uLong ratio=0;
+		char charCrypt=' ';
+		err = unzGetCurrentFileInfo(m_uf,&file_info,filename_inzip,sizeof(filename_inzip),NULL,0,NULL,0);
+
+		if (err!=UNZ_OK)
+		{
+			LogError("error %d with zipfile in unzGetCurrentFileInfo\n",err);
+			break;
+		}
+		
+		err = unzGetFilePos(m_uf, &entry.m_filepos);
+		if (err!=UNZ_OK)
+		{
+			LogError("error %d with zipfile in unzGetFilePos\n",err);
+			break;
+		}
+		m_cache[filename_inzip] = entry;
+
+		if ((i+1)<gi.number_entry)
+		{
+			err = unzGoToNextFile(m_uf);
+			if (err!=UNZ_OK)
+			{
+				LogError("error %d with zipfile in unzGoToNextFile\n",err);
+				break;
+			}
+		}
+	}
+
+	LogMsg("Cache has %d files.", m_cache.size());
 }
 
 vector<string> FileSystemZip::GetContents()
@@ -78,18 +134,37 @@ vector<string> FileSystemZip::GetContents()
 
 byte * FileSystemZip::Get( string fileName, int *pSizeOut )
 {
+	zipCacheMap::iterator itor = m_cache.find(m_rootDir+fileName);
+
+	if (itor == m_cache.end())
+	{
+		return NULL; //not found in this zip
+		//bingo!
+	}
 	
 	int err = UNZ_OK;
+
+	err = unzGoToFilePos(m_uf, &itor->second.m_filepos);
+	
+	if (err!=UNZ_OK)
+	{
+		LogError("error %d with zipfile in unzGoToFilePos",err);
+		return false;
+	}
+
+	/*
+	//old slow way of locating a file
 	if (unzLocateFile(m_uf,(m_rootDir+fileName).c_str(),CASESENSITIVITY)!=UNZ_OK)
 	{
 		return NULL;
 	}
+	*/
 
 	unz_file_info file_info;
 
 	char st_filename_inzip[512];
 
-
+	
 	err = unzGetCurrentFileInfo(m_uf,&file_info,st_filename_inzip,sizeof(st_filename_inzip),NULL,0,NULL,0);
 
 	if (err!=UNZ_OK)
@@ -145,15 +220,24 @@ void FileSystemZip::SetRootDirectory( string rootDir )
 
 StreamingInstance * FileSystemZip::GetStreaming( string fileName, int *pSizeOut )
 {
-	int err = UNZ_OK;
-	if (unzLocateFile(m_uf,(m_rootDir+fileName).c_str(),CASESENSITIVITY)!=UNZ_OK)
+	zipCacheMap::iterator itor = m_cache.find(m_rootDir+fileName);
+
+	if (itor == m_cache.end())
 	{
-		return NULL;
+		return NULL; //not found in this zip
 	}
 
+	
 	//ok, we now now that it exists.  Let's create a streaming zip reader and return it.
 	//To be able to properly handle multiple file access on the same zip, we have to create a new object that tracks the
 	//zip itself.
+
+
+//	int err = UNZ_OK;
+
+//	err = unzGoToFilePos(m_uf, &itor->second.m_filepos);
+
+	
 
 	StreamingInstanceZip *pStream = new StreamingInstanceZip;
 
@@ -168,7 +252,7 @@ StreamingInstance * FileSystemZip::GetStreaming( string fileName, int *pSizeOut 
 	{
 		pStream->SetRootDirectory(m_rootDir.substr(0, m_rootDir.length()-1));
 	}
-	if (!pStream->Open(fileName))
+	if (!pStream->OpenWithCacheEntry(&itor->second))
 	{
 		LogMsg("Error opening the file %s from the zip %s.", fileName.c_str(), m_zipFileName.c_str());
 		delete pStream;
@@ -180,11 +264,48 @@ StreamingInstance * FileSystemZip::GetStreaming( string fileName, int *pSizeOut 
 
 bool FileSystemZip::FileExists( string fileName )
 {
-	int err = UNZ_OK;
-	if (unzLocateFile(m_uf,(m_rootDir+fileName).c_str(),CASESENSITIVITY)!=UNZ_OK)
+	
+	zipCacheMap::iterator itor = m_cache.find(m_rootDir+fileName);
+
+	if (itor == m_cache.end())
 	{
+		return NULL; //not found in this zip
+	}
+	return true;
+}
+
+int FileSystemZip::GetFileSize( string fileName )
+{
+	
+	zipCacheMap::iterator itor = m_cache.find(m_rootDir+fileName);
+
+	if (itor == m_cache.end())
+	{
+		return 0; //not found in this zip
+	}
+	return true;
+	
+
+	int err = UNZ_OK;
+
+	err = unzGoToFilePos(m_uf, &itor->second.m_filepos);
+
+	if (err!=UNZ_OK)
+	{
+		LogError("error %d with unzGoToFilePos in unzGetCurrentFileInfo",err);
+		return 0;
+	}
+
+	unz_file_info file_info;
+	char st_filename_inzip[512];
+
+	err = unzGetCurrentFileInfo(m_uf,&file_info,st_filename_inzip,sizeof(st_filename_inzip),NULL,0,NULL,0);
+
+	if (err!=UNZ_OK)
+	{
+		LogError("error %d with zipfile in unzGetCurrentFileInfo",err);
 		return false;
 	}
 
-	return true;
+	return file_info.uncompressed_size;
 }

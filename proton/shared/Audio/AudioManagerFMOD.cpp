@@ -493,7 +493,8 @@ int AudioManagerFMOD::GetMemoryUsed()
 
 void AudioManagerFMOD::SetFrequency( AudioHandle soundID, int freq )
 {
-	assert(system && soundID);
+	assert(system);
+	if (!soundID) return;
 	FMOD::Channel *pChannel = (FMOD::Channel*) soundID;
 	pChannel->setFrequency(float(freq));
 
@@ -517,7 +518,8 @@ uint32 AudioManagerFMOD::GetPos( AudioHandle soundID )
 
 void AudioManagerFMOD::SetPos( AudioHandle soundID, uint32 posMS )
 {
-	assert(system && soundID);
+	assert(system);
+	if (!soundID) return;
 	FMOD::Channel *pChannel = (FMOD::Channel*) soundID;
 	
 	pChannel->setPosition(posMS, FMOD_TIMEUNIT_MS);
@@ -526,7 +528,8 @@ void AudioManagerFMOD::SetPos( AudioHandle soundID, uint32 posMS )
 
 void AudioManagerFMOD::SetVol( AudioHandle soundID, float vol )
 {
-	assert(system && soundID);
+	assert(system);
+	if (!soundID) return;
 	FMOD::Channel *pChannel = (FMOD::Channel*) soundID;
 	pChannel->setVolume(vol);
 }

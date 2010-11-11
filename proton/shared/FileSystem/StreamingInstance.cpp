@@ -94,3 +94,9 @@ bool StreamingInstance::ReadLineOfText( char *buffer, int bufferSize )
 	}
 
 }
+
+void StreamingInstance::SeekFromStart( int byteCount )
+{
+	assert(!"Seek not supported with this this streaming implementation");
+
+}

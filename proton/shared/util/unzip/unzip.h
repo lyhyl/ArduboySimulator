@@ -351,7 +351,8 @@ extern uLong ZEXPORT unzGetOffset (unzFile file);
 /* Set the current file offset */
 extern int ZEXPORT unzSetOffset (unzFile file, uLong pos);
 
-
+/* Get actual file location, useful for fopening() to a file position on your own */
+extern int ZEXPORT unzGetRawFilePos(unzFile file);
 
 #ifdef __cplusplus
 }

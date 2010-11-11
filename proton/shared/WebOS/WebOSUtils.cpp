@@ -290,7 +290,7 @@ bool RTCreateDirectory(const std::string &dir_name)
 
 void CreateDirectoryRecursively(string basePath, string path)
 {
-	LogMsg("CreateDirectoryRecursively url not done");
+	LogMsg("CreateDirectoryRecursively not done");
 	assert(!"no!");
 	return;
 	
@@ -322,7 +322,7 @@ vector<string> GetDirectoriesAtPath(string path)
 
 
 	
-	LogMsg(" GetDirectoriesAtPathurl not done");
+	LogMsg(" GetDirectoriesAtPathurl not done.. copy from android version?");
 	assert(!"no!");
 	return v;
 
@@ -354,7 +354,7 @@ vector<string> GetFilesAtPath(string path)
 {
 	vector<string> v;
 
-	LogMsg(" GetFilesAtPath not done");
+	LogMsg(" GetFilesAtPath not done..copy from android version?");
 	assert(!"no!");
 return v;
 

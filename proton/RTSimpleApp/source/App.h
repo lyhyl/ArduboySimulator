@@ -32,7 +32,8 @@ public:
 	Variant * GetVar(const string &keyName );
 	Variant * GetVarWithDefault(const string &varName, const Variant &var) {return m_varDB.GetVarWithDefault(varName, var);}
 	int GetSpecial();
-	
+	void OnExitApp(VariantList *pVarList);
+
 private:
 
 	bool m_bDidPostInit;

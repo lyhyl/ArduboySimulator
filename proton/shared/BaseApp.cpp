@@ -6,7 +6,7 @@
 #if defined( WIN32) && defined(_DEBUG)
 	//for testing the surface loading and unloading that the android version uses.  I don't really see a need to use it
 	//on any other platform yet.
-	//#define C_SURFACE_UNLOAD_TEXTURES
+	#define C_SURFACE_UNLOAD_TEXTURES
 #endif
 
 #ifdef _IRR_STATIC_LIB_
@@ -239,18 +239,23 @@ void BaseApp::OnMessage(Message &m)
 					m_sig_input(&v);
 					break;
 				}
-
-				
+	
 
 			case MESSAGE_TYPE_GUI_ACCELEROMETER:
 				{
 					v.Get(0).Set((float)m.GetType());
 					v.Get(1).Set(m.Get().GetVector3());
-									
-					m_sig_accel(&v);
+					m_sig_accel(&v);				
 					break;
 				}
-			
+			case MESSAGE_TYPE_GUI_TRACKBALL:
+				{
+					v.Get(0).Set((float)m.GetType());
+					v.Get(1).Set(m.Get().GetVector3());
+					m_sig_trackball(&v);
+					break;
+				}
+
 			case MESSAGE_TYPE_OS_CONNECTION_CHECKED:
 				{
 					v.Get(0).Set((float)m.GetType());
@@ -388,7 +393,7 @@ void BaseApp::OnEnterForeground()
 		LogMsg("Entering foreground");
 #endif
 	#ifdef C_SURFACE_UNLOAD_TEXTURES
-		GetBaseApp()->m_sig_loadSurfaces(); //nah, we'll let them load on demand instead to reduce the delay
+		GetBaseApp()->m_sig_loadSurfaces(); //for anyone who cares
 	#endif
 		m_sig_enterforeground(NULL);
 

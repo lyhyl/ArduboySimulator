@@ -21,7 +21,7 @@ public:
 	virtual bool ReadLineOfText( char *pBuffer, int bufferSize );
 	virtual bool IsFinished() = 0;
 	virtual int Read(byte * pBufferOut, int maxBytesToRead) = 0;
-
+	virtual void SeekFromStart(int byteCount);
 protected:
 private:
 };

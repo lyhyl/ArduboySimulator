@@ -111,10 +111,20 @@ void VariantDB::CallFunctionIfExists( const string &keyName, VariantList *pVList
 	}
 }
 
-bool VariantDB::Save(const string &fileName)
+bool VariantDB::Save(const string &fileName, bool bAddBasePath)
 {
 	
-	FILE *fp = fopen( (GetSavePath()+fileName).c_str(), "wb");
+	string f;
+
+	if (bAddBasePath)
+	{
+		f = GetSavePath()+fileName;
+	} else
+	{
+		f = fileName;
+	}
+
+	FILE *fp = fopen( f.c_str(), "wb");
 	
 	if (!fp)
 	{
@@ -149,12 +159,22 @@ bool VariantDB::Save(const string &fileName)
 	return true;
 }
 
-bool VariantDB::Load( const string &fileName, bool *pFileExistedOut )
+bool VariantDB::Load( const string &fileName, bool *pFileExistedOut, bool bAddBasePath )
 {
 	
+	string f;
+
+	if (bAddBasePath)
+	{
+		f = GetSavePath()+fileName;
+	} else
+	{
+		f = fileName;
+	}
+
 	assert(m_data.size() == 0 && "Don't have junk in here when loading.");
 
-	FILE *fp = fopen( (GetSavePath()+fileName).c_str(), "rb");
+	FILE *fp = fopen( f.c_str(), "rb");
 
 	if (!fp)
 	{

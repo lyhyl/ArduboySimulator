@@ -1,5 +1,5 @@
 For the documentation, tutorials, wiki, and forums, please visit:
 
-www.rtsoft.com/proton
+www.protonsdk.com
 
 -Seth (seth@rtsoft.com)
