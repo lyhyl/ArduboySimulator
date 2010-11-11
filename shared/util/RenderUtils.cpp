@@ -412,6 +412,7 @@ void SetupScreenInfo(int x, int y, int orientation)
 		}
 
 		NotifyOSOfOrientationPreference(eOrientationMode(orientation));
+		if (IsBaseAppInitted())
 		GetBaseApp()->OnScreenSizeChange();
 }
 
@@ -664,7 +665,7 @@ CL_Vec3f GetOGLPos(int x, int y, float z, CL_Vec3f *pNormalOut, CL_Mat4f *pModel
 	GLfloat posX, posY, posZ;
 
 	*((CL_Mat4f*)modelview) = *pModelMatrix;
-	*((CL_Mat4f*)projection) = GetBaseApp()->GetProjectionMatrix();
+	*((CL_Mat4f*)projection) = *GetBaseApp()->GetProjectionMatrix();
 	//glGetFloatv( GL_PROJECTION_MATRIX, projection );
 	
 	viewport[0] = 0;

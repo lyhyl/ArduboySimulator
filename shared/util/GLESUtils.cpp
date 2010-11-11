@@ -171,7 +171,7 @@ void GenerateSetPerspectiveFOV(float fovy, float aspect, float zNear, float zFar
 	xmax = ymax * aspect;
 
 	mat.multiply( CL_Mat4f::frustum(xmin, xmax, ymin, ymax, zNear, zFar));
-	GetBaseApp()->GetProjectionMatrix() = mat;
+	*GetBaseApp()->GetProjectionMatrix() = mat;
 	//glFrustumf(xmin, xmax, ymin, ymax, zNear, zFar);
 	glLoadMatrixf((GLfloat*)mat);
 

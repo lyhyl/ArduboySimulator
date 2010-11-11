@@ -21,7 +21,7 @@ SoftSurface::~SoftSurface()
 
 void SoftSurface::Kill()
 {
-	if (m_pPixels)
+	if (m_pPixels && IsBaseAppInitted())
 	{
 		GetBaseApp()->ModMemUsed(-m_memUsed);
 		m_memUsed = 0;
@@ -82,7 +82,7 @@ void SoftSurface::FillColor( glColorBytes color )
 	} else if (m_surfaceType == SURFACE_PALETTE_8BIT)
 	{
 		int indexColor = color.r;
-		//TODO: I believe Android has a memset bug where this will get set to on pre 2.2 devices.. rewrite for them?
+		//TODO: I believe Android has a memset bug where this will get set to 0 on pre 2.2 devices.. rewrite for them?
 		memset(m_pPixels, indexColor, GetPitch() * GetHeight());
 
 	} else

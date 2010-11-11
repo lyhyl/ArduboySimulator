@@ -532,50 +532,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\android\jni\AndroidApp.cpp"
-					>
-					<FileConfiguration
-						Name="Common Debug|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Common Release|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug GL|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release GL|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug WebOS|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
 					RelativePath="..\android\AndroidManifest.xml"
 					>
 				</File>
@@ -618,6 +574,10 @@
 			</File>
 			<File
 				RelativePath="..\..\shared\BaseApp.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\shared\platformenums.h"
 				>
 			</File>
 			<File
@@ -2545,6 +2505,50 @@
 				Name="android"
 				>
 				<File
+					RelativePath="..\..\shared\android\AndroidApp.cpp"
+					>
+					<FileConfiguration
+						Name="Common Debug|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Common Release|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug GL|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release GL|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug WebOS|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
 					RelativePath="..\..\shared\android\AndroidUtils.cpp"
 					>
 					<FileConfiguration
@@ -2596,6 +2600,18 @@
 					RelativePath="..\..\shared\android\PlatformSetupAndroid.h"
 					>
 				</File>
+				<Filter
+					Name="app"
+					>
+					<File
+						RelativePath="..\..\shared\android\src\com\rtsoft\shared\SharedActivity.java"
+						>
+					</File>
+					<File
+						RelativePath="..\..\shared\android\src\com\rtsoft\shared\SharedMultiTouchInput.java"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="FileSystem"
@@ -2650,6 +2666,14 @@
 				</File>
 			</Filter>
 		</Filter>
+		<File
+			RelativePath="..\..\license.txt"
+			>
+		</File>
+		<File
+			RelativePath="..\..\Programmer Readme.txt"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

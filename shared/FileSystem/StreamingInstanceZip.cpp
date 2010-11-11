@@ -7,6 +7,7 @@ StreamingInstanceZip::StreamingInstanceZip()
 {
 	m_uf = NULL;
 	m_bIsFinished = true;
+	m_pFile = NULL;
 }
 
 StreamingInstanceZip::~StreamingInstanceZip()
@@ -25,22 +26,17 @@ bool StreamingInstanceZip::Init(string zipFileName)
 	{
 		return false;
 	}
+	m_zipFileName = zipFileName;
 
 	return true; //success
 }
 
-bool StreamingInstanceZip::Open( string fName)
+bool StreamingInstanceZip::OpenFileAtCurrentLocation()
 {
-	int err = UNZ_OK;
-	
-	if (unzLocateFile(m_uf,(m_rootDir+fName).c_str(),CASESENSITIVITY)!=UNZ_OK)
-	{
-		return false;
-	}
-	
+
 	char st_filename_inzip[512];
 
-	err = unzGetCurrentFileInfo(m_uf,&m_file_info,st_filename_inzip,sizeof(st_filename_inzip),NULL,0,NULL,0);
+	int err = unzGetCurrentFileInfo(m_uf,&m_file_info,st_filename_inzip,sizeof(st_filename_inzip),NULL,0,NULL,0);
 
 	if (err!=UNZ_OK)
 	{
@@ -60,8 +56,36 @@ bool StreamingInstanceZip::Open( string fName)
 	}
 
 	m_bIsFinished = false;
-	
+
 	return true;
+
+}
+
+bool StreamingInstanceZip::Open( string fName)
+{
+	
+	Close();
+
+	int err = UNZ_OK;
+	
+	if (unzLocateFile(m_uf,(m_rootDir+fName).c_str(),CASESENSITIVITY)!=UNZ_OK)
+	{
+		return false;
+	}
+	
+	return OpenFileAtCurrentLocation();
+}
+
+
+bool StreamingInstanceZip::OpenWithCacheEntry(ZipCacheEntry *pCacheEntry)
+{
+	//use this instead of doing a full search, much faster
+	
+	Close();
+	int err = UNZ_OK;
+	err = unzGoToFilePos(m_uf, &pCacheEntry->m_filepos);
+
+	return OpenFileAtCurrentLocation();
 }
 
 bool StreamingInstanceZip::IsFinished()
@@ -83,6 +107,21 @@ int StreamingInstanceZip::Read( byte * pBufferOut, int maxBytesToRead )
 {
 	if (m_bIsFinished) return 0;
 
+
+	if (m_pFile)
+	{
+		//special way using a real file pointer
+
+		int bytesRead = fread(pBufferOut, 1, maxBytesToRead,  m_pFile);
+
+		if (bytesRead < maxBytesToRead || feof(m_pFile))
+		{
+			Close();
+		}
+		return bytesRead;
+	}
+
+
 	int totalBytesWritten = 0;
 
 	while(maxBytesToRead >= 0)
@@ -96,6 +135,8 @@ int StreamingInstanceZip::Read( byte * pBufferOut, int maxBytesToRead )
 			if (maxBytesToRead == 0) return totalBytesWritten;
 		}
 
+	
+		
 		//if we got here, it means we need to fill our buffer again
 		int err = unzReadCurrentFile(m_uf,m_buffer,BUFFER_SIZE);
 		if (err<0)	
@@ -137,4 +178,42 @@ void StreamingInstanceZip::Close()
 		m_bIsFinished = true;
 
 	}
+
+	if (m_pFile) fclose(m_pFile);
+
+}
+
+void StreamingInstanceZip::SeekFromStart( int byteCount )
+{
+	
+	int offset = unzGetRawFilePos(m_uf)+byteCount;
+	//since we moved, a readcache won't make sense anymore if it existed
+
+#ifdef _DEBUG
+	char charCrypt=' ';
+	char filename_inzip[512];
+	unz_file_info file_info;
+	uLong ratio=0;
+
+	int err = unzGetCurrentFileInfo(m_uf,&file_info,filename_inzip,sizeof(filename_inzip),NULL,0,NULL,0);
+
+	assert (file_info.compression_method == 0 && "Can't seek in a compressed file, I mean, it'd be slow");
+#endif
+
+
+	if (m_pFile) fclose(m_pFile);
+
+	m_pFile = fopen(m_zipFileName.c_str(), "rb");
+
+	if (m_pFile)
+	{
+		m_bufferBytesLeft = 0;
+		m_bufferCurIndex = 0;
+
+		fseek(m_pFile, offset, SEEK_SET);
+	}
+
+
+
+
 }

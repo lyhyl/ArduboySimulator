@@ -1,6 +1,8 @@
 #ifndef platformenums_h__
 #define platformenums_h__
 
+//these are defines and utility functions that are implemented on every platform. (Implemented in AndroidUtils.cpp, or WinUtils.cpp, or ioSUtils.cpp, etc)
+
 #include <string>
 #include <vector>
 
@@ -61,7 +63,7 @@ void NotifyOSOfOrientationPreference(eOrientationMode orientation);
 
 string GetBaseAppPath();
 string GetSavePath();
-string GetAppCachePath();
+string GetAppCachePath(); //on iPhone, returns path to save user data that isn't backed up, on Android, returns external sd card path or "" if not available
 void CreateAppCacheDirIfNeeded();
 int GetYOffset();
 unsigned int GetSystemTimeTick();

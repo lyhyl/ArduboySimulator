@@ -21,6 +21,7 @@ public:
 	virtual byte *Get( string fileName, int *pSizeOut) = 0;
 	virtual StreamingInstance * GetStreaming(string fileName, int *pSizeOut) = 0; //pSizeOut currently always set to 0.  Returns null on fail. You must DELETE !
 	virtual bool FileExists(string fileName) = 0;
+	virtual int GetFileSize(string fileName) = 0;
 
 protected:
 	

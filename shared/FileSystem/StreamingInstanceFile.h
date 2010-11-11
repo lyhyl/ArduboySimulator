@@ -22,7 +22,7 @@ public:
 	virtual bool IsFinished();
 	virtual int Read(byte * pBufferOut, int maxBytesToRead);
 	virtual void Close();
-
+	virtual void SeekFromStart(int byteCount);
 protected:
 	
 

@@ -297,9 +297,6 @@ AudioHandle AudioManagerAndroid::Play( string fName, bool bLooping /*= false*/, 
 		}
 	}
 
-	//play it
-	//pObject->m_pLastChannelToUse = Mix_PlayChannel(-1, pObject->m_pSound, loops);
-
 	return (AudioHandle) 0 ;
 }
 
@@ -416,17 +413,50 @@ int AudioManagerAndroid::GetMemoryUsed()
 
 void AudioManagerAndroid::SetFrequency( AudioHandle soundID, int freq )
 {
+	
 	assert(soundID);
 	//Android::Channel *pChannel = (Android::Channel*) soundID;
-	//pChannel->setFrequency(float(freq));
+	
+	float rate = float(freq)/float(22050);
+
+	//force value to be within range
+	rate = rt_min(2.0, rate);
+	rate = rt_max(0.5, rate);
+
+#ifdef _DEBUG
+	//LogMsg("Setting freq to %0.2f", rate);
+#endif
+
+	JNIEnv *env = GetJavaEnv();
+	if (env)
+	{
+		jclass cls = env->FindClass(GetAndroidMainClassName());
+		jmethodID mid = env->GetStaticMethodID(cls,
+			"sound_set_rate",
+			"(IF)V");
+		env->CallStaticIntMethod(cls, mid, jint(soundID), jfloat(rate));
+	}
 
 }
 
 void AudioManagerAndroid::SetPan( AudioHandle soundID, float pan )
 {
-	assert(soundID);
-	//	Android::Channel *pChannel = (Android::Channel*) soundID;
-	//	pChannel->setPan(pan);
+	if (soundID == 0) return;
+	
+	JNIEnv *env = GetJavaEnv();
+	if (env)
+	{
+		jclass cls = env->FindClass(GetAndroidMainClassName());
+		jmethodID mid = env->GetStaticMethodID(cls,
+			"sound_set_vol",
+			"(IFF)V");
+		
+		float volLeft = rt_max(1, 1- pan);
+		float volRight = rt_max(1, 1- (-pan));
+
+		LogMsg("%.2f converted to l %.2f, r %.2f");
+		env->CallStaticIntMethod(cls, mid, jint(soundID), jfloat(volLeft), jfloat(volRight));
+	}
 }
 
 
@@ -477,8 +507,20 @@ void AudioManagerAndroid::SetVol( AudioHandle soundID, float vol )
 		return;
 	}
 	assert(soundID);
-	LogMsg("SetVol is unsupported for sounds");
-	//pChannel->setVolume(vol);
+	
+#ifdef _DEBUG
+	LogMsg("Setting vol to %.2f", vol);
+#endif
+	JNIEnv *env = GetJavaEnv();
+	if (env)
+	{
+		jclass cls = env->FindClass(GetAndroidMainClassName());
+		jmethodID mid = env->GetStaticMethodID(cls,
+			"sound_set_vol",
+			"(IFF)V");
+		env->CallStaticIntMethod(cls, mid, jint(soundID), jfloat(vol), jfloat(vol));
+	}
+
 }
 
 void AudioManagerAndroid::SetMusicVol(float vol )

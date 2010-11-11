@@ -31,10 +31,9 @@ Entity * ParticleTestCreate(Entity *pParentEnt)
 	pButtonEntity = CreateTextButtonEntity(pBG, "Back", 240, 290, "Back"); 
 	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&ParticleTestOnSelect);
 	pButtonEntity->GetVar("alignment")->Set(uint32(ALIGNMENT_CENTER));
+	AddHotKeyToButton(pButtonEntity, VIRTUAL_KEY_BACK); //for android's back button, or escape key in windows
 
 	SlideScreen(pBG, true);
-
-	
 	return pBG;
 }
 

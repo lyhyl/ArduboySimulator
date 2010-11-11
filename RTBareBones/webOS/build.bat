@@ -33,7 +33,7 @@ set SRC= %SHARED%\PlatformSetup.cpp  %SHARED%\WebOS\SDLMain.cpp %SHARED%\win\app
 %SHARED%\FileSystem\StreamingInstanceFile.cpp %SHARED%\BaseApp.cpp %SHARED%\util\unzip\unzip.c %SHARED%\util\unzip\ioapi.c
 
 REM **************************************** ENGINE COMPONENT SOURCE CODE FILES
-set COMPONENT_SRC=%COMPPATH%\CustomInputComponent.cpp %COMPPATH%\FocusInputComponent.cpp
+set COMPONENT_SRC=%COMPPATH%\CustomInputComponent.cpp %COMPPATH%\FocusInputComponent.cpp %COMPPATH%\FocusUpdateComponent.cpp %COMPPATH%\ArcadeInputComponent.cpp
 
 
 REM **************************************** ZLIB SOURCE CODE FILES

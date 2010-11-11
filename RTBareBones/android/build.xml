@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="rtbarebones" default="help">
 
-<!-- The local.properties file is created and updated by the 'android'
+  <!-- The local.properties file is created and updated by the 'android'
      tool.
      It contains the path to the SDK. It should *NOT* be checked into
      Version Control Systems. -->
-    <property file="local.properties" />
+  <property file="local.properties" />
 
-    <!-- The build.properties file can be created by you and is never touched
+  <!-- The build.properties file can be created by you and is never touched
          by the 'android' tool. This is the place to change some of the
          default property values used by the Ant rules.
          Here are some properties you may want to change/update:
@@ -24,30 +24,30 @@
          application and should be checked into Version Control Systems.
 
          -->
-    <property file="build.properties" />
+  <property file="build.properties" />
 
-    <!-- The default.properties file is created and updated by the 'android'
+  <!-- The default.properties file is created and updated by the 'android'
          tool, as well as ADT.
          This file is an integral part of the build system for your
          application and should be checked into Version Control Systems. -->
-    <property file="default.properties" />
+  <property file="default.properties" />
 
-    <!-- Custom Android task to deal with the project target, and import the
+  <!-- Custom Android task to deal with the project target, and import the
          proper rules.
          This requires ant 1.6.0 or above. -->
-    <path id="android.antlibs">
-        <pathelement path="${sdk.dir}/tools/lib/anttasks.jar" />
-        <pathelement path="${sdk.dir}/tools/lib/sdklib.jar" />
-        <pathelement path="${sdk.dir}/tools/lib/androidprefs.jar" />
-    </path>
+  <path id="android.antlibs">
+    <pathelement path="${sdk.dir}/tools/lib/anttasks.jar" />
+    <pathelement path="${sdk.dir}/tools/lib/sdklib.jar" />
+    <pathelement path="${sdk.dir}/tools/lib/androidprefs.jar" />
+  </path>
 
-    <taskdef name="setup"
-        classname="com.android.ant.SetupTask"
-        classpathref="android.antlibs" />
+  <taskdef name="setup"
+      classname="com.android.ant.SetupTask"
+      classpathref="android.antlibs" />
 
-<!-- extension targets. Uncomment the ones where you want to do custom work
+  <!-- extension targets. Uncomment the ones where you want to do custom work
      in between standard targets -->
-<!--
+  <!--
     <target name="-pre-build">
     </target>
     <target name="-pre-compile">
@@ -61,31 +61,73 @@
 -->
 
 
-<!--
+  <!--
 Here is where Seth setups a customized packaging so we can tell it to not compress certain filetypes.
 
 -->
-   <target name="-package-resources">
-        <echo>Packaging resources</echo>
-        <aapt executable="${aapt}"
-                command="package"
-                versioncode="${version.code}"
-                manifest="AndroidManifest.xml"
-                assets="${asset.absolute.dir}"
-                androidjar="${android.jar}"
-                apkfolder="${out.absolute.dir}"
-                resourcefilename="${resource.package.file.name}"
-                resourcefilter="${aapt.resource.filter}">
-            <res path="${resource.absolute.dir}" />
-            <!-- <nocompress /> forces no compression on any files in assets or res/raw -->
-            <nocompress extension="rtfont" /> 
-            <nocompress extension="rttex" /> 
-            <nocompress extension="wav" /> 
-        </aapt>
-    </target>
+  <target name="-package-resources">
+    <echo>Packaging resources</echo>
+    <aapt executable="${aapt}"
+            command="package"
+            versioncode="${version.code}"
+            manifest="AndroidManifest.xml"
+            assets="${asset.absolute.dir}"
+            androidjar="${android.jar}"
+            apkfolder="${out.absolute.dir}"
+            resourcefilename="${resource.package.file.name}"
+            resourcefilter="${aapt.resource.filter}">
+      <res path="${resource.absolute.dir}" />
+      <!-- <nocompress /> forces no compression on any files in assets or res/raw -->
+      <nocompress extension="rtfont" />
+      <nocompress extension="rttex" />
+      <nocompress extension="wav" />
+    
+    </aapt>
+  </target>
 
 
-    <!-- Execute the Android Setup task that will setup some properties
+  <!-- Compiles this project's .java files into .class files. -->
+  <target name="compile" depends="-resource-src, -aidl, -pre-compile"
+              description="Compiles project's .java files into .class files">
+    <if condition="${manifest.hasCode}">
+      <then>
+        <!-- If android rules are used for a test project, its classpath should include
+                     tested project's location -->
+        <condition property="extensible.classpath"
+                value="${tested.project.absolute.dir}/bin/classes"
+                else=".">
+          <isset property="tested.project.absolute.dir" />
+        </condition>
+        <condition property="extensible.libs.classpath"
+                value="${tested.project.absolute.dir}/libs"
+                else="./libs">
+          <isset property="tested.project.absolute.dir" />
+        </condition>
+        <javac encoding="ascii" target="1.5" debug="true" extdirs=""
+                destdir="${out.classes.absolute.dir}"
+                bootclasspathref="android.target.classpath"
+                verbose="${verbose}"
+                classpath="${extensible.classpath}"
+                classpathref="android.libraries.jars">
+          <src path="${source.absolute.dir}" />
+          <src path="../../shared/android/src" />
+          <src path="${gen.absolute.dir}" />
+          <src refid="android.libraries.src" />
+          <classpath>
+            <fileset dir="${external.libs.absolute.dir}" includes="*.jar" />
+            <fileset dir="${extensible.libs.classpath}" includes="*.jar" />
+          </classpath>
+        </javac>
+      </then>
+      <else>
+        <echo>hasCode = false. Skipping...</echo>
+      </else>
+    </if>
+  </target>
+
+
+
+  <!-- Execute the Android Setup task that will setup some properties
          specific to the target, and import the build rules files.
 
          The rules file is imported from
@@ -103,6 +145,6 @@ Here is where Seth setups a customized packaging so we can tell it to not compre
                below to <setup import="false" />. 
              - customize to your needs.
     -->
-    <setup />
+  <setup />
 
 </project>

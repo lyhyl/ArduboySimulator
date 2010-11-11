@@ -29,7 +29,6 @@ void DebugMenuOnSelect(VariantList *pVList) //0=vec2 point of click, 1=entity se
 		SlideScreen(pEntClicked->GetParent(), false);
 		AddFocusIfNeeded(pEntClicked->GetParent()->GetParent());
 		GetMessageManager()->CallEntityFunction(pEntClicked->GetParent(), 500, "OnDelete", NULL);
-		//DebugMenuCreate(GetParent()
 	}
 
 	GetEntityRoot()->PrintTreeAsText(); //useful for debugging
@@ -48,24 +47,19 @@ Entity * DebugMenuCreate(Entity *pParentEnt)
 
 	pButtonEntity = CreateTextButtonEntity(pBG, "FPS", x, y, "Toggle FPS Display"); y += ySpacer;
 	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&DebugMenuOnSelect);
-	//pButtonEntity->GetVar("alignment")->Set(uint32(ALIGNMENT_CENTER));
 	
 	pButtonEntity = CreateTextButtonEntity(pBG, "music_on", x, y, "Play bg music"); y += ySpacer;
 	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&DebugMenuOnSelect);
-	//pButtonEntity->GetVar("alignment")->Set(uint32(ALIGNMENT_CENTER));
 	
 	pButtonEntity = CreateTextButtonEntity(pBG, "music_off", x, y, "Stop bg music"); y += ySpacer;
 	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&DebugMenuOnSelect);
-	//pButtonEntity->GetVar("alignment")->Set(uint32(ALIGNMENT_CENTER));
 
 
 	pButtonEntity = CreateTextButtonEntity(pBG, "Back", x, y, "Back"); y += ySpacer;
 	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&DebugMenuOnSelect);
-	//pButtonEntity->GetVar("alignment")->Set(uint32(ALIGNMENT_CENTER));
-	
-	SlideScreen(pBG, true, 500);
-	
+	AddHotKeyToButton(pButtonEntity, VIRTUAL_KEY_BACK); //for android's back button, or escape key in windows
 
+	SlideScreen(pBG, true, 500);
 	return pBG;
 }
 

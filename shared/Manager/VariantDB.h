@@ -101,8 +101,8 @@ public:
 	Variant * GetVarWithDefault(const string &keyName, const Variant &vDefault);
 	int DeleteVarsStartingWith(string deleteStr);
 	//you can load and save the variables in the DB on the fly.  (Does nothing with the functions)
-	bool Save(const string &fileName);
-	bool Load(const string &fileName, bool *pFileExistedOut);
+	bool Save(const string &fileName, bool bAddBasePath = true);
+	bool Load(const string &fileName, bool *pFileExistedOut, bool bAddBasePath = true);
 	
 	void Print(); //for debugging, will LogMsg everything inside of it
 

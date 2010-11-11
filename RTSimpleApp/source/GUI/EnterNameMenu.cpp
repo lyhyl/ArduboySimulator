@@ -28,9 +28,7 @@ void EnterNameMenuOnSelect(VariantList *pVList) //0=vec2 point of click, 1=entit
 	//LogMsg("Clicked %s entity at %s", pEntClicked->GetName().c_str(),pVList->m_variant[0].Print().c_str());
 	if (pEntClicked->GetName() == "Continue")
 	{
-
 		string name = GetEntityRoot()->GetEntityByName("name_input_box")->GetComponentByName("InputTextRender")->GetVar("text")->GetString();
-
 		GetApp()->GetVar("name")->Set(HighScoreNameFilter(name)); //save it to our database so we can remember the default
 		LogMsg("Read %s for the name", GetApp()->GetVar("name")->GetString().c_str());
 		SlideScreen(pEntClicked->GetParent(), false);
@@ -60,18 +58,15 @@ Entity * EnterNameMenuCreate(Entity *pParentEnt)
 	//the continue button
 	pButtonEntity = CreateOverlayButtonEntity(pBG, "Continue","interface/summary_continue.rttex", 100, 282);
 	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&EnterNameMenuOnSelect);
-
+	AddHotKeyToButton(pButtonEntity, VIRTUAL_KEY_BACK); //for android's back button, or escape key in windows
 
 	pButtonEntity = CreateTextLabelEntity(pBG, "name", vTextAreaPos.x, vTextAreaPos.y+73, "`$Name: ");
 	//pButtonEntity->GetComponentByName("TextRender")->GetVar("font")->Set(uint32(FONT_LARGE));
 	float nameWidth = pButtonEntity->GetVar("size2d")->GetVector2().x;
 
 	//create input box
-
 	pButtonEntity = CreateInputTextEntity(pBG, "name_input_box", vTextAreaPos.x+nameWidth, vTextAreaPos.y+71, GetApp()->GetShared()->GetVarWithDefault("name", string("Player"))->GetString());
 	//pButtonEntity->GetComponentByName("InputTextRender")->GetVar("font")->Set(uint32(FONT_LARGE));
-
-	//a way to get our CreateTextBox function called in 500 seconds, but not called if the entity doesn't exist at that time
 
 	SlideScreen(pBG, true);
 	return pBG;

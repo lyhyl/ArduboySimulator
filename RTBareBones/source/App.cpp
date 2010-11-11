@@ -9,6 +9,7 @@
 
 #include "Entity/CustomInputComponent.h" //used for the back button (android)
 #include "Entity/FocusInputComponent.h" //needed to let the input component see input messages
+#include "Entity/ArcadeInputComponent.h" 
 
 MessageManager g_messageManager;
 MessageManager * GetMessageManager() {return &g_messageManager;}
@@ -99,6 +100,7 @@ void App::OnExitApp(VariantList *pVarList)
 #define C_DELAY_BETWEEN_SHAKES_MS 500
 
 //testing accelerometer readings. To enable the test, search below for "ACCELTEST"
+//Note: You'll need to look at the  debug log to see the output. (For android, run PhoneLog.bat from RTBareBones/android)
 void App::OnAccel(VariantList *pVList)
 {
 	
@@ -130,6 +132,57 @@ void App::OnAccel(VariantList *pVList)
 	}
 }
 
+
+//test for arcade keys.  To enable this test, search for TRACKBALL/ARCADETEST: below and uncomment the stuff under it.
+//Note: You'll need to look at the debug log to see the output.  (For android, run PhoneLog.bat from RTBareBones/android)
+void App::OnArcadeInput(VariantList *pVList)
+{
+
+	int vKey = pVList->Get(0).GetUINT32();
+	eVirtualKeyInfo keyInfo = (eVirtualKeyInfo) pVList->Get(1).GetUINT32();
+	
+	string pressed;
+
+	switch (keyInfo)
+	{
+		case VIRTUAL_KEY_PRESS:
+			pressed = "pressed";
+			break;
+
+		case VIRTUAL_KEY_RELEASE:
+			pressed = "released";
+			break;
+
+		default:
+			LogMsg("OnArcadeInput> Bad value of %d", keyInfo);
+	}
+	
+
+	string keyName = "unknown";
+
+	switch (vKey)
+	{
+		case VIRTUAL_KEY_DIR_LEFT:
+			keyName = "Left";
+			break;
+
+		case VIRTUAL_KEY_DIR_RIGHT:
+			keyName = "Right";
+			break;
+
+		case VIRTUAL_KEY_DIR_UP:
+			keyName = "Up";
+			break;
+
+		case VIRTUAL_KEY_DIR_DOWN:
+			keyName = "Down";
+			break;
+
+	}
+	
+	LogMsg("Arcade input: Hit %d (%s) (%s)", vKey, keyName.c_str(), pressed.c_str());
+}
+
 void App::Update()
 {
 	
@@ -157,6 +210,12 @@ void App::Update()
 		//ACCELTEST:  To test the accelerometer uncomment below: (will print values to the debug output)
 		//SetAccelerometerUpdateHz(25); //default is 0, disabled
 		//GetBaseApp()->m_sig_accel.connect(1, boost::bind(&App::OnAccel, this, _1));
+
+
+		//TRACKBALL/ARCADETEST: Uncomment below to see log messages on trackball/key movement input
+		//pEnt->AddComponent(new ArcadeInputComponent);
+		//GetBaseApp()->m_sig_arcade_input.connect(1, boost::bind(&App::OnArcadeInput, this, _1));
+		
 	}
 
 

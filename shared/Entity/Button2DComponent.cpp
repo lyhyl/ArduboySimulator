@@ -98,12 +98,6 @@ void Button2DComponent::OnOverStart(VariantList *pVList)
 		m_alphaSave = *m_pAlpha;
 		break;
 	}
-
-	if (*m_pButtonStyle == BUTTON_STYLE_CLICK_ON_TOUCH )
-	{
-		PerformClick(pVList);
-		return;
-	}
 	
 	UpdateButtonVisuals(NULL);
 

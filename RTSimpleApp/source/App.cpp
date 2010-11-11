@@ -48,7 +48,7 @@ BaseApp * GetBaseApp()
 	if (!g_pApp)
 	{
 		#ifndef NDEBUG
-		LogMsg("Creating app object")	;
+		LogMsg("Creating app object");
 		#endif
 		g_pApp = new App;
 	}
@@ -71,6 +71,14 @@ App::~App()
 	L_ParticleSystem::deinit();
 }
 
+void App::OnExitApp(VariantList *pVarList)
+{
+	LogMsg("Exiting the app");
+
+	OSMessage o;
+	o.m_type = OSMessage::MESSAGE_FINISH_APP;
+	GetBaseApp()->AddOSMessage(o);
+}
 
 //First, our function we're going to call with a function object in a second..
 void SaySomething(VariantList *pVlist)
@@ -90,8 +98,8 @@ bool App::Init()
 	if (GetEmulatedPlatformID() == PLATFORM_ID_ANDROID)
 	{
 		//if we do this, everything will be stretched/zoomed to fit the screen
+		SetLockedLandscape(false);  //because it's set in the app manifest, we don't have to rotate ourselves
 		SetupFakePrimaryScreenSize(480,320); //game will think its this size, and will be scaled up
-		SetLockedLandscape(false); //we don't allow portrait mode for this game
 
 	} else
 	{

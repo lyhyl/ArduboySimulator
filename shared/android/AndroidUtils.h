@@ -27,4 +27,5 @@ void AppOnKey( JNIEnv* env, jobject jobj, jint type, jint keycode, jint c);
 int AppOSMessageGet(JNIEnv* env);
 float AppGetLastOSMessageX(JNIEnv* env);
 void AppOnAccelerometerUpdate(JNIEnv* env, jobject jobj, jfloat x, jfloat y, jfloat z);
+void AppOnTrackball(JNIEnv* env, jobject jobj, jfloat x, jfloat y);
 #endif // WebOSUtils_h__

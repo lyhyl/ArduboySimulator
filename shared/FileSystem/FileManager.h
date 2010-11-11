@@ -51,6 +51,7 @@ public:
 	StreamingInstance * GetStreaming(string fileName, int *pSizeOut, bool bAddBasePath = true); //pSizeOut currently always set to 0.  Returns null on fail. You must DELETE !
 	void MountFileSystem(FileSystem* pFileSystem);
 	bool FileExists(string fileName, bool bAddBasePath = true);
+	int GetFileSize(string fileName, bool bAddBasePath = true);
 
 private:
 

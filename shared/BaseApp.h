@@ -122,20 +122,23 @@ public:
 	eInputMode GetInputMode() {return m_inputMode;}
 	virtual void OnMemoryWarning();
 	//FocusComponents connect to these, which will tricky down their hierarchy
-	boost::signal<void (VariantList*)> m_sig_input; //input specific messages from Mac
-	boost::signal<void (VariantList*)> m_sig_input_move; //"move" touch messages from the mac, if INPUT_MODE_SEPARATE_MOVE_TOUCHES was set
+	boost::signal<void (VariantList*)> m_sig_input; //taps, clicks, and basic keyboard input
+	boost::signal<void (VariantList*)> m_sig_input_move; //"move" touch messages, if INPUT_MODE_SEPARATE_MOVE_TOUCHES was set, otherwise they go to m_sig_input
 	boost::signal<void (VariantList*)> m_sig_os; //messages from mac
-	boost::signal<void (VariantList*)> m_sig_render;
-	boost::signal<void (VariantList*)> m_sig_update;
+	boost::signal<void (VariantList*)> m_sig_render; //called once per frame. You should render but not do game logic.
+	boost::signal<void (VariantList*)> m_sig_update; //called once per frame, usually.  For your game logic.
 	boost::signal<void (VariantList*)> m_sig_enterbackground;
 	boost::signal<void (VariantList*)> m_sig_enterforeground;
 	boost::signal<void (VariantList*)> m_sig_accel; //accelerometer data from iphone
+	boost::signal<void (VariantList*)> m_sig_trackball; //used for android trackball move data
+	boost::signal<void (VariantList*)> m_sig_arcade_input; //for arcade movement controls like left/right/up/down, if MovementInputComponent is used, trackball/wasd are converted to send through this as well
+	
 	boost::signal<void (void)> m_sig_unloadSurfaces; //some phones may want you to release surfaces sometimes
 	boost::signal<void (void)> m_sig_loadSurfaces; //some phones may want you to release surfaces sometimes
 
 	deque <OSMessage> * GetOSMessages() {return &m_OSMessages;}
 	void AddOSMessage(OSMessage &m);
-	void SetManualRotationMode(bool bRotation); //if true, we manually rotate our GL and coordinates for the screen.  Only set by the Mac side..
+	void SetManualRotationMode(bool bRotation); //if true, we manually rotate our GL and coordinates for the screen.
 	bool GetManualRotationMode() {return m_bManualRotation;}
 	ResourceManager * GetResourceManager() {return &m_resourceManager;}
 
@@ -148,18 +151,18 @@ public:
 	eErrorType GetLastError() {return m_error;}
 	void ClearError() {m_error = ERROR_NONE;}
 	void SetLastError(eErrorType error) {m_error = error;}
-	bool IsInBackground() {return m_bIsInBackground;} //useful for iOS multitasking
+	bool IsInBackground() {return m_bIsInBackground;} 
 	
 	void AddCommandLineParm(string parm);
 	vector<string> GetCommandLineParms();
-	void SetAccelerometerUpdateHz(float hz) /*another way to think of hz is "how many times per second to update" */;
+	void SetAccelerometerUpdateHz(float hz); //another way to think of hz is "how many times per second to update"
 	void PrintGLString(const char *name, GLenum s);
 	bool IsInitted() {return m_bInitted;}
 	virtual void InitializeGLDefaults();
-	CL_Mat4f &GetProjectionMatrix() {return m_projectionMatrix;}
-	Entity * GetEntityRoot() {return &m_entityRoot;}
+	CL_Mat4f * GetProjectionMatrix() {return &m_projectionMatrix;}
+	Entity * GetEntityRoot() {return &m_entityRoot;} //an entity created by default, add children to become your entity hierarchy
 	
-	
+	//not really used by framework, but useful if your app has cheat modes and you want an easy way to enable/disable them
 	void SetCheatMode(bool bCheatMode) {m_bCheatMode = bCheatMode;}
 	bool GetCheatMode() {return m_bCheatMode;}
 
@@ -197,5 +200,5 @@ ResourceManager * GetResourceManager();
 unsigned int GetTick(eTimingSystem timingSystem = GetBaseApp()->GetActiveTimingSystem()); //faster to write
 eTimingSystem GetTiming();
 extern RenderBatcher g_globalBatcher; //can be used by anyone
-
+extern bool g_isLoggerInitted;
 #endif // BaseApp_h__
