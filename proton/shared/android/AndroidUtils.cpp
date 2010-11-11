@@ -177,9 +177,10 @@ string GetSavePath()
 	const char * ss=env->GetStringUTFChars(ret,0);
 	sprintf(r,"%s",ss);
 	env->ReleaseStringUTFChars(ret, ss);
-	LogMsg("Normal dir is %s", string(r).c_str());
+	string retString = string(r)+"/";
+	//LogMsg("Normal dir is %s", string(retString).c_str());
 
-	return string(r);
+	return retString;
 }
 
 

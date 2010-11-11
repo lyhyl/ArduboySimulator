@@ -74,6 +74,7 @@ public class SharedActivity extends Activity implements SensorEventListener
 	public static String PackageName= "com.rtsoft.something";
 	public static String dllname= "rtsomething";
 	public static boolean securityEnabled = false; //if false, it won't try to use the online license stuff
+	public static boolean bIsShuttingDown = false;
 	//************************************************************************
 
 
@@ -459,26 +460,14 @@ public class SharedActivity extends Activity implements SensorEventListener
 			 return super.onKeyDown(keycode, e);
 		}
       
-       /*
-		if (keycode == KeyEvent.KEYCODE_BACK)
-		{
-                Log.v("onKeyUp:is_quit","KEYCODE_BACK");
-                this.finish();
-                return true;
-        }
-	    */
-
-    	
-		nativeOnKey(1, keycode,e.getUnicodeChar()); //0 is type keyup
- 
+		nativeOnKey(1, keycode,e.getUnicodeChar()); //1  means keydown
         return super.onKeyDown(keycode, e);
-//         return super.onKeyDown(keycode,e);
     }
     
 
     public boolean onKeyUp(int keycode, KeyEvent e)
 	{
-        Log.v("onKeyUp","Keyup Got "+keycode+" "+Character.toString(Character.toChars(e.getUnicodeChar())[0]));
+       // Log.v("onKeyUp","Keyup Got "+keycode+" "+Character.toString(Character.toChars(e.getUnicodeChar())[0]));
        
 		  if (keycode == KeyEvent.KEYCODE_BACK)
 		{
@@ -516,23 +505,12 @@ public class SharedActivity extends Activity implements SensorEventListener
 			 return super.onKeyUp(keycode, e);
 		}
       
-       /*
-		if (keycode == KeyEvent.KEYCODE_BACK)
-		{
-                Log.v("onKeyUp:is_quit","KEYCODE_BACK");
-                this.finish();
-                return true;
-        }
-	    */
-
-		nativeOnKey(0, keycode,e.getUnicodeChar()); //0 is type keyup
-    
+      	nativeOnKey(0, keycode,e.getUnicodeChar()); //0 is type keyup
         return super.onKeyUp(keycode, e);
     }
     
 	//************** SOUND STUFF *************
 
-	
     // JNI to play music, etc
     public MediaPlayer _music = null;
     public static void music_play(String fname)
@@ -543,9 +521,8 @@ public class SharedActivity extends Activity implements SensorEventListener
 		} else
 		{
 	       app._music = new MediaPlayer();
-       
-		}
-        Log.v("music_play",fname);
+ 		}
+       // Log.v("music_play",fname);
 		 
 		if (fname.charAt(0) == '/')
 		{
@@ -559,7 +536,6 @@ public class SharedActivity extends Activity implements SensorEventListener
 			{ 
 			Log.v("Can't load music (raw)", fname);
 			}
-
 			return;
 		}
 
@@ -640,7 +616,7 @@ public class SharedActivity extends Activity implements SensorEventListener
 
 	public static int sound_load(String fname) 
 	{
-        Log.v("sound_load",fname);
+       // Log.v("sound_load",fname);
        
 		if (fname.charAt(0) == '/')
 		{
@@ -738,13 +714,22 @@ class AppGLSurfaceView extends GLSurfaceView
 	public void onPause() 
     {
         super.onPause();
-        nativePause();   
+
+		if (app.bIsShuttingDown == false)
+		{
+			nativePause();   
+		}
     }
-    public void onResume() 
+    
+	public void onResume() 
     {
         super.onResume();
-        nativeResume();   
-    }
+
+		if (app.bIsShuttingDown == false)
+		{
+			nativeResume();   
+		}
+   }
    
 		
     // single touch version, works starting API4/??
@@ -895,6 +880,7 @@ class AppRenderer implements GLSurfaceView.Renderer
 
 				case MESSAGE_FINISH_APP: 
 					Log.v(app.PackageName, "Finishing app from java side");
+					app.bIsShuttingDown = true;
 					nativeDone();
 					app.finish();
 					android.os.Process.killProcess(android.os.Process.myPid());
