@@ -145,7 +145,6 @@ bool VariantDB::Save(const string &fileName, bool bAddBasePath)
 			LogError("Unable to save data");
 			fclose(fp);
 			return false;
-
 		}
 
 		itor++;
@@ -161,7 +160,6 @@ bool VariantDB::Save(const string &fileName, bool bAddBasePath)
 
 bool VariantDB::Load( const string &fileName, bool *pFileExistedOut, bool bAddBasePath )
 {
-	
 	string f;
 
 	if (bAddBasePath)
@@ -179,6 +177,9 @@ bool VariantDB::Load( const string &fileName, bool *pFileExistedOut, bool bAddBa
 	if (!fp)
 	{
 		pFileExistedOut = false;
+#ifdef _DEBUG
+		LogMsg("%s doesn't exist", f.c_str());
+#endif
 		return true; //not here, but that's not really an error
 	}
 
@@ -189,8 +190,12 @@ bool VariantDB::Load( const string &fileName, bool *pFileExistedOut, bool bAddBa
 
 	if (bytesRead == 0 || version != 1)
 	{
-		assert(!"Unexpected version?!");
+		LogMsg("%s - unexpected version. Deleting file", f.c_str());
 		fclose(fp);
+
+		RemoveFile(f, false);
+		
+		assert(!"Unexpected version?!");
 		return false;
 	}
 
@@ -263,7 +268,10 @@ bool VariantDB::Load( const string &fileName, bool *pFileExistedOut, bool bAddBa
 			}
 		
 		default:
+			LogMsg("%s - unknown var type", f.c_str());
+
 			assert(!"Unknown var type");
+
 			fclose(fp);
 			return false;
 		}
