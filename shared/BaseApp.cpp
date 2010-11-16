@@ -121,7 +121,9 @@ void DrawConsole()
 
 void BaseApp::Draw()
 {
-	
+#ifdef _DEBUG
+//LogMsg("**********FRAME START");
+#endif
 	m_sig_render(&VariantList(Variant(0,0)));
 
 	if (GetFPSVisible())
@@ -157,6 +159,8 @@ void BaseApp::Draw()
 	{
 		GetFont(FONT_SMALL)->DrawScaled(2,14, "LOW MEM!", 0.7f);
 	}
+
+	g_globalBatcher.Flush();
 }
 
 void BaseApp::Update()
@@ -222,6 +226,17 @@ void BaseApp::OnMessage(Message &m)
 					break;
 				}
 		
+			//like MESSAGE_TYPE_GUI_CHAR, but handles up AND down events, and ignores things like key-repeat, better for
+			//arcade action
+			case MESSAGE_TYPE_GUI_CHAR_RAW:
+				{
+					v.Get(0).Set(uint32(m.GetParm1()));
+					v.Get(1).Set(uint32(m.GetParm2()));
+					m_sig_raw_keyboard(&v);
+					break;
+				}
+			
+			//usually used for text input
 			case MESSAGE_TYPE_GUI_CHAR:
 				{
 					v.Get(0).Set((float)m.GetType());

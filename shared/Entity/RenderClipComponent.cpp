@@ -6,6 +6,11 @@
 RenderClipComponent::RenderClipComponent()
 {
 	SetName("RenderClip");
+	if (GetEmulatedPlatformID() == PLATFORM_ID_ANDROID)
+	{
+		LogError("ANDROID WARNING: using glclipplane KILLS your fps on the Nexus One, and isn't supported on the G1. You sure you want to use RenderClipComponent?!");
+		assert(0);
+	}
 }
 
 RenderClipComponent::~RenderClipComponent()
@@ -72,6 +77,7 @@ void RenderClipComponent::FilterOnRender(VariantList *pVList)
 
 void RenderClipComponent::PostOnRender(VariantList *pVList)
 {
+	g_globalBatcher.Flush();
 	glDisable(GL_CLIP_PLANE0);
 }
 

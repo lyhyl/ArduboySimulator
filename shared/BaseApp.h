@@ -132,6 +132,7 @@ public:
 	boost::signal<void (VariantList*)> m_sig_accel; //accelerometer data from iphone
 	boost::signal<void (VariantList*)> m_sig_trackball; //used for android trackball move data
 	boost::signal<void (VariantList*)> m_sig_arcade_input; //for arcade movement controls like left/right/up/down, if MovementInputComponent is used, trackball/wasd are converted to send through this as well
+	boost::signal<void (VariantList*)> m_sig_raw_keyboard; //for raw data from keyboards that give pressed/released messages.  Generally you would convert them into arcade messages
 	
 	boost::signal<void (void)> m_sig_unloadSurfaces; //some phones may want you to release surfaces sometimes
 	boost::signal<void (void)> m_sig_loadSurfaces; //some phones may want you to release surfaces sometimes

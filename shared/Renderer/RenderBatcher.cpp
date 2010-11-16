@@ -22,6 +22,21 @@ void RenderBatcher::BlitEx(Surface *pSurf, rtRectf dst, rtRectf src, unsigned in
 		return;	
 	}
 
+	if (m_batchEvents.size() > 0 && m_batchEvents.back().m_pSurf == pSurf)
+	{
+		//we can just add to the existing event
+		m_batchEvents.back().m_vertCount += 6;
+	} else
+	{
+		//create a new event
+		RenderBatchEvent event;
+		event.m_type = RenderBatchEvent::TYPE_2D_BLIT;
+		event.m_pSurf = pSurf;
+		event.m_vertCount = 6;
+		m_batchEvents.push_back(event);
+
+	}
+
 	glColorBytes color;
 
 	color.a = GET_ALPHA(rgba);
@@ -82,10 +97,12 @@ void RenderBatcher::BlitEx(Surface *pSurf, rtRectf dst, rtRectf src, unsigned in
 
 void RenderBatcher::Flush()
 {
+	
+	if (m_batchEvents.empty()) return;
 	CHECK_GL_ERROR();
-	if (m_verts.empty()) return;
-	//glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-	if (m_pSurf) m_pSurf->Bind();
+	int curPrim = 0;
+	RenderBatchEvent event;
+
 	glEnable(GL_BLEND);
 	glVertexPointer(3, GL_FLOAT, sizeof(BatchVert), &m_verts[0].vPos.x);
 	glTexCoordPointer(2, GL_FLOAT,  sizeof(BatchVert), &m_verts[0].vUv.x);
@@ -95,13 +112,26 @@ void RenderBatcher::Flush()
 
 	CHECK_GL_ERROR();
 
-	::glDrawArrays(GL_TRIANGLES, 0, m_verts.size());
-	CHECK_GL_ERROR();
+	while (!m_batchEvents.empty())
+	{
+	
+		event = m_batchEvents.front();
+	//	LogMsg("Rendering event, %d prims", event.m_vertCount);
+
+		m_batchEvents.pop_front();
+		//glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+		if (event.m_pSurf) event.m_pSurf->Bind();
+		::glDrawArrays(GL_TRIANGLES,curPrim,event.m_vertCount);
+		curPrim += event.m_vertCount;
+		CHECK_GL_ERROR();
+	}
+
 	glDisable( GL_BLEND );
 	glDisableClientState(GL_COLOR_ARRAY);
 	glColor4x(1 << 16, 1 << 16, 1 << 16, 1 << 16); //need this for some gl drivers
 
 	m_verts.clear();
+	assert(m_batchEvents.empty());
 }
 
 void RenderBatcher::BlitRawImage(int x, int y, SoftSurface &soft)

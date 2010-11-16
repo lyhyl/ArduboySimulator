@@ -23,6 +23,20 @@ struct BatchVert
 	glColorBytes color;
 };
 
+struct RenderBatchEvent
+{
+public:
+	enum eType
+	{
+		TYPE_2D_BLIT
+	};
+
+	Surface *m_pSurf;
+	int m_vertCount;
+	eType m_type;
+	
+};
+
 class RenderBatcher
 {
 public:
@@ -44,6 +58,7 @@ protected:
 	Surface *m_pSurf;
 	vector<BatchVert> m_verts;
 
+	deque<RenderBatchEvent> m_batchEvents;
 private:
 };
 

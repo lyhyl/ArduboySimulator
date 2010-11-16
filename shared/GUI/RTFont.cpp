@@ -228,7 +228,7 @@ void RTFont::MeasureText( rtRectf *pRectOut, const char *pText, int len, float s
 
 void RTFont::DrawScaled( float x, float y, const string &text, float scale /*= 1.0f*/, unsigned int color/*=MAKE_RGBA(255,255,255,255)*/, FontStateStack *pState, RenderBatcher *pBatcher )
 {
-	
+	if (!pBatcher) pBatcher = &g_globalBatcher;
 	SetupOrtho();
 	assert(IsLoaded() && "No font loaded");
 	rtRectf dst, src;
@@ -548,7 +548,7 @@ CL_Vec2f RTFont::DrawWrapped(rtRect &r, const string &txt, bool centerX, bool ce
 		r.top += (int)GetLineHeight(scale);
 	}
 
-	g_globalBatcher.Flush();
+	//g_globalBatcher.Flush();
 
 	return enclosingRect;
 

@@ -10,6 +10,8 @@ vector<VideoModeEntry> g_videoModes;
 void AddVideoMode(string name, int x, int y, ePlatformID platformID);
 void SetVideoModeByName(string name);
 
+
+
 void InitVideoSize()
 {
 #ifdef RT_WEBOS_ARM
@@ -30,7 +32,7 @@ void InitVideoSize()
 	AddVideoMode("Droid", 480, 854, PLATFORM_ID_ANDROID);
 	AddVideoMode("Nexus One Landscape", 800, 480, PLATFORM_ID_ANDROID); //g_landScapeNoNeckHurtMode should be false when testing
 
-	string desiredVideoMode = "iPhone"; //name needs to match one of the ones defined below
+	string desiredVideoMode = "Windows"; //name needs to match one of the ones defined below
     g_landScapeNoNeckHurtMode = true; //if true, will rotate the screen so we can play in landscape mode in windows without hurting ourselves
 
 	#ifndef _DEBUG
@@ -126,6 +128,22 @@ bool g_bAppFinished = false;
 bool g_leftMouseButtonDown = false; //to help emulate how an iphone works
 
 
+
+int ConvertWindowsKeycodeToProtonVirtualKey(int keycode)
+{
+	switch (keycode)
+	{
+	case 37: keycode = VIRTUAL_KEY_DIR_LEFT; break;
+	case 39: keycode = VIRTUAL_KEY_DIR_RIGHT; break;
+	case 38: keycode = VIRTUAL_KEY_DIR_UP; break;
+	case 40: keycode = VIRTUAL_KEY_DIR_DOWN; break;
+	case VK_SHIFT: keycode = VIRTUAL_KEY_SHIFT; break;
+	case VK_CONTROL: keycode = VIRTUAL_KEY_CONTROL; break;
+	}
+
+	return keycode;
+}
+
 // Variable set in the message handler to finish the demo
 
 HDC			hDC=NULL;		// Private GDI Device Context
@@ -200,14 +218,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		switch (wParam)
 		{
 			
-		//case VK_F1:
 		case VK_ESCAPE:
-			//escape
-			//SendMessage(hWnd, WM_CLOSE, 0, 0);
-			LogMsg("normal escape");
-			//GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, wParam, lParam);  //lParam holds a lot of random data about the press, look it up if
 			GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, VIRTUAL_KEY_BACK, VIRTUAL_KEY_PRESS); 
-
 			break;
 
 		case 'L': //left landscape mode
@@ -262,6 +274,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			}
 		break;
 
+		/*
 		case VK_RETURN:
 		case VK_SHIFT:
 		case VK_CONTROL:
@@ -269,9 +282,31 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, wParam, lParam);  //lParam holds a lot of random data about the press, look it up if
 
 			break;
+			*/
 		}
-		//LogMsg("Got key %d", (int)wParam);
+		
+		{
+
+		
+		//send the raw key data as well
+		VariantList v;
+		const bool isBitSet = lParam & (1 << 30);
+
+		if (!isBitSet)
+		{
+			GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW, ConvertWindowsKeycodeToProtonVirtualKey(wParam), 1);  
+		}
+		//LogMsg("Got key down %d", (int)wParam);
 		break;
+		}
+
+	case WM_KEYUP:
+		{
+			//LogMsg("Got key up %d", (int)wParam);
+		GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW, ConvertWindowsKeycodeToProtonVirtualKey(wParam), 0);  
+		}
+	break;
+
 
 	case WM_LBUTTONUP:
 		{
@@ -335,7 +370,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 	if (lpCmdLine[0])
 	{
 		vector<string> parms = StringTokenize(lpCmdLine, " ");
-	
 	
 		for (unsigned int i=0; i < parms.size(); i++)
 		{

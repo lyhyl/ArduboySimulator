@@ -336,18 +336,15 @@ public class SharedActivity extends Activity implements SensorEventListener
         switch (event.sensor.getType())
 		{
             case Sensor.TYPE_ACCELEROMETER:
+				if (event.values.length < 3) return; //who knows what this is
+				//		Log.d(PackageName, "Accel: " + "x:"+Float.toString(event.values[0]) + " y:"+Float.toString(event.values[1]) + " z:"+Float.toString(event.values[2]));
+   				nativeOnAccelerometerUpdate(event.values[0], event.values[1], event.values[2]);
+				break;
+
+	        case Sensor.TYPE_ORIENTATION:
 			
-			if (event.values.length < 3) return; //who knows what this is
-			//		Log.d(PackageName, "Accel: " + "x:"+Float.toString(event.values[0]) + " y:"+Float.toString(event.values[1]) + " z:"+Float.toString(event.values[2]));
-    			nativeOnAccelerometerUpdate(event.values[0], event.values[1], event.values[2]);
-     
-
-            break;
-
-        case Sensor.TYPE_ORIENTATION:
-
-				//Log.d(PackageName, "Orientation: " + "x:"+Float.toString(event.values[0]));
-       break;
+			//Log.d(PackageName, "Orientation: " + "x:"+Float.toString(event.values[0]));
+			break;
         }
     }
 	
@@ -356,7 +353,6 @@ public class SharedActivity extends Activity implements SensorEventListener
 	{
     	//Log.d(PackageName,"onAccuracyChanged: " + sensor + ", accuracy: " + accuracy);
     }
-
 
 	public void setup_accel(float hz) //0 to disable
 	{
@@ -410,9 +406,64 @@ public class SharedActivity extends Activity implements SensorEventListener
         }
     }
 
+	//from MessageManager.h
 	final static int VIRTUAL_KEY_BACK = 500000;
+	final static int VIRTUAL_KEY_PROPERTIES = 500001;
+	final static int VIRTUAL_KEY_HOME = 500002;
+	final static int VIRTUAL_KEY_SEARCH = 500003;
+	final static int VIRTUAL_KEY_DIR_UP = 500004;
+	final static int VIRTUAL_KEY_DIR_DOWN = 500005;
+	final static int VIRTUAL_KEY_DIR_LEFT = 500006;
+	final static int VIRTUAL_KEY_DIR_RIGHT = 500007;
+	final static int VIRTUAL_KEY_DIR_CENTER = 500008;
+	final static int VIRTUAL_KEY_VOLUME_UP = 500009;
+	final static int VIRTUAL_KEY_VOLUME_DOWN = 500010;
+	final static int VIRTUAL_KEY_SHIFT = 500011;
 
+	public int TranslateKeycodeToProtonVirtualKey(int keycode)
+	{
 
+		switch (keycode)
+		{
+			case KeyEvent.KEYCODE_BACK:
+				keycode = VIRTUAL_KEY_BACK;
+				break;
+			case KeyEvent.KEYCODE_MENU:
+				keycode = VIRTUAL_KEY_PROPERTIES;
+				break;
+			case KeyEvent.KEYCODE_SEARCH:
+				keycode = VIRTUAL_KEY_SEARCH;
+				break;
+			case KeyEvent.KEYCODE_DPAD_DOWN:
+				keycode = VIRTUAL_KEY_DIR_DOWN;
+				break;
+			case KeyEvent.KEYCODE_DPAD_UP:
+				keycode = VIRTUAL_KEY_DIR_UP;
+				break;
+			case KeyEvent.KEYCODE_DPAD_LEFT:
+				keycode = VIRTUAL_KEY_DIR_LEFT;
+				break;
+			case KeyEvent.KEYCODE_DPAD_RIGHT:
+				keycode = VIRTUAL_KEY_DIR_RIGHT;
+				break;
+			case KeyEvent.KEYCODE_DPAD_CENTER:
+				keycode = VIRTUAL_KEY_DIR_CENTER;
+				break;
+			case 0:
+				keycode = VIRTUAL_KEY_SHIFT;
+				break;
+
+			case KeyEvent.KEYCODE_VOLUME_UP:
+				keycode = VIRTUAL_KEY_VOLUME_UP;
+				break;
+			case KeyEvent.KEYCODE_VOLUME_DOWN:
+				keycode = VIRTUAL_KEY_VOLUME_DOWN;
+				break;
+		}
+
+		return keycode;
+		
+	}
 	  // single touch version, works starting API4/??
     public boolean onTrackballEvent (MotionEvent e)
 	{
@@ -420,7 +471,7 @@ public class SharedActivity extends Activity implements SensorEventListener
 	  {
    		nativeOnTrackball(e.getX(),e.getY());
 	 	//Log.d("Hey", "trackball x rel: "+e.getX()+" y rel: "+e.getY());
-	    return true; //signal that we handled it
+	    return true; //signal that we handled it, so its messages don't show up as normal directional presses
 	  }
    		
 		return false; 
@@ -428,22 +479,10 @@ public class SharedActivity extends Activity implements SensorEventListener
 
 	 public boolean onKeyDown(int keycode, KeyEvent e) 
 	 {
-        //Log.v("keydown",Character.toString(Character.toChars(e.getUnicodeChar())[0]));
-
-		 if (keycode == KeyEvent.KEYCODE_BACK)
-		{
-            Log.v("onKeyDown","KEYCODE_BACK");
-        }
-
-		 if (keycode == KeyEvent.KEYCODE_MENU)
-		{
-            Log.v("onKeyDown","KEYCODE_MENU");
-        }
-
-        if (keycode == KeyEvent.KEYCODE_SEARCH)
-		{
-            Log.v("onKeyDown","KEYCODE_SEARCH");
-        }
+  //     Log.v("onKeyDown","Keydown Got "+keycode+" "+Character.toString(Character.toChars(e.getUnicodeChar())[0]));
+   
+	
+		if (e.getRepeatCount() > 0) return super.onKeyDown(keycode, e);
 
 
         switch (keycode)
@@ -454,58 +493,29 @@ public class SharedActivity extends Activity implements SensorEventListener
 				nativeOnKey(1, VIRTUAL_KEY_BACK, e.getUnicodeChar()); 
 				return true; //signal that we handled it
 			}
-			case KeyEvent.KEYCODE_MENU:
-			case KeyEvent.KEYCODE_SEARCH:
-
-			 return super.onKeyDown(keycode, e);
 		}
-      
-		nativeOnKey(1, keycode,e.getUnicodeChar()); //1  means keydown
+		
+		int vKey = TranslateKeycodeToProtonVirtualKey(keycode);
+		nativeOnKey(1, vKey,e.getUnicodeChar()); //1  means keydown
         return super.onKeyDown(keycode, e);
     }
-    
 
     public boolean onKeyUp(int keycode, KeyEvent e)
 	{
-       // Log.v("onKeyUp","Keyup Got "+keycode+" "+Character.toString(Character.toChars(e.getUnicodeChar())[0]));
+    //    Log.v("onKeyUp","Keyup Got "+keycode+" "+Character.toString(Character.toChars(e.getUnicodeChar())[0]));
        
-		  if (keycode == KeyEvent.KEYCODE_BACK)
+		switch (keycode)
 		{
-            Log.v("onKeyUp","KEYCODE_BACK");
-        }
-        if (keycode == KeyEvent.KEYCODE_MENU)
-		{
-            Log.v("onKeyUp","KEYCODE_MENU");
-        }
-
-        if (keycode == KeyEvent.KEYCODE_SEARCH)
-		{
-            Log.v("onKeyUp","KEYCODE_SEARCH");
-        }
-
-	       switch (keycode)
-		{
-
-			   case 20:
-			   case 21:
-			   case 22:
-			   case 23:
-
-				 return true;
-
 			case KeyEvent.KEYCODE_BACK:
 			{
 				nativeOnKey(0, VIRTUAL_KEY_BACK, e.getUnicodeChar()); //0 is type keyup
 				return true; //signal that we handled it
 			}
-
-			case KeyEvent.KEYCODE_MENU:
-			case KeyEvent.KEYCODE_SEARCH:
-
-			 return super.onKeyUp(keycode, e);
 		}
-      
-      	nativeOnKey(0, keycode,e.getUnicodeChar()); //0 is type keyup
+
+      	int vKey = TranslateKeycodeToProtonVirtualKey(keycode);
+	
+      	nativeOnKey(0, vKey,e.getUnicodeChar()); //0 is type keyup
         return super.onKeyUp(keycode, e);
     }
     

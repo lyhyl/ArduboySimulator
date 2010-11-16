@@ -44,7 +44,7 @@
 			
 			return false;
 	}
-	LogMsg("Setting orientation to interfaceOrientation %d", myinterfaceOrientation);
+	//LogMsg("Setting orientation to interfaceOrientation %d", myinterfaceOrientation);
 	[[UIApplication sharedApplication] setStatusBarOrientation: myinterfaceOrientation animated:NO];
 	SetupScreenInfoIPhone(myinterfaceOrientation); 
 	*/
@@ -54,7 +54,7 @@
 -(void)didRotate:(NSNotification *)theNotification 
 {
 	UIDeviceOrientation interfaceOrientation = [[UIDevice currentDevice] orientation];
-	NSLog(@"Got didRotate: %d", interfaceOrientation);
+	//NSLog(@"Got didRotate: %d", interfaceOrientation);
 	if (!UIDeviceOrientationIsValidInterfaceOrientation(interfaceOrientation))
 	{
 		//it's probably like a face up/down message.  Ignore it
@@ -69,7 +69,7 @@
 		
 		return ;
 	}
-	LogMsg("Setting orientation to interfaceOrientation %d", interfaceOrientation);
+	//LogMsg("Setting orientation to interfaceOrientation %d", interfaceOrientation);
 	[[UIApplication sharedApplication] setStatusBarOrientation: (UIInterfaceOrientation) interfaceOrientation animated:NO];
 	SetupScreenInfoIPhone(interfaceOrientation); 
 	

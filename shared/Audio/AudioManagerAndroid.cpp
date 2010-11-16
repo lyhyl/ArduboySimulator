@@ -293,7 +293,7 @@ AudioHandle AudioManagerAndroid::Play( string fName, bool bLooping /*= false*/, 
 		if (streamID == 0)
 		{
 			//something is wrong... probably not loaded.  Reschedule
-			GetMessageManager()->SendGame(MESSAGE_TYPE_PLAY_SOUND, fName, 50);
+			GetMessageManager()->SendGame(MESSAGE_TYPE_PLAY_SOUND, fName, 50, TIMER_SYSTEM);
 		}
 	}
 
@@ -525,6 +525,8 @@ void AudioManagerAndroid::SetVol( AudioHandle soundID, float vol )
 
 void AudioManagerAndroid::SetMusicVol(float vol )
 {
+	
+	m_musicVol = vol;
 	JNIEnv *env = GetJavaEnv();
 	if (env)
 	{
@@ -534,6 +536,7 @@ void AudioManagerAndroid::SetMusicVol(float vol )
 			"(F)V");
 		env->CallStaticVoidMethod(cls, mid, jfloat(vol));
 	}
+	
 }
 
 

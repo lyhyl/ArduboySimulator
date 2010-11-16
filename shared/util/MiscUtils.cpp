@@ -153,7 +153,8 @@ string RemoveTrailingBackslash(string st)
 {
 	if (st.empty()) return st;
 
-	if (st[st.size()-1] == '/' || st[st.size()-1] == '\\')
+
+	while(st[st.size()-1] == '/' || st[st.size()-1] == '\\' )
 	{
 		st = st.substr(0, st.size()-1);
 	}

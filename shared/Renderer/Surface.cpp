@@ -459,6 +459,8 @@ void Surface::BlitEx(rtRectf dst, rtRectf src, unsigned int rgba, float rotation
 	if (!IsLoaded()) return;
 	
 	SetupOrtho(); //upside down, makes this easier to do
+	g_globalBatcher.Flush();
+
 	Bind();
 	
 	//LogMsg("Rendering tex %d at %s at %d", m_glTextureID, PrintRect(dst).c_str(), GetTick(TIMER_GAME));
@@ -599,6 +601,7 @@ void Surface::BlitScaled( float x, float y, CL_Vec2f vScale, eAlignment alignmen
 void Surface::Blit( float x, float y, unsigned int rgba, float rotationDegrees, CL_Vec2f vRotatePt)
 {
 	SetupOrtho();
+	g_globalBatcher.Flush();
 	Bind();
 	
 	if (rotationDegrees != 0)
