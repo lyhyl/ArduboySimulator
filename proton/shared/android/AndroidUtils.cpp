@@ -183,8 +183,6 @@ string GetSavePath()
 	return retString;
 }
 
-
-
 string GetAPKFile()
 {
 	JNIEnv *env = GetJavaEnv();
@@ -227,13 +225,13 @@ string GetAppCachePath()
 		if (!retString.empty())
 		{
 			retString += string("/Android/data/")+GetBundlePrefix()+GetBundleName()+"/files/";
-			LogMsg("External dir is %s", retString.c_str());
+			//LogMsg("External dir is %s", retString.c_str());
 
 			//looks valid
 			return retString;
 		}
 	
-		return ""; //invalid
+	return ""; //invalid
 }
 
 void LaunchEmail(string subject, string content)
@@ -242,7 +240,6 @@ void LaunchEmail(string subject, string content)
 
 void LaunchURL(string url)
 {
-
 	JNIEnv *env = GetJavaEnv();
 	LogMsg("Launching %s", url.c_str());
 
@@ -256,7 +253,6 @@ void LaunchURL(string url)
 
 string GetClipboardText()
 {
-
 	JNIEnv *env = GetJavaEnv();
 	if (!env) return "";
 
@@ -270,7 +266,6 @@ string GetClipboardText()
 	string s = ss;
 	env->ReleaseStringUTFChars(ret, ss);
 	return string(s);
-	
 }
 
 bool IsIPhone3GS()
@@ -355,7 +350,7 @@ eNetworkType IsNetReachable( string url )
 
 int GetSystemData()
 {
-		return C_PIRATED_NO;
+	return C_PIRATED_NO;
 }
 
 void RemoveFile( string fileName, bool bAddSavePath)
@@ -441,9 +436,7 @@ void CreateDirectoryRecursively(string basePath, string path)
 		"(Ljava/lang/String;Ljava/lang/String;)V");
 	jstring ret;
 	env->CallStaticObjectMethod(cls, mid, env->NewStringUTF(basePath.c_str()), env->NewStringUTF(path.c_str()));
-	
 	return;
-	
 }
 
 
@@ -456,7 +449,6 @@ vector<string> GetDirectoriesAtPath(string path)
 #endif
 
 	dirent * buf, * ent;
-	
 	DIR *dp;
 
 	dp = opendir(path.c_str());
@@ -493,7 +485,6 @@ vector<string> GetFilesAtPath(string path)
 
 	vector<string> v;
 	dirent * buf, * ent;
-
 	DIR *dp;
 
 	dp = opendir(path.c_str());
@@ -526,7 +517,6 @@ bool RemoveDirectoryRecursively(string path)
 	//LogMsg(" RemoveDirectoryRecursively: %s", path.c_str());
 	
 	dirent * buf, * ent;
-
 	DIR *dp;
 
 	dp = opendir(path.c_str());
@@ -749,12 +739,14 @@ void AppOnTouch( JNIEnv*  env, jobject jobj,jint action, jfloat x, jfloat y, jin
 
 void AppOnKey( JNIEnv*  env, jobject jobj, jint type, jint keycode, jint c)
 {
-	if (type == 1) return; //don't care about keyups yet.. do we?
-
-	//LogMsg("Got type %d, keycode %d, key %d (%c)", type, keycode, c, (char(c)));
+	
+#ifdef _DEBUG
+	//LogMsg("Native Got type %d, keycode %d, key %d (%c)", type, keycode, c, (char(c)));
+#endif
 
 	switch (keycode)
 	{
+		
 		//case 4: e.v = KEY_BACK; break; // KEYCODE_BACK
 		//case 82: e.v = KEY_MENU; break; // KEYCODE_MENU
 		//case 84: e.v = KEY_SEARCH; break; // KEYCODE_SEARCH
@@ -764,20 +756,25 @@ void AppOnKey( JNIEnv*  env, jobject jobj, jint type, jint keycode, jint c)
 	case 67: //back space
 		c = 8;
 		break;
-
-	case VIRTUAL_KEY_BACK:
-		c = VIRTUAL_KEY_BACK;
-		break;
 	}
 	
+	if (keycode >= VIRTUAL_KEY_BACK)
+	{
+		c = keycode;
+	}
+
 	switch (type)
 	{
-	case 0: //keydown
-		GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, c, 0);  
-
+	case 1: //keydown
+		GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, c, 1);  
+		
+		if (c < 128) c = toupper(c);
+		GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW, c, 1);  
 		break;
 
-	case 1: //key up
+	case 0: //key up
+		if (c < 128) c = toupper(c);
+		GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW, c, 0);  
 		break;
 	}
 }

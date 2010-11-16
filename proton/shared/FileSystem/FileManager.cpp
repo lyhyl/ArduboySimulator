@@ -115,7 +115,8 @@ byte * FileManager::Get( string fileName, int *pSizeOut, bool bAddBasePath )
 			if (!fp)
 			{
 				
-				LogError("Can't open %s.", fileName.c_str());
+				//not really an error, we might just want to know if a file exists
+				//LogError("Can't open %s.", fileName.c_str());
 				//file not found	
 				return NULL;
 			}

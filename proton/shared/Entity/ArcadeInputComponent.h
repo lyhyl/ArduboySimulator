@@ -17,7 +17,6 @@
 
 #include "Entity/Component.h"
 #include "Entity/Entity.h"
-//#include "Renderer/SurfaceAnim.h"
 
 enum eMoveButtonDir
 {
@@ -27,7 +26,6 @@ enum eMoveButtonDir
 	MOVE_BUTTON_DIR_DOWN,
 	
 	MOVE_BUTTON_DIR_COUNT
-
 };
 
 
@@ -46,19 +44,44 @@ public:
 		m_keyType = type;
 	}
 
+	void ReleaseIfNeeded();
 	void OnPress(int releaseTime);
 
 	void Update();
+	void OnPressToggle(bool bDown);
 	bool m_bIsDown;
 	unsigned int m_releaseTimer;
 	eVirtualKeys m_keyType;
 };
 
 
+class ArcadeKeyBind
+{
+public:
+
+	ArcadeKeyBind()
+	{
+		m_inputkeycode = 0;
+		m_outputkeycode = 0;
+		m_requireShift = false;
+		m_requireAlt = false;
+		m_requireCtrl = false;
+	}
+
+	string m_name;
+	uint32 m_inputkeycode;
+	uint32 m_outputkeycode;
+	
+	//unused right now
+	bool m_requireShift;
+	bool m_requireAlt;
+	bool m_requireCtrl;
+
+};
+
+typedef list<ArcadeKeyBind> ArcadeBindList;
 class ArcadeInputComponent: public EntityComponent
 {
-
-	
 
 public:
 	ArcadeInputComponent();
@@ -67,13 +90,22 @@ public:
 	virtual void OnAdd(Entity *pEnt);
 	virtual void OnRemove();
 
+
+	enum TrackballMode
+	{
+		TRACKBALL_MODE_WALKING, //default, suitable for moving around a character, sends up/down notifications to mimic arrow key directions
+		TRACKBALL_MODE_MENU_SELECTION //suitable for moving up/down menus, sends an up/down notification every 1.0f of notches are reached
+	};
+
 private:
 
 	void OnUpdate(VariantList *pVList);
 	void OnTrackball(VariantList *pVList);
-
+	void OnRawKeyboard(VariantList *pVList);
+	void AddKeyBinding(VariantList *pVList);
+	void ActivateBinding(ArcadeKeyBind *pBind, bool bDown);
+	void OnTrackballModeChanged(Variant *pVar);
 	CL_Vec2f *m_pPos2d;
-	
 	/*
 	CL_Vec2f *m_pSize2d;
 	CL_Vec2f *m_pScale2d;
@@ -84,8 +116,10 @@ private:
 	float *m_pRotation; //in degrees
 	*/
 
-
 	MoveButtonState m_buttons[MOVE_BUTTON_DIR_COUNT];
+	ArcadeBindList m_bindings;
+	uint32 *m_pTrackballMode;
+	CL_Vec2f m_trackball;
 };
 
-#endif // MovementInputComponent_h__
+#endif // ArcadeInputComponent_h__

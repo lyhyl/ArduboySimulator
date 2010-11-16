@@ -84,6 +84,7 @@ void TextBoxRenderComponent::DrawTextNormal(CL_Vec2f vPos)
 	//go through all text and draw it
 	if (vPos.x > GetScreenSizeX()) return; //no use drawing stuff that is off the screen to the right
 
+	
 	float lineHeight = GetBaseApp()->GetFont(eFont(*m_pFontID))->GetLineHeight(*m_pFontScale);
 	uint32 color = ColorCombine(*m_pColor, *m_pColorMod, *m_pAlpha);
 
@@ -102,10 +103,11 @@ void TextBoxRenderComponent::DrawTextNormal(CL_Vec2f vPos)
 		}
 		
 
-		if (vPos.y+lineHeight > GetOrthoRenderSizeYf()) 
+		if (vPos.y > GetOrthoRenderSizeYf()) 
 		{
 			break; //no use drawing any more down here
 		}
+
 		
 		GetBaseApp()->GetFont(eFont(*m_pFontID))->DrawScaled(vPos.x, vPos.y, m_lines[i], *m_pFontScale, color, &state, &g_globalBatcher);
 
@@ -113,7 +115,7 @@ void TextBoxRenderComponent::DrawTextNormal(CL_Vec2f vPos)
 		vPos.y += lineHeight;
 	}
 
-	g_globalBatcher.Flush();
+	
 }
 
 void TextBoxRenderComponent::DrawTextType(CL_Vec2f vPos)
@@ -172,7 +174,7 @@ void TextBoxRenderComponent::DrawTextType(CL_Vec2f vPos)
 		}
 
 
-		if (vPos.y+lineHeight > GetOrthoRenderSizeYf()) 
+		if (vPos.y > GetOrthoRenderSizeYf()) 
 		{
 			break; //no use drawing any more down here
 		}
@@ -183,7 +185,7 @@ void TextBoxRenderComponent::DrawTextType(CL_Vec2f vPos)
 		vPos.y += lineHeight;
 	}
 
-	g_globalBatcher.Flush();
+	//g_globalBatcher.Flush();
 }
 
 void TextBoxRenderComponent::OnRender(VariantList *pVList)

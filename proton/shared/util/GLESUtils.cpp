@@ -357,6 +357,7 @@ bool g_OrthoRenderSizeActive = false;
 
 void SetOrthoRenderSize(float x, float y, int screenOffsetX, int screenOffsetY)
 {
+	
 	SetupOrtho();
 
 	if (g_OrthoRenderSizeActive)
@@ -386,6 +387,7 @@ void SetOrthoRenderSize(float x, float y, int screenOffsetX, int screenOffsetY)
 
 void RemoveOrthoRenderSize()
 {
+	g_globalBatcher.Flush();
 	if (NeedsOrthoSet()) return;
 	
 	if (g_OrthoRenderSizeActive)

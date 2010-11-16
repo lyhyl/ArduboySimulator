@@ -38,6 +38,8 @@ enum eOSSTreamEvent{
 	RT_kCFStreamEventEndEncountered = 16
 };
 
+//if you change the order of these, you have to also
+//update SharedActivity.java for the android side
 enum eVirtualKeys
 {
 	VIRTUAL_KEY_BACK = 500000,
@@ -47,7 +49,22 @@ enum eVirtualKeys
 	VIRTUAL_KEY_DIR_UP,
 	VIRTUAL_KEY_DIR_DOWN,
 	VIRTUAL_KEY_DIR_LEFT,
-	VIRTUAL_KEY_DIR_RIGHT
+	VIRTUAL_KEY_DIR_RIGHT,
+	VIRTUAL_KEY_DIR_CENTER,
+	VIRTUAL_KEY_VOLUME_UP,
+	VIRTUAL_KEY_VOLUME_DOWN,
+	VIRTUAL_KEY_SHIFT,
+	VIRTUAL_KEY_ALT, //doesn't work yet
+	VIRTUAL_KEY_CONTROL,
+
+	//useful for games, used by ArcadeInputComponent
+	VIRTUAL_KEY_GAME_FIRE,
+	VIRTUAL_KEY_GAME_TALK,
+	VIRTUAL_KEY_GAME_MAGIC,
+	VIRTUAL_KEY_GAME_INVENTORY,
+
+
+	VIRTUAL_KEY_CUSTOM_START = 510000 //if you add your own, do it after this
 };
 
 enum eVirtualKeyInfo
@@ -79,6 +96,7 @@ enum eMessageType
 	MESSAGE_TYPE_PLAY_MUSIC,
 	MESSAGE_TYPE_UNKNOWN,
 	MESSAGE_TYPE_PRELOAD_SOUND,
+	MESSAGE_TYPE_GUI_CHAR_RAW,
 	MESSAGE_USER = 1000 //users can add their own messages starting here
 	
 };
