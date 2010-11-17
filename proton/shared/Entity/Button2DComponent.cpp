@@ -104,7 +104,10 @@ void Button2DComponent::OnOverStart(VariantList *pVList)
 	switch (*m_pVisualStyle)
 	{
 	case STYLE_FADE_ALPHA_ON_HOVER:
-		GetParent()->GetVar("alpha")->Set(m_alphaSave*0.5f);
+		if (*m_pDisabled == 0 && m_repeatTimer < GetBaseApp()->GetTick())
+		{	
+			GetParent()->GetVar("alpha")->Set(m_alphaSave*0.5f);
+		}
 		break;
 	}
 }

@@ -1354,3 +1354,49 @@ EntityComponent * AddHotKeyToButton(Entity *pEnt, uint32 keycode)
 	return pComp;
 }
 
+
+
+EntityComponent * CreateSlider(Entity *pBG, float x, float y, float sizeX, string buttonFileName, string left, string middle, string right)
+{
+	//first the BG
+	CreateOverlayRectEntity(pBG, CL_Vec2f(x, y), CL_Vec2f(sizeX,3), MAKE_RGBA(255,255,255,255));
+
+	//the text descriptions
+
+	float textY = y- (GetBaseApp()->GetFont(FONT_SMALL)->GetLineHeight(1)+iPhoneMapY2X(15));
+
+	CreateTextLabelEntity(pBG, "txt", x, textY, left);
+
+	Entity *pText = CreateTextLabelEntity(pBG, "txt", x+sizeX/2, textY, middle);
+	SetAlignmentEntity(pText, ALIGNMENT_UPPER_CENTER);
+
+	pText = CreateTextLabelEntity(pBG, "txt", x+sizeX, textY, right);
+	SetAlignmentEntity(pText, ALIGNMENT_UPPER_RIGHT);
+
+	//then the slider control
+	Entity *pSliderEnt = pBG->AddEntity(new Entity("SliderEnt"));
+	EntityComponent * pSliderComp = pSliderEnt->AddComponent(new SliderComponent);
+
+	//the button we move around to slide
+	Entity *pSliderButton = CreateOverlayButtonEntity(pSliderEnt, "sliderButton",  buttonFileName, 0, 6);
+
+	CL_Vec2f vButtonScale = CL_Vec2f(0.7, 0.7);
+
+	if (IsLargeScreen())
+	{
+		vButtonScale = CL_Vec2f(1, 1);
+	}
+	
+	pSliderButton->GetVar("scale2d")->Set(vButtonScale);
+	pSliderButton->GetComponentByName("Button2D")->GetVar("onClickAudioFile")->Set("");
+
+	CL_Vec2f vImageSize = pSliderButton->GetVar("size2d")->GetVector2();
+	pSliderEnt->GetVar("pos2d")->Set(CL_Vec2f(x+(vImageSize.x/2)*0.5, y));
+	pSliderEnt->GetVar("size2d")->Set(CL_Vec2f(sizeX- (vImageSize.x*0.5),0));
+
+	//SetTouchPaddingEntity(pSliderButton, CL_Rectf(0,0,0,0));
+	SetAlignmentEntity(pSliderButton, ALIGNMENT_CENTER);
+	pSliderComp->GetVar("sliderButton")->Set(pSliderButton);
+	return pSliderComp;
+};
+
