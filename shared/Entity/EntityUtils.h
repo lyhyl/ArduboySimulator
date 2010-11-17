@@ -28,6 +28,7 @@
 #include "Entity/TrailRenderComponent.h"
 #include "Entity/RenderClipComponent.h"
 #include "Entity/SelectButtonWithCustomInputComponent.h"
+#include "Entity/SliderComponent.h"
 
 Entity * CreateTextLabelEntity(Entity *pParentEnt, string name, float x, float y, string text);
 Entity * CreateTextButtonEntity(Entity *pParentEnt, string name, float x, float y, string text, bool bUnderline = true);
@@ -106,5 +107,6 @@ void DestroyUnusedTextures();
 bool EntityRetinaRemapIfNeeded(Entity *pEnt, bool bAdjustPosition = true, bool bAdjustScale = false, bool bApplyToIpadAlso = true, bool bPerserveAspectRatio = false); //moves and scale entities to fit a retina screen like an iphone screen
 void EntitySetScaleBySize(Entity *pEnt, CL_Vec2f vDestSize);
 EntityComponent *AddHotKeyToButton(Entity *pEnt, uint32 keycode);
+EntityComponent * CreateSlider(Entity *pBG, float x, float y, float sizeX, string buttonFileName, string left, string middle, string right);
 
 #endif // EntityUtils_h__
