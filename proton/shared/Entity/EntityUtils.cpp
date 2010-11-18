@@ -1380,7 +1380,7 @@ EntityComponent * CreateSlider(Entity *pBG, float x, float y, float sizeX, strin
 	//the button we move around to slide
 	Entity *pSliderButton = CreateOverlayButtonEntity(pSliderEnt, "sliderButton",  buttonFileName, 0, 6);
 
-	CL_Vec2f vButtonScale = CL_Vec2f(0.7, 0.7);
+	CL_Vec2f vButtonScale = CL_Vec2f(0.7f, 0.7f);
 
 	if (IsLargeScreen())
 	{
@@ -1391,8 +1391,8 @@ EntityComponent * CreateSlider(Entity *pBG, float x, float y, float sizeX, strin
 	pSliderButton->GetComponentByName("Button2D")->GetVar("onClickAudioFile")->Set("");
 
 	CL_Vec2f vImageSize = pSliderButton->GetVar("size2d")->GetVector2();
-	pSliderEnt->GetVar("pos2d")->Set(CL_Vec2f(x+(vImageSize.x/2)*0.5, y));
-	pSliderEnt->GetVar("size2d")->Set(CL_Vec2f(sizeX- (vImageSize.x*0.5),0));
+	pSliderEnt->GetVar("pos2d")->Set(CL_Vec2f(x+(vImageSize.x/2)*0.5f, y));
+	pSliderEnt->GetVar("size2d")->Set(CL_Vec2f(sizeX- (vImageSize.x*0.5f),0));
 
 	//SetTouchPaddingEntity(pSliderButton, CL_Rectf(0,0,0,0));
 	SetAlignmentEntity(pSliderButton, ALIGNMENT_CENTER);

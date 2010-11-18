@@ -54,7 +54,13 @@ void ScrollBarRenderComponent::OnFileNameChanged(Variant *pDataObject)
 	SAFE_DELETE(m_pSurf);
 
 	m_pSurf = GetResourceManager()->GetSurfaceAnim(pDataObject->GetString());
-	m_pSurf->SetupAnim(1,2);
+	if (m_pSurf)
+	{
+		m_pSurf->SetupAnim(1,2);
+	} else
+	{
+		LogMsg("ScrollBarRenderComponent: Can't load scroll bar pieces");
+	}
 
 }
 void ScrollBarRenderComponent::OnTargetOverStart(VariantList *pVList)
@@ -91,6 +97,8 @@ void ScrollBarRenderComponent::OnRender(VariantList *pVList)
 		return;
 	}
 	float barHeight = m_pSize2d->y/contentAreaRatio;
+	if (!m_pSurf) return; //can't do anything without the graphics loaded
+	
 	if (barHeight < m_pSurf->GetFrameHeight()*2) barHeight = m_pSurf->GetFrameHeight()*2;
 	float barWidth = m_pSurf->GetFrameWidth();
 	uint32 color = ColorCombine(*m_pColor, *m_pColorMod, *m_pAlpha);

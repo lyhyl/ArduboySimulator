@@ -187,14 +187,17 @@ void ArcadeInputComponent::OnTrackball(VariantList *pVList)
 		{
 			m_buttons[MOVE_BUTTON_DIR_LEFT].OnPress(0);
 			m_buttons[MOVE_BUTTON_DIR_LEFT].ReleaseIfNeeded();
-			m_trackball.x = 0;
+			m_trackball.x += 1;
+			m_trackball.y = 0;
+
 		} else
 		{
 			if (m_trackball.x > 1.0f) 
 			{
 				m_buttons[MOVE_BUTTON_DIR_RIGHT].OnPress(0);
 				m_buttons[MOVE_BUTTON_DIR_RIGHT].ReleaseIfNeeded();
-				m_trackball.x = 0;
+				m_trackball.x -= 1;
+				m_trackball.y = 0;
 			}
 		}
 
@@ -202,14 +205,16 @@ void ArcadeInputComponent::OnTrackball(VariantList *pVList)
 		{
 			m_buttons[MOVE_BUTTON_DIR_UP].OnPress(0);
 			m_buttons[MOVE_BUTTON_DIR_UP].ReleaseIfNeeded();
-			m_trackball.y = 0;
+			m_trackball.y += 1;
+			m_trackball.x = 0;
 		}else
 		{
 			if (m_trackball.y > 1.0f)
 			{
 				m_buttons[MOVE_BUTTON_DIR_DOWN].OnPress(0);
 				m_buttons[MOVE_BUTTON_DIR_DOWN].ReleaseIfNeeded();
-				m_trackball.y = 0;
+				m_trackball.y -= 1;
+				m_trackball.x = 0;
 			}
 		}
 
