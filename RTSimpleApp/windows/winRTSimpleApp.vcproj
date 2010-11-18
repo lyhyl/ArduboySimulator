@@ -460,6 +460,14 @@
 				Name="GUI"
 				>
 				<File
+					RelativePath="..\source\GUI\AboutMenu.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\source\GUI\AboutMenu.h"
+					>
+				</File>
+				<File
 					RelativePath="..\source\GUI\DebugMenu.cpp"
 					>
 				</File>
@@ -1841,6 +1849,14 @@
 					</File>
 					<File
 						RelativePath="..\..\shared\Entity\SelectButtonWithCustomInputComponent.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\shared\Entity\SliderComponent.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\shared\Entity\SliderComponent.h"
 						>
 					</File>
 					<File

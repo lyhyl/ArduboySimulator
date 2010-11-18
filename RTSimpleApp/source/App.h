@@ -9,8 +9,6 @@
 
 #include "BaseApp.h"
 
-
-
 class App: public BaseApp
 {
 public:
@@ -39,7 +37,6 @@ private:
 	bool m_bDidPostInit;
 	VariantDB m_varDB; //holds all data we want to save/load
 	int m_special;
-
 };
 
 

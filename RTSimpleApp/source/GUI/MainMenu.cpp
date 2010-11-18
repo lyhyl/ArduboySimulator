@@ -5,7 +5,7 @@
 #include "EnterNameMenu.h"
 #include "ParticleTestMenu.h"
 #include "Entity/CustomInputComponent.h"
-
+#include "GUI/AboutMenu.h"
 
 void MainMenuOnSelect(VariantList *pVList) //0=vec2 point of click, 1=entity sent from
 {
@@ -38,6 +38,19 @@ void MainMenuOnSelect(VariantList *pVList) //0=vec2 point of click, 1=entity sen
 		DebugMenuCreate(pEntClicked->GetParent());
 	}
 
+	if (pEntClicked->GetName() == "About")
+	{
+		DisableAllButtonsEntity(pEntClicked->GetParent());
+		SlideScreen(pEntClicked->GetParent(), false);
+		
+		//kill this menu entirely, but we wait half a second while the transition is happening before doing it
+		GetMessageManager()->CallEntityFunction(pEntClicked->GetParent(), 500, "OnDelete", NULL); 
+		
+		//create the new menu
+		AboutMenuCreate(pEntClicked->GetParent()->GetParent());
+	}
+
+
 	GetEntityRoot()->PrintTreeAsText(); //useful for debugging
 }
 
@@ -68,7 +81,10 @@ Entity * MainMenuCreate(Entity *pParentEnt)
 
 	pButtonEntity = CreateTextButtonEntity(pBG, "Debug", x, y, "Debug and music test"); y += ySpacer;
 	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MainMenuOnSelect);
-	
+
+	pButtonEntity = CreateTextButtonEntity(pBG, "About", x, y, "About (scroll bar test)"); y += ySpacer;
+	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MainMenuOnSelect);
+
 	SlideScreen(pBG, true);
 	return pBG;
 }

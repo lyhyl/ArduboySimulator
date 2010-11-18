@@ -38,6 +38,8 @@ SurfaceAnim * ResourceManager::GetSurfaceAnim( string fileName )
 		if (!pSurf->LoadFile(fileName))
 		{
 			delete pSurf;
+			
+			LogMsg("ResourceManager::GetSurfaceAnim: Unable to load %s", fileName.c_str());
 			return NULL;
 		}
 

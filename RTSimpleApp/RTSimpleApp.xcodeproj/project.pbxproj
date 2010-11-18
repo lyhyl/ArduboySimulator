@@ -105,6 +105,7 @@
 		5DC6D63F0EA47C0E001482E0 /* interface in Resources */ = {isa = PBXBuildFile; fileRef = 5DC6D63B0EA47C0E001482E0 /* interface */; };
 		5DC6D77D0EA4B397001482E0 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 5DC6D77B0EA4B397001482E0 /* Default.png */; };
 		5DC6D77E0EA4B397001482E0 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 5DC6D77C0EA4B397001482E0 /* icon.png */; };
+		5DDEC3271295639300C42C5E /* AboutMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DDEC3261295639300C42C5E /* AboutMenu.cpp */; };
 		5DE84C090FB9469A00DDAE64 /* angle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84C060FB9469A00DDAE64 /* angle.cpp */; };
 		5DE84C0A0FB9469A00DDAE64 /* vec2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84C070FB9469A00DDAE64 /* vec2.cpp */; };
 		5DE84C0B0FB9469A00DDAE64 /* vec3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84C080FB9469A00DDAE64 /* vec3.cpp */; };
@@ -321,6 +322,8 @@
 		5DC6D77B0EA4B397001482E0 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = media/Default.png; sourceTree = "<group>"; };
 		5DC6D77C0EA4B397001482E0 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon.png; path = media/icon.png; sourceTree = "<group>"; };
 		5DD9544D0E960962004E403D /* PlatformSetup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlatformSetup.h; sourceTree = "<group>"; };
+		5DDEC3251295639300C42C5E /* AboutMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AboutMenu.h; path = source/GUI/AboutMenu.h; sourceTree = "<group>"; };
+		5DDEC3261295639300C42C5E /* AboutMenu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AboutMenu.cpp; path = source/GUI/AboutMenu.cpp; sourceTree = "<group>"; };
 		5DE84C060FB9469A00DDAE64 /* angle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = angle.cpp; path = "ClanLib-2.0/Sources/Core/Math/angle.cpp"; sourceTree = "<group>"; };
 		5DE84C070FB9469A00DDAE64 /* vec2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vec2.cpp; path = "ClanLib-2.0/Sources/Core/Math/vec2.cpp"; sourceTree = "<group>"; };
 		5DE84C080FB9469A00DDAE64 /* vec3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vec3.cpp; path = "ClanLib-2.0/Sources/Core/Math/vec3.cpp"; sourceTree = "<group>"; };
@@ -481,6 +484,8 @@
 		5D4760860FBB1D04008400E3 /* GUI */ = {
 			isa = PBXGroup;
 			children = (
+				5DDEC3251295639300C42C5E /* AboutMenu.h */,
+				5DDEC3261295639300C42C5E /* AboutMenu.cpp */,
 				5DF1D5731045018700826147 /* ParticleTestMenu.cpp */,
 				5DF1D5741045018700826147 /* ParticleTestMenu.h */,
 				5D7BBDDF10146FAC0015A90E /* EnterNameMenu.cpp */,
@@ -984,6 +989,7 @@
 				5D5C10311275794D00A4E4E3 /* EAGLView.mm in Sources */,
 				5D5C10B212779D4400A4E4E3 /* SliderComponent.cpp in Sources */,
 				5D5C10B312779D4400A4E4E3 /* SelectButtonWithCustomInputComponent.cpp in Sources */,
+				5DDEC3271295639300C42C5E /* AboutMenu.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

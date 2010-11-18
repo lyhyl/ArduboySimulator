@@ -80,14 +80,6 @@ void App::OnExitApp(VariantList *pVarList)
 	GetBaseApp()->AddOSMessage(o);
 }
 
-//First, our function we're going to call with a function object in a second..
-void SaySomething(VariantList *pVlist)
-{
-	LogMsg( ("I will say:" + pVlist->Get(0).GetString()).c_str() );
-}
-
-
-
 bool App::Init()
 {
 	//SetDefaultAudioClickSound("audio/enter.wav");
@@ -130,7 +122,7 @@ bool App::Init()
 		LogMsg("Can't load font 2");
 		return false;
 	}
-	//GetFont(FONT_SMALL)->SetSmoothing(false);
+	//GetFont(FONT_SMALL)->SetSmoothing(false); //if we wanted to disable bilinear filtering on the font
 
 	GetBaseApp()->SetFPSVisible(true);
 	
@@ -140,8 +132,6 @@ bool App::Init()
 	//preload audio
 	GetAudioManager()->Preload("audio/click.wav");
 
-
-	
 	return true;
 }
 
@@ -161,11 +151,9 @@ void App::Update()
 		m_bDidPostInit = true;
 		m_special = GetSystemData() != C_PIRATED_NO;
 
-		//build a GUI node
-
+		//build a dummy entity called "GUI" to put our GUI menu entities under
 		Entity *pGUIEnt = GetEntityRoot()->AddEntity(new Entity("GUI"));
 		MainMenuCreate(pGUIEnt);
-	
 	}
 }
 
@@ -224,10 +212,9 @@ int App::GetBuild()
 
 const char * GetAppName() {return "SimpleApp";}
 
-//for palm webos and android.  Dunno why my palm os versions have .app in them, but it's already in the story so can't change now.
+//for palm webos and android
 const char * GetBundlePrefix()
 {
-
 	char * bundlePrefix = "com.rtsoft.";
 	return bundlePrefix;
 }
