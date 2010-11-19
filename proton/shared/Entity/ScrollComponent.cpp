@@ -45,7 +45,7 @@ void ScrollComponent::SetProgress(VariantList *pVList)
 {
 	CL_Vec2f vProg = pVList->m_variant[0].GetVector2();
 	//LogMsg("Setting progress to %s", PrintVector2(vProg).c_str());
-	m_vecChildPos.x = m_pBoundsRect->left + vProg.x * m_pBoundsRect->get_width();
+	m_vecChildPos.x = m_pBoundsRect->right - vProg.x * m_pBoundsRect->get_width();
 	m_vecChildPos.y = m_pBoundsRect->bottom - vProg.y * m_pBoundsRect->get_height();
 
 	//update it

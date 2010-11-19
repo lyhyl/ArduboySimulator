@@ -1161,7 +1161,7 @@ void ResizeScrollBounds(VariantList *pVList)
 	}
 	CL_Rectf r = MeasureEntityAndChildren(pScrollChild);
 	//	LogMsg("Resizing bounds to %s", PrintRect(r).c_str());
-	pScroll->GetComponentByName("Scroll")->GetVar("boundsRect")->Set(CL_Rectf(0, (-r.get_height())+pScroll->GetVar("size2d")->GetVector2().y, 0, 0));
+	pScroll->GetComponentByName("Scroll")->GetVar("boundsRect")->Set(CL_Rectf((-r.get_width())+pScroll->GetVar("size2d")->GetVector2().x, (-r.get_height())+pScroll->GetVar("size2d")->GetVector2().y, 0, 0));
 }
 
 
