@@ -1159,9 +1159,27 @@ void ResizeScrollBounds(VariantList *pVList)
 		LogError("huh");
 		return;
 	}
+
+	CL_Vec2f scrollSize = pScroll->GetVar("size2d")->GetVector2();
+
 	CL_Rectf r = MeasureEntityAndChildren(pScrollChild);
 	//	LogMsg("Resizing bounds to %s", PrintRect(r).c_str());
-	pScroll->GetComponentByName("Scroll")->GetVar("boundsRect")->Set(CL_Rectf((-r.get_width())+pScroll->GetVar("size2d")->GetVector2().x, (-r.get_height())+pScroll->GetVar("size2d")->GetVector2().y, 0, 0));
+	CL_Rectf scrollRect = CL_Rectf( rt_min(0, (-r.get_width())+scrollSize.x), (-r.get_height())+scrollSize.y, 0, 0);
+
+	pScroll->GetComponentByName("Scroll")->GetVar("boundsRect")->Set(scrollRect);
+}
+
+void DisableHorizontalScrolling(Entity *pEnt)
+{
+	Entity *pScroll = pEnt->GetEntityByName("scroll");
+    if (!pScroll)
+	{
+		assert(!"This only works for an entity holding a ScrollComponent!");
+		return;
+	}
+
+	pEnt->GetComponentByName("Scroll")->GetVar("boundsRect")->GetRect().left = 0;
+
 }
 
 
