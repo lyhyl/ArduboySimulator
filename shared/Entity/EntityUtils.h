@@ -98,6 +98,7 @@ void SetButtonRepeatDelayMS(Entity *pEnt, uint32 delayMS);
 void LightBarOnChange(VariantList *pVList);
 void SetupLightBarSelect(Entity *pBG, string entNamePrefix, int defaultOption, uint32 color);
 void ResizeScrollBounds(VariantList *pVList);
+void DisableHorizontalScrolling(Entity *pEnt);
 
 EntityComponent * DisableComponentByName(Entity *pEnt, const string &compName, int delayBeforeActionMS=0); //applicable to components that check a var named "disabled", like Button2D or InputTextRender
 EntityComponent * EnableComponentByName(Entity *pEnt, const string &compName, int delayBeforeActionMS=0); //applicable to components that check a var named "disabled", like Button2D or InputTextRender
