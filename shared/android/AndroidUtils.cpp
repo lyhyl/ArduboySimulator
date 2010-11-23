@@ -435,7 +435,7 @@ void CreateDirectoryRecursively(string basePath, string path)
 		"create_dir_recursively",
 		"(Ljava/lang/String;Ljava/lang/String;)V");
 	jstring ret;
-	env->CallStaticObjectMethod(cls, mid, env->NewStringUTF(basePath.c_str()), env->NewStringUTF(path.c_str()));
+	env->CallStaticVoidMethod(cls, mid, env->NewStringUTF(basePath.c_str()), env->NewStringUTF(path.c_str()));
 	return;
 }
 
