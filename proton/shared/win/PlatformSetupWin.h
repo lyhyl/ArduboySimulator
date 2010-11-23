@@ -3,9 +3,8 @@
 #include <TCHAR.h>
 
 #ifdef C_GL_MODE
-#include "gl.h"
-#include <glu.h>			// Header File For The GLu32 Library
-#include "glext.h"
+#include "GL/gl.h"
+#include "glext.h" //needed for GL_CLAMP_TO_EDGE
 
 //help with compatibility so I can use the GL ES calls with normal GL
 
