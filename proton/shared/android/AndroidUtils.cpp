@@ -21,6 +21,8 @@ const char * GetBundleName();
 
 bool g_preferSDCardForUserStorage = false;
 
+bool g_callAppResumeASAP = false;
+
 string g_musicToPlay;
 int g_musicPos = 0;
 
@@ -59,7 +61,7 @@ extern "C"
 
 	JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) 
 	{
-		LogMsg("JNI_OnLoad(): you are here");
+		//LogMsg("JNI_OnLoad(): you are here");
 
 		JNIEnv* env;
 		if (vm->GetEnv((void**)&env, JNI_VERSION_1_4) != JNI_OK) 
@@ -537,7 +539,7 @@ bool RemoveDirectoryRecursively(string path)
 		if (ent->d_type == DT_REG) //regular file
 		{
 			string fName = path+string("/")+ent->d_name;
-			LogMsg("Deleting %s", fName.c_str());
+			//LogMsg("Deleting %s", fName.c_str());
 			unlink( fName.c_str());
 		}
 
@@ -638,6 +640,20 @@ void AppRender(JNIEnv*  env)
 
 void AppUpdate(JNIEnv*  env)
 {
+	if (g_callAppResumeASAP)
+	{
+		g_callAppResumeASAP = false;
+		LogMsg("Resume");
+		GetBaseApp()->OnEnterForeground();
+		GetAudioManager()->Init();
+
+		if (!g_musicToPlay.empty())
+		{
+			GetAudioManager()->Play(g_musicToPlay, GetAudioManager()->GetLastMusicLooping(), true, false, true);
+			GetAudioManager()->SetPos(GetAudioManager()->GetLastMusicID(), g_musicPos);
+		}
+
+	}
 	GetBaseApp()->Update();
 }
 
@@ -667,21 +683,14 @@ void AppPause(JNIEnv*  env)
 }
 void AppResume(JNIEnv*  env)
 {
-	LogMsg("Resume");
-	GetBaseApp()->OnEnterForeground();
-	GetAudioManager()->Init();
-
-	if (!g_musicToPlay.empty())
-	{
-		GetAudioManager()->Play(g_musicToPlay, GetAudioManager()->GetLastMusicLooping(), true, false, true);
-		GetAudioManager()->SetPos(GetAudioManager()->GetLastMusicID(), g_musicPos);
-	}
+	g_callAppResumeASAP = true;
+	
 }
 
 void AppInit(JNIEnv*  env)
 {
 	//happens after the gl surface is initialized
-	LogMsg("Android GL surface initialized");
+	//LogMsg("Android GL surface initialized");
 	GetBaseApp()->InitializeGLDefaults();
 	GetBaseApp()->OnScreenSizeChange();
 	GetBaseApp()->m_sig_loadSurfaces(); 

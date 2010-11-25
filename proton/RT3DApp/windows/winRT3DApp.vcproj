@@ -9181,6 +9181,14 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\shared\Entity\SliderComponent.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\shared\Entity\SliderComponent.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\shared\Entity\TapSequenceDetectComponent.cpp"
 						>
 					</File>

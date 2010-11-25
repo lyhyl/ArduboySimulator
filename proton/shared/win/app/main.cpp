@@ -31,10 +31,11 @@ void InitVideoSize()
 	AddVideoMode("G1 Landscape", 480, 320, PLATFORM_ID_ANDROID);
 	AddVideoMode("Nexus One", 480, 800, PLATFORM_ID_ANDROID);
 	AddVideoMode("Droid", 480, 854, PLATFORM_ID_ANDROID);
+	AddVideoMode("Droid Landscape", 854, 480, PLATFORM_ID_ANDROID);
 	AddVideoMode("Nexus One Landscape", 800, 480, PLATFORM_ID_ANDROID); //g_landScapeNoNeckHurtMode should be false when testing
 
-	string desiredVideoMode = "G1 Landscape"; //name needs to match one of the ones defined below
-    g_landScapeNoNeckHurtMode = false; //if true, will rotate the screen so we can play in landscape mode in windows without hurting ourselves
+	string desiredVideoMode = "iPhone"; //name needs to match one of the ones defined below
+    g_landScapeNoNeckHurtMode = true; //if true, will rotate the screen so we can play in landscape mode in windows without hurting ourselves
 
 	#ifndef _DEBUG
 		//desiredVideoMode = "Windows"; //so when I build Dink for windows I don't have to worry about this being set right

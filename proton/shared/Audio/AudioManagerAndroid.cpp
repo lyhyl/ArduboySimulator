@@ -17,13 +17,6 @@ AudioManagerAndroid::~AudioManagerAndroid()
 	Kill();
 }
 
-AudioHandle AudioManagerAndroid::Play( const string fileName )
-{
-	LogMsg("Playing %s", fileName.c_str());
-	assert(!"huh?");
-	return AUDIO_HANDLE_BLANK;
-}
-
 bool AudioManagerAndroid::Init()
 {
 	//initted on the Android side to reduce JNI crap

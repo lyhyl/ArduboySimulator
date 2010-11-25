@@ -57,7 +57,7 @@ void MainMenuOnSelect(VariantList *pVList) //0=vec2 point of click, 1=entity sen
 Entity * MainMenuCreate(Entity *pParentEnt)
 {
 	Entity *pBG = CreateOverlayEntity(pParentEnt, "MainMenu", "interface/summary_bg.rttex", 0,0);
-	
+	EntitySetScaleBySize(pBG, GetScreenSize());
 	AddFocusIfNeeded(pBG);
 	
 	Entity *pButtonEntity;
