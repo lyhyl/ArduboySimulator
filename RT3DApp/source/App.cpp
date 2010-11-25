@@ -80,6 +80,8 @@ bool App::Init()
 
 	}
 	
+	//SetupFakePrimaryScreenSize(320,480); //game will think its this size, and will be scaled up
+
 	L_ParticleSystem::init(2000);
 
 	if (m_bInitted)	
