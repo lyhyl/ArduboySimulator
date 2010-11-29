@@ -28,7 +28,16 @@ void RTFont::ReloadFontTextureOnly()
 {
 	if (m_fileName.empty()) return;
 
-	//LogMsg("Reloading font %s", m_fileName.c_str());
+	if (m_surf.IsLoaded())
+	{
+#ifdef _DEBUG
+		LogMsg("font %s already reloaded, ignoring", m_fileName.c_str());
+#endif	return;
+	}
+#ifdef _DEBUG
+	LogMsg("Reloading font %s", m_fileName.c_str());
+#endif
+
 	FileInstance f(m_fileName);
 	if (!f.IsLoaded()) return;
 	rtfont_header *pHeader = (rtfont_header*)f.GetAsBytes();
@@ -231,6 +240,13 @@ void RTFont::DrawScaled( float x, float y, const string &text, float scale /*= 1
 	if (!pBatcher) pBatcher = &g_globalBatcher;
 	SetupOrtho();
 	assert(IsLoaded() && "No font loaded");
+	
+	
+	if (!m_surf.IsLoaded())
+	{
+		ReloadFontTextureOnly();
+	}
+	
 	rtRectf dst, src;
 	rtfont_charData *pCharData, *pLastCharData;
 	
