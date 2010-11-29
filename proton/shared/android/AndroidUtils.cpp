@@ -21,10 +21,14 @@ const char * GetBundleName();
 
 bool g_preferSDCardForUserStorage = false;
 
-bool g_callAppResumeASAP = false;
-
+uint32 g_callAppResumeASAPTimer = 0;
+bool g_pauseASAP = false;
 string g_musicToPlay;
 int g_musicPos = 0;
+
+//this delay fixes a problem with restoring surfaces before android 1.6 devices are ready for it resulting
+//in white textures -  update: unneeded
+#define C_DELAY_BEFORE_RESTORING_SURFACES_MS 1
 
 OSMessage g_lastOSMessage; //used to be a temporary holding place so android can access it because I'm too lazy to figure
 //out how to make/pass java structs
@@ -633,6 +637,8 @@ void AppResize( JNIEnv*  env, jobject  thiz, jint w, jint h )
 
 void AppRender(JNIEnv*  env)
 {
+	if (GetBaseApp()->IsInBackground() || g_pauseASAP) return;
+
 	glViewport(0, 0, GetPrimaryGLX(), GetPrimaryGLY());
 	GetBaseApp()->Draw();
 	//appRender(0, sWindowWidth, sWindowHeight);
@@ -640,10 +646,27 @@ void AppRender(JNIEnv*  env)
 
 void AppUpdate(JNIEnv*  env)
 {
-	if (g_callAppResumeASAP)
+
+	if (g_pauseASAP)
 	{
-		g_callAppResumeASAP = false;
-		LogMsg("Resume");
+		g_pauseASAP = false;	
+
+		LogMsg("Pause");
+
+		GetBaseApp()->m_sig_unloadSurfaces();
+		GetBaseApp()->OnEnterBackground();
+
+		GetAudioManager()->Kill();
+		
+		return;
+	}
+
+	if (g_callAppResumeASAPTimer != 0 && g_callAppResumeASAPTimer < GetSystemTimeTick())
+	{
+#ifdef _DEBUG
+		LogMsg("Resuming at %u (timer was %u)", GetSystemTimeTick(), g_callAppResumeASAPTimer);
+#endif
+		g_callAppResumeASAPTimer = 0;
 		GetBaseApp()->OnEnterForeground();
 		GetAudioManager()->Init();
 
@@ -654,6 +677,8 @@ void AppUpdate(JNIEnv*  env)
 		}
 
 	}
+
+	if (GetBaseApp()->IsInBackground()) return;
 	GetBaseApp()->Update();
 }
 
@@ -666,9 +691,32 @@ void AppDone(JNIEnv*  env)
 
 void AppPause(JNIEnv*  env)
 {
-	LogMsg("Pause");
-	GetBaseApp()->m_sig_unloadSurfaces();
-	GetBaseApp()->OnEnterBackground();
+	
+	//instead of pausing right now and dealing with thread problems, schedule it to happen
+	//in the main update.  We will kill the sound now though.
+
+	//Note: Thread update isn't going to happen until they COME back, which means we aren't killing
+	//all used textures.  But this fixes problems with the engine trying to reload textures as it
+	//notices they are killed because the pause is run concurrently with the game update/render
+	//thread going.
+
+	//We will kill/restore lost surfaces when the app is restored so we are still ok with v1.6
+
+	//This also means we might not be saving the game until we return which is sort of weird, but
+	//I don't think Android users really expect that to happen anyway
+
+	if (g_pauseASAP)
+	{
+		LogMsg("Got android AppPause, ignoring as we've already trigger it");
+		return;
+	}
+#ifdef _DEBUG
+	LogMsg("Got android AppPause");
+#endif
+
+	g_pauseASAP = true;
+	
+
 	if (GetAudioManager()->IsPlaying(GetAudioManager()->GetLastMusicID()))
 	{
 		g_musicToPlay = GetAudioManager()->GetLastMusicFileName();
@@ -679,18 +727,23 @@ void AppPause(JNIEnv*  env)
 		g_musicPos = 0;
 
 	}
+	
 	GetAudioManager()->Kill();
+
 }
 void AppResume(JNIEnv*  env)
 {
-	g_callAppResumeASAP = true;
-	
+
+	g_callAppResumeASAPTimer = GetSystemTimeTick() + C_DELAY_BEFORE_RESTORING_SURFACES_MS;
+#ifdef _DEBUG
+	LogMsg("Queuing resume: %u (now is %u)", g_callAppResumeASAPTimer, GetTick(TIMER_SYSTEM));
+#endif
 }
 
 void AppInit(JNIEnv*  env)
 {
 	//happens after the gl surface is initialized
-	//LogMsg("Android GL surface initialized");
+	LogMsg("Initialized GL surfaces for game");
 	GetBaseApp()->InitializeGLDefaults();
 	GetBaseApp()->OnScreenSizeChange();
 	GetBaseApp()->m_sig_loadSurfaces(); 

@@ -385,7 +385,8 @@ void Surface::Bind()
 		//believe it or not, I saved 2 FPS on the iphone by doing my own checks
 		return;
 	}
-	assert(IsLoaded() && "Shouldn't you load a texture before binding it?");
+
+	CHECK_GL_ERROR();
 	glBindTexture( GL_TEXTURE_2D, m_glTextureID);
 	g_lastBound = m_glTextureID;
 	CHECK_GL_ERROR();
@@ -456,12 +457,12 @@ void Surface::BlitEx(rtRectf dst, rtRectf src, unsigned int rgba, float rotation
 		return;	
 	}
 
-	if (!IsLoaded()) return;
 	
 	SetupOrtho(); //upside down, makes this easier to do
 	g_globalBatcher.Flush();
-
 	Bind();
+	if (!IsLoaded()) return;
+
 	
 	//LogMsg("Rendering tex %d at %s at %d", m_glTextureID, PrintRect(dst).c_str(), GetTick(TIMER_GAME));
 	

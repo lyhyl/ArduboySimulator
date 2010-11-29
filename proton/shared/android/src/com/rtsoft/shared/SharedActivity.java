@@ -93,8 +93,8 @@ public class SharedActivity extends Activity implements SensorEventListener
         public boolean is_demo = false;
         public String BASE64_PUBLIC_KEY = "this will be set in your app's Main.java";
     
-        // Generate your own 20 random bytes, and put them here.
-        private static final byte[] SALT = new byte[] {
+        //20 random bytes.  You can override these in your own Main.java
+        public byte[] SALT = new byte[] {
             24, -96, 16, 91, 65, -86, -54, -73, -101, 12, -84, -90, -53, -68, 20, -67, 45, 35, 85, 17
         };
     
@@ -228,16 +228,12 @@ public class SharedActivity extends Activity implements SensorEventListener
 		apiVersion = Build.VERSION.SDK_INT;
 		
 		Log.d(PackageName, "SDK version: " + apiVersion);
-		
-		
-		
+				
 		System.loadLibrary(dllname);
 				
 		super.onCreate(savedInstanceState);
         mGLView = new AppGLSurfaceView(this, this);
      	
-	
-
 		setContentView(mGLView);
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
 		if (securityEnabled) this.license_init();
@@ -249,8 +245,8 @@ public class SharedActivity extends Activity implements SensorEventListener
 		float hzTemp = accelHzSave;
 	    setup_accel(0); //disable accelerator messages to save on CPU/battery
 		accelHzSave = hzTemp;
-        super.onPause();
         mGLView.onPause();
+        super.onPause();
 		//_sounds.autoPause();
 	
     }
@@ -261,9 +257,9 @@ public class SharedActivity extends Activity implements SensorEventListener
 		//_sounds.autoResume();
 	
 		music_set_volume(m_lastMusicVol); //android forgets the audio level, need to reset it
-		super.onResume();
         mGLView.onResume();
 		setup_accel(accelHzSave);
+		super.onResume();
   
 	}
  
@@ -523,7 +519,7 @@ public class SharedActivity extends Activity implements SensorEventListener
 
     // JNI to play music, etc
     public MediaPlayer _music = null;
-    public static void music_play(String fname)
+    public synchronized static void music_play(String fname)
 	{
 		if (app._music != null)
 		{
@@ -546,6 +542,11 @@ public class SharedActivity extends Activity implements SensorEventListener
 			{ 
 			Log.v("Can't load music (raw)", fname);
 			}
+			catch(IllegalStateException e) 
+		{ 
+			Log.v("Can't load music (raw), illegal state", fname);
+			app._music.reset();
+			}
 			return;
 		}
 
@@ -561,40 +562,45 @@ public class SharedActivity extends Activity implements SensorEventListener
 		{ 
 		Log.v("Can't load music", fname);
 		}
+		catch(IllegalStateException e) 
+		{ 
+			Log.v("Can't load music, illegal state", fname);
+			app._music.reset();
+		}
     }
 
-    public static void music_stop() 
+    public synchronized static void music_stop() 
 	{
         if (app._music == null) { return; }
         app._music.stop();
     }
 	
-	public static void music_set_volume(float v) 
+	public synchronized static void music_set_volume(float v) 
 	{
         if (app._music == null) { return; }
 		m_lastMusicVol = v;
 		app._music.setVolume(v,v);
     }
 
-    public static void vibrate(int vibMS) 
+    public synchronized static void vibrate(int vibMS) 
 	{
         Vibrator v = (Vibrator) app.getSystemService(Context.VIBRATOR_SERVICE);
 		v.vibrate(vibMS);
     }
 
-    public static int music_get_pos() 
+    public synchronized static int music_get_pos() 
 	{
         if (app._music == null) { return 0; }
         return app._music.getCurrentPosition();
     }
   
-	public static boolean music_is_playing() 
+	public synchronized static boolean music_is_playing() 
 	{
         if (app._music == null) { return false; }
         return app._music.isPlaying();
     }
 
-    public static void music_set_pos(int positionMS) 
+    public synchronized static void music_set_pos(int positionMS) 
 	{
         if (app._music == null) 
 		{
@@ -607,7 +613,7 @@ public class SharedActivity extends Activity implements SensorEventListener
 	// JNI to play sounds
     public SoundPool _sounds = new SoundPool(8,AudioManager.STREAM_MUSIC,0);
     
-	public static void sound_init()
+	public synchronized static void sound_init()
 	{
 		if (app._sounds == null)
 		{
@@ -615,7 +621,7 @@ public class SharedActivity extends Activity implements SensorEventListener
 		}
 	}
 
-	public static void sound_destroy()
+	public synchronized static void sound_destroy()
 	{
 		if (app._sounds != null)
 		{
@@ -624,7 +630,7 @@ public class SharedActivity extends Activity implements SensorEventListener
 		}
 	}
 
-	public static int sound_load(String fname) 
+	public synchronized static int sound_load(String fname) 
 	{
        // Log.v("sound_load",fname);
        
@@ -647,7 +653,7 @@ public class SharedActivity extends Activity implements SensorEventListener
         return 0;
     }
 
-    public static int sound_play(int soundID, float leftVol, float rightVol, int priority, int loop, float speedMod ) 
+    public synchronized static int sound_play(int soundID, float leftVol, float rightVol, int priority, int loop, float speedMod ) 
 	{
 		//Log.v("MSG", "Playing sound: "+soundID);
 		//Log.v("Sound vol:", ""+leftVol);
