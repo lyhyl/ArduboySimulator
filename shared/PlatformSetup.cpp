@@ -1,7 +1,7 @@
 #include "PlatformPrecomp.h"
 
 ePlatformID g_emulatedPlatformID = PLATFORM_ID_UNKNOWN;
-
+eMarketID g_marketID = MARKET_ID_UNSPECIFIED;
 
 //usually the same as PlatFormID, unless we're using one OS to test another OS's stuff
 ePlatformID GetEmulatedPlatformID()
@@ -36,6 +36,17 @@ string GetPlatformName()
 			
 	}
 	return "";
+}
+
+
+void SetMarketID(eMarketID marketID)
+{
+	g_marketID = marketID;
+}
+
+eMarketID GetMarketID()
+{
+	return g_marketID;
 }
 
 void SetEmulatedPlatformID(ePlatformID platformID)

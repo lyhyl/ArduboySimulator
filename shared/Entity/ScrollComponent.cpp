@@ -88,6 +88,20 @@ void ScrollComponent::SetPosition(CL_Vec2f vDisplacement, bool bForceUpdate)
 {
 	if (vDisplacement == CL_Vec2f(0,0) && !bForceUpdate) return;
 	
+	
+	/*
+	
+	//this works, but it still totally feels wrong, really I would need to turn "momentum" off as well, and perfectly tune the
+	//sensitivity so it feels like you're dragging the scroll bar
+
+	if (IsDesktop())
+	{
+		vDisplacement.y *= -1; //on desktops where you use a mouse, it makes more sense to drag the scroll bar down, rather than "drag the screen up"
+	}
+
+	*/
+
+
 	m_vecChildPos += vDisplacement;
 
 	//force it within our ranges

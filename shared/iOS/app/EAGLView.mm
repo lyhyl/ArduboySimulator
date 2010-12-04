@@ -106,7 +106,7 @@
 		OSMessage m = GetBaseApp()->GetOSMessages()->front();
 		GetBaseApp()->GetOSMessages()->pop_front();
 		
-		LogMsg("Got OS message %d, %s", m.m_type, m.m_string.c_str());
+		//LogMsg("Got OS message %d, %s", m.m_type, m.m_string.c_str());
 		MyAppDelegate *appDelegate = (MyAppDelegate *)[[UIApplication sharedApplication] delegate];
 		
 		[appDelegate onOSMessage: &m];

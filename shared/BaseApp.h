@@ -39,6 +39,10 @@ enum eFont
 	FONT_BASE_COUNT
 };
 
+//structure used to pass messages from Proton to the platform glue code on android, win, iOS, etc.  Parms are used differently
+//for different messages so it's sort of confusing to use, just find an example and copy it of the message type you are trying
+//to use.
+
 struct OSMessage
 {
 	enum eMessageType
@@ -50,6 +54,7 @@ struct OSMessage
 		MESSAGE_SET_FPS_LIMIT,
 		MESSAGE_SET_ACCELEROMETER_UPDATE_HZ,
 		MESSAGE_FINISH_APP, //only respected by windows and android right now.  webos and iphone don't really need it
+		MESSAGE_SET_VIDEO_MODE,
 		MESSAGE_USER = 1000
 	};
 
@@ -64,12 +69,12 @@ struct OSMessage
 
 	eMessageType m_type;
 	int m_parm1; //max length of input box
-	float m_x, m_y; //location of text box
+	float m_x, m_y; //location of text box, or screen size if using MESSAGE_SET_VIDEO_MODE
 	float m_sizeX, m_sizeY;
-	float m_fontSize;
+	float m_fontSize; //aspect ratio if using MESSAGE_SET_VIDEO_MODE
 	string m_string; //default text of text box
 	uint32 m_parm2; //well, I use it to describe the input box type with the input stuff
-
+	bool m_fullscreen; //used with MESSAGE_SET_VIDEO_MODE
 };
 
 enum eInputMode
@@ -95,11 +100,13 @@ public:
 
 	virtual bool Init();
 	virtual void Kill();
+	virtual bool OnPreInitVideo();
 	virtual void Draw();
 	virtual void Update();
 	virtual void OnEnterBackground(); //OS4 got a phonecall or changed apps, should save your junk
 	virtual void OnEnterForeground(); //switched back to the app
 	virtual void OnScreenSizeChange();
+	virtual void OnFullscreenToggleRequest(); //Alt-Enter on Win, Ctrl-F on Mac - override if you want custom functionality
 	void SetConsoleVisible(bool bNew);
 	bool GetConsoleVisible() {return m_bConsoleVisible;}
 	bool GetFPSVisible() {return m_bFPSVisible;}
@@ -166,7 +173,9 @@ public:
 	//not really used by framework, but useful if your app has cheat modes and you want an easy way to enable/disable them
 	void SetCheatMode(bool bCheatMode) {m_bCheatMode = bCheatMode;}
 	bool GetCheatMode() {return m_bCheatMode;}
-
+	void SetVideoMode(int width, int height, bool bFullScreen, float aspectRatio = 0) /*aspectRatio should be 0 to ignore */;
+	void KillOSMessagesByType(OSMessage::eMessageType type);
+ 
 protected:
 	
 	bool m_bConsoleVisible;
@@ -188,6 +197,7 @@ protected:
 	CL_Mat4f m_projectionMatrix;
 	Entity m_entityRoot;
 	bool m_bCheatMode;
+	
 };
 
 BaseApp * GetBaseApp(); //supply this yourself.  You create it on the first call if needed.

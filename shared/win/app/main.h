@@ -1,12 +1,15 @@
+//This file is used for all Windows builds and contains the WinMain entry point and Windows app code
+
 #pragma once
 
 const char * GetAppName();
 extern bool	g_bAppFinished;
 void InitVideoSize();
-extern int winVideoScreenX;
-extern int winVideoScreenY;
+extern int g_winVideoScreenX;
+extern int g_winVideoScreenY;
 extern bool g_landScapeNoNeckHurtMode;
 extern string g_videoModeNameForce; //if set, video mode will be forced to this instead of what is set in main.cpp
+extern bool g_bIsFullScreen;
 
 class VideoModeEntry
 {
@@ -16,3 +19,5 @@ public:
 	int x, y;
 	ePlatformID platformID;
 };
+
+

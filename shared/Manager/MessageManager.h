@@ -84,6 +84,7 @@ enum eMessageType
 	MESSAGE_TYPE_GUI_CHAR, //the input box uses it on windows since we don't have a virtual keyboard
 	MESSAGE_TYPE_GUI_COPY,
 	MESSAGE_TYPE_GUI_PASTE,
+	MESSAGE_TYPE_GUI_TOGGLE_FULLSCREEN,
 
 	MESSAGE_TYPE_SET_ENTITY_VARIANT,
 	MESSAGE_TYPE_CALL_ENTITY_FUNCTION,
