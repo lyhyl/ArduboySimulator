@@ -3,9 +3,8 @@
 #include "Renderer/RTGLESExt.h"
 
 
-#if defined( WIN32) && defined(_DEBUG)
-	//for testing the surface loading and unloading that the android version uses.  I don't really see a need to use it
-	//on any other platform yet.
+#if defined( WIN32)
+	
 	#define C_SURFACE_UNLOAD_TEXTURES
 #endif
 
@@ -225,7 +224,14 @@ void BaseApp::OnMessage(Message &m)
 
 					break;
 				}
-		
+			
+			case MESSAGE_TYPE_GUI_ACCELEROMETER:
+				{
+					v.Get(0).Set((float)m.GetType());
+					v.Get(1).Set(m.Get().GetVector3());
+					m_sig_accel(&v);				
+					break;
+				}
 			//like MESSAGE_TYPE_GUI_CHAR, but handles up AND down events, and ignores things like key-repeat, better for
 			//arcade action
 			case MESSAGE_TYPE_GUI_CHAR_RAW:
@@ -237,8 +243,13 @@ void BaseApp::OnMessage(Message &m)
 				}
 			
 			//usually used for text input
+			
+			
 			case MESSAGE_TYPE_GUI_CHAR:
 				{
+#ifdef _DEBUG
+					//LogMsg("Got char: %c (%d)", m.GetParm1(), int(m.GetParm1()));
+#endif
 					v.Get(0).Set((float)m.GetType());
 					v.Get(1).Set(0,0);
 					v.Get(2).Set(uint32(m.GetParm1()));
@@ -255,14 +266,6 @@ void BaseApp::OnMessage(Message &m)
 					break;
 				}
 	
-
-			case MESSAGE_TYPE_GUI_ACCELEROMETER:
-				{
-					v.Get(0).Set((float)m.GetType());
-					v.Get(1).Set(m.Get().GetVector3());
-					m_sig_accel(&v);				
-					break;
-				}
 			case MESSAGE_TYPE_GUI_TRACKBALL:
 				{
 					v.Get(0).Set((float)m.GetType());
@@ -279,11 +282,14 @@ void BaseApp::OnMessage(Message &m)
 				}
 				break;
 			
+			case MESSAGE_TYPE_GUI_TOGGLE_FULLSCREEN:
+				{
+					OnFullscreenToggleRequest();
+					break;
+				}
+				break;
 			}
-	
-
 	break;
-
 		
 	case MESSAGE_CLASS_GAME:
 
@@ -324,6 +330,26 @@ void BaseApp::OnMessage(Message &m)
 void BaseApp::AddOSMessage( OSMessage &m )
 {
 	m_OSMessages.push_back(m);
+}
+
+void BaseApp::KillOSMessagesByType(OSMessage::eMessageType type)
+{
+	//It's a deque, making it tricky to delete stuff from the middle.  I'll do it this way, speed isn't important
+	//as this is used rarely.
+
+	deque <OSMessage>::iterator itor = m_OSMessages.begin();
+
+	deque <OSMessage> temp;
+
+	for (;itor != m_OSMessages.end(); itor++)
+	{
+		if (itor->m_type != type)
+		{
+			temp.push_back(*itor);
+		}
+	}
+
+	m_OSMessages = temp;
 }
 
 eTimingSystem BaseApp::GetActiveTimingSystem()
@@ -411,7 +437,6 @@ void BaseApp::OnEnterForeground()
 		GetBaseApp()->m_sig_loadSurfaces(); //for anyone who cares
 	#endif
 		m_sig_enterforeground(NULL);
-
 	}
 }
 
@@ -431,4 +456,61 @@ void BaseApp::SetAccelerometerUpdateHz(float hz) //another way to think of hz is
 	o.m_type = OSMessage::MESSAGE_SET_ACCELEROMETER_UPDATE_HZ;
 	o.m_x = hz;
 	GetBaseApp()->AddOSMessage(o);
+}
+
+void BaseApp::SetVideoMode(int width, int height, bool bFullScreen, float aspectRatio) //aspectRatio should be 0 to ignore
+{
+	//this message is only going to be processed by platforms that can change size during runtime and have such a thing as fullscreen
+	
+	OSMessage o;
+	o.m_type = OSMessage::MESSAGE_SET_VIDEO_MODE;
+	o.m_x = width;
+	o.m_y = height;
+	o.m_fullscreen = bFullScreen;	
+	o.m_fontSize = aspectRatio;
+	GetBaseApp()->AddOSMessage(o);
+}
+
+
+
+#ifdef _WINDOWS_
+
+//yes, hacky.  Will cleanup when I add the OSX support for this
+extern bool g_bIsFullScreen;
+#endif
+
+bool BaseApp::OnPreInitVideo()
+{
+	//only called for desktop systems
+	//override in App.* if you want to do something here.  You'd have to
+	//extern these vars from main.cpp to change them...
+	
+	//g_winVideoScreenX = 768;
+	//g_winVideoScreenY = 1024;
+	//g_landScapeNoNeckHurtMode = true;
+	
+	return true; //no error
+}
+
+
+void BaseApp::OnFullscreenToggleRequest()
+{
+#ifdef _WINDOWS_
+	
+	static int savex =0;
+	static int savey =0;
+
+	if (g_bIsFullScreen)
+	{
+		GetBaseApp()->SetVideoMode(savex, savey, false);
+
+	} else
+	{
+		savex = GetPrimaryGLX();
+		savey = GetPrimaryGLY();
+
+		GetBaseApp()->SetVideoMode(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), true);
+
+	}
+#endif
 }

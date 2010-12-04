@@ -132,8 +132,8 @@ int initSDL_GLES()
 	
 #ifdef RT_WEBOS_ARM
 	g_screen = SDL_SetVideoMode(0 , 0, 0, videoFlags);
-	winVideoScreenX = g_screen->w;
-	winVideoScreenY = g_screen->h;
+	g_winVideoScreenX = g_screen->w;
+	g_winVideoScreenY = g_screen->h;
 
 #else
 	g_screen = SDL_SetVideoMode(GetPrimaryGLX() , GetPrimaryGLY(), 0, videoFlags);

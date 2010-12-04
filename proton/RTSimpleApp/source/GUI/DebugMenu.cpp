@@ -22,6 +22,14 @@ void DebugMenuOnSelect(VariantList *pVList) //0=vec2 point of click, 1=entity se
 		GetAudioManager()->StopMusic();
 	}
 
+	if (pEntClicked->GetName() == "toggle_fullscreen")
+	{
+		GetBaseApp()->OnFullscreenToggleRequest();
+		
+		//if you wanted to set a specific size instead:
+		//GetBaseApp()->SetVideoMode(200, 200, false);
+	}
+
 	if (pEntClicked->GetName() == "Back")
 	{
 		//slide it off the screen and then kill the whole menu tree
@@ -42,7 +50,7 @@ Entity * DebugMenuCreate(Entity *pParentEnt)
 
 	Entity *pButtonEntity;
 	float x = 80;
-	float y = 100;
+	float y = 40;
 	float ySpacer = 40;
 
 	pButtonEntity = CreateTextButtonEntity(pBG, "FPS", x, y, "Toggle FPS Display"); y += ySpacer;
@@ -53,6 +61,13 @@ Entity * DebugMenuCreate(Entity *pParentEnt)
 	
 	pButtonEntity = CreateTextButtonEntity(pBG, "music_off", x, y, "Stop bg music"); y += ySpacer;
 	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&DebugMenuOnSelect);
+	
+	//if (IsDesktop()) //normally you'd want this so this only shows up in desktop builds
+	{
+		pButtonEntity = CreateTextButtonEntity(pBG, "toggle_fullscreen", x, y, "Toggle fullscreen (or Alt-Enter)"); y += ySpacer;
+		pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&DebugMenuOnSelect);
+
+	}
 
 
 	pButtonEntity = CreateTextButtonEntity(pBG, "Back", x, y, "Back"); y += ySpacer;

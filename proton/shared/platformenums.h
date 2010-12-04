@@ -43,6 +43,14 @@ enum ePlatformID
 
 };
 
+enum eMarketID
+{
+	MARKET_ID_UNSPECIFIED,
+	MARKET_ID_ANDROID_MARKET, 
+	MARKET_ID_APPLE_APPSTORE, 
+	MARKET_AMAZON_MARKET
+};
+
 enum eOrientationMode
 {
 	//these match the iphone versions
@@ -98,4 +106,5 @@ bool IsIPodTouchThirdGen();
 string GetClipboardText();
 bool IsDesktop();
 bool HasVibration();
+
 #endif // platformenums_h__

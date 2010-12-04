@@ -51,8 +51,8 @@ JavaVM* g_pJavaVM = NULL;
 
 bool g_landScapeNoNeckHurtMode = false;
 
-int winVideoScreenX = 0;
-int winVideoScreenY = 0;
+int g_winVideoScreenX = 0;
+int g_winVideoScreenY = 0;
 
 
 void StringReplace(const std::string& what, const std::string& with, std::string& in);
@@ -83,19 +83,19 @@ int GetPrimaryGLX()
 {
 	if (g_landScapeNoNeckHurtMode)
 	{
-		return winVideoScreenY;
+		return g_winVideoScreenY;
 	}
 
-	return winVideoScreenX;
+	return g_winVideoScreenX;
 }
 int GetPrimaryGLY() 
 {
 	if (g_landScapeNoNeckHurtMode)
 	{
-		return winVideoScreenX;
+		return g_winVideoScreenX;
 	}
 
-	return winVideoScreenY;
+	return g_winVideoScreenY;
 }	
 
 void LogMsg ( const char* traceStr, ... )
@@ -588,8 +588,8 @@ bool HasVibration()
 
 void AppResize( JNIEnv*  env, jobject  thiz, jint w, jint h )
 {
-	winVideoScreenX = w;
-	winVideoScreenY = h;
+	g_winVideoScreenX = w;
+	g_winVideoScreenY = h;
 #ifdef _DEBUG
 	LogMsg("Resizing screen to %d %d", w, h);
 #endif

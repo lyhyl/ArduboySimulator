@@ -62,3 +62,6 @@ void LogError(const char *lpFormat, ...);
 void SetEmulatedPlatformID(ePlatformID platformID);
 string AddPlatformNameURL();
 string GetPlatformName();
+
+void SetMarketID(eMarketID marketID);
+eMarketID GetMarketID();
