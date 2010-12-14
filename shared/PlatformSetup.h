@@ -3,7 +3,14 @@
 #endif
 
 #ifdef __APPLE__
-#include "iOS/PlatformSetupIOS.h"
+
+#include "TargetConditionals.h"
+
+	#if TARGET_OS_IPHONE == 1
+		#include "iOS/PlatformSetupIOS.h"
+	#else
+		#include "OSX/PlatformSetupOSX.h"
+	#endif
 #endif
 
 #ifdef RT_WEBOS_ARM
@@ -14,7 +21,7 @@
 #include "android/PlatformSetupAndroid.h"
 #endif
 
-#ifdef __cplusplus
+#if defined(__cplusplus) || defined(__OBJC__)
 	#include <cstdio>
 	#include <string>
 	#include <vector>
@@ -29,7 +36,7 @@
 	#include <sstream>
 	using namespace std;
 	
-#endif
+
 
 
 #ifndef SAFE_DELETE
@@ -65,3 +72,4 @@ string GetPlatformName();
 
 void SetMarketID(eMarketID marketID);
 eMarketID GetMarketID();
+#endif

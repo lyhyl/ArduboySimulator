@@ -108,7 +108,15 @@ bool SoftSurface::SetPaletteFromBMP(const string fName, eColorKeyType colorKey)
 	assert(GetSurfaceType() == SURFACE_PALETTE_8BIT && "Load a palette requires an 8 bit surface!");
 
 	FileInstance f(fName);
-	if (!f.IsLoaded()) return false;
+	if (!f.IsLoaded()) 
+	{
+		//try again
+		if (!f.Load(fName, false))
+		{
+			return false;
+
+		}
+	}
 
 	BMPImageHeader *pBmpImageInfo = (BMPImageHeader*)(f.GetAsBytes()+14);
 

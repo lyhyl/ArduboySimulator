@@ -485,6 +485,7 @@ bool BaseApp::OnPreInitVideo()
 	//override in App.* if you want to do something here.  You'd have to
 	//extern these vars from main.cpp to change them...
 	
+	//SetEmulatedPlatformID(PLATFORM_ID_WINDOWS);
 	//g_winVideoScreenX = 768;
 	//g_winVideoScreenY = 1024;
 	//g_landScapeNoNeckHurtMode = true;

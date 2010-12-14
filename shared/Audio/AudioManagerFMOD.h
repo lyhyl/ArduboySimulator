@@ -49,8 +49,6 @@ public:
 	AudioManagerFMOD();
 	virtual ~AudioManagerFMOD();
 
-	virtual AudioHandle Play(const string fileName);
-
 	virtual bool Init();
 	virtual void Kill();
 

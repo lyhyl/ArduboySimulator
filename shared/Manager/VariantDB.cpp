@@ -310,8 +310,7 @@ int VariantDB::DeleteVarsStartingWith( string deleteStr )
 
 	while (itor != m_data.end())
 	{
-		Variant *pV = itor->second;
-			if (itor->first.compare(0, deleteStr.size(), deleteStr) == 0)
+		if (itor->first.compare(0, deleteStr.size(), deleteStr) == 0)
 		{
 			//match!
 			delete (itor->second);

@@ -243,8 +243,17 @@ void App::Draw()
 		m_surf.LoadFile("interface/test.bmp");
 	}
 
-	m_surf.Blit(50,50);
-	
+	//blit the logo with the Y mirrored
+	//rtRect texRect = rtRect(0, m_surf.GetHeight(), m_surf.GetWidth(), 0);
+	//rtRect destRect = rtRect(0,0, m_surf.GetWidth(), m_surf.GetHeight());
+	//m_surf.BlitEx(destRect, texRect);
+
+	//make the logo spin like a wheel, whee!
+	//m_surf.BlitEx(destRect, texRect, MAKE_RGBA(255,255,255,255) , 180*SinGamePulseByMS(3000), CL_Vec2f(m_surf.GetWidth()/2,m_surf.GetHeight()/2));
+
+	//blit it normally
+	m_surf.Blit(0, 0);
+
 	//GetFont(FONT_SMALL)->Draw(0,0, "test");
 	GetFont(FONT_SMALL)->DrawScaled(0,GetScreenSizeYf()-50, "white `2Green `3Cyan `4Red `5Purp ",1+SinGamePulseByMS(3000)*0.7);
 	

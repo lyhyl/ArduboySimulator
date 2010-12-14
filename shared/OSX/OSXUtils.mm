@@ -4,8 +4,9 @@
  *  For license info, check the license.txt file that should have come with this.
  *
  */
-#include "iOSUtils.h"
-#import <UIKit/UIKit.h>
+#include "PlatformSetup.h"
+#include "OSXUtils.h"
+
 #import <cstdarg>
 #include <string>
 #include <sys/time.h>
@@ -13,8 +14,9 @@
 #include "BaseApp.h"
 #include <SystemConfiguration/SystemConfiguration.h>
 #include "Network/NetUtils.h"
-#import <MobileCoreServices/MobileCoreServices.h> 
+#import <Cocoa/Cocoa.h>
 
+const char * GetAppName();
 
 using namespace std;
 bool g_landScapeNoNeckHurtMode = false; //not really used, but the SDK needs it
@@ -22,6 +24,7 @@ bool g_landScapeNoNeckHurtMode = false; //not really used, but the SDK needs it
 extern bool g_isLoggerInitted;
 void LogMsg(const char *lpFormat, ...)
 {
+	
 	std::va_list argPtr ;
 	va_start( argPtr, lpFormat ) ;
 	NSLogv([NSString stringWithCString:lpFormat], argPtr) ;
@@ -30,18 +33,18 @@ void LogMsg(const char *lpFormat, ...)
 	char buffer[logSize];
 	memset ( (void*)buffer, 0, logSize );
 	vsnprintf( buffer, logSize,  lpFormat, argPtr );
-	
+
 	if (g_isLoggerInitted)
 	GetBaseApp()->GetConsole()->AddLine(buffer);
-	
 	va_end(argPtr) ;
-	
+		
 } 
 
 void LaunchURL(string url)
 {
-	NSURL *appStoreUrl = [NSURL URLWithString:[NSString stringWithCString: url.c_str() encoding: [NSString defaultCStringEncoding]]];
-	[[UIApplication sharedApplication] openURL:appStoreUrl];
+	assert(!"no");
+	//NSURL *appStoreUrl = [NSURL URLWithString:[NSString stringWithCString: url.c_str() encoding: [NSString defaultCStringEncoding]]];
+	//[[UIApplication sharedApplication] openURL:appStoreUrl];
 }
 
 eNetworkType IsNetReachable(string url)
@@ -87,44 +90,51 @@ string GetLastStringInput()
 
 string GetBaseAppPath()
 {
-	
+
 	CFBundleRef mainBundle = CFBundleGetMainBundle();
-    CFURLRef resourcesURL = CFBundleCopyBundleURL(mainBundle);
-    char path[PATH_MAX];
-    if (!CFURLGetFileSystemRepresentation(resourcesURL, TRUE, (UInt8 *)path, PATH_MAX))
-    {
-        LogMsg("Can't change to Resources directory; something's seriously wrong\n");
-		return "";
-    }
-    CFRelease(resourcesURL);
+	CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL(mainBundle);
+	char path[PATH_MAX];
+	if (!CFURLGetFileSystemRepresentation(resourcesURL, TRUE, (UInt8 *)path, PATH_MAX))
+	{
+		LogMsg("Error getting bundle path");
+	}
+	CFRelease(resourcesURL);
+	
 
 	return string(path)+"/";
+
+//	chdir(path);
+//	LogMsg( path);
 	
 }
 
 string GetSavePath()
 {
-
-	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES); 
-	return string([ [paths objectAtIndex:0] cStringUsingEncoding:NSUTF8StringEncoding])+"/";
+	
+	 NSArray* paths = NSSearchPathForDirectoriesInDomains(
+        NSApplicationSupportDirectory,
+        NSUserDomainMask,
+        YES);
+    if ([paths count] == 0)
+    {
+        // *** creation and return of error object omitted for space
+        LogError("Couldn't get app path!");
+        return "";
+    }
+ 
+    NSString *resolvedPath = [paths objectAtIndex:0];
+ 
+	return string([resolvedPath cStringUsingEncoding:NSUTF8StringEncoding])+"/"+string(GetAppName())+"/";
 }
 
-string GetAppCachePath() //writable, but not backed up by iTunes
+string GetAppCachePath() 
 {
-
-	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES); 
-	return string([ [paths objectAtIndex:0] cStringUsingEncoding:NSUTF8StringEncoding])+"/";
+	return GetSavePath();
 }
 
 void CreateAppCacheDirIfNeeded()
 {
-	string path = GetAppCachePath();
-	int idx = path.find("Library/Caches");
-	if (idx != string::npos)
-	{
-		path = path.substr(0, idx);
-		CreateDirectoryRecursively(path, "Library/Caches");
-	}
+	CreateDirectoryRecursively("", GetAppCachePath());
 }
 
 void RemoveFile(string fileName, bool bAddSavePath)
@@ -162,125 +172,33 @@ string GetDeviceTypeString()
 
 bool IsIPhone3GS()
 {
-	if (GetDeviceTypeString() == "iPhone2,1") return true;
 	return false;
 }
 
 bool IsIPodTouchThirdGen()
 {
-	if (GetDeviceTypeString() == "iPhone1,3") return true;
 	return false;
 }
 
 
 bool IsIPAD()
 {
-	//#if __IPHONE_3_2 <= __IPHONE_OS_VERSION_MAX_ALLOWED
-#if 30200 <= __IPHONE_OS_VERSION_MAX_ALLOWED
-
-	//LogMsg("Our idiom is %d (iPad is: %d)", UI_USER_INTERFACE_IDIOM(), UIUserInterfaceIdiomPad);
-	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-	{
-	/*
-		assert(30200 == __IPHONE_3_2 && "Uh oh, why did this change?");
-		UIScreen* mainscr = [UIScreen mainScreen];
-		float x = mainscr.currentMode.size.width;
-		float y = mainscr.currentMode.size.height;
-	*/	
-		return true;
-	} else
-	{
-		//an iPhone/ipod	
-		
-	}
-	#endif
-	
 	return false;
 }
 
 eDeviceMemoryClass GetDeviceMemoryClass()
 {
-	if (IsIPhone3GS()) return C_DEVICE_MEMORY_CLASS_2;
-	if (IsIPodTouchThirdGen()) return C_DEVICE_MEMORY_CLASS_2;
-	if (IsIPAD()) return C_DEVICE_MEMORY_CLASS_2;
-	if (IsIphone4()) return C_DEVICE_MEMORY_CLASS_3;
-	
-	//default
-	return C_DEVICE_MEMORY_CLASS_1;
+	return C_DEVICE_MEMORY_CLASS_4; //lots of mem
 }
 
 
 bool IsIphone4()
 {
-
-	static bool bFirstTime = true;
-	static bool bAnswer;
-	
-	if (bFirstTime)
-	{
-		bFirstTime = false;
-		bAnswer = false;
-	//#if __IPHONE_3_2 <= __IPHONE_OS_VERSION_MAX_ALLOWED
-#if 30200 <= __IPHONE_OS_VERSION_MAX_ALLOWED
-	
-	if (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad)
-	{
-		
-		assert(30200 == __IPHONE_3_2 && "Uh oh, why did this change?");
-		UIScreen* mainscr = [UIScreen mainScreen];
-		if ([mainscr respondsToSelector:@selector( currentMode)] == YES) //avoid crash on pre 3.2 iOS
-		{
-			float x = mainscr.currentMode.size.width;
-			float y = mainscr.currentMode.size.height;
-			LogMsg("IsiPhone size reporting %.2f, %.2f", x, y);
-			bAnswer = (x == 640 && y == 960) ; //if the screen is this big, it's gotta be a retina display
-		}
-
-	} else
-	{
-		//an iPad?
-		
-	}
-#endif
-		
-	}
-	
-	return bAnswer;
+	return false;
 }
 
 int g_primaryGLX = 0;
 int g_primaryGLY = 0;
-
-void InitDeviceScreenInfo()
-{
-
-	if (IsIPAD())
-	{
-		g_primaryGLX = 768;
-		g_primaryGLY = 1024;
-		
-	} else
-	{
-	
-		if (IsIphone4())
-		{
-			g_primaryGLX = 320*2;
-			g_primaryGLY = 480*2;
-			
-		} else
-		{
-			g_primaryGLX = 320;
-			g_primaryGLY = 480;
-			LogMsg("Old iphone size detected");
-		}
-	}
-	
-	SetupScreenInfoIPhone(GetOrientation());
-	
-
-}
-
-
 
 //this doesn't change even if you rotate, for speed
 int GetPrimaryGLX() {return g_primaryGLX;}
@@ -288,24 +206,6 @@ int GetPrimaryGLY() {return g_primaryGLY;}
 
 int GetSystemData()
 {	
-	
-	//I didn't want the text SignerIdentity existing in the exe for simple text searches to find
-	string encoded = "Zqpxp%7EVrt%7E%85%7B%87%8D";
-	URLDecoder decode;
-	vector<byte> data = decode.decodeData(encoded);
-	DecryptPiece((byte*)&data[0], data.size(), 5);
-	data.push_back(0); //a null for the string
-
-	//LogMsg((char*)&data[0]);
-	NSString *str =  [NSString stringWithCString: (char*)&data[0] encoding: [NSString defaultCStringEncoding]];
-
-	NSBundle *bundle = [NSBundle mainBundle];
-	NSDictionary *info = [bundle infoDictionary];
-	if ([info objectForKey: str] != nil)
-	{
-	 return C_PIRATED_YES;
-	}
-
 	return C_PIRATED_NO;
 }
 	
@@ -330,27 +230,17 @@ int GetYOffset()
 
 bool IsIphone()
 {
-if (IsIPAD()) return false;
-
- 	NSString *deviceType = [UIDevice currentDevice].model;
-    if([deviceType isEqualToString:@"iPhone"])
-	{
-		return true;
-	}
 	return false;
 }
 
 const char* iPhoneVersion()
 {
-	NSString *deviceType = [UIDevice currentDevice].systemVersion;
-	return [deviceType cStringUsingEncoding:NSUTF8StringEncoding];
+	return "";
 }
 
 const char* iPhoneDeviceID()
 {
-	UIDevice *device = [UIDevice currentDevice];
-	NSString *uniqueIdentifier = [device uniqueIdentifier];
-	return [uniqueIdentifier cStringUsingEncoding:NSUTF8StringEncoding];
+	return "";
 }
 string GetRegionString()
 {
@@ -456,28 +346,32 @@ vector<string> GetFilesAtPath(string path)
 
 bool IsIphoneOriPad()
 {
-	return true;
+	return false;
 }
 
 string GetClipboardText()
 {
 	string text;
 	
+	/*
 	UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
 
 	if ([pasteboard containsPasteboardTypes: [NSArray arrayWithObject:@"public.utf8-plain-text"]])
 	{
 		text = [pasteboard.string cStringUsingEncoding:NSUTF8StringEncoding];
 	}
+	 */
+	
 	return text;
 }
 
-bool IsDesktop() {return false;}
+bool IsDesktop() {return true;}
 
 ePlatformID GetPlatformID()
 {
-	return PLATFORM_ID_IOS;
+	return PLATFORM_ID_OSX;
 }
+	
 void NotifyOSOfOrientationPreference(eOrientationMode orientation)
 {
 
@@ -485,7 +379,56 @@ void NotifyOSOfOrientationPreference(eOrientationMode orientation)
 
 bool HasVibration()
 {
-	if (IsIphone()) return true;
-
 	return false;
+}
+
+void InitDeviceScreenInfoEx(int width, int height, int orientation)
+{
+	g_primaryGLX = width;
+	g_primaryGLY = height;
+	
+	if (!GetBaseApp()->IsInitted())
+		{
+			SetupScreenInfo(width, height, GetOrientation());
+			LogMsg("Initializing BaseApp...");
+			srand( (unsigned)time(NULL) );
+			
+			CreateAppCacheDirIfNeeded(); //actually these creates our user data directory as well as they are the
+			//same path. It will be located in ~/Library/Application Support/"+GetAppName().  If you don't want this
+			//directory created, we'll need to add some flag here to not do it I guess.
+			
+			if (!GetBaseApp()->Init())
+			{
+				
+				NSLog(@"Couldn't init app");
+				//[self release];
+				//return nil;
+			}
+			
+//			CreateDirectoryRecursively("", GetAppCachePath());
+
+		} else
+		{
+				SetupScreenInfo(width, height, GetOrientation());
+		}
+	
+
+}
+
+int ConvertOSXKeycodeToProtonVirtualKey(int c)
+{
+	//LogMsg("Got %d  (%c)", c, char(c));
+	
+	switch (c)
+	{
+		case 27: return VIRTUAL_KEY_BACK;
+		case 127: return 8; //dunno why backspaces comes across as 127, whatever
+			
+			
+		case NSLeftArrowFunctionKey: return VIRTUAL_KEY_DIR_LEFT;
+		case NSRightArrowFunctionKey: return VIRTUAL_KEY_DIR_RIGHT;
+		case NSUpArrowFunctionKey: return VIRTUAL_KEY_DIR_UP;
+		case NSDownArrowFunctionKey: return VIRTUAL_KEY_DIR_DOWN;
+	}
+	return c;
 }

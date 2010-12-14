@@ -37,11 +37,6 @@ AudioManagerFMOD::~AudioManagerFMOD()
 	Kill();
 }
 
-AudioHandle AudioManagerFMOD::Play( const string fileName )
-{
-	LogMsg("Playing %s", fileName.c_str());
-	return AUDIO_HANDLE_BLANK;
-}
 
 bool AudioManagerFMOD::Init()
 {

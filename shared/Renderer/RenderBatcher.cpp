@@ -155,8 +155,6 @@ void RenderBatcher::BlitRawImage(int dstX, int dstY,  byte *pRaw, int width, int
 	static vector<CL_Vec3s> vertBuff;  //vertex of shorts
 	static int lastSize = 0;
 
-	int bytesPerPix = 4; //assume this for now
-
 	int dataSize = width*height;
 	if (lastSize != dataSize)
 	{

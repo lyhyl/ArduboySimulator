@@ -365,8 +365,6 @@ bool Entity::RemoveEntityByAddress(Entity *pEntToDelete, bool bDeleteAlso)
 {
 	EntityListItor itor = m_children.begin();
 
-	Entity * pEnt = NULL;
-
 	while (itor != m_children.end())
 	{
 		if ((*itor) == pEntToDelete)
@@ -412,8 +410,6 @@ bool Entity::RemoveComponentByAddress( EntityComponent *pCompToDelete, bool bDel
 
 	assert(pCompToDelete);
 
-	EntityComponent * pEnt = NULL;
-
 	while (itor != m_components.end())
 	{
 		if ((*itor) == pCompToDelete)
@@ -439,8 +435,6 @@ bool Entity::RemoveComponentByAddress( EntityComponent *pCompToDelete, bool bDel
 bool Entity::RemoveComponentByName( const string &name )
 {
 	ComponentListItor itor = m_components.begin();
-
-	EntityComponent * pEnt = NULL;
 
 	while (itor != m_components.end())
 	{

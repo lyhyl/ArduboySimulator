@@ -27,7 +27,7 @@ enum eDeviceMemoryClass
 	C_DEVICE_MEMORY_CLASS_1, //iphone 3g, ipod touch, 128 mb
 	C_DEVICE_MEMORY_CLASS_2, //iphone 3gs, iPad, ipod touch 3g, 256 mb
 	C_DEVICE_MEMORY_CLASS_3, //iphone 4, iPod Touch 4g, 512 mb
-	C_DEVICE_MEMORY_CLASS_4, //PC, Linux, Mac.. assuming to be a lot
+	C_DEVICE_MEMORY_CLASS_4, //PC, Linux, OSX.. assuming to be a lot
 };
 
 enum ePlatformID

@@ -697,7 +697,7 @@
 				PREBINDING = NO;
 				PRODUCT_NAME = "";
 				PROVISIONING_PROFILE = "";
-				SDKROOT = iphoneos4.1;
+				SDKROOT = iphoneos;
 				SYMROOT = "~/build";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "";
@@ -746,7 +746,7 @@
 				PREBINDING = NO;
 				PRODUCT_NAME = "";
 				PROVISIONING_PROFILE = "";
-				SDKROOT = iphoneos4.1;
+				SDKROOT = iphoneos;
 				SYMROOT = "~/build";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "";

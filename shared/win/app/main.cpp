@@ -36,7 +36,7 @@ void InitVideoSize()
 	AddVideoMode("Droid Landscape", 854, 480, PLATFORM_ID_ANDROID); //g_landScapeNoNeckHurtMode should be false when testing
 	AddVideoMode("Nexus One Landscape", 800, 480, PLATFORM_ID_ANDROID); //g_landScapeNoNeckHurtMode should be false when testing
 
-	string desiredVideoMode = "iPhone"; //name needs to match one of the ones defined below
+	string desiredVideoMode = "iPad"; //name needs to match one of the ones defined below
     g_landScapeNoNeckHurtMode = true; //if true, will rotate the screen so we can play in landscape mode in windows without hurting ourselves
 
 	SetVideoModeByName(desiredVideoMode);
@@ -225,6 +225,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 
 	case WM_SETFOCUS:
+		
 		if (!g_bHasFocus && IsBaseAppInitted() && g_hWnd)
 		{
 			GetBaseApp()->OnEnterForeground();
@@ -953,6 +954,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 			
 			case OSMessage::MESSAGE_SET_VIDEO_MODE:
 			
+				SwapBuffers(g_hDC);
+				GetBaseApp()->Draw();
+
 				g_bHasFocus = true;
 				GetBaseApp()->OnEnterBackground();
 
