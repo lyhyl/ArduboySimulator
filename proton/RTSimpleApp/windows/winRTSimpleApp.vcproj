@@ -572,6 +572,14 @@
 					</File>
 				</Filter>
 			</Filter>
+			<Filter
+				Name="OSX"
+				>
+				<File
+					RelativePath="..\OSX\RTSimpleApp-Info.plist"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="shared"
@@ -2400,6 +2408,54 @@
 					RelativePath="..\..\shared\FileSystem\StreamingInstanceZip.h"
 					>
 				</File>
+			</Filter>
+			<Filter
+				Name="OSX"
+				>
+				<File
+					RelativePath="..\..\shared\OSX\OSXUtils.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\OSX\OSXUtils.mm"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\OSX\PlatformSetupOSX.h"
+					>
+				</File>
+				<Filter
+					Name="app"
+					>
+					<File
+						RelativePath="..\..\shared\OSX\app\main.m"
+						>
+					</File>
+					<File
+						RelativePath="..\..\shared\OSX\app\MainController.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\shared\OSX\app\MainController.mm"
+						>
+					</File>
+					<File
+						RelativePath="..\..\shared\OSX\app\MyApplication.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\shared\OSX\app\MyApplication.m"
+						>
+					</File>
+					<File
+						RelativePath="..\..\shared\OSX\app\MyOpenGLView.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\shared\OSX\app\MyOpenGLView.mm"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 		<File

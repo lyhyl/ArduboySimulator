@@ -63,6 +63,8 @@ enum eVirtualKeys
 	VIRTUAL_KEY_GAME_MAGIC,
 	VIRTUAL_KEY_GAME_INVENTORY,
 
+	VIRTUAL_KEY_COMMAND, //on OSX.  equivelent would be windows key on Win, but I don't think we can really ever use that key..
+
 
 	VIRTUAL_KEY_CUSTOM_START = 510000 //if you add your own, do it after this
 };

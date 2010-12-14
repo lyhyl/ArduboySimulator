@@ -7,12 +7,11 @@
 
 #pragma once
 
-#ifndef __cplusplus
-#error Uh oh, we are compiling this as C, why?!
-#endif
+#ifdef __cplusplus || defined __OBJC__
 
 #include "../PlatformEnums.h"
 
-
-
+void InitDeviceScreenInfoEx(int width, int height, int orientation);
+int ConvertOSXKeycodeToProtonVirtualKey(int c);
+#endif
 

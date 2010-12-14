@@ -20,8 +20,20 @@ FileManager g_fileManager;
 FileManager * GetFileManager() {return &g_fileManager;}
 
 #ifdef __APPLE__
-#include "Audio/AudioManagerOS.h"
-AudioManagerOS g_audioManager;
+
+#if TARGET_OS_IPHONE == 1
+	//it's an iPhone or iPad
+	#include "Audio/AudioManagerOS.h"
+	AudioManagerOS g_audioManager;
+#else
+	//it's being compiled as a native OSX app
+   #include "Audio/AudioManagerFMOD.h"
+
+   AudioManagerFMOD g_audioManager; //dummy with no sound
+#endif
+	
+	
+
 #else
 #include "Audio/AudioManagerFMOD.h"
 #include "Audio/AudioManagerSDL.h"
@@ -87,18 +99,21 @@ bool App::Init()
 	SetManualRotationMode(true);
 
 	
-	if (GetEmulatedPlatformID() == PLATFORM_ID_ANDROID)
+	switch (GetEmulatedPlatformID())
 	{
-		//if we do this, everything will be stretched/zoomed to fit the screen
+	case PLATFORM_ID_ANDROID:
+	case PLATFORM_ID_OSX:
+	//if we do this, everything will be stretched/zoomed to fit the screen
 		SetLockedLandscape(false);  //because it's set in the app manifest, we don't have to rotate ourselves
 		SetupFakePrimaryScreenSize(480,320); //game will think its this size, and will be scaled up
+		break;
 
-	} else
-	{
-		//if we do this, everything will be stretched/zoomed to fit the screen
+	
+	default:
 		SetLockedLandscape(true); //we don't allow portrait mode for this game
 		SetupFakePrimaryScreenSize(320,480); //game will think its this size, and will be scaled up
 	}
+	
 	
 	L_ParticleSystem::init(2000);
 

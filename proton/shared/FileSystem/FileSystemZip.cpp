@@ -48,6 +48,7 @@ void FileSystemZip::CacheIndex()
 		LogError("error %d with zipfile in unzGetGlobalInfo \n",err);
 		return;
 	}
+	unzGoToFirstFile(m_uf);
 
 	ZipCacheEntry entry;
 
@@ -58,7 +59,7 @@ void FileSystemZip::CacheIndex()
 		uLong ratio=0;
 		char charCrypt=' ';
 		err = unzGetCurrentFileInfo(m_uf,&file_info,filename_inzip,sizeof(filename_inzip),NULL,0,NULL,0);
-
+	
 		if (err!=UNZ_OK)
 		{
 			LogError("error %d with zipfile in unzGetCurrentFileInfo\n",err);
@@ -102,6 +103,9 @@ vector<string> FileSystemZip::GetContents()
 		LogError("error %d with zipfile in unzGetGlobalInfo \n",err);
 		return m_contents;
 	}
+
+	unzGoToFirstFile(m_uf);
+
 	for (i=0;i<gi.number_entry;i++)
 	{
 		char filename_inzip[512];

@@ -41,7 +41,7 @@ private:
 	bool m_bGameTimerPaused;
 	int m_deltaMS;
 	float m_deltaFloat;
-	deque <float> m_tickHistory;
+	std::deque <float> m_tickHistory;
 
 };
 

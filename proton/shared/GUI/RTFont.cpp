@@ -66,7 +66,11 @@ bool RTFont::Load( string fileName )
 	m_fontStates.clear();
 
 	FileInstance f(fileName);
-	if (!f.IsLoaded()) return false;
+	if (!f.IsLoaded())
+	{
+		LogMsg("Unable to load font %s", fileName.c_str());
+		return false;
+	}
 
 	rtfont_header *pHeader = (rtfont_header*)f.GetAsBytes();
 	if (strncmp((char*)pHeader->rtFileHeader.fileTypeID, C_RTFILE_FONT_HEADER, 6) != 0)
