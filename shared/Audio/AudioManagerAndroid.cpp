@@ -294,13 +294,6 @@ AudioHandle AudioManagerAndroid::Play( string fName, bool bLooping /*= false*/, 
 	return (AudioHandle) 0 ;
 }
 
-AudioHandle AudioManagerAndroid::Play( string fName, int vol, int pan /*= 0*/ )
-{	
-
-	assert(!"We don't support this");
-	return NULL;
-}
-
 void AudioManagerAndroid::Update()
 {
 

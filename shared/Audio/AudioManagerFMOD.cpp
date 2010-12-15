@@ -244,7 +244,7 @@ void AudioManagerFMOD::Preload( string fName, bool bLooping /*= false*/, bool bI
 				memset(&ex, 0, sizeof(FMOD_CREATESOUNDEXINFO));
 				ex.cbsize = sizeof(FMOD_CREATESOUNDEXINFO);
 				string midiSoundBank = GetBaseAppPath()+m_midiSoundBankFile;
-				if (!midiSoundBank.empty())
+				if (!m_midiSoundBankFile.empty())
 				{
 					ex.dlsname = midiSoundBank.c_str();
 				}

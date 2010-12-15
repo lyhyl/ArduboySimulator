@@ -179,12 +179,15 @@ byte * FileSystemZip::Get( string fileName, int *pSizeOut )
 	
 
 	//let's allocate our own memory and pass the pointer back to them.
-	byte *pBytes = new byte[file_info.uncompressed_size+1]; //the two extra is because I may need to add a null later
+	byte *pBytes = new byte[file_info.uncompressed_size+1]; //the extra is because I will add a null later, helps when processing
+	//text files and can't hurt
+	
 	
 	if (pBytes)
 	{
 		//memory allocated
 		*pSizeOut =  file_info.uncompressed_size;
+		pBytes[file_info.uncompressed_size] = 0;
 	}   else
 	{
 		LogError("Couldn't allocate the required %d bytes to unzip into.", file_info.uncompressed_size+1);

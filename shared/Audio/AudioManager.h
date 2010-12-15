@@ -34,7 +34,8 @@ public:
 	virtual bool Init() {return true;}
 	virtual void Kill() {};
 	virtual AudioHandle Play(string fName, bool bLooping = false, bool bIsMusic = false, bool bAddBasePath = true, bool bForceStreaming = false){return AUDIO_HANDLE_BLANK;}
-	virtual AudioHandle PlayEx(string fName, bool bLooping = false, uint32 freq = 0, float pan = 0){return AUDIO_HANDLE_BLANK;}
+	
+	//virtual AudioHandle PlayEx(string fName, bool bLooping = false, uint32 freq = 0, float pan = 0){return AUDIO_HANDLE_BLANK;}
 
 	virtual AudioHandle PlayWithAVPlayer(string fName) { return Play(fName, false, false); } //also doesn't cache and uses AV player, useful for the TTS system or oneshots
 
