@@ -20,7 +20,8 @@ void InitVideoSize()
 	//the X/Y of the Windows setting is actually reversed.. it's confusing like this because most of the mobiles are "rotated" to landscape
 	//mode manually and it was just less changes to make to pretend we were rotating the Windows screen to play in "landscape" orientation
 	//to make testing consistent
-	AddVideoMode("Windows", 768, 1024, PLATFORM_ID_WINDOWS); //used for Dink
+	AddVideoMode("Windows", 768, 1024, PLATFORM_ID_WINDOWS);
+	AddVideoMode("OSX", 1024, 768, PLATFORM_ID_OSX); //g_landScapeNoNeckHurtMode should be false when testing
 
 	AddVideoMode("iPhone", 320, 480, PLATFORM_ID_IOS);
 	AddVideoMode("iPad", 768, 1024, PLATFORM_ID_IOS);
@@ -50,7 +51,6 @@ bool g_landScapeNoNeckHurtMode = false;
 int g_winVideoScreenX = 0;
 int g_winVideoScreenY = 0;
 bool g_bIsFullScreen = false;
-bool g_forceAspectRatioWhenChangingWindowSize = true; //applicable to manually dragging corners/sides.  Can hold Shift while dragging to toggle.
 
 void AddVideoMode(string name, int x, int y, ePlatformID platformID)
 {
@@ -149,6 +149,13 @@ int ConvertWindowsKeycodeToProtonVirtualKey(int keycode)
 	case VK_SHIFT: keycode = VIRTUAL_KEY_SHIFT; break;
 	case VK_CONTROL: keycode = VIRTUAL_KEY_CONTROL; break;
 	case VK_ESCAPE:  keycode = VIRTUAL_KEY_BACK; break;
+
+	default:
+		if (keycode >= VK_F1 && keycode <= VK_F12)
+		{
+				keycode = VIRTUAL_KEY_F1+(keycode-VK_F1);
+		}
+
 	}
 
 	return keycode;
@@ -237,16 +244,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 		
 		if ( 
-			(g_forceAspectRatioWhenChangingWindowSize && !(GetKeyState(VK_SHIFT)& 0xfe))
+			(GetForceAspectRatioWhenResizing() && !(GetKeyState(VK_SHIFT)& 0xfe))
 			||
-			(!g_forceAspectRatioWhenChangingWindowSize && (GetKeyState(VK_SHIFT)& 0xfe) )
+			(!GetForceAspectRatioWhenResizing() && (GetKeyState(VK_SHIFT)& 0xfe) )
 			)
 		{
 
-			
 			float aspect_r=(float)GetPrimaryGLX()/(float)GetPrimaryGLY(); // aspect ratio
-			
-			
+
 			if (GetFakePrimaryScreenSizeX() != 0)
 			{
 				//more reliable way to get the aspect ratio
@@ -318,10 +323,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	#endif
 						EndPaint(g_hWnd, &paint);
 					}
-
 				}
-
-			
 			}
 		}
 		
@@ -350,7 +352,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 		case VK_RETURN:
 			{
-
 				if (GetKeyState(VK_MENU)& 0xfe)
 				{
 					LogMsg("Toggle fullscreen from WM_KEYDOWN?, this should never happen");
@@ -396,8 +397,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_COPY, 0, 0);  //lParam holds a lot of random data about the press, look it up if
 			}
 			break;
-
-		
 		
 		case 'V':
 
@@ -432,7 +431,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_KEYUP:
 		{
 			//LogMsg("Got key up %d", (int)wParam);
-		
 			uint32 key = ConvertWindowsKeycodeToProtonVirtualKey(wParam);
 
 			if (key == VIRTUAL_KEY_BACK)
@@ -458,9 +456,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_SYSCOMMAND:
 		// Do not allow screensaver to start.
 		if (wParam == SC_SCREENSAVE) return true;
-		
-		
-		
 		break;
 
 	case WM_LBUTTONUP:
@@ -502,7 +497,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	// Calls the default window procedure for messages we did not handle
 	return DefWindowProc(hWnd, message, wParam, lParam);
 }
-
 
 bool TestEGLError(HWND hWnd, char* pszLocation)
 {

@@ -1,5 +1,11 @@
 #include "PlatformPrecomp.h"
 
+bool g_forceAspectRatioWhenChangingWindowSize = true; //applicable to manually dragging corners/sides.  Can hold Shift while dragging to toggle.
+
+bool GetForceAspectRatioWhenResizing()
+{
+	return g_forceAspectRatioWhenChangingWindowSize;
+}
 ePlatformID g_emulatedPlatformID = PLATFORM_ID_UNKNOWN;
 eMarketID g_marketID = MARKET_ID_UNSPECIFIED;
 

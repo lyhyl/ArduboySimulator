@@ -1,5 +1,6 @@
 #import "MainController.h"
 #import "MyOpenGLView.h"
+#import "MyApplication.h"
 
 
 @implementation MainController
@@ -264,6 +265,83 @@
 		[self stopAnimation];
 	else
 		[self startAnimation];
+}
+
+- (NSSize)windowWillResize:(NSWindow*)sender
+                    toSize:(NSSize)frameSize
+{
+	
+	float aspect_r=(float)GetPrimaryGLX()/(float)GetPrimaryGLY(); // aspect ratio
+	
+	NSWindow *window = [NSApp mainWindow];
+	float addX = 0;
+	float addY = [window frame].size.height - [[window contentView] frame].size.height;
+
+	//LogMsg("Shift down is %d", int([NSApp isShiftDown]));
+	if ( 
+		(GetForceAspectRatioWhenResizing() && ![NSApp isShiftDown])
+		||
+		(!GetForceAspectRatioWhenResizing() && [NSApp isShiftDown] )
+		)
+	{
+		float oldHeight = frameSize.height;
+		frameSize.height = ( (frameSize.width-addX) /aspect_r)+addY;
+		
+		LogMsg("Forcing aspect ratio %.2f offsetY: %.2f:  %.2f %.2f to %.2f %.2f", aspect_r, addY, frameSize.width, oldHeight, frameSize.width, frameSize.height);	
+	} else
+	{
+
+		//let them change it to whatever they want
+	}
+	
+	return frameSize;	
+}
+
+- (void) OnResizeFinished
+{
+		NSRect bounds = [openGLView bounds];
+		LogMsg("Finished resizing");
+		CGLLockContext( (_CGLContextObject*)[[openGLView openGLContext] CGLContextObj]);
+		InitDeviceScreenInfoEx(bounds.size.width, bounds.size.height, ORIENTATION_LANDSCAPE_LEFT);
+		//GetBaseApp()->OnEnterBackground();
+		//GetBaseApp()->OnEnterForeground();
+		CGLUnlockContext( (_CGLContextObject*) [[openGLView openGLContext] CGLContextObj]);
+	
+}
+
+- (void) windowDidResize: (NSNotification *) aNotification
+{
+//    NSLog (@"windowDidResize: called");
+}
+
+- (void)windowDidMiniaturize:(NSNotification *)notification
+{
+	CGLLockContext( (_CGLContextObject*)[[openGLView openGLContext] CGLContextObj]);
+	GetBaseApp()->OnEnterBackground();
+	CGLUnlockContext( (_CGLContextObject*) [[openGLView openGLContext] CGLContextObj]);
+	
+}
+- (void) applicationDidResignActive: (NSNotification *) aNotification
+{
+	CGLLockContext( (_CGLContextObject*)[[openGLView openGLContext] CGLContextObj]);
+	GetBaseApp()->OnEnterBackground();
+	CGLUnlockContext( (_CGLContextObject*) [[openGLView openGLContext] CGLContextObj]);
+	
+}
+
+- (void) applicationDidBecomeActive: (NSNotification *) aNotification
+{
+	CGLLockContext( (_CGLContextObject*)[[openGLView openGLContext] CGLContextObj]);
+	GetBaseApp()->OnEnterForeground();
+	CGLUnlockContext( (_CGLContextObject*) [[openGLView openGLContext] CGLContextObj]);
+
+}
+- (void)windowDidDeminiaturize:(NSNotification *)notification
+{
+	CGLLockContext( (_CGLContextObject*)[[openGLView openGLContext] CGLContextObj]);
+	GetBaseApp()->OnEnterForeground();
+	CGLUnlockContext( (_CGLContextObject*) [[openGLView openGLContext] CGLContextObj]);
+	
 }
 
 

@@ -72,4 +72,5 @@ string GetPlatformName();
 
 void SetMarketID(eMarketID marketID);
 eMarketID GetMarketID();
+bool GetForceAspectRatioWhenResizing();
 #endif

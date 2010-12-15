@@ -126,11 +126,17 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 		[[self openGLContext] setView:self];
 }
 
+//windowDidResize
+
 - (void) reshape
 {
+	
+	
+	
 	// This method will be called on the main thread when resizing, but we may be drawing on a secondary thread through the display link
 	// Add a mutex around to avoid the threads accessing the context simultaneously
 	CGLLockContext( (_CGLContextObject*)[[self openGLContext] CGLContextObj]);
+	
 	
 	// Delegate to the scene object to update for a change in the view size
 	//[[controller scene] setViewportRect:[self bounds]];
@@ -139,12 +145,57 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	
 	glViewport(0, 0, bounds.size.width, bounds.size.height);
 	
-	[[self openGLContext] update];
-	InitDeviceScreenInfoEx(bounds.size.width, bounds.size.height, ORIENTATION_LANDSCAPE_LEFT);
+	if (![self inLiveResize])
+	{
+		LogMsg("Reshaping");
+		InitDeviceScreenInfoEx(bounds.size.width, bounds.size.height, ORIENTATION_LANDSCAPE_LEFT);
+	}
 	
+	[[self openGLContext] update];
+		
 	CGLUnlockContext( (_CGLContextObject*) [[self openGLContext] CGLContextObj]);
 	
 }
+
+
+- (void)viewDidEndLiveResize
+{
+	[controller OnResizeFinished];
+}
+
+- (void)onOSMessage:(OSMessage *)pMsg
+{
+	
+	switch (pMsg->m_type)
+	{
+			
+		case OSMessage::MESSAGE_OPEN_TEXT_BOX:
+			break;
+			
+		case OSMessage::MESSAGE_CHECK_CONNECTION:
+			//pretend we did it
+			GetMessageManager()->SendGUI(MESSAGE_TYPE_OS_CONNECTION_CHECKED, RT_kCFStreamEventOpenCompleted, 0);	
+			break;
+			
+		case OSMessage::MESSAGE_CLOSE_TEXT_BOX:
+			break;
+		case OSMessage::MESSAGE_SET_FPS_LIMIT:
+			//glView.animationIntervalSave = 1.0/pMsg->m_x;
+			break;
+		case OSMessage::MESSAGE_SET_ACCELEROMETER_UPDATE_HZ:
+			break;
+		case OSMessage::MESSAGE_FINISH_APP:
+			assert(!"Test this!");
+	//		[[NSApplication sharedApplication] terminate];
+			break;
+		case OSMessage::MESSAGE_SET_VIDEO_MODE:
+			break;
+			
+		default:
+			LogMsg("Error, unknown message type: %d", pMsg->m_type);
+	}
+}
+
 
 - (void) drawRect:(NSRect)dirtyRect
 {
@@ -161,7 +212,19 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	
 	CGLLockContext( (_CGLContextObject*) [[self openGLContext] CGLContextObj]);
 
-	if (GetBaseApp()->IsInitted())
+	
+	while (!GetBaseApp()->GetOSMessages()->empty())
+	{
+		OSMessage m = GetBaseApp()->GetOSMessages()->front();
+		GetBaseApp()->GetOSMessages()->pop_front();
+		
+		//LogMsg("Got OS message %d, %s", m.m_type, m.m_string.c_str());
+		[self onOSMessage: &m];
+	}
+	
+	
+	
+	if (GetBaseApp()->IsInitted() && !GetBaseApp()->IsInBackground() && ![self inLiveResize])
 	{
 		GetBaseApp()->Update();
 	}
@@ -174,9 +237,13 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 		GetBaseApp()->Draw();
 	}
 	
+	
 	[[self openGLContext] flushBuffer];
 	
+	
 	CGLUnlockContext( (_CGLContextObject*) [[self openGLContext] CGLContextObj]);
+	
+	
 }
  
 - (BOOL) acceptsFirstResponder

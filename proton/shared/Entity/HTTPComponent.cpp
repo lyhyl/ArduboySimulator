@@ -175,7 +175,9 @@ void HTTPComponent::OnOS(VariantList *pVList)
 			return;
 			}
 			*/
-			//LogMsg("Initiating real connection");
+#ifdef _DEBUG
+			LogMsg("Initiating real connection");
+#endif
 			
 			m_state = STATE_CONNECTED;
 			m_netHTTP.Start();

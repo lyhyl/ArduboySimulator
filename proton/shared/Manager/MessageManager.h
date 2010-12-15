@@ -42,7 +42,7 @@ enum eOSSTreamEvent{
 //update SharedActivity.java for the android side
 enum eVirtualKeys
 {
-	VIRTUAL_KEY_BACK = 500000,
+	VIRTUAL_KEY_BACK = 500000, //escape on desktop computers, back key on android
 	VIRTUAL_KEY_PROPERTIES,
 	VIRTUAL_KEY_HOME,
 	VIRTUAL_KEY_SEARCH,
@@ -64,7 +64,22 @@ enum eVirtualKeys
 	VIRTUAL_KEY_GAME_INVENTORY,
 
 	VIRTUAL_KEY_COMMAND, //on OSX.  equivelent would be windows key on Win, but I don't think we can really ever use that key..
-
+	VIRTUAL_KEY_F1,
+	VIRTUAL_KEY_F2,
+	VIRTUAL_KEY_F3,
+	VIRTUAL_KEY_F4,
+	VIRTUAL_KEY_F5,
+	VIRTUAL_KEY_F6,
+	VIRTUAL_KEY_F7,
+	VIRTUAL_KEY_F8,
+	VIRTUAL_KEY_F9,
+	VIRTUAL_KEY_F10,
+	VIRTUAL_KEY_F11,
+	VIRTUAL_KEY_F12,
+	VIRTUAL_KEY_F13,
+	VIRTUAL_KEY_F14,
+	VIRTUAL_KEY_F15,
+	VIRTUAL_KEY_F16,
 
 	VIRTUAL_KEY_CUSTOM_START = 510000 //if you add your own, do it after this
 };
