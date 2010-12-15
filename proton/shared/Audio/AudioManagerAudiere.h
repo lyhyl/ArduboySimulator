@@ -1,17 +1,33 @@
 //  ***************************************************************
-//  AudioManagerAndroid - Creation date: 09/28/2010
+//  AudioManagerAudiere - Creation date: 12/14/2010
 //  -------------------------------------------------------------
-//  Robinson Technologies Copyright (C) 2010 - All Rights Reserved
+//  Robinson Technologies Copyright (C) 2009 - All Rights Reserved
 //
 //  ***************************************************************
-//  Programmer(s):  Seth A. Robinson (seth@rtsoft.com)
+//  Programmer(s):  Piotr "rzuf" Skrzypczynski (rzuf79@gmail.com)
 //  ***************************************************************
 
-#ifndef AudioManagerAndroid_h__
-#define AudioManagerAndroid_h__
+/*
+Audiere is an open source (LPGL) audio system
 
-#ifdef ANDROID_NDK
+It uses DirectSound or WinMM in windows, OSS on Linux
+
+Supports .wav, ogg, flac, mp3, mod/xm/s3m, midi (through MCI)
+
+http://audiere.sourceforge.net/home.php
+*/
+
+#ifndef AudioManagerAudiere_h__
+#define AudioManagerAudiere_h__
+
 #include "AudioManager.h"
+
+#if !defined RT_WEBOS && !defined (ANDROID_NDK)
+
+
+#include "audiere/include/audiere.h"
+
+using namespace audiere;
 
 class SoundObject
 {
@@ -19,50 +35,39 @@ public:
 
 	SoundObject()
 	{
-		m_soundID = 0;
-		m_bIsLooping = false;
+		m_pSound		= NULL;
+		m_bIsLooping	= false;
+		m_bIsMusic		= false;
+
 	}
 
 	~SoundObject()
 	{
-		if (m_soundID)
+		if (m_pSound)
 		{
-	
-			//notify engine to kill it, although it likely already did
-			JNIEnv *env = GetJavaEnv();
-			if (env)
-			{
-				jclass cls = env->FindClass(GetAndroidMainClassName());
-				jmethodID mid = env->GetStaticMethodID(cls,
-					"sound_kill",
-					"(I)V");
-
-				env->CallStaticVoidMethod(cls, mid, jint(m_soundID));
-			}
-
-
-			 m_soundID = 0;
-			 m_lastStreamIDToUse = 0;
+			m_pSound = 0;
 		}
 	}
 
-	int m_soundID;
+	OutputStreamPtr m_pSound;
+	//FMOD::Sound *m_pSound;
 	string m_fileName;
-	bool m_bIsLooping;
-	int m_lastStreamIDToUse;
+	bool   m_bIsLooping;
+	bool   m_bIsMusic;
+	//FMOD::Channel *m_pLastChannelToUse;
 };
 
-class AudioManagerAndroid: public AudioManager
+class AudioManagerAudiere: public AudioManager
 {
 public:
-	AudioManagerAndroid();
-	virtual ~AudioManagerAndroid();
+	AudioManagerAudiere();
+	virtual ~AudioManagerAudiere();
 
 	virtual bool Init();
 	virtual void Kill();
 
 	virtual AudioHandle Play(string fName, bool bLooping = false, bool bIsMusic = false, bool bAddBasePath = true, bool bForceStreaming = false);
-
+	
 	virtual void Preload(string fName, bool bLooping = false, bool bIsMusic = false, bool bAddBasePath = true, bool bForceStreaming = false);
 
 	SoundObject * GetSoundObjectByFileName(string fName);
@@ -82,16 +87,23 @@ public:
 	virtual uint32 GetPos( AudioHandle soundID );
 	virtual void SetPos( AudioHandle soundID, uint32 posMS );
 	virtual void SetMusicVol(float vol);
-	virtual void Vibrate();
+
+
 private:
+	
+	AudioDevicePtr	   m_pDevice;
 
-	list<SoundObject*> m_soundList;
-
+	//FMOD::System     *system;
+	list<SoundObject*>	m_soundList;
+	//SoundObject*		m_pLastPlayedMusic;
+	//FMOD::Channel *m_pMusicChannel;
+	
 protected:
 
 
 private:
 };
 
-#endif
+
+#endif // AudioManagerAudiere_h__
 #endif

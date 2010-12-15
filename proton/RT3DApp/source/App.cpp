@@ -19,10 +19,19 @@ FileManager * GetFileManager() {return &g_fileManager;}
 
 
 #ifdef __APPLE__
+
+#if TARGET_OS_IPHONE == 1
+//it's an iPhone or iPad
 #include "Audio/AudioManagerOS.h"
 AudioManagerOS g_audioManager;
 #else
+//it's being compiled as a native OSX app
 #include "Audio/AudioManagerFMOD.h"
+
+AudioManagerFMOD g_audioManager; //dummy with no sound
+#endif
+
+#else
 #include "Audio/AudioManagerSDL.h"
 #include "Audio/AudioManagerAndroid.h"
 
@@ -30,11 +39,16 @@ AudioManagerOS g_audioManager;
 AudioManagerSDL g_audioManager; //sound in windows and WebOS
 //AudioManager g_audioManager; //to disable sound
 #elif defined ANDROID_NDK
-AudioManagerAndroid g_audioManager; //sound for android build
-
+AudioManagerAndroid g_audioManager; //sound for android
 #else
-AudioManagerFMOD g_audioManager; //sound in windows
+//in windows
 //AudioManager g_audioManager; //to disable sound
+
+#include "Audio/AudioManagerAudiere.h"
+AudioManagerAudiere g_audioManager; //if we wanted FMOD sound in windows
+
+//#include "Audio/AudioManagerFMOD.h"
+//AudioManagerFMOD g_audioManager; //if we wanted FMOD sound in windows
 
 #endif
 #endif

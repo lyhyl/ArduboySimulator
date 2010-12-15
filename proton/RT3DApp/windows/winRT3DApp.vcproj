@@ -64,10 +64,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libgles_cm.lib fmodex_vc.lib zdll.lib wsock32.lib libGLES_CM.lib"
+				AdditionalDependencies="libgles_cm.lib  audiere.lib zdll.lib wsock32.lib libGLES_CM.lib"
 				OutputFile="../bin/winRT3DApp.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\shared\win\powerVR\OGLES\WindowsPC\lib;..\..\shared\win\lib;..\..\shared\win\fmod\api\lib"
+				AdditionalLibraryDirectories="..\..\shared\win\powerVR\OGLES\WindowsPC\lib;..\..\shared\win\lib;..\..\shared\win\fmod\api\lib;..\..\shared\win\audiere\lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)/RT3DApp.pdb"
 				SubSystem="2"
@@ -144,10 +144,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libgles_cm.lib fmodex_vc.lib zdll.lib wsock32.lib"
+				AdditionalDependencies="libgles_cm.lib  audiere.lib zdll.lib wsock32.lib"
 				OutputFile="../bin/winRT3DApp.exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\shared\win\powerVR\OGLES\WindowsPC\lib;..\..\shared\win\lib;..\..\shared\win\fmod\api\lib"
+				AdditionalLibraryDirectories="..\..\shared\win\powerVR\OGLES\WindowsPC\lib;..\..\shared\win\lib;..\..\shared\win\fmod\api\lib;..\..\shared\win\audiere\lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -228,10 +228,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opengl32.lib fmodex_vc.lib zdll.lib wsock32.lib"
+				AdditionalDependencies="opengl32.lib  audiere.lib zdll.lib wsock32.lib"
 				OutputFile="../bin/winRT3DApp.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\shared\win\lib;..\..\shared\win\fmod\api\lib"
+				AdditionalLibraryDirectories="..\..\shared\win\lib;..\..\shared\win\fmod\api\lib;..\..\shared\win\audiere\lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)/RT3DApp.pdb"
 				SubSystem="2"
@@ -308,10 +308,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opengl32.lib fmodex_vc.lib zdll.lib wsock32.lib"
+				AdditionalDependencies="opengl32.lib  audiere.lib zdll.lib wsock32.lib"
 				OutputFile="../bin/winRT3DApp.exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\shared\win\lib;..\..\shared\win\fmod\api\lib"
+				AdditionalLibraryDirectories="..\..\shared\win\lib;..\..\shared\win\fmod\api\lib;..\..\shared\win\audiere\lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -9614,12 +9614,84 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\shared\Audio\AudioManagerAudiere.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\Audio\AudioManagerAudiere.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\shared\Audio\AudioManagerFMOD.cpp"
 					>
+					<FileConfiguration
+						Name="Common Debug|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Common Release|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug GL|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release GL|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\shared\Audio\AudioManagerFMOD.h"
 					>
+					<FileConfiguration
+						Name="Common Debug|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Common Release|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug GL|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release GL|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\shared\Audio\AudioManagerOS.h"

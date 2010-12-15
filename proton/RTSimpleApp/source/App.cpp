@@ -32,10 +32,7 @@ FileManager * GetFileManager() {return &g_fileManager;}
    AudioManagerFMOD g_audioManager; //dummy with no sound
 #endif
 	
-	
-
 #else
-#include "Audio/AudioManagerFMOD.h"
 #include "Audio/AudioManagerSDL.h"
 #include "Audio/AudioManagerAndroid.h"
 
@@ -45,8 +42,14 @@ AudioManagerSDL g_audioManager; //sound in windows and WebOS
 #elif defined ANDROID_NDK
 AudioManagerAndroid g_audioManager; //sound for android
 #else
-AudioManagerFMOD g_audioManager; //sound in windows
+//in windows
 //AudioManager g_audioManager; //to disable sound
+
+#include "Audio/AudioManagerAudiere.h"
+AudioManagerAudiere g_audioManager; //if we wanted FMOD sound in windows
+
+//#include "Audio/AudioManagerFMOD.h"
+//AudioManagerFMOD g_audioManager; //if we wanted FMOD sound in windows
 
 #endif
 #endif
