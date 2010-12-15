@@ -9,4 +9,7 @@
 
 }
 
+- (bool) isShiftDown;
+
 @end
+

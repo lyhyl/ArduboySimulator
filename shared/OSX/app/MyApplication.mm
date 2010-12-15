@@ -12,6 +12,11 @@ bool g_controlDown = false;
 
 @implementation MyApplication
 
+- (bool) isShiftDown
+{
+	return g_shiftDown;	
+}
+
 
 - (void)sendControlKeyMessage: (int) key keyDown: (bool) keyDown
 {

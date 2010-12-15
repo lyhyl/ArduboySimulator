@@ -417,7 +417,9 @@ void InitDeviceScreenInfoEx(int width, int height, int orientation)
 
 int ConvertOSXKeycodeToProtonVirtualKey(int c)
 {
+#ifdef _DEBUG
 	//LogMsg("Got %d  (%c)", c, char(c));
+#endif
 	
 	switch (c)
 	{
@@ -429,6 +431,12 @@ int ConvertOSXKeycodeToProtonVirtualKey(int c)
 		case NSRightArrowFunctionKey: return VIRTUAL_KEY_DIR_RIGHT;
 		case NSUpArrowFunctionKey: return VIRTUAL_KEY_DIR_UP;
 		case NSDownArrowFunctionKey: return VIRTUAL_KEY_DIR_DOWN;
+		default:
+			if (c >= NSF1FunctionKey && c <= NSF16FunctionKey)
+			{
+				c = VIRTUAL_KEY_F1+	(c-NSF1FunctionKey);
+			}
+			break;
 	}
 	return c;
 }

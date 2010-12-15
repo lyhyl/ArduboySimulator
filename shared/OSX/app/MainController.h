@@ -35,5 +35,6 @@
 
 - (CFAbsoluteTime) renderTime;
 - (void) setRenderTime:(CFAbsoluteTime)time;
+- (void) OnResizeFinished;
 
 @end
