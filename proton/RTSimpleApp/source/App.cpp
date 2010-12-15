@@ -46,7 +46,7 @@ AudioManagerAndroid g_audioManager; //sound for android
 //AudioManager g_audioManager; //to disable sound
 
 #include "Audio/AudioManagerAudiere.h"
-AudioManagerAudiere g_audioManager; //if we wanted FMOD sound in windows
+AudioManagerAudiere g_audioManager;  //Use Audiere for audio
 
 //#include "Audio/AudioManagerFMOD.h"
 //AudioManagerFMOD g_audioManager; //if we wanted FMOD sound in windows
