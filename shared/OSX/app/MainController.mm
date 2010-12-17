@@ -9,6 +9,7 @@
 {
 	isInFullScreenMode = YES;
 	
+	/*
 	// Pause the non-fullscreen view
 	[openGLView stopAnimation];
 	
@@ -89,7 +90,7 @@
 	// Create the full-screen context with the attributes listed above
 	// By specifying the non-fullscreen context as the shareContext, we automatically inherit the OpenGL objects (textures, etc) it has defined
 	CGLChoosePixelFormat(attribs, &pixelFormatObj, &numPixelFormats);
-	CGLCreateContext(pixelFormatObj, [[openGLView openGLContext] CGLContextObj], &fullScreenContextObj);
+	CGLCreateContext(pixelFormatObj, (_CGLContextObject*)[[openGLView openGLContext] CGLContextObj], &fullScreenContextObj);
 	CGLDestroyPixelFormat(pixelFormatObj);
 	
 	if (!fullScreenContextObj) {
@@ -162,6 +163,7 @@
 	}
 	
 #endif
+	 */
 }
 
 - (void) goWindow
@@ -267,16 +269,14 @@
 		[self startAnimation];
 }
 
-- (NSSize)windowWillResize:(NSWindow*)sender
-                    toSize:(NSSize)frameSize
+- (NSSize) computeFrameSize: (NSSize) frameSize
 {
-	
 	float aspect_r=(float)GetPrimaryGLX()/(float)GetPrimaryGLY(); // aspect ratio
-	
+	aspect_r = 1.333333; //TODO this shouldn't be hardcoded, but I need to as the Zoom button screws up the aspect ratio
 	NSWindow *window = [NSApp mainWindow];
 	float addX = 0;
 	float addY = [window frame].size.height - [[window contentView] frame].size.height;
-
+	
 	//LogMsg("Shift down is %d", int([NSApp isShiftDown]));
 	if ( 
 		(GetForceAspectRatioWhenResizing() && ![NSApp isShiftDown])
@@ -290,9 +290,20 @@
 		LogMsg("Forcing aspect ratio %.2f offsetY: %.2f:  %.2f %.2f to %.2f %.2f", aspect_r, addY, frameSize.width, oldHeight, frameSize.width, frameSize.height);	
 	} else
 	{
-
+		
 		//let them change it to whatever they want
 	}
+
+	return frameSize;
+}
+
+- (NSSize)windowWillResize:(NSWindow*)sender
+                    toSize:(NSSize)frameSize
+{
+	
+	
+	frameSize = [self computeFrameSize: frameSize];
+	
 	
 	return frameSize;	
 }
@@ -303,15 +314,15 @@
 		LogMsg("Finished resizing");
 		CGLLockContext( (_CGLContextObject*)[[openGLView openGLContext] CGLContextObj]);
 		InitDeviceScreenInfoEx(bounds.size.width, bounds.size.height, ORIENTATION_LANDSCAPE_LEFT);
-		//GetBaseApp()->OnEnterBackground();
-		//GetBaseApp()->OnEnterForeground();
 		CGLUnlockContext( (_CGLContextObject*) [[openGLView openGLContext] CGLContextObj]);
 	
 }
 
 - (void) windowDidResize: (NSNotification *) aNotification
 {
-//    NSLog (@"windowDidResize: called");
+   NSLog (@"windowDidResize: called");
+	
+	[openGLView reshape];
 }
 
 - (void)windowDidMiniaturize:(NSNotification *)notification
@@ -321,6 +332,28 @@
 	CGLUnlockContext( (_CGLContextObject*) [[openGLView openGLContext] CGLContextObj]);
 	
 }
+
+- (BOOL)windowShouldZoom:(NSWindow *)window toFrame:(NSRect)newFrame
+{
+	
+	LogMsg("Window should zoom");	
+	return TRUE;
+}
+
+- (NSRect)windowWillUseStandardFrame:(NSWindow *)window defaultFrame:(NSRect)newFrame
+{
+	bool bZoomed = false; // [window isZoomed];
+	LogMsg("Window will use standard frame: %.2f %.2f is zoomed is %d", newFrame.size.width, newFrame.size.height, int(bZoomed));	
+	newFrame.size = [self computeFrameSize: newFrame.size];
+
+	//this is wrong, temporary
+	//newFrame.size.width = 1024;
+	//newFrame.size.height = 768;
+	
+	return newFrame;
+}
+
+
 - (void) applicationDidResignActive: (NSNotification *) aNotification
 {
 	CGLLockContext( (_CGLContextObject*)[[openGLView openGLContext] CGLContextObj]);

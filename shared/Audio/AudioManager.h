@@ -64,6 +64,8 @@ public:
 	virtual void SetMusicVol(float vol){};
 	bool GetSoundEnabled() {return m_bSoundEnabled;}
 	virtual void SetSoundEnabled(bool bNew) {m_bSoundEnabled = bNew;}
+	virtual void Suspend(){}; //stop all audio, app when into background or something
+	virtual void Resume(){}; //restore audio that was stopped
 
 protected:
 	

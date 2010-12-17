@@ -74,6 +74,8 @@ public:
 	virtual uint32 GetPos( AudioHandle soundID );
 	virtual void SetPos( AudioHandle soundID, uint32 posMS );
 	virtual void SetMusicVol(float vol);
+	virtual void Suspend(); //stop all audio, app when into background or something
+	virtual void Resume(); //restore audio that was stopped
 
 private:
 	

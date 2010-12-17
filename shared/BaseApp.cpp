@@ -423,10 +423,15 @@ void BaseApp::OnEnterBackground()
 	#endif
 	m_sig_enterbackground(NULL);
 	}
+
+	GetAudioManager()->Suspend();
+
 }
 
 void BaseApp::OnEnterForeground()
 {
+	GetAudioManager()->Resume();
+
 	if (m_bIsInBackground)
 	{
 		m_bIsInBackground = false;
@@ -438,6 +443,7 @@ void BaseApp::OnEnterForeground()
 	#endif
 		m_sig_enterforeground(NULL);
 	}
+
 }
 
 void BaseApp::AddCommandLineParm( string parm )

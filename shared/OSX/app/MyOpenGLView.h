@@ -35,5 +35,5 @@
 
 - (void) startAnimation;
 - (void) stopAnimation;
-
+- (void) reshape;
 @end

@@ -413,7 +413,9 @@ void SetupScreenInfo(int x, int y, int orientation)
 
 		NotifyOSOfOrientationPreference(eOrientationMode(orientation));
 		if (IsBaseAppInitted())
-		GetBaseApp()->OnScreenSizeChange();
+		{
+			GetBaseApp()->OnScreenSizeChange();
+		}
 }
 
 void ConvertCoordinatesIfRequired(int &xPos, int &yPos)
