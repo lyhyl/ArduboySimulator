@@ -42,9 +42,8 @@ void LogMsg(const char *lpFormat, ...)
 
 void LaunchURL(string url)
 {
-	assert(!"no");
-	//NSURL *appStoreUrl = [NSURL URLWithString:[NSString stringWithCString: url.c_str() encoding: [NSString defaultCStringEncoding]]];
-	//[[UIApplication sharedApplication] openURL:appStoreUrl];
+	NSURL *appStoreUrl = [NSURL URLWithString:[NSString stringWithCString: url.c_str() encoding: [NSString defaultCStringEncoding]]];
+	[[NSWorkspace sharedWorkspace] openURL:appStoreUrl];
 }
 
 eNetworkType IsNetReachable(string url)
@@ -351,17 +350,9 @@ bool IsIphoneOriPad()
 
 string GetClipboardText()
 {
-	string text;
-	
-	/*
-	UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-
-	if ([pasteboard containsPasteboardTypes: [NSArray arrayWithObject:@"public.utf8-plain-text"]])
-	{
-		text = [pasteboard.string cStringUsingEncoding:NSUTF8StringEncoding];
-	}
-	 */
-	
+	NSPasteboard *pb = [NSPasteboard generalPasteboard];
+	NSString *info = [pb stringForType: NSStringPboardType];
+    string text = [info cStringUsingEncoding:NSUTF8StringEncoding];
 	return text;
 }
 

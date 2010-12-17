@@ -545,4 +545,21 @@ void AudioManagerFMOD::SetPriority( AudioHandle soundID, int priority )
 {
 
 }
+
+void AudioManagerFMOD::Suspend()
+{
+	if (m_pMusicChannel)
+	{
+		m_pMusicChannel->setPaused(true);
+	}
+}
+
+void AudioManagerFMOD::Resume()
+{
+	if (m_pMusicChannel)
+	{
+		m_pMusicChannel->setPaused(false);
+	}
+
+}
 #endif

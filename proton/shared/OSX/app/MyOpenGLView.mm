@@ -147,7 +147,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	
 	if (![self inLiveResize])
 	{
-		LogMsg("Reshaping");
+		LogMsg("Reshaping: %.2f %.2f",  bounds.size.width, bounds.size.height);
 		InitDeviceScreenInfoEx(bounds.size.width, bounds.size.height, ORIENTATION_LANDSCAPE_LEFT);
 	}
 	
@@ -189,6 +189,14 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	//		[[NSApplication sharedApplication] terminate];
 			break;
 		case OSMessage::MESSAGE_SET_VIDEO_MODE:
+		{
+			NSWindow *window = [NSApp mainWindow];
+			NSSize frameSize;
+			frameSize.width = pMsg->m_x;
+			frameSize.height = pMsg->m_y;
+			[window setContentSize:frameSize];
+			[window center];
+			 }	
 			break;
 			
 		default:

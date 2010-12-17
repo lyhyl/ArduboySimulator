@@ -131,18 +131,18 @@ public:
 	//FocusComponents connect to these, which will tricky down their hierarchy
 	boost::signal<void (VariantList*)> m_sig_input; //taps, clicks, and basic keyboard input
 	boost::signal<void (VariantList*)> m_sig_input_move; //"move" touch messages, if INPUT_MODE_SEPARATE_MOVE_TOUCHES was set, otherwise they go to m_sig_input
-	boost::signal<void (VariantList*)> m_sig_os; //messages from mac
-	boost::signal<void (VariantList*)> m_sig_render; //called once per frame. You should render but not do game logic.
+	boost::signal<void (VariantList*)> m_sig_os; //messages from the platform itself (do eMessageType mType = (eMessageType)(int)pVList->m_variant[0].GetFloat(); to get message)
 	boost::signal<void (VariantList*)> m_sig_update; //called once per frame, usually.  For your game logic.
-	boost::signal<void (VariantList*)> m_sig_enterbackground;
-	boost::signal<void (VariantList*)> m_sig_enterforeground;
+	boost::signal<void (VariantList*)> m_sig_render; //called once per frame. You should render but not do game logic.
+	boost::signal<void (VariantList*)> m_sig_enterbackground; //game lost focus
+	boost::signal<void (VariantList*)> m_sig_enterforeground; //game restored focus
 	boost::signal<void (VariantList*)> m_sig_accel; //accelerometer data from iphone
 	boost::signal<void (VariantList*)> m_sig_trackball; //used for android trackball move data
 	boost::signal<void (VariantList*)> m_sig_arcade_input; //for arcade movement controls like left/right/up/down, if MovementInputComponent is used, trackball/wasd are converted to send through this as well
 	boost::signal<void (VariantList*)> m_sig_raw_keyboard; //for raw data from keyboards that give pressed/released messages.  Generally you would convert them into arcade messages
 	
 	boost::signal<void (void)> m_sig_unloadSurfaces; //some phones may want you to release surfaces sometimes
-	boost::signal<void (void)> m_sig_loadSurfaces; //some phones may want you to release surfaces sometimes
+	boost::signal<void (void)> m_sig_loadSurfaces; //some phones may want you to reload surfaces sometimes
 
 	deque <OSMessage> * GetOSMessages() {return &m_OSMessages;}
 	void AddOSMessage(OSMessage &m);

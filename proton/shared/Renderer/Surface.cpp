@@ -53,7 +53,7 @@ void Surface::Kill()
 	{
 		glDeleteTextures( 1, &m_glTextureID );
 #ifdef _DEBUG
-		LogMsg("Killing texture %s", m_textureLoaded.c_str());
+		//LogMsg("Killing texture %s", m_textureLoaded.c_str());
 #endif
 		m_glTextureID = NO_TEXTURE_LOADED;
 		GetBaseApp()->ModTexUsed(-m_memUsed);
