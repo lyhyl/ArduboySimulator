@@ -58,10 +58,10 @@ bool SurfaceAnim::LoadFileFromMemory( byte *pMem )
 }
 
 void SurfaceAnim::BlitScaledAnim( float x, float y, int frameX , int frameY, CL_Vec2f vScale, eAlignment alignment /*= ALIGNMENT_CENTER*/,
-								 unsigned int rgba /*= MAKE_RGBA(255,255,255,255)*/, float rotation, CL_Vec2f vRotationPt)
+								 unsigned int rgba /*= MAKE_RGBA(255,255,255,255)*/, float rotation, CL_Vec2f vRotationPt, bool flipX, bool flipY)
 {
 	assert(vScale.x != 0 && vScale.y != 0 && "Dahell?");
-	if (GetFrameWidth() == GetWidth() && GetFrameHeight() == GetHeight()) 
+	if (GetFrameWidth() == GetWidth() && GetFrameHeight() == GetHeight() && !flipX && !flipY) 
 	{
 		BlitScaled(x,y, vScale, alignment, rgba, rotation); //don't need the anim code
 		return;
@@ -76,6 +76,15 @@ void SurfaceAnim::BlitScaledAnim( float x, float y, int frameX , int frameY, CL_
 	
 	rtRectf dst(0,0, m_frameWidth, m_frameHeight);
 	
+	if (flipX)
+	{
+		swap(src.left, src.right);
+	}
+
+	if (flipY)
+	{
+		swap(src.top, src.bottom);
+	}
 	if (alignment != ALIGNMENT_UPPER_LEFT)
 	{
 		vStart -= GetAlignmentOffset(CL_Vec2f(GetFrameWidth(), GetFrameHeight()), alignment);

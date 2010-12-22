@@ -37,7 +37,7 @@ void InitVideoSize()
 	AddVideoMode("Droid Landscape", 854, 480, PLATFORM_ID_ANDROID); //g_landScapeNoNeckHurtMode should be false when testing
 	AddVideoMode("Nexus One Landscape", 800, 480, PLATFORM_ID_ANDROID); //g_landScapeNoNeckHurtMode should be false when testing
 
-	string desiredVideoMode = "iPhone"; //name needs to match one of the ones defined below
+	string desiredVideoMode = "Windows"; //name needs to match one of the ones defined below
     g_landScapeNoNeckHurtMode = true; //if true, will rotate the screen so we can play in landscape mode in windows without hurting ourselves
 
 	SetVideoModeByName(desiredVideoMode);
@@ -51,6 +51,9 @@ bool g_landScapeNoNeckHurtMode = false;
 int g_winVideoScreenX = 0;
 int g_winVideoScreenY = 0;
 bool g_bIsFullScreen = false;
+int g_fpsLimit = 0; //0 for no fps limit (default)  Use MESSAGE_SET_FPS_LIMIT to set
+
+
 
 void AddVideoMode(string name, int x, int y, ePlatformID platformID)
 {
@@ -894,10 +897,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 	}
 
 	//our main loop
+	static float fpsTimer=0;
 
 	while(1)
 	{
-
+		
 		if (GetAsyncKeyState('Q') && GetAsyncKeyState(VK_MENU))
 		{
 			SendMessage(g_hWnd, WM_CLOSE, 0, 0);
@@ -911,7 +915,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 			//return true;
 		}
 
-		
 		if (g_bAppFinished) break;
 
 		if (g_bHasFocus)
@@ -922,6 +925,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 		{
 			//LogMsg("Sleeping");
 			Sleep(50);
+		}
+
+		if (g_fpsLimit != 0)
+		{
+			while (fpsTimer > GetSystemTimeAccurate())
+			{
+				Sleep(0);
+			}
+			fpsTimer = GetSystemTimeAccurate()+(1000.0f/ (float(g_fpsLimit)));
 		}
 
 		while (!GetBaseApp()->GetOSMessages()->empty())
@@ -946,6 +958,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 				PostMessage(g_hWnd, WM_CLOSE, 0, 0);
 				break;
 			
+			case OSMessage::MESSAGE_SET_FPS_LIMIT:
+				g_fpsLimit = m.m_x;
+				
+				break;
 			case OSMessage::MESSAGE_SET_VIDEO_MODE:
 			
 				SwapBuffers(g_hDC);

@@ -154,9 +154,50 @@ void AnimateStopEntity(Entity *pEnt, int delayToStartMS)
 	EntityComponent *pComp = pEnt->GetComponentByName("ic_anim");
 	if (pComp)
 	{
-		GetMessageManager()->SetComponentVariable(pComp, delayToStartMS, "duration_ms", Variant(uint32(0)));
+		if (delayToStartMS == 0)
+		{
+			pComp->GetVar("duration_ms")->Set(uint32(0));
+		} else
+		{
+			GetMessageManager()->SetComponentVariable(pComp, delayToStartMS, "duration_ms", Variant(uint32(0)));
+		}
+	}
+}
+
+void AnimateStopEntityAndSetFrame(Entity *pEnt, int delayToStartMS, int frameX, int frameY)
+{
+	EntityComponent *overlayComp = pEnt->GetComponentByName("OverlayRender");
+
+	EntityComponent *pComp = pEnt->GetComponentByName("ic_anim");
+	if (pComp)
+	{
+		if (delayToStartMS == 0)
+		{
+			pComp->GetVar("duration_ms")->Set(uint32(0));
+
+		} else
+		{
+			GetMessageManager()->SetComponentVariable(pComp, delayToStartMS, "duration_ms", Variant(uint32(0)));
+		}
+	}
+
+	pComp = pEnt->GetComponentByName("OverlayRender");
+	if (pComp)
+	{
+		if (delayToStartMS == 0)
+		{
+			pComp->GetVar("frameX")->Set(uint32(frameX));
+			pComp->GetVar("frameY")->Set(uint32(frameY));
+		} else
+		{
+			GetMessageManager()->SetComponentVariable(pComp, delayToStartMS, "frameX", Variant(uint32(frameX)));
+			GetMessageManager()->SetComponentVariable(pComp, delayToStartMS, "frameY", Variant(uint32(frameY)));
+
+		}
 
 	}
+
+
 }
 
 EntityComponent * SetupAnimEntity(Entity *pEnt, uint32 frameCountX, uint32 frameCountY, int curFrameX, int curFrameY)
@@ -165,6 +206,7 @@ EntityComponent * SetupAnimEntity(Entity *pEnt, uint32 frameCountX, uint32 frame
 	
 	if (pEnt)
 	{
+		
 		pComp->GetFunction("SetupAnim")->sig_function(&VariantList(frameCountX, frameCountY));
 
 		if (curFrameX != -1)
@@ -183,6 +225,17 @@ EntityComponent * SetupAnimEntity(Entity *pEnt, uint32 frameCountX, uint32 frame
 
 	assert("This anim doesn't even have an OverlayRender attached!");
 	return NULL;
+}
+
+void AnimateEntitySetMirrorMode(Entity *pEnt, bool flipX, bool flipY)
+{
+	EntityComponent *overlayComp = pEnt->GetComponentByName("OverlayRender");
+	assert(overlayComp && "You must add a OverlayRender component to use this");
+	if (!overlayComp) return;
+
+	overlayComp->GetVar("flipX")->Set(uint32(flipX));
+	overlayComp->GetVar("flipY")->Set(uint32(flipY));
+
 }
 
 void AnimateEntity(Entity *pEnt, int startFrame, int endFrame, int animSpeedMS, InterpolateComponent::eOnFinish type, int delayToStartMS)
@@ -213,10 +266,13 @@ void AnimateEntity(Entity *pEnt, int startFrame, int endFrame, int animSpeedMS, 
 	}
 
 	uint32 totalTimeMS = animSpeedMS* (endFrame-startFrame);
+	
+	/*
 	if (type == InterpolateComponent::ON_FINISH_BOUNCE)
 	{
 		totalTimeMS *= 2; //need twice as much
 	}
+	*/
 
 	if (delayToStartMS == 0)
 	{
@@ -224,7 +280,7 @@ void AnimateEntity(Entity *pEnt, int startFrame, int endFrame, int animSpeedMS, 
 		pComp->GetVar("component_name")->Set("OverlayRender");
 		pComp->GetVar("var_name")->Set(frameName);
 		overlayComp->GetVar(frameName)->Set(uint32(startFrame));
-		pComp->GetVar("target")->Set(uint32(endFrame));
+		pComp->GetVar("target")->Set(uint32(endFrame+1));
 		pComp->GetVar("interpolation")->Set(uint32(INTERPOLATE_LINEAR));
 		pComp->GetVar("on_finish")->Set(uint32(type));
 		pComp->GetVar("duration_ms")->Set(uint32(totalTimeMS));
@@ -234,7 +290,7 @@ void AnimateEntity(Entity *pEnt, int startFrame, int endFrame, int animSpeedMS, 
 		GetMessageManager()->SetComponentVariable(pComp, delayToStartMS, "component_name", Variant("OverlayRender"));
 		GetMessageManager()->SetComponentVariable(pComp, delayToStartMS, "var_name", Variant(frameName));
 		GetMessageManager()->SetComponentVariable(overlayComp, delayToStartMS, frameName, Variant(uint32(startFrame)));
-		GetMessageManager()->SetComponentVariable(pComp, delayToStartMS, "target", Variant(uint32(endFrame)));
+		GetMessageManager()->SetComponentVariable(pComp, delayToStartMS, "target", Variant(uint32(endFrame)+1));
 		GetMessageManager()->SetComponentVariable(pComp, delayToStartMS, "interpolation", Variant(uint32(INTERPOLATE_LINEAR)));
 		GetMessageManager()->SetComponentVariable(pComp, delayToStartMS, "on_finish", Variant(uint32(type)));
 		GetMessageManager()->SetComponentVariable(pComp, delayToStartMS, "duration_ms", Variant(uint32(totalTimeMS)));
@@ -504,7 +560,7 @@ void MorphToColorEntity(Entity *pEnt, bool bRecursive, int timeMS, unsigned int 
 }
 
 
-void PulsateColorEntity(Entity *pEnt, bool bRecursive, unsigned int color)
+EntityComponent * PulsateColorEntity(Entity *pEnt, bool bRecursive, unsigned int color)
 {
 	EntityComponent * pComp = pEnt->AddComponent( new InterpolateComponent);
 	pComp->GetVar("var_name")->Set("colorMod");
@@ -513,7 +569,7 @@ void PulsateColorEntity(Entity *pEnt, bool bRecursive, unsigned int color)
 	pComp->GetVar("on_finish")->Set(uint32(InterpolateComponent::ON_FINISH_BOUNCE));
 	pComp->GetVar("duration_ms")->Set(uint32(1000));
 
-	if (!bRecursive) return;
+	if (!bRecursive) return pComp;
 
 	//also run this on all children
 	EntityList *pChildren = pEnt->GetChildren();
@@ -524,6 +580,8 @@ void PulsateColorEntity(Entity *pEnt, bool bRecursive, unsigned int color)
 		PulsateColorEntity( *itor, bRecursive, color);
 		itor++;
 	}
+
+	return pComp;
 
 }
 
@@ -583,9 +641,13 @@ void FlashOnceEntity(Entity *pEnt, int flashSpeedMS)
 	pComp->GetVar("duration_ms")->Set(uint32(flashSpeedMS/2));
 }
 
-void FadeEntity(Entity *pEnt, bool bRecursive, float alpha, int timeMS, int delayBeforeFadingMS)
+void FadeEntity(Entity *pEnt, bool bRecursive, float alpha, int timeMS, int delayBeforeFadingMS,  bool bAllowMultipleFadesActiveAtOnce)
 {
-	pEnt->RemoveComponentByName("ic_fade");
+	if (!bAllowMultipleFadesActiveAtOnce)
+	{
+		pEnt->RemoveComponentByName("ic_fade");
+
+	}
 	EntityComponent * pComp = pEnt->AddComponent( new InterpolateComponent);
 	pComp->SetName("ic_fade");
 	pComp->GetVar("var_name")->Set("alpha");

@@ -406,7 +406,11 @@ bool Surface::LoadFile( string fName )
 #endif
 
 	FileInstance f(fName);
-	if (!f.IsLoaded()) return false;
+	if (!f.IsLoaded()) 
+	{
+		LogMsg("Couldn't load surface %s", fName);
+		return false;
+	}
 	
 	m_textureLoaded = fName;
 	m_textureCreationMethod = TEXTURE_CREATION_FILE;

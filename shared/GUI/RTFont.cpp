@@ -243,7 +243,7 @@ void RTFont::DrawScaled( float x, float y, const string &text, float scale /*= 1
 {
 	if (!pBatcher) pBatcher = &g_globalBatcher;
 	SetupOrtho();
-	assert(IsLoaded() && "No font loaded");
+	//assert(IsLoaded() && "No font loaded");
 	
 	
 	if (!m_surf.IsLoaded())

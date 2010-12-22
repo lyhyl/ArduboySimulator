@@ -42,8 +42,6 @@ private:
 	L_MotionController m_motionController;
 	L_ExplosionEffect m_explosion;
 
-
-
 	SurfaceAnim m_textureFire;
 	L_Particle m_particleFire;
 	L_MotionController m_motionFire;
