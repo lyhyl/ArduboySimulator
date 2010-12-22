@@ -175,7 +175,8 @@ public:
 	bool GetCheatMode() {return m_bCheatMode;}
 	void SetVideoMode(int width, int height, bool bFullScreen, float aspectRatio = 0) /*aspectRatio should be 0 to ignore */;
 	void KillOSMessagesByType(OSMessage::eMessageType type);
- 
+	void SetFPSLimit(float fps);
+
 protected:
 	
 	bool m_bConsoleVisible;

@@ -2634,7 +2634,7 @@
 							>
 						</File>
 						<File
-							RelativePath="..\..\shared\Irrlicht\source\Irrlicht\COctTreeSceneNode.cpp"
+							RelativePath="..\..\shared\Irrlicht\source\Irrlicht\COctreeSceneNode.cpp"
 							>
 							<FileConfiguration
 								Name="Common Debug|Win32"
@@ -2670,11 +2670,11 @@
 							</FileConfiguration>
 						</File>
 						<File
-							RelativePath="..\..\shared\Irrlicht\source\Irrlicht\COctTreeSceneNode.h"
+							RelativePath="..\..\shared\Irrlicht\source\Irrlicht\COctreeSceneNode.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\shared\Irrlicht\source\Irrlicht\COctTreeTriangleSelector.cpp"
+							RelativePath="..\..\shared\Irrlicht\source\Irrlicht\COctreeTriangleSelector.cpp"
 							>
 							<FileConfiguration
 								Name="Common Debug|Win32"
@@ -2710,7 +2710,7 @@
 							</FileConfiguration>
 						</File>
 						<File
-							RelativePath="..\..\shared\Irrlicht\source\Irrlicht\COctTreeTriangleSelector.h"
+							RelativePath="..\..\shared\Irrlicht\source\Irrlicht\COctreeTriangleSelector.h"
 							>
 						</File>
 						<File

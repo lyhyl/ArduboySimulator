@@ -464,14 +464,22 @@ void BaseApp::SetAccelerometerUpdateHz(float hz) //another way to think of hz is
 	GetBaseApp()->AddOSMessage(o);
 }
 
+void BaseApp::SetFPSLimit(float fps) 
+{
+	OSMessage o;
+	o.m_type = OSMessage::MESSAGE_SET_FPS_LIMIT;
+	o.m_x = fps;
+	GetBaseApp()->AddOSMessage(o);
+}
+
 void BaseApp::SetVideoMode(int width, int height, bool bFullScreen, float aspectRatio) //aspectRatio should be 0 to ignore
 {
 	//this message is only going to be processed by platforms that can change size during runtime and have such a thing as fullscreen
 	
 	OSMessage o;
 	o.m_type = OSMessage::MESSAGE_SET_VIDEO_MODE;
-	o.m_x = width;
-	o.m_y = height;
+	o.m_x =(float) width;
+	o.m_y = (float) height;
 	o.m_fullscreen = bFullScreen;	
 	o.m_fontSize = aspectRatio;
 	GetBaseApp()->AddOSMessage(o);

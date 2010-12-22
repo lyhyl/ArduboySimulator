@@ -103,6 +103,12 @@ void RenderBatcher::Flush()
 	int curPrim = 0;
 	RenderBatchEvent event;
 
+	if (m_verts.empty())
+	{
+		assert(!"Hmm?");
+		m_batchEvents.clear();
+		return;
+	}
 	glEnable(GL_BLEND);
 	glVertexPointer(3, GL_FLOAT, sizeof(BatchVert), &m_verts[0].vPos.x);
 	glTexCoordPointer(2, GL_FLOAT,  sizeof(BatchVert), &m_verts[0].vUv.x);

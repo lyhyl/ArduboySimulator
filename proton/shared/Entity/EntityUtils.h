@@ -53,7 +53,7 @@ void FadeOutAndKillEntity(Entity *pEnt, bool bRecursive = true, int timeMS=300, 
 void FadeOutAndKillChildrenEntities(Entity *pEnt, int timeMS=300, int delayBeforeFadingMS = 0);
 void FadeInEntity(Entity *pEnt, bool bRecursive=true, int timeMS=300, int delayBeforeFadingMS = 0);
 void KillEntity(Entity *pEnt, int timeMS = 0);
-void PulsateColorEntity(Entity *pEnt, bool bRecursive, unsigned int color);
+EntityComponent * PulsateColorEntity(Entity *pEnt, bool bRecursive, unsigned int color);
 EntityComponent * TypeTextLabelEntity(Entity *pEnt, int delayBeforeActionMS = 0, uint32 textTypeSpeedMS = 50); //modifies an existing textlabel to 'type' itself out.  Deletes any pre-existing Typer effect
 
 EntityComponent * ZoomToPositionFromThisOffsetEntity(Entity *pEnt, CL_Vec2f vPos, unsigned int speedMS, eInterpolateType interpolateType = INTERPOLATE_SMOOTHSTEP,  int delayBeforeActionMS = 0);
@@ -77,9 +77,12 @@ void FlashOnceEntity(Entity *pEnt, int flashSpeedMS);
 EntityComponent * SetupAnimEntity(Entity *pEnt, uint32 frameCountX, uint32 frameCountY = 1, int curFrameX = -1, int curFrameY = -1); //-1 means don't set it
 void AnimateEntity(Entity *pEnt, int startFrame, int endFrame, int animSpeedMS, InterpolateComponent::eOnFinish type, int delayToStartMS);
 void AnimateStopEntity(Entity *pEnt, int delayToStartMS);
+void AnimateStopEntityAndSetFrame(Entity *pEnt, int delayToStartMS, int frameX, int frameY);
+void AnimateEntitySetMirrorMode(Entity *pEnt, bool flipX, bool flipY);
+
 void ScaleEntity(Entity *pEnt, float scaleStart, float scaleEnd, int timeMS, int delayBeforeStartingMS = 0); //send -1 for scaleStart to use current scale as start
 
-void FadeEntity(Entity *pEnt, bool bRecursive, float alpha, int timeMS, int delayBeforeFadingMS = 0);
+void FadeEntity(Entity *pEnt, bool bRecursive, float alpha, int timeMS, int delayBeforeFadingMS = 0, bool bAllowMultipleFadesActiveAtOnce = false);
 void FadeScreen( Entity *pParent, float defaultStartAlpha, float targetAlpha, int fadeDurationMS, bool bDeleteWhenDone);
 
 CL_Rectf MeasureEntityAndChildren(Entity *pEnt, bool bFirst = true);

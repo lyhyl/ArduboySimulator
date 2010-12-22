@@ -140,6 +140,12 @@ void AudioManagerAudiere::Preload( string fName, bool bLooping /*= false*/, bool
 			pObject->m_pSound  = OpenSound(m_pDevice, (basePath+fName).c_str());
 		}
 
+		if (!pObject->m_pSound)
+		{
+			LogMsg("Unable to find audio file %s",(basePath+fName).c_str() );
+			SAFE_DELETE(pObject);
+			return;
+		}
 		if(bLooping){
 			pObject->m_pSound->setRepeat(true);
 		}
@@ -171,7 +177,8 @@ AudioHandle AudioManagerAudiere::Play( string fName, bool bLooping /*= false*/, 
 	SoundObject *pObject = GetSoundObjectByFileName(fName);
 
 
-	if (!pObject){
+	if (!pObject)
+	{
 		Preload(fName, bLooping, bIsMusic, bAddBasePath, bForceStreaming);
 		pObject = GetSoundObjectByFileName(fName);
 		if (!pObject)
@@ -182,7 +189,8 @@ AudioHandle AudioManagerAudiere::Play( string fName, bool bLooping /*= false*/, 
 		}
 	}
 
-	if(pObject->m_pSound->isPlaying()){
+	if(pObject->m_pSound->isPlaying())
+	{
 		pObject->m_pSound->stop();
 	}
 	pObject->m_pSound->play();

@@ -90,8 +90,6 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 												 selector:@selector(reshape) 
 													 name:NSViewGlobalFrameDidChangeNotification
 												   object:self];
-	
-		
 
 		//make the working directory our resources dir, to match other platforms.  Shouldn't really matter as GetAppPath() will return it, and we usually use full
 		//path names to load stuff anyway.
@@ -130,9 +128,6 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 
 - (void) reshape
 {
-	
-	
-	
 	// This method will be called on the main thread when resizing, but we may be drawing on a secondary thread through the display link
 	// Add a mutex around to avoid the threads accessing the context simultaneously
 	CGLLockContext( (_CGLContextObject*)[[self openGLContext] CGLContextObj]);
@@ -154,9 +149,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	[[self openGLContext] update];
 		
 	CGLUnlockContext( (_CGLContextObject*) [[self openGLContext] CGLContextObj]);
-	
 }
-
 
 - (void)viewDidEndLiveResize
 {
@@ -185,8 +178,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 		case OSMessage::MESSAGE_SET_ACCELEROMETER_UPDATE_HZ:
 			break;
 		case OSMessage::MESSAGE_FINISH_APP:
-			assert(!"Test this!");
-	//		[[NSApplication sharedApplication] terminate];
+			[NSApp terminate:nil];
 			break;
 		case OSMessage::MESSAGE_SET_VIDEO_MODE:
 		{
@@ -230,8 +222,6 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 		[self onOSMessage: &m];
 	}
 	
-	
-	
 	if (GetBaseApp()->IsInitted() && !GetBaseApp()->IsInBackground() && ![self inLiveResize])
 	{
 		GetBaseApp()->Update();
@@ -245,13 +235,8 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 		GetBaseApp()->Draw();
 	}
 	
-	
 	[[self openGLContext] flushBuffer];
-	
-	
 	CGLUnlockContext( (_CGLContextObject*) [[self openGLContext] CGLContextObj]);
-	
-	
 }
  
 - (BOOL) acceptsFirstResponder
@@ -309,21 +294,19 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	// [controller mouseDown:theEvent];
 }
 
-
-
 - (void)keyDown:(NSEvent *)theEvent
 {
-	//    [controller keyDown:theEvent];
 	unichar c = [[theEvent charactersIgnoringModifiers] characterAtIndex:0];
 
 	GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR,  ConvertOSXKeycodeToProtonVirtualKey(c), 0);  //lParam holds a lot of random data about the press, look it up if
 	
-	if (!theEvent.isARepeat)
+	if (theEvent.isARepeat == NO)
 	{
-		//if it's now a key repeat, also send here for the more arcade-like key up/down messages
+		//if it's not a key repeat, also send here for the more arcade-like key up/down messages
+		c =  [[[NSString stringWithCharacters:&c length:1] uppercaseString] characterAtIndex: 0]; //make it uppercase, same as Win
+
 		GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW,   ConvertOSXKeycodeToProtonVirtualKey(c), 1);  
 	}
-	
 }
 
 - (void)keyUp:(NSEvent *)theEvent

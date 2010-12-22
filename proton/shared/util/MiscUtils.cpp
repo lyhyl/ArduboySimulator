@@ -117,7 +117,7 @@ int Random(int range)
 
 int RandomRange(int rangeMin, int rangeMax)
 {
-	return static_cast<int>(double(rand()) / RAND_MAX * (rangeMax+1-rangeMin)+rangeMin);
+	return static_cast<int>(double(rand()) / RAND_MAX * (rangeMax-rangeMin)+rangeMin);
 }
 
 float RandomRangeFloat(float rangeMin, float rangeMax)
