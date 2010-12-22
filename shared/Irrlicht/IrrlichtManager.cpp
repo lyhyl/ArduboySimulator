@@ -1,4 +1,5 @@
 #include "IrrlichtManager.h"
+#include "Renderer/Surface.h"
 //#include "source/Irrlicht/COGLESDriver.h"
 //#include "source/Irrlicht/COpenGLDriver.h"
 
@@ -103,7 +104,6 @@ void IrrlichtManager::BeginScene()
 	
 	if (m_pDriver)
 	{
-		//((COGLES1Driver*)m_pDriver)->setRenderStates3DMode();
 		m_pDriver->beginScene(false, false, SColor(255,100,101,140));
 	}
 
@@ -122,6 +122,7 @@ void IrrlichtManager::EndScene()
 	if (m_pDriver)
 	{
 		m_pDriver->endScene();
+	
 		const video::SMaterial m;
 		m_pDriver->setMaterial(m); 
 		
@@ -133,7 +134,8 @@ void IrrlichtManager::EndScene()
 		
 		glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 		glEnable(GL_TEXTURE_2D);
-
+		
+		g_lastBound = NO_TEXTURE_LOADED;
 	}
 
 }

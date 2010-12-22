@@ -19,13 +19,11 @@
 #endif
 */
 
-//SETH
-
-
 #include "SIrrCreationParameters.h"
-	#include "MacOSX/CIrrDeviceMacOSX.h"
+
 #ifdef _IRR_COMPILE_WITH_OGLES1_
-#include "CIrrDeviceIPhone.h"
+
+#include "CIrrDeviceIPhone.h" //SETH
 #include "CNullDriver.h"
 #include "IMaterialRendererServices.h"
 #include "EDriverFeatures.h"
@@ -42,7 +40,6 @@
 #ifdef _MSC_VER
 	#pragma comment(lib, "libgles_cm.lib")
 #endif
-
 */
 
 //SETH
@@ -82,7 +79,7 @@ namespace video
 		//! clears the zbuffer
 		virtual bool beginScene(bool backBuffer=true, bool zBuffer=true,
 				SColor color=SColor(255,0,0,0),
-				void* windowId=0,
+				const SExposedVideoData& videoData=SExposedVideoData(),
 				core::rect<s32>* sourceRect=0);
 
 		//! presents the rendered scene on the screen, returns false if failed
@@ -290,6 +287,9 @@ namespace video
 		//! Returns the graphics card vendor name.
 		virtual core::stringc getVendorInfo() {return vendorName;};
 
+		//! Get the maximal texture size for this driver
+		core::dimension2du getMaxTextureSize() const;
+
 		ITexture* createDepthTexture(ITexture* texture, bool shared=true);
 		void removeDepthTexture(ITexture* texture);
 
@@ -307,7 +307,7 @@ namespace video
 		bool genericDriverInit(const core::dimension2d<u32>& screenSize, bool stencilBuffer);
 
 		//! returns a device dependent texture from a software surface (IImage)
-		virtual video::ITexture* createDeviceDependentTexture(IImage* surface, const io::path& name);
+		virtual video::ITexture* createDeviceDependentTexture(IImage* surface, const io::path& name, void* mipmapData=0);
 
 		//! creates a transposed matrix in supplied GLfloat array to pass to OGLES1
 		inline void createGLMatrix(GLfloat gl_matrix[16], const core::matrix4& m);
@@ -316,7 +316,11 @@ namespace video
 
 		//! Set GL pipeline to desired texture wrap modes of the material
 		void setWrapMode(const SMaterial& material);
-		
+
+		//! Get OpenGL wrap enum from Irrlicht enum
+		GLint getTextureWrapMode(u8 clamp) const;
+
+	
 		// returns the current size of the screen or rendertarget
 		virtual const core::dimension2d<u32>& getCurrentRenderTargetSize() const;
 

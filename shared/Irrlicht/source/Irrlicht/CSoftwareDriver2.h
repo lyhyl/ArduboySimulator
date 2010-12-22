@@ -11,6 +11,7 @@
 #include "CImage.h"
 #include "os.h"
 #include "irrString.h"
+#include "SIrrCreationParameters.h"
 
 namespace irr
 {
@@ -21,7 +22,7 @@ namespace video
 	public:
 
 		//! constructor
-		CBurningVideoDriver(const core::dimension2d<u32>& windowSize, bool fullscreen, io::IFileSystem* io, video::IImagePresenter* presenter);
+		CBurningVideoDriver(const irr::SIrrlichtCreationParameters& params, io::IFileSystem* io, video::IImagePresenter* presenter);
 
 		//! destructor
 		virtual ~CBurningVideoDriver();
@@ -44,7 +45,7 @@ namespace video
 		//! clears the zbuffer
 		virtual bool beginScene(bool backBuffer=true, bool zBuffer=true,
 				SColor color=SColor(255,0,0,0),
-				void* windowId=0,
+				const SExposedVideoData& videoData=SExposedVideoData(),
 				core::rect<s32>* sourceRect=0);
 
 		//! presents the rendered scene on the screen, returns false if failed
@@ -157,6 +158,9 @@ namespace video
 		//! Returns the maximum texture size supported.
 		virtual core::dimension2du getMaxTextureSize() const;
 
+		virtual IDepthBuffer * getDepthBuffer () { return DepthBuffer; }
+		virtual IStencilBuffer * getStencilBuffer () { return StencilBuffer; }
+
 	protected:
 
 
@@ -168,7 +172,7 @@ namespace video
 
 		//! returns a device dependent texture from a software surface (IImage)
 		//! THIS METHOD HAS TO BE OVERRIDDEN BY DERIVED DRIVERS WITH OWN TEXTURES
-		virtual video::ITexture* createDeviceDependentTexture(IImage* surface, const io::path& name);
+		virtual video::ITexture* createDeviceDependentTexture(IImage* surface, const io::path& name, void* mipmapData=0);
 
 		video::CImage* BackBuffer;
 		video::IImagePresenter* Presenter;
@@ -187,6 +191,7 @@ namespace video
 		IBurningShader* BurningShader[ETR2_COUNT];
 
 		IDepthBuffer* DepthBuffer;
+		IStencilBuffer* StencilBuffer;
 
 
 		/*
@@ -201,6 +206,7 @@ namespace video
 			ETS_CURRENT,
 			ETS_CLIPSCALE,
 			ETS_VIEW_INVERSE,
+			ETS_WORLD_INVERSE,
 
 			ETS_COUNT_BURNING
 		};
@@ -215,6 +221,7 @@ namespace video
 		core::matrix4 Transformation[ETS_COUNT_BURNING];
 
 		void getCameraPosWorldSpace ();
+		void getLightPosObjectSpace ();
 
 
 		// Vertex Cache
@@ -254,7 +261,7 @@ namespace video
 
 		void ndc_2_dc_and_project ( s4DVertex *dest,s4DVertex *source, u32 vIn ) const;
 		f32 screenarea ( const s4DVertex *v0 ) const;
-		void select_polygon_mipmap ( s4DVertex *source, u32 vIn, u32 tex, const core::dimension2du& texSize );
+		void select_polygon_mipmap ( s4DVertex *source, u32 vIn, u32 tex, const core::dimension2du& texSize ) const;
 		f32 texelarea ( const s4DVertex *v0, int tex ) const;
 
 

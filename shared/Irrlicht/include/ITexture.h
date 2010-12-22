@@ -22,7 +22,7 @@ namespace video
 enum E_TEXTURE_CREATION_FLAG
 {
 	/** Forces the driver to create 16 bit textures always, independent of
-	which format the file on disk has. When choosing this you may loose
+	which format the file on disk has. When choosing this you may lose
 	some color detail, but gain much speed and memory. 16 bit textures can
 	be transferred twice as fast as 32 bit textures and only use half of
 	the space in memory.
@@ -62,30 +62,13 @@ enum E_TEXTURE_CREATION_FLAG
 	ETCF_NO_ALPHA_CHANNEL = 0x00000020,
 
 	//! Allow the Driver to use Non-Power-2-Textures
-	/** BurningVideo can handle Non-Power-2 Textures in 2D (GUI), but not it 3D. */
+	/** BurningVideo can handle Non-Power-2 Textures in 2D (GUI), but not in 3D. */
 	ETCF_ALLOW_NON_POWER_2 = 0x00000040,
 
 	/** This flag is never used, it only forces the compiler to compile
 	these enumeration values to 32 bit. */
 	ETCF_FORCE_32_BIT_DO_NOT_USE = 0x7fffffff
 };
-
-
-//! Helper function, helps to get the desired texture creation format from the flags.
-/** \return Either ETCF_ALWAYS_32_BIT, ETCF_ALWAYS_16_BIT,
-ETCF_OPTIMIZED_FOR_QUALITY, or ETCF_OPTIMIZED_FOR_SPEED. */
-inline E_TEXTURE_CREATION_FLAG getTextureFormatFromFlags(u32 flags)
-{
-	if (flags & ETCF_OPTIMIZED_FOR_SPEED)
-		return ETCF_OPTIMIZED_FOR_SPEED;
-	if (flags & ETCF_ALWAYS_16_BIT)
-		return ETCF_ALWAYS_16_BIT;
-	if (flags & ETCF_ALWAYS_32_BIT)
-		return ETCF_ALWAYS_32_BIT;
-	if (flags & ETCF_OPTIMIZED_FOR_QUALITY)
-		return ETCF_OPTIMIZED_FOR_QUALITY;
-	return ETCF_OPTIMIZED_FOR_SPEED;
-}
 
 
 //! Interface of a Video Driver dependent Texture.
@@ -102,9 +85,8 @@ class ITexture : public virtual IReferenceCounted
 public:
 
 	//! constructor
-	ITexture(const io::path& name) : Name(name)
+	ITexture(const io::path& name) : NamedPath(name)
 	{
-		Name.make_lower();
 	}
 
 	//! Lock function.
@@ -112,26 +94,32 @@ public:
 	pixels. After lock() has been called and all operations on the pixels
 	are done, you must call unlock().
 	Locks are not accumulating, hence one unlock will do for an arbitrary
-	number of previous locks.
+	number of previous locks. You should avoid locking different levels without
+	unlocking inbetween, though, because only the last level locked will be
+	unlocked.
+	The size of the i-th mipmap level is defined as max(getSize().Width>>i,1)
+	and max(getSize().Height>>i,1)
 	\param readOnly Specifies that no changes to the locked texture are
 	made. Unspecified behavior will arise if still write access happens.
+	\param mipmapLevel Number of the mipmapLevel to lock. 0 is main texture.
+	Non-existing levels will silently fail and return 0.
 	\return Returns a pointer to the pixel data. The format of the pixel can
 	be determined by using getColorFormat(). 0 is returned, if
 	the texture cannot be locked. */
-	virtual void* lock(bool readOnly = false) = 0;
+	virtual void* lock(bool readOnly = false, u32 mipmapLevel=0) = 0;
 
 	//! Unlock function. Must be called after a lock() to the texture.
-	/** One should avoid to call unlock more than once before another lock. */
+	/** One should avoid to call unlock more than once before another lock.
+	The last locked mip level will be unlocked. */
 	virtual void unlock() = 0;
 
 	//! Get original size of the texture.
 	/** The texture is usually scaled, if it was created with an unoptimal
-	size. For example if the size of the texture file it was loaded from
-	was not a power of two. This returns the size of the texture, it had
-	before it was scaled. Can be useful when drawing 2d images on the
-	screen, which should have the exact size of the original texture. Use
-	ITexture::getSize() if you want to know the real size it has now stored
-	in the system.
+	size. For example if the size was not a power of two. This method
+	returns the size of the texture it had before it was scaled. Can be
+	useful when drawing 2d images on the screen, which should have the
+	exact size of the original texture. Use ITexture::getSize() if you want
+	to know the real size it has now stored in the system.
 	\return The original size of the texture. */
 	virtual const core::dimension2d<u32>& getOriginalSize() const = 0;
 
@@ -150,7 +138,7 @@ public:
 	/** \return The color format of texture. */
 	virtual ECOLOR_FORMAT getColorFormat() const = 0;
 
-	//! Get pitch of texture (in bytes).
+	//! Get pitch of the main texture (in bytes).
 	/** The pitch is the amount of bytes used for a row of pixels in a
 	texture.
 	\return Pitch of texture in bytes. */
@@ -166,19 +154,43 @@ public:
 	}
 
 	//! Regenerates the mip map levels of the texture.
-	/** Required after modifying the texture, usually after calling unlock(). */
-	virtual void regenerateMipMapLevels() = 0;
+	/** Required after modifying the texture, usually after calling unlock().
+	\param mipmapData Optional parameter to pass in image data which will be
+	used instead of the previously stored or automatically generated mipmap
+	data. The data has to be a continuous pixel data for all mipmaps until
+	1x1 pixel. Each mipmap has to be half the width and height of the previous
+	level. At least one pixel will be always kept.*/
+	virtual void regenerateMipMapLevels(void* mipmapData=0) = 0;
 
 	//! Check whether the texture is a render target
-	/** \return True if this is a render target, otherwise false. */
+	/** Render targets can be set as such in the video driver, in order to
+	render a scene into the texture. Once unbound as render target, they can
+	be used just as usual textures again.
+	\return True if this is a render target, otherwise false. */
 	virtual bool isRenderTarget() const { return false; }
 
 	//! Get name of texture (in most cases this is the filename)
-	const io::path& getName() const { return Name; }
+	const io::SNamedPath& getName() const { return NamedPath; }
 
 protected:
 
-	io::path Name;
+	//! Helper function, helps to get the desired texture creation format from the flags.
+	/** \return Either ETCF_ALWAYS_32_BIT, ETCF_ALWAYS_16_BIT,
+	ETCF_OPTIMIZED_FOR_QUALITY, or ETCF_OPTIMIZED_FOR_SPEED. */
+	inline E_TEXTURE_CREATION_FLAG getTextureFormatFromFlags(u32 flags)
+	{
+		if (flags & ETCF_OPTIMIZED_FOR_SPEED)
+			return ETCF_OPTIMIZED_FOR_SPEED;
+		if (flags & ETCF_ALWAYS_16_BIT)
+			return ETCF_ALWAYS_16_BIT;
+		if (flags & ETCF_ALWAYS_32_BIT)
+			return ETCF_ALWAYS_32_BIT;
+		if (flags & ETCF_OPTIMIZED_FOR_QUALITY)
+			return ETCF_OPTIMIZED_FOR_QUALITY;
+		return ETCF_OPTIMIZED_FOR_SPEED;
+	}
+
+	io::SNamedPath NamedPath;
 };
 
 

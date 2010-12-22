@@ -324,10 +324,9 @@ void CAnimatedMeshMD2::updateInterpolationBuffer(s32 frame, s32 startFrameLoop, 
 	video::S3DVertex* target = static_cast<video::S3DVertex*>(InterpolationBuffer->getVertices());
 	SMD2Vert*         first  = FrameList[firstFrame].pointer();
 	SMD2Vert*         second = FrameList[secondFrame].pointer();
-	const u32 count = FrameList[firstFrame].size();
-	
-	// interpolate both frames
 
+	// interpolate both frames
+	const u32 count = FrameList[firstFrame].size();
 	for (u32 i=0; i<count; ++i)
 	{
 		core::vector3df one, two;
@@ -340,7 +339,7 @@ void CAnimatedMeshMD2::updateInterpolationBuffer(s32 frame, s32 startFrameLoop, 
 		target->Pos    = (two - one) * div + one;
 
 		target->Normal = (NormalTable[second->NormalIdx] - NormalTable[first->NormalIdx]) * div 
-			+  NormalTable[first->NormalIdx];
+			           +  NormalTable[first->NormalIdx];
 		++target;
 		++first;
 		++second;
@@ -366,27 +365,9 @@ void CAnimatedMeshMD2::updateInterpolationBuffer(s32 frame, s32 startFrameLoop, 
 	}
 
 	*/
-
 	//update bounding box
 	InterpolationBuffer->setBoundingBox(BoxList[secondFrame].getInterpolated(BoxList[firstFrame], div));
 	InterpolationBuffer->setDirty();
-}
-
-//! calculates the bounding box
-void CAnimatedMeshMD2::calculateBoundingBox()
-{
-	InterpolationBuffer->BoundingBox.reset(0,0,0);
-
-	if (FrameCount)
-	{
-		u32 defaultFrame = 1;
-
-		if (defaultFrame>=FrameCount)
-			defaultFrame = 0;
-
-//		for (u32 j=0; j<FrameList[defaultFrame].size(); ++j)
-//			InterpolationBuffer->BoundingBox.addInternalPoint(FrameList[defaultFrame].pointer()[j].Pos);
-	}
 }
 
 
@@ -395,7 +376,6 @@ void CAnimatedMeshMD2::setMaterialFlag(video::E_MATERIAL_FLAG flag, bool newvalu
 {
 	InterpolationBuffer->Material.setFlag(flag, newvalue);
 }
-
 
 
 //! set the hardware mapping hint, for driver

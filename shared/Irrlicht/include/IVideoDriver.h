@@ -18,6 +18,7 @@
 #include "triangle3d.h"
 #include "EDriverTypes.h"
 #include "EDriverFeatures.h"
+#include "SExposedVideoData.h"
 
 namespace irr
 {
@@ -30,7 +31,9 @@ namespace io
 namespace scene
 {
 	class IMeshBuffer;
+	class IMesh;
 	class IMeshManipulator;
+	class ISceneNode;
 } // end namespace scene
 
 namespace video
@@ -39,7 +42,6 @@ namespace video
 	struct S3DVertex2TCoords;
 	struct S3DVertexTangents;
 	struct SLight;
-	struct SExposedVideoData;
 	class IImageLoader;
 	class IImageWriter;
 	class IMaterialRenderer;
@@ -104,10 +106,12 @@ namespace video
 	{
 		//! Render target is the main color frame buffer
 		ERT_FRAME_BUFFER=0,
-		//! Render target is the main color frame buffer
-		ERT_STEREO_LEFT_BUFFER=0,
 		//! Render target is a render texture
 		ERT_RENDER_TEXTURE,
+		//! Multi-Render target textures
+		ERT_MULTI_RENDER_TEXTURES,
+		//! Render target is the main color frame buffer
+		ERT_STEREO_LEFT_BUFFER,
 		//! Render target is the right color buffer (left is the main buffer)
 		ERT_STEREO_RIGHT_BUFFER,
 		//! Render to both stereo buffers at once
@@ -182,16 +186,48 @@ namespace video
 						case EMF_NORMALIZE_NORMALS: material.NormalizeNormals = Material.NormalizeNormals; break;
 						case EMF_ANTI_ALIASING: material.AntiAliasing = Material.AntiAliasing; break;
 						case EMF_COLOR_MASK: material.ColorMask = Material.ColorMask; break;
+						case EMF_USE_MIP_MAPS: material.UseMipMaps = Material.UseMipMaps; break;
 						case EMF_BILINEAR_FILTER: material.TextureLayer[0].BilinearFilter = Material.TextureLayer[0].BilinearFilter; break;
 						case EMF_TRILINEAR_FILTER: material.TextureLayer[0].TrilinearFilter = Material.TextureLayer[0].TrilinearFilter; break;
 						case EMF_ANISOTROPIC_FILTER: material.TextureLayer[0].AnisotropicFilter = Material.TextureLayer[0].AnisotropicFilter; break;
-						case EMF_TEXTURE_WRAP: material.TextureLayer[0].TextureWrap = Material.TextureLayer[0].TextureWrap; break;
+						case EMF_TEXTURE_WRAP:
+							material.TextureLayer[0].TextureWrapU = Material.TextureLayer[0].TextureWrapU;
+							material.TextureLayer[0].TextureWrapV = Material.TextureLayer[0].TextureWrapV;
+							break;
 						}
 					}
 				}
 			}
 		}
 
+	};
+
+	struct IRenderTarget
+	{
+		IRenderTarget(ITexture* texture,
+				E_COLOR_PLANE colorMask=ECP_ALL,
+				E_BLEND_FACTOR blendFuncSrc=EBF_ONE,
+				E_BLEND_FACTOR blendFuncDst=EBF_ONE_MINUS_SRC_ALPHA,
+				bool blendEnable=false) :
+			RenderTexture(texture),
+			TargetType(ERT_RENDER_TEXTURE), ColorMask(colorMask),
+			BlendFuncSrc(blendFuncSrc), BlendFuncDst(blendFuncDst),
+			BlendEnable(blendEnable) {}
+		IRenderTarget(E_RENDER_TARGET target,
+				E_COLOR_PLANE colorMask=ECP_ALL,
+				E_BLEND_FACTOR blendFuncSrc=EBF_ONE,
+				E_BLEND_FACTOR blendFuncDst=EBF_ONE_MINUS_SRC_ALPHA,
+				bool blendEnable=false) :
+			RenderTexture(0),
+			TargetType(target), ColorMask(colorMask),
+			BlendFuncSrc(blendFuncSrc), BlendFuncDst(blendFuncDst),
+			BlendEnable(blendEnable) {}
+		ITexture* RenderTexture;
+		E_RENDER_TARGET TargetType:8;
+		E_COLOR_PLANE ColorMask:8;
+		E_BLEND_FACTOR BlendFuncSrc:4;
+		E_BLEND_FACTOR BlendFuncDst:4;
+		bool BlendEnable;
 	};
 
 	//! Interface to driver which is able to perform 2d and 3d graphics functions.
@@ -216,9 +252,9 @@ namespace video
 		be cleared. It is not nesesarry to do so if only 2d drawing is
 		used.
 		\param color The color used for back buffer clearing
-		\param windowId Handle of another window, if you want the
-		bitmap to be displayed on another window. If this is null,
-		everything will be displayed in the default window.
+		\param videoData Handle of another window, if you want the
+		bitmap to be displayed on another window. If this is an empty
+		element, everything will be displayed in the default window.
 		Note: This feature is not fully implemented for all devices.
 		\param sourceRect Pointer to a rectangle defining the source
 		rectangle of the area to be presented. Set to null to present
@@ -226,7 +262,7 @@ namespace video
 		\return False if failed. */
 		virtual bool beginScene(bool backBuffer=true, bool zBuffer=true,
 				SColor color=SColor(255,0,0,0),
-				void* windowId=0,
+				const SExposedVideoData& videoData=SExposedVideoData(),
 				core::rect<s32>* sourceRect=0) =0;
 
 		//! Presents the rendered image to the screen.
@@ -351,10 +387,14 @@ namespace video
 		/** \param name A name for the texture. Later calls of
 		getTexture() with this name will return this texture
 		\param image Image the texture is created from.
+		\param mipmapData Optional pointer to a set of images which
+		build up the whole mipmap set. Must be images of the same color
+		type as image. If this parameter is not given, the mipmaps are
+		derived from image.
 		\return Pointer to the newly created texture. This pointer
 		should not be dropped. See IReferenceCounted::drop() for more
 		information. */
-		virtual ITexture* addTexture(const io::path& name, IImage* image) = 0;
+		virtual ITexture* addTexture(const io::path& name, IImage* image, void* mipmapData=0) = 0;
 
 		//! Adds a new render target texture to the texture cache.
 		/** \param size Size of the texture, in pixels. Width and
@@ -393,6 +433,43 @@ namespace video
 
 		//! Remove all hardware buffers
 		virtual void removeAllHardwareBuffers() =0;
+
+		//! Create occlusion query.
+		/** Use node for identification and mesh for occlusion test. */
+		virtual void createOcclusionQuery(scene::ISceneNode* node,
+				const scene::IMesh* mesh=0) =0;
+
+		//! Remove occlusion query.
+		virtual void removeOcclusionQuery(scene::ISceneNode* node) =0;
+
+		//! Remove all occlusion queries.
+		virtual void removeAllOcclusionQueries() =0;
+
+		//! Run occlusion query. Draws mesh stored in query.
+		/** If the mesh shall not be rendered visible, use
+		overrideMaterial to disable the color and depth buffer. */
+		virtual void runOcclusionQuery(scene::ISceneNode* node, bool visible=false) =0;
+
+		//! Run all occlusion queries. Draws all meshes stored in queries.
+		/** If the meshes shall not be rendered visible, use
+		overrideMaterial to disable the color and depth buffer. */
+		virtual void runAllOcclusionQueries(bool visible=false) =0;
+
+		//! Update occlusion query. Retrieves results from GPU.
+		/** If the query shall not block, set the flag to false.
+		Update might not occur in this case, though */
+		virtual void updateOcclusionQuery(scene::ISceneNode* node, bool block=true) =0;
+
+		//! Update all occlusion queries. Retrieves results from GPU.
+		/** If the query shall not block, set the flag to false.
+		Update might not occur in this case, though */
+		virtual void updateAllOcclusionQueries(bool block=true) =0;
+
+		//! Return query result.
+		/** Return value is the number of visible pixels/fragments.
+		The value is a safe approximation, i.e. can be larger than the
+		actual value of pixels. */
+		virtual u32 getOcclusionQueryResult(scene::ISceneNode* node) const =0;
 
 		//! Sets a boolean alpha channel on the texture based on a color key.
 		/** This makes the texture fully transparent at the texels where
@@ -491,6 +568,11 @@ namespace video
 		virtual bool setRenderTarget(E_RENDER_TARGET target, bool clearTarget=true,
 					bool clearZBuffer=true,
 					SColor color=video::SColor(0,0,0,0)) =0;
+
+		//! Sets new multiple render targets.
+		virtual bool setRenderTarget(const core::array<video::IRenderTarget>& texture,
+			bool clearBackBuffer=true, bool clearZBuffer=true,
+			SColor color=video::SColor(0,0,0,0)) =0;
 
 		//! Sets a new viewport.
 		/** Every rendering operation is done into this new area.
@@ -750,8 +832,8 @@ namespace video
 		The subtextures are defined by the array of sourceRects and are
 		positioned using the array of positions.
 		\param texture Texture to be drawn.
-		\param pos Array of upper left 2d destinations where the images
-		will be drawn.
+		\param positions Array of upper left 2d destinations where the
+		images will be drawn.
 		\param sourceRects Source rectangles of the image.
 		\param clipRect Pointer to rectangle on the screen where the
 		images are clipped to.
@@ -1026,9 +1108,9 @@ namespace video
 		virtual void setTextureCreationFlag(E_TEXTURE_CREATION_FLAG flag, bool enabled=true) =0;
 
 		//! Returns if a texture creation flag is enabled or disabled.
-		/** You can change this value using setTextureCreationMode().
+		/** You can change this value using setTextureCreationFlag().
 		\param flag Texture creation flag.
-		\return The current texture creation mode. */
+		\return The current texture creation flag enabled mode. */
 		virtual bool getTextureCreationFlag(E_TEXTURE_CREATION_FLAG flag) const =0;
 
 		//! Creates a software image from a file.
@@ -1066,8 +1148,8 @@ namespace video
 		/** Requires that there is a suitable image writer registered
 		for writing the image.
 		\param image Image to write.
-		\param file  An already open io::IWriteFile object. The name will be used to determine
-					the appropriate image writer to use.
+		\param file  An already open io::IWriteFile object. The name
+		will be used to determine the appropriate image writer to use.
 		\param param Control parameter for the backend (e.g. compression
 		level).
 		\return True on successful write. */
@@ -1103,7 +1185,7 @@ namespace video
 		virtual IImage* createImage(ECOLOR_FORMAT format, const core::dimension2d<u32>& size) =0;
 
 		//! Creates a software image by converting it to given format from another image.
-		/**
+		/** \deprecated Create an empty image and use copyTo()
 		\param format Desired color format of the image.
 		\param imageToCopy Image to copy to the new image.
 		\return The created image.
@@ -1112,7 +1194,7 @@ namespace video
 		virtual IImage* createImage(ECOLOR_FORMAT format, IImage *imageToCopy) =0;
 
 		//! Creates a software image from a part of another image.
-		/**
+		/** \deprecated Create an empty image and use copyTo()
 		\param imageToCopy Image to copy to the new image in part.
 		\param pos Position of rectangle to copy.
 		\param size Extents of rectangle to copy.
@@ -1283,7 +1365,28 @@ namespace video
 		\return Reference to the Override Material. */
 		virtual SOverrideMaterial& getOverrideMaterial() =0;
 
-		//! Returns the graphics card vendor name.
+		//! Get the 2d override material for altering its values
+		/** The 2d override materual allows to alter certain render
+		states of the 2d methods. Not all members of SMaterial are
+		honored, especially not MaterialType and Textures. Moreover,
+		the zbuffer is always ignored, and lighting is always off. All
+		other flags can be changed, though some might have to effect
+		in most cases.
+		Please note that you have to enable/disable this effect with
+		enableInitMaterial2D(). This effect is costly, as it increases
+		the number of state changes considerably. Always reset the
+		values when done.
+		\return Material reference which should be altered to reflect
+		the new settings.
+		*/
+		virtual SMaterial& getMaterial2D() =0;
+
+		//! Enable the 2d override material
+		/** \param enable Flag which tells whether the material shall be
+		enabled or disabled. */
+		virtual void enableMaterial2D(bool enable=true) =0;
+
+		//! Get the graphics card vendor name.
 		virtual core::stringc getVendorInfo() =0;
 
 		//! Only used by the engine internally.
@@ -1298,8 +1401,21 @@ namespace video
 		\param flag Default behavior is to disable ZWrite, i.e. false. */
 		virtual void setAllowZWriteOnTransparent(bool flag) =0;
 
-		//! Returns the maximum texture size supported.
+		//! Get the maximum texture size supported.
 		virtual core::dimension2du getMaxTextureSize() const =0;
+
+		//! Color conversion convenience function
+		/** Convert an image (as array of pixels) from source to destination
+		array, thereby converting the color format. The pixel size is
+		determined by the color formats.
+		\param sP Pointer to source
+		\param sF Color format of source
+		\param sN Number of pixels to convert, both array must be large enough
+		\param dP Pointer to destination
+		\param dF Color format of destination
+		*/
+		virtual void convertColor(const void* sP, ECOLOR_FORMAT sF, s32 sN,
+				void* dP, ECOLOR_FORMAT dF) const =0;
 	};
 
 } // end namespace video

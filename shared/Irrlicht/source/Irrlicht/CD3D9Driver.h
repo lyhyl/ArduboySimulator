@@ -16,6 +16,9 @@
 
 #include "CNullDriver.h"
 #include "IMaterialRendererServices.h"
+#if defined(__BORLANDC__) || defined (__BCPLUSPLUS__)
+#include "irrMath.h"    // needed by borland for sqrtf define
+#endif
 #include <d3d9.h>
 
 namespace irr
@@ -56,7 +59,7 @@ namespace video
 		//! applications must call this method before performing any rendering. returns false if failed.
 		virtual bool beginScene(bool backBuffer=true, bool zBuffer=true,
 				SColor color=SColor(255,0,0,0),
-				void* windowId=0,
+				const SExposedVideoData& videoData=SExposedVideoData(),
 				core::rect<s32>* sourceRect=0);
 
 		//! applications must call this method after performing any rendering. returns false if failed.
@@ -73,7 +76,12 @@ namespace video
 
 		//! sets a render target
 		virtual bool setRenderTarget(video::ITexture* texture,
-			bool clearBackBuffer=false, bool clearZBuffer=false,
+			bool clearBackBuffer=true, bool clearZBuffer=true,
+			SColor color=video::SColor(0,0,0,0));
+
+		//! Sets multiple render targets
+		virtual bool setRenderTarget(const core::array<video::IRenderTarget>& texture,
+			bool clearBackBuffer=true, bool clearZBuffer=true,
 			SColor color=video::SColor(0,0,0,0));
 
 		//! sets a viewport
@@ -110,6 +118,30 @@ namespace video
 
 		//! Draw hardware buffer
 		virtual void drawHardwareBuffer(SHWBufferLink *HWBuffer);
+
+		//! Create occlusion query.
+		/** Use node for identification and mesh for occlusion test. */
+		virtual void createOcclusionQuery(scene::ISceneNode* node,
+				const scene::IMesh* mesh=0);
+
+		//! Remove occlusion query.
+		virtual void removeOcclusionQuery(scene::ISceneNode* node);
+
+		//! Run occlusion query. Draws mesh stored in query.
+		/** If the mesh shall not be rendered visible, use
+		overrideMaterial to disable the color and depth buffer. */
+		virtual void runOcclusionQuery(scene::ISceneNode* node, bool visible=false);
+
+		//! Update occlusion query. Retrieves results from GPU.
+		/** If the query shall not block, set the flag to false.
+		Update might not occur in this case, though */
+		virtual void updateOcclusionQuery(scene::ISceneNode* node, bool block=true);
+
+		//! Return query result.
+		/** Return value is the number of visible pixels/fragments.
+		The value is a safe approximation, i.e. can be larger then the
+		actual value of pixels. */
+		virtual u32 getOcclusionQueryResult(scene::ISceneNode* node) const;
 
 		//! draws a vertex primitive list
 		virtual void drawVertexPrimitiveList(const void* vertices, u32 vertexCount,
@@ -161,7 +193,7 @@ namespace video
 		//! initialises the Direct3D API
 		bool initDriver(const core::dimension2d<u32>& screenSize, HWND hwnd,
 				u32 bits, bool fullScreen, bool pureSoftware,
-				bool highPrecisionFPU, bool vsync, u8 antiAlias);
+				bool highPrecisionFPU, bool vsync, u8 antiAlias, u32 displayAdapter);
 
 		//! \return Returns the name of the video driver. Example: In case of the DIRECT3D8
 		//! driver, it would return "Direct3D8.1".
@@ -236,9 +268,6 @@ namespace video
 		//! Sets a constant for the pixel shader based on a name.
 		virtual bool setPixelShaderConstant(const c8* name, const f32* floats, int count);
 
-		//! Returns pointer to the IGPUProgrammingServices interface.
-		virtual IGPUProgrammingServices* getGPUProgrammingServices();
-
 		//! Returns a pointer to the IVideoDriver interface. (Implementation for
 		//! IMaterialRendererServices)
 		virtual IVideoDriver* getVideoDriver();
@@ -261,6 +290,9 @@ namespace video
 
 		//! Returns the graphics card vendor name.
 		virtual core::stringc getVendorInfo() {return VendorName;}
+
+		//! Enable the 2d override material
+		virtual void enableMaterial2D(bool enable=true);
 
 		//! Check if the driver was recently reset.
 		virtual bool checkDriverReset() {return DriverWasReset;}
@@ -321,7 +353,7 @@ namespace video
 
 		//! returns a device dependent texture from a software surface (IImage)
 		//! THIS METHOD HAS TO BE OVERRIDDEN BY DERIVED DRIVERS WITH OWN TEXTURES
-		virtual video::ITexture* createDeviceDependentTexture(IImage* surface, const io::path& name);
+		virtual video::ITexture* createDeviceDependentTexture(IImage* surface, const io::path& name, void* mipmapData=0);
 
 		//! returns the current size of the screen or rendertarget
 		virtual const core::dimension2d<u32>& getCurrentRenderTargetSize() const;
@@ -339,11 +371,17 @@ namespace video
 		//! language.
 		virtual s32 addHighLevelShaderMaterial(
 			const c8* vertexShaderProgram,
-			const c8* vertexShaderEntryPointName = "main",
-			E_VERTEX_SHADER_TYPE vsCompileTarget = EVST_VS_1_1,
-			const c8* pixelShaderProgram = 0,
-			const c8* pixelShaderEntryPointName = "main",
-			E_PIXEL_SHADER_TYPE psCompileTarget = EPST_PS_1_1,
+			const c8* vertexShaderEntryPointName,
+			E_VERTEX_SHADER_TYPE vsCompileTarget,
+			const c8* pixelShaderProgram,
+			const c8* pixelShaderEntryPointName,
+			E_PIXEL_SHADER_TYPE psCompileTarget,
+			const c8* geometryShaderProgram,
+			const c8* geometryShaderEntryPointName = "main",
+			E_GEOMETRY_SHADER_TYPE gsCompileTarget = EGST_GS_4_0,
+			scene::E_PRIMITIVE_TYPE inType = scene::EPT_TRIANGLES,
+			scene::E_PRIMITIVE_TYPE outType = scene::EPT_TRIANGLE_STRIP,
+			u32 verticesOut = 0,
 			IShaderConstantSetCallBack* callback = 0,
 			E_MATERIAL_TYPE baseMaterial = video::EMT_SOLID,
 			s32 userData=0);
@@ -354,6 +392,8 @@ namespace video
 				u32 vertexCount, const void* indexList, u32 primitiveCount,
 				E_VERTEX_TYPE vType, scene::E_PRIMITIVE_TYPE pType,
 				E_INDEX_TYPE iType, bool is3D);
+
+		D3DTEXTUREADDRESS getTextureWrapMode(const u8 clamp);
 
 		inline D3DCOLORVALUE colorToD3D(const SColor& col)
 		{
@@ -386,7 +426,7 @@ namespace video
 		core::dimension2d<u32> CurrentRendertargetSize;
 		core::dimension2d<u32> CurrentDepthBufferSize;
 
-		void* WindowId;
+		HWND WindowId;
 		core::rect<s32>* SceneSourceRect;
 
 		D3DCAPS9 Caps;
@@ -419,7 +459,10 @@ namespace video
 		bool DeviceLost;
 		bool Fullscreen;
 		bool DriverWasReset;
+		bool OcclusionQuerySupport;
 		bool AlphaToCoverageSupport;
+
+		u32 DisplayAdapter;
 	};
 
 

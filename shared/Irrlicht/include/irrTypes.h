@@ -89,7 +89,7 @@ typedef double				f64;
 
 
 #include <wchar.h>
-#ifdef _WIN32
+#ifdef _IRR_WINDOWS_API_
 //! Defines for s{w,n}printf because these methods do not match the ISO C
 //! standard on Windows platforms, but it does on all others.
 //! These should be int snprintf(char *str, size_t size, const char *format, ...);
@@ -139,7 +139,7 @@ strings
 //! define a break macro for debugging.
 #if defined(_DEBUG)
 #if defined(_IRR_WINDOWS_API_) && defined(_MSC_VER) && !defined (_WIN32_WCE)
-  #if defined(_WIN64) // using portable common solution for x64 configuration
+  #if defined(WIN64) || defined(_WIN64) // using portable common solution for x64 configuration
   #include <crtdbg.h>
   #define _IRR_DEBUG_BREAK_IF( _CONDITION_ ) if (_CONDITION_) {_CrtDbgBreak();}
   #else
@@ -216,6 +216,10 @@ code like 'code', but some generate warnings so we use this macro here */
 #define MAKE_IRR_ID(c0, c1, c2, c3) \
 		((irr::u32)(irr::u8)(c0) | ((irr::u32)(irr::u8)(c1) << 8) | \
 		((irr::u32)(irr::u8)(c2) << 16) | ((irr::u32)(irr::u8)(c3) << 24 ))
+
+#if defined(__BORLANDC__) || defined (__BCPLUSPLUS__)
+#define _strcmpi(a,b) strcmpi(a,b)
+#endif
 
 #endif // __IRR_TYPES_H_INCLUDED__
 

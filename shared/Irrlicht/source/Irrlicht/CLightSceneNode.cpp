@@ -188,7 +188,8 @@ void CLightSceneNode::doLightRecalc()
 		const f32 r = LightData.Radius * LightData.Radius * 0.5f;
 		BBox.MaxEdge.set( r, r, r );
 		BBox.MinEdge.set( -r, -r, -r );
-		setAutomaticCulling( scene::EAC_BOX );
+		//setAutomaticCulling( scene::EAC_BOX );
+		setAutomaticCulling( scene::EAC_OFF );
 		LightData.Position = getAbsolutePosition();
 	}
 	if (LightData.Type == video::ELT_DIRECTIONAL)
@@ -262,7 +263,8 @@ ISceneNode* CLightSceneNode::clone(ISceneNode* newParent, ISceneManager* newMana
 	nb->LightData = LightData;
 	nb->BBox = BBox;
 
-	nb->drop();
+	if ( newParent )
+		nb->drop();
 	return nb;
 }
 

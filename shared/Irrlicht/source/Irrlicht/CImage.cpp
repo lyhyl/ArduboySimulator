@@ -6,7 +6,6 @@
 #include "irrString.h"
 #include "CColorConverter.h"
 #include "CBlit.h"
-#include <cassert>
 
 namespace irr
 {
@@ -17,9 +16,6 @@ namespace video
 CImage::CImage(ECOLOR_FORMAT format, const core::dimension2d<u32>& size)
 :Data(0), Size(size), Format(format), DeleteMemory(true)
 {
-	#ifdef _DEBUG
-	setDebugName("CImage");
-	#endif
 	initData();
 }
 
@@ -29,7 +25,7 @@ CImage::CImage(ECOLOR_FORMAT format, const core::dimension2d<u32>& size, void* d
 			bool ownForeignMemory, bool deleteForeignMemory, u32 bytesSize)
 : Data(0), Size(size), Format(format), DeleteMemory(deleteForeignMemory)
 {
-	TotalSizeBytes = bytesSize;
+	TotalSizeBytes = bytesSize; //SETH
 
 	if (ownForeignMemory)
 	{
@@ -46,66 +42,26 @@ CImage::CImage(ECOLOR_FORMAT format, const core::dimension2d<u32>& size, void* d
 }
 
 
-//! Constructor from other image, with color conversion
-CImage::CImage(ECOLOR_FORMAT format, IImage* imageToCopy)
-: Data(0), Format(format), DeleteMemory(true)
-{
-	if (!imageToCopy)
-		return;
-	TotalSizeBytes = 0;
-
-	Size = imageToCopy->getDimension();
-	
-	if (imageToCopy->getColorFormat() == ECF_PVRTC)
-	{
-		Format = ECF_PVRTC;
-		//special kind of copy
-		Data = new u8[imageToCopy->getImageDataSizeInBytes()];
-		memcpy(Data, imageToCopy->lock(), imageToCopy->getImageDataSizeInBytes());
-		imageToCopy->unlock();
-		initData();
-	} else
-	{
-
-	initData();
-	// now copy data from other image
-	Blit ( BLITTER_TEXTURE, this, 0, 0, imageToCopy, 0,0 );
-	}
-}
-
-
-//! Constructor from other image, partially
-CImage::CImage(IImage* imageToCopy, const core::position2d<s32>& pos,
-		const core::dimension2d<u32>& size)
-	: Data(0), Size(0,0), DeleteMemory(true)
-{
-	if (!imageToCopy)
-		return;
-
-	Format = imageToCopy->getColorFormat();
-	Size = size;
-
-	initData();
-
-	core::rect<s32> sClip( pos.X, pos.Y, pos.X + size.Width,pos.Y + size.Height );
-	Blit (BLITTER_TEXTURE, this, 0, 0, imageToCopy, &sClip, 0);
-}
-
-
 //! assumes format and size has been set and creates the rest
 void CImage::initData()
 {
+#ifdef _DEBUG
+	setDebugName("CImage");
+#endif
 	BytesPerPixel = getBitsPerPixelFromFormat(Format) / 8;
 
 	// Pitch should be aligned...
 	Pitch = BytesPerPixel * Size.Width;
-	
+
 	if (!Data)
 	{
-		Data = new u8[Size.Height * Pitch];
-		TotalSizeBytes = Size.Height * Pitch;
-	}
+		if (Pitch > 0)
+		{
+			Data = new u8[Size.Height * Pitch]; //SETH
 
+		}
+		TotalSizeBytes = Size.Height * Pitch; //SETH
+	}
 }
 
 
@@ -327,9 +283,6 @@ void CImage::copyToScaling(void* target, u32 width, u32 height, ECOLOR_FORMAT fo
 {
 	if (!target || !width || !height)
 		return;
-
-	assert(getColorFormat() != ECF_PVRTC && "Not supported!");
-
 
 	const u32 bpp=getBitsPerPixelFromFormat(format)/8;
 	if (0==pitch)

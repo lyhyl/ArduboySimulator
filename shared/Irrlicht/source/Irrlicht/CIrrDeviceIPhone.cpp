@@ -72,15 +72,12 @@ CIrrDeviceIPhone::CIrrDeviceIPhone(const SIrrlichtCreationParameters& params)
 			+info.machine).c_str());
 	os::Printer::log(Operator->getOperationSystemVersion(), ELL_INFORMATION);
 */
-
 	// create display
 	if (CreationParams.DriverType != video::EDT_NULL)
 	{
-		/*
 		// create the display, only if we do not use the null device
-		if (!createDisplay())
-			return;
-			*/
+	//	if (!createDisplay())
+	//		return;
 	}
 
 	// create driver
