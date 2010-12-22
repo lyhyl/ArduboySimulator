@@ -15,7 +15,6 @@
 #include "IGUISpriteBank.h"
 #include "IFileList.h"
 #include "os.h"
-#include "SoftwareDriver2_helper.h"
 #include "CImage.h"
 
 namespace irr
@@ -303,7 +302,7 @@ void CGUIColorSelectDialog::buildColorRing( const core::dimension2d<u32> & dim, 
 	bool generateMipLevels = driver->getTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS);
 	driver->setTextureCreationFlag( video::ETCF_CREATE_MIP_MAPS, false);
 
-	ColorRing.Texture = driver->addTexture ( L"#colorring", RawTexture);
+	ColorRing.Texture = driver->addTexture ( "#colorring", RawTexture);
 	RawTexture->drop();
 
 	driver->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, generateMipLevels);

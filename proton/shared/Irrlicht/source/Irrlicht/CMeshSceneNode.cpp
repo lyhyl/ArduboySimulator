@@ -150,11 +150,8 @@ void CMeshSceneNode::render()
 	// render original meshes
 	if (renderMeshes)
 	{
-		
 		for (u32 i=0; i<Mesh->getMeshBufferCount(); ++i)
 		{
-			
-			
 			scene::IMeshBuffer* mb = Mesh->getMeshBuffer(i);
 			if (mb)
 			{
@@ -321,14 +318,14 @@ void CMeshSceneNode::serializeAttributes(io::IAttributes* out, io::SAttributeRea
 {
 	IMeshSceneNode::serializeAttributes(out, options);
 
-	out->addString("Mesh", SceneManager->getMeshCache()->getMeshFilename(Mesh).c_str());
+	out->addString("Mesh", SceneManager->getMeshCache()->getMeshName(Mesh).getPath().c_str());
 	out->addBool("ReadOnlyMaterials", ReadOnlyMaterials);
 }
 
 //! Reads attributes of the scene node.
 void CMeshSceneNode::deserializeAttributes(io::IAttributes* in, io::SAttributeReadWriteOptions* options)
 {
-	io::path oldMeshStr = SceneManager->getMeshCache()->getMeshFilename(Mesh);
+	io::path oldMeshStr = SceneManager->getMeshCache()->getMeshName(Mesh);
 	io::path newMeshStr = in->getAttributeAsString("Mesh");
 	ReadOnlyMaterials = in->getAttributeAsBool("ReadOnlyMaterials");
 
@@ -375,7 +372,8 @@ ISceneNode* CMeshSceneNode::clone(ISceneNode* newParent, ISceneManager* newManag
 	nb->ReadOnlyMaterials = ReadOnlyMaterials;
 	nb->Materials = Materials;
 
-	nb->drop();
+	if ( newParent )
+		nb->drop();
 	return nb;
 }
 

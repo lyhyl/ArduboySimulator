@@ -771,9 +771,7 @@ namespace quake3
 				io::IFileSystem *fileSystem,
 				video::IVideoDriver* driver)
 	{
-
-		static const int extCount = 3;
-		static const char * extension[extCount] =
+		static const char * extension[3] =
 		{
 			".rttex",
 			".jpg",
@@ -785,11 +783,11 @@ namespace quake3
 
 		textures.clear();
 
-		core::stringc loadFile;
+		io::path loadFile;
 		for ( u32 i = 0; i!= stringList.size (); ++i )
 		{
 			video::ITexture* texture = 0;
-			for ( u32 g = 0; g != extCount ; ++g )
+			for ( u32 g = 0; g != 2 ; ++g )
 			{
 				core::cutFilenameExtension ( loadFile, stringList[i] );
 

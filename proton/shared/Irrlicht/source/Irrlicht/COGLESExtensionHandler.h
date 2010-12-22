@@ -8,7 +8,6 @@
 
 #include "IrrCompileConfig.h"
 
-
 #ifdef _IRR_COMPILE_WITH_OGLES1_
 
 /*
@@ -23,7 +22,6 @@
 */
 
 #include "PlatformSetup.h"  //SETH
-
 
 #include "os.h"
 #include "EDriverFeatures.h"
@@ -46,18 +44,25 @@ namespace video
 		IRR_AMD_compressed_ATC_texture, //40
 		IRR_AMD_performance_monitor, //50
 		IRR_AMD_program_binary_Z400, //48
+		IRR_APPLE_texture_2D_limited_npot, //59
 		IRR_ARB_texture_env_combine, //ogl, IMG simulator
 		IRR_ARB_texture_env_dot3, //ogl, IMG simulator
-		IRR_EXT_multi_draw_arrays, //ogl, IMG simulator
+		IRR_EXT_blend_minmax, //65
+		IRR_EXT_discard_framebuffer, //64
+		IRR_EXT_multi_draw_arrays, //ogl, 69
+		IRR_EXT_read_format_bgra, //66
 		IRR_EXT_texture_compression_dxt1, //49
 		IRR_EXT_texture_filter_anisotropic, //41
 		IRR_EXT_texture_format_BGRA8888, //51
+		IRR_EXT_texture_lod_bias, //60
 		IRR_EXT_texture_type_2_10_10_10_REV, //42
+		IRR_IMG_program_binary, //67
 		IRR_IMG_read_format, //53
+		IRR_IMG_shader_binary, //68
 		IRR_IMG_texture_compression_pvrtc, //54
-		IRR_IMG_texture_env_enhanced_fixed_function, // non-standard
+		IRR_IMG_texture_env_enhanced_fixed_function, // 58
 		IRR_IMG_texture_format_BGRA8888, // replaced by EXT version
-		IRR_IMG_user_clip_planes, // non-standard
+		IRR_IMG_user_clip_plane, // 57
 		IRR_IMG_vertex_program, // non-standard
 		IRR_NV_fence, //52
 		IRR_OES_blend_equation_separate, //1
@@ -105,7 +110,11 @@ namespace video
 		IRR_OES_vertex_half_float, //38
 		IRR_OES_vertex_type_10_10_10_2, //46
 		IRR_QCOM_driver_control, //55
-		IRR_QCOM_performance_monitor_global_mode, //56
+		IRR_QCOM_extended_get, //62
+		IRR_QCOM_extended_get2, //63
+		IRR_QCOM_perfmon_global_mode, //56
+		IRR_QCOM_writeonly_rendering, //61
+		IRR_SUN_multi_draw_arrays, //69
 
 		IRR_OGLES_Feature_Count
 	};
@@ -116,8 +125,33 @@ namespace video
 		return FeatureAvailable[feature];
 	}
 
+	u16 EGLVersion;
+	u16 Version;
+	u8 MaxTextureUnits;
+	u8 MaxLights;
+	u8 MaxAnisotropy;
+	u8 MaxUserClipPlanes;
+	u8 MaxAuxBuffers;
+	u8 MaxMultipleRenderTargets;
+	u32 MaxIndices;
+	u32 MaxTextureSize;
+	f32 MaxTextureLODBias;
+	//! Minimal and maximal supported thickness for lines without smoothing
+	GLfloat DimAliasedLine[2];
+	//! Minimal and maximal supported thickness for points without smoothing
+	GLfloat DimAliasedPoint[2];
+	//! Minimal and maximal supported thickness for lines with smoothing
+	GLfloat DimSmoothedLine[2];
+	//! Minimal and maximal supported thickness for points with smoothing
+	GLfloat DimSmoothedPoint[2];
+	bool CommonProfile;
+	bool MultiTextureExtension;
+	bool MultiSamplingExtension;
+	bool StencilBuffer;
 
 	protected:
+		bool FeatureAvailable[IRR_OGLES_Feature_Count];
+
 		COGLES1ExtensionHandler();
 
 		bool queryFeature(video::E_VIDEO_DRIVER_FEATURE feature) const
@@ -138,6 +172,8 @@ namespace video
 					return StencilBuffer;
 				case EVDF_TEXTURE_NSQUARE:
 					return true; // non-square is always supported
+				case EVDF_TEXTURE_NPOT:
+					return FeatureAvailable[IRR_APPLE_texture_2D_limited_npot];
 				default:
 					return false;
 			}
@@ -363,10 +399,10 @@ namespace video
 
 //	private:
 #if defined(_IRR_OGLES1_USE_EXTPOINTER_)
-		typedef void (APIENTRY * PFNGLDRAWTEXIOES) (GLint x, GLint y, GLint z, GLint width, GLint height);
-		typedef void (APIENTRY * PFNGLDRAWTEXIVOES) (const GLint* coords);
-		typedef void (APIENTRY * PFNGLDRAWTEXFOES) (GLfloat x, GLfloat y, GLfloat z, GLfloat width, GLfloat height);
-		typedef void (APIENTRY * PFNGLDRAWTEXFVOES) (const GLfloat* coords);
+		typedef void (GL_APIENTRYP PFNGLDRAWTEXIOES) (GLint x, GLint y, GLint z, GLint width, GLint height);
+		typedef void (GL_APIENTRYP PFNGLDRAWTEXIVOES) (const GLint* coords);
+		typedef void (GL_APIENTRYP PFNGLDRAWTEXFOES) (GLfloat x, GLfloat y, GLfloat z, GLfloat width, GLfloat height);
+		typedef void (GL_APIENTRYP PFNGLDRAWTEXFVOES) (const GLfloat* coords);
 		typedef GLboolean (GL_APIENTRYP PFNGLISRENDERBUFFEROES) (GLuint renderbuffer);
 		typedef void (GL_APIENTRYP PFNGLBINDRENDERBUFFEROES) (GLenum target, GLuint renderbuffer);
 		typedef void (GL_APIENTRYP PFNGLDELETERENDERBUFFERSOES) (GLsizei n, const GLuint* renderbuffers);
@@ -399,19 +435,6 @@ namespace video
 		PFNGLFRAMEBUFFERTEXTURE2DOES pGlFramebufferTexture2DOES;
 		PFNGLGENERATEMIPMAPOES pGlGenerateMipMapOES;
 #endif
-
-	protected:
-		u16 EGLVersion;
-		u16 Version;
-		u8 MaxTextureUnits;
-		u8 MaxLights;
-		u8 MaxAnisotropy;
-		u8 MaxUserClipPlanes;
-		bool CommonProfile;
-		bool MultiTextureExtension;
-		bool MultiSamplingExtension;
-		bool StencilBuffer;
-		bool FeatureAvailable[IRR_OGLES_Feature_Count];
 	};
 
 } // end namespace video
@@ -420,3 +443,4 @@ namespace video
 
 #endif // _IRR_COMPILE_WITH_OGLES1_
 #endif
+

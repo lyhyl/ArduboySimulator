@@ -7,13 +7,13 @@
 
 //! Irrlicht SDK Version
 #define IRRLICHT_VERSION_MAJOR 1
-#define IRRLICHT_VERSION_MINOR 6
-#define IRRLICHT_VERSION_REVISION 0
+#define IRRLICHT_VERSION_MINOR 7
+#define IRRLICHT_VERSION_REVISION 1
 // This flag will be defined only in SVN, the official release code will have
 // it undefined
 //#define IRRLICHT_VERSION_SVN
-#define IRRLICHT_SDK_VERSION "1.6" //well, a modified 1.6 by Seth
-
+#define IRRLICHT_VERSION_SVN -beta
+#define IRRLICHT_SDK_VERSION "1.7.1-beta" //with Seth's modifications, including support for his .rttext texture format
 #include <stdio.h> // TODO: Although included elsewhere this is required at least for mingw
 
 #include "PlatformSetup.h"
@@ -45,7 +45,7 @@
 //#define _IRR_COMPILE_WITH_SDL_DEVICE_
 
 //! Comment this line to compile without the fallback console device.
-#define _IRR_COMPILE_WITH_CONSOLE_DEVICE_
+//#define _IRR_COMPILE_WITH_CONSOLE_DEVICE_
 
 //! WIN32 for Windows32
 //! WIN64 for Windows64
@@ -100,11 +100,13 @@
 
 
 #if !defined(_IRR_WINDOWS_API_) && !defined(_IRR_OSX_PLATFORM_)
+/*
 #ifndef _IRR_SOLARIS_PLATFORM_
 #define _IRR_LINUX_PLATFORM_
 #endif
 #define _IRR_POSIX_API_
 #define _IRR_COMPILE_WITH_X11_DEVICE_
+*/
 #endif
 
 //! Define _IRR_COMPILE_WITH_JOYSTICK_SUPPORT_ if you want joystick events.

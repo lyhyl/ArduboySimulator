@@ -32,7 +32,7 @@ CAnimatedMeshSceneNode::CAnimatedMeshSceneNode(IAnimatedMesh* mesh,
 		const core::vector3df& rotation,
 		const core::vector3df& scale)
 : IAnimatedMeshSceneNode(parent, mgr, id, position, rotation, scale), Mesh(0),
-	BeginFrameTime(0), StartFrame(0), EndFrame(0), FramesPerSecond(0.f),
+	StartFrame(0), EndFrame(0), FramesPerSecond(0.f),
 	CurrentFrameNr(0.f), LastTimeMs(0),
 	TransitionTime(0), Transiting(0.f), TransitingBlend(0.f),
 	JointMode(EJUOR_NONE), JointsUsed(false),
@@ -44,7 +44,6 @@ CAnimatedMeshSceneNode::CAnimatedMeshSceneNode(IAnimatedMesh* mesh,
 	setDebugName("CAnimatedMeshSceneNode");
 	#endif
 
-	BeginFrameTime = os::Timer::getTime();
 	FramesPerSecond = 25.f/1000.f;
 
 	setMesh(mesh);
@@ -78,12 +77,6 @@ void CAnimatedMeshSceneNode::setCurrentFrame(f32 frame)
 	// if you pass an out of range value, we just clamp it
 	CurrentFrameNr = core::clamp ( frame, (f32)StartFrame, (f32)EndFrame );
 
-	BeginFrameTime = os::Timer::getTime();
-	if (FramesPerSecond > 0)
-		BeginFrameTime += (s32)((CurrentFrameNr - StartFrame) / FramesPerSecond);
-	else if (FramesPerSecond < 0)
-		BeginFrameTime += (s32)((CurrentFrameNr - EndFrame) / -FramesPerSecond);
-
 	beginTransition(); //transit to this frame if enabled
 }
 
@@ -115,15 +108,18 @@ void CAnimatedMeshSceneNode::buildFrameNr(u32 timeMs)
 	{
 		// play animation looped
 		CurrentFrameNr += timeMs * FramesPerSecond;
+
+		// We have no interpolation between EndFrame and StartFrame,
+		// the last frame must be identical to first one with our current solution.
 		if (FramesPerSecond > 0.f) //forwards...
 		{
 			if (CurrentFrameNr > EndFrame)
-				CurrentFrameNr -= (EndFrame-StartFrame);
+				CurrentFrameNr = StartFrame + fmod(CurrentFrameNr - StartFrame, (f32)(EndFrame-StartFrame));
 		}
 		else //backwards...
 		{
 			if (CurrentFrameNr < StartFrame)
-				CurrentFrameNr += (EndFrame-StartFrame);
+				CurrentFrameNr = EndFrame - fmod(EndFrame - CurrentFrameNr, (f32)(EndFrame-StartFrame));
 		}
 	}
 	else
@@ -195,18 +191,18 @@ void CAnimatedMeshSceneNode::OnRegisterSceneNode()
 	}
 }
 
-IMesh * CAnimatedMeshSceneNode::getMeshForCurrentFrame(bool forceRecalcOfControlJoints)
+IMesh * CAnimatedMeshSceneNode::getMeshForCurrentFrame()
 {
-
-	
 	if(Mesh->getMeshType() != EAMT_SKINNED)
 	{
-		return Mesh->getMesh((s32)getFrameNr(), 255, StartFrame, EndFrame);
+		s32 frameNr = (s32) getFrameNr();
+		s32 frameBlend = (s32) (core::fract ( getFrameNr() ) * 1000.f);
+		return Mesh->getMesh(frameNr, frameBlend, StartFrame, EndFrame);
 	}
 	else
 	{
 		// As multiple scene nodes may be sharing the same skinned mesh, we have to
-		// re-animated it every frame to ensure that this node gets the mesh that it needs.
+		// re-animate it every frame to ensure that this node gets the mesh that it needs.
 
 		CSkinnedMesh* skinnedMesh = reinterpret_cast<CSkinnedMesh*>(Mesh);
 
@@ -248,7 +244,7 @@ void CAnimatedMeshSceneNode::OnAnimate(u32 timeMs)
 
 	if (Mesh)
 	{
-		scene::IMesh * mesh = getMeshForCurrentFrame( true );
+		scene::IMesh * mesh = getMeshForCurrentFrame();
 
 		if (mesh)
 			Box = mesh->getBoundingBox();
@@ -273,7 +269,7 @@ void CAnimatedMeshSceneNode::render()
 
 	++PassCount;
 
-	scene::IMesh* m = getMeshForCurrentFrame( false );
+	scene::IMesh* m = getMeshForCurrentFrame();
 
 	if(m)
 	{
@@ -294,8 +290,6 @@ void CAnimatedMeshSceneNode::render()
 
 	// for debug purposes only:
 
-	
-	
 	bool renderMeshes = true;
 	video::SMaterial mat;
 	if (DebugDataVisible && PassCount==1)
@@ -572,10 +566,7 @@ IShadowVolumeSceneNode* CAnimatedMeshSceneNode::addShadowVolumeSceneNode(const I
 		return 0;
 
 	if (Shadow)
-	{
-		os::Printer::log("This node already has a shadow.", ELL_WARNING);
-		return 0;
-	}
+		return Shadow;
 
 	if (!shadowMesh)
 		shadowMesh = Mesh; // if null is given, use the mesh of node
@@ -603,7 +594,7 @@ IBoneSceneNode* CAnimatedMeshSceneNode::getJointNode(const c8* jointName)
 
 	if (number == -1)
 	{
-		os::Printer::log("Joint with specified name not found in skinned mesh.", jointName, ELL_WARNING);
+		os::Printer::log("Joint with specified name not found in skinned mesh.", jointName, ELL_DEBUG);
 		return 0;
 	}
 
@@ -774,7 +765,7 @@ void CAnimatedMeshSceneNode::serializeAttributes(io::IAttributes* out, io::SAttr
 {
 	IAnimatedMeshSceneNode::serializeAttributes(out, options);
 
-	out->addString("Mesh", SceneManager->getMeshCache()->getMeshFilename(Mesh).c_str());
+	out->addString("Mesh", SceneManager->getMeshCache()->getMeshName(Mesh).getPath().c_str());
 	out->addBool("Looping", Looping);
 	out->addBool("ReadOnlyMaterials", ReadOnlyMaterials);
 	out->addFloat("FramesPerSecond", FramesPerSecond);
@@ -788,7 +779,7 @@ void CAnimatedMeshSceneNode::deserializeAttributes(io::IAttributes* in, io::SAtt
 {
 	IAnimatedMeshSceneNode::deserializeAttributes(in, options);
 
-	io::path oldMeshStr = SceneManager->getMeshCache()->getMeshFilename(Mesh);
+	io::path oldMeshStr = SceneManager->getMeshCache()->getMeshName(Mesh);
 	io::path newMeshStr = in->getAttributeAsString("Mesh");
 
 	Looping = in->getAttributeAsBool("Looping");
@@ -1067,15 +1058,20 @@ ISceneNode* CAnimatedMeshSceneNode::clone(ISceneNode* newParent, ISceneManager* 
 	if (!newManager) newManager = SceneManager;
 
 	CAnimatedMeshSceneNode * newNode =
-		new CAnimatedMeshSceneNode(Mesh, newParent, newManager, ID, RelativeTranslation,
+		new CAnimatedMeshSceneNode(Mesh, NULL, newManager, ID, RelativeTranslation,
 						 RelativeRotation, RelativeScale);
+
+	if ( newParent )
+	{
+		newNode->setParent(newParent); 	// not in constructor because virtual overload for updateAbsolutePosition won't be called
+		newNode->drop();
+	}
 
 	newNode->cloneMembers(this, newManager);
 
 	newNode->Materials = Materials;
 	newNode->Box = Box;
 	newNode->Mesh = Mesh;
-	newNode->BeginFrameTime = BeginFrameTime;
 	newNode->StartFrame = StartFrame;
 	newNode->EndFrame = EndFrame;
 	newNode->FramesPerSecond = FramesPerSecond;
@@ -1095,7 +1091,6 @@ ISceneNode* CAnimatedMeshSceneNode::clone(ISceneNode* newParent, ISceneManager* 
 	newNode->RenderFromIdentity = RenderFromIdentity;
 	newNode->MD3Special = MD3Special;
 
-	(void)newNode->drop();
 	return newNode;
 }
 

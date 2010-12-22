@@ -22,7 +22,6 @@ namespace irr
 		bool CImageLoaderRTTEX::isALoadableFileExtension(const io::path& filename) const
 		{
 			return core::hasFileExtension ( filename, "rttex" );
-			return false;
 		}
 
 

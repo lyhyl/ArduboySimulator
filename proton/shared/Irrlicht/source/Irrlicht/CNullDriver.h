@@ -13,7 +13,9 @@
 #include "irrString.h"
 #include "irrMap.h"
 #include "IAttributes.h"
+#include "IMesh.h"
 #include "IMeshBuffer.h"
+#include "IMeshSceneNode.h"
 #include "CFPSCounter.h"
 #include "S3DVertex.h"
 #include "SVertexIndex.h"
@@ -43,7 +45,8 @@ namespace video
 		virtual ~CNullDriver();
 
 		virtual bool beginScene(bool backBuffer=true, bool zBuffer=true,
-				SColor color=SColor(255,0,0,0), void* windowId=0,
+				SColor color=SColor(255,0,0,0),
+				const SExposedVideoData& videoData=SExposedVideoData(),
 				core::rect<s32>* sourceRect=0);
 
 		virtual bool endScene();
@@ -97,6 +100,10 @@ namespace video
 		//! set or reset special render targets
 		virtual bool setRenderTarget(video::E_RENDER_TARGET target, bool clearTarget,
 					bool clearZBuffer, SColor color);
+
+		//! Sets multiple render targets
+		virtual bool setRenderTarget(const core::array<video::IRenderTarget>& texture,
+					bool clearBackBuffer=true, bool clearZBuffer=true, SColor color=SColor(0,0,0,0));
 
 		//! sets a viewport
 		virtual void setViewPort(const core::rect<s32>& area);
@@ -390,17 +397,18 @@ namespace video
 		//! updates hardware buffer if needed  (only some drivers can)
 		virtual bool updateHardwareBuffer(SHWBufferLink *HWBuffer) {return false;}
 
-		//! Create hardware buffer from mesh (only some drivers can)
-		virtual SHWBufferLink *createHardwareBuffer(const scene::IMeshBuffer* mb) {return 0;}
-
 		//! Draw hardware buffer (only some drivers can)
 		virtual void drawHardwareBuffer(SHWBufferLink *HWBuffer) {}
 
-		//! Update all hardware buffers, remove unused ones
-		virtual void updateAllHardwareBuffers();
-
 		//! Delete hardware buffer
 		virtual void deleteHardwareBuffer(SHWBufferLink *HWBuffer);
+
+		//! Create hardware buffer from mesh (only some drivers can)
+		virtual SHWBufferLink *createHardwareBuffer(const scene::IMeshBuffer* mb) {return 0;}
+
+	public:
+		//! Update all hardware buffers, remove unused ones
+		virtual void updateAllHardwareBuffers();
 
 		//! Remove hardware buffer
 		virtual void removeHardwareBuffer(const scene::IMeshBuffer* mb);
@@ -411,7 +419,43 @@ namespace video
 		//! is vbo recommended on this mesh?
 		virtual bool isHardwareBufferRecommend(const scene::IMeshBuffer* mb);
 
-	public:
+		//! Create occlusion query.
+		/** Use node for identification and mesh for occlusion test. */
+		virtual void createOcclusionQuery(scene::ISceneNode* node,
+				const scene::IMesh* mesh=0);
+
+		//! Remove occlusion query.
+		virtual void removeOcclusionQuery(scene::ISceneNode* node);
+
+		//! Remove all occlusion queries.
+		virtual void removeAllOcclusionQueries();
+
+		//! Run occlusion query. Draws mesh stored in query.
+		/** If the mesh shall not be rendered visible, use
+		overrideMaterial to disable the color and depth buffer. */
+		virtual void runOcclusionQuery(scene::ISceneNode* node, bool visible=false);
+
+		//! Run all occlusion queries. Draws all meshes stored in queries.
+		/** If the meshes shall not be rendered visible, use
+		overrideMaterial to disable the color and depth buffer. */
+		virtual void runAllOcclusionQueries(bool visible=false);
+
+		//! Update occlusion query. Retrieves results from GPU.
+		/** If the query shall not block, set the flag to false.
+		Update might not occur in this case, though */
+		virtual void updateOcclusionQuery(scene::ISceneNode* node, bool block=true);
+
+		//! Update all occlusion queries. Retrieves results from GPU.
+		/** If the query shall not block, set the flag to false.
+		Update might not occur in this case, though */
+		virtual void updateAllOcclusionQueries(bool block=true);
+
+		//! Return query result.
+		/** Return value is the number of visible pixels/fragments.
+		The value is a safe approximation, i.e. can be larger than the
+		actual value of pixels. */
+		virtual u32 getOcclusionQueryResult(scene::ISceneNode* node) const;
+
 		//! Only used by the engine internally.
 		/** Used to notify the driver that the window was resized. */
 		virtual void OnResize(const core::dimension2d<u32>& size);
@@ -474,6 +518,12 @@ namespace video
 			const c8* pixelShaderProgram = 0,
 			const c8* pixelShaderEntryPointName = 0,
 			E_PIXEL_SHADER_TYPE psCompileTarget = EPST_PS_1_1,
+			const c8* geometryShaderProgram = 0,
+			const c8* geometryShaderEntryPointName = "main",
+			E_GEOMETRY_SHADER_TYPE gsCompileTarget = EGST_GS_4_0,
+			scene::E_PRIMITIVE_TYPE inType = scene::EPT_TRIANGLES,
+			scene::E_PRIMITIVE_TYPE outType = scene::EPT_TRIANGLE_STRIP,
+			u32 verticesOut = 0,
 			IShaderConstantSetCallBack* callback = 0,
 			E_MATERIAL_TYPE baseMaterial = video::EMT_SOLID,
 			s32 userData=0);
@@ -487,6 +537,12 @@ namespace video
 			const io::path& pixelShaderProgramFile = "",
 			const c8* pixelShaderEntryPointName = "main",
 			E_PIXEL_SHADER_TYPE psCompileTarget = EPST_PS_1_1,
+			const io::path& geometryShaderProgramFileName="",
+			const c8* geometryShaderEntryPointName = "main",
+			E_GEOMETRY_SHADER_TYPE gsCompileTarget = EGST_GS_4_0,
+			scene::E_PRIMITIVE_TYPE inType = scene::EPT_TRIANGLES,
+			scene::E_PRIMITIVE_TYPE outType = scene::EPT_TRIANGLE_STRIP,
+			u32 verticesOut = 0,
 			IShaderConstantSetCallBack* callback = 0,
 			E_MATERIAL_TYPE baseMaterial = video::EMT_SOLID,
 			s32 userData=0);
@@ -500,6 +556,12 @@ namespace video
 			io::IReadFile* pixelShaderProgram = 0,
 			const c8* pixelShaderEntryPointName = "main",
 			E_PIXEL_SHADER_TYPE psCompileTarget = EPST_PS_1_1,
+			io::IReadFile* geometryShaderProgram= 0,
+			const c8* geometryShaderEntryPointName = "main",
+			E_GEOMETRY_SHADER_TYPE gsCompileTarget = EGST_GS_4_0,
+			scene::E_PRIMITIVE_TYPE inType = scene::EPT_TRIANGLES,
+			scene::E_PRIMITIVE_TYPE outType = scene::EPT_TRIANGLE_STRIP,
+			u32 verticesOut = 0,
 			IShaderConstantSetCallBack* callback = 0,
 			E_MATERIAL_TYPE baseMaterial = video::EMT_SOLID,
 			s32 userData=0);
@@ -557,12 +619,31 @@ namespace video
 		meshbuffer being rendered. */
 		virtual SOverrideMaterial& getOverrideMaterial();
 
+		//! Get the 2d override material for altering its values
+		virtual SMaterial& getMaterial2D();
+
+		//! Enable the 2d override material
+		virtual void enableMaterial2D(bool enable=true);
+
 		//! Only used by the engine internally.
 		virtual void setAllowZWriteOnTransparent(bool flag)
 		{ AllowZWriteOnTransparent=flag; }
 
 		//! Returns the maximum texture size supported.
 		virtual core::dimension2du getMaxTextureSize() const;
+
+		//! Color conversion convenience function
+		/** Convert an image (as array of pixels) from source to destination
+		array, thereby converting the color format. The pixel size is
+		determined by the color formats.
+		\param sP Pointer to source
+		\param sF Color format of source
+		\param sN Number of pixels to convert, both array must be large enough
+		\param dP Pointer to destination
+		\param dF Color format of destination
+		*/
+		virtual void convertColor(const void* sP, ECOLOR_FORMAT sF, s32 sN,
+				void* dP, ECOLOR_FORMAT dF) const;
 
 		//! deprecated method
 		virtual ITexture* createRenderTargetTexture(const core::dimension2d<u32>& size,
@@ -581,11 +662,11 @@ namespace video
 		void addTexture(video::ITexture* surface);
 
 		//! Creates a texture from a loaded IImage.
-		virtual ITexture* addTexture(const io::path& name, IImage* image);
+		virtual ITexture* addTexture(const io::path& name, IImage* image, void* mipmapData=0);
 
 		//! returns a device dependent texture from a software surface (IImage)
 		//! THIS METHOD HAS TO BE OVERRIDDEN BY DERIVED DRIVERS WITH OWN TEXTURES
-		virtual video::ITexture* createDeviceDependentTexture(IImage* surface, const io::path& name);
+		virtual video::ITexture* createDeviceDependentTexture(IImage* surface, const io::path& name, void* mipmapData=0);
 
 		//! checks triangle count and print warning if wrong
 		bool checkPrimitiveCount(u32 prmcnt) const;
@@ -636,20 +717,75 @@ namespace video
 		{
 			SDummyTexture(const io::path& name) : ITexture(name), size(0,0) {};
 
-			virtual void* lock(bool readOnly = false) { return 0; };
+			virtual void* lock(bool readOnly = false, u32 mipmapLevel=0) { return 0; };
 			virtual void unlock(){}
 			virtual const core::dimension2d<u32>& getOriginalSize() const { return size; }
 			virtual const core::dimension2d<u32>& getSize() const { return size; }
 			virtual E_DRIVER_TYPE getDriverType() const { return video::EDT_NULL; }
 			virtual ECOLOR_FORMAT getColorFormat() const { return video::ECF_A1R5G5B5; };
 			virtual u32 getPitch() const { return 0; }
-			virtual void regenerateMipMapLevels() {};
+			virtual void regenerateMipMapLevels(void* mipmapData=0) {};
 			core::dimension2d<u32> size;
 		};
-
-
-
 		core::array<SSurface> Textures;
+
+		struct SOccQuery
+		{
+			SOccQuery(scene::ISceneNode* node, const scene::IMesh* mesh=0) : Node(node), Mesh(mesh), PID(0), Result(~0), Run(~0)
+			{
+				if (Node)
+					Node->grab();
+				if (Mesh)
+					Mesh->grab();
+			}
+
+			SOccQuery(const SOccQuery& other) : Node(other.Node), Mesh(other.Mesh), PID(other.PID), Result(other.Result), Run(other.Run)
+			{
+				if (Node)
+					Node->grab();
+				if (Mesh)
+					Mesh->grab();
+			}
+
+			~SOccQuery()
+			{
+				if (Node)
+					Node->drop();
+				if (Mesh)
+					Mesh->drop();
+			}
+
+			SOccQuery& operator=(const SOccQuery& other)
+			{
+				Node=other.Node;
+				Mesh=other.Mesh;
+				PID=other.PID;
+				Result=other.Result;
+				Run=other.Run;
+				if (Node)
+					Node->grab();
+				if (Mesh)
+					Mesh->grab();
+				return *this;
+			}
+
+			bool operator==(const SOccQuery& other) const
+			{
+				return other.Node==Node;
+			}
+
+			scene::ISceneNode* Node;
+			const scene::IMesh* Mesh;
+			union
+			{
+				void* PID;
+				unsigned int UID;
+			};
+			u32 Result;
+			u32 Run;
+		};
+		core::array<SOccQuery> OcclusionQueries;
+
 		core::array<video::IImageLoader*> SurfaceLoader;
 		core::array<video::IImageWriter*> SurfaceWriter;
 		core::array<SLight> Lights;
@@ -681,6 +817,9 @@ namespace video
 		SExposedVideoData ExposedData;
 
 		SOverrideMaterial OverrideMaterial;
+		SMaterial OverrideMaterial2D;
+		SMaterial InitMaterial2D;
+		bool OverrideMaterial2DEnabled;
 
 		E_FOG_TYPE FogType;
 		bool PixelFog;
@@ -695,6 +834,3 @@ namespace video
 
 
 #endif
-
-
-

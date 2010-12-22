@@ -1,7 +1,6 @@
 // Copyright (C) 2002-2008 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
-
 //SETH hack to handle screen rotation
 void RotateGLIfNeeded();
 
@@ -55,7 +54,8 @@ COGLES1Driver::COGLES1Driver(const SIrrlichtCreationParameters& params,
 	#endif
 	ExposedData=data;
 
-/*
+
+	/*
 #if defined(_IRR_COMPILE_WITH_WINDOWS_DEVICE_)
 	EglWindow = (NativeWindowType)data.OpenGLWin32.HWnd;
 	HDc = GetDC((HWND)EglWindow);
@@ -66,8 +66,6 @@ COGLES1Driver::COGLES1Driver(const SIrrlichtCreationParameters& params,
 #elif defined(_IRR_COMPILE_WITH_IPHONE_DEVICE_)
 	Device = device;
 #endif
-
-
 #ifdef EGL_VERSION_1_0
 	if(EglDisplay == EGL_NO_DISPLAY)
 		EglDisplay = eglGetDisplay((NativeDisplayType) EGL_DEFAULT_DISPLAY);
@@ -110,6 +108,7 @@ COGLES1Driver::COGLES1Driver(const SIrrlichtCreationParameters& params,
 		EglSurface = eglCreateWindowSurface(EglDisplay, config, NULL, NULL);
 	if (EGL_NO_SURFACE==EglSurface)
 	{
+		testEGLError();
 		os::Printer::log("Could not create surface for OpenGL-ES1 display.");
 	}
 
@@ -128,6 +127,7 @@ COGLES1Driver::COGLES1Driver(const SIrrlichtCreationParameters& params,
 		os::Printer::log("Could not make Context current for OpenGL-ES1 display.");
 	}
 
+	genericDriverInit(params.WindowSize, params.Stencilbuffer);
 
 	// set vsync
 	if (params.Vsync)
@@ -160,19 +160,17 @@ COGLES1Driver::COGLES1Driver(const SIrrlichtCreationParameters& params,
 	glFramebufferRenderbufferOES(
 		GL_FRAMEBUFFER_OES, GL_DEPTH_ATTACHMENT_OES, GL_RENDERBUFFER_OES, ViewDepthRenderbuffer);
 
+		*/
+
 	genericDriverInit(params.WindowSize, params.Stencilbuffer);
 #endif
-
-	*/
-
-genericDriverInit(params.WindowSize, params.Stencilbuffer);
-
 }
 
 
 //! destructor
 COGLES1Driver::~COGLES1Driver()
 {
+	RequestedLights.clear();
 	deleteMaterialRenders();
 	deleteAllTextures();
 
@@ -215,7 +213,7 @@ bool COGLES1Driver::genericDriverInit(const core::dimension2d<u32>& screenSize, 
 	Name=glGetString(GL_VERSION);
 	printVersion();
 
-/*
+	/*
 #if defined(EGL_VERSION_1_0)
 	os::Printer::log(eglQueryString(EglDisplay, EGL_CLIENT_APIS));
 #endif
@@ -227,12 +225,10 @@ bool COGLES1Driver::genericDriverInit(const core::dimension2d<u32>& screenSize, 
 	u32 i;
 	for (i=0; i<MATERIAL_MAX_TEXTURES; ++i)
 		CurrentTexture[i]=0;
-
-
 	// load extensions
 	initExtensions(this,
 #if defined(EGL_VERSION_1_0)
-			2, //EglDisplay,
+			2,
 #endif
 			stencilBuffer);
 	StencilBuffer=stencilBuffer;
@@ -241,37 +237,9 @@ bool COGLES1Driver::genericDriverInit(const core::dimension2d<u32>& screenSize, 
 
 	// Reset The Current Viewport
 	//SETH we don't want them to screw with the view port
+	
+	// Reset The Current Viewport
 	//glViewport(0, 0, screenSize.Width, screenSize.Height);
-
-// This needs an SMaterial flag to enable/disable later on, but should become default sometimes
-//	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
-//	glEnable(GL_COLOR_MATERIAL);
-
-	setAmbientLight(SColorf(0.0f,0.0f,0.0f,0.0f));
-#ifdef GL_separate_specular_color
-	if (FeatureAvailable[IRR_separate_specular_color])
-		glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
-#endif
-// TODO ogl-es
-//	glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, 1);
-	glClearDepthf(1.0f);
-
-	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
-	glHint(GL_GENERATE_MIPMAP_HINT, GL_FASTEST);
-	glDepthFunc(GL_LEQUAL);
-	glFrontFace( GL_CW );
-
-	if (AntiAlias>1)
-	{
-		if (MultiSamplingExtension)
-			glEnable(GL_MULTISAMPLE);
-
-		glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-		glEnable(GL_LINE_SMOOTH);
-	}
-// currently disabled, because often in software, and thus very slow
-	glHint(GL_POINT_SMOOTH_HINT, GL_FASTEST);
-//	glEnable(GL_POINT_SMOOTH);
 
 	UserClipPlane.reallocate(MaxUserClipPlanes);
 	UserClipPlaneEnabled.reallocate(MaxUserClipPlanes);
@@ -280,6 +248,25 @@ bool COGLES1Driver::genericDriverInit(const core::dimension2d<u32>& screenSize, 
 		UserClipPlane.push_back(core::plane3df());
 		UserClipPlaneEnabled.push_back(false);
 	}
+
+	for (i=0; i<ETS_COUNT; ++i)
+		setTransform(static_cast<E_TRANSFORMATION_STATE>(i), core::IdentityMatrix);
+
+	setAmbientLight(SColorf(0.0f,0.0f,0.0f,0.0f));
+#ifdef GL_EXT_separate_specular_color
+	if (FeatureAvailable[IRR_EXT_separate_specular_color])
+		glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
+#endif
+// TODO ogl-es
+//	glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, 1);
+
+	glClearDepthf(1.0f);
+	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
+	glHint(GL_GENERATE_MIPMAP_HINT, GL_FASTEST);
+	glHint(GL_LINE_SMOOTH_HINT, GL_FASTEST);
+	glHint(GL_POINT_SMOOTH_HINT, GL_FASTEST);
+	glDepthFunc(GL_LEQUAL);
+	glFrontFace( GL_CW );
 
 	// create material renderers
 	createMaterialRenderers();
@@ -293,7 +280,7 @@ bool COGLES1Driver::genericDriverInit(const core::dimension2d<u32>& screenSize, 
 	setFog(FogColor, FogType, FogStart, FogEnd, FogDensity, PixelFog, RangeFog);
 
 	// create matrix for flipping textures
-	//TextureFlipMatrix.buildTextureTransform(0.0f, core::vector2df(0,0), core::vector2df(0,1.0f), core::vector2df(1.0f,-1.0f));
+	TextureFlipMatrix.buildTextureTransform(0.0f, core::vector2df(0,0), core::vector2df(0,1.0f), core::vector2df(1.0f,-1.0f));
 
 	// We need to reset once more at the beginning of the first rendering.
 	// This fixes problems with intermediate changes to the material during texture load.
@@ -365,8 +352,7 @@ void COGLES1Driver::createMaterialRenderers()
 bool COGLES1Driver::endScene()
 {
 	CNullDriver::endScene();
-
-	/*
+/*
 #if defined(EGL_VERSION_1_0)
 	eglSwapBuffers(EglDisplay, EglSurface);
 	EGLint g = eglGetError();
@@ -395,10 +381,10 @@ bool COGLES1Driver::endScene()
 
 //! clears the zbuffer
 bool COGLES1Driver::beginScene(bool backBuffer, bool zBuffer, SColor color,
-		void* windowId, core::rect<s32>* sourceRect)
+		const SExposedVideoData& videoData,
+		core::rect<s32>* sourceRect)
 {
 	CNullDriver::beginScene(backBuffer, zBuffer, color);
-
 	setTexture(0,0);
 	ResetRenderStates = true;
 	/*
@@ -460,6 +446,8 @@ void COGLES1Driver::setTransform(E_TRANSFORMATION_STATE state, const core::matri
 					uploadClipPlane(i);
 		}
 		break;
+	
+
 	case ETS_PROJECTION:
 		{
 			GLfloat glmat[16];
@@ -486,13 +474,7 @@ void COGLES1Driver::setTransform(E_TRANSFORMATION_STATE state, const core::matri
 
 		glMatrixMode(GL_TEXTURE);
 		if (!isRTT && mat.isIdentity())
-		{
 			glLoadIdentity();
-			//GLfloat glmat[16];
-
-			//createGLTextureMatrix(glmat, TextureFlipMatrix);
-			//glLoadMatrixf(glmat);
-		}
 		else
 		{
 			GLfloat glmat[16];
@@ -763,7 +745,7 @@ void COGLES1Driver::drawHardwareBuffer(SHWBufferLink *_HWBuffer)
 	updateHardwareBuffer(HWBuffer); //check if update is needed
 
 	HWBuffer->LastUsed=0;//reset count
-	
+
 	const scene::IMeshBuffer* mb = HWBuffer->MeshBuffer;
 	const void *vertices=mb->getVertices();
 	const void *indexList=mb->getIndices();
@@ -773,7 +755,7 @@ void COGLES1Driver::drawHardwareBuffer(SHWBufferLink *_HWBuffer)
 		extGlBindBuffer(GL_ARRAY_BUFFER, HWBuffer->vbo_verticesID);
 		vertices=0;
 	}
-	
+
 	if (HWBuffer->Mapped_Index!=scene::EHM_NEVER)
 	{
 		extGlBindBuffer(GL_ELEMENT_ARRAY_BUFFER, HWBuffer->vbo_indicesID);
@@ -784,7 +766,6 @@ void COGLES1Driver::drawHardwareBuffer(SHWBufferLink *_HWBuffer)
 	drawVertexPrimitiveList(vertices, mb->getVertexCount(), indexList,
 			mb->getIndexCount()/3, mb->getVertexType(),
 			scene::EPT_TRIANGLES, mb->getIndexType());
-
 
 	if (HWBuffer->Mapped_Vertex!=scene::EHM_NEVER)
 		extGlBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -809,7 +790,6 @@ void COGLES1Driver::drawVertexPrimitiveList(const void* vertices, u32 vertexCoun
 	if (!checkPrimitiveCount(primitiveCount))
 		return;
 
-
 	setRenderStates3DMode();
 
 	drawVertexPrimitiveList2d3d(vertices, vertexCount, (const u16*)indexList, primitiveCount, vType, pType, iType);
@@ -826,9 +806,9 @@ void COGLES1Driver::drawVertexPrimitiveList2d3d(const void* vertices, u32 vertex
 	if (!threed && !checkPrimitiveCount(primitiveCount))
 		return;
 
+
 	CNullDriver::drawVertexPrimitiveList(vertices, vertexCount, indexList, primitiveCount, vType, pType, iType);
 
-	
 	if (vertices)
 	{
 		// convert colors to gl color format.
@@ -1450,6 +1430,8 @@ bool COGLES1Driver::setTexture(u32 stage, const video::ITexture* texture)
 	if (CurrentTexture[stage]==texture)
 		return true;
 
+
+	
 	if (MultiTextureExtension)
 		extGlActiveTexture(GL_TEXTURE0 + stage);
 
@@ -1480,6 +1462,7 @@ bool COGLES1Driver::setTexture(u32 stage, const video::ITexture* texture)
 //! disables all textures beginning with the optional fromStage parameter.
 bool COGLES1Driver::disableTextures(u32 fromStage)
 {
+
 	bool result=true;
 	for (u32 i=fromStage; i<MaxTextureUnits; ++i)
 		result &= setTexture(i, 0);
@@ -1520,9 +1503,9 @@ inline void COGLES1Driver::createGLTextureMatrix(GLfloat *o, const core::matrix4
 
 
 //! returns a device dependent texture from a software surface (IImage)
-video::ITexture* COGLES1Driver::createDeviceDependentTexture(IImage* surface, const io::path& name)
+video::ITexture* COGLES1Driver::createDeviceDependentTexture(IImage* surface, const io::path& name, void* mipmapData)
 {
-	return new COGLES1Texture(surface, name, this);
+	return new COGLES1Texture(surface, name, this, mipmapData);
 }
 
 
@@ -1530,6 +1513,7 @@ video::ITexture* COGLES1Driver::createDeviceDependentTexture(IImage* surface, co
 void COGLES1Driver::setMaterial(const SMaterial& material)
 {
 	Material = material;
+	
 	OverrideMaterial.apply(Material);
 
 	for (s32 i = MaxTextureUnits-1; i>= 0; --i)
@@ -1633,9 +1617,8 @@ void COGLES1Driver::setRenderStates3DMode()
 		glMatrixMode(GL_PROJECTION);
 		glLoadMatrixf(glmat);
 
-		ResetRenderStates = true;
 	}
-
+	
 	if ( ResetRenderStates || LastMaterial != Material)
 	{
 		// unset old material
@@ -1645,11 +1628,9 @@ void COGLES1Driver::setRenderStates3DMode()
 			MaterialRenderers[LastMaterial.MaterialType].Renderer->OnUnsetMaterial();
 
 		// set new material.
-
 		if (static_cast<u32>(Material.MaterialType) < MaterialRenderers.size())
 			MaterialRenderers[Material.MaterialType].Renderer->OnSetMaterial(
 				Material, LastMaterial, ResetRenderStates, this);
-			
 
 		LastMaterial = Material;
 		ResetRenderStates = false;
@@ -1659,6 +1640,48 @@ void COGLES1Driver::setRenderStates3DMode()
 		MaterialRenderers[Material.MaterialType].Renderer->OnRender(this, video::EVT_STANDARD);
 
 	CurrentRenderMode = ERM_3D;
+}
+
+
+GLint COGLES1Driver::getTextureWrapMode(u8 clamp) const
+{
+	switch (clamp)
+	{
+		case ETC_CLAMP:
+			//	return GL_CLAMP; not supported in ogl-es
+			return GL_CLAMP_TO_EDGE;
+			break;
+		case ETC_CLAMP_TO_EDGE:
+			return GL_CLAMP_TO_EDGE;
+			break;
+		case ETC_CLAMP_TO_BORDER:
+			//	return GL_CLAMP_TO_BORDER; not supported in ogl-es
+			return GL_CLAMP_TO_EDGE;
+			break;
+		case ETC_MIRROR:
+#ifdef GL_OES_texture_mirrored_repeat
+			if (FeatureAvailable[IRR_OES_texture_mirrored_repeat])
+				return GL_MIRRORED_REPEAT_OES;
+			else
+#endif
+			return GL_REPEAT;
+			break;
+		// the next three are not yet supported at all
+		case ETC_MIRROR_CLAMP:
+		case ETC_MIRROR_CLAMP_TO_EDGE:
+		case ETC_MIRROR_CLAMP_TO_BORDER:
+#ifdef GL_OES_texture_mirrored_repeat
+			if (FeatureAvailable[IRR_OES_texture_mirrored_repeat])
+				return GL_MIRRORED_REPEAT_OES;
+			else
+#endif
+			return GL_CLAMP_TO_EDGE;
+			break;
+		case ETC_REPEAT:
+		default:
+			return GL_REPEAT;
+			break;
+	}
 }
 
 
@@ -1673,35 +1696,18 @@ void COGLES1Driver::setWrapMode(const SMaterial& material)
 		else if (u>0)
 			break; // stop loop
 
-		GLint mode=GL_REPEAT;
-		switch (material.TextureLayer[u].TextureWrap)
+		// the APPLE npot restricted extension needs some care as it only supports CLAMP_TO_EDGE
+		if (queryFeature(EVDF_TEXTURE_NPOT) && !FeatureAvailable[IRR_OES_texture_npot] &&
+				CurrentTexture[u] && (CurrentTexture[u]->getSize() != CurrentTexture[u]->getOriginalSize()))
 		{
-			case ETC_REPEAT:
-				mode=GL_REPEAT;
-				break;
-			case ETC_CLAMP:
-				//	mode=GL_CLAMP; not supported in ogl-es
-				mode = GL_CLAMP_TO_EDGE;
-				break;
-			case ETC_CLAMP_TO_EDGE:
-				mode=GL_CLAMP_TO_EDGE;
-				break;
-			case ETC_CLAMP_TO_BORDER:
-				//	mode=GL_CLAMP_TO_BORDER; not supported in ogl-es
-				mode = GL_CLAMP_TO_EDGE;
-				break;
-			case ETC_MIRROR:
-#ifdef GL_OES_texture_mirrored_repeat
-				if (FeatureAvailable[IRR_OES_texture_mirrored_repeat])
-					mode=GL_MIRRORED_REPEAT_OES;
-				else
-#endif
-				mode = GL_REPEAT;
-				break;
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		}
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, mode);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, mode);
+		else
+		{
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, getTextureWrapMode(material.TextureLayer[u].TextureWrapU));
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, getTextureWrapMode(material.TextureLayer[u].TextureWrapV));
+		}
 	}
 }
 
@@ -1771,8 +1777,8 @@ void COGLES1Driver::setBasicRenderStates(const SMaterial& material, const SMater
 		if ((material.Shininess != 0.0f) &&
 			(material.ColorMaterial != video::ECM_SPECULAR))
 		{
-#ifdef GL_separate_specular_color
-			if (FeatureAvailable[IRR_separate_specular_color])
+#ifdef GL_EXT_separate_specular_color
+			if (FeatureAvailable[IRR_EXT_separate_specular_color])
 				glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
 #endif
 			glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, material.Shininess);
@@ -1782,9 +1788,9 @@ void COGLES1Driver::setBasicRenderStates(const SMaterial& material, const SMater
 			color[3] = material.SpecularColor.getAlpha() * inv;
 			glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, color);
 		}
-#ifdef GL_separate_specular_color
+#ifdef GL_EXT_separate_specular_color
 		else
-			if (FeatureAvailable[IRR_separate_specular_color])
+			if (FeatureAvailable[IRR_EXT_separate_specular_color])
 				glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SINGLE_COLOR);
 #endif
 	}
@@ -1799,21 +1805,40 @@ void COGLES1Driver::setBasicRenderStates(const SMaterial& material, const SMater
 		else if (i>0)
 			break;
 
+#ifdef GL_EXT_texture_lod_bias
+		if (FeatureAvailable[IRR_EXT_texture_lod_bias])
+		{
+			if (material.TextureLayer[i].LODBias)
+			{
+				const float tmp = core::clamp(material.TextureLayer[i].LODBias * 0.125f, -MaxTextureLODBias, MaxTextureLODBias);
+				glTexEnvf(GL_TEXTURE_FILTER_CONTROL_EXT, GL_TEXTURE_LOD_BIAS_EXT, tmp);
+			}
+			else
+				glTexEnvf(GL_TEXTURE_FILTER_CONTROL_EXT, GL_TEXTURE_LOD_BIAS_EXT, 0.f);
+		}
+#endif
+
 		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
 			(material.TextureLayer[i].BilinearFilter || material.TextureLayer[i].TrilinearFilter) ? GL_LINEAR : GL_NEAREST);
 
 		if (material.getTexture(i) && material.getTexture(i)->hasMipMaps())
-		{
-
-			//glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_NEAREST);
-
-			
-			glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-				material.TextureLayer[i].TrilinearFilter ? GL_LINEAR_MIPMAP_LINEAR :
-				material.TextureLayer[i].BilinearFilter ? GL_LINEAR_MIPMAP_NEAREST :
-				GL_NEAREST_MIPMAP_NEAREST );
-			
-		}
+			// the npot extensions need some checks, because APPLE
+			// npot is somewhat restricted and only support non-mipmap filter
+			if (queryFeature(EVDF_TEXTURE_NPOT) && !FeatureAvailable[IRR_OES_texture_npot] &&
+					(CurrentTexture[i]->getSize() != CurrentTexture[i]->getOriginalSize()))
+			{
+				glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+					material.TextureLayer[i].TrilinearFilter ? GL_LINEAR:
+					material.TextureLayer[i].BilinearFilter ? GL_LINEAR:
+					GL_NEAREST);
+			}
+			else
+			{
+				glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+					material.TextureLayer[i].TrilinearFilter ? GL_LINEAR_MIPMAP_LINEAR :
+					material.TextureLayer[i].BilinearFilter ? GL_LINEAR_MIPMAP_NEAREST :
+					GL_NEAREST_MIPMAP_NEAREST );
+			}
 		else
 			glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
 				(material.TextureLayer[i].BilinearFilter || material.TextureLayer[i].TrilinearFilter) ? GL_LINEAR : GL_NEAREST);
@@ -1953,8 +1978,18 @@ void COGLES1Driver::setBasicRenderStates(const SMaterial& material, const SMater
 	// thickness
 	if (resetAllRenderStates || lastmaterial.Thickness != material.Thickness)
 	{
-		glPointSize(material.Thickness);
-		glLineWidth(material.Thickness);
+		if (AntiAlias)
+		{
+//			glPointSize(core::clamp(static_cast<GLfloat>(material.Thickness), DimSmoothedPoint[0], DimSmoothedPoint[1]));
+			// we don't use point smoothing
+			glPointSize(core::clamp(static_cast<GLfloat>(material.Thickness), DimAliasedPoint[0], DimAliasedPoint[1]));
+			glLineWidth(core::clamp(static_cast<GLfloat>(material.Thickness), DimSmoothedLine[0], DimSmoothedLine[1]));
+		}
+		else
+		{
+			glPointSize(core::clamp(static_cast<GLfloat>(material.Thickness), DimAliasedPoint[0], DimAliasedPoint[1]));
+			glLineWidth(core::clamp(static_cast<GLfloat>(material.Thickness), DimAliasedLine[0], DimAliasedLine[1]));
+		}
 	}
 
 	// Anti aliasing
@@ -1972,12 +2007,15 @@ void COGLES1Driver::setBasicRenderStates(const SMaterial& material, const SMater
 			else
 				glDisable(GL_MULTISAMPLE);
 		}
-		if (AntiAlias >= 2)
+		if ((material.AntiAliasing & EAAM_LINE_SMOOTH) != (lastmaterial.AntiAliasing & EAAM_LINE_SMOOTH))
 		{
 			if (material.AntiAliasing & EAAM_LINE_SMOOTH)
 				glEnable(GL_LINE_SMOOTH);
 			else if (lastmaterial.AntiAliasing & EAAM_LINE_SMOOTH)
 				glDisable(GL_LINE_SMOOTH);
+		}
+		if ((material.AntiAliasing & EAAM_POINT_SMOOTH) != (lastmaterial.AntiAliasing & EAAM_POINT_SMOOTH))
+		{
 			if (material.AntiAliasing & EAAM_POINT_SMOOTH)
 				// often in software, and thus very slow
 				glEnable(GL_POINT_SMOOTH);
@@ -2504,9 +2542,9 @@ void COGLES1Driver::draw3DLine(const core::vector3df& start,
 void COGLES1Driver::OnResize(const core::dimension2d<u32>& size)
 {
 	CNullDriver::OnResize(size);
+	assert(!"Seth, not handled");
 	glViewport(0, 0, size.Width, size.Height);
 }
-
 
 //! Returns type of video driver
 E_DRIVER_TYPE COGLES1Driver::getDriverType() const
@@ -2514,13 +2552,11 @@ E_DRIVER_TYPE COGLES1Driver::getDriverType() const
 	return EDT_OGLES1;
 }
 
-
 //! returns color format
 ECOLOR_FORMAT COGLES1Driver::getColorFormat() const
 {
 	return ColorFormat;
 }
-
 
 //! Sets a vertex shader constant.
 void COGLES1Driver::setVertexShaderConstant(const f32* data, s32 startRegister, s32 constantAmount)
@@ -2566,7 +2602,6 @@ s32 COGLES1Driver::addShaderMaterial(const c8* vertexShaderProgram,
 	return -1;
 }
 
-
 //! Adds a new material renderer to the VideoDriver, using GLSL to render geometry.
 s32 COGLES1Driver::addHighLevelShaderMaterial(
 	const c8* vertexShaderProgram,
@@ -2590,13 +2625,11 @@ IVideoDriver* COGLES1Driver::getVideoDriver()
 	return this;
 }
 
-
 //! Returns pointer to the IGPUProgrammingServices interface.
 IGPUProgrammingServices* COGLES1Driver::getGPUProgrammingServices()
 {
 	return this;
 }
-
 
 ITexture* COGLES1Driver::addRenderTargetTexture(const core::dimension2d<u32>& size,
 					const io::path& name,
@@ -2739,19 +2772,27 @@ IImage* COGLES1Driver::createScreenShot()
 {
 	int format=GL_RGBA;
 	int type=GL_UNSIGNED_BYTE;
-	if (FeatureAvailable[IRR_IMG_read_format] || FeatureAvailable[IRR_OES_read_format])
+	if (FeatureAvailable[IRR_IMG_read_format] || FeatureAvailable[IRR_OES_read_format] || FeatureAvailable[IRR_EXT_read_format_bgra])
 	{
 #ifdef GL_IMPLEMENTATION_COLOR_READ_TYPE_OES
 		glGetIntegerv(GL_IMPLEMENTATION_COLOR_READ_FORMAT_OES, &format);
 		glGetIntegerv(GL_IMPLEMENTATION_COLOR_READ_TYPE_OES, &type);
 #endif
-		// there's a format we don't support ATM
+		// there are formats we don't support ATM
 		if (GL_UNSIGNED_SHORT_4_4_4_4==type)
 			type=GL_UNSIGNED_SHORT_5_5_5_1;
+#ifdef GL_EXT_read_format_bgra
+		else if (GL_UNSIGNED_SHORT_4_4_4_4_REV_EXT==type)
+			type=GL_UNSIGNED_SHORT_1_5_5_5_REV_EXT;
+#endif
 	}
 
 	IImage* newImage = 0;
-	if (GL_RGBA==format)
+	if ((GL_RGBA==format)
+#ifdef GL_EXT_read_format_bgra
+			|| (GL_BGRA_EXT==format)
+#endif
+			)
 	{
 		if (GL_UNSIGNED_BYTE==type)
 			newImage = new CImage(ECF_A8R8G8B8, ScreenSize);
@@ -2885,8 +2926,15 @@ void COGLES1Driver::enableClipPlane(u32 index, bool enable)
 }
 
 
+core::dimension2du COGLES1Driver::getMaxTextureSize() const
+{
+	return core::dimension2du(MaxTextureSize, MaxTextureSize);
+}
+
 } // end namespace
 } // end namespace
+
+
 
 namespace irr
 {
@@ -2900,8 +2948,8 @@ namespace video
 IVideoDriver* createOGLES1Driver(const SIrrlichtCreationParameters& params,
 		video::SExposedVideoData& data, io::IFileSystem* io)
 {
-#ifdef _IRR_COMPILE_WITH_OGLES1_)
-	//return new COGLES1Driver(params, data, io);
+#ifdef _IRR_COMPILE_WITH_OGLES1_
+	return new COGLES1Driver(params, data, io);
 #else
 	return 0;
 #endif // _IRR_COMPILE_WITH_OGLES1_
@@ -2942,6 +2990,6 @@ IVideoDriver* createOGLES1Driver(const SIrrlichtCreationParameters& params,
 } // end namespace
 } // end namespace
 
-#endif // _IRR_COMPILE_WITH_OGLES1_
 
 
+//#endif // _IRR_COMPILE_WITH_OGLES1_

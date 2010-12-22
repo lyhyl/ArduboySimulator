@@ -6,7 +6,6 @@
 #include "irrString.h"
 #include "IrrCompileConfig.h"
 #include "irrMath.h"
-#include "PlatformSetup.h"
 
 #ifndef _WIN32
 
@@ -14,9 +13,8 @@
 #define bswap_16(X) OSReadSwapInt16(&X,0)
 #define bswap_32(X) OSReadSwapInt32(&X,0)
 
+
 #endif
-
-
 #if defined(_IRR_COMPILE_WITH_SDL_DEVICE_)
 	#include <SDL/SDL_endian.h>
 	#define bswap_16(X) SDL_Swap16(X)
@@ -29,21 +27,15 @@
 	#include <libkern/OSByteOrder.h>
 	#define bswap_16(X) OSReadSwapInt16(&X,0)
 	#define bswap_32(X) OSReadSwapInt32(&X,0)
-#elif defined(__FreeBSD__)
+#elif defined(__FreeBSD__) || defined(__OpenBSD__)
 	#include <sys/endian.h>
 	#define bswap_16(X) bswap16(X)
 	#define bswap_32(X) bswap32(X)
 #elif !defined(_IRR_SOLARIS_PLATFORM_) && !defined(__PPC__) && !defined(_IRR_WINDOWS_API_)
-
-//#include <byteswap.h>
+	//#include <byteswap.h>
 #else
 	#define bswap_16(X) ((((X)&0xFF) << 8) | (((X)&0xFF00) >> 8))
 	#define bswap_32(X) ( (((X)&0x000000FF)<<24) | (((X)&0xFF000000) >> 24) | (((X)&0x0000FF00) << 8) | (((X) &0x00FF0000) >> 8))
-#endif
-
-#ifdef _WIN
-#define bswap_16(X) _byteswap_ushort(X)
-#define bswap_32(X) _byteswap_ulong(X)
 #endif
 
 namespace irr
@@ -54,7 +46,7 @@ namespace os
 	s16 Byteswap::byteswap(s16 num) {return bswap_16(num);}
 	u32 Byteswap::byteswap(u32 num) {return bswap_32(num);}
 	s32 Byteswap::byteswap(s32 num) {return bswap_32(num);}
-	f32 Byteswap::byteswap(f32 num) {u32 tmp=bswap_32(*((u32*)&num)); return *((f32*)&tmp);}
+	f32 Byteswap::byteswap(f32 num) {u32 tmp=IR(num); tmp=bswap_32(tmp); return (FR(tmp));}
 	// prevent accidental byte swapping of chars
 	u8  Byteswap::byteswap(u8 num)  {return num;}
 	c8  Byteswap::byteswap(c8 num)  {return num;}
@@ -145,7 +137,7 @@ namespace os
 
 #include <stdio.h>
 #include <time.h>
-
+#include <sys/time.h>
 
 namespace irr
 {
@@ -165,13 +157,9 @@ namespace os
 
 	u32 Timer::getRealTime()
 	{
-		return GetSystemTimeTick();
-		
-		/*
 		timeval tv;
 		gettimeofday(&tv, 0);
 		return (u32)(tv.tv_sec * 1000) + (tv.tv_usec / 1000);
-		*/
 	}
 
 } // end namespace os
@@ -309,7 +297,7 @@ namespace os
 	//! returns if the timer currently is stopped
 	bool Timer::isStopped()
 	{
-		return VirtualTimerStopCounter != 0;
+		return VirtualTimerStopCounter < 0;
 	}
 
 	void Timer::initVirtualTimer()

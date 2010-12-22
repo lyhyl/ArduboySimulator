@@ -43,11 +43,11 @@ public:
 	virtual void OnSetMaterial(const SMaterial& material, const SMaterial& lastMaterial,
 		bool resetAllRenderstates, IMaterialRendererServices* services)
 	{
-		
+
 		Driver->disableTextures(1);
 		Driver->setTexture(0, material.getTexture(0));
 		Driver->setBasicRenderStates(material, lastMaterial, resetAllRenderstates);
-
+		
 		if (resetAllRenderstates || (material.MaterialType != lastMaterial.MaterialType))
 		{
 			// thanks to Murphy, the following line removed some
@@ -69,6 +69,8 @@ public:
 	virtual void OnSetMaterial(const SMaterial& material, const SMaterial& lastMaterial,
 		bool resetAllRenderstates, IMaterialRendererServices* services)
 	{
+	
+	
 		Driver->disableTextures(1);
 		Driver->setTexture(0, material.getTexture(0));
 		Driver->setBasicRenderStates(material, lastMaterial, resetAllRenderstates);
@@ -156,6 +158,7 @@ public:
 	virtual void OnSetMaterial(const SMaterial& material, const SMaterial& lastMaterial,
 		bool resetAllRenderstates, IMaterialRendererServices* services)
 	{
+		
 		Driver->disableTextures(2);
 		Driver->setTexture(1, material.getTexture(1));
 		Driver->setTexture(0, material.getTexture(0));
@@ -180,6 +183,7 @@ public:
 
 	virtual void OnUnsetMaterial()
 	{
+	
 		if (Driver->queryFeature(EVDF_MULTITEXTURE))
 		{
 			Driver->extGlActiveTexture(GL_TEXTURE1);
