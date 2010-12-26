@@ -33,7 +33,8 @@ public:
 		MODE_IDLE, //don't actually do anything
 		MODE_CLIP_INPUT_TO_ABSOLUTE_CLIP_RECT_AND_DISABLE_INPUT_CHILDREN,
 		MODE_IGNORE_ABSOLUTE_CLIP_RECT,
-		MODE_CLIP_INPUT_TO_SIZE_STRICT //like MODE_CLIP_INPUT_TO_SIZE but also clips release messages
+		MODE_CLIP_INPUT_TO_SIZE_STRICT, //like MODE_CLIP_INPUT_TO_SIZE but also clips release messages
+		MODE_CLIP_INPUT_TO_CLIP_RECT //respects the position and alignment of the entity - must set the clipRect var in this component to something.
 	};
 	void FilterOnInput(VariantList *pVList);
 	//our stuff

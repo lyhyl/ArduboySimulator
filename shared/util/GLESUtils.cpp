@@ -278,7 +278,7 @@ void  DrawLine( GLuint rgba,   float ax, float ay, float bx, float by, float lin
 	glDisable( GL_TEXTURE_2D );
 
 	glEnableClientState(GL_VERTEX_ARRAY);	
-
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	GLfloat	vertices[] = 
 	{
 		ax,ay, 0,

@@ -186,6 +186,31 @@ void FilterInputComponent::FilterOnInput(VariantList *pVList)
 
 		break;
 
+	case MODE_CLIP_INPUT_TO_CLIP_RECT:
+
+		//let's only apply this to some messages
+		switch (eMessageType( int(pVList->Get(0).GetFloat())))
+		{
+		case MESSAGE_TYPE_GUI_CLICK_START:
+		case MESSAGE_TYPE_GUI_CLICK_MOVE:
+		case MESSAGE_TYPE_GUI_CLICK_END:
+			CL_Vec2f pt = pVList->Get(1).GetVector2();
+			pt += GetAlignmentOffset(CL_Vec2f(m_pClipRect->get_width(), m_pClipRect->get_height()), eAlignment(*m_pAlignment));
+
+			CL_Rectf r(*m_pPos2d, m_pClipRect->get_size());
+
+			if (!r.contains(pt))
+			{
+				pVList->m_variant[Entity::FILTER_INDEX].Set(uint32(Entity::FILTER_REFUSE_ALL));
+				return;
+			} else
+			{
+				//fine, you may pass
+			}
+		}
+
+		break;
+
 	default:
 		LogError("FilterInputComponent: Unknown mode %d", *m_pMode);
 	}
