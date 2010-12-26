@@ -42,6 +42,7 @@ enum eOSSTreamEvent{
 //update SharedActivity.java for the android side
 enum eVirtualKeys
 {
+	VIRTUAL_KEY_NONE = 0,
 	VIRTUAL_KEY_BACK = 500000, //escape on desktop computers, back key on android
 	VIRTUAL_KEY_PROPERTIES,
 	VIRTUAL_KEY_HOME,
