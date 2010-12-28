@@ -1,0 +1,198 @@
+// !$*UTF8*$!
+{
+	256AC3F00F4B6AF500CF3369 /* RTLooneyLadders_Prefix.pch */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {726, 428}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 161}";
+		};
+	};
+	29B97313FDCFA39411CA2CEA /* Project object */ = {
+		activeBuildConfigurationName = Release;
+		activeExecutable = 5DD3246A12BF8F160009B0F3 /* RTLooneyLadders */;
+		activeTarget = 8D1107260486CEB800E47090 /* RTLooneyLadders */;
+		addToTargets = (
+			8D1107260486CEB800E47090 /* RTLooneyLadders */,
+		);
+		breakpoints = (
+		);
+		codeSenseManager = 5DD324A112BF8F340009B0F3 /* Code sense */;
+		executables = (
+			5DD3246A12BF8F160009B0F3 /* RTLooneyLadders */,
+		);
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					1048,
+					20,
+					48,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 315203197;
+			PBXWorkspaceStateSaveDate = 315203197;
+		};
+		perUserProjectItems = {
+			5DD3254912C057D90009B0F3 = 5DD3254912C057D90009B0F3 /* PBXTextBookmark */;
+			5DD3255312C058F10009B0F3 = 5DD3255312C058F10009B0F3 /* PlistBookmark */;
+			5DD3257112C0595A0009B0F3 = 5DD3257112C0595A0009B0F3 /* PBXTextBookmark */;
+			5DD3277A12C97BFB0009B0F3 = 5DD3277A12C97BFB0009B0F3 /* PBXTextBookmark */;
+			5DD3278812C97D5E0009B0F3 = 5DD3278812C97D5E0009B0F3 /* PBXTextBookmark */;
+			5DD328BF12C99E7E0009B0F3 /* PBXTextBookmark */ = 5DD328BF12C99E7E0009B0F3 /* PBXTextBookmark */;
+		};
+		sourceControlManager = 5DD324A012BF8F340009B0F3 /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	5D70B62012B5FED300A1AB17 /* MainController.mm */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1454, 5265}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{5962, 1067}";
+			sepNavWindowFrame = "{{417, 343}, {1081, 694}}";
+		};
+	};
+	5D70B62412B5FED300A1AB17 /* MyOpenGLView.mm */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1238, 4589}}";
+			sepNavSelRange = "{5296, 0}";
+			sepNavVisRange = "{5068, 453}";
+			sepNavWindowFrame = "{{331, 121}, {1345, 891}}";
+		};
+	};
+	5D70B79E12B606DC00A1AB17 /* PlatformPrecomp.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {870, 176}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 28}";
+		};
+	};
+	5DD3246A12BF8F160009B0F3 /* RTLooneyLadders */ = {
+		isa = PBXExecutable;
+		activeArgIndices = (
+		);
+		argumentStrings = (
+		);
+		autoAttachOnCrash = 1;
+		breakpointsEnabled = 1;
+		configStateDict = {
+		};
+		customDataFormattersEnabled = 1;
+		dataTipCustomDataFormattersEnabled = 1;
+		dataTipShowTypeColumn = 1;
+		dataTipSortType = 0;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		dylibVariantSuffix = "";
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		libgmallocEnabled = 0;
+		name = RTLooneyLadders;
+		savedGlobals = {
+		};
+		showTypeColumn = 0;
+		sourceDirectories = (
+		);
+		variableFormatDictionary = {
+		};
+	};
+	5DD324A012BF8F340009B0F3 /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+			repositoryNamesForRoots = {
+				"" = "";
+			};
+		};
+	};
+	5DD324A112BF8F340009B0F3 /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+	5DD3254912C057D90009B0F3 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 256AC3F00F4B6AF500CF3369 /* RTLooneyLadders_Prefix.pch */;
+		name = "RTLooneyLadders_Prefix.pch: 8";
+		rLen = 0;
+		rLoc = 161;
+		rType = 0;
+		vrLen = 161;
+		vrLoc = 0;
+	};
+	5DD3255312C058F10009B0F3 /* PlistBookmark */ = {
+		isa = PlistBookmark;
+		fRef = 8D1107310486CEB800E47090 /* RTLooneyLadders-Info.plist */;
+		fallbackIsa = PBXBookmark;
+		isK = 0;
+		kPath = (
+			CFBundleIdentifier,
+		);
+		name = "/Volumes/projects/proton/RTLooneyLadders/OSX/RTLooneyLadders-Info.plist";
+		rLen = 0;
+		rLoc = 9223372036854775808;
+	};
+	5DD3257112C0595A0009B0F3 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5D70B79E12B606DC00A1AB17 /* PlatformPrecomp.cpp */;
+		name = "PlatformPrecomp.cpp: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 28;
+		vrLoc = 0;
+	};
+	5DD3277A12C97BFB0009B0F3 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5D70B62412B5FED300A1AB17 /* MyOpenGLView.mm */;
+		name = "MyOpenGLView.mm: 181";
+		rLen = 0;
+		rLoc = 5296;
+		rType = 0;
+		vrLen = 473;
+		vrLoc = 5068;
+	};
+	5DD3278812C97D5E0009B0F3 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5D70B62412B5FED300A1AB17 /* MyOpenGLView.mm */;
+		name = "MyOpenGLView.mm: 181";
+		rLen = 0;
+		rLoc = 5296;
+		rType = 0;
+		vrLen = 473;
+		vrLoc = 5068;
+	};
+	5DD328BF12C99E7E0009B0F3 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5D70B62412B5FED300A1AB17 /* MyOpenGLView.mm */;
+		name = "MyOpenGLView.mm: 181";
+		rLen = 0;
+		rLoc = 5296;
+		rType = 0;
+		vrLen = 453;
+		vrLoc = 5068;
+	};
+	8D1107260486CEB800E47090 /* RTLooneyLadders */ = {
+		activeExec = 0;
+		executables = (
+			5DD3246A12BF8F160009B0F3 /* RTLooneyLadders */,
+		);
+	};
+}

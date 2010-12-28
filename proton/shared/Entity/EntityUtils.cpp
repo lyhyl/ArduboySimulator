@@ -1434,7 +1434,17 @@ EntityComponent * AddHotKeyToButton(Entity *pEnt, uint32 keycode)
 	return pComp;
 }
 
-
+EntityComponent * MakeButtonEmitVirtualGameKey(Entity *pEnt, uint32 keycode)
+{
+	if (!pEnt)
+	{
+		assert(!"Serious error");
+		return NULL;
+	}
+	EntityComponent *pComp = pEnt->AddComponent(new EmitVirtualKeyComponent);
+	pComp->GetVar("keycode")->Set(keycode);
+	return pComp;
+}
 
 EntityComponent * CreateSlider(Entity *pBG, float x, float y, float sizeX, string buttonFileName, string left, string middle, string right)
 {

@@ -9085,6 +9085,14 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\shared\Entity\EmitVirtualKeyComponent.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\shared\Entity\EmitVirtualKeyComponent.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\shared\Entity\FilterInputComponent.cpp"
 						>
 					</File>
