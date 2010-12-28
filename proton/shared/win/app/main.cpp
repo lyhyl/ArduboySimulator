@@ -5,7 +5,10 @@
 #include "main.h"
 #include "WebOS/SDLMain.h"
 #include "App.h"
-#include <direct.h>
+
+#ifndef RT_WEBOS
+	#include <direct.h>
+#endif
 
 vector<VideoModeEntry> g_videoModes;
 void AddVideoMode(string name, int x, int y, ePlatformID platformID);
@@ -92,9 +95,10 @@ using namespace irr;
 #define EGL_SUCCESS GL_NO_ERROR
 #else
 
+#ifndef RT_WEBOS
 EGLDisplay			g_eglDisplay	= 0;
 EGLSurface			g_eglSurface	= 0;
-
+#endif
 #endif
 
 int GetPrimaryGLX() 
@@ -859,7 +863,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 	WSADATA wsaData;
 	WSAStartup(MAKEWORD(2, 2), &wsaData);
 
-#endif
+
 
 	srand( (unsigned)GetTickCount() );
 
@@ -1080,3 +1084,4 @@ void LogMsg ( const char* traceStr, ... )
 	AddText(buffer, "log.txt");
 }
 
+#endif
