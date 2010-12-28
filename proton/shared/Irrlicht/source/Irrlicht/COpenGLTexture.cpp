@@ -244,6 +244,14 @@ GLint COpenGLTexture::getOpenGLFormatAndParametersFromColorFormat(ECOLOR_FORMAT 
 			return GL_RGBA8;
 #endif
 		}
+
+		case ECF_PVRTC:
+		
+			//uhh.. I don't know, we're going to ignore this I think
+			colorformat=GL_BGR;
+			type=GL_UNSIGNED_BYTE;
+			return GL_RGB;
+		
 		default:
 		{
 			os::Printer::log("Unsupported texture format", ELL_ERROR);
