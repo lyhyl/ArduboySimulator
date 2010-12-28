@@ -37,7 +37,7 @@ void InitVideoSize()
 	AddVideoMode("Droid Landscape", 854, 480, PLATFORM_ID_ANDROID); //g_landScapeNoNeckHurtMode should be false when testing
 	AddVideoMode("Nexus One Landscape", 800, 480, PLATFORM_ID_ANDROID); //g_landScapeNoNeckHurtMode should be false when testing
 
-	string desiredVideoMode = "Windows"; //name needs to match one of the ones defined below
+	string desiredVideoMode = "iPhone"; //name needs to match one of the ones defined below
     g_landScapeNoNeckHurtMode = true; //if true, will rotate the screen so we can play in landscape mode in windows without hurting ourselves
 
 	SetVideoModeByName(desiredVideoMode);
@@ -933,7 +933,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 			{
 				Sleep(0);
 			}
-			fpsTimer = GetSystemTimeAccurate()+(1000.0f/ (float(g_fpsLimit)));
+			fpsTimer = float(GetSystemTimeAccurate())+(1000.0f/ (float(g_fpsLimit)));
 		}
 
 		while (!GetBaseApp()->GetOSMessages()->empty())
@@ -959,7 +959,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 				break;
 			
 			case OSMessage::MESSAGE_SET_FPS_LIMIT:
-				g_fpsLimit = m.m_x;
+				g_fpsLimit = int(m.m_x);
 				
 				break;
 			case OSMessage::MESSAGE_SET_VIDEO_MODE:
@@ -975,7 +975,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 				DestroyVideo(false);
 			
 				g_bHasFocus = false;
-				if (!InitVideo(m.m_x, m.m_y, m.m_fullscreen, m.m_fontSize))
+				if (!InitVideo(int(m.m_x), int(m.m_y), m.m_fullscreen, m.m_fontSize))
 				{
 					MessageBox(NULL, "Error changing video mode", "Error", NULL);
 					goto cleanup;

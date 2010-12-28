@@ -20,6 +20,8 @@ Note:
 
 Irrlicht engine modifications are released under the Irrlicht ZLIB style license. ( http://irrlicht.sourceforge.net/license.html )
 
+Any source based off Clanlib (located in the shared/Clanlib directory) is released under the current Clanlib license.
+
 Some of the libraries Proton may link to may have additional requirements or restrictions.  The Proton SDK license only applies to the Proton SDK source code itself; each of the dependency libraries used in your project includes a license as well, which must be followed.
 
 

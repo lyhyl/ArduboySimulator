@@ -10,6 +10,12 @@
 #ifndef Button2DComponent_h__
 #define Button2DComponent_h__
 
+/*
+Add this component and if it is clicked/touched (it knows the site because it checks pos2d, size2d, scale2d vars)
+it causes a function called OnButtonSelected (on the parent entity) with two parms - index 0 is the vec2 position,
+index 1 is the parent entity
+*/
+
 #include "Component.h"
 #include "Entity.h"
 #include "Renderer/Surface.h"

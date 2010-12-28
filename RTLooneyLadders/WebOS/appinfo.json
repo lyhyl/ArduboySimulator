@@ -1,0 +1,10 @@
+{
+	"title": "RTLooneyLadders",
+	"type": "pdk",
+	"main": "RTLooneyLadders",
+	"id": "com.rtsoft.RTLooneyLadders",
+	"version": "1.0.0",
+	"vendor": "Robinson Technologies",
+	"icon": "icon.png",
+  "requiredMemory": 20
+}
