@@ -1,5 +1,5 @@
 //  ***************************************************************
-//  TouchTestComponent - Creation date: ?/?/2010
+//  TouchTestComponent - Creation date: 1/5/2010
 //  -------------------------------------------------------------
 //  Robinson Technologies Copyright (C) 2010 - All Rights Reserved
 //
@@ -14,7 +14,7 @@
 #include "Entity/Entity.h"
 //#include "Renderer/SurfaceAnim.h"
 
-#define MAX_TOUCHES_AT_ONCE 10 //iPad can do ten, right?  Let's try.
+#define MAX_TOUCHES_AT_ONCE 12 //iPad can do 11, right?  Well, whatever, let's do this to be safe.
 
 class TouchObject
 {

@@ -239,7 +239,7 @@
 	[super dealloc];
 }
 
-const int MAX_TOUCHES= 10; //Yup, iPad only does ten, tested it
+const int MAX_TOUCHES= 12;
 
 class TouchTrack
 {
@@ -303,7 +303,6 @@ return count;
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
   	// Enumerate through all the touch objects.
-	int touchCount = 0;
 
 	for (UITouch *touch in touches)
 	{
@@ -324,7 +323,6 @@ return count;
 		CGPoint pt =[touch locationInView:self];
 		ConvertCoordinatesIfRequired(pt.x, pt.y);
 		GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_START,pt.x, pt.y,fingerID);			
-		touchCount++;  
 	}	
 
 	  
@@ -336,10 +334,8 @@ return count;
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
   	// Enumerate through all the touch objects.
-	int touchCount = 0;
 	for (UITouch *touch in touches)
 	{
-		//int nb = [touch count];
 		//found a touch.  Is it already on our list?
 		int fingerID = GetFingerTrackIDByTouch(touch);
 		if (fingerID != -1)
@@ -354,17 +350,14 @@ return count;
 		CGPoint pt =[touch locationInView:self];
 		ConvertCoordinatesIfRequired(pt.x, pt.y);
 		GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_END,pt.x, pt.y, fingerID);
-		touchCount++;  
 	}	
 }
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
 {
   	// Enumerate through all the touch objects.
-	int touchCount = 0;
 	for (UITouch *touch in touches)
 	{
-		//int nb = [touch count];
 		//found a touch.  Is it already on our list?
 		int fingerID = GetFingerTrackIDByTouch(touch);
 		if (fingerID != -1)
@@ -379,7 +372,6 @@ return count;
 		CGPoint pt =[touch locationInView:self];
 		ConvertCoordinatesIfRequired(pt.x, pt.y);
 		GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_END,pt.x, pt.y, fingerID);
-		touchCount++;  
 	}	
 }
 
@@ -387,7 +379,6 @@ return count;
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
    // Enumerate through all the touch objects.
-	int touchCount = 0;
 	for (UITouch *touch in touches)
 	{
 	
@@ -405,7 +396,6 @@ return count;
 		CGPoint pt =[touch locationInView:self];
 		ConvertCoordinatesIfRequired(pt.x, pt.y);
 		GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_MOVE,pt.x, pt.y, fingerID);
-		touchCount++;  
 	}	
 }
 
