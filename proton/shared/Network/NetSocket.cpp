@@ -34,7 +34,9 @@
 #else
 	
 	#include "winsock.h"
+#ifndef ECONNREFUSED
 	#define ECONNREFUSED            WSAECONNREFUSED
+#endif
 
 	#define rt_closesocket(x) closesocket(x)
 

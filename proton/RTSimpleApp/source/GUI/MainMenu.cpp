@@ -4,8 +4,9 @@
 #include "DebugMenu.h"
 #include "EnterNameMenu.h"
 #include "ParticleTestMenu.h"
+#include "TouchTestMenu.h"
 #include "Entity/CustomInputComponent.h"
-#include "GUI/AboutMenu.h"
+#include "AboutMenu.h"
 
 void MainMenuOnSelect(VariantList *pVList) //0=vec2 point of click, 1=entity sent from
 {
@@ -29,6 +30,15 @@ void MainMenuOnSelect(VariantList *pVList) //0=vec2 point of click, 1=entity sen
 		SlideScreen(pEntClicked->GetParent(), false);
 		GetMessageManager()->CallEntityFunction(pEntClicked->GetParent(), 500, "OnDelete", NULL);
 		EnterNameMenuCreate(pEntClicked->GetParent()->GetParent());
+	}
+	
+	if (pEntClicked->GetName() == "TouchTest")
+	{
+		//slide it off the screen and then kill the whole menu tree
+		pEntClicked->GetParent()->RemoveComponentByName("FocusInput");
+		SlideScreen(pEntClicked->GetParent(), false);
+		GetMessageManager()->CallEntityFunction(pEntClicked->GetParent(), 500, "OnDelete", NULL);
+		TouchTestMenuCreate(pEntClicked->GetParent()->GetParent());
 	}
 
 	if (pEntClicked->GetName() == "Debug")
@@ -76,7 +86,10 @@ Entity * MainMenuCreate(Entity *pParentEnt)
 	pButtonEntity = CreateTextButtonEntity(pBG, "ParticleTest", x, y, "ParticleTest"); y += ySpacer;
 	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MainMenuOnSelect);
 
-	pButtonEntity = CreateTextButtonEntity(pBG, "InputTest", x, y, "Input Test"); y += ySpacer;
+	pButtonEntity = CreateTextButtonEntity(pBG, "InputTest", x, y, "Text Input Test"); y += ySpacer;
+	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MainMenuOnSelect);
+
+	pButtonEntity = CreateTextButtonEntity(pBG, "TouchTest", x, y, "Multitouch Input Test"); y += ySpacer;
 	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MainMenuOnSelect);
 
 	pButtonEntity = CreateTextButtonEntity(pBG, "Debug", x, y, "Debug and music test"); y += ySpacer;

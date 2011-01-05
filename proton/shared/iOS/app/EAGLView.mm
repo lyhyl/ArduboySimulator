@@ -239,42 +239,172 @@
 	[super dealloc];
 }
 
+const int MAX_TOUCHES= 10; //Yup, iPad only does ten, tested it
+
+class TouchTrack
+{
+public:
+
+	TouchTrack()
+	{
+		m_touchPointer = NULL;
+	}
+
+	void *m_touchPointer;
+};
+
+TouchTrack g_touchTracker[MAX_TOUCHES];
+
+int GetFingerTrackIDByTouch(void* touch)
+{
+		for (int i=0; i < MAX_TOUCHES; i++)
+		{
+			if (g_touchTracker[i].m_touchPointer == touch)
+			{
+				return i;
+			}
+		}
+
+	//LogMsg("Can't locate fingerID by touch %d", touch);
+	return -1;
+}
+
+int AddNewTouch(void* touch)
+{
+		for (int i=0; i < MAX_TOUCHES; i++)
+		{
+			if (!g_touchTracker[i].m_touchPointer)
+			{
+				//hey, an empty slot, yay
+				g_touchTracker[i].m_touchPointer = touch;
+				return i;
+			}
+		}
+
+	LogMsg("Can't add new fingerID");
+	return -1;
+}
+
+int GetTouchesActive()
+{
+int count = 0;
+
+	for (int i=0; i < MAX_TOUCHES; i++)
+		{
+			if (g_touchTracker[i].m_touchPointer)
+			{
+				count++;
+			}
+		}
+return count;
+}
+
 // Handles the start of a touch
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
   	// Enumerate through all the touch objects.
-	NSUInteger touchCount = 0;
+	int touchCount = 0;
+
 	for (UITouch *touch in touches)
 	{
+		//found a touch.  Is it already on our list?
+		int fingerID = GetFingerTrackIDByTouch(touch);
+
+		if (fingerID == -1)
+		{
+			//add it to our list
+			fingerID = AddNewTouch(touch);
+		} else
+		{
+			//already on the list.  Don't send this
+			//LogMsg("Ignoring touch %d", fingerID);
+			continue;
+		}
+
 		CGPoint pt =[touch locationInView:self];
 		ConvertCoordinatesIfRequired(pt.x, pt.y);
-		GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CLICK_START,pt.x, pt.y);			
+		GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_START,pt.x, pt.y,fingerID);			
 		touchCount++;  
 	}	
+
+	  
+	#ifdef _DEBUG
+	//LogMsg("%d touches active", GetTouchesActive());
+	#endif
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
   	// Enumerate through all the touch objects.
-	NSUInteger touchCount = 0;
+	int touchCount = 0;
 	for (UITouch *touch in touches)
 	{
+		//int nb = [touch count];
+		//found a touch.  Is it already on our list?
+		int fingerID = GetFingerTrackIDByTouch(touch);
+		if (fingerID != -1)
+		{
+			g_touchTracker[fingerID].m_touchPointer = NULL; //clear it
+		} else
+		{
+			//wasn't on our list
+			continue;
+		}
+		
 		CGPoint pt =[touch locationInView:self];
 		ConvertCoordinatesIfRequired(pt.x, pt.y);
-		GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CLICK_END,pt.x, pt.y);
+		GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_END,pt.x, pt.y, fingerID);
 		touchCount++;  
 	}	
 }
 
+- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
+{
+  	// Enumerate through all the touch objects.
+	int touchCount = 0;
+	for (UITouch *touch in touches)
+	{
+		//int nb = [touch count];
+		//found a touch.  Is it already on our list?
+		int fingerID = GetFingerTrackIDByTouch(touch);
+		if (fingerID != -1)
+		{
+			g_touchTracker[fingerID].m_touchPointer = NULL; //clear it
+		} else
+		{
+			//wasn't on our list
+			continue;
+		}
+		
+		CGPoint pt =[touch locationInView:self];
+		ConvertCoordinatesIfRequired(pt.x, pt.y);
+		GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_END,pt.x, pt.y, fingerID);
+		touchCount++;  
+	}	
+}
+
+
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
    // Enumerate through all the touch objects.
-	NSUInteger touchCount = 0;
+	int touchCount = 0;
 	for (UITouch *touch in touches)
 	{
+	
+		//found a touch.  Is it already on our list?
+		int fingerID = GetFingerTrackIDByTouch(touch);
+		if (fingerID != -1)
+		{
+			//found it
+		} else
+		{
+			//wasn't on our list?!
+			continue;
+		}
+	
 		CGPoint pt =[touch locationInView:self];
 		ConvertCoordinatesIfRequired(pt.x, pt.y);
-		GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CLICK_MOVE,pt.x, pt.y);
+		GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_MOVE,pt.x, pt.y, fingerID);
 		touchCount++;  
 	}	
 }

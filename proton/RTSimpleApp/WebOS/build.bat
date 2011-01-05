@@ -53,7 +53,7 @@ set PARTICLE_SRC=%PPATH%/L_Defination.cpp %PPATH%/L_DroppingEffect.cpp %PPATH%/L
 
 REM **************************************** APP SOURCE CODE FILES
 set APP_SRC=%APP%\App.cpp %APP%\Component\ParticleTestComponent.cpp %APP%\GUI\DebugMenu.cpp %APP%\GUI\EnterNameMenu.cpp %APP%\GUI\MainMenu.cpp %APP%\GUI\ParticleTestMenu.cpp ^
-%APP%\GUI\AboutMenu.cpp
+%APP%\GUI\AboutMenu.cpp %APP%\GUI\TouchTestMenu.cpp %APP%\Component\TouchTestComponent.cpp
 REM **************************************** END SOURCE
 
 set DEFINES=-D RT_WEBOS -D BOOST_ALL_NO_LIB  -D RT_WEBOS_ARM -D NDEBUG

@@ -179,8 +179,13 @@ void GenerateSetPerspectiveFOV(float fovy, float aspect, float zNear, float zFar
 }
 
 
-void DrawFilledSquare( float x, float y, float size/*=10*/, uint32 color /*= MAKE_RGBA(255,255,255,255)*/ )
+void DrawFilledSquare( float x, float y, float size/*=10*/, uint32 color /*= MAKE_RGBA(255,255,255,255)*/, bool bCentered )
 {
+	if (bCentered)
+	{
+		x -= size/2;
+		y -= size/2;
+	}
 	GenerateFillRect(color, x,y, size, size);
 }
 

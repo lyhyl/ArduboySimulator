@@ -24,7 +24,7 @@ void InitVideoSize()
 	//mode manually and it was just less changes to make to pretend we were rotating the Windows screen to play in "landscape" orientation
 	//to make testing consistent
 	AddVideoMode("Windows", 768, 1024, PLATFORM_ID_WINDOWS);
-	AddVideoMode("OSX", 1024, 768, PLATFORM_ID_OSX); //g_landScapeNoNeckHurtMode should be false when testing
+	AddVideoMode("OSX", 1024, 768, PLATFORM_ID_OSX); //g_landScapeNoNeckHurtMode should be false when testing. Sort of buggy to emulate in Windows
 
 	AddVideoMode("iPhone", 320, 480, PLATFORM_ID_IOS);
 	AddVideoMode("iPad", 768, 1024, PLATFORM_ID_IOS);
@@ -40,7 +40,7 @@ void InitVideoSize()
 	AddVideoMode("Droid Landscape", 854, 480, PLATFORM_ID_ANDROID); //g_landScapeNoNeckHurtMode should be false when testing
 	AddVideoMode("Nexus One Landscape", 800, 480, PLATFORM_ID_ANDROID); //g_landScapeNoNeckHurtMode should be false when testing
 
-	string desiredVideoMode = "iPhone"; //name needs to match one of the ones defined below
+	string desiredVideoMode = "Windows"; //name needs to match one of the ones defined below
     g_landScapeNoNeckHurtMode = true; //if true, will rotate the screen so we can play in landscape mode in windows without hurting ourselves
 
 	SetVideoModeByName(desiredVideoMode);
@@ -55,7 +55,7 @@ int g_winVideoScreenX = 0;
 int g_winVideoScreenY = 0;
 bool g_bIsFullScreen = false;
 int g_fpsLimit = 0; //0 for no fps limit (default)  Use MESSAGE_SET_FPS_LIMIT to set
-
+//#define C_BORDERLESS_WINDOW_MODE_FOR_SCREENSHOT_EASE //use this with alt print-screen to take fullscreen screenshots easier
 
 
 void AddVideoMode(string name, int x, int y, ePlatformID platformID)
@@ -588,10 +588,13 @@ bool InitVideo(int width, int height, bool bFullscreen, float aspectRatio)
 	RECT	sRect;
 	SetRect(&sRect, 0, 0, width, height);
 	//for taking screenshots with no borders with Alt-Print screen, try this:
-	//DWORD style = WS_POPUP;
 	
 	DWORD style = WS_POPUP | WS_SYSMENU | WS_CAPTION | WS_SIZEBOX | WS_MAXIMIZEBOX | WS_MINIMIZEBOX;
 	
+#ifdef C_BORDERLESS_WINDOW_MODE_FOR_SCREENSHOT_EASE
+	style = WS_POPUP;
+
+#endif
 	
 	if (bFullscreen)
 	{
@@ -862,8 +865,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 
 	WSADATA wsaData;
 	WSAStartup(MAKEWORD(2, 2), &wsaData);
-
-
 
 	srand( (unsigned)GetTickCount() );
 

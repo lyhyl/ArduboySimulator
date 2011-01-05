@@ -136,6 +136,8 @@ class Message: public boost::signals::trackable
 	int GetParm1() {return m_parm1;}
 	void SetParm2(int parm2) {m_parm2 = parm2;}
 	int GetParm2() {return m_parm2;}
+	void SetParm3(int parm3) {m_parm3 = parm3;}
+	int GetParm3() {return m_parm3;}
 	eTimingSystem GetTimingMethod() {return m_timerMethod;}
 	unsigned int GetDeliveryTime() {return m_deliveryTime;}
 	eMessageType GetType() {return m_type;}
@@ -167,6 +169,7 @@ private:
 	eMessageClass m_class;
 	int m_parm1;
 	int m_parm2;
+	int m_parm3;
 	unsigned int m_deliveryTime;
 	Variant m_variant;
 	VariantList m_variantList;
@@ -188,6 +191,7 @@ public:
 
 	void SendGUI( eMessageType type, int parm1, int parm2 = 0, int deliverTimeMS = 0, eTimingSystem timing = TIMER_SYSTEM);
 	void SendGUI( eMessageType type, const Variant &v, int deliverTimeMS = 0);
+	void SendGUIEx( eMessageType type, int parm1, int parm2, int finger, int deliverTimeMS = 0, eTimingSystem timing = TIMER_SYSTEM);
 	void SendGame( eMessageType type, const string msg, int deliverTimeMS = 0, eTimingSystem timing = TIMER_GAME);
 	void SetEntityVariable( Entity *pEnt, int timeMS, const string &varName, const Variant &v, eTimingSystem timing = GetTiming());
 	void SetComponentVariable( EntityComponent *pComp, int timeMS, const string &varName, const Variant &v, eTimingSystem timing = GetTiming() );

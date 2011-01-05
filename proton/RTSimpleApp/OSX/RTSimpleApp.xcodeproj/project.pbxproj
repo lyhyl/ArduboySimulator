@@ -112,6 +112,8 @@
 		5DDE02A012B4F50D000C5CC0 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DDE029F12B4F50D000C5CC0 /* libz.dylib */; };
 		5DDE02A512B4F526000C5CC0 /* App.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DDE02A412B4F526000C5CC0 /* App.cpp */; };
 		5DDE05AA12B58EBD000C5CC0 /* interface in Resources */ = {isa = PBXBuildFile; fileRef = 5DDE05A912B58EBD000C5CC0 /* interface */; };
+		5DEB1B8B12D309CE00A3A6DB /* TouchTestComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DEB1B8A12D309CE00A3A6DB /* TouchTestComponent.cpp */; };
+		5DEB1B8E12D309D700A3A6DB /* TouchTestMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DEB1B8D12D309D700A3A6DB /* TouchTestMenu.cpp */; };
 		5DFB863312BB233D00337543 /* app.icns in Resources */ = {isa = PBXBuildFile; fileRef = 5DFB863212BB233D00337543 /* app.icns */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
@@ -334,6 +336,10 @@
 		5DDE02A312B4F526000C5CC0 /* App.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = App.h; path = ../source/App.h; sourceTree = SOURCE_ROOT; };
 		5DDE02A412B4F526000C5CC0 /* App.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = App.cpp; path = ../source/App.cpp; sourceTree = SOURCE_ROOT; };
 		5DDE05A912B58EBD000C5CC0 /* interface */ = {isa = PBXFileReference; lastKnownFileType = folder; name = interface; path = ../bin/interface; sourceTree = SOURCE_ROOT; };
+		5DEB1B8912D309CE00A3A6DB /* TouchTestComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TouchTestComponent.h; path = ../source/Component/TouchTestComponent.h; sourceTree = SOURCE_ROOT; };
+		5DEB1B8A12D309CE00A3A6DB /* TouchTestComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TouchTestComponent.cpp; path = ../source/Component/TouchTestComponent.cpp; sourceTree = SOURCE_ROOT; };
+		5DEB1B8C12D309D700A3A6DB /* TouchTestMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TouchTestMenu.h; path = ../source/GUI/TouchTestMenu.h; sourceTree = SOURCE_ROOT; };
+		5DEB1B8D12D309D700A3A6DB /* TouchTestMenu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TouchTestMenu.cpp; path = ../source/GUI/TouchTestMenu.cpp; sourceTree = SOURCE_ROOT; };
 		5DFB863212BB233D00337543 /* app.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = app.icns; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* RTSimpleApp-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "RTSimpleApp-Info.plist"; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* RTSimpleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RTSimpleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -751,6 +757,8 @@
 		5D70B81F12B6072D00A1AB17 /* Component */ = {
 			isa = PBXGroup;
 			children = (
+				5DEB1B8912D309CE00A3A6DB /* TouchTestComponent.h */,
+				5DEB1B8A12D309CE00A3A6DB /* TouchTestComponent.cpp */,
 				5D70B82012B6072D00A1AB17 /* ParticleTestComponent.cpp */,
 				5D70B82112B6072D00A1AB17 /* ParticleTestComponent.h */,
 			);
@@ -761,6 +769,8 @@
 			isa = PBXGroup;
 			children = (
 				5D70B82312B6072D00A1AB17 /* AboutMenu.h */,
+				5DEB1B8C12D309D700A3A6DB /* TouchTestMenu.h */,
+				5DEB1B8D12D309D700A3A6DB /* TouchTestMenu.cpp */,
 				5D70B82412B6072D00A1AB17 /* AboutMenu.cpp */,
 				5D70B82512B6072D00A1AB17 /* ParticleTestMenu.cpp */,
 				5D70B82612B6072D00A1AB17 /* ParticleTestMenu.h */,
@@ -995,6 +1005,8 @@
 				5D70B83212B6072D00A1AB17 /* MainMenu.cpp in Sources */,
 				5D70BA6112B7124700A1AB17 /* AudioManagerFMOD.cpp in Sources */,
 				5D70C4BF12B7586D00A1AB17 /* MyApplication.mm in Sources */,
+				5DEB1B8B12D309CE00A3A6DB /* TouchTestComponent.cpp in Sources */,
+				5DEB1B8E12D309D700A3A6DB /* TouchTestMenu.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

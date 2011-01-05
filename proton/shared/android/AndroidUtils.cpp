@@ -851,7 +851,7 @@ int AppOSMessageGet(JNIEnv* env)
 		
 		ConvertCoordinatesIfRequired(pM->x, pM->y);
 
-		GetMessageManager()->SendGUI(pM->type, pM->x, pM->y);
+		GetMessageManager()->SendGUIEx(pM->type, pM->x, pM->y, pM->finger);
 		g_messageCache.pop_front();
 	}
 
