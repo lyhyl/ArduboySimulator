@@ -19,8 +19,6 @@ void MapMenuOnSelect(VariantList *pVList) //0=vec2 point of click, 1=entity sent
 
 	if (pEntClicked->GetName() == "Back")
 	{
-		
-	
 		SlideScreen(pEntClicked->GetParent(), false);
 		GetMessageManager()->CallEntityFunction(pEntClicked->GetParent(), 500, "OnDelete", NULL);
 		MainMenuCreate(pEntClicked->GetParent()->GetParent());
@@ -52,14 +50,16 @@ void MapInitScene()
 	smgr->getParameters()->setAttribute(B3D_LOADER_IGNORE_MIPMAP_FLAG, true);
 	//TO LOAD THE QUAKE LEVEL
 
+
 	device->getFileSystem()->changeWorkingDirectoryTo( (GetBaseAppPath()+"game/quake").c_str());
+	//scene::IAnimatedMesh* mesh = smgr->getMesh("maps/20kdm2.bsp");
 	scene::IAnimatedMesh* mesh = smgr->getMesh("maps/20kdm2.bsp");
 	scene::IMeshSceneNode* node = 0;
 	if (mesh)
 	{
-		driver->setMinHardwareBufferVertexCount(8);
+		//driver->setMinHardwareBufferVertexCount(8);
 		mesh->setHardwareMappingHint(scene::EHM_STATIC);
-	//	node = smgr->addOctTreeSceneNode(mesh->getMesh(0), 0, -1, 64); //for oct tree stuff, actually slower with current level
+		//node = smgr->addOctreeSceneNode(mesh->getMesh(0), 0, -1, 1024); //for oct tree stuff, actually slower with current level
 		node = smgr->addMeshSceneNode(mesh->getMesh(0));
 		node->setMaterialFlag(video::EMF_LIGHTING, false);
 	}
@@ -76,8 +76,8 @@ void MapInitScene()
 		{
 			//node->setPosition(core::vector3df(-1350,-130,-1400));
 
-			selector = smgr->createOctTreeTriangleSelector(node->getMesh(), node, 64);
-			//selector = smgr->createTriangleSelector(node);
+			selector = smgr->createOctreeTriangleSelector(node->getMesh(), node, 64);
+			//selector = smgr->createTriangleSelector(node->getMesh(), node);
 
 			node->setTriangleSelector(selector);
 			// We're not done with this selector yet, so don't drop it.
@@ -95,6 +95,9 @@ void MapInitScene()
 			
 		camera->setAspectRatio(GetScreenSizeXf()/GetScreenSizeYf());
 		camera->setFOV((120 * M_PI / 360.0f));
+
+
+
 
 	return;
 

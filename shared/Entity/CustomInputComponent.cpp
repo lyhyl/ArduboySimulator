@@ -3,7 +3,7 @@
 #include "EntityUtils.h"
 
 CustomInputComponent::CustomInputComponent()
-{
+{///****************
 	SetName("CustomInput");
 }
 

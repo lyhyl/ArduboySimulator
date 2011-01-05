@@ -7,10 +7,11 @@
 #include "PlatformPrecomp.h"
 #include "App.h"
 #include "GUI/MainMenu.h"
-#include "Renderer/LinearParticle.h"
-#include "Entity/EntityUtils.h"//create the classes that our globally library expects to exist somewhere.
+#include "Entity/EntityUtils.h"
 #include "Irrlicht/IrrlichtManager.h"
  
+//create the classes that our globally library expects to exist somewhere.
+
 MessageManager g_messageManager;
 MessageManager * GetMessageManager() {return &g_messageManager;}
 
@@ -79,7 +80,7 @@ App::App()
 App::~App()
 {
 
-	L_ParticleSystem::deinit();
+	//L_ParticleSystem::deinit(); //if we wanted to use the 2d particle system
 }
 
 bool App::Init()
@@ -96,7 +97,7 @@ bool App::Init()
 	
 	//SetupFakePrimaryScreenSize(320,480); //game will think its this size, and will be scaled up
 
-	L_ParticleSystem::init(2000);
+	//L_ParticleSystem::init(2000); //if we wanted to use the 2d particle system
 
 	if (m_bInitted)	
 	{
@@ -168,9 +169,7 @@ void App::Draw()
    //GetFont(FONT_SMALL)->DrawScaled(0,200, "Default - `2Green`` - default",1+SinPulseByMS(3000), MAKE_RGBA(255,255,255,50));
 	//the base handles actually drawing the GUI stuff over everything else
 	BaseApp::Draw();
-
 	PrepareForGL();
-
 }
 
 void App::OnScreenSizeChange()
@@ -198,7 +197,6 @@ int App::GetSpecial()
 	return m_special; //1 means pirated copy
 }
 
-
 Variant * App::GetVar( const string &keyName )
 {
 	return GetShared()->GetVar(keyName);
@@ -219,7 +217,6 @@ int App::GetBuild()
 	return 1;
 }
 
-
 void App::SaveStuff()
 {
 	m_varDB.Save("save.dat");
@@ -235,19 +232,28 @@ void App::OnEnterForeground()
 	BaseApp::OnEnterForeground();
 }
 
+
+void App::OnExitApp(VariantList *pVarList)
+{
+	LogMsg("Exiting the app");
+
+	OSMessage o;
+	o.m_type = OSMessage::MESSAGE_FINISH_APP;
+	GetBaseApp()->AddOSMessage(o);
+}
+
 const char * GetAppName() {return "RT3DApp";};
-//for palm webos and android.  Dunno why my palm os versions have .app in them, but it's already in the story so can't change now.
+//for palm webos, android, App Store
 const char * GetBundlePrefix()
 {
-
-	char * bundlePrefix = "com.rtsoft.app.";
+	char * bundlePrefix = "com.rtsoft.";
 	return bundlePrefix;
 }
 
 //applicable to Palm WebOS builds only
 const char * GetBundleName()
 {
-	char * bundleName = "RT3DApp";
+	char * bundleName = "3dapp";
 	return bundleName;
 }
 

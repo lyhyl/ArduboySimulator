@@ -5,7 +5,7 @@
 #include "MathUtils.h"
 
 void GenerateSetPerspectiveFOV(float fovy, float aspect, float zNear, float zFar);
-void DrawFilledSquare(float x, float y, float size=10, uint32 color = MAKE_RGBA(255,255,255,255)); //it just calls GenerateFillRect
+void DrawFilledSquare(float x, float y, float size=10, uint32 color = MAKE_RGBA(255,255,255,255), bool bCentered = false); //it just calls GenerateFillRect
 void DrawFilledRect(float x, float y, float sizeX, float sizeY, uint32 color  = MAKE_RGBA(255,255,255,255));
 void DrawRect(float x, float y, float width, float height, uint32 color = MAKE_RGBA(255,255,255,255), float lineWidth=1);
 void DrawRect(CL_Vec2f &vPos, CL_Vec2f &vSize, uint32 color= MAKE_RGBA(255,255,255,255), float lineWidth=1);

@@ -109,6 +109,9 @@
 		5DE84C090FB9469A00DDAE64 /* angle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84C060FB9469A00DDAE64 /* angle.cpp */; };
 		5DE84C0A0FB9469A00DDAE64 /* vec2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84C070FB9469A00DDAE64 /* vec2.cpp */; };
 		5DE84C0B0FB9469A00DDAE64 /* vec3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84C080FB9469A00DDAE64 /* vec3.cpp */; };
+		5DEB1B7C12D3099100A3A6DB /* TouchTestMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DEB1B7B12D3099100A3A6DB /* TouchTestMenu.cpp */; };
+		5DEB1B7F12D309A300A3A6DB /* TouchTestComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DEB1B7E12D309A300A3A6DB /* TouchTestComponent.cpp */; };
+		5DEB1BA512D30B3D00A3A6DB /* EmitVirtualKeyComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DEB1BA412D30B3D00A3A6DB /* EmitVirtualKeyComponent.cpp */; };
 		5DF1D5751045018700826147 /* ParticleTestComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF1D5711045018700826147 /* ParticleTestComponent.cpp */; };
 		5DF1D5761045018700826147 /* ParticleTestMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF1D5731045018700826147 /* ParticleTestMenu.cpp */; };
 		5DF1D58F104501C400826147 /* L_Defination.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF1D578104501C400826147 /* L_Defination.cpp */; };
@@ -327,6 +330,12 @@
 		5DE84C060FB9469A00DDAE64 /* angle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = angle.cpp; path = "ClanLib-2.0/Sources/Core/Math/angle.cpp"; sourceTree = "<group>"; };
 		5DE84C070FB9469A00DDAE64 /* vec2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vec2.cpp; path = "ClanLib-2.0/Sources/Core/Math/vec2.cpp"; sourceTree = "<group>"; };
 		5DE84C080FB9469A00DDAE64 /* vec3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vec3.cpp; path = "ClanLib-2.0/Sources/Core/Math/vec3.cpp"; sourceTree = "<group>"; };
+		5DEB1B7A12D3099100A3A6DB /* TouchTestMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TouchTestMenu.h; path = source/GUI/TouchTestMenu.h; sourceTree = "<group>"; };
+		5DEB1B7B12D3099100A3A6DB /* TouchTestMenu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TouchTestMenu.cpp; path = source/GUI/TouchTestMenu.cpp; sourceTree = "<group>"; };
+		5DEB1B7D12D309A300A3A6DB /* TouchTestComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TouchTestComponent.h; path = source/Component/TouchTestComponent.h; sourceTree = "<group>"; };
+		5DEB1B7E12D309A300A3A6DB /* TouchTestComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TouchTestComponent.cpp; path = source/Component/TouchTestComponent.cpp; sourceTree = "<group>"; };
+		5DEB1BA312D30B3D00A3A6DB /* EmitVirtualKeyComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EmitVirtualKeyComponent.h; path = Entity/EmitVirtualKeyComponent.h; sourceTree = "<group>"; };
+		5DEB1BA412D30B3D00A3A6DB /* EmitVirtualKeyComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EmitVirtualKeyComponent.cpp; path = Entity/EmitVirtualKeyComponent.cpp; sourceTree = "<group>"; };
 		5DF1D5711045018700826147 /* ParticleTestComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ParticleTestComponent.cpp; path = source/Component/ParticleTestComponent.cpp; sourceTree = "<group>"; };
 		5DF1D5721045018700826147 /* ParticleTestComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ParticleTestComponent.h; path = source/Component/ParticleTestComponent.h; sourceTree = "<group>"; };
 		5DF1D5731045018700826147 /* ParticleTestMenu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ParticleTestMenu.cpp; path = source/GUI/ParticleTestMenu.cpp; sourceTree = "<group>"; };
@@ -484,6 +493,8 @@
 		5D4760860FBB1D04008400E3 /* GUI */ = {
 			isa = PBXGroup;
 			children = (
+				5DEB1B7A12D3099100A3A6DB /* TouchTestMenu.h */,
+				5DEB1B7B12D3099100A3A6DB /* TouchTestMenu.cpp */,
 				5DDEC3251295639300C42C5E /* AboutMenu.h */,
 				5DDEC3261295639300C42C5E /* AboutMenu.cpp */,
 				5DF1D5731045018700826147 /* ParticleTestMenu.cpp */,
@@ -578,6 +589,8 @@
 		5D82C88E0FF4BB660082EBE7 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				5DEB1BA312D30B3D00A3A6DB /* EmitVirtualKeyComponent.h */,
+				5DEB1BA412D30B3D00A3A6DB /* EmitVirtualKeyComponent.cpp */,
 				5D5C10AE12779D4400A4E4E3 /* SliderComponent.h */,
 				5D5C10AF12779D4400A4E4E3 /* SliderComponent.cpp */,
 				5D5C10B012779D4400A4E4E3 /* SelectButtonWithCustomInputComponent.h */,
@@ -787,6 +800,8 @@
 		5DF1D5771045019100826147 /* Component */ = {
 			isa = PBXGroup;
 			children = (
+				5DEB1B7D12D309A300A3A6DB /* TouchTestComponent.h */,
+				5DEB1B7E12D309A300A3A6DB /* TouchTestComponent.cpp */,
 				5DF1D5711045018700826147 /* ParticleTestComponent.cpp */,
 				5DF1D5721045018700826147 /* ParticleTestComponent.h */,
 			);
@@ -990,6 +1005,9 @@
 				5D5C10B212779D4400A4E4E3 /* SliderComponent.cpp in Sources */,
 				5D5C10B312779D4400A4E4E3 /* SelectButtonWithCustomInputComponent.cpp in Sources */,
 				5DDEC3271295639300C42C5E /* AboutMenu.cpp in Sources */,
+				5DEB1B7C12D3099100A3A6DB /* TouchTestMenu.cpp in Sources */,
+				5DEB1B7F12D309A300A3A6DB /* TouchTestComponent.cpp in Sources */,
+				5DEB1BA512D30B3D00A3A6DB /* EmitVirtualKeyComponent.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

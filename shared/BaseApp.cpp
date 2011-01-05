@@ -201,6 +201,7 @@ void BaseApp::OnMessage(Message &m)
 				{
 					v.Get(0).Set((float)m.GetType());
 					v.Get(1).Set(float(m.GetParm1()), float(m.GetParm2()) );
+					v.Get(2).Set(uint32(m.GetParm3()));
 			
 					m_sig_input(&v);
 					break;
@@ -214,11 +215,13 @@ void BaseApp::OnMessage(Message &m)
 					{
 						v.Get(0).Set((float)m.GetType());
 						v.Get(1).Set(float(m.GetParm1()), float(m.GetParm2()) );
+						v.Get(2).Set(uint32(m.GetParm3()));
 						m_sig_input(&v);
 					} else
 					{
 						v.Get(0).Set((float)m.GetType());
 						v.Get(1).Set(float(m.GetParm1()), float(m.GetParm2()) );
+						v.Get(2).Set(uint32(m.GetParm3()));
 						m_sig_input_move(&v);
 					}
 

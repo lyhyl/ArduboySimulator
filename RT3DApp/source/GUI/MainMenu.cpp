@@ -6,6 +6,7 @@
 #include "TerrainMenu.h"
 #include "MapMenu.h"
 #include "Map3Menu.h"
+#include "Entity/CustomInputComponent.h"
 
 void MainMenuOnSelect(VariantList *pVList) //0=vec2 point of click, 1=entity sent from
 {
@@ -86,6 +87,14 @@ Entity * MainMenuCreate(Entity *pParentEnt)
 	pButtonEntity = CreateTextButtonEntity(pBG, "Map3", x, y, "3D Scene"); y += ySpacer;
 	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MainMenuOnSelect);
 	
+	//for android, so the back key (or escape on windows/OSX) will quit out of the game
+	EntityComponent *pComp = pBG->AddComponent(new CustomInputComponent);
+	//tell the component which key has to be hit for it to be activated
+	pComp->GetFunction("OnActivated")->sig_function.connect(1, boost::bind(&App::OnExitApp, GetApp(), _1));
+	pComp->GetVar("keycode")->Set(uint32(VIRTUAL_KEY_BACK));
+
+
+
 	SlideScreen(pBG, true);
 
 	return pBG;

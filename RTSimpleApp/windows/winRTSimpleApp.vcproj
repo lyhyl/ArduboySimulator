@@ -499,6 +499,14 @@
 					RelativePath="..\source\GUI\ParticleTestMenu.h"
 					>
 				</File>
+				<File
+					RelativePath="..\source\GUI\TouchTestMenu.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\source\GUI\TouchTestMenu.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Component"
@@ -509,6 +517,14 @@
 				</File>
 				<File
 					RelativePath="..\source\Component\ParticleTestComponent.h"
+					>
+				</File>
+				<File
+					RelativePath="..\source\Component\TouchTestComponent.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\source\Component\TouchTestComponent.h"
 					>
 				</File>
 			</Filter>

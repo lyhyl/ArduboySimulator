@@ -80,6 +80,17 @@ void MessageManager::SendGUI( eMessageType type, int parm1, int parm2, int deliv
 	Message *m = new Message(MESSAGE_CLASS_GUI, timing, type);
 	m->SetParm1(parm1);
 	m->SetParm2(parm2);
+	m->SetParm3(0); //finger id unknown so..
+	m->SetDeliveryTime(deliverTimeMS);
+	Send(m);
+}
+
+void MessageManager::SendGUIEx( eMessageType type, int parm1, int parm2, int finger, int deliverTimeMS, eTimingSystem timing)
+{
+	Message *m = new Message(MESSAGE_CLASS_GUI, timing, type);
+	m->SetParm1(parm1);
+	m->SetParm2(parm2);
+	m->SetParm3(finger);
 	m->SetDeliveryTime(deliverTimeMS);
 	Send(m);
 }

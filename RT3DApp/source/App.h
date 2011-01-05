@@ -33,6 +33,7 @@ public:
 	int GetSpecial();
 	virtual void OnEnterBackground();
 	virtual void OnEnterForeground();
+	void OnExitApp(VariantList *pVarList);
 
 private:
 
