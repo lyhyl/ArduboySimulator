@@ -436,6 +436,38 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="android"
+				>
+				<File
+					RelativePath="..\android\jni\Android.mk"
+					>
+				</File>
+				<File
+					RelativePath="..\android\AndroidManifest.xml"
+					>
+				</File>
+				<File
+					RelativePath="..\android\app_info_setup.bat"
+					>
+				</File>
+				<File
+					RelativePath="..\android\jni\Application.mk"
+					>
+				</File>
+				<File
+					RelativePath="..\android\build.bat"
+					>
+				</File>
+				<File
+					RelativePath="..\android\build.xml"
+					>
+				</File>
+				<File
+					RelativePath="..\android\src\com\rtsoft\rt3dapp\Main.java"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="shared"
@@ -8495,6 +8527,14 @@
 								>
 							</File>
 							<File
+								RelativePath="..\..\shared\Irrlicht\source\Irrlicht\CProtonReader.cpp"
+								>
+							</File>
+							<File
+								RelativePath="..\..\shared\Irrlicht\source\Irrlicht\CProtonReader.h"
+								>
+							</File>
+							<File
 								RelativePath="..\..\shared\Irrlicht\source\Irrlicht\CReadFile.cpp"
 								>
 								<FileConfiguration
@@ -9833,6 +9873,102 @@
 					RelativePath="..\..\shared\FileSystem\StreamingInstanceZip.h"
 					>
 				</File>
+			</Filter>
+			<Filter
+				Name="android"
+				>
+				<File
+					RelativePath="..\..\shared\android\AndroidApp.cpp"
+					>
+					<FileConfiguration
+						Name="Common Debug|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Common Release|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug GL|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release GL|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\shared\android\AndroidUtils.cpp"
+					>
+					<FileConfiguration
+						Name="Common Debug|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Common Release|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug GL|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release GL|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\shared\android\AndroidUtils.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\android\PlatformSetupAndroid.h"
+					>
+				</File>
+				<Filter
+					Name="app"
+					>
+					<File
+						RelativePath="..\..\shared\android\src\com\rtsoft\shared\SharedActivity.java"
+						>
+					</File>
+					<File
+						RelativePath="..\..\shared\android\src\com\rtsoft\shared\SharedMultiTouchInput.java"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 	</Files>

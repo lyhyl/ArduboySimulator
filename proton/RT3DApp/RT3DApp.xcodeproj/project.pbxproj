@@ -271,6 +271,7 @@
 		5D8500DC10BE288F0083C437 /* pngwio.c in Sources */ = {isa = PBXBuildFile; fileRef = 5D8500CA10BE288F0083C437 /* pngwio.c */; };
 		5D8500DD10BE288F0083C437 /* pngwtran.c in Sources */ = {isa = PBXBuildFile; fileRef = 5D8500CB10BE288F0083C437 /* pngwtran.c */; };
 		5D85010D10BE6FCD0083C437 /* CImageLoaderRTTEX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D85010B10BE6FCD0083C437 /* CImageLoaderRTTEX.cpp */; };
+		5D8F8F5C12D6D69300E9B3B8 /* CProtonReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D8F8F5B12D6D69300E9B3B8 /* CProtonReader.cpp */; };
 		5D9831DD0F7B626400D94D9B /* rtRect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9831DB0F7B626400D94D9B /* rtRect.cpp */; };
 		5D9831F20F7BD64B00D94D9B /* RTFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9831F00F7BD64B00D94D9B /* RTFont.cpp */; };
 		5DA1FCF70F01EEFD001E9C1B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DA1FCF60F01EEFD001E9C1B /* AudioToolbox.framework */; };
@@ -966,6 +967,8 @@
 		5D8500CB10BE288F0083C437 /* pngwtran.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pngwtran.c; path = ../shared/Irrlicht/source/Irrlicht/libpng/pngwtran.c; sourceTree = SOURCE_ROOT; };
 		5D85010B10BE6FCD0083C437 /* CImageLoaderRTTEX.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CImageLoaderRTTEX.cpp; path = ../shared/Irrlicht/source/Irrlicht/CImageLoaderRTTEX.cpp; sourceTree = SOURCE_ROOT; };
 		5D85010C10BE6FCD0083C437 /* CImageLoaderRTTEX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CImageLoaderRTTEX.h; path = ../shared/Irrlicht/source/Irrlicht/CImageLoaderRTTEX.h; sourceTree = SOURCE_ROOT; };
+		5D8F8F5A12D6D69300E9B3B8 /* CProtonReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CProtonReader.h; path = ../shared/Irrlicht/source/Irrlicht/CProtonReader.h; sourceTree = SOURCE_ROOT; };
+		5D8F8F5B12D6D69300E9B3B8 /* CProtonReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CProtonReader.cpp; path = ../shared/Irrlicht/source/Irrlicht/CProtonReader.cpp; sourceTree = SOURCE_ROOT; };
 		5D9831DB0F7B626400D94D9B /* rtRect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = rtRect.cpp; path = Math/rtRect.cpp; sourceTree = "<group>"; };
 		5D9831DC0F7B626400D94D9B /* rtRect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = rtRect.h; path = Math/rtRect.h; sourceTree = "<group>"; };
 		5D9831F00F7BD64B00D94D9B /* RTFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RTFont.cpp; path = GUI/RTFont.cpp; sourceTree = "<group>"; };
@@ -1170,6 +1173,8 @@
 		5D59D01E10B64ADE00BA1F75 /* Irrlicht */ = {
 			isa = PBXGroup;
 			children = (
+				5D8F8F5A12D6D69300E9B3B8 /* CProtonReader.h */,
+				5D8F8F5B12D6D69300E9B3B8 /* CProtonReader.cpp */,
 				5D59D0CE10B64C7B00BA1F75 /* IrrlichtManager.cpp */,
 				5D59D0CF10B64C7B00BA1F75 /* IrrlichtManager.h */,
 				5D59D02010B64AF200BA1F75 /* include */,
@@ -2378,6 +2383,7 @@
 				5DD326B912C0DD490009B0F3 /* COctreeSceneNode.cpp in Sources */,
 				5DD3289C12C99DD50009B0F3 /* EmitVirtualKeyComponent.cpp in Sources */,
 				5DD3289D12C99DD50009B0F3 /* ArcadeInputComponent.cpp in Sources */,
+				5D8F8F5C12D6D69300E9B3B8 /* CProtonReader.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

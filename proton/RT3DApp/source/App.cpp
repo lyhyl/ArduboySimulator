@@ -9,6 +9,7 @@
 #include "GUI/MainMenu.h"
 #include "Entity/EntityUtils.h"
 #include "Irrlicht/IrrlichtManager.h"
+#include "FileSystem/FileSystemZip.h"
  
 //create the classes that our globally library expects to exist somewhere.
 
@@ -110,6 +111,35 @@ bool App::Init()
 
 	LogMsg("Save path is %s", GetSavePath().c_str());
 
+
+	//we'll load a .zip as our filesystem if we can, this isn't really needed, but useful for testing Android style
+	//loading from a zip from windows to debug it.
+
+if (GetPlatformID() != PLATFORM_ID_ANDROID)
+{
+
+		FileSystemZip *pFileSystem = new FileSystemZip();
+		if (!pFileSystem->Init(GetBaseAppPath()+ "game.zip"))
+		{
+			LogMsg("Error finding APK file to load resources");
+		}
+
+/*	
+		vector<string> contents = pFileSystem->GetContents();
+		LogMsg("Listing all %d files.", contents.size());
+		
+		for (int i=0; i < contents.size(); i++)
+		{
+			LogMsg("%s", contents[i].c_str());
+		}
+*/
+		pFileSystem->SetRootDirectory("assets");
+
+		GetFileManager()->MountFileSystem(pFileSystem);
+}
+
+
+
 	if (!GetFont(FONT_SMALL)->Load("interface/font_trajan.rtfont")) return false;
 	if (!GetFont(FONT_LARGE)->Load("interface/font_trajan_big.rtfont")) return false;
 	//GetFont(FONT_SMALL)->SetSmoothing(false);
@@ -121,6 +151,9 @@ bool App::Init()
  
 	//preload audio
 	GetAudioManager()->Preload("audio/click.wav");
+	
+	
+	
 	if (!GetIrrlichtManager()->Init(0)) return false;
 	return true;
 }
@@ -253,7 +286,7 @@ const char * GetBundlePrefix()
 //applicable to Palm WebOS builds only
 const char * GetBundleName()
 {
-	char * bundleName = "3dapp";
+	char * bundleName = "rt3dapp";
 	return bundleName;
 }
 

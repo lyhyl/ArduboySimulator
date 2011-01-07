@@ -63,6 +63,11 @@ void TerrainInitScene()
 		4					// smoothFactor
 		);
 
+	if (!terrain)
+	{
+		LogError("Looks like we couldn't find the heightmap.  Resources not built or copied?");
+		return;
+	}
 	terrain->setMaterialFlag(video::EMF_LIGHTING, false);
 
 	terrain->setMaterialTexture(0,

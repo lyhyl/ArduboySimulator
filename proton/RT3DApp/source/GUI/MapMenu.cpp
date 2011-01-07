@@ -4,6 +4,7 @@
 #include "MainMenu.h"
 #include "Irrlicht/IrrlichtManager.h"
 #include "Component/FPSControlComponent.h"
+#include "FileSystem/FileSystemZip.h"
 
 using namespace irr;
 using namespace core;
@@ -24,12 +25,18 @@ void MapMenuOnSelect(VariantList *pVList) //0=vec2 point of click, 1=entity sent
 		MainMenuCreate(pEntClicked->GetParent()->GetParent());
 		GetIrrlichtManager()->ClearScene();
 		
-#ifdef WIN32
-	//TODO: Make this less hacky
-		GetIrrlichtManager()->GetDevice()->getFileSystem()->changeWorkingDirectoryTo( "..\\..");
-#else
-		GetIrrlichtManager()->GetDevice()->getFileSystem()->changeWorkingDirectoryTo(GetBaseAppPath().c_str());
-#endif
+		//put it back to how it was.  Major hack.  For a real game, set up the data so we don't need to change directories.
+
+			#ifdef WIN32
+				//Hack to change the working directory back to what it was
+					GetIrrlichtManager()->GetDevice()->getFileSystem()->changeWorkingDirectoryTo( "..\\..");
+			#else
+					GetIrrlichtManager()->GetDevice()->getFileSystem()->changeWorkingDirectoryTo(GetBaseAppPath().c_str());
+			#endif
+		
+			FileSystemZip *pFileSystem = (FileSystemZip*)GetFileManager()->GetFileSystem(0);
+			if (pFileSystem) pFileSystem->SetRootDirectory("assets"); //for android
+
 	}
 
 	GetEntityRoot()->PrintTreeAsText(); //useful for debugging
@@ -51,8 +58,12 @@ void MapInitScene()
 	//TO LOAD THE QUAKE LEVEL
 
 
+	FileSystemZip *pFileSystem = (FileSystemZip*) GetFileManager()->GetFileSystem(0); //for Android
+	if (pFileSystem) pFileSystem->SetRootDirectory("assets/game/quake");
+	
+	//hack so the textures can be found.  The quake map loader isn't all that smart
 	device->getFileSystem()->changeWorkingDirectoryTo( (GetBaseAppPath()+"game/quake").c_str());
-	//scene::IAnimatedMesh* mesh = smgr->getMesh("maps/20kdm2.bsp");
+
 	scene::IAnimatedMesh* mesh = smgr->getMesh("maps/20kdm2.bsp");
 	scene::IMeshSceneNode* node = 0;
 	if (mesh)
@@ -61,7 +72,12 @@ void MapInitScene()
 		mesh->setHardwareMappingHint(scene::EHM_STATIC);
 		//node = smgr->addOctreeSceneNode(mesh->getMesh(0), 0, -1, 1024); //for oct tree stuff, actually slower with current level
 		node = smgr->addMeshSceneNode(mesh->getMesh(0));
+		assert(node);
 		node->setMaterialFlag(video::EMF_LIGHTING, false);
+	} else
+	{
+		LogError("Aborting, can't load mesh");
+		return;
 	}
 	scene::ITriangleSelector* selector = 0;
 	

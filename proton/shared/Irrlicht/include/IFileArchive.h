@@ -46,7 +46,12 @@ enum E_FILE_ARCHIVE_TYPE
 	EFAT_WAD     = MAKE_IRR_ID('W','A','D', 0),
 
 	//! The type of this archive is unknown
-	EFAT_UNKNOWN = MAKE_IRR_ID('u','n','k','n')
+	EFAT_UNKNOWN = MAKE_IRR_ID('u','n','k','n'),
+	
+	//! A dummy interface that links into Proton's filesystem SETH
+	EFAT_PROTON     = MAKE_IRR_ID('P','+', 0, 0),
+
+
 };
 
 //! The FileArchive manages archives and provides access to files inside them.

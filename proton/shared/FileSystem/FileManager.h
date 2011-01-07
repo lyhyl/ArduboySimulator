@@ -52,6 +52,7 @@ public:
 	void MountFileSystem(FileSystem* pFileSystem);
 	bool FileExists(string fileName, bool bAddBasePath = true);
 	int GetFileSize(string fileName, bool bAddBasePath = true);
+	FileSystem * GetFileSystem(int index); //returns null if invalid index
 
 private:
 

@@ -21,6 +21,7 @@
 #include "CAttributes.h"
 #include "CMemoryFile.h"
 #include "CLimitReadFile.h"
+#include "CProtonReader.h" //attaches to Proton's internal filesystem, which knows how to read Android .zip's correctly
 
 #if defined (_IRR_WINDOWS_API_)
 	#if !defined ( _WIN32_WCE )
@@ -57,6 +58,7 @@ CFileSystem::CFileSystem()
 	//! reset current working directory
 	getWorkingDirectory();
 
+
 #ifdef __IRR_COMPILE_WITH_ZIP_ARCHIVE_LOADER_
 	ArchiveLoader.push_back(new CArchiveLoaderZIP(this));
 #endif
@@ -79,6 +81,10 @@ CFileSystem::CFileSystem()
 
 #ifdef __IRR_COMPILE_WITH_WAD_ARCHIVE_LOADER_
 	ArchiveLoader.push_back(new CArchiveLoaderWAD(this));
+#endif
+
+#ifdef __IRR_COMPILE_WITH_PROTON_ARCHIVE_LOADER_
+	ArchiveLoader.push_back(new CArchiveLoaderProton(this));
 #endif
 
 }
@@ -251,14 +257,26 @@ bool CFileSystem::addFileArchive(const io::path& filename, bool ignoreCase,
 	}
 	else
 	{
+	
+		
 		// try to open archive based on archive loader type
 
 		io::IReadFile* file = 0;
 
+	
 		for (i = 0; i < ArchiveLoader.size(); ++i)
 		{
 			if (ArchiveLoader[i]->isALoadableFileFormat(archiveType))
 			{
+				
+				if (archiveType == EFAT_PROTON) //SETH Hack for mounting the dummy Proton filesystem with EFAT_PROTON
+				{
+					archive = ArchiveLoader[i]->createArchive(file, ignoreCase, ignorePaths);
+					if (archive)
+						break;
+				}
+
+				
 				// attempt to open file
 				if (!file)
 					file = createAndOpenFile(filename);
@@ -451,6 +469,9 @@ bool CFileSystem::changeWorkingDirectoryTo(const io::path& newDirectory)
 
 io::path CFileSystem::getAbsolutePath(const io::path& filename) const
 {
+
+	return filename; //SETH we don't need this
+
 #if defined(_IRR_WINDOWS_CE_PLATFORM_)
 	return filename;
 #elif defined(_IRR_WINDOWS_API_)
@@ -727,8 +748,12 @@ IFileList* CFileSystem::createEmptyFileList(const io::path& path, bool ignoreCas
 bool CFileSystem::existFile(const io::path& filename) const
 {
 	for (u32 i=0; i < FileArchives.size(); ++i)
+	{
+
 		if (FileArchives[i]->getFileList()->findFile(filename)!=-1)
 			return true;
+
+	}
 
 #if defined(_IRR_WINDOWS_CE_PLATFORM_)
 #if defined(_IRR_WCHAR_FILESYSTEM)
