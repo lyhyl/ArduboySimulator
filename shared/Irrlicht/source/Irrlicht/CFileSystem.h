@@ -16,6 +16,7 @@ namespace io
 	class CZipReader;
 	class CPakReader;
 	class CMountPointReader;
+	class CProtonReader;
 
 /*!
 	FileSystem which uses normal files and one zipfile

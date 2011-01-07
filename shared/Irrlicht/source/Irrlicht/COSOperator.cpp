@@ -13,7 +13,12 @@
 #include <unistd.h>
 #ifndef _IRR_SOLARIS_PLATFORM_
 #include <sys/types.h>
+	#ifdef ANDROID_NDK
+//#include <linux/sysctl.h> //this is where the NDK wants it //SETH
+#else
 #include <sys/sysctl.h>
+#endif
+
 #endif
 #endif
 

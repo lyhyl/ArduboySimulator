@@ -56,6 +56,10 @@ void Map3InitScene()
 		mesh->setHardwareMappingHint(scene::EHM_STATIC);
 		node = smgr->addMeshSceneNode(mesh->getMesh(0));
 		node->setMaterialFlag(video::EMF_LIGHTING, false);
+	} else
+	{
+		LogError("Aborting, can't load mesh");
+		return;
 	}
 
 	node->setScale(core::vector3df(30,30,30));

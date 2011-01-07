@@ -496,6 +496,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		//sreturn true;
 
 		break;
+
+	case WM_CANCELMODE:
+
+		LogMsg("Got WM cancel mode");
+		break;
 	
 	default:
 		break;

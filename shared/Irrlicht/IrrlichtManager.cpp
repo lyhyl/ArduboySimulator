@@ -68,6 +68,12 @@ bool IrrlichtManager::Init(irr::IEventReceiver *pEventReceiver)
 
 	m_pDriver = m_pDevice->getVideoDriver();
 	m_pScene = m_pDevice->getSceneManager();
+
+	if (!m_pDevice->getFileSystem()->addFileArchive("", true, false, EFAT_PROTON))
+	{
+		LogMsg("Unable to mount Proton filesystem");
+	}
+
 	return true;
 }
 
@@ -93,9 +99,6 @@ void IrrlichtManager::ClearScene()
 		const video::SMaterial m;
 		m_pDriver->setMaterial(m); 
 		m_pDriver->removeAllTextures();
-		//m_pDriver->se
-	
-
 	}
 }
 

@@ -424,6 +424,7 @@ B3D, MS3D or X meshes */
 //#define __IRR_COMPILE_WITH_PAK_ARCHIVE_LOADER_
 //! Define __IRR_COMPILE_WITH_TAR_ARCHIVE_LOADER_ if you want to open TAR archives
 //#define __IRR_COMPILE_WITH_TAR_ARCHIVE_LOADER_
+#define __IRR_COMPILE_WITH_PROTON_ARCHIVE_LOADER_
 
 //! Set FPU settings
 /** Irrlicht should use approximate float and integer fpu techniques

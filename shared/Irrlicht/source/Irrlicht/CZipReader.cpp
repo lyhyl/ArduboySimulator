@@ -471,6 +471,7 @@ bool CZipReader::scanZipHeader()
 	//os::Debuginfo::print("added file from archive", ZipFileName.c_str());
 	#endif
 
+	LogMsg("Adding %s", ZipFileName);
 	addItem(ZipFileName, entry.Offset, entry.header.DataDescriptor.UncompressedSize, false, FileInfo.size());
 	FileInfo.push_back(entry);
 

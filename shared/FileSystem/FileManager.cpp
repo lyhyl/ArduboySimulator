@@ -140,7 +140,9 @@ byte * FileManager::Get( string fileName, int *pSizeOut, bool bAddBasePath )
 		if (IsAPackedFile(pData))
 		{
 			//let's decompress it to memory before passing it back
-			byte *pDecompressedData = DecompressRTPackToMemory(pData);
+			unsigned int decompressedSize;
+			byte *pDecompressedData = DecompressRTPackToMemory(pData, &decompressedSize);
+			*pSizeOut = decompressedSize;
 			SAFE_DELETE_ARRAY(pData);
 			return pDecompressedData;
 			
@@ -205,4 +207,22 @@ int FileManager::GetFileSize( string fileName, bool bAddBasePath /*= true*/ )
 	//vanilla file system version
 
 	return ::GetFileSize(fileName);
+}
+
+FileSystem * FileManager::GetFileSystem( int index )
+{
+	if (index < 0 || index > (int)m_fileSystems.size()) return 0;
+
+	list<FileSystem*>::iterator itor = m_fileSystems.begin();
+
+	int count = 0;
+	while (itor != m_fileSystems.end())
+	{
+		if (count++ == index) return (*itor);
+
+		itor++;
+	}
+
+
+	return NULL;
 }

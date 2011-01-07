@@ -21,6 +21,7 @@ CBSPMeshFileLoader::CBSPMeshFileLoader(scene::ISceneManager* smgr,
 
 	#ifdef _DEBUG
 	setDebugName("CBSPMeshFileLoader");
+	LoadParam.verbose = 10; //SETH for debugging
 	#endif
 
 	if (FileSystem)
