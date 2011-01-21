@@ -14,6 +14,7 @@
 #include <sys/stat.h>
 #include "errno.h"
 
+using namespace std;
 
 void StringReplace(const std::string& what, const std::string& with, std::string& in);
 vector<string> StringTokenize (const  string  & theString,  const  string  & theDelimiter );

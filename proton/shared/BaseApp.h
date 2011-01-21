@@ -12,6 +12,8 @@
 #ifndef BaseApp_h__
 #define BaseApp_h__
 
+using namespace std;
+
 #include "Manager/GameTimer.h"
 #include "Manager/Console.h"
 #include "Manager/ResourceManager.h"
@@ -123,6 +125,7 @@ public:
 	Console * GetConsole() {return &m_console;}
 	void SetGameTickPause(bool bNew) {m_gameTimer.SetGameTickPause(bNew);}
 	bool GetGameTickPause() {return m_gameTimer.GetGameTickPause();}
+	GameTimer * GetGameTimer() {return &m_gameTimer;}
 	virtual void OnMessage(Message &m);
 	RTFont * GetFont(eFont font) {return &m_fontArray[font];}
 	void SetInputMode(eInputMode mode){m_inputMode = mode;}

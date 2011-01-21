@@ -80,9 +80,11 @@ void Mesh3DInitScene()
 	//m_pScene->addCameraSceneNode(0, vector3df(-2,6,-7));
 */
 	ICameraSceneNode *pCam = pScene->addCameraSceneNode(0, vector3df(0,2,-10));
-	pCam->setAspectRatio(GetScreenSizeXf()/GetScreenSizeYf());
+	float fov = float(GetPrimaryGLX())/ float(GetPrimaryGLY());
+	LogMsg("Setting fov to %.2f", fov);
+	pCam->setAspectRatio(fov);
 	pCam->setFOV((120 * M_PI / 360.0f));
-	
+
 }
 
 Entity * Mesh3DMenuCreate(Entity *pParentEnt)

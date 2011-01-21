@@ -94,61 +94,65 @@ void gluLookAt(GLfloat eyex, GLfloat eyey, GLfloat eyez,
 	/* Translate Eye to Origin */
 	glTranslatef(-eyex, -eyey, -eyez);
 }
+float g_extraScreenRotation = 0;
+void SetExtraScreenRotationDegrees(float degrees)
+{
+	g_extraScreenRotation = degrees;
+}
 
 
+float OrientationToDegrees(int orientation)
+{
+	switch (GetOrientation())
+	{
+	case ORIENTATION_PORTRAIT:
+		return 0;
+		break;
+	case ORIENTATION_PORTRAIT_UPSIDE_DOWN:
+		return 180;
+
+	case ORIENTATION_LANDSCAPE_RIGHT:
+		return 90;
+
+	case ORIENTATION_LANDSCAPE_LEFT:
+		return -90;
+		break;
+	}
+
+	assert(0);
+	return 0;
+}
 void RotateGLIfNeeded()
 {
 	if (GetBaseApp()->GetManualRotationMode())
 	{
-		switch (GetOrientation())
+		float degrees = OrientationToDegrees(GetOrientation());
+		glRotatef(degrees, 0.0f, 0.0f, 1.0f);
+
+		if (g_extraScreenRotation != 0)
 		{
-		case ORIENTATION_PORTRAIT:
-			break;
-		case ORIENTATION_PORTRAIT_UPSIDE_DOWN:
-			glRotatef(180.0f, 0.0f, 0.0f, 1.0f);
-
-			break;
-
-		case ORIENTATION_LANDSCAPE_RIGHT:
-			glRotatef(90.0f, 0.0f, 0.0f, 1.0f);
-			break;
-
-		case ORIENTATION_LANDSCAPE_LEFT:
-			glRotatef(-90.0f, 0.0f, 0.0f, 1.0f);
-			break;
-		
+			glRotatef(-g_extraScreenRotation, 0,0,1);
 		}
-
 	}
+
 }
 
 
 void RotateGLIfNeeded(CL_Mat4f &mat)
 {
+
 	if (GetBaseApp()->GetManualRotationMode())
 	{
-		switch (GetOrientation())
+		float degrees = OrientationToDegrees(GetOrientation());
+		mat = mat.rotate(CL_Angle(degrees, cl_degrees), 0,0,1.0f);
+
+		if (g_extraScreenRotation != 0)
 		{
-		case ORIENTATION_PORTRAIT:
-			break;
-		case ORIENTATION_PORTRAIT_UPSIDE_DOWN:
-			//glRotatef(180.0f, 0.0f, 0.0f, 1.0f);
-			mat = mat.rotate(CL_Angle(180.0f, cl_degrees), 0,0,1.0f);
-			break;
-
-		case ORIENTATION_LANDSCAPE_RIGHT:
-			//glRotatef(90.0f, 0.0f, 0.0f, 1.0f);
-			mat = mat.rotate(CL_Angle(90.0f, cl_degrees), 0,0,1.0f);
-			break;
-
-		case ORIENTATION_LANDSCAPE_LEFT:
-			//glRotatef(-90.0f, 0.0f, 0.0f, 1.0f);
-			mat = mat.rotate(CL_Angle(-90.0f, cl_degrees), 0,0,1.0f);
-			break;
-
+			mat = mat.rotate(CL_Angle(-g_extraScreenRotation, cl_degrees), 0,0,1.0f);
+		
 		}
-
 	}
+
 }
 
 void GenerateSetPerspectiveFOV(float fovy, float aspect, float zNear, float zFar)

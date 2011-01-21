@@ -109,7 +109,9 @@ void MapInitScene()
 			anim->drop();  // And likewise, drop the animator when we're done referring to it.
 		}
 			
-		camera->setAspectRatio(GetScreenSizeXf()/GetScreenSizeYf());
+		float fov = float(GetPrimaryGLX())/ float(GetPrimaryGLY());
+		LogMsg("Setting fov to %.2f", fov);
+		camera->setAspectRatio(fov);
 		camera->setFOV((120 * M_PI / 360.0f));
 
 

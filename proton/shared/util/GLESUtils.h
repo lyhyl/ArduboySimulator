@@ -33,4 +33,5 @@ void SetOrthoRenderSize(float x, float y, int screenOffsetX, int screenOffsetY);
 void RemoveOrthoRenderSize();
 float GetOrthoRenderSizeXf();
 float GetOrthoRenderSizeYf();
+void SetExtraScreenRotationDegrees(float degrees); // a way to add an additional rotation, I needed it for 4 player splitscreen with Irrlicht
 #endif // GLESUtils_h__

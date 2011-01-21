@@ -493,3 +493,16 @@ string ReplaceWithLargeInFileNameAndOSSpecific(const string &fName)
 	}
 	return final;
 }
+
+string ReplaceMP3( const string &fName)
+{
+	if (GetEmulatedPlatformID() != PLATFORM_ID_ANDROID)
+	{
+		return fName; //leave it as mp3
+	}
+	
+	string final = fName;
+
+	StringReplace("mp3", "ogg", final);
+	return final;
+}

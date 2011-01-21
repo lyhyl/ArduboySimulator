@@ -26,7 +26,7 @@
 #ifndef L_DEFINATION_H
 #define L_DEFINATION_H
 
-#include "util/MathUtils.h"
+
 #include <climits>
 //#define L_USING_DOUBLE
 

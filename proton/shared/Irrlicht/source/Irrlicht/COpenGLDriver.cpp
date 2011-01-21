@@ -880,6 +880,8 @@ void COpenGLDriver::setTransform(E_TRANSFORMATION_STATE state, const core::matri
 			for (u32 i=0; i<MaxUserClipPlanes; ++i)
 				if (UserClipPlanes[i].Enabled)
 					uploadClipPlane(i);
+	
+	
 		}
 		break;
 	case ETS_PROJECTION:
@@ -891,6 +893,7 @@ void COpenGLDriver::setTransform(E_TRANSFORMATION_STATE state, const core::matri
 			glMatrixMode(GL_PROJECTION);
 			glLoadMatrixf(glmat);
 			::RotateGLIfNeeded(); //SETH Hack to handle screen rotations
+	
 		}
 		break;
 	case ETS_COUNT:

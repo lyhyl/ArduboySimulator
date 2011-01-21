@@ -110,9 +110,11 @@ void Map3InitScene()
 
 	//	scene::ICameraSceneNode* camera = smgr->addCameraSceneNodeFPS(0,100.0f,0.5f);
 
-	camera->setAspectRatio(GetScreenSizeXf()/GetScreenSizeYf());
+	float fov = float(GetPrimaryGLX())/ float(GetPrimaryGLY());
+	LogMsg("Setting fov to %.2f", fov);
+	camera->setAspectRatio(fov);
 	camera->setFOV((120 * M_PI / 360.0f));
-    
+  
 	//camera->setFarValue(700.0f);
 	/*
 	The mouse cursor needs not be visible, so we hide it via the

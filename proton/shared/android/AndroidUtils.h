@@ -11,7 +11,7 @@
 #define WebOSUtils_h__
 #include "../PlatformEnums.h"
 #include <jni.h>
-string GetAPKFile();
+std::string GetAPKFile();
 
 JNIEnv * GetJavaEnv();
 char * GetAndroidMainClassName();

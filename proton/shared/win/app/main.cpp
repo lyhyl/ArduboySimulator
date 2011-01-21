@@ -24,10 +24,14 @@ void InitVideoSize()
 	//mode manually and it was just less changes to make to pretend we were rotating the Windows screen to play in "landscape" orientation
 	//to make testing consistent
 	AddVideoMode("Windows", 768, 1024, PLATFORM_ID_WINDOWS);
-	AddVideoMode("OSX", 1024, 768, PLATFORM_ID_OSX); //g_landScapeNoNeckHurtMode should be false when testing. Sort of buggy to emulate in Windows
+	AddVideoMode("Windows Wide", 800, 1280, PLATFORM_ID_WINDOWS);
+	AddVideoMode("OSX", 768, 1024, PLATFORM_ID_OSX); //g_landScapeNoNeckHurtMode should be false when testing. Sort of buggy to emulate in Windows
+	AddVideoMode("OSX Wide", 800, 1280, PLATFORM_ID_OSX); 
 
 	AddVideoMode("iPhone", 320, 480, PLATFORM_ID_IOS);
 	AddVideoMode("iPad", 768, 1024, PLATFORM_ID_IOS);
+	AddVideoMode("iPad2", 768*2, 1024*2, PLATFORM_ID_IOS); //Note, you need a monitor bigger than 2048X1536 on Windows for this to work right,
+	//otherwise it clips the window size to the main monitor size.  I don't have one...
 	AddVideoMode("iPhone4", 640, 960, PLATFORM_ID_IOS);
 
 	AddVideoMode("Palm Pre Plus", 320, 480, PLATFORM_ID_WEBOS);
@@ -40,7 +44,7 @@ void InitVideoSize()
 	AddVideoMode("Droid Landscape", 854, 480, PLATFORM_ID_ANDROID); //g_landScapeNoNeckHurtMode should be false when testing
 	AddVideoMode("Nexus One Landscape", 800, 480, PLATFORM_ID_ANDROID); //g_landScapeNoNeckHurtMode should be false when testing
 
-	string desiredVideoMode = "iPhone"; //name needs to match one of the ones defined below
+	string desiredVideoMode = "iPad"; //name needs to match one of the ones defined below
     g_landScapeNoNeckHurtMode = true; //if true, will rotate the screen so we can play in landscape mode in windows without hurting ourselves
 
 	SetVideoModeByName(desiredVideoMode);
@@ -302,6 +306,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	
 	case WM_SIZE:
 		{
+
+			break;
 			// Respond to the message:				
 			int Width = LOWORD( lParam );
 			int Height = HIWORD( lParam ); 
@@ -598,7 +604,6 @@ bool InitVideo(int width, int height, bool bFullscreen, float aspectRatio)
 	
 #ifdef C_BORDERLESS_WINDOW_MODE_FOR_SCREENSHOT_EASE
 	style = WS_POPUP;
-
 #endif
 	
 	if (bFullscreen)

@@ -18,7 +18,7 @@ public:
 	Console();
 	virtual ~Console();
 
-	void AddLine(string line);
+	void AddLine(std::string line);
 	void SetMaxLines(unsigned int num) {m_maxLines = num;}
 	string GetAsSingleString();
 	void Clear();
@@ -28,7 +28,7 @@ public:
 private:
 
 	unsigned int m_maxLines;
-	deque<string> m_log;
+	std::deque<std::string> m_log;
 };
 
 #endif // Console_h__

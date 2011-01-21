@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-using namespace std;
+//using namespace std;
 
 #define IsPixiSize ((GetScreenSizeX() == 400 && GetScreenSizeY() ==  320)|| (GetScreenSizeX() == 320 && GetScreenSizeY() ==  480))
 #define IsNexusOneSize (GetScreenSizeX() == 800 || GetScreenSizeY() ==  480)
@@ -69,24 +69,24 @@ ePlatformID GetEmulatedPlatformID(); //defaults to GetPlatformID if not set
 //platform include must support these functions:
 void NotifyOSOfOrientationPreference(eOrientationMode orientation);
 
-string GetBaseAppPath();
-string GetSavePath();
-string GetAppCachePath(); //on iPhone, returns path to save user data that isn't backed up, on Android, returns external sd card path or "" if not available
+std::string GetBaseAppPath();
+std::string GetSavePath();
+std::string GetAppCachePath(); //on iPhone, returns path to save user data that isn't backed up, on Android, returns external sd card path or "" if not available
 void CreateAppCacheDirIfNeeded();
 int GetYOffset();
 unsigned int GetSystemTimeTick();
 double GetSystemTimeAccurate();
 unsigned int GetFreeMemory();
-void LaunchURL(string url);
+void LaunchURL(std::string url);
 void LogMsg(const char *lpFormat, ...);
-void SetLastStringInput(string s);
-string GetLastStringInput();
-void RemoveFile(string fileName, bool bAddSavePath = true);
-void CreateDirectoryRecursively(string basePath, string path);
-bool RemoveDirectoryRecursively(string path);
-vector<string> GetDirectoriesAtPath(string path);
-vector<string> GetFilesAtPath(string path);
-string GetRegionString();
+void SetLastStringInput(std::string s);
+std::string GetLastStringInput();
+void RemoveFile(std::string fileName, bool bAddSavePath = true);
+void CreateDirectoryRecursively(std::string basePath, std::string path);
+bool RemoveDirectoryRecursively(std::string path);
+std::vector<std::string> GetDirectoriesAtPath(std::string path);
+std::vector<std::string> GetFilesAtPath(std::string path);
+std::string GetRegionString();
 
 bool IsIphone();
 bool IsIPAD();
@@ -98,12 +98,12 @@ int GetPrimaryGLY();
 #define C_PIRATED_YES 0
 #define C_PIRATED_NO 18263
 int GetSystemData(); //returns C_PIRATED_YES or C_PIRATED_NO
-void CreateDirectoryRecursively(string basePath, string path);
-eNetworkType IsNetReachable(string url);
+void CreateDirectoryRecursively(std::string basePath, std::string path);
+eNetworkType IsNetReachable(std::string url);
 void InitDeviceScreenInfo();
 eDeviceMemoryClass GetDeviceMemoryClass();
 bool IsIPodTouchThirdGen();
-string GetClipboardText();
+std::string GetClipboardText();
 bool IsDesktop();
 bool HasVibration();
 

@@ -124,6 +124,12 @@ IReadFile* CProtonReader::createAndOpenFile(const io::path& filename)
 	int size;
 	byte *pBytes = GetFileManager()->Get( filename.c_str(), &size, false);
 
+	if (!pBytes)
+	{
+		//try again with full path
+		pBytes = GetFileManager()->Get( filename.c_str(), &size, true);
+
+	}
 	if (pBytes)
 	{
 	

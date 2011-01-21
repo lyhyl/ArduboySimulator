@@ -307,14 +307,14 @@ void BaseApp::OnMessage(Message &m)
 		case MESSAGE_TYPE_PRELOAD_SOUND:
 			if (GetAudioManager())
 			{
-				GetAudioManager()->Preload(m.GetVarName());
+				GetAudioManager()->Preload(ReplaceMP3(m.GetVarName()));
 			}
 			break;
 
 		case MESSAGE_TYPE_PLAY_MUSIC:
 			if (GetAudioManager())
 			{
-				GetAudioManager()->Play(m.GetVarName(), true, true);
+				GetAudioManager()->Play(ReplaceMP3(m.GetVarName()), true, true);
 			}
 			break;
 
