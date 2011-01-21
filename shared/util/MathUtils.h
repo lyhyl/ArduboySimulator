@@ -1,6 +1,7 @@
 
 #ifndef MathUtils_h__
 #define MathUtils_h__
+
 #include "Math/rtRect.h"
 #include "Math/rtPlane.h"
 #include "CRandom.h"
@@ -12,6 +13,8 @@
 #include "ClanLib-2.0/Sources/API/Core/Math/mat4.h"
 #include "ClanLib-2.0/Sources/api/Core/Math/line_segment.h"
 #include "ClanLib-2.0/Sources/api/Core/Math/circle.h"
+
+using namespace std;
 
 string PrintVector2(CL_Vec2f v);
 string PrintVector3(CL_Vec3f v);

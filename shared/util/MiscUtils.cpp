@@ -130,6 +130,11 @@ float LerpFloat(float f_origin, float f_target, float f_percent)
 	return (f_origin - ((f_origin-f_target)*f_percent));
 }
 
+CL_Vec3f LerpVector(const CL_Vec3f &vOriginal, const CL_Vec3f &vTarget, float f_percent)
+{
+	return (vOriginal - ((vOriginal-vTarget)*f_percent));
+}
+
 char *StringReverse(char *str)
 {
 

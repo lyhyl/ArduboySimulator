@@ -28,15 +28,16 @@
 	#include <cmath>
 	#include <deque>
 	#include <cassert>
-	#include <list>
 	#include <map>
 	#include <deque>
 	#include <stdlib.h>
 	#include <iostream>
 	#include <sstream>
-	using namespace std;
-	
 
+//hack for making irrBullet compile without needing irr::core prefix on its
+//list.  Its' because I include this file in the irrlicht main config stuff.
+	
+//using namespace std;
 
 
 #ifndef SAFE_DELETE
@@ -67,8 +68,8 @@ void LogMsg ( const char* traceStr, ... );
 void LogError(const char *lpFormat, ...);
 
 void SetEmulatedPlatformID(ePlatformID platformID);
-string AddPlatformNameURL();
-string GetPlatformName();
+std::string AddPlatformNameURL();
+std::string GetPlatformName();
 
 void SetMarketID(eMarketID marketID);
 eMarketID GetMarketID();

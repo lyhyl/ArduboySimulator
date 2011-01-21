@@ -1,7 +1,7 @@
 //  ***************************************************************
-//  TemplateComponent - Creation date: ?/?/2010
+//  TemplateComponent - Creation date: ?/?/2011
 //  -------------------------------------------------------------
-//  Robinson Technologies Copyright (C) 2010 - All Rights Reserved
+//  Robinson Technologies Copyright (C) 2011 - All Rights Reserved
 //
 //  ***************************************************************
 //  Programmer(s):  Seth A. Robinson (seth@rtsoft.com)

@@ -1,14 +1,12 @@
 #include "IrrlichtManager.h"
 #include "Renderer/Surface.h"
-//#include "source/Irrlicht/COGLESDriver.h"
-//#include "source/Irrlicht/COpenGLDriver.h"
+#include "BaseApp.h"
 
 using namespace irr;
 using namespace core;
 using namespace scene;
 using namespace video;
 using namespace io;
-
 
 
 //poor man's singleton
@@ -24,6 +22,7 @@ IrrlichtManager::IrrlichtManager()
 	m_pDevice = NULL;
 	m_pScene = NULL;
 	m_pDriver = NULL;
+	m_pWorld = NULL;
 }
 
 
@@ -39,6 +38,10 @@ void IrrlichtManager::Kill()
 
 	if (m_pDevice)
 	{
+		if (m_pWorld)
+		{
+			delete m_pWorld;
+		}
 		m_pDevice->drop();
 		m_pDevice = NULL;
 		m_pDriver = NULL;
@@ -74,6 +77,22 @@ bool IrrlichtManager::Init(irr::IEventReceiver *pEventReceiver)
 		LogMsg("Unable to mount Proton filesystem");
 	}
 
+#ifdef RT_IRRBULLET
+
+	////////////////////////////
+	// Create irrBullet World //
+	////////////////////////////
+
+	assert(!m_pWorld);
+	m_pWorld = createIrrBulletWorld(m_pDevice, true, true);
+
+	m_pWorld->setDebugMode(EPDM_DrawAabb |
+		EPDM_DrawContactPoints);
+
+	m_pWorld->setGravity(vector3df(0,-10,0));
+
+
+#endif
 	return true;
 }
 
@@ -94,22 +113,45 @@ void IrrlichtManager::ClearScene()
 			m_pDevice->getFileSystem()->removeFileArchive(0);
 		}
 	*/	
+	
+#ifdef RT_IRRBULLET
+		while(m_pWorld->getNumCollisionObjects() > 0)
+		{
+			m_pWorld->removeCollisionObject(m_pWorld->getCollisionObject(0));
+		}
+#endif
+		
+		m_pScene->getRootSceneNode()->removeAll();
 		m_pScene->getMeshCache()->clear(); 
 		m_pScene->clear();	
 		const video::SMaterial m;
 		m_pDriver->setMaterial(m); 
 		m_pDriver->removeAllTextures();
+		
+
 	}
 }
 
 void IrrlichtManager::BeginScene()
 {
-	
 	if (m_pDriver)
 	{
 		m_pDriver->beginScene(false, false, SColor(255,100,101,140));
-	}
+	
+#ifdef RT_IRRBULLET
+		
+		if (m_pWorld)
+		{
+		// Step the simulation with our delta time
+		m_pWorld->stepSimulation(GetBaseApp()->GetGameDelta()*0.02f, 120);
 
+		//m_pWorld->debugDrawWorld(debugDraw);
+		// This call will draw the technical properties of the physics simulation
+		// to the GUI environment.
+		//m_pWorld->debugDrawProperties(drawProperties);
+		}
+#endif
+	}
 }
 
 void IrrlichtManager::Render()
@@ -118,12 +160,18 @@ void IrrlichtManager::Render()
 	if (m_pScene)
 	m_pScene->drawAll();
 
+	
 }
 
 void IrrlichtManager::EndScene()
 {
 	if (m_pDriver)
 	{
+		if (m_pDevice->getGUIEnvironment())
+		{
+			m_pDevice->getGUIEnvironment()->drawAll();
+		}
+		
 		m_pDriver->endScene();
 	
 		const video::SMaterial m;
@@ -149,4 +197,14 @@ bool IrrlichtManager::IsRunning()
 	return m_pDevice->run();
 
 	return false;
+}
+
+core::rect<s32> CLRectToIrrlichtRect32(CL_Rectf clR)
+{
+	core::rect<s32> r;
+	r.UpperLeftCorner.X = clR.left;
+	r.UpperLeftCorner.Y = clR.top;
+	r.LowerRightCorner.X = clR.right;
+	r.LowerRightCorner.Y = clR.bottom;
+	return r;
 }

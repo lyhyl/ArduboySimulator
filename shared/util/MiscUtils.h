@@ -48,3 +48,4 @@ string GetFileExtension(string fileName);
 string ModifyFileExtension(string fileName, string extension);
 void TruncateString(string &input, size_t len);
 bool IsInString(string &s, const char *search);
+CL_Vec3f LerpVector(const CL_Vec3f &vOriginal, const CL_Vec3f &Target, float f_percent);

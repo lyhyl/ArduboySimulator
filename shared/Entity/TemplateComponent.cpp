@@ -1,8 +1,7 @@
 #include "PlatformPrecomp.h"
 #include "TemplateComponent.h"
-#include "util/GLESUtils.h"
 #include "Entity/EntityUtils.h"
-#include "BaseApp.h"
+
 
 TemplateComponent::TemplateComponent()
 {

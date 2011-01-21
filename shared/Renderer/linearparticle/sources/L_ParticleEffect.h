@@ -28,7 +28,7 @@
 
 
 #include "L_Particle.h"
-#include <list>
+//#include <list>
 
 
 //! Particle effect interface

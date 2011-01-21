@@ -16,7 +16,9 @@
 #define IRRLICHT_SDK_VERSION "1.7.1-beta" //with Seth's modifications, including support for his .rttext texture format
 #include <stdio.h> // TODO: Although included elsewhere this is required at least for mingw
 
+#define DONTNAMESPACE_STD
 #include "PlatformSetup.h"
+#undef DONTNAMESPACE_STD
 
 //! The defines for different operating system are:
 //! _IRR_XBOX_PLATFORM_ for XBox
