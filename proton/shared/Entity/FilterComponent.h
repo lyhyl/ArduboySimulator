@@ -45,6 +45,8 @@ void SetFilterSetting(Entity *pEnt, string functionName, Entity::eFilterCommunic
 Example of usage to disable rendering (also would work for OnInput, OnUpdate if you wanted to disable all of them, or
 any user called recursive function call)
 
+#include "Entity/FilterComponent.h"
+
 AddFilter(pButtonEntity, "OnRender"); //add it.  Note that optionally we could have sent a third part to set the filter state.
 //set it, with optional timeMS to schedule when it should be set
 SetFilterSetting(pButtonEntity, "OnRender", Entity::FILTER_REFUSE_ALL, 1000); //turn it off in a second

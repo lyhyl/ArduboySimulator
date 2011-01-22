@@ -1,0 +1,2276 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="source">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="source\GUI">
+      <UniqueIdentifier>{d2a40dd6-66e4-4f13-a80a-7b4c1dbf96c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Component">
+      <UniqueIdentifier>{f749a87b-f811-4943-9e1e-08be2d746ad7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared">
+      <UniqueIdentifier>{21482ebd-7eb6-45e8-b9bb-c7ccf22fbe41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\win">
+      <UniqueIdentifier>{2c956dae-1892-4df6-b91e-424e5ce7d5e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\util">
+      <UniqueIdentifier>{5d03f130-23f7-4759-ab78-b73901c86c7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\util\Boost">
+      <UniqueIdentifier>{69e9f80d-e903-4e05-8a87-c45803acc4c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\util\unzip">
+      <UniqueIdentifier>{6dac8ba1-948e-4c23-a41a-b3926904e571}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\iOS">
+      <UniqueIdentifier>{863b85ef-da5a-442b-a2e2-15da799e3a3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\iOS\app">
+      <UniqueIdentifier>{59d3f8c4-ba94-4822-94a8-821fbb5e1bb7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\Manager">
+      <UniqueIdentifier>{18ca7bbe-5832-4181-b9ca-00c0c5a0b6f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\Renderer">
+      <UniqueIdentifier>{d60678e5-0e0d-4c2b-8fd3-90974b29e099}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\Renderer\LinearParticle">
+      <UniqueIdentifier>{041a182f-d4e3-4094-94bc-fa6e3b5a99cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\GUI">
+      <UniqueIdentifier>{a32861a0-7522-4a8f-b9a0-c0e68c046038}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\Entity">
+      <UniqueIdentifier>{ba552916-60cf-4f88-b04f-1045c9fddddb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\Entity\Component">
+      <UniqueIdentifier>{606f030c-fe0a-4ee9-9a32-bad1a08caa1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\ClanLib">
+      <UniqueIdentifier>{9c100cd9-ea18-4e12-aa90-0a09891f20aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\ClanLib\Core">
+      <UniqueIdentifier>{a3bff531-9296-46d1-b3b9-aa74bdb89cea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\ClanLib\Core\Math">
+      <UniqueIdentifier>{e985947e-5f06-402d-921c-335430b1b622}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\ClanLib\Math">
+      <UniqueIdentifier>{cba09b78-01bd-4968-a7d0-535ad0829ff3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\Audio">
+      <UniqueIdentifier>{c54bca0c-6ed8-4392-b0a0-aeb20f8c450d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\Network">
+      <UniqueIdentifier>{335d2310-2c74-4a5a-adf6-6e744a05ddb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\Math">
+      <UniqueIdentifier>{150272bd-a90a-4f94-afe2-1013c2f9da14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\FileSystem">
+      <UniqueIdentifier>{95f5f767-8861-4f5e-81e2-200e951ab89c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\android">
+      <UniqueIdentifier>{bad8b51a-c8e5-4a59-93b8-8c62d3a81f05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\android">
+      <UniqueIdentifier>{812b4bdf-93cb-4224-93ab-f601acdd012e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\android\app">
+      <UniqueIdentifier>{7b1a0c3b-d1e3-4793-9fb3-5f6f7e2d855e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\Irrlicht">
+      <UniqueIdentifier>{6fae3942-d5a9-49d9-8df5-0a0b113618c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\Irrlicht\include">
+      <UniqueIdentifier>{557d9489-c878-43f3-9aca-161c6fc44bdf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\Irrlicht\source">
+      <UniqueIdentifier>{7da86b4d-ce4f-4dde-9f34-761f46cdc6c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\Irrlicht\source\Video">
+      <UniqueIdentifier>{4e311523-93df-411a-baa8-46e69f957f77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\Irrlicht\source\Video\GL">
+      <UniqueIdentifier>{a9b51bf5-e91b-4569-8201-57c2f8a70100}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\Irrlicht\source\Video\GLES">
+      <UniqueIdentifier>{3d1df86a-c875-4973-bd22-65de8e65c1fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\Irrlicht\source\Video\NULLDriver">
+      <UniqueIdentifier>{45c56039-363c-4206-bc5b-cdd26f6f15d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\Irrlicht\source\Mesh">
+      <UniqueIdentifier>{b2544883-2827-4bf8-8b25-fbdc5dd3988f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\Irrlicht\source\ParticleSystem">
+      <UniqueIdentifier>{2b763ca7-ee34-42ee-9e10-4f4077355db0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\Irrlicht\source\Devices">
+      <UniqueIdentifier>{44ace42c-5204-4691-a379-19f29f1eb3a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\Irrlicht\source\Scene">
+      <UniqueIdentifier>{967a83e9-016c-4109-9c5b-538ab540966d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\Irrlicht\source\Image">
+      <UniqueIdentifier>{db139a50-53b7-4515-8bd7-a601be59cb5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\Irrlicht\source\Image\LibJPeg">
+      <UniqueIdentifier>{21a943f4-ade2-402a-8181-116b2ec7de48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\Irrlicht\source\Image\LibPng">
+      <UniqueIdentifier>{9135b1fb-9988-4d82-b058-1dbb1d95274a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\Irrlicht\source\FileSystem">
+      <UniqueIdentifier>{8103a7ee-2d6d-4d3b-9239-76079c2b1b89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\Irrlicht\source\Terrain">
+      <UniqueIdentifier>{5ba25135-2966-46fb-ad4c-e45f2e0fd7e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\Irrlicht\source\Camera">
+      <UniqueIdentifier>{0babc291-7887-4a1e-bb81-637b44bf9e6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\Irrlicht\source\Sky">
+      <UniqueIdentifier>{8dcc82ee-72b5-4e50-b185-62bbf10349fb}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\source\App.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\win\app\main.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\GUI\DebugMenu.cpp">
+      <Filter>source\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\GUI\MainMenu.cpp">
+      <Filter>source\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\GUI\Map3Menu.cpp">
+      <Filter>source\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\GUI\MapMenu.cpp">
+      <Filter>source\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\GUI\Mesh3DMenu.cpp">
+      <Filter>source\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\GUI\TerrainMenu.cpp">
+      <Filter>source\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Component\FPSControlComponent.cpp">
+      <Filter>source\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\BaseApp.cpp">
+      <Filter>shared</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\PlatformPrecomp.cpp">
+      <Filter>shared</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\PlatformSetup.cpp">
+      <Filter>shared</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\win\MemMgr.cpp">
+      <Filter>shared\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\win\WinUtils.cpp">
+      <Filter>shared\win</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\util\CRandom.cpp">
+      <Filter>shared\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\util\GLESUtils.cpp">
+      <Filter>shared\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\util\MathUtils.cpp">
+      <Filter>shared\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\util\MiscUtils.cpp">
+      <Filter>shared\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\util\PrimeSearch.cpp">
+      <Filter>shared\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\util\RenderUtils.cpp">
+      <Filter>shared\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\util\ResourceUtils.cpp">
+      <Filter>shared\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\util\TextScanner.cpp">
+      <Filter>shared\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\util\Variant.cpp">
+      <Filter>shared\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\util\boost\libs\signals\src\connection.cpp">
+      <Filter>shared\util\Boost</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\util\boost\libs\signals\src\named_slot_map.cpp">
+      <Filter>shared\util\Boost</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\util\boost\libs\signals\src\signal_base.cpp">
+      <Filter>shared\util\Boost</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\util\boost\libs\signals\src\slot.cpp">
+      <Filter>shared\util\Boost</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\util\boost\libs\signals\src\trackable.cpp">
+      <Filter>shared\util\Boost</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\util\unzip\ioapi.c">
+      <Filter>shared\util\unzip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\util\unzip\unzip.c">
+      <Filter>shared\util\unzip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Manager\Console.cpp">
+      <Filter>shared\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Manager\GameTimer.cpp">
+      <Filter>shared\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Manager\MessageManager.cpp">
+      <Filter>shared\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Manager\ResourceManager.cpp">
+      <Filter>shared\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Manager\VariantDB.cpp">
+      <Filter>shared\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Renderer\RenderBatcher.cpp">
+      <Filter>shared\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Renderer\SoftSurface.cpp">
+      <Filter>shared\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Renderer\Surface.cpp">
+      <Filter>shared\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Renderer\SurfaceAnim.cpp">
+      <Filter>shared\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Renderer\linearparticle\sources\L_Defination.cpp">
+      <Filter>shared\Renderer\LinearParticle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Renderer\linearparticle\sources\L_DroppingEffect.cpp">
+      <Filter>shared\Renderer\LinearParticle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Renderer\linearparticle\sources\L_EffectEmitter.cpp">
+      <Filter>shared\Renderer\LinearParticle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Renderer\linearparticle\sources\L_EffectManager.cpp">
+      <Filter>shared\Renderer\LinearParticle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Renderer\linearparticle\sources\L_ExplosionEffect.cpp">
+      <Filter>shared\Renderer\LinearParticle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Renderer\linearparticle\sources\L_MotionController.cpp">
+      <Filter>shared\Renderer\LinearParticle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Renderer\linearparticle\sources\L_Particle.cpp">
+      <Filter>shared\Renderer\LinearParticle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Renderer\linearparticle\sources\L_ParticleEffect.cpp">
+      <Filter>shared\Renderer\LinearParticle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Renderer\linearparticle\sources\L_ParticleMem.cpp">
+      <Filter>shared\Renderer\LinearParticle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Renderer\linearparticle\sources\L_ParticleSystem.cpp">
+      <Filter>shared\Renderer\LinearParticle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Renderer\linearparticle\sources\L_ShootingEffect.cpp">
+      <Filter>shared\Renderer\LinearParticle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\IrrlichtManager.cpp">
+      <Filter>shared\Irrlicht</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CAttributes.cpp">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CBoneSceneNode.cpp">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CColorConverter.cpp">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CDefaultSceneNodeAnimatorFactory.cpp">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CDefaultSceneNodeFactory.cpp">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CDepthBuffer.cpp">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CDummyTransformationSceneNode.cpp">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CEmptySceneNode.cpp">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CFPSCounter.cpp">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CGeometryCreator.cpp">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CLightSceneNode.cpp">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CLogger.cpp">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CMemoryFile.cpp">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CMeshCache.cpp">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CMeshManipulator.cpp">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CMeshSceneNode.cpp">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CMetaTriangleSelector.cpp">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\COCTLoader.cpp">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\COctreeSceneNode.cpp">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\COctreeTriangleSelector.cpp">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CSkinnedMesh.cpp">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CTextSceneNode.cpp">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CTriangleBBSelector.cpp">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CTriangleSelector.cpp">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CVideoModeList.cpp">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CVolumeLightSceneNode.cpp">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CWaterSurfaceSceneNode.cpp">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\Irrlicht.cpp">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\irrXML.cpp">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\os.cpp">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\COpenGLDriver.cpp">
+      <Filter>shared\Irrlicht\source\Video\GL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\COpenGLExtensionHandler.cpp">
+      <Filter>shared\Irrlicht\source\Video\GL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\COpenGLNormalMapRenderer.cpp">
+      <Filter>shared\Irrlicht\source\Video\GL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\COpenGLParallaxMapRenderer.cpp">
+      <Filter>shared\Irrlicht\source\Video\GL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\COpenGLShaderMaterialRenderer.cpp">
+      <Filter>shared\Irrlicht\source\Video\GL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\COpenGLSLMaterialRenderer.cpp">
+      <Filter>shared\Irrlicht\source\Video\GL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\COpenGLTexture.cpp">
+      <Filter>shared\Irrlicht\source\Video\GL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\COGLESDriver.cpp">
+      <Filter>shared\Irrlicht\source\Video\GLES</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\COGLESExtensionHandler.cpp">
+      <Filter>shared\Irrlicht\source\Video\GLES</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\COGLESTexture.cpp">
+      <Filter>shared\Irrlicht\source\Video\GLES</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CNullDriver.cpp">
+      <Filter>shared\Irrlicht\source\Video\NULLDriver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\C3DSMeshFileLoader.cpp">
+      <Filter>shared\Irrlicht\source\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CAnimatedMeshMD2.cpp">
+      <Filter>shared\Irrlicht\source\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CAnimatedMeshMD3.cpp">
+      <Filter>shared\Irrlicht\source\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CB3DMeshFileLoader.cpp">
+      <Filter>shared\Irrlicht\source\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CBSPMeshFileLoader.cpp">
+      <Filter>shared\Irrlicht\source\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CColladaFileLoader.cpp">
+      <Filter>shared\Irrlicht\source\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CCSMLoader.cpp">
+      <Filter>shared\Irrlicht\source\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CMD2MeshFileLoader.cpp">
+      <Filter>shared\Irrlicht\source\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CMD3MeshFileLoader.cpp">
+      <Filter>shared\Irrlicht\source\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CMS3DMeshFileLoader.cpp">
+      <Filter>shared\Irrlicht\source\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CMY3DMeshFileLoader.cpp">
+      <Filter>shared\Irrlicht\source\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\COBJMeshFileLoader.cpp">
+      <Filter>shared\Irrlicht\source\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CQ3LevelMesh.cpp">
+      <Filter>shared\Irrlicht\source\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CQuake3ShaderSceneNode.cpp">
+      <Filter>shared\Irrlicht\source\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CXMeshFileLoader.cpp">
+      <Filter>shared\Irrlicht\source\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CParticleAnimatedMeshSceneNodeEmitter.cpp">
+      <Filter>shared\Irrlicht\source\ParticleSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CParticleAttractionAffector.cpp">
+      <Filter>shared\Irrlicht\source\ParticleSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CParticleBoxEmitter.cpp">
+      <Filter>shared\Irrlicht\source\ParticleSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CParticleCylinderEmitter.cpp">
+      <Filter>shared\Irrlicht\source\ParticleSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CParticleFadeOutAffector.cpp">
+      <Filter>shared\Irrlicht\source\ParticleSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CParticleGravityAffector.cpp">
+      <Filter>shared\Irrlicht\source\ParticleSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CParticleMeshEmitter.cpp">
+      <Filter>shared\Irrlicht\source\ParticleSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CParticlePointEmitter.cpp">
+      <Filter>shared\Irrlicht\source\ParticleSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CParticleRingEmitter.cpp">
+      <Filter>shared\Irrlicht\source\ParticleSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CParticleRotationAffector.cpp">
+      <Filter>shared\Irrlicht\source\ParticleSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CParticleScaleAffector.cpp">
+      <Filter>shared\Irrlicht\source\ParticleSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CParticleSphereEmitter.cpp">
+      <Filter>shared\Irrlicht\source\ParticleSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CParticleSystemSceneNode.cpp">
+      <Filter>shared\Irrlicht\source\ParticleSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CIrrDeviceIPhone.cpp">
+      <Filter>shared\Irrlicht\source\Devices</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CIrrDeviceStub.cpp">
+      <Filter>shared\Irrlicht\source\Devices</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CIrrDeviceWin32.cpp">
+      <Filter>shared\Irrlicht\source\Devices</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CAnimatedMeshSceneNode.cpp">
+      <Filter>shared\Irrlicht\source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CBillboardSceneNode.cpp">
+      <Filter>shared\Irrlicht\source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CCubeSceneNode.cpp">
+      <Filter>shared\Irrlicht\source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CSceneCollisionManager.cpp">
+      <Filter>shared\Irrlicht\source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CSceneManager.cpp">
+      <Filter>shared\Irrlicht\source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CSceneNodeAnimatorCameraMaya.cpp">
+      <Filter>shared\Irrlicht\source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CSceneNodeAnimatorCollisionResponse.cpp">
+      <Filter>shared\Irrlicht\source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CSceneNodeAnimatorDelete.cpp">
+      <Filter>shared\Irrlicht\source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CSceneNodeAnimatorFlyCircle.cpp">
+      <Filter>shared\Irrlicht\source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CSceneNodeAnimatorFlyStraight.cpp">
+      <Filter>shared\Irrlicht\source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CSceneNodeAnimatorFollowSpline.cpp">
+      <Filter>shared\Irrlicht\source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CSceneNodeAnimatorRotation.cpp">
+      <Filter>shared\Irrlicht\source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CSceneNodeAnimatorTexture.cpp">
+      <Filter>shared\Irrlicht\source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CShadowVolumeSceneNode.cpp">
+      <Filter>shared\Irrlicht\source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CImage.cpp">
+      <Filter>shared\Irrlicht\source\Image</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CImageLoaderBMP.cpp">
+      <Filter>shared\Irrlicht\source\Image</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CImageLoaderJPG.cpp">
+      <Filter>shared\Irrlicht\source\Image</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CImageLoaderPNG.cpp">
+      <Filter>shared\Irrlicht\source\Image</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CImageLoaderRGB.cpp">
+      <Filter>shared\Irrlicht\source\Image</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CImageLoaderRTTEX.cpp">
+      <Filter>shared\Irrlicht\source\Image</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CImageLoaderTGA.cpp">
+      <Filter>shared\Irrlicht\source\Image</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jcapimin.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jcapistd.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jccoefct.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jccolor.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jcdctmgr.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jchuff.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jcinit.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jcmainct.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jcmarker.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jcmaster.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jcomapi.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jcparam.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jcphuff.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jcprepct.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jcsample.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jctrans.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jdapimin.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jdapistd.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jdatadst.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jdatasrc.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jdcoefct.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jdcolor.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jddctmgr.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jdhuff.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jdinput.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jdmainct.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jdmarker.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jdmaster.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jdmerge.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jdphuff.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jdpostct.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jdsample.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jdtrans.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jerror.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jfdctflt.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jfdctfst.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jfdctint.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jidctflt.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jidctfst.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jidctint.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jidctred.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jmemmgr.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jmemnobs.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jquant1.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jquant2.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jutils.c">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\libpng\png.c">
+      <Filter>shared\Irrlicht\source\Image\LibPng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\libpng\pngerror.c">
+      <Filter>shared\Irrlicht\source\Image\LibPng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\libpng\pnggccrd.c">
+      <Filter>shared\Irrlicht\source\Image\LibPng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\libpng\pngget.c">
+      <Filter>shared\Irrlicht\source\Image\LibPng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\libpng\pngmem.c">
+      <Filter>shared\Irrlicht\source\Image\LibPng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\libpng\pngpread.c">
+      <Filter>shared\Irrlicht\source\Image\LibPng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\libpng\pngread.c">
+      <Filter>shared\Irrlicht\source\Image\LibPng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\libpng\pngrio.c">
+      <Filter>shared\Irrlicht\source\Image\LibPng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\libpng\pngrtran.c">
+      <Filter>shared\Irrlicht\source\Image\LibPng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\libpng\pngrutil.c">
+      <Filter>shared\Irrlicht\source\Image\LibPng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\libpng\pngset.c">
+      <Filter>shared\Irrlicht\source\Image\LibPng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\libpng\pngtrans.c">
+      <Filter>shared\Irrlicht\source\Image\LibPng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\libpng\pngvcrd.c">
+      <Filter>shared\Irrlicht\source\Image\LibPng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\libpng\pngwio.c">
+      <Filter>shared\Irrlicht\source\Image\LibPng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\libpng\pngwtran.c">
+      <Filter>shared\Irrlicht\source\Image\LibPng</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CFileList.cpp">
+      <Filter>shared\Irrlicht\source\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CFileSystem.cpp">
+      <Filter>shared\Irrlicht\source\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CLimitReadFile.cpp">
+      <Filter>shared\Irrlicht\source\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CMountPointReader.cpp">
+      <Filter>shared\Irrlicht\source\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\COSOperator.cpp">
+      <Filter>shared\Irrlicht\source\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CPakReader.cpp">
+      <Filter>shared\Irrlicht\source\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CReadFile.cpp">
+      <Filter>shared\Irrlicht\source\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CWriteFile.cpp">
+      <Filter>shared\Irrlicht\source\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CXMLReader.cpp">
+      <Filter>shared\Irrlicht\source\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CXMLWriter.cpp">
+      <Filter>shared\Irrlicht\source\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CZBuffer.cpp">
+      <Filter>shared\Irrlicht\source\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CZipReader.cpp">
+      <Filter>shared\Irrlicht\source\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CTerrainSceneNode.cpp">
+      <Filter>shared\Irrlicht\source\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CTerrainTriangleSelector.cpp">
+      <Filter>shared\Irrlicht\source\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CCameraSceneNode.cpp">
+      <Filter>shared\Irrlicht\source\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CSceneNodeAnimatorCameraFPS.cpp">
+      <Filter>shared\Irrlicht\source\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CSkyBoxSceneNode.cpp">
+      <Filter>shared\Irrlicht\source\Sky</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CSkyDomeSceneNode.cpp">
+      <Filter>shared\Irrlicht\source\Sky</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CSphereSceneNode.cpp">
+      <Filter>shared\Irrlicht\source\Sky</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\GUI\RTFont.cpp">
+      <Filter>shared\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Entity\Component.cpp">
+      <Filter>shared\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Entity\Entity.cpp">
+      <Filter>shared\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Entity\EntityUtils.cpp">
+      <Filter>shared\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Entity\Button2DComponent.cpp">
+      <Filter>shared\Entity\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Entity\CustomInputComponent.cpp">
+      <Filter>shared\Entity\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Entity\EmitVirtualKeyComponent.cpp">
+      <Filter>shared\Entity\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Entity\FilterInputComponent.cpp">
+      <Filter>shared\Entity\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Entity\FocusInputComponent.cpp">
+      <Filter>shared\Entity\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Entity\FocusRenderComponent.cpp">
+      <Filter>shared\Entity\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Entity\FocusUpdateComponent.cpp">
+      <Filter>shared\Entity\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Entity\HTTPComponent.cpp">
+      <Filter>shared\Entity\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Entity\InputTextRenderComponent.cpp">
+      <Filter>shared\Entity\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Entity\InterpolateComponent.cpp">
+      <Filter>shared\Entity\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Entity\OverlayRenderComponent.cpp">
+      <Filter>shared\Entity\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Entity\ProgressBarComponent.cpp">
+      <Filter>shared\Entity\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Entity\RectRenderComponent.cpp">
+      <Filter>shared\Entity\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Entity\ScrollBarRenderComponent.cpp">
+      <Filter>shared\Entity\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Entity\ScrollComponent.cpp">
+      <Filter>shared\Entity\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Entity\SelectButtonWithCustomInputComponent.cpp">
+      <Filter>shared\Entity\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Entity\SliderComponent.cpp">
+      <Filter>shared\Entity\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Entity\TapSequenceDetectComponent.cpp">
+      <Filter>shared\Entity\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Entity\TemplateComponent.cpp">
+      <Filter>shared\Entity\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Entity\TextBoxRenderComponent.cpp">
+      <Filter>shared\Entity\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Entity\TextRenderComponent.cpp">
+      <Filter>shared\Entity\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Entity\TouchHandlerComponent.cpp">
+      <Filter>shared\Entity\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Entity\TouchStripComponent.cpp">
+      <Filter>shared\Entity\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Entity\TrailRenderComponent.cpp">
+      <Filter>shared\Entity\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Entity\TyperComponent.cpp">
+      <Filter>shared\Entity\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Entity\UnderlineRenderComponent.cpp">
+      <Filter>shared\Entity\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\ClanLib-2.0\Sources\Core\Math\angle.cpp">
+      <Filter>shared\ClanLib\Core\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\ClanLib-2.0\Sources\Core\Math\mat3.cpp">
+      <Filter>shared\ClanLib\Core\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\ClanLib-2.0\Sources\Core\Math\mat4.cpp">
+      <Filter>shared\ClanLib\Core\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\ClanLib-2.0\Sources\Core\Math\rect.cpp">
+      <Filter>shared\ClanLib\Core\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\ClanLib-2.0\Sources\Core\Math\vec2.cpp">
+      <Filter>shared\ClanLib\Core\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\ClanLib-2.0\Sources\Core\Math\vec3.cpp">
+      <Filter>shared\ClanLib\Core\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\ClanLib-2.0\Sources\Core\Math\vec4.cpp">
+      <Filter>shared\ClanLib\Core\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Audio\AudioManager.cpp">
+      <Filter>shared\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Audio\AudioManagerAudiere.cpp">
+      <Filter>shared\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Audio\AudioManagerFMOD.cpp">
+      <Filter>shared\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Network\NetHTTP.cpp">
+      <Filter>shared\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Network\NetSocket.cpp">
+      <Filter>shared\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Network\NetUtils.cpp">
+      <Filter>shared\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Math\rtPlane.cpp">
+      <Filter>shared\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Math\rtRect.cpp">
+      <Filter>shared\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Math\WeightRand.cpp">
+      <Filter>shared\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\FileSystem\FileManager.cpp">
+      <Filter>shared\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\FileSystem\FileSystem.cpp">
+      <Filter>shared\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\FileSystem\FileSystemZip.cpp">
+      <Filter>shared\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\FileSystem\StreamingInstance.cpp">
+      <Filter>shared\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\FileSystem\StreamingInstanceFile.cpp">
+      <Filter>shared\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\FileSystem\StreamingInstanceZip.cpp">
+      <Filter>shared\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\android\AndroidApp.cpp">
+      <Filter>shared\android</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\android\AndroidUtils.cpp">
+      <Filter>shared\android</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\shared\Irrlicht\source\Irrlicht\CProtonReader.cpp">
+      <Filter>shared\Irrlicht\source\FileSystem</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\source\App.h">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\GUI\DebugMenu.h">
+      <Filter>source\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\GUI\MainMenu.h">
+      <Filter>source\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\GUI\Map3Menu.h">
+      <Filter>source\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\GUI\MapMenu.h">
+      <Filter>source\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\GUI\Mesh3DMenu.h">
+      <Filter>source\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\GUI\TerrainMenu.h">
+      <Filter>source\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Component\FPSControlComponent.h">
+      <Filter>source\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\BaseApp.h">
+      <Filter>shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\PlatformPrecomp.h">
+      <Filter>shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\PlatformSetup.h">
+      <Filter>shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\win\MemMgr.h">
+      <Filter>shared\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\win\PlatformSetupWin.h">
+      <Filter>shared\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\win\WinUtils.h">
+      <Filter>shared\win</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\util\CRandom.h">
+      <Filter>shared\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\win\powerVR\OGLES\Include\GLES\egl.h">
+      <Filter>shared\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Entity\EntityUtils.h">
+      <Filter>shared\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\win\powerVR\OGLES\Include\GLES\gl.h">
+      <Filter>shared\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\util\GLESUtils.h">
+      <Filter>shared\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\util\MathUtils.h">
+      <Filter>shared\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\util\MiscUtils.h">
+      <Filter>shared\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\util\PrimeSearch.h">
+      <Filter>shared\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\util\RenderUtils.h">
+      <Filter>shared\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\util\ResourceUtils.h">
+      <Filter>shared\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\util\RTFileFormat.h">
+      <Filter>shared\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\util\TextScanner.h">
+      <Filter>shared\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\util\Variant.h">
+      <Filter>shared\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\util\unzip\crypt.h">
+      <Filter>shared\util\unzip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\util\unzip\ioapi.h">
+      <Filter>shared\util\unzip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\util\unzip\unzip.h">
+      <Filter>shared\util\unzip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\iOS\iOSUtils.h">
+      <Filter>shared\iOS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\iOS\PlatformSetupIOS.h">
+      <Filter>shared\iOS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\iOS\app\EAGLView.h">
+      <Filter>shared\iOS\app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\iOS\app\MyAppDelegate.h">
+      <Filter>shared\iOS\app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\iOS\app\MyViewController.h">
+      <Filter>shared\iOS\app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Manager\Console.h">
+      <Filter>shared\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Manager\GameTimer.h">
+      <Filter>shared\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Manager\MessageManager.h">
+      <Filter>shared\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Manager\ResourceManager.h">
+      <Filter>shared\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Manager\VariantDB.h">
+      <Filter>shared\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Renderer\bitmap.h">
+      <Filter>shared\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Renderer\RenderBatcher.h">
+      <Filter>shared\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Renderer\SoftSurface.h">
+      <Filter>shared\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Renderer\Surface.h">
+      <Filter>shared\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Renderer\SurfaceAnim.h">
+      <Filter>shared\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Renderer\linearparticle\sources\L_Defination.h">
+      <Filter>shared\Renderer\LinearParticle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Renderer\linearparticle\sources\L_DroppingEffect.h">
+      <Filter>shared\Renderer\LinearParticle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Renderer\linearparticle\sources\L_EffectEmitter.h">
+      <Filter>shared\Renderer\LinearParticle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Renderer\linearparticle\sources\L_EffectManager.h">
+      <Filter>shared\Renderer\LinearParticle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Renderer\linearparticle\sources\L_ExplosionEffect.h">
+      <Filter>shared\Renderer\LinearParticle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Renderer\linearparticle\sources\L_MotionController.h">
+      <Filter>shared\Renderer\LinearParticle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Renderer\linearparticle\sources\L_Particle.h">
+      <Filter>shared\Renderer\LinearParticle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Renderer\linearparticle\sources\L_ParticleEffect.h">
+      <Filter>shared\Renderer\LinearParticle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Renderer\linearparticle\sources\L_ParticleMem.h">
+      <Filter>shared\Renderer\LinearParticle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Renderer\linearparticle\sources\L_ParticleSystem.h">
+      <Filter>shared\Renderer\LinearParticle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Renderer\linearparticle\sources\L_ShootingEffect.h">
+      <Filter>shared\Renderer\LinearParticle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Renderer\LinearParticle.h">
+      <Filter>shared\Renderer\LinearParticle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IrrCompileConfig.h">
+      <Filter>shared\Irrlicht</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\IrrlichtManager.h">
+      <Filter>shared\Irrlicht</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\aabbox3d.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\CDynamicMeshBuffer.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\CIndexBuffer.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\CMeshBuffer.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\coreutil.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\CVertexBuffer.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\dimension2d.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\ECullingTypes.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\EDebugSceneTypes.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\EDeviceTypes.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\EDriverFeatures.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\EDriverTypes.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\EGUIAlignment.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\EGUIElementTypes.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\EHardwareBufferFlags.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\EMaterialFlags.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\EMaterialTypes.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\EMeshWriterEnums.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\EMessageBoxFlags.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\ESceneNodeAnimatorTypes.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\ESceneNodeTypes.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\ETerrainElements.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\fast_atof.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\heapsort.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IAnimatedMesh.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IAnimatedMeshMD2.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IAnimatedMeshMD3.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IAnimatedMeshSceneNode.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IAttributeExchangingObject.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IAttributes.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IBillboardSceneNode.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IBillboardTextSceneNode.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IBoneSceneNode.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\ICameraSceneNode.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\ICursorControl.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IDummyTransformationSceneNode.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IDynamicMeshBuffer.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IEventReceiver.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IFileArchive.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IFileList.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IFileSystem.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IGeometryCreator.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IGPUProgrammingServices.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IGUIButton.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IGUICheckBox.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IGUIColorSelectDialog.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IGUIComboBox.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IGUIContextMenu.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IGUIEditBox.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IGUIElement.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IGUIElementFactory.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IGUIEnvironment.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IGUIFileOpenDialog.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IGUIFont.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IGUIFontBitmap.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IGUIImage.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IGUIImageList.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IGUIInOutFader.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IGUIListBox.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IGUIMeshViewer.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IGUIScrollBar.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IGUISkin.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IGUISpinBox.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IGUISpriteBank.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IGUIStaticText.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IGUITabControl.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IGUITable.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IGUIToolbar.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IGUITreeView.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IGUIWindow.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IImage.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IImageLoader.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IImageWriter.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IIndexBuffer.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\ILightManager.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\ILightSceneNode.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\ILogger.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IMaterialRenderer.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IMaterialRendererServices.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IMesh.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IMeshBuffer.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IMeshCache.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IMeshLoader.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IMeshManipulator.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IMeshSceneNode.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IMeshWriter.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IMetaTriangleSelector.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IOSOperator.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IParticleAffector.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IParticleAnimatedMeshSceneNodeEmitter.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IParticleAttractionAffector.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IParticleBoxEmitter.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IParticleCylinderEmitter.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IParticleEmitter.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IParticleFadeOutAffector.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IParticleGravityAffector.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IParticleMeshEmitter.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IParticleRingEmitter.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IParticleRotationAffector.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IParticleSphereEmitter.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IParticleSystemSceneNode.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IQ3LevelMesh.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IQ3Shader.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IReadFile.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IReferenceCounted.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\irrAllocator.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\irrArray.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\irrlicht.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IrrlichtDevice.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\irrList.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\irrMap.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\irrMath.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\irrString.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\irrTypes.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\irrXML.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\ISceneCollisionManager.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\ISceneManager.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\ISceneNode.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\ISceneNodeAnimator.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\ISceneNodeAnimatorCameraFPS.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\ISceneNodeAnimatorCameraMaya.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\ISceneNodeAnimatorCollisionResponse.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\ISceneNodeAnimatorFactory.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\ISceneNodeFactory.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\ISceneUserDataSerializer.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IShaderConstantSetCallBack.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IShadowVolumeSceneNode.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\ISkinnedMesh.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\ITerrainSceneNode.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\ITextSceneNode.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\ITexture.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\ITimer.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\ITriangleSelector.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IVertexBuffer.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IVideoDriver.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IVideoModeList.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IVolumeLightSceneNode.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IWriteFile.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IXMLReader.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\IXMLWriter.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\Keycodes.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\line2d.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\line3d.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\matrix4.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\path.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\plane3d.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\position2d.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\quaternion.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\rect.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\S3DVertex.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\SAnimatedMesh.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\SceneParameters.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\SColor.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\SExposedVideoData.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\SIrrCreationParameters.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\SKeyMap.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\SLight.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\SMaterial.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\SMaterialLayer.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\SMesh.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\SMeshBuffer.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\SMeshBufferLightMap.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\SMeshBufferTangents.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\SParticle.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\SSharedMeshBuffer.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\SSkinMeshBuffer.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\SVertexIndex.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\SViewFrustum.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\triangle3d.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\vector2d.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\include\vector3d.h">
+      <Filter>shared\Irrlicht\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CAttributes.h">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CBoneSceneNode.h">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CColorConverter.h">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CDefaultSceneNodeAnimatorFactory.h">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CDefaultSceneNodeFactory.h">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CDepthBuffer.h">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CDummyTransformationSceneNode.h">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CEmptySceneNode.h">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CFPSCounter.h">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CGeometryCreator.h">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CLightSceneNode.h">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CLogger.h">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CMemoryFile.h">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CMeshCache.h">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CMeshManipulator.h">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CMeshSceneNode.h">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CMetaTriangleSelector.h">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\COCTLoader.h">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\COctreeSceneNode.h">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\COctreeTriangleSelector.h">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CSkinnedMesh.h">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CTextSceneNode.h">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CTriangleBBSelector.h">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CTriangleSelector.h">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CVideoModeList.h">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CVolumeLightSceneNode.h">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CWaterSurfaceSceneNode.h">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\eglext.h">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\gles-ext.h">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\glext.h">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\glxext.h">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\octtree.h">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\os.h">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\S2DVertex.h">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\S4DVertex.h">
+      <Filter>shared\Irrlicht\source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CNullDriver.h">
+      <Filter>shared\Irrlicht\source\Video\NULLDriver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\C3DSMeshFileLoader.h">
+      <Filter>shared\Irrlicht\source\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CAnimatedMeshMD2.h">
+      <Filter>shared\Irrlicht\source\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CAnimatedMeshMD3.h">
+      <Filter>shared\Irrlicht\source\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CB3DMeshFileLoader.h">
+      <Filter>shared\Irrlicht\source\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CBSPMeshFileLoader.h">
+      <Filter>shared\Irrlicht\source\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CColladaFileLoader.h">
+      <Filter>shared\Irrlicht\source\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CCSMLoader.h">
+      <Filter>shared\Irrlicht\source\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CMD2MeshFileLoader.h">
+      <Filter>shared\Irrlicht\source\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CMD3MeshFileLoader.h">
+      <Filter>shared\Irrlicht\source\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CMS3DMeshFileLoader.h">
+      <Filter>shared\Irrlicht\source\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CMY3DHelper.h">
+      <Filter>shared\Irrlicht\source\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CMY3DMeshFileLoader.h">
+      <Filter>shared\Irrlicht\source\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\COBJMeshFileLoader.h">
+      <Filter>shared\Irrlicht\source\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CQ3LevelMesh.h">
+      <Filter>shared\Irrlicht\source\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CQuake3ShaderSceneNode.h">
+      <Filter>shared\Irrlicht\source\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CXMeshFileLoader.h">
+      <Filter>shared\Irrlicht\source\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CParticleAnimatedMeshSceneNodeEmitter.h">
+      <Filter>shared\Irrlicht\source\ParticleSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CParticleAttractionAffector.h">
+      <Filter>shared\Irrlicht\source\ParticleSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CParticleBoxEmitter.h">
+      <Filter>shared\Irrlicht\source\ParticleSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CParticleCylinderEmitter.h">
+      <Filter>shared\Irrlicht\source\ParticleSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CParticleFadeOutAffector.h">
+      <Filter>shared\Irrlicht\source\ParticleSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CParticleGravityAffector.h">
+      <Filter>shared\Irrlicht\source\ParticleSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CParticleMeshEmitter.h">
+      <Filter>shared\Irrlicht\source\ParticleSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CParticlePointEmitter.h">
+      <Filter>shared\Irrlicht\source\ParticleSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CParticleRingEmitter.h">
+      <Filter>shared\Irrlicht\source\ParticleSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CParticleRotationAffector.h">
+      <Filter>shared\Irrlicht\source\ParticleSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CParticleScaleAffector.h">
+      <Filter>shared\Irrlicht\source\ParticleSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CParticleSphereEmitter.h">
+      <Filter>shared\Irrlicht\source\ParticleSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CParticleSystemSceneNode.h">
+      <Filter>shared\Irrlicht\source\ParticleSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CIrrDeviceStub.h">
+      <Filter>shared\Irrlicht\source\Devices</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CIrrDeviceWin32.h">
+      <Filter>shared\Irrlicht\source\Devices</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CAnimatedMeshSceneNode.h">
+      <Filter>shared\Irrlicht\source\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CBillboardSceneNode.h">
+      <Filter>shared\Irrlicht\source\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CCubeSceneNode.h">
+      <Filter>shared\Irrlicht\source\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CSceneCollisionManager.h">
+      <Filter>shared\Irrlicht\source\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CSceneManager.h">
+      <Filter>shared\Irrlicht\source\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CSceneNodeAnimatorCameraMaya.h">
+      <Filter>shared\Irrlicht\source\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CSceneNodeAnimatorCollisionResponse.h">
+      <Filter>shared\Irrlicht\source\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CSceneNodeAnimatorDelete.h">
+      <Filter>shared\Irrlicht\source\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CSceneNodeAnimatorFlyCircle.h">
+      <Filter>shared\Irrlicht\source\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CSceneNodeAnimatorFlyStraight.h">
+      <Filter>shared\Irrlicht\source\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CSceneNodeAnimatorFollowSpline.h">
+      <Filter>shared\Irrlicht\source\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CSceneNodeAnimatorRotation.h">
+      <Filter>shared\Irrlicht\source\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CSceneNodeAnimatorTexture.h">
+      <Filter>shared\Irrlicht\source\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CShadowVolumeSceneNode.h">
+      <Filter>shared\Irrlicht\source\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CImage.h">
+      <Filter>shared\Irrlicht\source\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CImageLoaderBMP.h">
+      <Filter>shared\Irrlicht\source\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CImageLoaderJPG.h">
+      <Filter>shared\Irrlicht\source\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CImageLoaderPNG.h">
+      <Filter>shared\Irrlicht\source\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CImageLoaderRGB.h">
+      <Filter>shared\Irrlicht\source\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CImageLoaderRTTEX.h">
+      <Filter>shared\Irrlicht\source\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CImageLoaderTGA.h">
+      <Filter>shared\Irrlicht\source\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\cderror.h">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jchuff.h">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jconfig.h">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jdct.h">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jdhuff.h">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jerror.h">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jinclude.h">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jmemsys.h">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jmorecfg.h">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jpegint.h">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jpeglib.h">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\jpeglib\jversion.h">
+      <Filter>shared\Irrlicht\source\Image\LibJPeg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\libpng\png.h">
+      <Filter>shared\Irrlicht\source\Image\LibPng</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\libpng\pngconf.h">
+      <Filter>shared\Irrlicht\source\Image\LibPng</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CFileList.h">
+      <Filter>shared\Irrlicht\source\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CFileSystem.h">
+      <Filter>shared\Irrlicht\source\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CLimitReadFile.h">
+      <Filter>shared\Irrlicht\source\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CMountPointReader.h">
+      <Filter>shared\Irrlicht\source\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\COSOperator.h">
+      <Filter>shared\Irrlicht\source\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CPakReader.h">
+      <Filter>shared\Irrlicht\source\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CXMLReader.h">
+      <Filter>shared\Irrlicht\source\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CXMLReaderImpl.h">
+      <Filter>shared\Irrlicht\source\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CXMLWriter.h">
+      <Filter>shared\Irrlicht\source\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CZBuffer.h">
+      <Filter>shared\Irrlicht\source\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CZipReader.h">
+      <Filter>shared\Irrlicht\source\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CTerrainSceneNode.h">
+      <Filter>shared\Irrlicht\source\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CTerrainTriangleSelector.h">
+      <Filter>shared\Irrlicht\source\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CCameraSceneNode.h">
+      <Filter>shared\Irrlicht\source\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CSceneNodeAnimatorCameraFPS.h">
+      <Filter>shared\Irrlicht\source\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CSkyBoxSceneNode.h">
+      <Filter>shared\Irrlicht\source\Sky</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CSkyDomeSceneNode.h">
+      <Filter>shared\Irrlicht\source\Sky</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CSphereSceneNode.h">
+      <Filter>shared\Irrlicht\source\Sky</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\GUI\RTFont.h">
+      <Filter>shared\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\GUI\RTFontFileFormat.h">
+      <Filter>shared\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Entity\Component.h">
+      <Filter>shared\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Entity\Entity.h">
+      <Filter>shared\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Entity\Button2DComponent.h">
+      <Filter>shared\Entity\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Entity\CustomInputComponent.h">
+      <Filter>shared\Entity\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Entity\EmitVirtualKeyComponent.h">
+      <Filter>shared\Entity\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Entity\FilterInputComponent.h">
+      <Filter>shared\Entity\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Entity\FocusInputComponent.h">
+      <Filter>shared\Entity\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Entity\FocusRenderComponent.h">
+      <Filter>shared\Entity\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Entity\FocusUpdateComponent.h">
+      <Filter>shared\Entity\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Entity\HTTPComponent.h">
+      <Filter>shared\Entity\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Entity\InputTextRenderComponent.h">
+      <Filter>shared\Entity\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Entity\InterpolateComponent.h">
+      <Filter>shared\Entity\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Entity\OverlayRenderComponent.h">
+      <Filter>shared\Entity\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Entity\ProgressBarComponent.h">
+      <Filter>shared\Entity\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Entity\RectRenderComponent.h">
+      <Filter>shared\Entity\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Entity\ScrollBarRenderComponent.h">
+      <Filter>shared\Entity\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Entity\ScrollComponent.h">
+      <Filter>shared\Entity\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Entity\SelectButtonWithCustomInputComponent.h">
+      <Filter>shared\Entity\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Entity\SliderComponent.h">
+      <Filter>shared\Entity\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Entity\TapSequenceDetectComponent.h">
+      <Filter>shared\Entity\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Entity\TextBoxRenderComponent.h">
+      <Filter>shared\Entity\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Entity\TextRenderComponent.h">
+      <Filter>shared\Entity\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Entity\TouchHandlerComponent.h">
+      <Filter>shared\Entity\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Entity\TouchStripComponent.h">
+      <Filter>shared\Entity\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Entity\TrailRenderComponent.h">
+      <Filter>shared\Entity\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Entity\TyperComponent.h">
+      <Filter>shared\Entity\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Entity\UnderlineRenderComponent.h">
+      <Filter>shared\Entity\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Audio\AudioManager.h">
+      <Filter>shared\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Audio\AudioManagerAudiere.h">
+      <Filter>shared\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Audio\AudioManagerOS.h">
+      <Filter>shared\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Network\NetHTTP.h">
+      <Filter>shared\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Network\NetSocket.h">
+      <Filter>shared\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Network\NetUtils.h">
+      <Filter>shared\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Math\rtPlane.h">
+      <Filter>shared\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Math\rtRect.h">
+      <Filter>shared\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Math\WeightRand.h">
+      <Filter>shared\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\FileSystem\FileManager.h">
+      <Filter>shared\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\FileSystem\FileSystem.h">
+      <Filter>shared\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\FileSystem\FileSystemZip.h">
+      <Filter>shared\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\FileSystem\StreamingInstance.h">
+      <Filter>shared\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\FileSystem\StreamingInstanceFile.h">
+      <Filter>shared\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\FileSystem\StreamingInstanceZip.h">
+      <Filter>shared\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\android\AndroidUtils.h">
+      <Filter>shared\android</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\android\PlatformSetupAndroid.h">
+      <Filter>shared\android</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\shared\Irrlicht\source\Irrlicht\CProtonReader.h">
+      <Filter>shared\Irrlicht\source\FileSystem</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\license.txt">
+      <Filter>source</Filter>
+    </None>
+    <None Include="..\..\Programmer Readme.txt">
+      <Filter>source</Filter>
+    </None>
+    <None Include="..\..\shared\iOS\iOSUtils.mm">
+      <Filter>shared\iOS</Filter>
+    </None>
+    <None Include="..\..\shared\iOS\app\EAGLView.mm">
+      <Filter>shared\iOS\app</Filter>
+    </None>
+    <None Include="..\..\shared\iOS\app\main.mm">
+      <Filter>shared\iOS\app</Filter>
+    </None>
+    <None Include="..\..\shared\iOS\app\MyAppDelegate.mm">
+      <Filter>shared\iOS\app</Filter>
+    </None>
+    <None Include="..\..\shared\iOS\app\MyViewController.mm">
+      <Filter>shared\iOS\app</Filter>
+    </None>
+    <None Include="..\android\app_info_setup.bat">
+      <Filter>source\android</Filter>
+    </None>
+    <None Include="..\android\build.bat">
+      <Filter>source\android</Filter>
+    </None>
+    <None Include="..\android\build.xml">
+      <Filter>source\android</Filter>
+    </None>
+    <None Include="..\android\local.properties">
+      <Filter>source\android</Filter>
+    </None>
+    <None Include="..\android\jni\Android.mk">
+      <Filter>source\android</Filter>
+    </None>
+    <None Include="..\android\src\com\rtsoft\rt3dapp\Main.java">
+      <Filter>source\android</Filter>
+    </None>
+    <None Include="..\android\AndroidManifest.xml">
+      <Filter>source\android</Filter>
+    </None>
+    <None Include="..\..\shared\android\src\com\rtsoft\shared\SharedActivity.java">
+      <Filter>shared\android\app</Filter>
+    </None>
+    <None Include="..\..\shared\android\src\com\rtsoft\shared\SharedMultiTouchInput.java">
+      <Filter>shared\android\app</Filter>
+    </None>
+    <None Include="..\android\jni\Application.mk">
+      <Filter>source\android</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuildStep Include="..\..\shared\Irrlicht\source\Irrlicht\COpenGLDriver.h">
+      <Filter>shared\Irrlicht\source\Video\GL</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="..\..\shared\Irrlicht\source\Irrlicht\COpenGLExtensionHandler.h">
+      <Filter>shared\Irrlicht\source\Video\GL</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="..\..\shared\Irrlicht\source\Irrlicht\COpenGLMaterialRenderer.h">
+      <Filter>shared\Irrlicht\source\Video\GL</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="..\..\shared\Irrlicht\source\Irrlicht\COpenGLNormalMapRenderer.h">
+      <Filter>shared\Irrlicht\source\Video\GL</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="..\..\shared\Irrlicht\source\Irrlicht\COpenGLParallaxMapRenderer.h">
+      <Filter>shared\Irrlicht\source\Video\GL</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="..\..\shared\Irrlicht\source\Irrlicht\COpenGLShaderMaterialRenderer.h">
+      <Filter>shared\Irrlicht\source\Video\GL</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="..\..\shared\Irrlicht\source\Irrlicht\COpenGLSLMaterialRenderer.h">
+      <Filter>shared\Irrlicht\source\Video\GL</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="..\..\shared\Irrlicht\source\Irrlicht\COpenGLTexture.h">
+      <Filter>shared\Irrlicht\source\Video\GL</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="..\..\shared\Irrlicht\source\Irrlicht\COGLESDriver.h">
+      <Filter>shared\Irrlicht\source\Video\GLES</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="..\..\shared\Irrlicht\source\Irrlicht\COGLESExtensionHandler.h">
+      <Filter>shared\Irrlicht\source\Video\GLES</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="..\..\shared\Irrlicht\source\Irrlicht\COGLESMaterialRenderer.h">
+      <Filter>shared\Irrlicht\source\Video\GLES</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="..\..\shared\Irrlicht\source\Irrlicht\COGLESTexture.h">
+      <Filter>shared\Irrlicht\source\Video\GLES</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="..\..\shared\Irrlicht\source\Irrlicht\CIrrDeviceIPhone.h">
+      <Filter>shared\Irrlicht\source\Devices</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="..\..\shared\Entity\TemplateComponent.h">
+      <Filter>shared\Entity\Component</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="..\..\shared\Audio\AudioManagerFMOD.h">
+      <Filter>shared\Audio</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="..\..\shared\Audio\AudioManagerOS.mm">
+      <Filter>shared\Audio</Filter>
+    </CustomBuildStep>
+  </ItemGroup>
+</Project>

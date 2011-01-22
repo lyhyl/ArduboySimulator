@@ -80,7 +80,7 @@ AudioObjectOS * AudioManagerOS::GetAudioObjectByFileName(const string &fName, bo
 			//LogMsg("Cached %s at bufferID %d", a.fName.c_str(), a.m_id);
 		} else
 		{
-			LogMsg("Error loading %s (OSStatus %d)", fName.c_str(), s);
+			LogMsg("Error loading %s (OSStatus %d)", (GetBaseAppPath()+fName).c_str(), s);
 			return NULL;
 		}
 	}
