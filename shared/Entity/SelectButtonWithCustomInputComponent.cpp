@@ -17,6 +17,7 @@ void SelectButtonWithCustomInputComponent::OnAdd(Entity *pEnt)
 
 	//first setup to listen to keyboard messages
 	GetParent()->GetFunction("OnInput")->sig_function.connect(1, boost::bind(&SelectButtonWithCustomInputComponent::OnInput, this, _1)); //used for keyboard keys on Win
+	GetParent()->GetFunction("OnInput")->sig_function.connect(1, boost::bind(&SelectButtonWithCustomInputComponent::OnInput, this, _1)); //used for keyboard keys on Win
 	m_pDisabled = &GetVarWithDefault("disabled", uint32(0))->GetUINT32();
 
 	m_pKeys = &GetVar("keys")->GetString(); //local to us
@@ -51,7 +52,13 @@ void SelectButtonWithCustomInputComponent::OnInput( VariantList *pVList )
 	switch (eMessageType( int(pVList->Get(0).GetFloat())))
 	{
 	
+	case MESSAGE_TYPE_GUI_CHAR_RAW:
+
+		LogMsg("Got raw char %d", pVList->Get(2).GetUINT32());
+		break;
 	case MESSAGE_TYPE_GUI_CHAR:
+		{
+
 		
 		if (*m_pKeyCode != 0)
 		{
@@ -101,7 +108,11 @@ void SelectButtonWithCustomInputComponent::OnInput( VariantList *pVList )
 		VariantList vList(vClickPos, GetParent());
 		GetMessageManager()->CallEntityFunction(GetParent(), 1, "OnButtonSelected", &vList);  //sends a vec2 with position and this entity
 		*/
+		}
 		break;
+
+		//LogMsg("Got msg %d", int(pVList->Get(0).GetFloat()));
+
 	}	
 
 }

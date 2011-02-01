@@ -19,10 +19,16 @@ IrrlichtManager * GetIrrlichtManager()
 
 IrrlichtManager::IrrlichtManager()
 {
+	m_bLightingEnabled = false;
 	m_pDevice = NULL;
 	m_pScene = NULL;
 	m_pDriver = NULL;
+#ifdef RT_IRRBULLET
 	m_pWorld = NULL;
+#endif
+	m_bBulletPhysicsEnabled = true; //only applicable if RT_IRRBULLET was defined
+
+	m_bDebugEnabled = false;
 }
 
 
@@ -38,10 +44,12 @@ void IrrlichtManager::Kill()
 
 	if (m_pDevice)
 	{
+#ifdef RT_IRRBULLET
 		if (m_pWorld)
 		{
 			delete m_pWorld;
 		}
+#endif
 		m_pDevice->drop();
 		m_pDevice = NULL;
 		m_pDriver = NULL;
@@ -55,14 +63,16 @@ bool IrrlichtManager::Init(irr::IEventReceiver *pEventReceiver)
 {
 	LogMsg("initting irrlicht");
 
+	bool bStencilBuffer = false;
 	E_DRIVER_TYPE driverType = video::EDT_OGLES1;
 
 #ifdef C_GL_MODE
 	driverType = video::EDT_OPENGL;
+	bStencilBuffer = true;
 #endif
 
-	m_pDevice = createDevice( driverType, dimension2d<u32>(GetPrimaryGLX(), GetPrimaryGLY()), 16, false, false, false, pEventReceiver);
-
+	m_pDevice = createDevice( driverType, dimension2d<u32>(GetPrimaryGLX(), GetPrimaryGLY()), 16, false, bStencilBuffer, false, pEventReceiver);
+  
 	if (!m_pDevice)
 	{
 		LogError("Unable to create video driver");
@@ -77,6 +87,7 @@ bool IrrlichtManager::Init(irr::IEventReceiver *pEventReceiver)
 		LogMsg("Unable to mount Proton filesystem");
 	}
 
+	if (!m_bBulletPhysicsEnabled) return true;
 #ifdef RT_IRRBULLET
 
 	////////////////////////////
@@ -85,13 +96,13 @@ bool IrrlichtManager::Init(irr::IEventReceiver *pEventReceiver)
 
 	assert(!m_pWorld);
 	m_pWorld = createIrrBulletWorld(m_pDevice, true, true);
-
-	m_pWorld->setDebugMode(EPDM_DrawAabb |
-		EPDM_DrawContactPoints);
-
 	m_pWorld->setGravity(vector3df(0,-10,0));
 
+#ifdef _DEBUG
+	m_pWorld->setDebugMode(EPDM_DrawAabb | EPDM_DrawContactPoints);
+	
 
+#endif
 #endif
 	return true;
 }
@@ -115,9 +126,14 @@ void IrrlichtManager::ClearScene()
 	*/	
 	
 #ifdef RT_IRRBULLET
+		if (m_bBulletPhysicsEnabled)
+		{
+
+		
 		while(m_pWorld->getNumCollisionObjects() > 0)
 		{
 			m_pWorld->removeCollisionObject(m_pWorld->getCollisionObject(0));
+		}
 		}
 #endif
 		
@@ -145,22 +161,36 @@ void IrrlichtManager::BeginScene()
 		// Step the simulation with our delta time
 		m_pWorld->stepSimulation(GetBaseApp()->GetGameDelta()*0.02f, 120);
 
-		//m_pWorld->debugDrawWorld(debugDraw);
-		// This call will draw the technical properties of the physics simulation
-		// to the GUI environment.
-		//m_pWorld->debugDrawProperties(drawProperties);
 		}
 #endif
 	}
+}
+
+void IrrlichtManager::Render2D()
+{
+#ifdef RT_IRRBULLET
+
+	if (m_pWorld)
+	{
+		GetBaseApp()->GetFont(FONT_SMALL)->Draw(5,60, m_pWorld->debugDrawProperties(true).c_str());
+	}
+#endif
+
 }
 
 void IrrlichtManager::Render()
 {
 
 	if (m_pScene)
-	m_pScene->drawAll();
-
-	
+	{
+		m_pScene->drawAll();
+#ifdef RT_IRRBULLET
+		if (m_bDebugEnabled && m_pWorld)
+		{
+			m_pWorld->debugDrawWorld(true);
+		}
+#endif
+	}
 }
 
 void IrrlichtManager::EndScene()
@@ -207,4 +237,31 @@ core::rect<s32> CLRectToIrrlichtRect32(CL_Rectf clR)
 	r.LowerRightCorner.X = clR.right;
 	r.LowerRightCorner.Y = clR.bottom;
 	return r;
+}
+
+core::vector3df GetVectorHeadingFromNode(scene::ISceneNode *pNode)
+{
+	vector3df v = core::vector3df(0,0,-1);
+	matrix4 m = pNode->getAbsoluteTransformation();
+	m.setTranslation(core::vector3df(0,0,0));
+	m.transformVect(v);
+	v.normalize();
+	return v;
+}
+
+core::vector3df RotatePositionByDirectionalVector(core::vector3df vPos, core::vector3df vNormal )
+{
+	//OPTIMIZE Isn't there a much faster way to do this?
+
+	//calculate rotated z
+	core::vector3df vFinal = vNormal * vPos.Z;
+
+	//calculate rotation x
+	vFinal = vFinal + (vNormal.crossProduct(core::vector3df(0,1,0)) * vPos.X);
+
+	//y will just be up.. yeah, not really right
+	vFinal.Y += vPos.Y;
+	return vFinal;
+
+
 }

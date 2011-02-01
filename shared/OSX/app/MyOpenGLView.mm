@@ -25,8 +25,9 @@
 	// There is no autorelease pool when this method is called because it will be called from a background thread
 	// It's important to create one or you will leak objects
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-		
-	[self drawView];
+	
+	if (openGLContext)
+		[self drawView];
 	[pool release];
     return kCVReturnSuccess;
 }
@@ -71,11 +72,17 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	
     if (!pixelFormat)
 		NSLog(@"No OpenGL pixel format");
+		
 	
 	// NSOpenGLView does not handle context sharing, so we draw to a custom NSView instead
 	openGLContext = [[NSOpenGLContext alloc] initWithFormat:pixelFormat shareContext:context];
 	
-	if (self = [super initWithFrame:frameRect]) {
+	
+	
+	
+	
+	if (self = [super initWithFrame:frameRect])
+	{
 		[[self openGLContext] makeCurrentContext];
 		
 		// Synchronize buffer swaps with vertical refresh rate
@@ -200,7 +207,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 - (void) drawRect:(NSRect)dirtyRect
 {
 	// Ignore if the display link is still running
-	if (!CVDisplayLinkIsRunning(displayLink))
+	if (!CVDisplayLinkIsRunning(displayLink) &&  openGLContext)
 		[self drawView];
 }
 

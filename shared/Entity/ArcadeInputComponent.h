@@ -12,6 +12,37 @@
 //The way it does it with the trackball is it detects a direction, then keeps the key "down" until no movement is detected after 100
 //ms or so.
 
+
+//Check RTLooneyLadders for a working example.
+
+/*
+
+Example of usage:
+
+EntityComponent *pComp = pIcon->AddComponent(new ArcadeInputComponent);
+AddKeyBinding(pComp, "Up", VIRTUAL_KEY_DIR_UP, VIRTUAL_KEY_DIR_UP);
+AddKeyBinding(pComp, "Unlock", 'U', 'U');
+
+//route messages to the entity you want to have them:
+GetBaseApp()->m_sig_arcade_input.connect(pBG->GetFunction("OnArcadeInput")->sig_function);
+//connect that to a function
+pBG->GetShared()->GetFunction("OnArcadeInput")->sig_function.connect(&OnSelectInput);
+
+
+
+
+//another example, but overriding things so the messages are not broadcast through m_sig_arcade, but to a specific entity
+
+//this example is how I did it from inside a component:
+EntityComponent *pComp = GetParent()->AddComponent(new ArcadeInputComponent);
+//these arrow keys will be triggered by the keyboard, if applicable
+AddKeyBinding(pComp, "Fire", VIRTUAL_KEY_CONTROL, VIRTUAL_KEY_GAME_FIRE);
+pComp->GetFunction("SetOutputEntity")->sig_function(&VariantList(GetParent())); //redirect its messages to our parent entity, will call OnArcadeInput
+GetParent()->GetFunction("OnArcadeInput")->sig_function.connect(1, boost::bind(&VehicleControlComponent::OnArcadeInput, this, _1));	
+
+*/
+
+
 #ifndef ArcadeInputComponent_h__
 #define ArcadeInputComponent_h__
 
@@ -44,11 +75,11 @@ public:
 		m_keyType = type;
 	}
 
-	void ReleaseIfNeeded();
-	void OnPress(int releaseTime);
+	void ReleaseIfNeeded(boost::signal<void (VariantList*)> *pCustomSignal);
+	void OnPress(int releaseTime, boost::signal<void (VariantList*)> *pCustomSignal);
 
-	void Update();
-	void OnPressToggle(bool bDown);
+	void Update(boost::signal<void (VariantList*)> *pCustomSignal);
+	void OnPressToggle(bool bDown, boost::signal<void (VariantList*)> *pCustomSignal);
 	bool m_bIsDown;
 	unsigned int m_releaseTimer;
 	eVirtualKeys m_keyType;
@@ -91,6 +122,8 @@ public:
 	virtual void OnRemove();
 
 
+	bool GetDirectionKeysAsVector(CL_Vec2f *pVecOut);
+
 	enum TrackballMode
 	{
 		TRACKBALL_MODE_WALKING, //default, suitable for moving around a character, sends up/down notifications to mimic arrow key directions
@@ -105,6 +138,8 @@ private:
 	void AddKeyBinding(VariantList *pVList);
 	void ActivateBinding(ArcadeKeyBind *pBind, bool bDown);
 	void OnTrackballModeChanged(Variant *pVar);
+	void OnCustomOutputRemoved(Entity *pEnt);
+	void SetOutput(VariantList *pVList);
 	CL_Vec2f *m_pPos2d;
 	/*
 	CL_Vec2f *m_pSize2d;
@@ -120,6 +155,10 @@ private:
 	ArcadeBindList m_bindings;
 	uint32 *m_pTrackballMode;
 	CL_Vec2f m_trackball;
+	
+	boost::signal<void (VariantList*)> *m_customSignal; //if not null, messages will be sent here
 };
+
+void AddKeyBinding(EntityComponent *pComp, string name, uint32 inputcode, uint32 outputcode);
 
 #endif // ArcadeInputComponent_h__

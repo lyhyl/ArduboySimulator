@@ -72,7 +72,7 @@ class ICollisionObject
     public:
         ICollisionObject();
 
-        ~ICollisionObject();
+        virtual ~ICollisionObject();
 
         void updateObject();
 

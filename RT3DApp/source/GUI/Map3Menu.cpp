@@ -92,7 +92,7 @@ void Map3InitScene()
 		//		colmesh, colnode, 128);
 		selector = smgr->createTriangleSelector(colmesh, node);
 
-		node->setTriangleSelector(selector);
+		//node->setTriangleSelector(selector);
 		colnode->setVisible(false);
 
 		if (selector)

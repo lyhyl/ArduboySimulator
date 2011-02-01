@@ -29,7 +29,7 @@ class btDefaultCollisionConfiguration;
 class btDispatcher;
 class btBroadphaseInterface;
 class btConstraintSolver;
-class btVehicleRaycaster;
+struct btVehicleRaycaster;
 class ILiquidBody;
 
 
@@ -151,7 +151,7 @@ public:
         @param b Can be used to toggle whether or not the data is visible.
         @param col If present, this will be the override color of the property text. Defaults to white.
     */
-    void debugDrawProperties(bool b, const irr::video::SColor& col = irr::video::SColor(255,255,255,255));
+	irr::core::stringc debugDrawProperties(bool b, const irr::video::SColor& col = irr::video::SColor(255,255,255,255));
 
     /// @return Whether or not the simulation is paused.
     bool simulationPaused() const { return isPaused; };

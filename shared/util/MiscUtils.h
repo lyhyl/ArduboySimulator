@@ -49,3 +49,5 @@ string ModifyFileExtension(string fileName, string extension);
 void TruncateString(string &input, size_t len);
 bool IsInString(string &s, const char *search);
 CL_Vec3f LerpVector(const CL_Vec3f &vOriginal, const CL_Vec3f &Target, float f_percent);
+CL_Vec2f RotateGUIPoint(CL_Vec2f vPos, CL_Rectf r, float rotation); //used for calculating screen positions for splitscreen modes
+void RotationToXYMod(float rotation, float *pXMod ,float *pYMod); //given a rotation in degrees, tells you what to flip

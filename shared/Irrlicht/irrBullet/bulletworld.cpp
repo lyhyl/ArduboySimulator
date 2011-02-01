@@ -369,10 +369,11 @@ void irrBulletWorld::debugDrawWorld(bool setDriverMaterial)
     }
 }
 
-void irrBulletWorld::debugDrawProperties(bool b, const SColor& col)
+irr::core::stringc irrBulletWorld::debugDrawProperties(bool b, const SColor& col)
 {
-    if(b == true)
-    {
+
+	
+  //  if(b == true)
         const u32 numObjects = getNumCollisionObjects();
         u32 active = 0;
         u32 sleeping = 0;
@@ -392,7 +393,7 @@ void irrBulletWorld::debugDrawProperties(bool b, const SColor& col)
         const s32 perc = (diff / active) * 100;
 
 
-        stringw str = "MPF: "; // Milliseconds Per Frame
+        stringc str = "MPF: "; // Milliseconds Per Frame
         str += (1000 / (device->getVideoDriver()->getFPS()));
         str += "\nObjects: ";
         str += numObjects;
@@ -401,14 +402,16 @@ void irrBulletWorld::debugDrawProperties(bool b, const SColor& col)
         str += "\nSleeping: ";
         str += sleeping;
         str += "\nPerc. Active: ";
-        str += (perc > 0) ? (stringw(perc) + "%") : "0%";
+        str += (perc > 0) ? (stringc(perc) + "%") : "0%";
 
-        propertyText->setText(str.c_str());
+/*       
+		propertyText->setText(str.c_str());
 
         if(propertyText->getOverrideColor() != col)
             propertyText->setOverrideColor(col);
-    }
-
+			*/
+   
+/*
     else
     if(b == false)
     {
@@ -417,6 +420,9 @@ void irrBulletWorld::debugDrawProperties(bool b, const SColor& col)
             propertyText->setText(L"");
         }
     }
+	*/
+
+	return str;
 }
 
 

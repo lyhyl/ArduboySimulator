@@ -14,6 +14,7 @@
 #include "irrlicht.h"
 #ifdef RT_IRRBULLET
 #include "irrBullet/irrbullet.h"
+class irrBulletWorld;
 #endif
 #include "util/MathUtils.h"
 
@@ -24,7 +25,7 @@
 
 using namespace irr;
 
-class irrBulletWorld;
+
 
 class IrrlichtManager
 {
@@ -46,7 +47,17 @@ public:
 	irr::video::IVideoDriver* GetDriver() {return m_pDriver;}
 	irr::scene::ISceneManager* GetScene() {return m_pScene;}
 
+	void Render2D();
+	bool GetLightingEnabled() {return m_bLightingEnabled;}
+	void SetLightingEnabled(bool bNew) {m_bLightingEnabled = bNew;}
+
+	bool GetDebugEnabled() {return m_bDebugEnabled;}
+	void SetDebugEnabled(bool bNew) {m_bDebugEnabled = bNew;}
+	void SetBulletPhysicsEnabled(bool bNew) {m_bBulletPhysicsEnabled = bNew;} //only applicable if RT_IRRBULLET was defined
+
+#ifdef RT_IRRBULLET
 	irrBulletWorld * GetBulletWorld() {return m_pWorld;}
+#endif
 
 private:
 	
@@ -54,11 +65,20 @@ private:
 	irr::video::IVideoDriver* m_pDriver;
 	irr::scene::ISceneManager* m_pScene;
 
+#ifdef RT_IRRBULLET
 	irrBulletWorld *m_pWorld;
+#endif
+
+	bool m_bLightingEnabled;
+	bool m_bDebugEnabled;
+	bool m_bPhysicsEnabled;
+	bool m_bBulletPhysicsEnabled;
 
 };
 
 IrrlichtManager * GetIrrlichtManager();
 core::rect<s32> CLRectToIrrlichtRect32(CL_Rectf clR);
+core::vector3df GetVectorHeadingFromNode(scene::ISceneNode *pNode);
+core::vector3df RotatePositionByDirectionalVector(core::vector3df vPos, core::vector3df vNormal );
 
 #endif // IrrlichtManager_h__
