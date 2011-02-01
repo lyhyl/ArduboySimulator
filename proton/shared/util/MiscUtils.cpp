@@ -384,3 +384,94 @@ bool IsInString(string &s, const char *search)
 	if (s.find(search) != string::npos) return true;
 	return false;
 }
+
+
+void RotationToXYMod(float rotation, float *pXMod ,float *pYMod)
+{
+	switch (int(rotation))
+	{
+	case 0:
+
+		*pXMod = 0; //no change
+		*pYMod = 0; //no change
+		return;
+	case 90:
+		*pXMod = 0; //change!
+		*pYMod = 1; //no change
+		return;
+
+	case 180:
+		*pXMod = 1; //change!
+		*pYMod = 1; 
+		return;
+
+	case 270:
+		*pXMod = 1; //no change
+		*pYMod = 0; //change!
+		return;
+
+	}
+
+	assert("Unknown degree");
+	*pXMod = 0; //no change
+	*pYMod = 0; //no change
+	return;
+
+}
+
+
+CL_Vec2f RotateGUIPoint(CL_Vec2f vPos, CL_Rectf r, float angle)
+{
+
+	CL_Vec2f destSize = GetScreenSize();
+
+	assert(angle >=0 && angle < 360);
+	if (angle == 90 || angle == 270) 
+	{
+		swap(destSize.x, destSize.y);
+	}
+
+		switch (int(angle))
+		{
+
+		case 0:
+			break;
+
+		case 180:
+			 vPos.y = destSize.y-vPos.y;
+			vPos.x = destSize.x-vPos.x;
+			break;
+
+		case 270:
+			swap(vPos.x, vPos.y);
+			vPos.y = destSize.y-vPos.y;
+			break;
+
+		case 90:
+			vPos.y = destSize.x-vPos.y;
+			swap(vPos.x, vPos.y);
+			break;
+
+		}
+	
+		float xRatio = r.get_width()/ GetScreenSizeXf();
+		float yRatio = r.get_height()/ GetScreenSizeYf();
+
+		if (destSize.x != GetScreenSizeXf())
+		{
+			//need to apply a new aspect ratio
+			yRatio *= (destSize.x / GetScreenSizeXf());
+			xRatio *= (destSize.y / GetScreenSizeYf());
+		} 
+
+
+		//shrink it to its real screen size
+		vPos.x *= xRatio;
+		vPos.y *= yRatio;
+
+		//move it the offset required
+		vPos.x += r.left;
+		vPos.y += r.top;
+
+	return vPos;
+}

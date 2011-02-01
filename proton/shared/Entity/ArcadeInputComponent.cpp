@@ -5,72 +5,91 @@
 #include "BaseApp.h"
 
 
-void MoveButtonState::OnPress(int timeToAddMS)
+void MoveButtonState::OnPress(int timeToAddMS, boost::signal<void (VariantList*)> *pCustomSignal)
 {
 	VariantList v;
 
 	if (!m_bIsDown)
 	{
+		m_bIsDown = true;
 		v.Get(0).Set(uint32(m_keyType));
 		v.Get(1).Set(uint32(VIRTUAL_KEY_PRESS)); 
-		GetBaseApp()->m_sig_arcade_input(&v);
+		if (pCustomSignal)
+		{
+			(*pCustomSignal)(&v);
+		} else
+		{
+			GetBaseApp()->m_sig_arcade_input(&v);
+		}	
+
 	}
 	
-	m_bIsDown = true;
 	m_releaseTimer = rt_max(GetTick(TIMER_SYSTEM), m_releaseTimer);
 	m_releaseTimer += timeToAddMS;
 }
 
-void MoveButtonState::OnPressToggle(bool bDown)
+void MoveButtonState::OnPressToggle(bool bDown, boost::signal<void (VariantList*)> *pCustomSignal)
 {
 	VariantList v;
 
 	if (bDown)
 	{
 
-	
 	if (!m_bIsDown)
 	{
+		m_bIsDown = true;
+
 		v.Get(0).Set(uint32(m_keyType));
 		v.Get(1).Set(uint32(VIRTUAL_KEY_PRESS)); 
-		GetBaseApp()->m_sig_arcade_input(&v);
+		if (pCustomSignal)
+		{
+			(*pCustomSignal)(&v);
+		} else
+		{
+			GetBaseApp()->m_sig_arcade_input(&v);
+		}	
 	}
 
-	m_bIsDown = true;
 	m_releaseTimer = rt_max(GetTick(TIMER_SYSTEM), m_releaseTimer);
 	m_releaseTimer += 1000*60;
 	} else
 	{
-		ReleaseIfNeeded();
+		ReleaseIfNeeded(pCustomSignal);
 	}
 }
-void MoveButtonState::Update()
+void MoveButtonState::Update(boost::signal<void (VariantList*)> *pCustomSignal)
 {
 	if (m_bIsDown && m_releaseTimer < GetTick(TIMER_SYSTEM))
 	{
 		//time to release, since Android doesn't send one
-		ReleaseIfNeeded();
+		ReleaseIfNeeded(pCustomSignal);
 	}
 }
 
-void MoveButtonState::ReleaseIfNeeded()
+void MoveButtonState::ReleaseIfNeeded(boost::signal<void (VariantList*)> *pCustomSignal)
 {
 	if (m_bIsDown)
 	{
+		m_bIsDown = false;
 		VariantList v;
 
 		v.Get(0).Set(uint32(m_keyType));
 		v.Get(1).Set(uint32(VIRTUAL_KEY_RELEASE)); 
-		GetBaseApp()->m_sig_arcade_input(&v);
-
-		m_bIsDown = false;
+	
+		if (pCustomSignal)
+		{
+			(*pCustomSignal)(&v);
+		} else
+		{
+			GetBaseApp()->m_sig_arcade_input(&v);
+		}	
 	}
 }
 
 ArcadeInputComponent::ArcadeInputComponent()
 {
 	SetName("ArcadeInput");
-
+	m_customSignal = NULL;
 	m_buttons[MOVE_BUTTON_DIR_LEFT].SetKeyType(VIRTUAL_KEY_DIR_LEFT);
 	m_buttons[MOVE_BUTTON_DIR_RIGHT].SetKeyType(VIRTUAL_KEY_DIR_RIGHT);
 	m_buttons[MOVE_BUTTON_DIR_UP].SetKeyType(VIRTUAL_KEY_DIR_UP);
@@ -92,13 +111,14 @@ void ArcadeInputComponent::OnAdd(Entity *pEnt)
 	GetBaseApp()->m_sig_update.connect(1, boost::bind(&ArcadeInputComponent::OnUpdate, this, _1));
 	GetBaseApp()->m_sig_trackball.connect(1, boost::bind(&ArcadeInputComponent::OnTrackball, this, _1));
 	GetBaseApp()->m_sig_raw_keyboard.connect(1, boost::bind(&ArcadeInputComponent::OnRawKeyboard, this, _1));
-	
+
+	GetFunction("SetOutputEntity")->sig_function.connect(1, boost::bind(&ArcadeInputComponent::SetOutput, this, _1));
+
 	GetFunction("AddKeyBinding")->sig_function.connect(1, boost::bind(&ArcadeInputComponent::AddKeyBinding, this, _1));
 	m_pTrackballMode = &GetVarWithDefault("trackball_mode", uint32(TRACKBALL_MODE_WALKING))->GetUINT32();
 
 	//get notified when this changes:
 	GetVar("trackball_mode")->GetSigOnChanged()->connect(1, boost::bind(&ArcadeInputComponent::OnTrackballModeChanged, this, _1));
-
 	//example of adding a keybinding:
 	//pComp->GetFunction("AddKeyBinding")->sig_function(&VariantList(string("Left"), uint32(VIRTUAL_KEY_DIR_LEFT), uint32(VIRTUAL_KEY_DIR_LEFT)));
 }
@@ -115,6 +135,21 @@ void ArcadeInputComponent::OnTrackballModeChanged(Variant *pVar)
 		m_trackball = CL_Vec2f(0,0); //clear whatever was there before
 	}
 }
+void ArcadeInputComponent::SetOutput(VariantList *pVList)
+{
+	Entity *pEnt = pVList->Get(0).GetEntity();
+	assert(!m_customSignal && "We don't support setting this twice yet");
+	
+	m_customSignal = &pEnt->GetFunction("OnArcadeInput")->sig_function;
+
+	//get notified when this entity dies
+	pEnt->sig_onRemoved.connect(1, boost::bind(&ArcadeInputComponent::OnCustomOutputRemoved, this, _1));
+}
+
+void ArcadeInputComponent::OnCustomOutputRemoved(Entity *pEnt)
+{
+	m_customSignal = NULL;
+}
 
 void ArcadeInputComponent::AddKeyBinding(VariantList *pVList)
 {
@@ -126,16 +161,46 @@ void ArcadeInputComponent::AddKeyBinding(VariantList *pVList)
 	m_bindings.push_back(b);
 }
 
+
+#define C_ANGLE_VEC (sqrt(2.0f)/2.0f)
+
+//returns false if no direction is active (if no keys are down)
+bool ConvertKeysToDirectionVector(bool bLeft, bool bRight, bool bUp, bool bDown, CL_Vec2f * pVecOut)
+{
+	
+	if (!bLeft && !bRight && !bUp && !bDown)
+	{
+		*pVecOut = CL_Vec2f(0,0);
+		return false;
+	}
+	
+	if (bLeft) *pVecOut = CL_Vec2f(-1,0); else
+	if (bRight) *pVecOut = CL_Vec2f(1,0); else
+	if (bUp) *pVecOut = CL_Vec2f(0,-1); else
+	*pVecOut = CL_Vec2f(0, 1); //must have hit down
+
+
+	//check diagonals
+
+	if (bUp && bLeft) *pVecOut = CL_Vec2f(-C_ANGLE_VEC,-C_ANGLE_VEC); else
+	if (bDown && bLeft) *pVecOut = CL_Vec2f(-C_ANGLE_VEC,C_ANGLE_VEC); else
+	if (bUp && bRight) *pVecOut = CL_Vec2f(C_ANGLE_VEC,-C_ANGLE_VEC); else
+	if (bDown && bRight) *pVecOut = CL_Vec2f(C_ANGLE_VEC,C_ANGLE_VEC);
+
+	return true;
+}
+
+
 void ArcadeInputComponent::ActivateBinding(ArcadeKeyBind *pBind, bool bDown)
 {
 	//special handling for directional keys, so they work in tandem with the trackball or whatever else also does directions
 
 	switch (pBind->m_inputkeycode)
 	{
-		case VIRTUAL_KEY_DIR_LEFT:  m_buttons[MOVE_BUTTON_DIR_LEFT].OnPressToggle(bDown); break;
-		case VIRTUAL_KEY_DIR_RIGHT:  m_buttons[MOVE_BUTTON_DIR_RIGHT].OnPressToggle(bDown); break;
-		case VIRTUAL_KEY_DIR_UP:  m_buttons[MOVE_BUTTON_DIR_UP].OnPressToggle(bDown); break;
-		case VIRTUAL_KEY_DIR_DOWN:  m_buttons[MOVE_BUTTON_DIR_DOWN].OnPressToggle(bDown); break;
+		case VIRTUAL_KEY_DIR_LEFT:  m_buttons[MOVE_BUTTON_DIR_LEFT].OnPressToggle(bDown, m_customSignal);  break;
+		case VIRTUAL_KEY_DIR_RIGHT:  m_buttons[MOVE_BUTTON_DIR_RIGHT].OnPressToggle(bDown, m_customSignal);  break;
+		case VIRTUAL_KEY_DIR_UP:  m_buttons[MOVE_BUTTON_DIR_UP].OnPressToggle(bDown, m_customSignal);  break;
+		case VIRTUAL_KEY_DIR_DOWN:  m_buttons[MOVE_BUTTON_DIR_DOWN].OnPressToggle(bDown, m_customSignal); break;
 
 	default:
 
@@ -144,12 +209,19 @@ void ArcadeInputComponent::ActivateBinding(ArcadeKeyBind *pBind, bool bDown)
 			VariantList v;
 			v.Get(0).Set(pBind->m_outputkeycode);
 			v.Get(1).Set(uint32(bDown != 1)); 
-			GetBaseApp()->m_sig_arcade_input(&v);
-
+			
+			if (m_customSignal)
+			{
+				(*m_customSignal)(&v);
+			} else
+			{
+				GetBaseApp()->m_sig_arcade_input(&v);
+			}
 		}
 	}
-
+	
 }
+
 void ArcadeInputComponent::OnRawKeyboard(VariantList *pVList)
 {
 	int keyCode = pVList->Get(0).GetUINT32();
@@ -185,8 +257,8 @@ void ArcadeInputComponent::OnTrackball(VariantList *pVList)
 
 		if (m_trackball.x < -1.0f) 
 		{
-			m_buttons[MOVE_BUTTON_DIR_LEFT].OnPress(0);
-			m_buttons[MOVE_BUTTON_DIR_LEFT].ReleaseIfNeeded();
+			m_buttons[MOVE_BUTTON_DIR_LEFT].OnPress(0, m_customSignal);
+			m_buttons[MOVE_BUTTON_DIR_LEFT].ReleaseIfNeeded(m_customSignal);
 			m_trackball.x += 1;
 			m_trackball.y = 0;
 
@@ -194,8 +266,8 @@ void ArcadeInputComponent::OnTrackball(VariantList *pVList)
 		{
 			if (m_trackball.x > 1.0f) 
 			{
-				m_buttons[MOVE_BUTTON_DIR_RIGHT].OnPress(0);
-				m_buttons[MOVE_BUTTON_DIR_RIGHT].ReleaseIfNeeded();
+				m_buttons[MOVE_BUTTON_DIR_RIGHT].OnPress(0, m_customSignal);
+				m_buttons[MOVE_BUTTON_DIR_RIGHT].ReleaseIfNeeded(m_customSignal);
 				m_trackball.x -= 1;
 				m_trackball.y = 0;
 			}
@@ -203,16 +275,16 @@ void ArcadeInputComponent::OnTrackball(VariantList *pVList)
 
 		if (m_trackball.y < -1.0f)
 		{
-			m_buttons[MOVE_BUTTON_DIR_UP].OnPress(0);
-			m_buttons[MOVE_BUTTON_DIR_UP].ReleaseIfNeeded();
+			m_buttons[MOVE_BUTTON_DIR_UP].OnPress(0, m_customSignal);
+			m_buttons[MOVE_BUTTON_DIR_UP].ReleaseIfNeeded(m_customSignal);
 			m_trackball.y += 1;
 			m_trackball.x = 0;
 		}else
 		{
 			if (m_trackball.y > 1.0f)
 			{
-				m_buttons[MOVE_BUTTON_DIR_DOWN].OnPress(0);
-				m_buttons[MOVE_BUTTON_DIR_DOWN].ReleaseIfNeeded();
+				m_buttons[MOVE_BUTTON_DIR_DOWN].OnPress(0, m_customSignal);
+				m_buttons[MOVE_BUTTON_DIR_DOWN].ReleaseIfNeeded(m_customSignal);
 				m_trackball.y -= 1;
 				m_trackball.x = 0;
 			}
@@ -226,27 +298,27 @@ void ArcadeInputComponent::OnTrackball(VariantList *pVList)
 
 	if (x < 0) 
 	{
-		m_buttons[MOVE_BUTTON_DIR_LEFT].OnPress(releaseTime);
-		m_buttons[MOVE_BUTTON_DIR_RIGHT].ReleaseIfNeeded();
+		m_buttons[MOVE_BUTTON_DIR_LEFT].OnPress(releaseTime, m_customSignal);
+		m_buttons[MOVE_BUTTON_DIR_RIGHT].ReleaseIfNeeded(m_customSignal);
 	} else
 	{
 		if (x > 0) 
 		{
-			m_buttons[MOVE_BUTTON_DIR_RIGHT].OnPress(releaseTime);
-			m_buttons[MOVE_BUTTON_DIR_LEFT].ReleaseIfNeeded();
+			m_buttons[MOVE_BUTTON_DIR_RIGHT].OnPress(releaseTime, m_customSignal);
+			m_buttons[MOVE_BUTTON_DIR_LEFT].ReleaseIfNeeded(m_customSignal);
 		}
 	}
 	
 	if (y < 0)
 	{
-		m_buttons[MOVE_BUTTON_DIR_UP].OnPress(releaseTime);
-		m_buttons[MOVE_BUTTON_DIR_DOWN].ReleaseIfNeeded();
+		m_buttons[MOVE_BUTTON_DIR_UP].OnPress(releaseTime, m_customSignal);
+		m_buttons[MOVE_BUTTON_DIR_DOWN].ReleaseIfNeeded(m_customSignal);
 	}else
 	{
 		if (y > 0)
 		{
-			m_buttons[MOVE_BUTTON_DIR_DOWN].OnPress(releaseTime);
-			m_buttons[MOVE_BUTTON_DIR_UP].ReleaseIfNeeded();
+			m_buttons[MOVE_BUTTON_DIR_DOWN].OnPress(releaseTime, m_customSignal);
+			m_buttons[MOVE_BUTTON_DIR_UP].ReleaseIfNeeded(m_customSignal);
 		}
 	}
 }
@@ -255,6 +327,18 @@ void ArcadeInputComponent::OnUpdate(VariantList *pVList)
 {
 	for (int i=0; i < MOVE_BUTTON_DIR_COUNT; i++)
 	{
-		m_buttons[i].Update();
+		m_buttons[i].Update(m_customSignal);
 	}
+}
+
+bool ArcadeInputComponent::GetDirectionKeysAsVector( CL_Vec2f *pVecOut )
+{
+	return ConvertKeysToDirectionVector(m_buttons[MOVE_BUTTON_DIR_LEFT].m_bIsDown,
+		m_buttons[MOVE_BUTTON_DIR_RIGHT].m_bIsDown, m_buttons[MOVE_BUTTON_DIR_UP].m_bIsDown,
+		m_buttons[MOVE_BUTTON_DIR_DOWN].m_bIsDown, pVecOut);
+}
+
+void AddKeyBinding(EntityComponent *pComp, string name, uint32 inputcode, uint32 outputcode)
+{
+	pComp->GetFunction("AddKeyBinding")->sig_function(&VariantList(name, inputcode, outputcode));
 }

@@ -4,9 +4,7 @@
 
 #include "AudioManagerAudiere.h"
 #include "util/MiscUtils.h"
-
-
-
+  
 AudioManagerAudiere::AudioManagerAudiere()
 {
 	m_pDevice = NULL;
@@ -161,7 +159,8 @@ void AudioManagerAudiere::Preload( string fName, bool bLooping /*= false*/, bool
 AudioHandle AudioManagerAudiere::Play( string fName, bool bLooping /*= false*/, bool bIsMusic, bool bAddBasePath, bool bForceStreaming)
 {
 
-	if( !GetMusicEnabled() && bIsMusic ){
+	if( !GetMusicEnabled() && bIsMusic )
+	{
 		m_bLastMusicLooping = bLooping;
 		m_lastMusicFileName = fName;
 
@@ -192,6 +191,7 @@ AudioHandle AudioManagerAudiere::Play( string fName, bool bLooping /*= false*/, 
 	if(pObject->m_pSound->isPlaying())
 	{
 		pObject->m_pSound->stop();
+		pObject->m_pSound->reset();
 	}
 	pObject->m_pSound->play();
 

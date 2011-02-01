@@ -39,7 +39,6 @@ void CustomInputComponent::OnActivated()
 	GetFunction("OnActivated")->sig_function(&v);
 }
 
-
 void CustomInputComponent::OnInput( VariantList *pVList )
 {
 
@@ -63,27 +62,21 @@ void CustomInputComponent::OnInput( VariantList *pVList )
 		}
 		char c = (char)pVList->Get(2).GetUINT32();
 
-
-
-
 		if (m_pKeys->size() > 0)
 		{
 
 			bool bFound = false;
 			for (unsigned int i=0; i < m_pKeys->size(); i++)
 			{
-
 				if (c == m_pKeys->at(i))
 				{
 					bFound = true;
 					break;
 				}
-
 			}
 
 			if (!bFound)
 			{
-
 #ifdef _DEBUG
 				//LogMsg("Got key %c, ignoring", c);
 #endif
@@ -91,8 +84,6 @@ void CustomInputComponent::OnInput( VariantList *pVList )
 				return;
 			}
 		}
-
-
 
 		OnActivated();	
 		//another method

@@ -72,7 +72,7 @@ void DPadComponent::OnAdd(Entity *pEnt)
 
 	//movement arrows?
 
-	if (!FileExists(*m_pDpadImage))
+	if (!GetFileManager()->FileExists(*m_pDpadImage))
 	{
 		LogMsg("Missing file %s.  Set dpad_image to desired filename in DPadComponent before adding!", m_pDpadImage->c_str());
 		assert(!"Can't load the dpad file!");

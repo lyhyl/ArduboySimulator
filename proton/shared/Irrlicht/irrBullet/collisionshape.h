@@ -74,7 +74,7 @@ public:
 
     const irr::core::vector3df getLocalScaling() const;
 
-    const irr::core::stringc& getName() const { return (irr::core::stringc)shape->getName(); };
+    const irr::core::stringc& getName() const { return shape->getName(); };
 
     ECollisionShapeType getShapeType() const { return type; };
 

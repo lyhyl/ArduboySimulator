@@ -150,10 +150,6 @@ void OnSelectInput(VariantList *pVList)
 
 }
 
-void AddKeyBinding(EntityComponent *pComp, string name, uint32 inputcode, uint32 outputcode)
-{
-	pComp->GetFunction("AddKeyBinding")->sig_function(&VariantList(name, inputcode, outputcode));
-}
 
 
 void SetupArrowSelector(Entity *pBG, int itemCount, uint32 defaultItem)

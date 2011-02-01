@@ -12,7 +12,7 @@
 class irrBulletWorld;
 class IRigidBody;
 class ICollisionObject;
-class btVehicleRaycaster;
+struct btVehicleRaycaster;
 
 
 namespace irr

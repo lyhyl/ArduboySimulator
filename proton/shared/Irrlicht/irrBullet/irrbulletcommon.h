@@ -12,7 +12,7 @@
 #include <ISceneNode.h>
 
 
-class SWheelInfo;
+struct SWheelInfo;
 class btVector3;
 class btTransform;
 struct btWheelInfo;

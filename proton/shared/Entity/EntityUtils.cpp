@@ -1490,3 +1490,9 @@ EntityComponent * CreateSlider(Entity *pBG, float x, float y, float sizeX, strin
 	return pSliderComp;
 };
 
+
+void AdjustGUIElementForWindowView(Entity *pEnt, CL_Rectf r, float rotation)
+{
+	CL_Vec2f vPos = RotateGUIPoint( pEnt->GetVar("pos2d")->GetVector2(), r, rotation);
+	pEnt->GetVar("pos2d")->Set(vPos);
+}
