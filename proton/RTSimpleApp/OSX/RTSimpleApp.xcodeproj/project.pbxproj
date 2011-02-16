@@ -106,7 +106,6 @@
 		5D70B83412B6074D00A1AB17 /* audio in Resources */ = {isa = PBXBuildFile; fileRef = 5D70B83312B6074D00A1AB17 /* audio */; };
 		5D70B83612B6075B00A1AB17 /* game in Resources */ = {isa = PBXBuildFile; fileRef = 5D70B83512B6075B00A1AB17 /* game */; };
 		5D70BA5B12B711BC00A1AB17 /* libfmodex.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D70BA5A12B711BC00A1AB17 /* libfmodex.dylib */; };
-		5D70BA6112B7124700A1AB17 /* AudioManagerFMOD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D70BA6012B7124700A1AB17 /* AudioManagerFMOD.cpp */; };
 		5D70BB2412B7208700A1AB17 /* libfmodex.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 5D70BA5A12B711BC00A1AB17 /* libfmodex.dylib */; };
 		5D70C4BF12B7586D00A1AB17 /* MyApplication.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D70C4BE12B7586D00A1AB17 /* MyApplication.mm */; };
 		5DDE02A012B4F50D000C5CC0 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DDE029F12B4F50D000C5CC0 /* libz.dylib */; };
@@ -114,6 +113,8 @@
 		5DDE05AA12B58EBD000C5CC0 /* interface in Resources */ = {isa = PBXBuildFile; fileRef = 5DDE05A912B58EBD000C5CC0 /* interface */; };
 		5DEB1B8B12D309CE00A3A6DB /* TouchTestComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DEB1B8A12D309CE00A3A6DB /* TouchTestComponent.cpp */; };
 		5DEB1B8E12D309D700A3A6DB /* TouchTestMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DEB1B8D12D309D700A3A6DB /* TouchTestMenu.cpp */; };
+		5DF9975A130B9CCB00985AF4 /* AudioManagerFMOD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF99759130B9CCB00985AF4 /* AudioManagerFMOD.cpp */; };
+		5DF99764130B9D2D00985AF4 /* EmitVirtualKeyComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF99763130B9D2D00985AF4 /* EmitVirtualKeyComponent.cpp */; };
 		5DFB863312BB233D00337543 /* app.icns in Resources */ = {isa = PBXBuildFile; fileRef = 5DFB863212BB233D00337543 /* app.icns */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
@@ -329,8 +330,6 @@
 		5D70B83312B6074D00A1AB17 /* audio */ = {isa = PBXFileReference; lastKnownFileType = folder; name = audio; path = ../bin/audio; sourceTree = SOURCE_ROOT; };
 		5D70B83512B6075B00A1AB17 /* game */ = {isa = PBXFileReference; lastKnownFileType = folder; name = game; path = ../bin/game; sourceTree = SOURCE_ROOT; };
 		5D70BA5A12B711BC00A1AB17 /* libfmodex.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; name = libfmodex.dylib; path = "FMOD Programmers API Mac/api/lib/libfmodex.dylib"; sourceTree = DEVELOPER_DIR; };
-		5D70BA5F12B7124700A1AB17 /* AudioManagerFMOD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AudioManagerFMOD.h; path = ../../shared/Audio/AudioManagerFMOD.h; sourceTree = SOURCE_ROOT; };
-		5D70BA6012B7124700A1AB17 /* AudioManagerFMOD.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AudioManagerFMOD.cpp; path = ../../shared/Audio/AudioManagerFMOD.cpp; sourceTree = SOURCE_ROOT; };
 		5D70C4BE12B7586D00A1AB17 /* MyApplication.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MyApplication.mm; sourceTree = "<group>"; };
 		5DDE029F12B4F50D000C5CC0 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		5DDE02A312B4F526000C5CC0 /* App.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = App.h; path = ../source/App.h; sourceTree = SOURCE_ROOT; };
@@ -340,6 +339,10 @@
 		5DEB1B8A12D309CE00A3A6DB /* TouchTestComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TouchTestComponent.cpp; path = ../source/Component/TouchTestComponent.cpp; sourceTree = SOURCE_ROOT; };
 		5DEB1B8C12D309D700A3A6DB /* TouchTestMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TouchTestMenu.h; path = ../source/GUI/TouchTestMenu.h; sourceTree = SOURCE_ROOT; };
 		5DEB1B8D12D309D700A3A6DB /* TouchTestMenu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TouchTestMenu.cpp; path = ../source/GUI/TouchTestMenu.cpp; sourceTree = SOURCE_ROOT; };
+		5DF99758130B9CCB00985AF4 /* AudioManagerFMOD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AudioManagerFMOD.h; path = ../../shared/Audio/AudioManagerFMOD.h; sourceTree = SOURCE_ROOT; };
+		5DF99759130B9CCB00985AF4 /* AudioManagerFMOD.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AudioManagerFMOD.cpp; path = ../../shared/Audio/AudioManagerFMOD.cpp; sourceTree = SOURCE_ROOT; };
+		5DF99762130B9D2D00985AF4 /* EmitVirtualKeyComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EmitVirtualKeyComponent.h; path = ../../shared/Entity/EmitVirtualKeyComponent.h; sourceTree = SOURCE_ROOT; };
+		5DF99763130B9D2D00985AF4 /* EmitVirtualKeyComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EmitVirtualKeyComponent.cpp; path = ../../shared/Entity/EmitVirtualKeyComponent.cpp; sourceTree = SOURCE_ROOT; };
 		5DFB863212BB233D00337543 /* app.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = app.icns; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* RTSimpleApp-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "RTSimpleApp-Info.plist"; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* RTSimpleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RTSimpleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -518,8 +521,8 @@
 		5D70B6D012B606DC00A1AB17 /* Audio */ = {
 			isa = PBXGroup;
 			children = (
-				5D70BA5F12B7124700A1AB17 /* AudioManagerFMOD.h */,
-				5D70BA6012B7124700A1AB17 /* AudioManagerFMOD.cpp */,
+				5DF99758130B9CCB00985AF4 /* AudioManagerFMOD.h */,
+				5DF99759130B9CCB00985AF4 /* AudioManagerFMOD.cpp */,
 				5D70B6D312B606DC00A1AB17 /* AudioManager.cpp */,
 				5D70B6D412B606DC00A1AB17 /* AudioManager.h */,
 			);
@@ -573,6 +576,8 @@
 		5D70B6E012B606DC00A1AB17 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				5DF99762130B9D2D00985AF4 /* EmitVirtualKeyComponent.h */,
+				5DF99763130B9D2D00985AF4 /* EmitVirtualKeyComponent.cpp */,
 				5D70B6E112B606DC00A1AB17 /* SliderComponent.h */,
 				5D70B6E212B606DC00A1AB17 /* SliderComponent.cpp */,
 				5D70B6E312B606DC00A1AB17 /* SelectButtonWithCustomInputComponent.h */,
@@ -1003,10 +1008,11 @@
 				5D70B83012B6072D00A1AB17 /* EnterNameMenu.cpp in Sources */,
 				5D70B83112B6072D00A1AB17 /* DebugMenu.cpp in Sources */,
 				5D70B83212B6072D00A1AB17 /* MainMenu.cpp in Sources */,
-				5D70BA6112B7124700A1AB17 /* AudioManagerFMOD.cpp in Sources */,
 				5D70C4BF12B7586D00A1AB17 /* MyApplication.mm in Sources */,
 				5DEB1B8B12D309CE00A3A6DB /* TouchTestComponent.cpp in Sources */,
 				5DEB1B8E12D309D700A3A6DB /* TouchTestMenu.cpp in Sources */,
+				5DF9975A130B9CCB00985AF4 /* AudioManagerFMOD.cpp in Sources */,
+				5DF99764130B9D2D00985AF4 /* EmitVirtualKeyComponent.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

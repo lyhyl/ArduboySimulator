@@ -79,7 +79,6 @@
 		5D7D3AB50FF6D87500A99844 /* TyperComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D3AB20FF6D87500A99844 /* TyperComponent.cpp */; };
 		5D7F36150FBD17E100A15763 /* InterpolateComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7F36130FBD17E100A15763 /* InterpolateComponent.cpp */; };
 		5D8272910FA9DEE00097DE6A /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5D8272900FA9DEE00097DE6A /* Entitlements.plist */; };
-		5D82C8830FF4BB110082EBE7 /* AudioManagerOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D82C8820FF4BB110082EBE7 /* AudioManagerOS.mm */; };
 		5D82C88B0FF4BB3F0082EBE7 /* NetHTTP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D82C8850FF4BB3F0082EBE7 /* NetHTTP.cpp */; };
 		5D82C88C0FF4BB3F0082EBE7 /* NetSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D82C8870FF4BB3F0082EBE7 /* NetSocket.cpp */; };
 		5D82C88D0FF4BB3F0082EBE7 /* NetUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D82C8890FF4BB3F0082EBE7 /* NetUtils.cpp */; };
@@ -125,6 +124,11 @@
 		5DF1D597104501C400826147 /* L_ParticleMem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF1D588104501C400826147 /* L_ParticleMem.cpp */; };
 		5DF1D598104501C400826147 /* L_ParticleSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF1D58A104501C400826147 /* L_ParticleSystem.cpp */; };
 		5DF1D599104501C400826147 /* L_ShootingEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF1D58C104501C400826147 /* L_ShootingEffect.cpp */; };
+		5DF9963C130B7ED600985AF4 /* AudioManagerDenshion.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5DF9963A130B7ED600985AF4 /* AudioManagerDenshion.mm */; };
+		5DF9965D130B802300985AF4 /* SimpleAudioEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DF99654130B802300985AF4 /* SimpleAudioEngine.m */; };
+		5DF9965E130B802300985AF4 /* CocosDenshion.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DF99656130B802300985AF4 /* CocosDenshion.m */; };
+		5DF9965F130B802300985AF4 /* CDOpenALSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DF99658130B802300985AF4 /* CDOpenALSupport.m */; };
+		5DF99660130B802300985AF4 /* CDAudioManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DF9965B130B802300985AF4 /* CDAudioManager.m */; };
 		5DFE105B0F60EB790065956E /* MiscUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DFE10550F60EB790065956E /* MiscUtils.cpp */; };
 		5DFE105C0F60EB790065956E /* RenderUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DFE10570F60EB790065956E /* RenderUtils.cpp */; };
 		5DFE10650F60EBB80065956E /* BaseApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DFE10600F60EBB80065956E /* BaseApp.cpp */; };
@@ -286,8 +290,6 @@
 		5D7F36130FBD17E100A15763 /* InterpolateComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = InterpolateComponent.cpp; path = Entity/InterpolateComponent.cpp; sourceTree = "<group>"; };
 		5D7F36140FBD17E100A15763 /* InterpolateComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InterpolateComponent.h; path = Entity/InterpolateComponent.h; sourceTree = "<group>"; };
 		5D8272900FA9DEE00097DE6A /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Entitlements.plist; sourceTree = "<group>"; };
-		5D82C8810FF4BB110082EBE7 /* AudioManagerOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AudioManagerOS.h; path = Audio/AudioManagerOS.h; sourceTree = "<group>"; };
-		5D82C8820FF4BB110082EBE7 /* AudioManagerOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AudioManagerOS.mm; path = Audio/AudioManagerOS.mm; sourceTree = "<group>"; };
 		5D82C8850FF4BB3F0082EBE7 /* NetHTTP.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NetHTTP.cpp; path = Network/NetHTTP.cpp; sourceTree = "<group>"; };
 		5D82C8860FF4BB3F0082EBE7 /* NetHTTP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NetHTTP.h; path = Network/NetHTTP.h; sourceTree = "<group>"; };
 		5D82C8870FF4BB3F0082EBE7 /* NetSocket.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NetSocket.cpp; path = Network/NetSocket.cpp; sourceTree = "<group>"; };
@@ -363,6 +365,17 @@
 		5DF1D58C104501C400826147 /* L_ShootingEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = L_ShootingEffect.cpp; path = ../shared/Renderer/linearparticle/sources/L_ShootingEffect.cpp; sourceTree = SOURCE_ROOT; };
 		5DF1D58D104501C400826147 /* L_ShootingEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = L_ShootingEffect.h; path = ../shared/Renderer/linearparticle/sources/L_ShootingEffect.h; sourceTree = SOURCE_ROOT; };
 		5DF1D58E104501C400826147 /* LinearParticle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LinearParticle.h; path = ../shared/Renderer/LinearParticle.h; sourceTree = SOURCE_ROOT; };
+		5DF9963A130B7ED600985AF4 /* AudioManagerDenshion.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AudioManagerDenshion.mm; path = Audio/AudioManagerDenshion.mm; sourceTree = "<group>"; };
+		5DF9963B130B7ED600985AF4 /* AudioManagerDenshion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AudioManagerDenshion.h; path = Audio/AudioManagerDenshion.h; sourceTree = "<group>"; };
+		5DF99654130B802300985AF4 /* SimpleAudioEngine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SimpleAudioEngine.m; path = Audio/CocosDenshion/SimpleAudioEngine.m; sourceTree = "<group>"; };
+		5DF99655130B802300985AF4 /* SimpleAudioEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SimpleAudioEngine.h; path = Audio/CocosDenshion/SimpleAudioEngine.h; sourceTree = "<group>"; };
+		5DF99656130B802300985AF4 /* CocosDenshion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CocosDenshion.m; path = Audio/CocosDenshion/CocosDenshion.m; sourceTree = "<group>"; };
+		5DF99657130B802300985AF4 /* CocosDenshion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CocosDenshion.h; path = Audio/CocosDenshion/CocosDenshion.h; sourceTree = "<group>"; };
+		5DF99658130B802300985AF4 /* CDOpenALSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CDOpenALSupport.m; path = Audio/CocosDenshion/CDOpenALSupport.m; sourceTree = "<group>"; };
+		5DF99659130B802300985AF4 /* CDOpenALSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDOpenALSupport.h; path = Audio/CocosDenshion/CDOpenALSupport.h; sourceTree = "<group>"; };
+		5DF9965A130B802300985AF4 /* CDConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDConfig.h; path = Audio/CocosDenshion/CDConfig.h; sourceTree = "<group>"; };
+		5DF9965B130B802300985AF4 /* CDAudioManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CDAudioManager.m; path = Audio/CocosDenshion/CDAudioManager.m; sourceTree = "<group>"; };
+		5DF9965C130B802300985AF4 /* CDAudioManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CDAudioManager.h; path = Audio/CocosDenshion/CDAudioManager.h; sourceTree = "<group>"; };
 		5DFE10550F60EB790065956E /* MiscUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MiscUtils.cpp; path = util/MiscUtils.cpp; sourceTree = "<group>"; };
 		5DFE10560F60EB790065956E /* MiscUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MiscUtils.h; path = util/MiscUtils.h; sourceTree = "<group>"; };
 		5DFE10570F60EB790065956E /* RenderUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RenderUtils.cpp; path = util/RenderUtils.cpp; sourceTree = "<group>"; };
@@ -482,8 +495,9 @@
 		5D3063690FD890CF009DE600 /* Audio */ = {
 			isa = PBXGroup;
 			children = (
-				5D82C8810FF4BB110082EBE7 /* AudioManagerOS.h */,
-				5D82C8820FF4BB110082EBE7 /* AudioManagerOS.mm */,
+				5DF99653130B800300985AF4 /* CocosDenshion */,
+				5DF9963A130B7ED600985AF4 /* AudioManagerDenshion.mm */,
+				5DF9963B130B7ED600985AF4 /* AudioManagerDenshion.h */,
 				5D3063600FD890CB009DE600 /* AudioManager.cpp */,
 				5D3063610FD890CB009DE600 /* AudioManager.h */,
 			);
@@ -837,6 +851,22 @@
 			name = LinearParticle;
 			sourceTree = "<group>";
 		};
+		5DF99653130B800300985AF4 /* CocosDenshion */ = {
+			isa = PBXGroup;
+			children = (
+				5DF99654130B802300985AF4 /* SimpleAudioEngine.m */,
+				5DF99655130B802300985AF4 /* SimpleAudioEngine.h */,
+				5DF99656130B802300985AF4 /* CocosDenshion.m */,
+				5DF99657130B802300985AF4 /* CocosDenshion.h */,
+				5DF99658130B802300985AF4 /* CDOpenALSupport.m */,
+				5DF99659130B802300985AF4 /* CDOpenALSupport.h */,
+				5DF9965A130B802300985AF4 /* CDConfig.h */,
+				5DF9965B130B802300985AF4 /* CDAudioManager.m */,
+				5DF9965C130B802300985AF4 /* CDAudioManager.h */,
+			);
+			name = CocosDenshion;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -946,7 +976,6 @@
 				5D30635B0FD89049009DE600 /* VariantDB.cpp in Sources */,
 				5D30635F0FD890B0009DE600 /* MathUtils.cpp in Sources */,
 				5D3063660FD890CB009DE600 /* AudioManager.cpp in Sources */,
-				5D82C8830FF4BB110082EBE7 /* AudioManagerOS.mm in Sources */,
 				5D82C88B0FF4BB3F0082EBE7 /* NetHTTP.cpp in Sources */,
 				5D82C88C0FF4BB3F0082EBE7 /* NetSocket.cpp in Sources */,
 				5D82C88D0FF4BB3F0082EBE7 /* NetUtils.cpp in Sources */,
@@ -1008,6 +1037,11 @@
 				5DEB1B7C12D3099100A3A6DB /* TouchTestMenu.cpp in Sources */,
 				5DEB1B7F12D309A300A3A6DB /* TouchTestComponent.cpp in Sources */,
 				5DEB1BA512D30B3D00A3A6DB /* EmitVirtualKeyComponent.cpp in Sources */,
+				5DF9963C130B7ED600985AF4 /* AudioManagerDenshion.mm in Sources */,
+				5DF9965D130B802300985AF4 /* SimpleAudioEngine.m in Sources */,
+				5DF9965E130B802300985AF4 /* CocosDenshion.m in Sources */,
+				5DF9965F130B802300985AF4 /* CDOpenALSupport.m in Sources */,
+				5DF99660130B802300985AF4 /* CDAudioManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

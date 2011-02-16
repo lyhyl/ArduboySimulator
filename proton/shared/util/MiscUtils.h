@@ -26,7 +26,7 @@ void ForceRange(float &a, const float min, const float max);
 #define rt_max(a,b)            (((a) > (b)) ? (a) : (b))
 
 template< class C>
-string toString(C value)
+std::string toString(C value)
 {
 	std::ostringstream o;
 	o << value;
@@ -50,4 +50,6 @@ void TruncateString(string &input, size_t len);
 bool IsInString(string &s, const char *search);
 CL_Vec3f LerpVector(const CL_Vec3f &vOriginal, const CL_Vec3f &Target, float f_percent);
 CL_Vec2f RotateGUIPoint(CL_Vec2f vPos, CL_Rectf r, float rotation); //used for calculating screen positions for splitscreen modes
+CL_Rectf RotateGUIRect(CL_Rectf vRect, CL_Rectf r, float angle); //used for calculating screen positions for splitscreen modes
 void RotationToXYMod(float rotation, float *pXMod ,float *pYMod); //given a rotation in degrees, tells you what to flip
+void SetFloatWithTarget(float *p_out_dest, float r_target, float r_amount);

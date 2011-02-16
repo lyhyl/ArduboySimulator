@@ -105,6 +105,22 @@ SoundObject * AudioManagerAudiere::GetSoundObjectByFileName(string fName)
 	return 0; //failed
 }
 
+SoundObject * AudioManagerAudiere::GetSoundObjectByPointer(void *p)
+{
+	list<SoundObject*>::iterator itor = m_soundList.begin();
+
+	while (itor != m_soundList.end())
+	{
+		if ( (*itor) == p)
+		{
+			return (*itor); //found a match
+		}
+		itor++;
+	}
+
+	return 0; //failed
+}
+
 void AudioManagerAudiere::Preload( string fName, bool bLooping /*= false*/, bool bIsMusic /*= false*/, bool bAddBasePath /*= true*/, bool bForceStreaming )
 {
 
@@ -191,11 +207,12 @@ AudioHandle AudioManagerAudiere::Play( string fName, bool bLooping /*= false*/, 
 	if(pObject->m_pSound->isPlaying())
 	{
 		pObject->m_pSound->stop();
-		pObject->m_pSound->reset();
 	}
+	pObject->m_pSound->reset();
+
 	pObject->m_pSound->play();
 
-	return (AudioHandle)0;
+	return (AudioHandle)pObject;
 }
 
 /*
@@ -224,7 +241,13 @@ void AudioManagerAudiere::Update()
 
 void AudioManagerAudiere::Stop( AudioHandle soundID )
 {
-	//skipped
+	
+	SoundObject *pObject = GetSoundObjectByPointer((void*)soundID);
+
+	if (pObject && pObject->m_pSound)
+	{
+		pObject->m_pSound->stop();
+	}
 	
 }
 

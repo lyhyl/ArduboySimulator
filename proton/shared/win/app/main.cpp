@@ -44,7 +44,7 @@ void InitVideoSize()
 	AddVideoMode("Droid Landscape", 854, 480, PLATFORM_ID_ANDROID); //g_landScapeNoNeckHurtMode should be false when testing
 	AddVideoMode("Nexus One Landscape", 800, 480, PLATFORM_ID_ANDROID); //g_landScapeNoNeckHurtMode should be false when testing
 
-	string desiredVideoMode = "iPhone"; //name needs to match one of the ones defined below
+	string desiredVideoMode = "Windows"; //name needs to match one of the ones defined below
     g_landScapeNoNeckHurtMode = true; //if true, will rotate the screen so we can play in landscape mode in windows without hurting ourselves
 
 	SetVideoModeByName(desiredVideoMode);
@@ -194,7 +194,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			int xPos = GET_X_LPARAM(lParam);
 			int yPos = GET_Y_LPARAM(lParam) + GetYOffset();
 			ConvertCoordinatesIfRequired(xPos, yPos);
-			GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CLICK_START, xPos, yPos);
+			GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_START, xPos, yPos, 0);
 			break;
 		}
 
@@ -477,7 +477,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			int xPos = GET_X_LPARAM(lParam);
 			int yPos = GET_Y_LPARAM(lParam) + GetYOffset();
 			ConvertCoordinatesIfRequired(xPos, yPos);
-			GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CLICK_END, xPos, yPos);
+			GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_END, xPos, yPos, 0);
 			g_leftMouseButtonDown = false;
 		}
 		return true;
@@ -491,11 +491,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			int yPos = GET_Y_LPARAM(lParam) + GetYOffset();
 			ConvertCoordinatesIfRequired(xPos, yPos);
 
-			GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CLICK_MOVE_RAW, xPos, yPos);
+			GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_MOVE_RAW, xPos, yPos, 0);
 
 			if (g_leftMouseButtonDown)
 			{
-				GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CLICK_MOVE, xPos, yPos);
+				GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_MOVE, xPos, yPos, 0);
 				break;
 			} 
 		}
