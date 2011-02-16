@@ -1,23 +1,38 @@
-#include "AudioManagerOS.h"
+#include "AudioManagerDenshion.h"
 #include <CoreAudio/CoreAudioTypes.h>
 #include <AudioToolbox/AudioToolbox.h>
+#include "CocosDenshion/SimpleAudioEngine.h"
+
+#if TARGET_OS_IPHONE == 1
 #include <AVFoundation/AVFoundation.h>
+#endif
 
 AVAudioPlayer * m_bgMusicPlayer;
 
 
-
-
-AudioManagerOS::AudioManagerOS()
+AudioManagerDenshion::AudioManagerDenshion()
 {
 	m_bgMusicPlayer = NULL;
 	m_bDisabledMusicRecently = false;
 }
 
-AudioManagerOS::~AudioManagerOS()
+AudioManagerDenshion::~AudioManagerDenshion()
 {
 }
 
+bool AudioManagerDenshion::Init()
+{
+	[CDSoundEngine setMixerSampleRate: 22050];
+	[SimpleAudioEngine sharedEngine];
+
+	[[CDAudioManager sharedManager].soundEngine setSourceGroupNonInterruptible:0 isNonInterruptible:TRUE];
+	[[CDAudioManager sharedManager] setResignBehavior:kAMRBStopPlay autoHandle:YES];
+	
+	LogMsg("Initialized Denshion");
+	return true; //success
+}
+
+#if TARGET_OS_IPHONE == 1
 
 bool CheckIfOtherAudioIsPlaying()
 {
@@ -35,6 +50,7 @@ if (isPlaying != 0)
 		return true;
 }
 
+	
 /*
 // since no other audio is *supposedly* playing, then we will make darn sure by changing the audio session category temporarily
 // to kick any system remnants out of hardware (iTunes (or the iPod App, or whatever you wanna call it) sticks around)
@@ -50,80 +66,32 @@ AudioSessionSetProperty(kAudioSessionProperty_Audi oCategory, sizeof(sessionCate
 return false;
 }
 
+#endif
 
-AudioObjectOS * AudioManagerOS::GetAudioObjectByFileName(const string &fName, bool bLooping)
+void AudioManagerDenshion::Vibrate()
 {
-	for (int i=0; i < m_audioList.size(); i++)
-	{
-		if (m_audioList[i].fName == fName)
-			return &m_audioList[i];
-	}
+#if TARGET_OS_IPHONE == 1
 
-	UInt32 id = AUDIO_HANDLE_BLANK;
-
-	//create it
-	if (id == AUDIO_HANDLE_BLANK)
-	{
-		SystemSoundID myID;
-		
-		NSString *soundFile =  [NSString stringWithCString:  (GetBaseAppPath()+fName).c_str() encoding: [NSString defaultCStringEncoding]];
-
-		NSURL *url = [NSURL fileURLWithPath:soundFile];
-
-		OSStatus s = AudioServicesCreateSystemSoundID( (CFURLRef) url, &myID );
-
-		if (s == noErr)
-		{
-				
-			AudioObjectOS a;
-			a.fName = fName;
-			a.m_id = myID;
-			m_audioList.push_back(a);
-			//LogMsg("Cached %s at bufferID %d", a.fName.c_str(), a.m_id);
-		} else
-		{
-			LogMsg("Error loading %s (OSStatus %d)", (GetBaseAppPath()+fName).c_str(), s);
-			return NULL;
-		}
-	}
-	return &m_audioList.back();
-}
-
-AudioObjectOS * AudioManagerOS::GetAudioObjectByID(UInt32 id)
-{
-	for (int i=0; i < m_audioList.size(); i++)
-	{
-		if (m_audioList[i].m_id == id)
-			return &m_audioList[i];
-	}
-	return NULL;
-}
-
-void AudioManagerOS::Vibrate()
-{
 	if (!m_bVibrationDisabled)
 	{
 		AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
 	}
+#endif
 }
 
-void AudioManagerOS::KillAudioObjectByFileName(const string &fName)
+
+void AudioManagerDenshion::DestroyAudioCache()
 {
 
 }
 
-void AudioManagerOS::DestroyAudioCache()
+void AudioManagerDenshion::Stop(AudioHandle id)
 {
 
-	//m_audioList.clear();
+	[[SimpleAudioEngine sharedEngine]stopEffect: id];
 }
 
-void AudioManagerOS::Stop(AudioHandle id)
-{
-	
-}
-
-void AudioManagerOS::Preload(string fName, bool bLooping, bool bIsMusic, bool bAddBasePath , bool bForceStreaming)
+void AudioManagerDenshion::Preload(string fName, bool bLooping, bool bIsMusic, bool bAddBasePath , bool bForceStreaming)
 {
  
 	if (bIsMusic)
@@ -131,10 +99,14 @@ void AudioManagerOS::Preload(string fName, bool bLooping, bool bIsMusic, bool bA
 		assert(!"We don't have that yet..");
 		return;
 	}
-	GetAudioObjectByFileName(fName, bLooping);
+	
+	NSString *soundFile =  [NSString stringWithCString:  fName.c_str() encoding: [NSString defaultCStringEncoding]];
+	
+	[[SimpleAudioEngine sharedEngine] preloadEffect: soundFile];
+	//GetAudioObjectByFileName(fName, bLooping);
 }
 
-AudioHandle AudioManagerOS::PlayWithAVPlayer( string fName)
+AudioHandle AudioManagerDenshion::PlayWithAVPlayer( string fName)
 {
 	NSString *soundFile =  [NSString stringWithCString:  fName.c_str() encoding: [NSString defaultCStringEncoding]];
 	
@@ -147,7 +119,7 @@ AudioHandle AudioManagerOS::PlayWithAVPlayer( string fName)
 	return AUDIO_HANDLE_BLANK;
 }
 
-AudioHandle AudioManagerOS::Play( string fName, bool bLooping /*= false*/, bool bIsMusic /*= false*/, bool bAddBasePath, bool bForceStreaming )
+AudioHandle AudioManagerDenshion::Play( string fName, bool bLooping /*= false*/, bool bIsMusic /*= false*/, bool bAddBasePath, bool bForceStreaming )
 {
 	#ifdef _DEBUG
 	LogMsg("Playing %s", fName.c_str());
@@ -217,30 +189,30 @@ LogMsg("Music disabled, pretending to play");
 
 	UInt32 soundId = AUDIO_HANDLE_BLANK;
 
-	AudioObjectOS *pAudio = GetAudioObjectByFileName(fName, bLooping);
-	if (!pAudio) return soundId;
+	//AudioObjectOS *pAudio = GetAudioObjectByFileName(fName, bLooping);
+	//if (!pAudio) return soundId;
 
-	soundId = pAudio->m_id;
+	//soundId = pAudio->m_id;
 
-	AudioServicesPlaySystemSound(soundId);
+	//AudioServicesPlaySystemSound(soundId);
 	
+	NSString *soundFile =  [NSString stringWithCString:  fName.c_str() encoding: [NSString defaultCStringEncoding]];
+	
+	//soundId = [[SimpleAudioEngine sharedEngine] playEffect: soundFile];
+	
+	soundId = [[SimpleAudioEngine sharedEngine] playEffect: soundFile pitch:1.0f pan:0.0f gain:1.0f loop:bLooping];
 	return soundId;
 }
 
-bool AudioManagerOS::Init()
-{
-	
-	return true; //success
-}
 
-void AudioManagerOS::Kill()
+void AudioManagerDenshion::Kill()
 {
 	DestroyAudioCache();
 	
 }
 
 
-void AudioManagerOS::SetMusicEnabled( bool bNew )
+void AudioManagerDenshion::SetMusicEnabled( bool bNew )
 {
 	if (bNew != m_bMusicEnabled)
 	{
@@ -276,7 +248,7 @@ void AudioManagerOS::SetMusicEnabled( bool bNew )
 	}
 }
 
-void AudioManagerOS::StopMusic()
+void AudioManagerDenshion::StopMusic()
 {
 		
 		LogMsg("Killing music..");
@@ -298,12 +270,3 @@ void AudioManagerOS::StopMusic()
 	
 }
 
-
-void AudioObjectOS::Unload()
-	{
-		if (m_id != AUDIO_HANDLE_BLANK)
-		{
-			AudioServicesDisposeSystemSoundID(m_id);
-				m_id = AUDIO_HANDLE_BLANK;
-		}
-	}

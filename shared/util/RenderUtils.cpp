@@ -713,10 +713,33 @@ CL_Vec2f iPhoneMap( CL_Vec2f vPos )
 	return CL_Vec2f((int) (vPos.x*GetScreenSizeXf()/480.0f), (int) (vPos.y*GetScreenSizeYf()/320.0f));
 }
 
+
 CL_Vec2f iPhoneMap( float x, float y )
 {
 	return CL_Vec2f((int) (x*GetScreenSizeXf()/480.0f), (int) (y*GetScreenSizeYf()/320.0f));
 }
+
+float iPadMapY( float y )
+{
+	return (int)(y*GetScreenSizeYf())/768.0f; //I cast to int because it helps with "middle of the pixel" jaggies
+}
+
+float iPadMapX( float x )
+{
+	return (int)(x*GetScreenSizeXf())/1024.0f;  //I cast to int because it helps with "middle of the pixel" jaggies
+}
+
+CL_Vec2f iPadMap( CL_Vec2f vPos )
+{
+	return CL_Vec2f((int) (vPos.x*GetScreenSizeXf()/1024.0f), (int) (vPos.y*GetScreenSizeYf()/768.0f));
+}
+
+
+CL_Vec2f iPadMap( float x, float y )
+{
+	return CL_Vec2f((int) (x*GetScreenSizeXf()/1024.0f), (int) (y*GetScreenSizeYf()/768.0f));
+}
+
 
 float iPhoneMapX2X( float x )
 {

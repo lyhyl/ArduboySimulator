@@ -1,5 +1,5 @@
 //  ***************************************************************
-//  AudioManagerOS - Creation date: 06/12/2009
+//  AudioManagerDenshion - Creation date: 02/16/2011
 //  -------------------------------------------------------------
 //  Robinson Technologies Copyright (C) 2009 - All Rights Reserved
 //
@@ -7,32 +7,18 @@
 //  Programmer(s):  Seth A. Robinson (seth@rtsoft.com)
 //  ***************************************************************
 
-#ifndef AudioManagerOS_h__
-#define AudioManagerOS_h__
+#ifndef AudioManagerDenshion_h__
+#define AudioManagerDenshion_h__
 
 #include "AudioManager.h"
 
 
 
-class AudioObjectOS
+class AudioManagerDenshion: public AudioManager
 {
 public:
-	AudioObjectOS()
-	{
-		m_id = AUDIO_HANDLE_BLANK;
-	}
-
-	void Unload();
-	string fName;
-	UInt32 m_id;
-	;
-};
-
-class AudioManagerOS: public AudioManager
-{
-public:
-	AudioManagerOS();
-	virtual ~AudioManagerOS();
+	AudioManagerDenshion();
+	virtual ~AudioManagerDenshion();
 
 	virtual bool Init();
 	virtual void Kill();
@@ -46,12 +32,8 @@ public:
 	virtual void StopMusic();
 
 protected:
-	AudioObjectOS * GetAudioObjectByFileName(const string &fName, bool bLooping);
-	void KillAudioObjectByFileName(const string &fName);
 	void DestroyAudioCache();
-	AudioObjectOS * GetAudioObjectByID(UInt32 id);
 	bool m_bDisabledMusicRecently;
-	vector<AudioObjectOS> m_audioList;
 };
 
-#endif // AudioManagerOS_h__
+#endif // AudioManagerDenshion_h__

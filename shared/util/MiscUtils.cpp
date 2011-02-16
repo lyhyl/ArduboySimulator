@@ -100,6 +100,24 @@ void SetIntWithTarget(int32 *p_out_dest, int r_target, int r_amount)
 
 }
 
+
+void SetFloatWithTarget(float *p_out_dest, float r_target, float r_amount)
+{
+	if (*p_out_dest > r_target)
+	{
+		//make it less
+		*p_out_dest -= r_amount;
+		if (*p_out_dest < r_target) *p_out_dest = r_target;
+
+	}   else
+	{
+		//make it more
+		*p_out_dest += r_amount;
+		if (*p_out_dest > r_target) *p_out_dest = r_target;
+	}
+
+}
+
 int mod(int a, int b)
 {
 
@@ -418,6 +436,24 @@ void RotationToXYMod(float rotation, float *pXMod ,float *pYMod)
 	return;
 
 }
+
+
+
+CL_Rectf RotateGUIRect(CL_Rectf vRect, CL_Rectf r, float angle)
+{
+
+
+	CL_Vec2f vTopLeft =  RotateGUIPoint(vRect.get_top_left(), r, angle);
+	CL_Vec2f vBottomRight =  RotateGUIPoint(vRect.get_bottom_right(), r, angle);
+
+	if (angle == 90 ||angle == 270)
+	{
+		swap(vTopLeft.y, vBottomRight.y);
+	}
+
+	return CL_Rectf(vTopLeft, *(CL_Sizef*)&(vBottomRight-vTopLeft));
+}
+
 
 
 CL_Vec2f RotateGUIPoint(CL_Vec2f vPos, CL_Rectf r, float angle)

@@ -87,7 +87,7 @@ public:
 	virtual uint32 GetPos( AudioHandle soundID );
 	virtual void SetPos( AudioHandle soundID, uint32 posMS );
 	virtual void SetMusicVol(float vol);
-
+	SoundObject * GetSoundObjectByPointer(void *p);
 
 private:
 	

@@ -224,4 +224,35 @@ bool CircleSegmentIntersect(CL_Vec2f C, float r, CL_Vec2f A, CL_Vec2f B, CL_Vec2
 		return true;
 }
 
+//my MSVC2005 doesn't have round in cmath/math.h.  I'll just do it this so I won't break other builds...
 
+inline double sethround(double val)
+{   
+	return floor(val + 0.5);
+}
+
+
+float ModNearestInt(float a, float b)
+{
+	return a - b * sethround(a / b);
+}
+
+/*
+//let's you know how close two angles are to eachother.  Handles wrapping and such
+bool AnglesAreClose(float a, float b, float angleTolerance)
+{
+
+	a = fmod(a, PI2);
+	b = fmod(b, PI2);
+
+	float mi = MIN(a, b);
+	float mx = MAX(a, b);
+
+	if (  !(( mx - mi) < angleTolerance) &&
+		( !(  (mi + PI2) - mx < angleTolerance))) return false;
+
+	return true;
+}
+
+
+*/

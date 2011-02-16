@@ -4,6 +4,8 @@
  *  For license info, check the license.txt file that should have come with this.
  *
  */
+
+
 #include "PlatformPrecomp.h"
 #include "App.h"
 #include "GUI/MainMenu.h"
@@ -23,13 +25,21 @@ FileManager * GetFileManager() {return &g_fileManager;}
 
 #if TARGET_OS_IPHONE == 1
 	//it's an iPhone or iPad
-	#include "Audio/AudioManagerOS.h"
-	AudioManagerOS g_audioManager;
+	//#include "Audio/AudioManagerOS.h"
+	//AudioManagerOS g_audioManager;
+	#include "Audio/AudioManagerDenshion.h"
+	
+	AudioManagerDenshion g_audioManager;
 #else
 	//it's being compiled as a native OSX app
    #include "Audio/AudioManagerFMOD.h"
+  AudioManagerFMOD g_audioManager; //dummy with no sound
 
-   AudioManagerFMOD g_audioManager; //dummy with no sound
+//in theory, CocosDenshion should work for the Mac builds, but right now it seems to want a big chunk of
+//Cocos2d included so I'm not fiddling with it for now
+
+//#include "Audio/AudioManagerDenshion.h"
+//AudioManagerDenshion g_audioManager;
 #endif
 	
 #else

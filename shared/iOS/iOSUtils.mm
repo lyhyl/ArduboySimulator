@@ -38,6 +38,8 @@ void LogMsg(const char *lpFormat, ...)
 	
 } 
 
+
+
 void LaunchURL(string url)
 {
 	NSURL *appStoreUrl = [NSURL URLWithString:[NSString stringWithCString: url.c_str() encoding: [NSString defaultCStringEncoding]]];

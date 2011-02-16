@@ -75,11 +75,17 @@ float iPhoneMapY(float y); //enter coords for iPhone, if iPad, will convert to r
 CL_Vec2f iPhoneMap( CL_Vec2f vPos ); //enter coords for iPhone, if iPad, will convert to relative position (makes porting easier)
 CL_Vec2f iPhoneMap( float x, float y ); //enter coords for iPhone, if iPad, will convert to relative position (makes porting easier)
 
+float iPadMapY( float y );
+float iPadMapX( float x );
+CL_Vec2f iPadMap( CL_Vec2f vPos );
+CL_Vec2f iPadMap( float x, float y );
+
 //like above, but force iPad's/large screens to return numbers 2x of iPhone, useful for sharing the 2x media between iPhone4 and ipad
 float iPhoneMapX2X( float x );
 float iPhoneMapY2X( float y );
 CL_Vec2f iPhoneMap2X( CL_Vec2f vPos );
 CL_Vec2f iPhoneMap2X( float x, float y );
+
 void SetupFakePrimaryScreenSize(int x, int y);
 int GetFakePrimaryScreenSizeX();
 int GetFakePrimaryScreenSizeY();
