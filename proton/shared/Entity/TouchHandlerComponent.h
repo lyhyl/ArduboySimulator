@@ -27,9 +27,9 @@ public:
 	
 private:
 
-	void HandleClickStart(CL_Vec2f &pt);
-	void HandleClickMove(CL_Vec2f &pt);
-	void HandleClickEnd(CL_Vec2f &pt);
+	void HandleClickStart(CL_Vec2f &pt, uint32 fingerID);
+	void HandleClickMove(CL_Vec2f &pt, uint32 fingerID);
+	void HandleClickEnd(CL_Vec2f &pt, uint32 fingerID);
 	Variant *m_pTouchOver;
 	CL_Vec2f *m_pSize2d;
 	CL_Vec2f *m_pPos2d;

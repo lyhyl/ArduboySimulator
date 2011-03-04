@@ -34,10 +34,11 @@ public:
 private:
 
 	void OnOverStart(VariantList *pVList);
-	void OnOverEnd(VariantList *pVList);
 	void OnOverMove(VariantList *pVList);
 	void SetPosition(CL_Vec2f vPos);
 
+	void OnTouchStart(VariantList *pVList);
+	void OnInput(VariantList *pVList);
 	uint32 *m_pDisabled;
 	uint32 * m_pVisualStyle;
 	CL_Vec2f *m_pPos2d;
@@ -45,8 +46,11 @@ private:
 	CL_Vec2f *m_pMult; //multiplied against the final result, so you can make it go backwards or whatever
 	uint32 *m_pSwapXAndY, *m_pReverseX, *m_pReverseY;
 	CL_Vec2f m_lastPos;
-
+	int m_activeFinger;
 	FunctionObject *m_pOnTouchStripUpdate;
+	CL_Rectf *m_pTouchPadding;
+	uint32 *m_pAlignment;
+
 };
 
 #endif // TouchStripComponent_h__

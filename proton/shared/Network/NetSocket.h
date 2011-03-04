@@ -10,19 +10,25 @@
 #ifndef NetSocket_h__
 #define NetSocket_h__
 
+#ifndef SOCKET_ERROR
+#define SOCKET_ERROR (-1)
+
+#endif
 class NetSocket
 {
 public:
 	NetSocket();
 	virtual ~NetSocket();
-	bool Init(string url, int port);
+	bool Init(string url, int port); //for clients
+	bool InitHost(int port, int connections); //for host sockets
 	void Update();
 	void Write(char *pBuff, int len);
 	void Write(const string &msg);
-
+	int GetSocket() {return m_socket;}
 	vector<char> & GetBuffer() {return m_readBuffer;}
 	int GetIdleTimeMS();
 	void Kill();
+	void SetSocket(int socket);
 
 protected:
 

@@ -73,10 +73,14 @@ void OverlayRenderComponent::OnAdd(Entity *pEnt)
 	m_pColorMod = &GetParent()->GetShared()->GetVarWithDefault("colorMod", Variant(MAKE_RGBA(255,255,255,255)))->GetUINT32();
 	m_pAlpha = &GetParent()->GetShared()->GetVarWithDefault("alpha", Variant(1.0f))->GetFloat();
 	m_pAlignment = &GetParent()->GetVar("alignment")->GetUINT32();
+	m_pVisible = &GetParent()->GetVarWithDefault("visible", uint32(1))->GetUINT32();
 	
 	m_pFrameX = &GetVar("frameX")->GetUINT32(); //applicable if SetupAnim was used
 	m_pFrameY = &GetVar("frameY")->GetUINT32(); //applicable if SetupAnim was used
 	
+	m_pFlipX = &GetVar("flipX")->GetUINT32(); 
+	m_pFlipY = &GetVar("flipY")->GetUINT32(); 
+
 	m_pFileName = &GetVar("fileName")->GetString(); //local to us
 	
 	//any post var data you want to send, must send it before the Init
@@ -115,6 +119,8 @@ void OverlayRenderComponent::OnRemove()
 
 void OverlayRenderComponent::OnRender(VariantList *pVList)
 {
+	if (*m_pVisible == 0) return;
+
 	if (m_pTex && m_pTex->IsLoaded() && *m_pAlpha > 0.01)
 	{
 		CL_Vec2f vFinalPos = pVList->m_variant[0].GetVector2()+*m_pPos2d;
@@ -123,7 +129,7 @@ void OverlayRenderComponent::OnRender(VariantList *pVList)
 
 		if (GET_ALPHA(finalColor) == 0) return;
 
-		if (m_pScale2d->x != 1 || m_pScale2d->y != 1)
+		if (m_pScale2d->x != 1 || m_pScale2d->y != 1 || *m_pFlipX != 0 || *m_pFlipY != 0)
 		{
 			CL_Vec2f vRotationPt = vFinalPos+m_pTex->GetFrameSize()/2;
 			if (vFinalPos.y < -m_pSize2d->y) return;
@@ -131,7 +137,8 @@ void OverlayRenderComponent::OnRender(VariantList *pVList)
 			
 			if (m_pScale2d->x != 0 && m_pScale2d->y != 0)
 			{
-				m_pTex->BlitScaledAnim(vFinalPos.x, vFinalPos.y,  *m_pFrameX, *m_pFrameY,*m_pScale2d, ALIGNMENT_UPPER_LEFT, finalColor, *m_pRotation, vRotationPt);
+				m_pTex->BlitScaledAnim(vFinalPos.x, vFinalPos.y,  *m_pFrameX, *m_pFrameY,*m_pScale2d, ALIGNMENT_UPPER_LEFT, finalColor, *m_pRotation, vRotationPt,
+					*m_pFlipX != 0, *m_pFlipY != 0);
 			}
 		} else
 		{

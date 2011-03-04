@@ -111,6 +111,7 @@ void TextRenderComponent::OnRender(VariantList *pVList)
 	
 	if (*m_pRotation != 0)
 	{
+		g_globalBatcher.Flush();
 		SetupOrtho();
 		PushRotationMatrix(*m_pRotation, vRotationPt);
 		vFinalPos -= vRotationPt;
@@ -129,6 +130,7 @@ void TextRenderComponent::OnRender(VariantList *pVList)
 
 	if (*m_pRotation != 0)
 	{
+		g_globalBatcher.Flush(); //force it to render now so our transformation matrix will work with it
 		PopRotationMatrix();
 	}
 #ifdef _DEBUG

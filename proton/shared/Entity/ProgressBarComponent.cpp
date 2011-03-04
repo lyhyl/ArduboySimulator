@@ -46,10 +46,11 @@ void ProgressBarComponent::OnAdd(Entity *pEnt)
 
 	m_pPos2d = &GetParent()->GetVar("pos2d")->GetVector2();
 	m_pSize2d = &GetParent()->GetVar("size2d")->GetVector2();
-	m_pScale2d = &GetParent()->GetShared()->GetVarWithDefault("scale2d", Variant(1.0f, 1.0f))->GetVector2();
-	m_pColor = &GetParent()->GetShared()->GetVarWithDefault("color", Variant(MAKE_RGBA(255,255,255,255)))->GetUINT32();
-	m_pColorMod = &GetParent()->GetShared()->GetVarWithDefault("colorMod", Variant(MAKE_RGBA(255,255,255,255)))->GetUINT32();
-	m_pAlpha = &GetParent()->GetShared()->GetVarWithDefault("alpha", Variant(1.0f))->GetFloat();
+	m_pScale2d = &GetParent()->GetVarWithDefault("scale2d", Variant(1.0f, 1.0f))->GetVector2();
+	m_pColor = &GetParent()->GetVarWithDefault("color", Variant(MAKE_RGBA(255,255,255,255)))->GetUINT32();
+	m_pColorMod = &GetParent()->GetVarWithDefault("colorMod", Variant(MAKE_RGBA(255,255,255,255)))->GetUINT32();
+	m_pAlpha = &GetParent()->GetVarWithDefault("alpha", 1.0f)->GetFloat();
+	m_pType = &GetVarWithDefault("type", uint32(TYPE_HORIZONTAL))->GetUINT32();
 	m_pAlignment = &GetParent()->GetVar("alignment")->GetUINT32();
 
 	GetParent()->GetVar("scale2d")->GetSigOnChanged()->connect(boost::bind(&ProgressBarComponent::OnScaleChanged, this, _1));
@@ -64,6 +65,9 @@ void ProgressBarComponent::OnAdd(Entity *pEnt)
 	m_pProgressOfLastSet = &GetVarWithDefault("progressOfLastSet", Variant(0.0f))->GetFloat(); //don't really want this shared, but too lazy to convert it back
 	m_pFileName = &GetVar("fileName")->GetString(); //local to us
 	
+	m_pFlipX = &GetVar("flipX")->GetUINT32(); 
+	m_pFlipY = &GetVar("flipY")->GetUINT32(); 
+
 	//if "fileName" is set, we'll know about it here
 	GetVar("fileName")->GetSigOnChanged()->connect(boost::bind(&ProgressBarComponent::OnFileNameChanged, this, _1));
 	GetVar("progress")->GetSigOnChanged()->connect(boost::bind(&ProgressBarComponent::OnProgressChanged, this, _1));
@@ -103,36 +107,63 @@ void ProgressBarComponent::OnRender(VariantList *pVList)
 		if (progress == 0) return;
 		*m_pVisualProgress = progress; //save it so outsiders can check and see what we're displaying
 		uint32 color = ColorCombine(*m_pColor, *m_pColorMod, *m_pAlpha);
-
 		uint32 borderColor = ColorCombine(*m_pBorderColor, *m_pColorMod, *m_pAlpha);
 
 		//here, we assume the progress bar is horizontal and going left to right.. later, add a var to control this if needed and do a switch statement here
 
-		if (m_pSurf && m_pSurf->IsLoaded())
-		{
-			//bitmap version of a progress bar
-			
-			rtRectf src = rtRectf(0,0,progress*m_pSurf->GetFrameWidth(), m_pSurf->GetFrameHeight());
-			rtRectf dst = src;
-			dst.AdjustPosition(vFinalPos.x, vFinalPos.y);
-			m_pSurf->BlitEx(dst, src, color); 
+		float progressX = 1;
+		float progressY = 1;
 
+		if (*m_pType == TYPE_HORIZONTAL)
+		{
+			progressX = progress;
 		} else
 		{
-			//manual rectangle version of a progress bar
-			//vFinalPos -= GetAlignmentOffset(*m_pSize2d, eAlignment(*m_pAlignment));	
-			CL_Rectf r = CL_Rectf(vFinalPos.x, vFinalPos.y, vFinalPos.x+ (m_pSize2d->x*progress), vFinalPos.y+m_pSize2d->y); 
-			
-			if (GET_ALPHA(color) > 0)
-			{
-				DrawFilledRect(r, color);
-			}
-
-			if (GET_ALPHA(borderColor) > 0)
-			{
-				DrawRect(r, borderColor, 1);
-			}
+			progressY = progress;
 		}
+
+			if (m_pSurf && m_pSurf->IsLoaded())
+			{
+				//bitmap version of a progress bar
+
+				rtRectf src = rtRectf(0,0,progressX*m_pSurf->GetFrameWidth(), progressY*m_pSurf->GetFrameHeight());
+				
+				assert(*m_pFlipX == 0 && "Need to add support for flipx with bitmaps here");
+				rtRectf dst = src;
+				dst.AdjustPosition(vFinalPos.x, vFinalPos.y);
+				m_pSurf->BlitEx(dst, src, color); 
+
+			} else
+			{
+				//manual rectangle version of a progress bar
+				CL_Rectf r = CL_Rectf(vFinalPos.x, vFinalPos.y, vFinalPos.x+ (m_pSize2d->x*progressX), vFinalPos.y+m_pSize2d->y*progressY); 
+
+				//flip y?  //default is yes, which is bottom up
+			
+				if (*m_pType == TYPE_VERTICAL && *m_pFlipY == 0)
+				{
+					r.bottom = vFinalPos.y + m_pSize2d->y;
+					r.top = r.bottom - m_pSize2d->y*progressY;
+				} else 	if (*m_pType == TYPE_HORIZONTAL && *m_pFlipX == 1)
+				{
+					r.right = vFinalPos.x + m_pSize2d->x;
+					r.left = r.right - m_pSize2d->x*progressX;
+				}
+
+
+				if (GET_ALPHA(color) > 0)
+				{
+					DrawFilledRect(r, color);
+				}
+
+				if (GET_ALPHA(borderColor) > 0)
+				{
+					DrawRect(r, borderColor, 1);
+				}
+			}
+		
+	
+		
 	}
 
 }

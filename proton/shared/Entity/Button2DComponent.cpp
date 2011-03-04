@@ -128,6 +128,10 @@ void Button2DComponent::OnOverEnd(VariantList *pVList)
 
 void Button2DComponent::OnTouchStart(VariantList *pVList)
 {
+	TouchTrackInfo *pTouch = GetBaseApp()->GetTouch(pVList->Get(2).GetUINT32());
+	if (pTouch->WasHandled()) return;
+	pTouch->SetWasHandled(true);
+	
 	if (*m_pButtonStyle == BUTTON_STYLE_CLICK_ON_TOUCH || *m_pButtonStyle == BUTTON_STYLE_CLICK_ON_TOUCH_IGNORE_DRAGGING)
 	{
 		if (*m_pVisualStyle == STYLE_FADE_ALPHA_ON_HOVER)
@@ -136,9 +140,7 @@ void Button2DComponent::OnTouchStart(VariantList *pVList)
 		}
 
 		PerformClick(pVList);
-
 		//tell the original touch handler that we're not over it anymore, because we may want to load a menu now, then return, and the unclick will be missed.
-
 		return;
 	}
 

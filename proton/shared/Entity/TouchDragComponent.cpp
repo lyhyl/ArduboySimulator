@@ -80,15 +80,25 @@ void TouchDragComponent::OnInput( VariantList *pVList )
 	case MESSAGE_TYPE_GUI_CLICK_START:
 		//first, determine if the click is on our area
 		{
+		
+		
 			CL_Rectf r(*m_pPos2d, CL_Sizef(m_pSize2d->x, m_pSize2d->y));
 
 			if (r.contains(pt))
 			{
+						
 				if (m_lastFingerID != -1)
 				{
 					LogMsg("Ignoring new finger..");
 					return;
 				}
+		
+				TouchTrackInfo *pTouch = GetBaseApp()->GetTouch(pVList->Get(2).GetUINT32());
+				if (pTouch->WasHandled()) return;
+				pTouch->SetWasHandled(true);
+				GetParent()->GetFunction("OnOverStart")->sig_function(&VariantList(pt, GetParent(), uint32(fingerID)));
+
+
 				m_lastPos = pt;
 				m_lastFingerID = fingerID;
 			}
@@ -99,6 +109,7 @@ void TouchDragComponent::OnInput( VariantList *pVList )
 		
 		if (m_lastFingerID == fingerID)
 		{
+			GetParent()->GetFunction("OnOverEnd")->sig_function(&VariantList(pt, GetParent(), uint32(fingerID)));
 			m_lastFingerID = -1;
 		}
 		//HandleClickEnd(pt);

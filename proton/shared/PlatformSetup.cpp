@@ -59,3 +59,11 @@ void SetEmulatedPlatformID(ePlatformID platformID)
 {
 	g_emulatedPlatformID = platformID;
 }
+
+#ifdef _CONSOLE
+float GetScreenSizeXf() { assert(0); return 0;}
+float GetScreenSizeYf() { assert(0); return 0;}
+int GetScreenSizeX() { assert(0); return 0;}
+int GetScreenSizeY() { assert(0); return 0;}
+
+#endif

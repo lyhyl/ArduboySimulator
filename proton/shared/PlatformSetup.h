@@ -12,6 +12,10 @@
 		#include "OSX/PlatformSetupOSX.h"
 	#endif
 #endif
+#ifdef RTLINUX
+#include "linux/PlatformSetupLinux.h"
+
+#endif
 
 #ifdef RT_WEBOS_ARM
 #include "WebOS/PlatformSetupWebOS.h"
@@ -35,10 +39,12 @@
 	#include <sstream>
 
 //hack for making irrBullet compile without needing irr::core prefix on its
-//list.  Its' because I include this file in the irrlicht main config stuff.
+//list.  It's because I include this file in the irrlicht main config stuff.
 	
-//using namespace std;
-
+#ifdef _CONSOLE
+#include <list>
+using namespace std;
+#endif
 
 #ifndef SAFE_DELETE
 #define SAFE_DELETE(p)      { if(p) { delete (p); (p)=NULL; } }
@@ -74,4 +80,12 @@ std::string GetPlatformName();
 void SetMarketID(eMarketID marketID);
 eMarketID GetMarketID();
 bool GetForceAspectRatioWhenResizing();
+
+//copy these here, so I don't have to include ResourceUtils.cpp in my console only apps
+int GetScreenSizeY();
+int GetScreenSizeX();
+float GetScreenSizeYf();
+float GetScreenSizeXf();
+bool IsLargeScreen();
+
 #endif

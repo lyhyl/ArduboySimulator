@@ -48,3 +48,11 @@ void IrrHealthBar::Update()
 {
 
 }
+
+void IrrHealthBar::SetVisible( bool bNew )
+{
+	if (m_bb)
+	{
+		m_bb->setVisible(bNew);
+	}
+}

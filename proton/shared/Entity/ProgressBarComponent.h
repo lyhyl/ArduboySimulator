@@ -23,6 +23,11 @@ public:
 	virtual void OnAdd(Entity *pEnt);
 	virtual void OnRemove();
 
+	enum eType
+	{
+		TYPE_HORIZONTAL,
+		TYPE_VERTICAL
+	};
 private:
 
 	void OnUpdate(VariantList *pVList);
@@ -37,6 +42,7 @@ private:
 	CL_Vec2f *m_pPos2d;
 	CL_Vec2f *m_pSize2d;
 	CL_Vec2f *m_pScale2d;
+	uint32 *m_pType;
 	uint32 *m_pColor;
 	uint32 *m_pColorMod;
 	uint32 *m_pBorderColor;
@@ -50,7 +56,7 @@ private:
 	unsigned int m_timeOfLastSet;
 	SurfaceAnim *m_pSurf; //only used if we're using a bmp for the progress bar overlay
 	string *m_pFileName;
-
+	uint32 *m_pFlipX, *m_pFlipY;
 };
 
 #endif // ProgressBarComponent_h__

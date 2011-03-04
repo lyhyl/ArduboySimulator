@@ -5,7 +5,7 @@
 #ifndef C_NO_ZLIB
 #include <zlib.h>
 #endif
-
+ 
 bool IsPowerOf2(int n) { return (!(n & (n - 1))); }
 
 bool SaveToFile(const string &str, FILE *fp)

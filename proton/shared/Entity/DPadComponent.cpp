@@ -83,7 +83,7 @@ void DPadComponent::OnAdd(Entity *pEnt)
 	
 
 	m_pArrowEnt->GetVarWithDefault(string("touchPadding"), Variant(CL_Rectf(*m_ptouchAreaPadding, *m_ptouchAreaPadding, *m_ptouchAreaPadding, *m_ptouchAreaPadding)))->GetRect();
-	m_pArrowEnt->AddComponent(new TouchHandlerComponent);
+	//m_pArrowEnt->AddComponent(new TouchHandlerComponent);
 
 	//for speed, we've disabled movement message handling in App.cpp, but we actually want them just here, so we'll hardwire it
 	AddInputMovementFocusIfNeeded(m_pArrowEnt);
@@ -134,6 +134,9 @@ void DPadComponent::OnScaleChanged(Variant *pVariant)
 void DPadComponent::SetupClipRectOnDPad()
 {
 
+	//no longer needed
+
+	/*
 	//if there was an old one, remove it
 	m_pArrowEnt->RemoveComponentByName("FilterInput");
 	EntityComponent *pFilter = m_pArrowEnt->AddComponent(new FilterInputComponent);
@@ -145,7 +148,7 @@ void DPadComponent::SetupClipRectOnDPad()
 	clipRect.expand(*m_ptouchAreaPadding+50); //clip our input to a little outside of our image area (plus padding), so we don't get confused by
 	//other buttons far away, yet can still register "they slipped off the button"
 	pFilter->GetVar("clipRect")->Set(clipRect);
-
+*/
 }
 void DPadComponent::SendKey(eVirtualKeys key, bool bIsDown)
 {

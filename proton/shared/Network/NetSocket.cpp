@@ -1,14 +1,15 @@
 #include "PlatformPrecomp.h"
-
 #include "NetSocket.h"
-#include "BaseApp.h"
+//#include "BaseApp.h"
 
-#ifndef WIN32
+
+#ifndef WINAPI
 	#include <sys/types.h> 
 	#include <sys/socket.h>
 	#include <sys/wait.h> 
 	#include <netinet/in.h> 
 	#include <netdb.h> 
+	#include <arpa/inet.h>
 
 #ifdef ANDROID_NDK
 #include <fcntl.h>
@@ -22,10 +23,11 @@
 #define INVALID_SOCKET  (~0)
 #define rt_closesocket(x) close(x)
 
-#if defined(RT_WEBOS_ARM) || defined(ANDROID_NDK)
+#if defined(RT_WEBOS_ARM) || defined(ANDROID_NDK) || defined (RTLINUX)
 	#include <linux/sockios.h>
 	#include <errno.h>
 #else
+	
 	#include <sys/sockio.h>
 #endif
 
@@ -33,7 +35,7 @@
 
 #else
 	
-	#include "winsock.h"
+
 #ifndef ECONNREFUSED
 	#define ECONNREFUSED            WSAECONNREFUSED
 #endif
@@ -74,7 +76,7 @@ bool NetSocket::Init( string url, int port )
 	Kill();
 	//connect to another one
 
-	m_idleTimer = GetBaseApp()->GetTick();
+	m_idleTimer = GetSystemTimeTick();
 	struct sockaddr_in sa;
 	struct hostent     *hp;
 	
@@ -93,7 +95,7 @@ bool NetSocket::Init( string url, int port )
 	if ((m_socket= socket(hp->h_addrtype,SOCK_STREAM,0)) < 0)     /* get socket */
 		return false;
 
-#ifdef WIN32
+#ifdef WINAPI
 
 	//u_long iMode = 0;
 	//ioctlsocket(m_socket, FIOASYNC, &iMode);
@@ -115,6 +117,83 @@ bool NetSocket::Init( string url, int port )
 
 
 	return true;
+}
+
+
+
+bool NetSocket::InitHost( int port, int connections )
+{
+	sockaddr_in sa;
+
+	memset(&sa, 0, sizeof(sa));
+
+	sa.sin_family = PF_INET;             
+	sa.sin_addr.s_addr = htonl(INADDR_ANY);
+	sa.sin_port = htons(port);          
+	m_socket = socket(AF_INET, SOCK_STREAM, 0);
+	if (m_socket == INVALID_SOCKET )
+	{
+		LogMsg("socket command: INVALID_SOCKET");
+		return false;
+	}
+
+	//u_long arg = 1;
+	
+	
+	//ioctlsocket(m_socket, FIONBIO, &arg);
+
+	/* bind the socket to the internet address */
+	if (bind(m_socket, (sockaddr *)&sa, sizeof(sockaddr_in)) == SOCKET_ERROR) 
+	{
+		rt_closesocket(m_socket);
+		LogMsg("bind: INVALID_SOCKET");
+		return false;
+	}
+
+
+#ifdef WINAPI
+
+	//u_long iMode = 0;
+	//ioctlsocket(m_socket, FIOASYNC, &iMode);
+    ULONG NonBlock;
+	
+	NonBlock = 1;
+	if (ioctlsocket(m_socket, FIONBIO, &NonBlock) == SOCKET_ERROR)
+	{
+		LogError("ioctlsocket() failed \n");
+		return false;
+	}
+	
+	WSAAsyncSelect(m_socket, GetForegroundWindow(), WM_USER+1, FD_READ); 
+	WSAAsyncSelect(m_socket, GetForegroundWindow(), WM_USER+1, FD_WRITE); 
+	WSAAsyncSelect(m_socket, GetForegroundWindow(), WM_USER+1, FD_CONNECT); 
+	WSAAsyncSelect(m_socket, GetForegroundWindow(), WM_USER+1, FD_OOB); 
+
+
+#else
+	//int x;
+	//x=fcntl(m_socket,F_GETFL,0);
+	//fcntl(m_socket,F_SETFL,x | O_NONBLOCK);
+	fcntl(m_socket, F_SETFL, O_NONBLOCK);
+	
+
+#endif
+
+
+	listen(m_socket, connections); 
+	return true;
+}
+
+
+void NetSocket::SetSocket( int socket )
+{
+	Kill();
+	m_socket = socket;
+	m_idleTimer = GetSystemTimeTick();
+#ifndef WINAPI
+	fcntl(m_socket, F_SETFL, O_NONBLOCK);
+#endif
+
 }
 
 void NetSocket::Update()
@@ -151,7 +230,7 @@ void NetSocket::UpdateRead()
 		//OutputDebugString("\n");
 #endif
 		#endif
-		m_idleTimer = GetBaseApp()->GetTick();
+		m_idleTimer = GetSystemTimeTick();
 
 	} while (bytesRead >= int(buff.size()));
 
@@ -170,7 +249,7 @@ void NetSocket::UpdateWrite()
 		return;
 	}
 	m_writeBuffer.erase(m_writeBuffer.begin(), m_writeBuffer.begin()+bytesWritten);
-	m_idleTimer = GetBaseApp()->GetTick();
+	m_idleTimer = GetSystemTimeTick();
 
 #ifdef _DEBUG
 	//LogMsg("wrote %d, %d left", bytesWritten, m_writeBuffer.size());
@@ -184,7 +263,18 @@ void NetSocket::Write( const string &msg )
 	UpdateWrite();
 }
 
+void NetSocket::Write( char *pBuff, int len )
+{
+	m_writeBuffer.resize(m_writeBuffer.size()+len);
+	memcpy(&m_writeBuffer[m_writeBuffer.size()-len], pBuff, len);
+	
+	UpdateWrite();
+
+}
+
+
+
 int NetSocket::GetIdleTimeMS()
 {
-	return GetBaseApp()->GetTick()-m_idleTimer;
+	return GetSystemTimeTick()-m_idleTimer;
 }

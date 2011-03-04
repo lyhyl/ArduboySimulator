@@ -1496,3 +1496,26 @@ void AdjustGUIElementForWindowView(Entity *pEnt, CL_Rectf r, float rotation)
 	CL_Vec2f vPos = RotateGUIPoint( pEnt->GetVar("pos2d")->GetVector2(), r, rotation);
 	pEnt->GetVar("pos2d")->Set(vPos);
 }
+
+void ManuallySetAlignmentEntity(Entity *pEnt, eAlignment alignment)
+{
+	float rotation = pEnt->GetVar("rotation")->GetFloat();
+
+	CL_Vec2f pt = pEnt->GetVar("pos2d")->GetVector2();
+	CL_Vec2f vSize = pEnt->GetVar("size2d")->GetVector2();
+	CL_Vec2f vOffset = GetAlignmentOffset(vSize, alignment);
+
+	float modx,mody;
+	RotationToXYMod(rotation, &modx, &mody);
+
+	if (modx) vOffset.x *= -1;
+	if (mody) vOffset.y *= -1;
+
+	if (rotation == 90 || rotation == 270)
+	{
+		swap(vOffset.x, vOffset.y);
+	}
+
+	pt -= vOffset;
+	pEnt->GetVar("pos2d")->Set(pt);
+}
