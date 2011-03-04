@@ -30,8 +30,6 @@ void InitVideoSize()
 
 	AddVideoMode("iPhone", 320, 480, PLATFORM_ID_IOS);
 	AddVideoMode("iPad", 768, 1024, PLATFORM_ID_IOS);
-	AddVideoMode("iPad2", 768*2, 1024*2, PLATFORM_ID_IOS); //Note, you need a monitor bigger than 2048X1536 on Windows for this to work right,
-	//otherwise it clips the window size to the main monitor size.  I don't have one...
 	AddVideoMode("iPhone4", 640, 960, PLATFORM_ID_IOS);
 
 	AddVideoMode("Palm Pre Plus", 320, 480, PLATFORM_ID_WEBOS);
@@ -44,7 +42,7 @@ void InitVideoSize()
 	AddVideoMode("Droid Landscape", 854, 480, PLATFORM_ID_ANDROID); //g_landScapeNoNeckHurtMode should be false when testing
 	AddVideoMode("Nexus One Landscape", 800, 480, PLATFORM_ID_ANDROID); //g_landScapeNoNeckHurtMode should be false when testing
 
-	string desiredVideoMode = "Windows"; //name needs to match one of the ones defined below
+	string desiredVideoMode = "iPhone"; //name needs to match one of the ones defined below
     g_landScapeNoNeckHurtMode = true; //if true, will rotate the screen so we can play in landscape mode in windows without hurting ourselves
 
 	SetVideoModeByName(desiredVideoMode);
@@ -234,21 +232,24 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 
 	case WM_KILLFOCUS:
+#ifndef RT_RUNS_IN_BACKGROUND
 		if (g_bHasFocus && IsBaseAppInitted() && g_hWnd)
 		{
 			GetBaseApp()->OnEnterBackground();
 		}
 
 		g_bHasFocus = false;
+#endif
 		break;
 
 	case WM_SETFOCUS:
-		
+#ifndef RT_RUNS_IN_BACKGROUND
 		if (!g_bHasFocus && IsBaseAppInitted() && g_hWnd)
 		{
 			GetBaseApp()->OnEnterForeground();
 		}
 		g_bHasFocus = true;
+#endif
 		break;
 
 	case WM_SIZING:

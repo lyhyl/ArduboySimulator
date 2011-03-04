@@ -4,6 +4,7 @@
 
 TouchStripComponent::TouchStripComponent()
 {
+	m_activeFinger = -1;
 	SetName("TouchStrip");
 }
 
@@ -24,15 +25,17 @@ void TouchStripComponent::OnAdd(Entity *pEnt)
 	m_pSwapXAndY = &GetVar("swapXAndY")->GetUINT32();
 	m_pReverseX = &GetVar("reverseX")->GetUINT32();
 	m_pReverseY = &GetVar("reverseY")->GetUINT32();
-	
+	m_pAlignment = &GetParent()->GetVar("alignment")->GetUINT32();
+	m_pTouchPadding = &GetParent()->GetVarWithDefault(string("touchPadding"), Variant(CL_Rectf(20.0f, 5.0f, 20.0f, 15.0f)))->GetRect();
+
+
 	//this will only be set if TouchStripComponent is initted before the TouchHandler...
 	//GetParent()->GetVarWithDefault(string("touchPadding"), Variant(CL_Rectf(0.0f, 0.0f, 0.0f, 0.0f)))->GetRect();
 
 	//register to get updated every frame
 
 	GetParent()->GetFunction("OnOverStart")->sig_function.connect(1, boost::bind(&TouchStripComponent::OnOverStart, this, _1));
-	GetParent()->GetFunction("OnOverEnd")->sig_function.connect(1, boost::bind(&TouchStripComponent::OnOverEnd, this, _1));
-	GetParent()->GetFunction("OnOverMove")->sig_function.connect(1, boost::bind(&TouchStripComponent::OnOverMove, this, _1));
+	GetParent()->GetFunction("OnInput")->sig_function.connect(1, boost::bind(&TouchStripComponent::OnInput, this, _1));
 
 }
 
@@ -41,20 +44,83 @@ void TouchStripComponent::OnRemove()
 	EntityComponent::OnRemove();
 }
 
+
 void TouchStripComponent::OnOverStart(VariantList *pVList)
 {
+
+#ifdef _DEBUG
+	if (GetParent()->GetComponentByName("TouchHandler"))
+	{
+		assert(!"TouchStrip was changed so it doesn't require a TouchHandlerComponent in its parent entity.  Remove it for things to work right!");
+	}
+#endif
+	uint32 fingerID = pVList->Get(2).GetUINT32();
+	TouchTrackInfo *pTouch = GetBaseApp()->GetTouch(fingerID);
+	if (pTouch->WasHandled()) return;
+	pTouch->SetWasHandled(true);
+	m_activeFinger = fingerID;
 	SetPosition(pVList->Get(0).GetVector2());
+
+	//LogMsg("Tracking finger %d", fingerID);
 }
 
-void TouchStripComponent::OnOverEnd(VariantList *pVList)
+void TouchStripComponent::OnInput(VariantList *pVList)
 {
-	SetPosition(pVList->Get(0).GetVector2());
+
+	CL_Vec2f pt = pVList->Get(1).GetVector2();
+
+	//0 = message type, 1 = parent coordinate offset
+
+	uint32 fingerID = pVList->Get(2).GetUINT32();
+
+	switch (eMessageType( int(pVList->Get(0).GetFloat())))
+	{
+
+	case MESSAGE_TYPE_GUI_CLICK_START:
+		{
+
+		
+		//first, determine if the click is on our area
+		CL_Rectf r(*m_pPos2d, CL_Sizef(m_pSize2d->x, m_pSize2d->y));
+		ApplyPadding(&r, *m_pTouchPadding);
+
+		if (r.contains(pt))
+		{
+			if (m_activeFinger != -1)
+			{
+				LogMsg("Ignoring new finger..");
+				return;
+			}
+
+			GetParent()->GetFunction("OnOverStart")->sig_function(&VariantList(pt, GetParent(), fingerID));
+		}
+		}
+
+		break;
+	case MESSAGE_TYPE_GUI_CLICK_END:
+		if (fingerID == m_activeFinger)
+		{
+		//	LogMsg("Finger %d released", fingerID);
+			GetParent()->GetFunction("OnOverEnd")->sig_function(&VariantList(pt, GetParent(), fingerID));
+			m_activeFinger = -1;
+			
+			
+			break;
+		}
+		
+	case MESSAGE_TYPE_GUI_CLICK_MOVE:
+		{
+			if (m_activeFinger != fingerID) return;
+			SetPosition(pt);
+			
+		}	
+		break;	
+	
+	}	
 }
 
-void TouchStripComponent::OnOverMove(VariantList *pVList)
-{
-	SetPosition(pVList->Get(0).GetVector2());
-}
+
+
 
 void TouchStripComponent::SetPosition(CL_Vec2f vPos)
 {

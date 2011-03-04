@@ -22,6 +22,7 @@ class irrBulletWorld;
 
 #define ToIrrVector3(a) (*(irr::core::vector3df*)(&(a)))
 #define ToCLVector3(a) (*(CL_Vec3f*)(&(a)))
+#define ToCLVector2(a) (*(CL_Vec2f*)(&(a)))
 
 using namespace irr;
 
@@ -80,5 +81,5 @@ IrrlichtManager * GetIrrlichtManager();
 core::rect<s32> CLRectToIrrlichtRect32(CL_Rectf clR);
 core::vector3df GetVectorHeadingFromNode(scene::ISceneNode *pNode);
 core::vector3df RotatePositionByDirectionalVector(core::vector3df vPos, core::vector3df vNormal );
-
+float Vector3DToAngleRadians(core::vector3df v);
 #endif // IrrlichtManager_h__

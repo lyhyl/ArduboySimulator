@@ -265,3 +265,8 @@ core::vector3df RotatePositionByDirectionalVector(core::vector3df vPos, core::ve
 
 
 }
+
+float Vector3DToAngleRadians(core::vector3df v)
+{
+	return atan2(v.X, -v.Z);
+}

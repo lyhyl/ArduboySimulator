@@ -40,4 +40,10 @@ CL_Rectf ScaleRect2D(const CL_Rectf &r, CL_Vec2f vScale);
 bool CircleSegmentIntersect(CL_Vec2f C, float r, CL_Vec2f A, CL_Vec2f B, CL_Vec2f& P);
 float ModNearestInt(float a, float b);
 bool AnglesAreClose(float a, float b, float angleTolerance);
+float GetAngleBetweenTwoAnglesRadians(float a, float b);
+
+CL_Vec3f LerpVector(const CL_Vec3f &vOriginal, const CL_Vec3f &Target, float f_percent);
+CL_Vec2f RotateGUIPoint(CL_Vec2f vPos, CL_Rectf r, float rotation); //used for calculating screen positions for splitscreen modes
+CL_Rectf RotateGUIRect(CL_Rectf vRect, CL_Rectf r, float angle); //used for calculating screen positions for splitscreen modes
+
 #endif // MathUtils_h__

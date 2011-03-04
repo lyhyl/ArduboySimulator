@@ -115,5 +115,5 @@ EntityComponent * AddHotKeyToButton(Entity *pEnt, uint32 keycode);
 EntityComponent * MakeButtonEmitVirtualGameKey(Entity *pEnt, uint32 keycode);
 EntityComponent * CreateSlider(Entity *pBG, float x, float y, float sizeX, string buttonFileName, string left, string middle, string right);
 void AdjustGUIElementForWindowView(Entity *pEnt, CL_Rectf r, float rotation);
-
+void ManuallySetAlignmentEntity(Entity *pEnt, eAlignment alignment); //takes into account rotation as in screen rotation
 #endif // EntityUtils_h__

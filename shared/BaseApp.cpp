@@ -24,6 +24,9 @@ bool IsBaseAppInitted()
 {
 	return g_isLoggerInitted;
 }
+
+
+
 BaseApp::BaseApp()
 {
 		m_bCheatMode = false;
@@ -35,6 +38,8 @@ BaseApp::BaseApp()
 		SetFPSVisible(false);
 		m_bIsInBackground = false;
 		SetInputMode(INPUT_MODE_NORMAL);
+		
+		m_touchTracker.resize(C_MAX_TOUCHES_AT_ONCE);
 		ClearError();
 
 }
@@ -203,6 +208,17 @@ void BaseApp::OnMessage(Message &m)
 					v.Get(1).Set(float(m.GetParm1()), float(m.GetParm2()) );
 					v.Get(2).Set(uint32(m.GetParm3()));
 			
+					if (m.GetType() == MESSAGE_TYPE_GUI_CLICK_START)
+					{
+						m_touchTracker[m.GetParm3()].SetIsDown(true);
+						m_touchTracker[m.GetParm3()].SetPos(v.Get(1).GetVector2());
+						m_touchTracker[m.GetParm3()].SetWasHandled(false);
+					} else
+					{
+						m_touchTracker[m.GetParm3()].SetIsDown(false);
+					}
+
+
 					m_sig_input(&v);
 					break;
 				}
@@ -210,18 +226,21 @@ void BaseApp::OnMessage(Message &m)
 			case MESSAGE_TYPE_GUI_CLICK_MOVE:
 			case MESSAGE_TYPE_GUI_CLICK_MOVE_RAW:
 				{
-							
+				
+				
 					if (m_inputMode == INPUT_MODE_NORMAL)
 					{
 						v.Get(0).Set((float)m.GetType());
 						v.Get(1).Set(float(m.GetParm1()), float(m.GetParm2()) );
 						v.Get(2).Set(uint32(m.GetParm3()));
+						m_touchTracker[m.GetParm3()].SetPos(v.Get(1).GetVector2());
 						m_sig_input(&v);
 					} else
 					{
 						v.Get(0).Set((float)m.GetType());
 						v.Get(1).Set(float(m.GetParm1()), float(m.GetParm2()) );
 						v.Get(2).Set(uint32(m.GetParm3()));
+						m_touchTracker[m.GetParm3()].SetPos(v.Get(1).GetVector2());
 						m_sig_input_move(&v);
 					}
 
@@ -531,4 +550,15 @@ void BaseApp::OnFullscreenToggleRequest()
 
 	}
 #endif
+}
+
+TouchTrackInfo * BaseApp::GetTouch( int index )
+{
+	if (index >= C_MAX_TOUCHES_AT_ONCE)
+	{
+		assert(!"Uh no");
+		return &m_touchTracker[C_MAX_TOUCHES_AT_ONCE-1];
+	}
+
+	return &m_touchTracker[index];
 }

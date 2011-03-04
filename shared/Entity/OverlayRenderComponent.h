@@ -47,6 +47,9 @@ private:
 	uint32 *m_pFrameX, *m_pFrameY;
 	float *m_pRotation; //in degrees
 	bool m_bDeleteSurface;
+	uint32 *m_pVisible;
+	uint32 *m_pFlipX, *m_pFlipY;
+
 };
 
 #endif // OverlayRenderComponent_h__

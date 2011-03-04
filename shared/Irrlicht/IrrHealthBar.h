@@ -22,6 +22,7 @@ public:
 	void Update(); //run every tick for the animation/interpolation
 
 	void SetHealthTarget(float target);
+	void SetVisible(bool bNew);
 
 protected:
 	

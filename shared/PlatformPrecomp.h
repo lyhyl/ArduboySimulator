@@ -4,7 +4,9 @@
 
 #if defined __cplusplus 
 #include "PlatformSetup.h"
+#ifndef _CONSOLE
 #include "BaseApp.h"
+#endif
 #endif
 
 

@@ -15,6 +15,8 @@
 class FileSystem;
 class StreamingInstance;
 
+#include "FileSystem/FileSystem.h"
+
 class FileInstance
 {
 public:
@@ -56,7 +58,7 @@ public:
 
 private:
 
-	list<FileSystem*> m_fileSystems;
+	std::list<FileSystem*> m_fileSystems;
 };
 
 #endif // FileManager_h__

@@ -232,6 +232,7 @@ void DrawRect(float x, float y, float width, float height, uint32 color, float l
 {
 	//OPTIMIZE:  This could be done as a single GL call instead... or optimize GenerateFillRect to smartly handle render states
 
+
 	GenerateFillRect(color, x, y, width, lineWidth); //top bar
 	GenerateFillRect(color, x, (y+height)-lineWidth, width, lineWidth); //bottom bar
 	GenerateFillRect(color, x, y+lineWidth, lineWidth, (height-lineWidth*2)); //left side

@@ -12,6 +12,9 @@
 #ifndef BaseApp_h__
 #define BaseApp_h__
 
+#define C_MAX_TOUCHES_AT_ONCE 11
+
+
 using namespace std;
 
 #include "Manager/GameTimer.h"
@@ -85,6 +88,29 @@ enum eInputMode
 	INPUT_MODE_SEPARATE_MOVE_TOUCHES //move messages will only be on sig_input_move if this is set, useful because
 	//on a 4 player game it's just too slow to send them to entire trees..
 };
+
+class TouchTrackInfo
+{
+public:
+	TouchTrackInfo()
+	{
+		m_bHandled = false;
+		m_bIsDown = false;
+	}
+	
+	bool WasHandled() {return m_bHandled;}
+	CL_Vec2f GetPos() {return m_vPos;}
+	bool IsDown() {return m_bIsDown;}
+
+	void SetIsDown(bool bNew)  {m_bIsDown = bNew;}
+	void SetPos(const CL_Vec2f &vPos) {m_vPos = vPos;}
+	void SetWasHandled(bool bNew) {m_bHandled = bNew;}
+private:
+	bool m_bHandled;
+	bool m_bIsDown;
+	CL_Vec2f m_vPos;
+};
+
 
 class BaseApp
 {
@@ -179,6 +205,7 @@ public:
 	void SetVideoMode(int width, int height, bool bFullScreen, float aspectRatio = 0) /*aspectRatio should be 0 to ignore */;
 	void KillOSMessagesByType(OSMessage::eMessageType type);
 	void SetFPSLimit(float fps);
+	TouchTrackInfo * GetTouch(int index);
 
 protected:
 	
@@ -201,6 +228,7 @@ protected:
 	CL_Mat4f m_projectionMatrix;
 	Entity m_entityRoot;
 	bool m_bCheatMode;
+	vector<TouchTrackInfo> m_touchTracker;
 	
 };
 
@@ -216,4 +244,6 @@ unsigned int GetTick(eTimingSystem timingSystem = GetBaseApp()->GetActiveTimingS
 eTimingSystem GetTiming();
 extern RenderBatcher g_globalBatcher; //can be used by anyone
 extern bool g_isLoggerInitted;
+
+
 #endif // BaseApp_h__

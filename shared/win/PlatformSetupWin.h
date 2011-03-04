@@ -1,7 +1,9 @@
 #pragma once
+#include <winsock2.h>
 #include <windows.h>
 #include <TCHAR.h>
 
+#ifndef _CONSOLE
 #ifdef C_GL_MODE
 #include "GL/gl.h"
 #include "glext.h" //needed for GL_CLAMP_TO_EDGE
@@ -30,7 +32,7 @@ typedef GLfloat GLdouble;
 #define glClipPlane glClipPlanef
 #endif
 
-
+#endif
 #define M_PI 3.141592f
 
 /* The following definitions are the same across platforms.  This first
