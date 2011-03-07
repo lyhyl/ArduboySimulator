@@ -3,6 +3,7 @@
 //#include "BaseApp.h"
 
 
+
 #ifndef WINAPI
 	#include <sys/types.h> 
 	#include <sys/socket.h>
@@ -34,7 +35,6 @@
 
 
 #else
-	
 
 #ifndef ECONNREFUSED
 	#define ECONNREFUSED            WSAECONNREFUSED
@@ -143,7 +143,7 @@ bool NetSocket::InitHost( int port, int connections )
 	//ioctlsocket(m_socket, FIONBIO, &arg);
 
 	/* bind the socket to the internet address */
-	if (bind(m_socket, (sockaddr *)&sa, sizeof(sockaddr_in)) == SOCKET_ERROR) 
+	if (::bind(m_socket, (sockaddr *)&sa, sizeof(sockaddr_in)) == SOCKET_ERROR) 
 	{
 		rt_closesocket(m_socket);
 		LogMsg("bind: INVALID_SOCKET");

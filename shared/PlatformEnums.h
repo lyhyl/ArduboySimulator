@@ -3,6 +3,9 @@
 
 //these are defines and utility functions that are implemented on every platform. (Implemented in AndroidUtils.cpp, or WinUtils.cpp, or ioSUtils.cpp, etc)
 
+#ifdef __cplusplus
+
+
 #include <string>
 #include <vector>
 
@@ -108,3 +111,4 @@ bool IsDesktop();
 bool HasVibration();
 
 #endif // platformenums_h__
+#endif
