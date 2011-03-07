@@ -179,7 +179,7 @@
       <OutputFile>../bin/RTSimpleApp.exe</OutputFile>
       <AdditionalLibraryDirectories>..\..\shared\win\lib;..\..\shared\win\fmod\api\lib;..\..\shared\win\audiere\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>$(OutDir)RTSimpleApp.pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>../bin/RTSimpleApp.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>

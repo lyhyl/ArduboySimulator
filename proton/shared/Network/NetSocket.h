@@ -12,8 +12,8 @@
 
 #ifndef SOCKET_ERROR
 #define SOCKET_ERROR (-1)
-
 #endif
+
 class NetSocket
 {
 public:
@@ -25,7 +25,7 @@ public:
 	void Write(char *pBuff, int len);
 	void Write(const string &msg);
 	int GetSocket() {return m_socket;}
-	vector<char> & GetBuffer() {return m_readBuffer;}
+	std::vector<char> & GetBuffer() {return m_readBuffer;}
 	int GetIdleTimeMS();
 	void Kill();
 	void SetSocket(int socket);
@@ -36,8 +36,8 @@ protected:
 	void UpdateWrite();
 	int m_socket;
 	
-	vector<char> m_readBuffer;
-	vector<char> m_writeBuffer;
+	std::vector<char> m_readBuffer;
+	std::vector<char> m_writeBuffer;
 	unsigned int m_idleTimer; //time of last communication
 
 private:
