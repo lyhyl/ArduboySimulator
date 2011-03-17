@@ -1580,6 +1580,14 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\shared\Entity\RenderClipComponent.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\shared\Entity\RenderClipComponent.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\shared\Entity\ScrollBarRenderComponent.cpp"
 						>
 					</File>

@@ -129,11 +129,12 @@ void OverlayRenderComponent::OnRender(VariantList *pVList)
 
 		if (GET_ALPHA(finalColor) == 0) return;
 
+		if (vFinalPos.y < -m_pSize2d->y && *m_pRotation == 0) return; //if rotation is enabled, we don't do this early exit check as it could be incorrect
+		if (vFinalPos.y > GetOrthoRenderSizeYf() && *m_pRotation == 0) return; //if rotation is enabled, we don't do this early exit check as it could be incorrect
+		CL_Vec2f vRotationPt = vFinalPos+m_pTex->GetFrameSize()/2;
+
 		if (m_pScale2d->x != 1 || m_pScale2d->y != 1 || *m_pFlipX != 0 || *m_pFlipY != 0)
 		{
-			CL_Vec2f vRotationPt = vFinalPos+m_pTex->GetFrameSize()/2;
-			if (vFinalPos.y < -m_pSize2d->y) return;
-			if (vFinalPos.y > GetOrthoRenderSizeYf()) return;
 			
 			if (m_pScale2d->x != 0 && m_pScale2d->y != 0)
 			{
@@ -142,9 +143,6 @@ void OverlayRenderComponent::OnRender(VariantList *pVList)
 			}
 		} else
 		{
-			CL_Vec2f vRotationPt = vFinalPos+m_pTex->GetFrameSize()/2;
-			if (vFinalPos.y < -m_pSize2d->y) return;
-			if (vFinalPos.y > GetOrthoRenderSizeYf()) return;
 			m_pTex->BlitAnim(vFinalPos.x, vFinalPos.y, *m_pFrameX, *m_pFrameY, finalColor, *m_pRotation, vRotationPt);
 		}
 	}

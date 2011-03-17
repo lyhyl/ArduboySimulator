@@ -104,7 +104,7 @@ bool FileExists(const string &fName)
 
 //this is so my RTPacker command line util will compile using this even though it doesn't use the filemanager
 
-#ifndef CLANLIB_1
+#if !defined(CLANLIB_1) && !defined(_CONSOLE)
 	if (GetFileManager())
 	{
 		return GetFileManager()->FileExists(fName, false);

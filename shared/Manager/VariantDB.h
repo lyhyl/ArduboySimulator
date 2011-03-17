@@ -57,7 +57,7 @@ typedef  __gnu_cxx::hash_map<string, FunctionObject*> functionList;
 #else
 #include <hash_map>
 
-#if defined RT_WEBOS_ARM || ANDROID_NDK
+#if defined RT_WEBOS_ARM || ANDROID_NDK || RTLINUX
 
 namespace __gnu_cxx {
 	/**

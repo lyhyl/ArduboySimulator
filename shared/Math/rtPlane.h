@@ -1,8 +1,12 @@
 #ifndef rtPlane_h__
 #define rtPlane_h__
 
+#include "PlatformSetup.h"
 #include "ClanLib-2.0/Sources/API/Core/Math/vec3.h"
 
+#ifdef _CONSOLE
+typedef float GLdouble;
+#endif
 struct rtPlane
 {
 	rtPlane(){};

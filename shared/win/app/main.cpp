@@ -25,6 +25,16 @@ void InitVideoSize()
 	//to make testing consistent
 	AddVideoMode("Windows", 768, 1024, PLATFORM_ID_WINDOWS);
 	AddVideoMode("Windows Wide", 800, 1280, PLATFORM_ID_WINDOWS);
+	// get native window size
+	HWND        hDesktopWnd = GetDesktopWindow();
+	HDC         hDesktopDC = GetDC(hDesktopWnd);
+	int nScreenX = GetDeviceCaps(hDesktopDC, HORZRES);
+	int nScreenY = GetDeviceCaps(hDesktopDC, VERTRES);
+	ReleaseDC(hDesktopWnd, hDesktopDC);
+	AddVideoMode("Windows Native", nScreenX, nScreenX, PLATFORM_ID_WINDOWS);
+
+
+
 	AddVideoMode("OSX", 768, 1024, PLATFORM_ID_OSX); //g_landScapeNoNeckHurtMode should be false when testing. Sort of buggy to emulate in Windows
 	AddVideoMode("OSX Wide", 800, 1280, PLATFORM_ID_OSX); 
 
@@ -218,13 +228,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_CHAR:
 		{
 			if (!g_bHasFocus) break;
-			
+
 			const bool isBitSet = (lParam & (1 << 30)) != 0;
 
 			//only register the first press of the escape key
 			if (wParam == 27 && isBitSet) break;
 
-			GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, ConvertWindowsKeycodeToProtonVirtualKey(wParam), lParam);  //lParam holds a lot of random data about the press, look it up if
+		if (wParam == VK_ESCAPE) wParam = VIRTUAL_KEY_BACK;
+
+			GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, wParam, lParam);  //lParam holds a lot of random data about the press, look it up if
 			//you actually want to access it
 			return 0;
 		}
@@ -308,7 +320,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_SIZE:
 		{
 
-			break;
+			
 			// Respond to the message:				
 			int Width = LOWORD( lParam );
 			int Height = HIWORD( lParam ); 

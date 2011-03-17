@@ -2,6 +2,7 @@
 #include "VariantDB.h"
 #include "util/ResourceUtils.h"
 
+
 VariantDB::VariantDB()
 {
 }
