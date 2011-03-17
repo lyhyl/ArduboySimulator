@@ -135,6 +135,7 @@ CBillboardTextSceneNode::CBillboardTextSceneNode(ISceneNode* parent, ISceneManag
 	setText(text);
 	setSize(size);
 
+	autoSizeMod = 0;
 	setAutomaticCulling ( scene::EAC_BOX );
 }
 
@@ -276,6 +277,21 @@ void CBillboardTextSceneNode::OnRegisterSceneNode()
 	horizontal.normalize();
 	core::vector3df space = horizontal;
 
+
+	//****** SETH
+	core::dimension2df originalSize = Size;
+
+	if (autoSizeMod != 0)
+	{
+	float distFromCam = (campos-pos).getLength();
+	float sizeMod = distFromCam*autoSizeMod;
+	//limiting it looks a little better... 
+	if (sizeMod > 5) sizeMod = 5;
+	Size *= sizeMod;
+	
+	}
+	//*************
+
 	horizontal *= 0.5f * Size.Width;
 
 	core::vector3df vertical = horizontal.crossProduct(view);
@@ -322,6 +338,8 @@ void CBillboardTextSceneNode::OnRegisterSceneNode()
 
 	SceneManager->registerNodeForRendering(this, ESNRP_TRANSPARENT);
 	ISceneNode::OnRegisterSceneNode();
+
+	Size = originalSize; //put it back how it was //SETH
 }
 
 
@@ -333,8 +351,12 @@ void CBillboardTextSceneNode::render()
 
 	video::IVideoDriver* driver = SceneManager->getVideoDriver();
 
+
 	// draw
 	core::matrix4 mat;
+	
+	
+	
 	driver->setTransform(video::ETS_WORLD, mat);
 
 	for (u32 i = 0; i < Mesh->getMeshBufferCount(); ++i)
@@ -351,6 +373,9 @@ void CBillboardTextSceneNode::render()
 		driver->setMaterial(m);
 		driver->draw3DBox(BBox, video::SColor(0,208,195,152));
 	}
+
+	//setSize(originalSize);
+
 }
 
 

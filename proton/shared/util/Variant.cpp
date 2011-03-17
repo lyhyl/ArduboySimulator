@@ -173,7 +173,12 @@ void Variant::Interpolate(Variant *pA,Variant *pB, float curPos, eInterpolateTyp
 		{
 			if (bAsColor)
 			{
+#ifdef _CONSOLE
+assert(!"Not supported in console builds");
+	pA->Set(pB->GetUINT32());
+#else
 				Set(ColorCombineMix(pA->GetUINT32(), pB->GetUINT32(), curPos));
+#endif
 			} else
 			{
 				Set( uint32(  float(pA->GetUINT32()) + (   (float(pB->GetUINT32())- float(pA->GetUINT32())  ) * curPos)));
@@ -249,4 +254,184 @@ int GetSizeOfData(Variant::eType type)
 	}
 
 	return 0;
+}
+
+byte * VariantList::SerializeToMem( uint32 *pSizeOut, byte *pDest )
+{
+	int varsUsed = 0;
+	int memNeeded = 0;
+
+	int tempSize;
+
+	for (int i=0; i < C_MAX_VARIANT_LIST_PARMS; i++)
+	{
+		if (m_variant[i].GetType() == Variant::TYPE_STRING)
+		{
+			tempSize = m_variant[i].GetString().size()+4; //the 4 is for an int showing how long the string will be when writing
+		} else
+		{
+			tempSize = GetSizeOfData(m_variant[i].GetType());
+		}
+
+		if (tempSize > 0)
+		{
+			varsUsed++;
+			memNeeded += tempSize;
+		}
+
+	}
+
+	int totalSize = memNeeded + 1 + (varsUsed*2);
+
+
+	if (!pDest)
+	{
+		pDest = new byte[totalSize]; //1 is to write how many are coming
+	}
+
+	//write it
+
+	
+	byte *pCur = pDest;
+
+	pCur[0] = byte(varsUsed);
+	pCur++;
+
+	byte type;
+
+	for (int i=0; i < C_MAX_VARIANT_LIST_PARMS; i++)
+	{
+		if (m_variant[i].GetType() == Variant::TYPE_STRING)
+		{
+			type = i;
+			memcpy(pCur, &type, 1); pCur += 1; //index
+
+			type = Variant::TYPE_STRING;
+			memcpy(pCur, &type, 1); pCur += 1; //type
+
+			
+			uint32 s = m_variant[i].GetString().size();
+			memcpy(pCur, &s, 4); pCur += 4; //length of string
+			memcpy(pCur, m_variant[i].GetString().c_str(), s); pCur += s; //actual string data
+		} else
+		{
+			tempSize = GetSizeOfData(m_variant[i].GetType());
+
+			if (tempSize > 0)
+			{
+				type = i;
+				memcpy(pCur, &type, 1); pCur += 1; //index
+
+				type = m_variant[i].GetType();
+				memcpy(pCur, &type, 1); pCur += 1; //type
+				
+				memcpy(pCur, m_variant[i].m_var, tempSize); pCur += tempSize;
+
+			}
+		}
+	}
+
+	*pSizeOut = totalSize;
+	return pDest;
+}
+
+
+
+bool VariantList::SerializeFromMem(byte *pSrc, int bufferSize )
+{
+	byte count = pSrc[0]; pSrc++;
+
+	for (int i=0; i < count; i++)
+	{
+		byte index = pSrc[0]; pSrc++;
+		byte type = pSrc[0]; pSrc++;
+
+		switch(type)
+		{
+
+		case Variant::TYPE_STRING:
+			{
+				uint32 strLen;
+				memcpy(&strLen, pSrc, 4); pSrc += 4;
+				if (strLen > 1024*5 )
+				{
+					LogMsg("Bad str len!");
+					assert(0);
+					return false;
+				}
+		
+					string v;
+					v.resize(strLen );
+					memcpy(&v[0], pSrc, strLen ); pSrc += strLen;
+					m_variant[index].Set(v);
+				
+				break;
+			}
+
+		case Variant::TYPE_UINT32:
+			{
+				uint32 v;
+				memcpy(&v, pSrc, sizeof(uint32));
+				pSrc += sizeof(uint32);
+				m_variant[index].Set(v);
+				break;
+			}
+
+		case Variant::TYPE_FLOAT:
+			{
+				float v;
+				memcpy(&v, pSrc, sizeof(float));
+				pSrc += sizeof(float);
+				m_variant[index].Set(v);
+				break;
+			}
+
+		case Variant::TYPE_VECTOR2:
+			{
+				CL_Vec2f v;
+				memcpy(&v, pSrc, sizeof(CL_Vec2f));
+				pSrc += sizeof(CL_Vec2f);
+				m_variant[index].Set(v);
+				break;
+				
+			}
+
+		case Variant::TYPE_VECTOR3:
+			{
+				CL_Vec3f v;
+				memcpy(&v, pSrc, sizeof(CL_Vec3f));
+				pSrc += sizeof(CL_Vec3f);
+				m_variant[index].Set(v);
+				break;
+			}
+
+		case Variant::TYPE_RECT:
+			{
+				CL_Rectf v;
+				memcpy(&v, pSrc, sizeof(CL_Rectf));
+				pSrc += sizeof(CL_Rectf);
+				m_variant[index].Set(v);
+			}
+
+		default:
+			LogMsg("unknown var type");
+
+			assert(!"Unknown var type");
+			return false;
+		}
+	}
+
+
+	return true; //success
+}
+
+void VariantList::GetVariantListStartingAt(VariantList *pOut, int startIndex)
+{
+	int cur = 0;
+
+	for (int i=startIndex; i < C_MAX_VARIANT_LIST_PARMS;i++)
+	{
+		pOut->m_variant[cur++] = m_variant[i];
+	}
+	
 }

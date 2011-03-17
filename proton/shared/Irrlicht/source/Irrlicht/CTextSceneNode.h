@@ -111,6 +111,9 @@ namespace scene
 		//! \param bottomColor: stores the color of the bottom vertices
 		virtual void getColor(video::SColor & topColor, video::SColor & bottomColor) const;
 
+		void setAutoSizeMod(float mod) {autoSizeMod = mod;} //setting this to non zero means text will auto scale to be this size based on distance
+		//from camera
+
 	private:
 
 		core::stringw Text;
@@ -135,6 +138,7 @@ namespace scene
 		core::array < SSymbolInfo > Symbol;
 
 		SMesh *Mesh;
+		float autoSizeMod; //SETH
 	};
 
 } // end namespace scene

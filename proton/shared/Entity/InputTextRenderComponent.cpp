@@ -368,11 +368,14 @@ void InputTextRenderComponent::OnInput( VariantList *pVList )
 		break;
 	
 	case MESSAGE_TYPE_GUI_CHAR:
+#ifdef _DEBUG		
+		//LogMsg("Got key %c", (char)pVList->Get(2).GetUINT32());
+#endif
+
 		if (!m_bEditActive) return; //ignore, we don't have focus
 
 		char c = (char)pVList->Get(2).GetUINT32();
-		//LogMsg("Got key %c", c);
-		string input = GetLastStringInput();
+			string input = GetLastStringInput();
 
 		if (c == 13)
 		{

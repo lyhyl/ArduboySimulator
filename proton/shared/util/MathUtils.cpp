@@ -284,9 +284,10 @@ CL_Vec3f LerpVector(const CL_Vec3f &vOriginal, const CL_Vec3f &vTarget, float f_
 	return (vOriginal - ((vOriginal-vTarget)*f_percent));
 }
 
+
 CL_Vec2f RotateGUIPoint(CL_Vec2f vPos, CL_Rectf r, float angle)
 {
-
+#ifndef _CONSOLE
 	CL_Vec2f destSize = GetScreenSize();
 
 	assert(angle >=0 && angle < 360);
@@ -338,4 +339,12 @@ CL_Vec2f RotateGUIPoint(CL_Vec2f vPos, CL_Rectf r, float angle)
 	vPos.y += r.top;
 
 	return vPos;
+#else
+	assert(!"Can't use this in console mode, there is no concept of a screen");
+	return CL_Vec2f(0,0);
+#endif
 }
+
+
+
+

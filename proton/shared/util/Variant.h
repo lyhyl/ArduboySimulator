@@ -26,6 +26,7 @@
 
 class Entity;
 class EntityComponent;
+class VariantList;
 
 enum eInterpolateType
 {
@@ -235,6 +236,8 @@ public:
 
 	bool Save(FILE *fp, const string &varName ); //assumes you've already fopen'ed something and pass the file pointer in
 
+	friend class VariantList;
+
 private:
 
 	void SetDefaults()
@@ -259,7 +262,30 @@ private:
 
 };
 
+//a VariantList holds a group of variants, we pass these when we don't know in advance how many variants we want to use
+
 #define C_MAX_VARIANT_LIST_PARMS 4
+
+/*
+//example of memory serialization of a VariantList
+
+VariantList v;
+v.Get(0).Set(uint32(42));
+v.Get(1).Set("Hey guys");
+
+//save to mem
+byte *pData = v.SerializeToMem(&size, NULL);
+
+//load from mem
+VariantList b;
+b.SerializeFromMem(pData, size);
+
+//display
+LogMsg("%s, the answer to life is %d", b.Get(1).GetString().c_str(), b.Get(0).GetUINT32());
+
+//clean up the mem we initted earlier
+SAFE_DELETE_ARRAY(pData);
+*/
 
 class VariantList
 {
@@ -280,7 +306,11 @@ class VariantList
 				m_variant[i].Reset();
 			}
 		}
+
+		byte * SerializeToMem(uint32 *pSizeOut, byte *pDest); //pass in NULL for dest and it will new[] the memory itself
+		bool SerializeFromMem(byte *pSrc, int length );
 		Variant m_variant[C_MAX_VARIANT_LIST_PARMS]; //non-dynamic for speed
+		void GetVariantListStartingAt(VariantList *pOut, int startIndex); //shift variables over to the right, deleting some.  0 based index
 };
 
 int GetSizeOfData(Variant::eType type);
