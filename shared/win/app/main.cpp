@@ -31,7 +31,7 @@ void InitVideoSize()
 	int nScreenX = GetDeviceCaps(hDesktopDC, HORZRES);
 	int nScreenY = GetDeviceCaps(hDesktopDC, VERTRES);
 	ReleaseDC(hDesktopWnd, hDesktopDC);
-	AddVideoMode("Windows Native", nScreenX, nScreenX, PLATFORM_ID_WINDOWS);
+	AddVideoMode("Windows Native", nScreenX, nScreenY, PLATFORM_ID_WINDOWS);
 
 
 
