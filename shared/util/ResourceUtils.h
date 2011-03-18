@@ -2,7 +2,7 @@
 #include "RTFileFormat.h"
 
 #ifndef CLANLIB_1
-	#include "math/rtRect.h"
+	#include "Math/rtRect.h"
 	#include "MathUtils.h"
 	bool LoadFromFile(CL_Vec2f &num, FILE *fp);
 	bool LoadFromFile(CL_Vec3f &num, FILE *fp);
