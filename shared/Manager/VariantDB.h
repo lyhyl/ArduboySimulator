@@ -33,7 +33,7 @@ public:
 
 #else
 
-#ifdef __APPLE__
+#if defined( __APPLE__) || defined(RTLINUX)
 #include <ext/hash_map>
 
 namespace __gnu_cxx {
@@ -57,7 +57,7 @@ typedef  __gnu_cxx::hash_map<string, FunctionObject*> functionList;
 #else
 #include <hash_map>
 
-#if defined RT_WEBOS_ARM || ANDROID_NDK || RTLINUX
+#if defined RT_WEBOS_ARM || ANDROID_NDK
 
 namespace __gnu_cxx {
 	/**
