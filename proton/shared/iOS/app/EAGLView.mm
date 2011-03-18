@@ -138,7 +138,7 @@
 	if (IsIphone4())
 	{
 		NSLog(@"iPhone4 detected");
-		self.contentScaleFactor = 2.0;	
+		[self setContentScaleFactor: 2.0];
 	}
 	
 	glGenFramebuffersOES(1, &viewFramebuffer);

@@ -5,10 +5,14 @@
 LogDisplayComponent::LogDisplayComponent()
 {
 	SetName("LogDisplay");
+	m_pActiveConsole = NULL;
+	m_pInternalConsole = NULL;
 }
 
 LogDisplayComponent::~LogDisplayComponent()
 {
+
+	SAFE_DELETE(m_pInternalConsole);
 }
 
 void LogDisplayComponent::OnAdd(Entity *pEnt)
@@ -28,8 +32,10 @@ void LogDisplayComponent::OnAdd(Entity *pEnt)
 	m_pAlignment = &GetParent()->GetVar("alignment")->GetUINT32();
 	*/
 
+	if (!m_pActiveConsole) m_pActiveConsole = GetBaseApp()->GetConsole();
 	//register ourselves to render if the parent does
 	GetParent()->GetFunction("OnRender")->sig_function.connect(1, boost::bind(&LogDisplayComponent::OnRender, this, _1));
+	GetFunction("AddLine")->sig_function.connect(1, boost::bind(&LogDisplayComponent::AddLine, this, _1));
 //	GetParent()->GetFunction("OnUpdate")->sig_function.connect(1, boost::bind(&LogDisplayComponent::OnUpdate, this, _1));
 }
 
@@ -38,12 +44,25 @@ void LogDisplayComponent::OnRemove()
 	EntityComponent::OnRemove();
 }
 
+
+void LogDisplayComponent::AddLine(VariantList *pVList)
+{
+ if (!m_pInternalConsole)
+ {
+	 m_pInternalConsole = new Console;
+	 m_pActiveConsole = m_pInternalConsole;
+ }
+
+ m_pActiveConsole->AddLine(pVList->Get(0).GetString());
+
+}
+
 void LogDisplayComponent::OnRender(VariantList *pVList)
 {
 	CL_Vec2f vFinalPos = pVList->m_variant[0].GetVector2()+*m_pPos2d;
 
 	
-	int lines = GetBaseApp()->GetConsole()->GetTotalLines();
+	int lines = m_pActiveConsole->GetTotalLines();
 
 	eFont fontID = FONT_SMALL;
 	float fontScale = 1.0f;
@@ -59,7 +78,7 @@ void LogDisplayComponent::OnRender(VariantList *pVList)
 	
 	while (y > vFinalPos.y && curLine >= 0)
 	{
-		pFont->DrawScaled(vFinalPos.x, y, GetBaseApp()->GetConsole()->GetLine(curLine), fontScale,
+		pFont->DrawScaled(vFinalPos.x, y, m_pActiveConsole->GetLine(curLine), fontScale,
 			MAKE_RGBA(255,255,255, 255), NULL, &b);
 
 		curLine--;
@@ -68,13 +87,6 @@ void LogDisplayComponent::OnRender(VariantList *pVList)
 
 	b.Flush();
 }
-
-void LogDisplayComponent::OnUpdate(VariantList *pVList)
-{
-	
-	
-}
-
 
 
 void SetConsole(bool bOn)
@@ -88,7 +100,6 @@ void SetConsole(bool bOn)
 	{
 		//kill it
 		KillEntity(pConsole);
-
 	} else
 	{
 		pConsole = GetEntityRoot()->AddEntity(new Entity("ConsoleEnt"));

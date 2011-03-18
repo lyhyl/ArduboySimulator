@@ -11,8 +11,8 @@
 
 #include "ClanLib-2.0/Sources/API/Core/Math/mat3.h"
 #include "ClanLib-2.0/Sources/API/Core/Math/mat4.h"
-#include "ClanLib-2.0/Sources/api/Core/Math/line_segment.h"
-#include "ClanLib-2.0/Sources/api/Core/Math/circle.h"
+#include "ClanLib-2.0/Sources/API/Core/Math/line_segment.h"
+#include "ClanLib-2.0/Sources/API/Core/Math/circle.h"
 
 using namespace std;
 
