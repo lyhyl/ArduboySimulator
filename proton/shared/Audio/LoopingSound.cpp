@@ -9,6 +9,7 @@ LoopingSound::LoopingSound()
 	m_moveEndTimeMS = 4300;
 	m_bMoving = false;
 	m_state = STATE_IDLE;
+	m_bDisabled = false;
 }
 
 LoopingSound::~LoopingSound()
@@ -77,6 +78,7 @@ void LoopingSound::PlayMoveSound()
 
 void LoopingSound::SetMoving( bool bNew )
 {
+	if (m_bDisabled) return;
 
 	if (bNew == m_bMoving) return; //nothing really changed
 
@@ -119,6 +121,7 @@ void LoopingSound::SetMoving( bool bNew )
 
 void LoopingSound::Update()
 {
+	if (m_bDisabled) return;
 
 	switch (m_state)
 	{
@@ -155,5 +158,24 @@ void LoopingSound::SetTransitionTimings( int transitionStartMS, int transitionSt
 {
 	m_moveStartTimeMS = transitionStartMS;
 	m_moveEndTimeMS = transitionStopMS;
+
+}
+
+void LoopingSound::SetDisabled( bool bDisabled )
+{
+	if (bDisabled == m_bDisabled) return; //no change
+
+	if (bDisabled)
+	{
+		KillAudio();
+		m_bMoving = false;
+	} else
+	{
+	  m_state = STATE_IDLE;
+	  PlayIdleSound();
+	}
+
+	m_bDisabled = bDisabled;
+
 
 }

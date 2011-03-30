@@ -55,9 +55,7 @@ void Button2DComponent::OnAdd(Entity *pEnt)
 	GetVar("fileName")->GetSigOnChanged()->connect(boost::bind(&Button2DComponent::UpdateButtonVisuals, this, _1));
 	GetVar("overFileName")->GetSigOnChanged()->connect(boost::bind(&Button2DComponent::UpdateButtonVisuals, this, _1));
 	GetVar("visualStyle")->GetSigOnChanged()->connect(boost::bind(&Button2DComponent::OnVisualStyleChanged, this, _1));
-
 }
-
 
 void Button2DComponent::OnRemove()
 {
@@ -180,7 +178,6 @@ void Button2DComponent::PerformClick(VariantList *pVList)
 			return;
 		}
 		
-		
 	} else
 	{
 #ifdef _DEBUG
@@ -196,6 +193,4 @@ void Button2DComponent::OnTouchEnd(VariantList *pVList)
 		PerformClick(pVList);
 		return;
 	}
-
 }
-

@@ -206,7 +206,6 @@ EntityComponent * SetupAnimEntity(Entity *pEnt, uint32 frameCountX, uint32 frame
 	
 	if (pEnt)
 	{
-		
 		pComp->GetFunction("SetupAnim")->sig_function(&VariantList(frameCountX, frameCountY));
 
 		if (curFrameX != -1)
@@ -583,6 +582,18 @@ EntityComponent * PulsateColorEntity(Entity *pEnt, bool bRecursive, unsigned int
 
 	return pComp;
 
+}
+
+bool IsDisabledEntity(Entity *pEnt)
+{
+	EntityComponent * pComp = pEnt->GetComponentByName("Button2D");
+
+	if (pComp)
+	{
+		return pComp->GetVar("disabled")->GetUINT32() != 0;
+	}
+
+	return false;
 }
 
 void DisableAllButtonsEntity(Entity *pEnt, bool bRecursive)

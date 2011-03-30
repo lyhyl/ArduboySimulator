@@ -226,3 +226,43 @@ FileSystem * FileManager::GetFileSystem( int index )
 
 	return NULL;
 }
+
+bool FileManager::Copy(string srcFile, string dstFile, bool bAddBasePath)
+{
+	if (bAddBasePath)
+	{
+		srcFile = GetBaseAppPath() + srcFile;
+		dstFile = GetBaseAppPath() + dstFile;
+	}
+
+	int size;
+	StreamingInstance *pSrc = GetFileManager()->GetStreaming(srcFile, &size, false);
+	if (!pSrc) 
+	{
+		LogMsg("Copy: Can't open input file of %s", srcFile.c_str());
+		return false;
+	}
+
+	const int bufferSize = 512;
+	byte buff[bufferSize];
+
+	FILE *fp = fopen(dstFile.c_str(), "wb");
+	if (!fp)
+	{
+		LogError("Unable to create file %s", dstFile.c_str());
+		return false;
+	}
+
+	while (!pSrc->IsFinished())
+	{
+		int bytesRead = pSrc->Read(buff, bufferSize);
+
+		if (bytesRead > 0)
+		{
+			fwrite(buff, bytesRead, 1, fp);
+		}
+	}
+
+	fclose(fp);
+	return true;
+}

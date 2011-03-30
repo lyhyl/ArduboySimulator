@@ -33,6 +33,7 @@ public:
 	void SetMoving(bool bNew);
 	void SetTransitionTimings(int transitionStartMS, int transitionStopMS);
 	void Update(); //needs to be called each frame
+	void SetDisabled(bool bDisabled);
 
 private:
 
@@ -54,6 +55,7 @@ private:
 
 	uint32 m_waitTimer;
 	eState m_state;
+	bool m_bDisabled;
 	
 
 };
