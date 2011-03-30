@@ -55,6 +55,7 @@ public:
 	bool FileExists(string fileName, bool bAddBasePath = true);
 	int GetFileSize(string fileName, bool bAddBasePath = true);
 	FileSystem * GetFileSystem(int index); //returns null if invalid index
+	bool Copy(string srcFile, string dstFile, bool bAddBasePath = true); //copy a file to a file.  Destination can't be inside a zip, but src can be.
 
 private:
 

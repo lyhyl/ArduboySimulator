@@ -10,6 +10,13 @@ TouchStripComponent::TouchStripComponent()
 
 TouchStripComponent::~TouchStripComponent()
 {
+	if (m_activeFinger != -1)
+	{
+		//mark the touch we were using as unhandled now, so if we're recreated right at the same place controls don't
+		//go dead until they release and touch again
+		TouchTrackInfo *pTouch = GetBaseApp()->GetTouch(m_activeFinger);
+		pTouch->SetWasHandled(false);
+	}
 }
 
 void TouchStripComponent::OnAdd(Entity *pEnt)
@@ -73,6 +80,7 @@ void TouchStripComponent::OnInput(VariantList *pVList)
 
 	uint32 fingerID = pVList->Get(2).GetUINT32();
 
+	
 	switch (eMessageType( int(pVList->Get(0).GetFloat())))
 	{
 
@@ -110,7 +118,30 @@ void TouchStripComponent::OnInput(VariantList *pVList)
 		
 	case MESSAGE_TYPE_GUI_CLICK_MOVE:
 		{
-			if (m_activeFinger != fingerID) return;
+			
+			if (m_activeFinger != fingerID)
+			{
+				//not ours.. but hold on, if it's an unclaimed touch let's take it anyway
+				if (m_activeFinger == -1)			
+				{
+
+				TouchTrackInfo *pTouch = GetBaseApp()->GetTouch(fingerID);
+				//if (pTouch->WasHandled()) return;
+
+					//well, nobody has claimed it yet.  Tell you what, if they are over us, let's let it count as a first touch
+					CL_Rectf r(*m_pPos2d, CL_Sizef(m_pSize2d->x, m_pSize2d->y));
+					ApplyPadding(&r, *m_pTouchPadding);
+
+					if (r.contains(pt))
+					{
+						GetParent()->GetFunction("OnOverStart")->sig_function(&VariantList(pt, GetParent(), fingerID));
+					}
+					
+				}
+
+				return;
+				
+			}
 			SetPosition(pt);
 			
 		}	

@@ -339,7 +339,11 @@ void CGUIFileOpenDialog::fillListBox()
 			#ifndef _IRR_WCHAR_FILESYSTEM
 			const c8 *cs = (const c8 *)FileList->getFileName(i).c_str();
 			wchar_t *ws = new wchar_t[strlen(cs) + 1];
+#ifdef ANDROID_NDK
+			int len = strlen(cs); //SETH Android NDK doesn't support wchar at all
+#else
 			int len = mbstowcs(ws,cs,strlen(cs));
+#endif
 			ws[len] = 0;
 			s = ws;
 			delete [] ws;
@@ -355,7 +359,11 @@ void CGUIFileOpenDialog::fillListBox()
 		#ifndef _IRR_WCHAR_FILESYSTEM
 		const c8 *cs = (const c8 *)FileSystem->getWorkingDirectory().c_str();
 		wchar_t *ws = new wchar_t[strlen(cs) + 1];
+#ifdef ANDROID_NDK
+		int len = strlen(cs); //SETH Android NDK doesn't support wchar at all
+#else
 		int len = mbstowcs(ws,cs,strlen(cs));
+#endif
 		ws[len] = 0;
 		s = ws;
 		delete [] ws;
