@@ -518,10 +518,15 @@ EntityComponent * ZoomToPositionEntityMulti(Entity *pEnt, CL_Vec2f vPos, unsigne
 }
 
 
-void MorphToColorEntity(Entity *pEnt, bool bRecursive, int timeMS, unsigned int color, int delayBeforeActionMS)
+void MorphToColorEntity(Entity *pEnt, bool bRecursive, int timeMS, unsigned int color, int delayBeforeActionMS, bool bAllowMultipleAtOnce)
 {
 	
-	EntityComponent * pComp = pEnt->GetComponentByName("ic_color");
+	EntityComponent * pComp = NULL;
+	
+	if (!bAllowMultipleAtOnce)
+	{
+		pEnt->GetComponentByName("ic_color");
+	}
 
 	if (!pComp)
 	{

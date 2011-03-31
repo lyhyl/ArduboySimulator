@@ -35,7 +35,6 @@ void TouchStripComponent::OnAdd(Entity *pEnt)
 	m_pAlignment = &GetParent()->GetVar("alignment")->GetUINT32();
 	m_pTouchPadding = &GetParent()->GetVarWithDefault(string("touchPadding"), Variant(CL_Rectf(20.0f, 5.0f, 20.0f, 15.0f)))->GetRect();
 
-
 	//this will only be set if TouchStripComponent is initted before the TouchHandler...
 	//GetParent()->GetVarWithDefault(string("touchPadding"), Variant(CL_Rectf(0.0f, 0.0f, 0.0f, 0.0f)))->GetRect();
 
