@@ -57,6 +57,6 @@ private:
 	SurfaceAnim *m_pSurf; //only used if we're using a bmp for the progress bar overlay
 	string *m_pFileName;
 	uint32 *m_pFlipX, *m_pFlipY;
+	uint32 *m_pInterpolateType; //really a eInterpolateType
 };
-
 #endif // ProgressBarComponent_h__

@@ -24,9 +24,25 @@ float ProgressBarComponent::GetVisualProgress()
 	return progress;
 }
 
+float ApplyInterpolationToFloat(eInterpolateType type, float f)
+{
+	switch (type)
+	{
+	case INTERPOLATE_SMOOTHSTEP: return SMOOTHSTEP(f);
+	case INTERPOLATE_LINEAR: return f;
+	case INTERPOLATE_EASE_FROM: return EASE_FROM(f);
+	case INTERPOLATE_EASE_TO: return EASE_TO(f);
+	
+	default:
+		assert(!"Unhandled interpolation type");
+		return f;
+	}
+	return f;
+}
+
 void ProgressBarComponent::OnProgressChanged(Variant *pDataObject)
 {
-	m_baseProgress = m_baseProgress+  ( ( (*m_pProgressOfLastSet)-m_baseProgress) * SMOOTHSTEP (GetVisualProgress()));
+	m_baseProgress = m_baseProgress+  ( ( (*m_pProgressOfLastSet)-m_baseProgress) * ApplyInterpolationToFloat(eInterpolateType(*m_pInterpolateType), GetVisualProgress()));
 	*m_pProgressOfLastSet = *m_pProgress;
 	m_timeOfLastSet = GetBaseApp()->GetGameTick();
 }
@@ -59,6 +75,7 @@ void ProgressBarComponent::OnAdd(Entity *pEnt)
 
 	//personal vars
 	m_pInterpolationTimeMS = &GetVarWithDefault("interpolationTimeMS", Variant(uint32(1000)))->GetUINT32();
+	m_pInterpolateType = &GetVarWithDefault("interpolation", Variant(uint32(INTERPOLATE_SMOOTHSTEP)))->GetUINT32();
 	m_pBorderColor = &GetVarWithDefault("borderColor", Variant(MAKE_RGBA(255,255,255,0)))->GetUINT32();
 	m_pProgress = &GetVarWithDefault("progress", Variant(0.0f))->GetFloat();
 	m_pVisualProgress = &GetVarWithDefault("visualProgress", Variant(0.0f))->GetFloat();
@@ -103,7 +120,7 @@ void ProgressBarComponent::OnRender(VariantList *pVList)
 	if (*m_pAlpha > 0.01)
 	{
 		CL_Vec2f vFinalPos = pVList->m_variant[0].GetVector2()+*m_pPos2d;
-		float progress = m_baseProgress +  ( (*m_pProgress-m_baseProgress) * SMOOTHSTEP(GetVisualProgress()) );
+		float progress = m_baseProgress +  ( (*m_pProgress-m_baseProgress) * ApplyInterpolationToFloat(eInterpolateType(*m_pInterpolateType), GetVisualProgress()) );
 		if (progress == 0) return;
 		*m_pVisualProgress = progress; //save it so outsiders can check and see what we're displaying
 		uint32 color = ColorCombine(*m_pColor, *m_pColorMod, *m_pAlpha);
