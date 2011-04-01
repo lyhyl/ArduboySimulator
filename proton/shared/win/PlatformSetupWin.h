@@ -33,8 +33,9 @@ typedef GLfloat GLdouble;
 #endif
 
 #endif
+#ifndef M_PI
 #define M_PI 3.141592f
-
+#endif
 /* The following definitions are the same across platforms.  This first
 ** group are the sanctioned types.
 */
@@ -60,6 +61,10 @@ typedef  unsigned char      uint8;       /* Unsigned 8  bit value */
 
 #ifndef _INT32_DEFINED
 typedef  signed long int    int32;       /* Signed 32 bit value */
+
+//for mysql
+#define HAVE_INT32
+
 #define _INT32_DEFINED
 #endif
 

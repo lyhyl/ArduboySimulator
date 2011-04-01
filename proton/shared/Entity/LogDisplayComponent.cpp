@@ -21,6 +21,7 @@ void LogDisplayComponent::OnAdd(Entity *pEnt)
 
 	m_pPos2d = &GetParent()->GetVar("pos2d")->GetVector2();
 	m_pSize2d = &GetParent()->GetVar("size2d")->GetVector2();
+	m_pFontID = &GetVarWithDefault("font", uint32(FONT_SMALL))->GetUINT32();
 	
 	/*
 		m_pScale2d = &GetParent()->GetShared()->GetVarWithDefault("scale2d", Variant(1.0f, 1.0f))->GetVector2();
@@ -53,18 +54,26 @@ void LogDisplayComponent::AddLine(VariantList *pVList)
 	 m_pActiveConsole = m_pInternalConsole;
  }
 
- m_pActiveConsole->AddLine(pVList->Get(0).GetString());
+ //word wrap it into lines if needed
+ deque<string> lines;
+CL_Vec2f enclosedSize2d;
+ GetBaseApp()->GetFont(eFont(*m_pFontID))->MeasureTextAndAddByLinesIntoDeque(*m_pSize2d, pVList->Get(0).GetString(), &lines, 1, enclosedSize2d);
+
+ for (;lines.size();)
+ {
+	 m_pActiveConsole->AddLine(lines.front());
+	 lines.pop_front();
+ }
 
 }
 
 void LogDisplayComponent::OnRender(VariantList *pVList)
 {
 	CL_Vec2f vFinalPos = pVList->m_variant[0].GetVector2()+*m_pPos2d;
-
 	
 	int lines = m_pActiveConsole->GetTotalLines();
 
-	eFont fontID = FONT_SMALL;
+	eFont fontID = eFont(*m_pFontID);
 	float fontScale = 1.0f;
 	RTFont *pFont = GetBaseApp()->GetFont(fontID);
 

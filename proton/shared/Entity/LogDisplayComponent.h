@@ -47,7 +47,7 @@ private:
 	void AddLine(VariantList *pVList);
 	CL_Vec2f *m_pPos2d;
 	CL_Vec2f *m_pSize2d;
-	
+	uint32 *m_pFontID;
 	/*
 	CL_Vec2f *m_pScale2d;
 	uint32 *m_pColor;

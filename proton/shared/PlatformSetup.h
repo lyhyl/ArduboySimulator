@@ -87,5 +87,5 @@ int GetScreenSizeX();
 float GetScreenSizeYf();
 float GetScreenSizeXf();
 bool IsLargeScreen();
-
+std::string PlatformIDAsString(ePlatformID platformID);
 #endif
