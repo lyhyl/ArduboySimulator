@@ -29,19 +29,27 @@ string AddPlatformNameURL()
 	}
 	return "";
 }
+
+string PlatformIDAsString(ePlatformID platformID)
+{
+
+	switch (platformID)
+	{
+	case PLATFORM_ID_UNKNOWN: return "unknown";
+	case PLATFORM_ID_ANDROID: return "android";
+	case PLATFORM_ID_WEBOS: return "webos";
+	case PLATFORM_ID_WINDOWS: return "windows";
+	case PLATFORM_ID_LINUX: return "linux";
+	case PLATFORM_ID_IOS: return "iphone";
+	case PLATFORM_ID_OSX: return "osx";
+
+	}
+
+	return "";
+}
 string GetPlatformName()
 {
-	switch (GetEmulatedPlatformID())
-	{
-		case PLATFORM_ID_UNKNOWN: return "unknown";
-		case PLATFORM_ID_ANDROID: return "android";
-		case PLATFORM_ID_WEBOS: return "webos";
-		case PLATFORM_ID_WINDOWS: return "windows";
-		case PLATFORM_ID_LINUX: return "linux";
-		case PLATFORM_ID_IOS: return "iphone";
-			
-	}
-	return "";
+	return PlatformIDAsString(GetEmulatedPlatformID());
 }
 
 
