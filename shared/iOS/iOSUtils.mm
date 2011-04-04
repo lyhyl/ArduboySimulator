@@ -347,13 +347,13 @@ const char* iPhoneVersion()
 	NSString *deviceType = [UIDevice currentDevice].systemVersion;
 	return [deviceType cStringUsingEncoding:NSUTF8StringEncoding];
 }
-
-const char* iPhoneDeviceID()
+string GetDeviceID()
 {
 	UIDevice *device = [UIDevice currentDevice];
 	NSString *uniqueIdentifier = [device uniqueIdentifier];
-	return [uniqueIdentifier cStringUsingEncoding:NSUTF8StringEncoding];
+	return string([uniqueIdentifier cStringUsingEncoding:NSUTF8StringEncoding]);
 }
+
 string GetRegionString()
 {
 	NSLocale *currentUsersLocale = [NSLocale currentLocale];
