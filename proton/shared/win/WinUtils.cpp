@@ -227,6 +227,34 @@ void RemoveFile( string fileName, bool bAddSavePath)
 	}
 }
 
+string GetDeviceID()
+{
+	//half hearted attempt at getting a unique identifier.  Don't count on it, though.
+	DWORD dwDiskSerial;
+	if (!GetVolumeInformation(_T("C:\\"), NULL, 0, &dwDiskSerial, NULL, NULL, NULL, NULL))
+	{
+		if (!GetVolumeInformation(_T("D:\\"), NULL, 0, &dwDiskSerial, NULL, NULL, NULL, NULL))
+		{
+			if (!GetVolumeInformation(_T("E:\\"), NULL, 0, &dwDiskSerial, NULL, NULL, NULL, NULL))
+			{
+				if (!GetVolumeInformation(_T("F:\\"), NULL, 0, &dwDiskSerial, NULL, NULL, NULL, NULL))
+				{
+					if (!GetVolumeInformation(_T("G:\\"), NULL, 0, &dwDiskSerial, NULL, NULL, NULL, NULL))
+					{
+						return "";
+					}
+				}
+			}
+		}
+	}
+
+	char stTemp[128];
+	sprintf(stTemp, "%u",dwDiskSerial);
+
+	return stTemp;
+
+}
+
 string GetRegionString()
 {
 	return "en_jp";

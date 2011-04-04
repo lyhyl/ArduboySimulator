@@ -52,6 +52,9 @@ void Variant::Set( Variant &v )
 	case TYPE_UINT32:
 		Set(v.GetUINT32());
 		break;
+	case TYPE_INT32:
+		Set(v.GetINT32());
+		break;
 	case TYPE_ENTITY:
 		Set(v.GetEntity());
 		break;
@@ -88,6 +91,9 @@ std::string Variant::Print()
 
 	case TYPE_UINT32:
 		return toString(GetUINT32());
+		break;
+	case TYPE_INT32:
+		return toString(GetINT32());
 		break;
 	case TYPE_ENTITY:
 		//return GetEntity()->GetName();
@@ -188,6 +194,12 @@ assert(!"Not supported in console builds");
 
 		break;
 
+		case Variant::TYPE_INT32:
+			{
+				Set( int32(  float(pA->GetINT32()) + (   (float(pB->GetINT32())- float(pA->GetINT32())  ) * curPos)));
+			}
+
+			break;
 	default:
 		LogError("Interpolate: Don't handle this combination yet");
 		assert(0);
@@ -201,7 +213,7 @@ bool Variant::Save( FILE *fp, const string &varName )
 	
 	if (GetType() == TYPE_STRING)
 	{
-		dataSizeBytes = m_string.size();
+		dataSizeBytes = (int)m_string.size();
 	} else
 	{
 		dataSizeBytes = GetSizeOfData(GetType());
@@ -210,7 +222,7 @@ bool Variant::Save( FILE *fp, const string &varName )
 	if (dataSizeBytes == 0) return true; //can't save this type, but not an error
 
 	uint32 varType = GetType();
-	int bytesRead = fwrite(&varType, 1, sizeof(uint32), fp);
+	int bytesRead = (int)fwrite(&varType, 1, sizeof(uint32), fp);
 	if (bytesRead == 0) return false;
 
 	//save the variable name
@@ -239,6 +251,7 @@ int GetSizeOfData(Variant::eType type)
 		break;
 
 	case Variant::TYPE_UINT32:
+	case Variant::TYPE_INT32:
 	case Variant::TYPE_FLOAT:
 		return 4;
 	case Variant::TYPE_VECTOR2:
@@ -267,7 +280,7 @@ byte * VariantList::SerializeToMem( uint32 *pSizeOut, byte *pDest )
 	{
 		if (m_variant[i].GetType() == Variant::TYPE_STRING)
 		{
-			tempSize = m_variant[i].GetString().size()+4; //the 4 is for an int showing how long the string will be when writing
+			tempSize = (int)m_variant[i].GetString().size()+4; //the 4 is for an int showing how long the string will be when writing
 		} else
 		{
 			tempSize = GetSizeOfData(m_variant[i].GetType());
@@ -310,7 +323,7 @@ byte * VariantList::SerializeToMem( uint32 *pSizeOut, byte *pDest )
 			memcpy(pCur, &type, 1); pCur += 1; //type
 
 			
-			uint32 s = m_variant[i].GetString().size();
+			uint32 s = (int)m_variant[i].GetString().size();
 			memcpy(pCur, &s, 4); pCur += 4; //length of string
 			memcpy(pCur, m_variant[i].GetString().c_str(), s); pCur += s; //actual string data
 		} else
@@ -373,6 +386,14 @@ bool VariantList::SerializeFromMem(byte *pSrc, int bufferSize )
 				uint32 v;
 				memcpy(&v, pSrc, sizeof(uint32));
 				pSrc += sizeof(uint32);
+				m_variant[index].Set(v);
+				break;
+			}
+		case Variant::TYPE_INT32:
+			{
+				int32 v;
+				memcpy(&v, pSrc, sizeof(int32));
+				pSrc += sizeof(int32);
 				m_variant[index].Set(v);
 				break;
 			}

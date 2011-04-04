@@ -104,7 +104,28 @@ public:
 	bool Save(const string &fileName, bool bAddBasePath = true);
 	bool Load(const string &fileName, bool *pFileExistedOut, bool bAddBasePath = true);
 	
-	void Print(); //for debugging, will LogMsg everything inside of it
+	string DumpAsString();
+	void Print(); //same as above, but sends to LogMsg()
+
+VariantDB & operator= (const VariantDB &rhs)
+	{
+		//m_functionData = rhs.m_functionData;
+		dataList::const_iterator itor = rhs.m_data.begin();
+
+		while (itor != rhs.m_data.end())
+		{
+			m_data[itor->first] = new Variant(*itor->second);
+			itor++;
+		}
+		return *this; 
+	}
+
+VariantDB(const VariantDB & ref)
+{
+	//assert(!"Warning, slow operation!");
+	//our special copy won't include the sig crap, that stuff can't be copied
+	*this = ref;
+}
 
 private:
 

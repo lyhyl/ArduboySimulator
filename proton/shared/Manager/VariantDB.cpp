@@ -63,7 +63,7 @@ Variant * VariantDB::GetVarWithDefault(const string &keyName, const Variant &vDe
 
 Variant * VariantDB::GetVar(const string &keyName)
 {
-	
+
 	Variant *pData = GetVarIfExists(keyName);
 
 	if (!pData)
@@ -326,4 +326,23 @@ int VariantDB::DeleteVarsStartingWith( string deleteStr )
 	}
 
 	return deleted;
+}
+
+std::string VariantDB::DumpAsString()
+{
+	string log = "*********************\r\n";
+
+	dataList::iterator itor = m_data.begin();
+
+	while (itor != m_data.end())
+	{
+		Variant *pV = itor->second;
+		string s = itor->first + ": "+pV->Print();
+
+		log += s + " ";
+		itor++;
+	}
+
+	log += "\r\n";
+	return log;
 }

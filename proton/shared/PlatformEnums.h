@@ -109,6 +109,6 @@ bool IsIPodTouchThirdGen();
 std::string GetClipboardText();
 bool IsDesktop();
 bool HasVibration();
-
+std::string GetDeviceID(); //returns a string that is probably unique to the device
 #endif // platformenums_h__
 #endif

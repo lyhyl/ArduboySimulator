@@ -57,9 +57,11 @@ public:
 		TYPE_ENTITY,
 		TYPE_COMPONENT,
 		TYPE_RECT,
+		TYPE_INT32
 				
 	};
 	Variant(uint32 var) {SetDefaults(); Set(var);}
+	Variant(int32 var) {SetDefaults(); Set(var);}
 
 	Variant(float var) {SetDefaults(); Set(var);}
 	Variant(const string &var) {SetDefaults(); Set(var);}
@@ -145,6 +147,19 @@ public:
 		return  *((uint32*)m_var);
 	}
 
+	void Set(int32 var) 
+	{
+		assert(m_type == TYPE_UNUSED || m_type == TYPE_INT32);
+		m_type = TYPE_INT32; *((int32*)m_var) = var;
+		if (m_pSig_onChanged) (*m_pSig_onChanged)(this);
+	}
+
+	int32 & GetINT32()
+	{
+		if (m_type == TYPE_UNUSED) Set(int32(0));
+		assert(m_type == TYPE_INT32);
+		return  *((int32*)m_var);
+	}
 
 	void Set(string const &var);
 	string & GetString() 
@@ -222,6 +237,7 @@ public:
 		*this = v;
 	}
 
+
 	Variant & operator= (const Variant &rhs)
 	{
 		m_type = rhs.m_type;
@@ -231,6 +247,8 @@ public:
 		m_pSig_onChanged = NULL;
 		return *this; 
 	}
+
+
 
 	void Interpolate(Variant *pA,Variant *pB, float curPos, eInterpolateType type);
 
@@ -256,6 +274,7 @@ private:
 		//don't actually use these, these unions help me look at vars when debugging easier
 		float m_as_floats[4];
 		uint32 m_as_uint32s[4];
+		int32 m_as_int32s[4];
 	};
 	string m_string;
 	boost::signal<void (Variant*)> *m_pSig_onChanged; //not initialized unless used

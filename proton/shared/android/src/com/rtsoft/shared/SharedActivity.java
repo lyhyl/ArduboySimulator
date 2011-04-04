@@ -324,7 +324,20 @@ public class SharedActivity extends Activity implements SensorEventListener
 		String data = clipboard.getText().toString();
 		return data;
 	}
-	
+	public static String get_deviceID()
+	{
+		String m_szDevIDShort = "35" + //we make this look like a valid IMEI
+            Build.BOARD.length()%10+ Build.BRAND.length()%10 +
+            Build.CPU_ABI.length()%10 + Build.DEVICE.length()%10 +
+            Build.DISPLAY.length()%10 + Build.HOST.length()%10 +
+            Build.ID.length()%10 + Build.MANUFACTURER.length()%10 +
+            Build.MODEL.length()%10 + Build.PRODUCT.length()%10 +
+            Build.TAGS.length()%10 + Build.TYPE.length()%10 +
+            Build.USER.length()%10 ; //13 digits
+
+		return m_szDevIDShort;
+	}
+
   @Override
 	public void onSensorChanged(SensorEvent event) 
 	{
