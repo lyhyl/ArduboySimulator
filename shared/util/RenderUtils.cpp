@@ -272,6 +272,11 @@ bool IsLargeScreen()
 {
 	return g_screenSizeX>480 || g_screenSizeY > 480;
 }
+bool IsTabletSize()
+{
+	return g_screenSizeX>=1024 || g_screenSizeY >= 1024;
+}
+
 
 int GetOrientation() {return g_orientation;}
 
@@ -768,5 +773,22 @@ CL_Vec2f iPhoneMap2X( float x, float y )
 }
 
 
+rtRectf ConvertFakeScreenRectToReal(rtRectf r)
+{
+	if (GetFakePrimaryScreenSizeX() == 0) return r;
 
+	float ratioy = ((float)GetPrimaryGLY()/(float)GetFakePrimaryScreenSizeX());
+	float ratiox = ((float)GetPrimaryGLX()/(float)GetFakePrimaryScreenSizeY());
+
+	float widthHold = r.GetWidth();
+	float heightHold = r.GetHeight();
+
+	r.top *= ratioy;
+	r.left *= ratiox;
+
+	r.right = widthHold*ratiox+r.left;
+	r.bottom = heightHold*ratioy+r.top;
+
+	return r;
+}
 

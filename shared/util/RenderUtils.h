@@ -93,4 +93,6 @@ int GetOriginalScreenSizeY();
 int GetOriginalScreenSizeX();
 void UndoFakeScreenSize();
 void RedoFakeScreenSize();
+bool IsTabletSize();
+rtRectf ConvertFakeScreenRectToReal(rtRectf r);
 #endif // RenderUtils_h__

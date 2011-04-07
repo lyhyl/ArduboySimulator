@@ -48,9 +48,9 @@ void InitVideoSize()
 	AddVideoMode("G1", 320, 480, PLATFORM_ID_ANDROID);
 	AddVideoMode("G1 Landscape", 480, 320, PLATFORM_ID_ANDROID);
 	AddVideoMode("Nexus One", 480, 800, PLATFORM_ID_ANDROID);
-	AddVideoMode("Droid", 480, 854, PLATFORM_ID_ANDROID);
-	AddVideoMode("Droid Landscape", 854, 480, PLATFORM_ID_ANDROID); //g_landScapeNoNeckHurtMode should be false when testing
-	AddVideoMode("Nexus One Landscape", 800, 480, PLATFORM_ID_ANDROID); //g_landScapeNoNeckHurtMode should be false when testing
+	AddVideoMode("Droid", 480, 854, PLATFORM_ID_ANDROID); //set g_landScapeNoNeckHurtMode to true
+	AddVideoMode("Nexus One Landscape", 480, 800, PLATFORM_ID_ANDROID); //set g_landScapeNoNeckHurtMode to true
+	AddVideoMode("Xoom Landscape", 800,1280, PLATFORM_ID_ANDROID);//set g_landScapeNoNeckHurtMode to true 
 
 	string desiredVideoMode = "iPad"; //name needs to match one of the ones defined below
     g_landScapeNoNeckHurtMode = true; //if true, will rotate the screen so we can play in landscape mode in windows without hurting ourselves

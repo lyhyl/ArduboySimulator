@@ -305,6 +305,23 @@ bool IsIphone4()
 	return false; 
 }
 
+string GetDeviceID()
+{
+	JNIEnv *env = GetJavaEnv();
+	if (!env) return "";
+
+	jclass cls = env->FindClass(GetAndroidMainClassName());
+	jmethodID mid = env->GetStaticMethodID(cls,
+		"get_deviceID",
+		"()Ljava/lang/String;");
+	jstring ret;
+	ret = (jstring)env->CallStaticObjectMethod(cls, mid);
+	const char * ss=env->GetStringUTFChars(ret,0);
+	string s = ss;
+	env->ReleaseStringUTFChars(ret, ss);
+	return string(s);
+}
+
 bool IsIPAD()
 {
 	return false;
