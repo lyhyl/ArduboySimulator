@@ -155,15 +155,12 @@ void AudioManagerAndroid::Preload( string fName, bool bLooping /*= false*/, bool
 			"sound_load",
 			"(Ljava/lang/String;)I");
 		
-
-		
 		jstring mystr = env->NewStringUTF((basePath+fName).c_str());
 
 		jint ret = env->CallStaticIntMethod(cls, mid, mystr);
 		pObject->m_soundID = ret;
 
 		//LogMsg("Got back audio handle %d", pObject->m_soundID);
-
 		}
 
 	
@@ -175,13 +172,9 @@ void AudioManagerAndroid::Preload( string fName, bool bLooping /*= false*/, bool
 		}
 		
 
-
-
 //		LogMsg("Caching out %s", fName.c_str());
 
-
 		pObject->m_bIsLooping = bLooping;
-
 		m_soundList.push_back(pObject);
 	}
 }
@@ -270,7 +263,7 @@ AudioHandle AudioManagerAndroid::Play( string fName, bool bLooping /*= false*/, 
 		if (!pObject)
 		{
 			LogError("Unable to cache sound %s", fName.c_str());
-			return false;
+			return (AudioHandle) 0 ;
 		}
 	}
 
@@ -289,6 +282,7 @@ AudioHandle AudioManagerAndroid::Play( string fName, bool bLooping /*= false*/, 
 			//something is wrong... probably not loaded.  Reschedule
 			GetMessageManager()->SendGame(MESSAGE_TYPE_PLAY_SOUND, fName, 50, TIMER_SYSTEM);
 		}
+		return (AudioHandle) streamID;
 	}
 
 	return (AudioHandle) 0 ;
@@ -301,6 +295,8 @@ void AudioManagerAndroid::Update()
 
 void AudioManagerAndroid::Stop( AudioHandle soundID )
 {
+
+	//LogMsg("About to call soundstop with %d", soundID);
 
 	if (!soundID) return;
 
@@ -333,8 +329,6 @@ bool AudioManagerAndroid::IsPlaying( AudioHandle soundID )
 {
 	if (soundID == 0) return false;
 
-	
-	
 	if (soundID == (AudioHandle) m_lastMusicID)
 	{
 		JNIEnv *env = GetJavaEnv();
@@ -346,7 +340,6 @@ bool AudioManagerAndroid::IsPlaying( AudioHandle soundID )
 				"()Z");
 			return env->CallStaticBooleanMethod(cls, mid);
 		}
-
 		
 	}
 	

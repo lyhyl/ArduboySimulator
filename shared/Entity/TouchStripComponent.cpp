@@ -95,7 +95,7 @@ void TouchStripComponent::OnInput(VariantList *pVList)
 		{
 			if (m_activeFinger != -1)
 			{
-				LogMsg("Ignoring new finger..");
+				//LogMsg("Ignoring new finger..");
 				return;
 			}
 

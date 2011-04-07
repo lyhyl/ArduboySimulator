@@ -89,7 +89,7 @@ void TouchDragComponent::OnInput( VariantList *pVList )
 						
 				if (m_lastFingerID != -1)
 				{
-					LogMsg("Ignoring new finger..");
+					//LogMsg("Ignoring new finger..");
 					return;
 				}
 		
