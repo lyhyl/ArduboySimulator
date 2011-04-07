@@ -65,6 +65,12 @@ typedef int16_t int16;
 #define _INT16
 #endif
 
+#ifndef _INT8
+typedef  signed char       int8;        /* Signed 8  bit value */
+#define _INT8
+#endif
+
+
 
 #if defined(__GNUC__)
 #define __int64 long long

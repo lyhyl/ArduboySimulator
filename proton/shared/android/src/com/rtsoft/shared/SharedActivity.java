@@ -668,29 +668,28 @@ public class SharedActivity extends Activity implements SensorEventListener
 
     public synchronized static int sound_play(int soundID, float leftVol, float rightVol, int priority, int loop, float speedMod ) 
 	{
-		//Log.v("MSG", "Playing sound: "+soundID);
-		//Log.v("Sound vol:", ""+leftVol);
+	//	Log.v("MSG", "Playing sound: "+soundID);
+	//	Log.v("Sound vol:", ""+leftVol);
         return app._sounds.play(soundID,leftVol,rightVol,priority,loop,speedMod);
     }
   
 	public static void sound_kill(int soundID ) 
 	{
-		//Log.v("MSG", "Playing sound: "+soundID);
-		//Log.v("Sound vol:", ""+leftVol);
-        app._sounds.unload(soundID);
+	//	Log.v("MSG", "killing sound: "+soundID);
+       app._sounds.unload(soundID);
     }
 
 	  public static void sound_stop(int streamID ) 
 	{
-		//Log.v("MSG", "Playing sound: "+soundID);
+		//Log.v("MSG", "stopping sound: "+streamID);
 		//Log.v("Sound vol:", ""+leftVol);
         app._sounds.stop(streamID);
     }
 
 	  public static void sound_set_vol(int streamID, float left, float right ) 
 	{
-		//Log.v("MSG", "Playing sound: "+soundID);
-		//Log.v("Sound vol:", ""+leftVol);
+		//Log.v("MSG", "setting sound vol: "+streamID);
+		//Log.v("Sound vol:", ""+left);
         app._sounds.setVolume(streamID, left, right);
     }
 		  public static void sound_set_rate(int streamID, float rate ) 
