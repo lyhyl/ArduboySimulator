@@ -172,6 +172,8 @@ public:
 	//! Get name of texture (in most cases this is the filename)
 	const io::SNamedPath& getName() const { return NamedPath; }
 
+	virtual void Unload(){}; //SETH release texture memory, reload upon next use
+
 protected:
 
 	//! Helper function, helps to get the desired texture creation format from the flags.

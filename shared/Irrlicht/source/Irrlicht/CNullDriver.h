@@ -696,6 +696,9 @@ namespace video
 
 			return (f32) getAverage ( p[(y * pitch) + x] );
 		}
+		
+		virtual void OnSuspend();
+		virtual void OnResume();
 
 		struct SSurface
 		{

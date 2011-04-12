@@ -81,7 +81,7 @@ enum eVirtualKeys
 	VIRTUAL_KEY_F14,
 	VIRTUAL_KEY_F15,
 	VIRTUAL_KEY_F16,
-
+	VIRTUAL_KEY_TRACKBALL_DOWN = 500035,
 	VIRTUAL_KEY_CUSTOM_START = 510000 //if you add your own, do it after this
 };
 

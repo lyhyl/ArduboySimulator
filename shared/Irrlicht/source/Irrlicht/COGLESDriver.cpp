@@ -1452,8 +1452,8 @@ bool COGLES1Driver::setTexture(u32 stage, const video::ITexture* texture)
 		}
 
 		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D,
-			static_cast<const COGLES1Texture*>(texture)->getOGLES1TextureName());
+		//SETH, tweaked below after I changed constness which was needed for dynamic bad surface loading
+		glBindTexture(GL_TEXTURE_2D, ((COGLES1Texture*)(texture))->getOGLES1TextureName());
 	}
 	return true;
 }

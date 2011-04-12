@@ -117,4 +117,5 @@ EntityComponent * CreateSlider(Entity *pBG, float x, float y, float sizeX, strin
 void AdjustGUIElementForWindowView(Entity *pEnt, CL_Rectf r, float rotation);
 void ManuallySetAlignmentEntity(Entity *pEnt, eAlignment alignment); //takes into account rotation as in screen rotation
 bool IsDisabledEntity(Entity *pEnt);
+void RemovePaddingEntity(Entity *pEnt);
 #endif // EntityUtils_h__

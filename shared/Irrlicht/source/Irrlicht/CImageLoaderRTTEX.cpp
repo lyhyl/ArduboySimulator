@@ -64,7 +64,7 @@ namespace irr
 			rttex_header *pTexHeader = (rttex_header*)pBuff;
 
 			//we're not really going to do anything with the data yet, just pass it in and hope the CImage doesn't really
-			//think it's valid RGBA data.  Later when we the device dependent surface is made we'll do the real work
+			//think it's valid RGBA data.  Later when the device dependent surface is made we'll do the real work
 
 			image = new CImage(ECF_PVRTC, core::dimension2d<u32>(pTexHeader->width, pTexHeader->height), pBuff, true, true, decompressedSize);
 		

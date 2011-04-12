@@ -1514,6 +1514,9 @@ namespace scene
 		\return True if node is not visible in the current scene, else
 		false. */
 		virtual bool isCulled(const ISceneNode* node) const =0;
+
+		virtual void OnSuspend() =0; //seth handle unloading surfaces (needed for Android)
+		virtual void OnResume() =0; //seth handle reloading surfaces (needed for Android)
 	};
 
 

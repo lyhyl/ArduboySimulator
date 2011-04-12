@@ -212,7 +212,9 @@ bool CGUIFont::load(io::IReadFile* file)
 	if (!Driver)
 		return false;
 
-	return loadTexture(Driver->createImageFromFile(file),
+	video::IImage *pImage = Driver->createImageFromFile(file);
+
+	return loadTexture(pImage,
 				file->getFileName());
 }
 

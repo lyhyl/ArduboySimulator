@@ -802,6 +802,8 @@ bool CIrrDeviceWin32::run()
 
     static_cast<CCursorControl*>(CursorControl)->update();
 
+	//SETH: Handled by Proton instead
+	/*
 	MSG msg;
 
 	while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -817,7 +819,7 @@ bool CIrrDeviceWin32::run()
 		if (msg.message == WM_QUIT)
 			Close = true;
 	}
-
+*/
 	if (!Close)
 		resizeIfNecessary();
 

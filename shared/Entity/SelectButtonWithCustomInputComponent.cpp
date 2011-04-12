@@ -17,7 +17,7 @@ void SelectButtonWithCustomInputComponent::OnAdd(Entity *pEnt)
 
 	//first setup to listen to keyboard messages
 	GetParent()->GetFunction("OnInput")->sig_function.connect(1, boost::bind(&SelectButtonWithCustomInputComponent::OnInput, this, _1)); //used for keyboard keys on Win
-	GetParent()->GetFunction("OnInput")->sig_function.connect(1, boost::bind(&SelectButtonWithCustomInputComponent::OnInput, this, _1)); //used for keyboard keys on Win
+	GetBaseApp()->m_sig_raw_keyboard.connect(1, boost::bind(&SelectButtonWithCustomInputComponent::OnInputRaw, this, _1)); //used for keyboard keys on Win
 	m_pDisabled = &GetVarWithDefault("disabled", uint32(0))->GetUINT32();
 
 	m_pKeys = &GetVar("keys")->GetString(); //local to us
@@ -42,13 +42,32 @@ void SelectButtonWithCustomInputComponent::ClickButton()
 	SendFakeInputMessageToEntity(GetParent(), MESSAGE_TYPE_GUI_CLICK_END, vClickPos);
 }
 
+void SelectButtonWithCustomInputComponent::OnInputRaw( VariantList *pVList )
+{
+
+	if (*m_pDisabled == 1) return;
+	bool bDown = pVList->Get(1).GetUINT32() != 0;
+	if (!bDown)	 return;
+
+	int key = pVList->Get(0).GetUINT32();
+	//LogMsg("Got raw char %d, down is %d", key, int(bDown));
+	
+	if (*m_pKeyCode != 0)
+	{
+		if (key == *m_pKeyCode)
+		{
+			ClickButton();
+			return;
+		}
+	}
+}
+
 
 void SelectButtonWithCustomInputComponent::OnInput( VariantList *pVList )
 {
 	
 	if (*m_pDisabled == 1) return;
-	//0 = message type, 1 = parent coordinate offset, 2 = char, 3 reserved for filtering control messages
-
+	
 	switch (eMessageType( int(pVList->Get(0).GetFloat())))
 	{
 	
@@ -58,8 +77,6 @@ void SelectButtonWithCustomInputComponent::OnInput( VariantList *pVList )
 		break;
 	case MESSAGE_TYPE_GUI_CHAR:
 		{
-
-		
 		if (*m_pKeyCode != 0)
 		{
 			if (pVList->Get(2).GetUINT32() == *m_pKeyCode)
@@ -72,7 +89,6 @@ void SelectButtonWithCustomInputComponent::OnInput( VariantList *pVList )
 		}
 		char c = (char)pVList->Get(2).GetUINT32();
 	
-
 
 		if (m_pKeys->size() > 0)
 		{
@@ -91,23 +107,10 @@ void SelectButtonWithCustomInputComponent::OnInput( VariantList *pVList )
 
 			if (!bFound)
 			{
-				
-#ifdef _DEBUG
-					//LogMsg("Got key %c, ignoring", c);
-#endif
-					//none of the accepted keys are here.  Bye
-					return;
+				return;//none of the accepted keys are here.  Bye
 			}
 		}
-			
-			
-	
 		ClickButton();	
-		//another method
-		/*
-		VariantList vList(vClickPos, GetParent());
-		GetMessageManager()->CallEntityFunction(GetParent(), 1, "OnButtonSelected", &vList);  //sends a vec2 with position and this entity
-		*/
 		}
 		break;
 

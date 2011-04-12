@@ -829,10 +829,12 @@ void CAnimatedMeshSceneNode::setMesh(IAnimatedMesh* mesh)
 		for (u32 i=0; i<m->getMeshBufferCount(); ++i)
 		{
 			IMeshBuffer* mb = m->getMeshBuffer(i);
+		
 			if (mb)
 				Materials.push_back(mb->getMaterial());
 			else
 				Materials.push_back(video::SMaterial());
+				
 		}
 	}
 

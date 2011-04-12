@@ -25,6 +25,7 @@ private:
 	string * m_pKeys;
 	void OnInput( VariantList *pVList );
 	void ClickButton();
+	void OnInputRaw( VariantList *pVList );
 	uint32 *m_pDisabled;
 	uint32 *m_pKeyCode;
 

@@ -422,7 +422,6 @@ void BaseApp::SetManualRotationMode( bool bRotation )
 {
 	LogMsg("AppManualRotation set to %d", int(bRotation));
 	m_bManualRotation = bRotation;
-	
 }
 
 void BaseApp::OnMemoryWarning()
@@ -447,7 +446,6 @@ void BaseApp::OnEnterBackground()
 	}
 
 	GetAudioManager()->Suspend();
-
 }
 
 void BaseApp::OnEnterForeground()
@@ -465,7 +463,6 @@ void BaseApp::OnEnterForeground()
 	#endif
 		m_sig_enterforeground(NULL);
 	}
-
 }
 
 void BaseApp::AddCommandLineParm( string parm )

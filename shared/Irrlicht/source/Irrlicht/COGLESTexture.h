@@ -61,7 +61,7 @@ namespace irr
 			virtual u32 getPitch() const;
 
 			//! return open gl texture name
-			GLuint getOGLES1TextureName() const;
+			GLuint getOGLES1TextureName();
 
 			//! return whether this texture has mipmaps
 			virtual bool hasMipMaps() const;
@@ -75,6 +75,8 @@ namespace irr
 			//! Is it a FrameBufferObject?
 			virtual bool isFrameBufferObject() const;
 
+			virtual void Unload(); //seth
+
 			//! Bind RenderTargetTexture
 			void bindRTT();
 
@@ -83,6 +85,8 @@ namespace irr
 
 			//! sets whether this texture is intended to be used as a render target.
 			void setIsRenderTarget(bool isTarget);
+
+			bool Reload();
 
 		protected:
 

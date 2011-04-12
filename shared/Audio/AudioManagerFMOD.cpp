@@ -231,7 +231,7 @@ void AudioManagerFMOD::Preload( string fName, bool bLooping /*= false*/, bool bI
 #ifdef _DEBUG
 		LogMsg("Caching out %s", fName.c_str());
 #endif
-		int fModParms = FMOD_SOFTWARE|FMOD_LOWMEM;
+		int fModParms = FMOD_SOFTWARE|FMOD_LOWMEM|FMOD_LOOP_NORMAL; //tell it looking anyway, avoid a click later
 		if (bLooping)
 		{
 			fModParms = FMOD_SOFTWARE|FMOD_LOOP_NORMAL|FMOD_LOWMEM;
@@ -341,6 +341,10 @@ AudioHandle AudioManagerFMOD::Play( string fName, bool bLooping /*= false*/, boo
 		if (pChannel && bLooping)
 		{
 			pChannel->setLoopCount(-1);
+		} else
+		{
+			pChannel->setLoopCount(0);
+
 		}
 	}
 	pObject->m_pLastChannelToUse = pChannel;

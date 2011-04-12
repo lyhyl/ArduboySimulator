@@ -820,8 +820,8 @@ void AppOnKey( JNIEnv*  env, jobject jobj, jint type, jint keycode, jint c)
 {
 	
 #ifdef _DEBUG
-	//LogMsg("Native Got type %d, keycode %d, key %d (%c)", type, keycode, c, (char(c)));
 #endif
+	LogMsg("Native Got type %d, keycode %d, key %d (%c)", type, keycode, c, (char(c)));
 
 	switch (keycode)
 	{

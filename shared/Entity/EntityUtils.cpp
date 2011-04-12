@@ -1057,6 +1057,11 @@ Entity * CreateTextBoxEntity(Entity *pParent, string entName, CL_Vec2f vPos, CL_
 	return pText;
 }
 
+void RemovePaddingEntity(Entity *pEnt)
+{
+	SetTouchPaddingEntity(pEnt, CL_Rectf(0,0,0,0));
+}
+
 void SetTouchPaddingEntity( Entity *pEnt, CL_Rectf padding )
 {
 	pEnt->GetVar("touchPadding")->Set(padding);
@@ -1158,6 +1163,13 @@ void SendFakeInputMessageToEntity(Entity *pEnt, eMessageType msg, CL_Vec2f vClic
 	VariantList v;
 	v.Get(0).Set((float)msg);
 	v.Get(1).Set(vClickPos);
+	v.Get(2).Set(uint32(C_MAX_TOUCHES_AT_ONCE-1));
+
+	//fake out our touch tracker, will override the 11th finger touch..
+	GetBaseApp()->GetTouch(C_MAX_TOUCHES_AT_ONCE-1)->SetWasHandled(false);
+	GetBaseApp()->GetTouch(C_MAX_TOUCHES_AT_ONCE-1)->SetIsDown(true);
+	GetBaseApp()->GetTouch(C_MAX_TOUCHES_AT_ONCE-1)->SetPos(vClickPos);
+
 	pEnt->CallFunctionRecursively("OnInput", &v);
 }
 

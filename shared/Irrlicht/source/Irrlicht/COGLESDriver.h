@@ -330,7 +330,6 @@ namespace video
 		//! free hardware lights exist.
 		//! \param[in] lightIndex: the index of the requesting light
 		void assignHardwareLight(u32 lightIndex);
-
 		core::stringw Name;
 		core::matrix4 Matrices[ETS_COUNT];
 		core::array<u8> ColorBuffer;

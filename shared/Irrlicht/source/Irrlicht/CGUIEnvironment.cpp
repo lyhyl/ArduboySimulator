@@ -163,6 +163,29 @@ CGUIEnvironment::~CGUIEnvironment()
 		GUIElementFactoryList[i]->drop();
 }
 
+void CGUIEnvironment::OnSuspend()
+{
+	// delete all fonts
+	for (unsigned int i=0; i<Fonts.size(); ++i)
+		Fonts[i].Font->drop();
+	Fonts.clear();
+
+	assert(Fonts.size() <= 1 && "Don't use suspend/resume with non-default fonts, untested... you'll have to reload them yourself on resume");
+	// delete all sprite banks
+	for (unsigned int i=0; i<Banks.size(); ++i)
+		if (Banks[i].Bank)
+			Banks[i].Bank->drop();
+
+Banks.clear();
+}
+
+void CGUIEnvironment::OnResume()
+{
+	// delete all fonts
+	loadBuiltInFont();
+	
+}
+
 
 void CGUIEnvironment::loadBuiltInFont()
 {

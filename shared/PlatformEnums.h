@@ -13,6 +13,7 @@
 
 #define IsPixiSize ((GetScreenSizeX() == 400 && GetScreenSizeY() ==  320)|| (GetScreenSizeX() == 320 && GetScreenSizeY() ==  480))
 #define IsNexusOneSize (GetScreenSizeX() == 800 || GetScreenSizeY() ==  480)
+#define IsDroidSize (GetScreenSizeX() == 854 || GetScreenSizeY() ==  480)
 #define IsIphoneSize ((GetScreenSizeX() == 320 && GetScreenSizeY() ==  480)|| (GetScreenSizeX() == 480 && GetScreenSizeY() ==  320))
 #define IsIphone4Size ((GetScreenSizeX() == 640 && GetScreenSizeY() ==  960)|| (GetScreenSizeX() == 960 && GetScreenSizeY() ==  640))
 #define IsIPADSize ((GetScreenSizeX() == 1024 && GetScreenSizeY() ==  768)|| (GetScreenSizeX() == 1024 && GetScreenSizeY() ==  768))
