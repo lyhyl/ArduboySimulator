@@ -165,6 +165,7 @@ CGUIEnvironment::~CGUIEnvironment()
 
 void CGUIEnvironment::OnSuspend()
 {
+/*
 	// delete all fonts
 	for (unsigned int i=0; i<Fonts.size(); ++i)
 		Fonts[i].Font->drop();
@@ -176,13 +177,14 @@ void CGUIEnvironment::OnSuspend()
 		if (Banks[i].Bank)
 			Banks[i].Bank->drop();
 
-Banks.clear();
+	Banks.clear();
+	*/
 }
 
 void CGUIEnvironment::OnResume()
 {
 	// delete all fonts
-	loadBuiltInFont();
+	//loadBuiltInFont();
 	
 }
 

@@ -89,6 +89,8 @@ bool IrrlichtManager::Init(irr::IEventReceiver *pEventReceiver)
 
 	GetBaseApp()->m_sig_unloadSurfaces.connect(1, boost::bind(&IrrlichtManager::OnUnloadSurfaces, this));
 	GetBaseApp()->m_sig_loadSurfaces.connect(1, boost::bind(&IrrlichtManager::OnLoadSurfaces, this));
+	LogMsg("Irrlicht initted");
+
 
 	if (!m_bBulletPhysicsEnabled) return true;
 #ifdef RT_IRRBULLET
@@ -287,9 +289,15 @@ void IrrlichtManager::OnUnloadSurfaces()
 
 void IrrlichtManager::OnLoadSurfaces()
 {
+	LogMsg("Loading surfaces..");
 	if (m_pScene)
 	{
 		m_pScene->OnResume();
+	}
+	if (m_pDriver)
+	{
 		m_pDriver->OnResume();
 	}
+	LogMsg("Surfaces loaded...");
+
 }
