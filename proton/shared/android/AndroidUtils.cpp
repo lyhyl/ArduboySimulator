@@ -762,9 +762,14 @@ void AppInit(JNIEnv*  env)
 	//happens after the gl surface is initialized
 	LogMsg("Initialized GL surfaces for game");
 	GetBaseApp()->InitializeGLDefaults();
+	LogMsg("gl defaults set");
 	GetBaseApp()->OnScreenSizeChange();
+	LogMsg("OnScreensizechange done");
 	GetBaseApp()->m_sig_loadSurfaces(); 
+	LogMsg("Surfaces loaded");
+
 }
+
 
 
 enum eAndroidActions
