@@ -58,10 +58,15 @@ public:
 
 #ifdef RT_IRRBULLET
 	irrBulletWorld * GetBulletWorld() {return m_pWorld;}
+
 #endif
 
 private:
-	
+
+	void OnUnloadSurfaces();
+	void OnLoadSurfaces();
+
+
 	irr::IrrlichtDevice * m_pDevice;
 	irr::video::IVideoDriver* m_pDriver;
 	irr::scene::ISceneManager* m_pScene;

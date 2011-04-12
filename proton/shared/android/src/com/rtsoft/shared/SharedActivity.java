@@ -428,6 +428,7 @@ public class SharedActivity extends Activity implements SensorEventListener
 	final static int VIRTUAL_KEY_VOLUME_UP = 500009;
 	final static int VIRTUAL_KEY_VOLUME_DOWN = 500010;
 	final static int VIRTUAL_KEY_SHIFT = 500011;
+	final static int VIRTUAL_KEY_TRACKBALL_DOWN = 500035;
 
 	public int TranslateKeycodeToProtonVirtualKey(int keycode)
 	{
@@ -481,6 +482,11 @@ public class SharedActivity extends Activity implements SensorEventListener
    		nativeOnTrackball(e.getX(),e.getY());
 	 	//Log.d("Hey", "trackball x rel: "+e.getX()+" y rel: "+e.getY());
 	    return true; //signal that we handled it, so its messages don't show up as normal directional presses
+	  } else if (e.getAction() == MotionEvent.ACTION_DOWN)
+	{
+		  //they pushed the button
+		//Log.d("Hey", "Trackball button pushed");
+		  nativeOnKey(1, VIRTUAL_KEY_TRACKBALL_DOWN, VIRTUAL_KEY_TRACKBALL_DOWN); 
 	  }
    		
 		return false; 

@@ -495,6 +495,9 @@ namespace scene
 		//! returns if node is culled
 		virtual bool isCulled(const ISceneNode* node) const;
 
+		virtual void OnSuspend();
+		virtual void OnResume();
+
 	private:
 
 		//! clears the deletion list
@@ -514,7 +517,7 @@ namespace scene
 
 		//! reads user data of a node
 		void readUserData(io::IXMLReader* reader, ISceneNode* node, ISceneUserDataSerializer* userDataSerializer);
-
+		
 		struct DefaultNodeEntry
 		{
 			DefaultNodeEntry(ISceneNode* n) :

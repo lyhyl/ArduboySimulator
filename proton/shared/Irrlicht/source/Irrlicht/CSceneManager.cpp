@@ -2514,6 +2514,22 @@ void CSceneManager::serializeAttributes(io::IAttributes* out, io::SAttributeRead
 	out->addBool("FogRange", rangeFog);
 }
 
+void CSceneManager::OnSuspend()
+{
+	if (getGUIEnvironment())
+	{
+		getGUIEnvironment()->OnSuspend();
+	}
+}
+
+void CSceneManager::OnResume()
+{
+	if (getGUIEnvironment())
+	{
+		getGUIEnvironment()->OnResume();
+	}
+}
+
 //! Reads attributes of the scene node.
 void CSceneManager::deserializeAttributes(io::IAttributes* in, io::SAttributeReadWriteOptions* options)
 {
@@ -2623,6 +2639,7 @@ ISceneManager* createSceneManager(video::IVideoDriver* driver,
 {
 	return new CSceneManager(driver, fs, cursorcontrol, 0, guiEnvironment );
 }
+
 
 
 } // end namespace scene

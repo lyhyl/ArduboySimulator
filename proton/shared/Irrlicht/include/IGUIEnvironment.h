@@ -580,6 +580,9 @@ public:
 
 	//! reads an element
 	virtual void readGUIElement(io::IXMLReader* reader, IGUIElement* node) =0;
+
+	virtual void OnSuspend() = 0;
+	virtual void OnResume() = 0;
 };
 
 

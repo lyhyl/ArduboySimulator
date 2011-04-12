@@ -73,6 +73,17 @@ void AudioManagerAndroid::Kill()
 {
 	StopMusic();
 	KillCachedSounds(true, true, 0, 0, false);
+	
+	list<SoundObject*>::iterator itor = m_soundList.begin();
+
+	while (itor != m_soundList.end())
+	{
+			delete (*itor);
+			itor++;
+	}
+	m_soundList.clear();
+
+	
 	LogMsg("Shutting down audio system");
 }
 

@@ -1416,7 +1416,10 @@ namespace video
 		*/
 		virtual void convertColor(const void* sP, ECOLOR_FORMAT sF, s32 sN,
 				void* dP, ECOLOR_FORMAT dF) const =0;
-	};
+	
+		virtual void OnSuspend()=0;
+		virtual void OnResume()=0;
+};
 
 } // end namespace video
 } // end namespace irr

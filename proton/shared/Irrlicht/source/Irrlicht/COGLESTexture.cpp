@@ -48,8 +48,6 @@ namespace irr
 				ColorFormat = origImage->getColorFormat();
 			} else
 			{
-
-
 				if (ImageSize==TextureSize)
 				{
 					Image = new CImage(ColorFormat, ImageSize);
@@ -395,13 +393,11 @@ namespace irr
 			ReadOnlyLock = false;
 		}
 
-
 		//! Returns size of the original image.
 		const core::dimension2d<u32>& COGLES1Texture::getOriginalSize() const
 		{
 			return ImageSize;
 		}
-
 
 		//! Returns size of the texture.
 		const core::dimension2d<u32>& COGLES1Texture::getSize() const
@@ -412,13 +408,11 @@ namespace irr
 				return ImageSize;
 		}
 
-
 		//! returns driver type of texture, i.e. the driver, which created the texture
 		E_DRIVER_TYPE COGLES1Texture::getDriverType() const
 		{
 			return EDT_OGLES1;
 		}
-
 
 		//! returns color format of texture
 		ECOLOR_FORMAT COGLES1Texture::getColorFormat() const
@@ -439,10 +433,63 @@ namespace irr
 				return 0;
 		}
 
+		bool COGLES1Texture::Reload()
+		{
+			IImage *origImage = Driver->createImageFromFile(getName());
+			if (!origImage)
+			{
+				LogMsg("Unable to reload tex %s", getName().getPath().c_str());
+				//assert(!"Seth's texture reloading stuff failed here? Tweak to fix for this kind of tex");
+				return false;
+			}
+
+			glGenTextures(1, &TextureName);
+			glBindTexture( GL_TEXTURE_2D, TextureName);
+
+			//LogMsg("reloading %s into %d", getName().getPath().c_str(), TextureName);
+			if (origImage->getColorFormat() == ECF_PVRTC)
+			{
+				Image = origImage;
+				ColorFormat = origImage->getColorFormat();
+			} else
+			{
+				if (ImageSize==TextureSize)
+				{
+					Image = new CImage(ColorFormat, ImageSize);
+					origImage->copyTo(Image);
+				}
+				else
+				{
+					Image = new CImage(ColorFormat, TextureSize);
+					// scale texture
+					origImage->copyToScaling(Image);
+				}
+			}
+
+			uploadTexture(true, 0);
+			if (!KeepImage)
+			{
+				Image->drop();
+				Image=0;
+			}
+
+			return true;
+		}
+		
 
 		//! return open gl texture name
-		GLuint COGLES1Texture::getOGLES1TextureName() const
+		GLuint COGLES1Texture::getOGLES1TextureName()
 		{
+			if (TextureName == 0)
+			{
+				Reload();
+				if (!TextureName)
+				{
+					LogMsg("Unable to load texture %s?", getName().getPath().c_str());
+				}
+				//assert(TextureName);
+			}
+
 			return TextureName;
 		}
 
@@ -537,13 +584,28 @@ namespace irr
 			glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, getSize().Width, getSize().Height);
 		}
 
+		void COGLES1Texture::Unload()
+		{
+			if (Image && getName().getPath().c_str()[0] != '#') //# is reserved for non file names or something -Seth
+			{
+				LogMsg("Unloading texture %d", TextureName);
+				glDeleteTextures(1, &TextureName);
+
+				Image->drop();
+				Image = NULL;
+				TextureName = 0;
+			} else
+			{
+				LogMsg("Huh, texture already unloaded");
+			}
+
+		}
 		/* FBO Textures */
 
 #ifdef GL_OES_framebuffer_object
 		// helper function for render to texture
 		static bool checkFBOStatus(COGLES1Driver* Driver);
 #endif
-
 
 		//! RTT ColorFrameBuffer constructor
 		COGLES1FBOTexture::COGLES1FBOTexture(const core::dimension2d<u32>& size,

@@ -247,6 +247,8 @@ public:
 
 	//! reads an element
 	virtual void readGUIElement(io::IXMLReader* reader, IGUIElement* node);
+	virtual void OnSuspend();
+	virtual void OnResume();
 
 private:
 
@@ -255,7 +257,6 @@ private:
 	void updateHoveredElement(core::position2d<s32> mousePos);
 
 	void loadBuiltInFont();
-
 	struct SFont
 	{
 		io::SNamedPath NamedPath;

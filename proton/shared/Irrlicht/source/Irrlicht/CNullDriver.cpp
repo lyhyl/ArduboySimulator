@@ -520,6 +520,24 @@ void CNullDriver::addTexture(video::ITexture* texture)
 }
 
 
+void CNullDriver::OnSuspend()
+{
+	
+	LogMsg("Unloading %d textures", Textures.size());
+	for (unsigned int i=0; i < Textures.size(); i++)
+	{
+		LogMsg("%s", Textures[i].Surface->getName());
+		Textures[i].Surface->Unload();
+	}
+
+}
+
+void CNullDriver::OnResume()
+{
+
+
+}
+
 //! looks if the image is already loaded
 video::ITexture* CNullDriver::findTexture(const io::path& filename)
 {

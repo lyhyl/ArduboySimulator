@@ -48,11 +48,11 @@ void InitVideoSize()
 	AddVideoMode("G1", 320, 480, PLATFORM_ID_ANDROID);
 	AddVideoMode("G1 Landscape", 480, 320, PLATFORM_ID_ANDROID);
 	AddVideoMode("Nexus One", 480, 800, PLATFORM_ID_ANDROID);
-	AddVideoMode("Droid", 480, 854, PLATFORM_ID_ANDROID); //set g_landScapeNoNeckHurtMode to true
+	AddVideoMode("Droid Landscape", 480, 854, PLATFORM_ID_ANDROID); //set g_landScapeNoNeckHurtMode to true
 	AddVideoMode("Nexus One Landscape", 480, 800, PLATFORM_ID_ANDROID); //set g_landScapeNoNeckHurtMode to true
 	AddVideoMode("Xoom Landscape", 800,1280, PLATFORM_ID_ANDROID);//set g_landScapeNoNeckHurtMode to true 
 
-	string desiredVideoMode = "iPad"; //name needs to match one of the ones defined below
+	string desiredVideoMode = "iPhone"; //name needs to match one of the ones defined below
     g_landScapeNoNeckHurtMode = true; //if true, will rotate the screen so we can play in landscape mode in windows without hurting ourselves
 
 	SetVideoModeByName(desiredVideoMode);
@@ -225,23 +225,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			return true;
 		}
 
-	case WM_CHAR:
-		{
-			if (!g_bHasFocus) break;
-
-			const bool isBitSet = (lParam & (1 << 30)) != 0;
-
-			//only register the first press of the escape key
-			if (wParam == 27 && isBitSet) break;
-
-		if (wParam == VK_ESCAPE) wParam = VIRTUAL_KEY_BACK;
-
-			GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, wParam, lParam);  //lParam holds a lot of random data about the press, look it up if
-			//you actually want to access it
-			return 0;
-		}
-
-		break;
+	
 
 	case WM_KILLFOCUS:
 #ifndef RT_RUNS_IN_BACKGROUND
@@ -364,10 +348,32 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		}
 		break;
 
+	case WM_CHAR:
+		{
+			if (!g_bHasFocus) break;
+
+			const bool isBitSet = (lParam & (1 << 30)) != 0;
+
+			//only register the first press of the escape key
+
+			if (wParam == VK_ESCAPE) 
+			{
+				if (isBitSet) break;
+				wParam = VIRTUAL_KEY_BACK;
+			}
+
+			GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, wParam, lParam);  //lParam holds a lot of random data about the press, look it up if
+			//you actually want to access it
+			return 0;
+		}
+
+		break;
+
 	case WM_KEYDOWN:
 		
 		if (!g_bHasFocus) break;
 
+	
 		switch (wParam)
 		{
 	
@@ -441,18 +447,19 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		}
 		
 		{
-
 		//send the raw key data as well
 		VariantList v;
 		const bool isBitSet = (lParam & (1 << 30)) != 0;
 
 		if (!isBitSet)
 		{
-			GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW, ConvertWindowsKeycodeToProtonVirtualKey(wParam), 1);  
+			int vKey = ConvertWindowsKeycodeToProtonVirtualKey(wParam); 
+			GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW, vKey, 1);  
 		}
-		//LogMsg("Got key down %d", (int)wParam);
+		}
+	
 		break;
-		}
+	
 
 	case WM_KEYUP:
 		{
