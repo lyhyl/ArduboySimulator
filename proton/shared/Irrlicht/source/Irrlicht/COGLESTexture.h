@@ -76,6 +76,7 @@ namespace irr
 			virtual bool isFrameBufferObject() const;
 
 			virtual void Unload(); //seth
+			virtual void Reload(); //seth
 
 			//! Bind RenderTargetTexture
 			void bindRTT();
@@ -86,8 +87,7 @@ namespace irr
 			//! sets whether this texture is intended to be used as a render target.
 			void setIsRenderTarget(bool isTarget);
 
-			bool Reload();
-
+	
 		protected:
 
 			//! protected constructor with basic setup, no GL texture name created, for derived classes
@@ -121,6 +121,7 @@ namespace irr
 			bool UseStencil;
 			bool ReadOnlyLock;
 			bool KeepImage;
+			bool bRequestReload;
 		};
 
 

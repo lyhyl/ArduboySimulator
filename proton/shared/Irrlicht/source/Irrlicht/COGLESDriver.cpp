@@ -688,6 +688,7 @@ COGLES1Driver::SHWBufferLink *COGLES1Driver::createHardwareBuffer(const scene::I
 	if (!mb || (mb->getHardwareMappingHint_Index()==scene::EHM_NEVER && mb->getHardwareMappingHint_Vertex()==scene::EHM_NEVER))
 		return 0;
 
+	//LogMsg("Creating HW buffer for %s", mb->getDebugName());
 	SHWBufferLink_opengl *HWBuffer=new SHWBufferLink_opengl(mb);
 
 	//add to map
@@ -1429,8 +1430,6 @@ bool COGLES1Driver::setTexture(u32 stage, const video::ITexture* texture)
 
 	if (CurrentTexture[stage]==texture)
 		return true;
-
-
 	
 	if (MultiTextureExtension)
 		extGlActiveTexture(GL_TEXTURE0 + stage);

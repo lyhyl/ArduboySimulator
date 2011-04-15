@@ -33,6 +33,7 @@ class IFileSystem : public virtual IReferenceCounted
 {
 public:
 
+
 	//! Opens a file for read access.
 	/** \param filename: Name of file to open.
 	\return Pointer to the created file interface.
@@ -124,6 +125,7 @@ public:
 
 	//! Get the number of archives currently attached to the file system
 	virtual u32 getFileArchiveCount() const =0;
+	virtual io::path getWorkingDirectoryChange() = 0;
 
 	//! Removes an archive from the file system.
 	/** This will close the archive and free any file handles, but will not close resources which have already

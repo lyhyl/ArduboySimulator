@@ -17,7 +17,7 @@ namespace irr
 namespace gui
 {
 #ifdef _IRR_COMPILE_WITH_BMP_LOADER_
-u8 BuiltInFontData[] =
+const u8 BuiltInFontData[] =
 {
 	0x42, 0x4d, 0x4a, 0x20, 0x00, 0x00, 0x00, 0x00, 
 	0x00, 0x00, 0x4a, 0x00, 0x00, 0x00, 0x28, 0x00, 
@@ -1055,7 +1055,7 @@ u8 BuiltInFontData[] =
 	0x23, 0x22
 };
 
-	u32 BuiltInFontDataSize = sizeof(BuiltInFontData);
+	const u32 BuiltInFontDataSize = sizeof(BuiltInFontData);
 
 #else // !defined(_IRR_COMPILE_WITH_BMP_LOADER_)
 

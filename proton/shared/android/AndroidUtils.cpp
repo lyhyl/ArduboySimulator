@@ -724,7 +724,7 @@ void AppPause(JNIEnv*  env)
 
 	if (g_pauseASAP)
 	{
-		LogMsg("Got android AppPause, ignoring as we've already trigger it");
+		LogMsg("Got android AppPause, ignoring as we've already triggered it");
 		return;
 	}
 #ifdef _DEBUG
@@ -732,7 +732,6 @@ void AppPause(JNIEnv*  env)
 #endif
 
 	g_pauseASAP = true;
-	
 
 	if (GetAudioManager()->IsPlaying(GetAudioManager()->GetLastMusicID()))
 	{
@@ -745,6 +744,9 @@ void AppPause(JNIEnv*  env)
 
 	}
 	
+	GetBaseApp()->m_sig_pre_enterbackground(NULL); //I needed this to kill audio in a custom way, but we still
+	//shouldn't do anything else or we risk android conflicts
+
 	GetAudioManager()->Kill();
 
 }

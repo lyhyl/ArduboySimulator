@@ -17,9 +17,12 @@
 
 #include "Renderer/Surface.h"
 #include "util/ResourceUtils.h"
+#include "BuiltInFont.h"
 
 namespace irr
 {
+
+	
 	namespace video
 	{
 
@@ -36,7 +39,7 @@ namespace irr
 #ifdef _DEBUG
 			setDebugName("COGLES1Texture");
 #endif
-
+			bRequestReload = false;
 			HasMipMaps = Driver->getTextureCreationFlag(ETCF_CREATE_MIP_MAPS);
 			getImageValues(origImage);
 
@@ -433,20 +436,58 @@ namespace irr
 				return 0;
 		}
 
-		bool COGLES1Texture::Reload()
+
+		void COGLES1Texture::Unload()
 		{
-			IImage *origImage = Driver->createImageFromFile(getName());
+			bRequestReload = true;
+			if (Image) //# is reserved for non file names or something -Seth
+				//if (Image && getName().getPath().c_str()[0] != '#') //# is reserved for non file names or something -Seth
+			{
+
+				LogMsg("Unloading texture %d (%s)", TextureName, getName().getPath().c_str());
+				glDeleteTextures(1, &TextureName);
+
+				Image->drop();
+				Image = NULL;
+				TextureName = 0;
+			} else
+			{
+				LogMsg("Huh, texture already unloaded");
+			}
+
+		}
+		void COGLES1Texture::Reload()
+		{
+			IImage *origImage = NULL;
+			bRequestReload = false;
+
+			if (getName().getPath().find("#DefaultFont") != -1)
+			{
+				//special case for the default font.  This is ugly but I don't know how else to do it...
+				io::path filename = "#DefaultFont";
+				io::IReadFile* file = io::createMemoryReadFile((void*)gui::BuiltInFontData, gui::BuiltInFontDataSize, filename, false);
+				origImage= Driver->createImageFromFile(file);
+
+			} else
+			{
+				origImage = Driver->createImageFromFile(getName());
+			}
+
+			if (!origImage)
+			{
+				origImage = Driver->createImageFromFile(io::SNamedPath((std::string("game/")+string(getName().getPath().c_str())).c_str()));
+			}
 			if (!origImage)
 			{
 				LogMsg("Unable to reload tex %s", getName().getPath().c_str());
 				//assert(!"Seth's texture reloading stuff failed here? Tweak to fix for this kind of tex");
-				return false;
+				return;
 			}
 
 			glGenTextures(1, &TextureName);
 			glBindTexture( GL_TEXTURE_2D, TextureName);
 
-			//LogMsg("reloading %s into %d", getName().getPath().c_str(), TextureName);
+			LogMsg("reloading %s into %d", getName().getPath().c_str(), TextureName);
 			if (origImage->getColorFormat() == ECF_PVRTC)
 			{
 				Image = origImage;
@@ -473,17 +514,17 @@ namespace irr
 				Image=0;
 			}
 
-			return true;
+			return;
 		}
 		
 
 		//! return open gl texture name
 		GLuint COGLES1Texture::getOGLES1TextureName()
 		{
-			if (TextureName == 0)
+			if (bRequestReload)
 			{
 				Reload();
-				if (!TextureName)
+				if (!Image)
 				{
 					LogMsg("Unable to load texture %s?", getName().getPath().c_str());
 				}
@@ -499,7 +540,6 @@ namespace irr
 		{
 			return HasMipMaps;
 		}
-
 
 		//! Regenerates the mip map levels of the texture.
 		void COGLES1Texture::regenerateMipMapLevels(void* mipmapData)
@@ -555,12 +595,10 @@ namespace irr
 			return IsRenderTarget;
 		}
 
-
 		bool COGLES1Texture::isFrameBufferObject() const
 		{
 			return false;
 		}
-
 
 		void COGLES1Texture::setIsRenderTarget(bool isTarget)
 		{
@@ -584,22 +622,6 @@ namespace irr
 			glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, getSize().Width, getSize().Height);
 		}
 
-		void COGLES1Texture::Unload()
-		{
-			if (Image && getName().getPath().c_str()[0] != '#') //# is reserved for non file names or something -Seth
-			{
-				LogMsg("Unloading texture %d", TextureName);
-				glDeleteTextures(1, &TextureName);
-
-				Image->drop();
-				Image = NULL;
-				TextureName = 0;
-			} else
-			{
-				LogMsg("Huh, texture already unloaded");
-			}
-
-		}
 		/* FBO Textures */
 
 #ifdef GL_OES_framebuffer_object
@@ -616,7 +638,7 @@ namespace irr
 #ifdef _DEBUG
 			setDebugName("COGLES1Texture_FBO");
 #endif
-
+			bRequestReload = false;
 			ECOLOR_FORMAT col = getBestColorFormat(format);
 			switch (col)
 			{

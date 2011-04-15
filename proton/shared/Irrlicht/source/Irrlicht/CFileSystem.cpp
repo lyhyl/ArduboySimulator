@@ -862,6 +862,10 @@ IAttributes* CFileSystem::createEmptyAttributes(video::IVideoDriver* driver)
 	return new CAttributes(driver);
 }
 
+io::path CFileSystem::getWorkingDirectoryChange()
+{
+	return WorkingDirectory[FILESYSTEM_NATIVE];
+}
 
 } // end namespace irr
 } // end namespace io

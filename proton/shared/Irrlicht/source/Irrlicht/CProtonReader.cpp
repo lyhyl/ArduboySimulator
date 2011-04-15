@@ -7,6 +7,7 @@
 #include "os.h"
 
 
+
 #ifdef __IRR_COMPILE_WITH_PROTON_ARCHIVE_LOADER_
 
 #include "CFileList.h"
@@ -14,7 +15,7 @@
 #include "coreutil.h"
 
 #include "IrrCompileConfig.h"
-
+#include "../IrrlichtManager.h"
 
 namespace irr
 {
@@ -126,9 +127,11 @@ IReadFile* CProtonReader::createAndOpenFile(const io::path& filename)
 
 	if (!pBytes)
 	{
+		std::string workingDir = GetIrrlichtManager()->GetDevice()->getFileSystem()->getWorkingDirectoryChange().c_str();
 		//try again with full path
-		pBytes = GetFileManager()->Get( filename.c_str(), &size, true);
-
+		string newFileName = workingDir+"/"+string(filename.c_str());
+		LogMsg("Trying with %s", newFileName.c_str());
+		pBytes = GetFileManager()->Get( newFileName, &size, true);
 	}
 	if (pBytes)
 	{
@@ -157,7 +160,15 @@ IReadFile* CProtonReader::createAndOpenFile(const io::path& filename)
 
 irr::s32 CProtonReader::findFile( const io::path& filename, bool isFolder ) const
 {
+	
 	if (GetFileManager()->FileExists(filename.c_str(), false)) return 0; //dummy ID to signal we found it
+
+	//try another way too
+	std::string workingDir = GetIrrlichtManager()->GetDevice()->getFileSystem()->getWorkingDirectoryChange().c_str();
+	//try again with full path
+	string newFileName = workingDir+"/"+string(filename.c_str());
+	if (GetFileManager()->FileExists(newFileName, false)) return 0; //dummy ID to signal we found it
+
 
 	return -1; //can't find it
 }

@@ -85,3 +85,8 @@ void GameTimer::Reset()
 	m_fpsTimer = 0;
 	m_deltaFloat = 1;
 }
+
+void GameTimer::SetGameTickPause( bool bNew )
+{
+ m_bGameTimerPaused = bNew;
+}
