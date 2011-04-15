@@ -73,6 +73,8 @@ public:
 	//! Returns the string of the current working directory
 	virtual const io::path& getWorkingDirectory();
 
+	virtual io::path getWorkingDirectoryChange();
+
 	//! Changes the current Working Directory to the string given.
 	//! The string is operating system dependent. Under Windows it will look
 	//! like this: "drive:\directory\sudirectory\"

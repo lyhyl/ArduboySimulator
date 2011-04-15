@@ -526,15 +526,23 @@ void CNullDriver::OnSuspend()
 	LogMsg("Unloading %d textures", Textures.size());
 	for (unsigned int i=0; i < Textures.size(); i++)
 	{
-		LogMsg("%s", Textures[i].Surface->getName());
+		LogMsg("%s", Textures[i].Surface->getName().getPath().c_str());
 		Textures[i].Surface->Unload();
 	}
 
+	LogMsg("CNullDriver: Textures unloaded");
 }
 
 void CNullDriver::OnResume()
 {
 
+	for (unsigned int i=0; i < Textures.size(); i++)
+	{
+		LogMsg("%s", Textures[i].Surface->getName().getPath().c_str());
+		//Textures[i].Surface->Reload();
+		//((COGLES1Texture*)Textures[i].Surface)->getOGLES1TextureName();
+
+	}
 
 }
 
@@ -1518,6 +1526,8 @@ void CNullDriver::drawMeshBuffer(const scene::IMeshBuffer* mb)
 
 CNullDriver::SHWBufferLink *CNullDriver::getBufferLink(const scene::IMeshBuffer* mb)
 {
+	if (GetEmulatedPlatformID() == PLATFORM_ID_ANDROID) return 0;
+
 	if (!mb || !isHardwareBufferRecommend(mb))
 		return 0;
 

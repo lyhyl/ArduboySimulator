@@ -118,13 +118,13 @@ bool App::Init()
 	case PLATFORM_ID_OSX:
 	//if we do this, everything will be stretched/zoomed to fit the screen
 		SetLockedLandscape(false);  //because it's set in the app manifest, we don't have to rotate ourselves
-		SetupFakePrimaryScreenSize(480,320); //game will think its this size, and will be scaled up
+		SetupFakePrimaryScreenSize(480,320); //game will think it's this size, and will be scaled up
 		break;
 
 	
 	default:
 		SetLockedLandscape(true); //we don't allow portrait mode for this game
-		SetupFakePrimaryScreenSize(320,480); //game will think its this size, and will be scaled up
+		SetupFakePrimaryScreenSize(320,480); //game will think it's this size, and will be scaled up
 	}
 	
 	

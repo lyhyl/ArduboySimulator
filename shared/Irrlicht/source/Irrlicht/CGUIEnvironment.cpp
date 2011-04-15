@@ -183,9 +183,15 @@ void CGUIEnvironment::OnSuspend()
 
 void CGUIEnvironment::OnResume()
 {
-	// delete all fonts
-	//loadBuiltInFont();
-	
+	//special case for the default font.  This is ugly but I don't know how else to do it...
+	LogMsg("Reloading default font");
+	//((CGUIFont *)getBuiltInFont())->draw("", core::rect<s32>(0,0,100,100), video::SColor(0xffffffff));
+	/*
+	io::path filename = "#DefaultFont";
+	CGUIFont *pFont = (CGUIFont *) getFont(filename); //bad seth
+	io::IReadFile* file = io::createMemoryReadFile(BuiltInFontData, BuiltInFontDataSize, filename, false);
+	pFont->load(file);
+	*/
 }
 
 
@@ -193,7 +199,7 @@ void CGUIEnvironment::loadBuiltInFont()
 {
 	io::path filename = "#DefaultFont";
 
-	io::IReadFile* file = io::createMemoryReadFile(BuiltInFontData, BuiltInFontDataSize, filename, false);
+	io::IReadFile* file = io::createMemoryReadFile((void*)BuiltInFontData, BuiltInFontDataSize, filename, false);
 
 	CGUIFont* font = new CGUIFont(this, filename );
 	if (!font->load(file))
@@ -1391,6 +1397,7 @@ IGUIFont* CGUIEnvironment::getFont(const io::path& filename)
 {
 	// search existing font
 
+	
 	SFont f;
 	f.NamedPath.setPath(filename);
 

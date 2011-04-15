@@ -163,6 +163,7 @@ public:
 	boost::signal<void (VariantList*)> m_sig_os; //messages from the platform itself (do eMessageType mType = (eMessageType)(int)pVList->m_variant[0].GetFloat(); to get message)
 	boost::signal<void (VariantList*)> m_sig_update; //called once per frame, usually.  For your game logic.
 	boost::signal<void (VariantList*)> m_sig_render; //called once per frame. You should render but not do game logic.
+	boost::signal<void (VariantList*)> m_sig_pre_enterbackground; //early signal that we are about to enter background, don't mess with video here, useful for shutting down audio on android
 	boost::signal<void (VariantList*)> m_sig_enterbackground; //game lost focus
 	boost::signal<void (VariantList*)> m_sig_enterforeground; //game restored focus
 	boost::signal<void (VariantList*)> m_sig_accel; //accelerometer data from iphone

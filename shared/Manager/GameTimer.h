@@ -26,7 +26,7 @@ public:
 	float GetGameDelta() {if (m_bGameTimerPaused) return 0; else return m_deltaFloat;}
 	int GetDeltaTick() {return m_deltaMS;}
 	int GetDeltaGameTick() {if (m_bGameTimerPaused) return 0; else return m_deltaMS;}
-	void SetGameTickPause(bool bNew) {m_bGameTimerPaused = bNew;}
+	void SetGameTickPause(bool bNew);
 	bool GetGameTickPause() {return m_bGameTimerPaused;}
 	void Reset();
 

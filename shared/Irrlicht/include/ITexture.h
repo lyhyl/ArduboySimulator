@@ -173,6 +173,7 @@ public:
 	const io::SNamedPath& getName() const { return NamedPath; }
 
 	virtual void Unload(){}; //SETH release texture memory, reload upon next use
+	virtual void Reload(){}; //SETH release texture memory, reload upon next use
 
 protected:
 

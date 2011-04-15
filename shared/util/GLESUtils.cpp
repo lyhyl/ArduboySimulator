@@ -422,7 +422,7 @@ void SetupOrtho()
 {
 
 	if (!NeedsOrthoSet()) return;
-
+	CHECK_GL_ERROR();
 	g_globalBatcher.Flush();
 
 	CHECK_GL_ERROR();

@@ -71,6 +71,7 @@ void AudioManagerAndroid::KillCachedSounds(bool bKillMusic, bool bKillLooping, i
 
 void AudioManagerAndroid::Kill()
 {
+	
 	StopMusic();
 	KillCachedSounds(true, true, 0, 0, false);
 	

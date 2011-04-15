@@ -437,12 +437,20 @@ void BaseApp::OnEnterBackground()
 #ifdef _DEBUG	
 		LogMsg("Entering background");
 #endif
-	
+	 
 	#ifdef C_SURFACE_UNLOAD_TEXTURES
 	
 		m_sig_unloadSurfaces();	
 	#endif
-	m_sig_enterbackground(NULL);
+	
+		
+	if (GetEmulatedPlatformID() != PLATFORM_ID_ANDROID)
+	{
+		//android will do it elsewhere, but for other platforms we fake this message here
+		m_sig_pre_enterbackground(NULL); 
+	}
+
+		m_sig_enterbackground(NULL);
 	}
 
 	GetAudioManager()->Suspend();
@@ -459,6 +467,16 @@ void BaseApp::OnEnterForeground()
 		LogMsg("Entering foreground");
 #endif
 	#ifdef C_SURFACE_UNLOAD_TEXTURES
+		
+		if (GetEmulatedPlatformID() != PLATFORM_ID_ANDROID)
+		{
+		//emulate the android way a bit better, helps when fixing bugs under windows
+		InitializeGLDefaults();
+		LogMsg("gl defaults set");
+		OnScreenSizeChange();
+		LogMsg("OnScreensizechange done");
+		}
+		
 		GetBaseApp()->m_sig_loadSurfaces(); //for anyone who cares
 	#endif
 		m_sig_enterforeground(NULL);

@@ -280,8 +280,10 @@ float Vector3DToAngleRadians(core::vector3df v)
 
 void IrrlichtManager::OnUnloadSurfaces()
 {
-	if (m_pScene)
+	
+	if (m_pScene && m_pDriver)
 	{
+		LogMsg("Irrlicht unloading surfaces..");
 		m_pScene->OnSuspend();
 		m_pDriver->OnSuspend();
 	}
@@ -289,15 +291,11 @@ void IrrlichtManager::OnUnloadSurfaces()
 
 void IrrlichtManager::OnLoadSurfaces()
 {
-	LogMsg("Loading surfaces..");
-	if (m_pScene)
+	LogMsg("Irrlicht loading surfaces..");
+	if (m_pScene && m_pDriver)
 	{
 		m_pScene->OnResume();
-	}
-	if (m_pDriver)
-	{
 		m_pDriver->OnResume();
 	}
-	LogMsg("Surfaces loaded...");
 
 }

@@ -6,7 +6,7 @@
 
 void AboutMenuOnSelect(VariantList *pVList) //0=vec2 point of click, 1=entity sent from
 {
-	Entity *pEntClicked = pVList->m_variant[1].GetEntity();
+	Entity *pEntClicked = pVList->Get(1).GetEntity();
 	LogMsg("Clicked %s entity at %s", pEntClicked->GetName().c_str(),pVList->m_variant[1].Print().c_str());
 	Entity *pMenu = GetEntityRoot()->GetEntityByName("AboutMenu"); //we're sort of cheating by just grabbing the top level parent
 	//entity by name instead of GetParent() a bunch of times to reach the top level, but meh

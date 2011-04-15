@@ -55,6 +55,8 @@ public:
 	bool GetDebugEnabled() {return m_bDebugEnabled;}
 	void SetDebugEnabled(bool bNew) {m_bDebugEnabled = bNew;}
 	void SetBulletPhysicsEnabled(bool bNew) {m_bBulletPhysicsEnabled = bNew;} //only applicable if RT_IRRBULLET was defined
+	void OnUnloadSurfaces();
+	void OnLoadSurfaces();
 
 #ifdef RT_IRRBULLET
 	irrBulletWorld * GetBulletWorld() {return m_pWorld;}
@@ -63,8 +65,6 @@ public:
 
 private:
 
-	void OnUnloadSurfaces();
-	void OnLoadSurfaces();
 
 
 	irr::IrrlichtDevice * m_pDevice;
