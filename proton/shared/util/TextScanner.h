@@ -7,6 +7,39 @@
 //  Programmer(s):  Seth A. Robinson (seth@rtsoft.com)
 //  ***************************************************************
 
+
+/* Simple way to read parms from a text file
+
+Here is an example of use:
+
+Assume a simple text file, settings.txt holds the following:
+
+name|Jeff
+lives|3
+
+You could parse it like this:
+
+TextScanner t("settings.txt");
+
+//Or, if you've downloaded the file, you can just pass in the memory location:
+//TextScanner t(pPointerToMem);
+
+if (!t.IsLoaded())
+{
+LogError("Oh damn");
+}
+
+//Note: returns a blank string if the parm is missing
+string name = t.GetParmString("name", 1, "|");
+
+//Note: the number says which section to return, you can have multiple delimiters in the same line
+int lives = atoi( t.GetParmString("lives",1,"|") );
+
+
+*/
+
+
+
 #ifndef TextScanner_h__
 #define TextScanner_h__
 

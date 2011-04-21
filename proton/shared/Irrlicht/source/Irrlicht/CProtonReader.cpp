@@ -128,10 +128,16 @@ IReadFile* CProtonReader::createAndOpenFile(const io::path& filename)
 	if (!pBytes)
 	{
 		std::string workingDir = GetIrrlichtManager()->GetDevice()->getFileSystem()->getWorkingDirectoryChange().c_str();
+		
+		if (!workingDir.empty())
+		{
+
+		
 		//try again with full path
 		string newFileName = workingDir+"/"+string(filename.c_str());
 		LogMsg("Trying with %s", newFileName.c_str());
 		pBytes = GetFileManager()->Get( newFileName, &size, true);
+		}
 	}
 	if (pBytes)
 	{
