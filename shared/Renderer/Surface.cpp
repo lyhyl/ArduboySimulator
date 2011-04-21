@@ -408,7 +408,7 @@ bool Surface::LoadFile( string fName )
 	FileInstance f(fName);
 	if (!f.IsLoaded()) 
 	{
-		LogMsg("Couldn't load surface %s", fName);
+		LogMsg("Couldn't load surface %s", fName.c_str());
 		return false;
 	}
 	
