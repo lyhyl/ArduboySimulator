@@ -123,12 +123,6 @@ int initSDL_GLES()
 	// to speficy what OGL you want to use, it will be pure luck which one you
 	// get. Don't leave that up to chance. 
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 1);	// Force this to be version 1
-
-	// now we init the screen. The size of the screen on the palm
-	// is 320x480. We have those values set in SCREEN_WIDTH and SCREEN_HEIGHT
-	// in globals.h because magic numbers are icky.	
-	// This function will return the screen's surface.
-
 	
 #ifdef RT_WEBOS_ARM
 	g_screen = SDL_SetVideoMode(0 , 0, 0, videoFlags);
@@ -138,6 +132,7 @@ int initSDL_GLES()
 #else
 	g_screen = SDL_SetVideoMode(GetPrimaryGLX() , GetPrimaryGLY(), 0, videoFlags);
 #endif
+
 
 
 	LogMsg("Setting up GLES to %d by %d",g_screen->w, g_screen->h);
@@ -160,6 +155,8 @@ int initSDL_GLES()
 #if WIN32
 	_dgles_load_library(NULL, proc_loader);
 #endif
+
+	LogMsg((char*)glGetString(GL_VERSION));
 
 	// now we init graphics
 	//graphics_init();

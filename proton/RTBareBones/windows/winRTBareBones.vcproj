@@ -392,10 +392,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="SDLmain.lib SDL.lib SDL_image.lib SDL_net.lib SDL_mixer.lib ws2_32.lib libpdl.lib dgles.lib zdll.lib"
+				AdditionalDependencies="SDLmain.lib SDL.lib SDL_image.lib SDL_net.lib SDL_mixer.lib ws2_32.lib libpdl.lib zdll.lib dgles.lib"
 				OutputFile="../bin/winRTBareBones.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\shared\win\powerVR\OGLES\WindowsPC\lib;..\..\shared\win\lib;&quot;$(PalmPDK)\host\lib&quot;"
+				AdditionalLibraryDirectories="..\..\shared\win\lib;&quot;$(PalmPDK)\host\lib&quot;"
 				IgnoreDefaultLibraryNames="msvcrt.lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)/RTBareBones.pdb"

@@ -4,6 +4,8 @@
 #include "PDL.h"
 #include <errno.h>
 
+using namespace std;
+
 #ifdef RT_WEBOS_ARM
 #include "PlatformSetupWebOS.h"
 

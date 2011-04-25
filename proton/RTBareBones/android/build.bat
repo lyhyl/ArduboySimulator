@@ -4,7 +4,7 @@ start emulator %EMULATOR_AVD%
 
 :build the C/C++ parts
 %CYGWIN_DIR%\bin\bash --login -i -c '%PATH_TO_PROJECT_DIR_FROM_CYGWIN%/android/build.sh'
-if not exist libs/armeabi/lib%SMALL_PACKAGE_NAME%.so beeper.exe /p
+if not exist libs/armeabi/lib%SMALL_PACKAGE_NAME%.so ..\..\shared\win\utils\beeper.exe /p
 
 :Copy refresh resources, assuming the windows version had them built with update_media recently...
 rmdir assets /S /Q
