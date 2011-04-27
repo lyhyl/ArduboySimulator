@@ -239,10 +239,10 @@ bool IrrlichtManager::IsRunning()
 core::rect<s32> CLRectToIrrlichtRect32(CL_Rectf clR)
 {
 	core::rect<s32> r;
-	r.UpperLeftCorner.X = clR.left;
-	r.UpperLeftCorner.Y = clR.top;
-	r.LowerRightCorner.X = clR.right;
-	r.LowerRightCorner.Y = clR.bottom;
+	r.UpperLeftCorner.X = (irr::s32) clR.left;
+	r.UpperLeftCorner.Y = (irr::s32) clR.top;
+	r.LowerRightCorner.X = (irr::s32) clR.right;
+	r.LowerRightCorner.Y = (irr::s32) clR.bottom;
 	return r;
 }
 
@@ -298,4 +298,9 @@ void IrrlichtManager::OnLoadSurfaces()
 		m_pDriver->OnResume();
 	}
 
+}
+
+std::string PrintVector3(core::vector3df v)
+{
+	return PrintVector3(ToCLVector3(v));
 }

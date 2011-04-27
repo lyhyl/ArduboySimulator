@@ -40,6 +40,7 @@ void Surface::SetDefaults()
 	m_mipMapCount = 0;
 	m_frameBuffer = 0;
 	m_textureCreationMethod = TEXTURE_CREATION_NONE;
+	
 }
 
 Surface::~Surface()

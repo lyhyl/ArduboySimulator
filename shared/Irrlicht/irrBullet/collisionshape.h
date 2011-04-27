@@ -70,11 +70,9 @@ public:
 
     void removeNode() { node->remove(); };
 
-
-
     const irr::core::vector3df getLocalScaling() const;
 
-    const irr::core::stringc& getName() const { return shape->getName(); };
+    const irr::core::stringc getName() const { return shape->getName(); };
 
     ECollisionShapeType getShapeType() const { return type; };
 

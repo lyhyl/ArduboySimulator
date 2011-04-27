@@ -15,7 +15,7 @@
 #include "coreutil.h"
 
 #include "IrrCompileConfig.h"
-#include "../IrrlichtManager.h"
+#include "../../IrrlichtManager.h"
 
 namespace irr
 {

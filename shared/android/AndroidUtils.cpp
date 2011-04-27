@@ -110,7 +110,7 @@ void LogMsg ( const char* traceStr, ... )
 	va_end( argsVA );
 	
 	
-	__android_log_write(ANDROID_LOG_ERROR,GetAppName(), buffer);
+	__android_log_write(ANDROID_LOG_INFO,GetAppName(), buffer);
 
 	if (g_isLoggerInitted)
 	{

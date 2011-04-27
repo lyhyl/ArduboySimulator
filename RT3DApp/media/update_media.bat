@@ -49,7 +49,7 @@ xcopy audio ..\bin\audio /E /F /Y /EXCLUDE:exclude.txt
 
 mkdir ..\bin\game
 xcopy game ..\bin\game /E /F /Y /EXCLUDE:game_exclude.txt
-
+copy game\dwarf.jpg ..\bin\game
 
 REM Convert everything to lowercase, otherwise the iphone will choke on the files
 REM for /r %%f in (*.*) do ..\media\LowerCase.bat  %%f
