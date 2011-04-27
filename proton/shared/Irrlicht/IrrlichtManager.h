@@ -26,8 +26,6 @@ class irrBulletWorld;
 
 using namespace irr;
 
-
-
 class IrrlichtManager
 {
 public:
@@ -60,12 +58,9 @@ public:
 
 #ifdef RT_IRRBULLET
 	irrBulletWorld * GetBulletWorld() {return m_pWorld;}
-
 #endif
 
 private:
-
-
 
 	irr::IrrlichtDevice * m_pDevice;
 	irr::video::IVideoDriver* m_pDriver;
@@ -87,4 +82,5 @@ core::rect<s32> CLRectToIrrlichtRect32(CL_Rectf clR);
 core::vector3df GetVectorHeadingFromNode(scene::ISceneNode *pNode);
 core::vector3df RotatePositionByDirectionalVector(core::vector3df vPos, core::vector3df vNormal );
 float Vector3DToAngleRadians(core::vector3df v);
+std::string PrintVector3(core::vector3df v);
 #endif // IrrlichtManager_h__

@@ -125,7 +125,6 @@ void CSceneNodeAnimatorCollisionResponse::setWorld(ITriangleSelector* newWorld)
 		World->drop();
 
 	World = newWorld;
-
 	FirstUpdate = true;
 }
 
@@ -136,7 +135,6 @@ ITriangleSelector* CSceneNodeAnimatorCollisionResponse::getWorld() const
 {
 	return World;
 }
-
 
 void CSceneNodeAnimatorCollisionResponse::animateNode(ISceneNode* node, u32 timeMs)
 {
@@ -225,7 +223,6 @@ void CSceneNodeAnimatorCollisionResponse::animateNode(ISceneNode* node, u32 time
 	LastPosition = Object->getPosition();
 }
 
-
 void CSceneNodeAnimatorCollisionResponse::setNode(ISceneNode* node)
 {
 	Object = node;
@@ -258,7 +255,6 @@ void CSceneNodeAnimatorCollisionResponse::deserializeAttributes(io::IAttributes*
 	Translation = in->getAttributeAsVector3d("Translation");
 	AnimateCameraTarget = in->getAttributeAsBool("AnimateCameraTarget");
 }
-
 
 ISceneNodeAnimator* CSceneNodeAnimatorCollisionResponse::createClone(ISceneNode* node, ISceneManager* newManager)
 {
