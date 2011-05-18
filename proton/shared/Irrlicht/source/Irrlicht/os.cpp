@@ -7,7 +7,8 @@
 #include "IrrCompileConfig.h"
 #include "irrMath.h"
 
-#if !defined(_WIN32) && !defined(ANDROID_NDK)
+//SETH I had to tweak this..
+#if !defined(_WIN32) && !defined(ANDROID_NDK) && !defined(RT_WEBOS)
 
 #include <libkern/OSByteOrder.h>
 #define bswap_16(X) OSReadSwapInt16(&X,0)

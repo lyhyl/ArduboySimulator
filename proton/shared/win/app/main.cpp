@@ -1,4 +1,4 @@
-//THIS FILE IS SHARED BETWEEN ALL GAMES (during Windows builds) !  I don't always put it in the "shared" folder in the msvc project tree because
+//THIS FILE IS SHARED BETWEEN ALL GAMES (during Windows and WebOS builds) !  I don't always put it in the "shared" folder in the msvc project tree because
 //I want quick access to it.
 
 #include "PlatformPrecomp.h"
@@ -20,11 +20,13 @@ void InitVideoSize()
 	return;
 #endif
 
-	//the X/Y of the Windows setting is actually reversed.. it's confusing like this because most of the mobiles are "rotated" to landscape
+	//the X/Y of the Windows setting is (usually) actually reversed.. it's confusing like this because most of the mobiles are "rotated" to landscape
 	//mode manually and it was just less changes to make to pretend we were rotating the Windows screen to play in "landscape" orientation
 	//to make testing consistent
 	AddVideoMode("Windows", 768, 1024, PLATFORM_ID_WINDOWS);
 	AddVideoMode("Windows Wide", 800, 1280, PLATFORM_ID_WINDOWS);
+	
+#ifndef RT_WEBOS
 	// get native window size
 	HWND        hDesktopWnd = GetDesktopWindow();
 	HDC         hDesktopDC = GetDC(hDesktopWnd);
@@ -32,19 +34,23 @@ void InitVideoSize()
 	int nScreenY = GetDeviceCaps(hDesktopDC, VERTRES);
 	ReleaseDC(hDesktopWnd, hDesktopDC);
 	AddVideoMode("Windows Native", nScreenX, nScreenY, PLATFORM_ID_WINDOWS);
+#endif
 
-
-
+	//OSX
 	AddVideoMode("OSX", 768, 1024, PLATFORM_ID_OSX); //g_landScapeNoNeckHurtMode should be false when testing. Sort of buggy to emulate in Windows
 	AddVideoMode("OSX Wide", 800, 1280, PLATFORM_ID_OSX); 
 
+	//iOS
 	AddVideoMode("iPhone", 320, 480, PLATFORM_ID_IOS);
 	AddVideoMode("iPad", 768, 1024, PLATFORM_ID_IOS);
 	AddVideoMode("iPhone4", 640, 960, PLATFORM_ID_IOS);
-
-	AddVideoMode("Palm Pre Plus", 320, 480, PLATFORM_ID_WEBOS);
-	AddVideoMode("Pixi", 320, 400, PLATFORM_ID_WEBOS);
 	
+	//Palm er, I mean HP
+	AddVideoMode("Pre Plus", 320, 480, PLATFORM_ID_WEBOS);
+	AddVideoMode("Pixi", 320, 400, PLATFORM_ID_WEBOS);
+	AddVideoMode("Touchpad", 768, 1024, PLATFORM_ID_WEBOS);
+
+	//'droid
 	AddVideoMode("G1", 320, 480, PLATFORM_ID_ANDROID);
 	AddVideoMode("G1 Landscape", 480, 320, PLATFORM_ID_ANDROID);
 	AddVideoMode("Nexus One", 480, 800, PLATFORM_ID_ANDROID);
@@ -52,7 +58,7 @@ void InitVideoSize()
 	AddVideoMode("Nexus One Landscape", 480, 800, PLATFORM_ID_ANDROID); //set g_landScapeNoNeckHurtMode to true
 	AddVideoMode("Xoom Landscape", 800,1280, PLATFORM_ID_ANDROID);//set g_landScapeNoNeckHurtMode to true 
 
-	string desiredVideoMode = "iPhone"; //name needs to match one of the ones defined below
+	string desiredVideoMode = "Touchpad"; //name needs to match one of the ones defined below
     g_landScapeNoNeckHurtMode = true; //if true, will rotate the screen so we can play in landscape mode in windows without hurting ourselves
 
 	SetVideoModeByName(desiredVideoMode);

@@ -46,3 +46,5 @@ private:
 };
 
 App * GetApp();
+const char * GetBundlePrefix();
+const char * GetBundleName();

@@ -93,9 +93,16 @@ bool App::Init()
 	{
 		SetLockedLandscape(true); //we don't allow portrait mode for this game.  Android doesn't count
 		//because its landscape mode is addressed like portrait mode when set in the manifest.
-
 	}
-	
+
+	if (GetEmulatedPlatformID() == PLATFORM_ID_WEBOS && IsIPADSize)
+	{
+		LogMsg("Special handling for touchpad landscape mode..");
+		SetLockedLandscape(false);
+		SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(), ORIENTATION_PORTRAIT);
+	}
+
+
 	//SetupFakePrimaryScreenSize(320,480); //game will think its this size, and will be scaled up
 
 	//L_ParticleSystem::init(2000); //if we wanted to use the 2d particle system
