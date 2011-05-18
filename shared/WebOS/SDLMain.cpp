@@ -137,7 +137,6 @@ int initSDL_GLES()
 
 	LogMsg("Setting up GLES to %d by %d",g_screen->w, g_screen->h);
 	
-	
 	if ( g_screen == NULL )
 	{
 		// couldn't make that screen
@@ -417,14 +416,7 @@ int main(int argc, char *argv[])
 
 	SDL_JoystickEventState(SDL_IGNORE);
 	
-	if (!GetBaseApp()->Init())
-	{
-#ifdef WIN32
-		MessageBox(NULL, "Couldn't initialize game.  Yeah.\n\nDid everything unzip right?", "Unable to load stuff", NULL);
-#endif
-		goto cleanup;
-	}
-	
+
 	if (g_landScapeNoNeckHurtMode || GetOrientation() == ORIENTATION_PORTRAIT)
 	{
 		SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(), ORIENTATION_PORTRAIT);
@@ -432,6 +424,23 @@ int main(int argc, char *argv[])
 	{
 		SetupScreenInfo(GetPrimaryGLY(), GetPrimaryGLX(), ORIENTATION_LANDSCAPE_LEFT);
 	}
+
+	if (!GetBaseApp()->Init())
+	{
+#ifdef WIN32
+		MessageBox(NULL, "Couldn't initialize game.  Yeah.\n\nDid everything unzip right?", "Unable to load stuff", NULL);
+#endif
+		goto cleanup;
+	}
+
+	if (GetLockedLandscape() && g_screen->w == 1024)
+	{
+		//it's a touchpad.  We need to rotate it manually, unlike with the smaller phones.  I don't know why
+		LogMsg("Touchpad detected.  Rotation screen to landscape.");
+		//PDL_SetOrientation(PDL_ORIENTATION_0);
+
+	}
+
 
 	while(1)
 	{

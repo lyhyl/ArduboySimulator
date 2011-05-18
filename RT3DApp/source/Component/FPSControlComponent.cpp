@@ -50,7 +50,6 @@ void FPSControlComponent::OnAdd(Entity *pEnt)
 	m_pArrowEnt = CreateOverlayEntity(GetParent(), "arrow_gui", "interface/arrows.rttex", iPhoneMapX(20), GetScreenSizeYf()-170);
 	EntityComponent *pStripComp = m_pArrowEnt->AddComponent(new TouchStripComponent);
 	m_pArrowEnt->GetVarWithDefault(string("touchPadding"), Variant(CL_Rectf(100, 100, 100, 100)))->GetRect();
-	m_pArrowEnt->AddComponent(new TouchHandlerComponent);
 
 	m_pArrowEnt->GetFunction("OnTouchStripUpdate")->sig_function.connect(1, boost::bind(&FPSControlComponent::OnStripUpdate, this, _1));	
 	m_pArrowEnt->GetFunction("OnOverStart")->sig_function.connect(1, boost::bind(&FPSControlComponent::OnOverStart, this, _1));	
