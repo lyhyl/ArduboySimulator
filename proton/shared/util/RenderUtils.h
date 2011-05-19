@@ -17,12 +17,7 @@ class Entity;
 #ifdef _DEBUG
 #define CHECK_GL_ERROR() { GLenum __error = glGetError(); if(__error) LogError("OpenGL error 0x%04X (%d) in %s line %d\n", __error,__error, __FUNCTION__, __LINE__);}
 #else
-#ifdef WIN32
-#define CHECK_GL_ERROR() { GLenum __error = glGetError(); if(__error) LogError("OpenGL error 0x%04X (%d) in %s line %d\n", __error,__error, __FUNCTION__, __LINE__);}
-
-#else
 #define CHECK_GL_ERROR() 
-#endif
 #endif
 
 
