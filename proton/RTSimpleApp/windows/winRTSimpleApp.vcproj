@@ -1432,6 +1432,14 @@
 						>
 					</File>
 				</Filter>
+				<Filter
+					Name="GLES"
+					>
+					<File
+						RelativePath="..\..\shared\Renderer\GLES\glext.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="GUI"

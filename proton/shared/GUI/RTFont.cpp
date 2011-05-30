@@ -198,7 +198,7 @@ void RTFont::MeasureText( rtRectf *pRectOut, const char *pText, int len, float s
 		if (pText[i] == '\n')
 		{
 			lines++;
-			dst.right = max(dst.right, curX);
+			dst.right = rt_max(dst.right, curX);
 			curX = 0;
 			pLastCharData = NULL;
 			continue;
@@ -232,10 +232,10 @@ void RTFont::MeasureText( rtRectf *pRectOut, const char *pText, int len, float s
 		
 		float letterHeight = float(pCharData->charSizeY)*scale;
 		float offsetY = (float(pCharData->charBmpOffsetY+m_yOffset)*scale);
-		dst.bottom = max(dst.bottom, (lines*GetLineHeight(scale)) +  dst.top + letterHeight + offsetY);
+		dst.bottom = rt_max(dst.bottom, (lines*GetLineHeight(scale)) +  dst.top + letterHeight + offsetY);
 	}
 
-	dst.right = max(dst.right, curX);
+	dst.right = rt_max(dst.right, curX);
 	*pRectOut = dst;
 }
 

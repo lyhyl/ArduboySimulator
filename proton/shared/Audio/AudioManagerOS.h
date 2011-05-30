@@ -24,7 +24,7 @@ public:
 
 	void Unload();
 	string fName;
-	UInt32 m_id;
+	uint32 m_id;
 	;
 };
 
@@ -49,7 +49,7 @@ protected:
 	AudioObjectOS * GetAudioObjectByFileName(const string &fName, bool bLooping);
 	void KillAudioObjectByFileName(const string &fName);
 	void DestroyAudioCache();
-	AudioObjectOS * GetAudioObjectByID(UInt32 id);
+	AudioObjectOS * GetAudioObjectByID(uint32 id);
 	bool m_bDisabledMusicRecently;
 	vector<AudioObjectOS> m_audioList;
 };

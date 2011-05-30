@@ -265,8 +265,6 @@ void BaseApp::OnMessage(Message &m)
 				}
 			
 			//usually used for text input
-			
-			
 			case MESSAGE_TYPE_GUI_CHAR:
 				{
 #ifdef _DEBUG

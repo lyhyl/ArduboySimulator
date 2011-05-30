@@ -2,6 +2,9 @@
 #include <winsock2.h>
 #include <windows.h>
 #include <TCHAR.h>
+#include "time.h"
+
+#define snprintf _snprintf
 
 #ifndef _CONSOLE
 #ifdef C_GL_MODE
@@ -19,9 +22,11 @@
 
 #ifdef RT_WEBOS
 #include <GLES/gl.h>
+#include <GLES/glext.h>
 #else
 #include <GLES/egl.h>
 #include <GLES/gl.h>
+#include "Renderer/GLES/glext.h"
 #endif
 
 #ifdef _IRR_STATIC_LIB_

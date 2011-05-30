@@ -127,7 +127,13 @@ bool App::Init()
 		SetupFakePrimaryScreenSize(320,480); //game will think it's this size, and will be scaled up
 	}
 	
-	
+	if (GetPlatformID() == PLATFORM_ID_WEBOS && IsIPADSize )
+	{
+		LogMsg("Special handling for touchpad landscape mode..");
+		SetLockedLandscape(false);
+		SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(), ORIENTATION_PORTRAIT);
+	}
+
 	L_ParticleSystem::init(2000);
 
 	if (m_bInitted)	
