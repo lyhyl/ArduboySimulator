@@ -59,7 +59,7 @@ void InitVideoSize()
 	AddVideoMode("Xoom Landscape", 800,1280, PLATFORM_ID_ANDROID);//set g_landScapeNoNeckHurtMode to true 
 
 	string desiredVideoMode = "Touchpad"; //name needs to match one of the ones defined below
-    g_landScapeNoNeckHurtMode = true; //if true, will rotate the screen so we can play in landscape mode in windows without hurting ourselves
+    g_landScapeNoNeckHurtMode = false; //if true, will rotate the screen so we can play in landscape mode in windows without hurting ourselves
 
 	SetVideoModeByName(desiredVideoMode);
 
@@ -758,6 +758,14 @@ assert(!g_hDC);
 	{
 		return false;
 	}
+
+		/*
+	
+	GLuint viewFramebuffer;
+	GLuint textureFrameBuffer;
+
+	glGenFramebuffersOES(1, &textureFrameBuffer);
+*/
 #else
 
 	//NORMAL GL INIT
@@ -832,8 +840,12 @@ void DestroyVideo(bool bDestroyHWNDAlso)
 
 
 #else
+
 	eglMakeCurrent(g_eglDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
 	eglTerminate(g_eglDisplay);
+	
+
+
 #endif
 
 	if (g_hDC && !ReleaseDC(g_hWnd,g_hDC))					// Are We Able To Release The DC

@@ -74,6 +74,10 @@ bool IsDesktop()
 
 ePlatformID GetPlatformID()
 {
+	#ifdef WIN32
+	return PLATFORM_ID_WINDOWS;
+	#endif
+
 	return PLATFORM_ID_WEBOS;
 }
 
@@ -501,5 +505,9 @@ bool HasVibration()
 	return false;
 }
 
-
+string GetDeviceID()
+{
+	LogMsg("SETH: Add GetDeviceID() for WebOS, already!");
+	return "NONE";
+}
 #endif

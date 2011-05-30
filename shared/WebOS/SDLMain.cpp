@@ -279,7 +279,8 @@ void SDLEventLoop()
 			float xPos = ev.motion.x;
 			float yPos = ev.motion.y;
 			ConvertCoordinatesIfRequired(xPos, yPos);
-			GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CLICK_START, xPos, yPos);
+			
+			GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_START, xPos, yPos, ev.motion.which);
 			}
 			break;
 		case SDL_MOUSEBUTTONUP:
@@ -289,7 +290,7 @@ void SDLEventLoop()
 				float xPos = ev.motion.x;
 				float yPos = ev.motion.y;
 				ConvertCoordinatesIfRequired(xPos, yPos);
-				GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CLICK_END, xPos, yPos);
+				GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_END, xPos, yPos, ev.motion.which);
 			}
 			break;
 	
@@ -298,14 +299,15 @@ void SDLEventLoop()
 				int xPos = ev.motion.x;
 				int yPos = ev.motion.y;
 				
+				
 				//ev.motion.which should hold which finger id
 				ConvertCoordinatesIfRequired(xPos, yPos);
 
-				GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CLICK_MOVE_RAW, xPos, yPos);
+				GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_MOVE_RAW, xPos, yPos, ev.motion.which);
 
 				if (g_leftMouseButtonDown)
 				{
-					GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CLICK_MOVE, xPos, yPos);
+					GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_MOVE, xPos, yPos, ev.motion.which);
 					break;
 				} 
 
@@ -436,7 +438,7 @@ int main(int argc, char *argv[])
 	if (GetLockedLandscape() && g_screen->w == 1024)
 	{
 		//it's a touchpad.  We need to rotate it manually, unlike with the smaller phones.  I don't know why
-		LogMsg("Touchpad detected.  Rotation screen to landscape.");
+		LogMsg("Touchpad detected.  Rotating screen to landscape.");
 		//PDL_SetOrientation(PDL_ORIENTATION_0);
 
 	}

@@ -479,14 +479,6 @@ void PrepareForGL()
 	glCullFace(GL_BACK);
 	glLoadIdentity();
 	ResetOrthoFlag();
-#ifdef _IRR_STATIC_LIB_
-	//glCullFace(GL_BACK); //SETH should be culls front for old setup
-	//glFrontFace( GL_CCW );
-	//glDisable(GL_CULL_FACE);
-#else
-
-#endif
-
 }
 
 /*

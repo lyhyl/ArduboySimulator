@@ -576,10 +576,10 @@ uint32 ColorCombine(uint32 c1, uint32 c2, float alphaMod)
 		b = GET_BLUE(c1) - (255-  GET_BLUE(c2));
 		a = GET_ALPHA(c1) - (255-  GET_ALPHA(c2));
 
-		r = max(0, r); r = min(255,r);
-		g = max(0, g); g = min(255,g);
-		b = max(0, b); b = min(255,b);
-		a = max(0, a); a = min(255,a);
+		r = rt_max(0, r); r = rt_min(255,r);
+		g = rt_max(0, g); g = rt_min(255,g);
+		b = rt_max(0, b); b = rt_min(255,b);
+		a = rt_max(0, a); a = rt_min(255,a);
 	} else
 	{
 		if (alphaMod == 1) return c1;
