@@ -4,7 +4,6 @@
 //SETH hack to handle screen rotation
 void RotateGLIfNeeded();
 
-
 #include "COGLESDriver.h"
 // needed here also because of the create methods' parameters
 #include "CNullDriver.h"

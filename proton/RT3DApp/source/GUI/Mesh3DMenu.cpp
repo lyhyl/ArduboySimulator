@@ -49,7 +49,7 @@ void Mesh3DInitScene()
 	video::IVideoDriver* driver = GetIrrlichtManager()->GetDriver();
 
 	mesh = pScene->getMesh( (GetBaseAppPath() + "game/squirrel.x").c_str());
-	//mesh = pScene->getMesh( (GetBaseAppPath() + "game/squirrel.DAE").c_str());
+	//mesh = pScene->getMesh( (GetBaseAppPath() + "game/ninja.b3d").c_str());
 
 	IAnimatedMeshSceneNode* node =pScene->addAnimatedMeshSceneNode( mesh );
 	

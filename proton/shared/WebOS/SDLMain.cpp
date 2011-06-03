@@ -280,7 +280,7 @@ void SDLEventLoop()
 			float yPos = ev.motion.y;
 			ConvertCoordinatesIfRequired(xPos, yPos);
 			
-			GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_START, xPos, yPos, ev.motion.which);
+			GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_START, (int)xPos, (int)yPos, ev.motion.which);
 			}
 			break;
 		case SDL_MOUSEBUTTONUP:
@@ -290,7 +290,7 @@ void SDLEventLoop()
 				float xPos = ev.motion.x;
 				float yPos = ev.motion.y;
 				ConvertCoordinatesIfRequired(xPos, yPos);
-				GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_END, xPos, yPos, ev.motion.which);
+				GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_END, (int)xPos, (int)yPos, ev.motion.which);
 			}
 			break;
 	
@@ -303,9 +303,11 @@ void SDLEventLoop()
 				//ev.motion.which should hold which finger id
 				ConvertCoordinatesIfRequired(xPos, yPos);
 
+#ifdef WIN32
 				GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_MOVE_RAW, xPos, yPos, ev.motion.which);
+#endif
 
-				if (g_leftMouseButtonDown)
+				if (g_leftMouseButtonDown || GetPlatformID() == PLATFORM_ID_WEBOS)
 				{
 					GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_MOVE, xPos, yPos, ev.motion.which);
 					break;
@@ -443,11 +445,24 @@ int main(int argc, char *argv[])
 
 	}
 
+	static unsigned int gameTimer = 0;
+	static unsigned int fpsTimerLoopMS = 0;
+
 
 	while(1)
 	{
 		if (g_bAppFinished) break;
 		SDLEventLoop();
+
+		if (fpsTimerLoopMS != 0)
+		{
+			while (gameTimer > SDL_GetTicks())
+			{
+				SDL_Delay(1); 
+			}
+			gameTimer = SDL_GetTicks()+fpsTimerLoopMS;
+
+		}
 
 		if (g_isInForeground)
 			GetBaseApp()->Update();
@@ -455,6 +470,7 @@ int main(int argc, char *argv[])
 
 		while (!GetBaseApp()->GetOSMessages()->empty())
 		{
+			
 			OSMessage m = GetBaseApp()->GetOSMessages()->front();
 			GetBaseApp()->GetOSMessages()->pop_front();
 			//LogMsg("Got OS message %d, %s", m.m_type, m.m_string.c_str());
@@ -472,6 +488,10 @@ int main(int argc, char *argv[])
 				SetIsUsingNativeUI(false);
 				break;
 				
+			case OSMessage::MESSAGE_SET_FPS_LIMIT:
+				fpsTimerLoopMS = (int) (1000.0f/m.m_x);
+				break;
+
 			case OSMessage::MESSAGE_SET_ACCELEROMETER_UPDATE_HZ:
 
 				//well, it's hardcoded at 30 by the pdk I guess, but we can still enable/disable it

@@ -3,7 +3,7 @@ call app_info_setup.bat
 set STAGING_DIR=STAGING\%BUNDLEIDPREFIX%%APPNAME%
 set STRIP=y
 
-rmdir /s /y %STAGING_DIR%
+rmdir /S /Q STAGING
 del *.ipk
 mkdir %STAGING_DIR%
 REM call buildit.cmd

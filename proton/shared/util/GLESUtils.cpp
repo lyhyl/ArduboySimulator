@@ -260,16 +260,21 @@ void DrawEllipse (const int segments, CL_Vec2f vPos, float radianWidth, float ra
 	if (GET_ALPHA(color) != 255)
 	{
 		glEnable(GL_BLEND);
+		glEnable(GL_ALPHA_TEST);
+
 	}
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);	
 	glDisable(GL_TEXTURE_2D);	
 	glVertexPointer (2, GL_FLOAT , 0, &vertices.at(0)); 
 	glDrawArrays ((vFilled) ? GL_TRIANGLE_FAN : GL_LINE_LOOP, 0, segments);
+	
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);	
 	glEnable(GL_TEXTURE_2D);	
 	if (GET_ALPHA(color) != 255)
 	{
 		glDisable(GL_BLEND);
+		glDisable(GL_ALPHA_TEST);
+
 	}
 	glColor4x(1 << 16, 1 << 16, 1 << 16, 1 << 16);
 	glPopMatrix();
@@ -321,9 +326,10 @@ void  GenerateFillRect( GLuint rgba, float x, float y, float w, float h )
 	//disable depth testing and depth writing
 	glDisable( GL_TEXTURE_2D );
 	
+	
+
 	//3 2
 	//0 1
-
 	
 	GLfloat	vertices[] = {
 		x,			y,			0.0,
@@ -331,12 +337,15 @@ void  GenerateFillRect( GLuint rgba, float x, float y, float w, float h )
 		x +w,			y+h,		0.0,
 		x ,		 y+h,		0.0 };
 
-		
+		glEnableClientState(GL_VERTEX_ARRAY);	
+	
 		glVertexPointer(3, GL_FLOAT, 0, vertices);
 		//glColor4f(1, 1, 1, 1);
 		assert((rgba&0xFF)*256 != 0 && "Why send something with zero alpha?");
 		glEnable( GL_BLEND );
-	
+		glDisable( GL_TEXTURE_2D );
+		glEnable(GL_ALPHA_TEST);
+
 		glColor4x( (rgba >>8 & 0xFF)*256,  (rgba>>16& 0xFF)*256, (rgba>>24& 0xFF)*256, (rgba&0xFF)*256);
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);	
 
@@ -345,7 +354,8 @@ void  GenerateFillRect( GLuint rgba, float x, float y, float w, float h )
 
 		glDisable( GL_BLEND );
 		glEnable( GL_TEXTURE_2D );
-		
+		glDisable(GL_ALPHA_TEST);
+
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);	
 	CHECK_GL_ERROR();	
 }
@@ -431,6 +441,8 @@ void SetupOrtho()
 	glLoadIdentity();
 	glEnableClientState(GL_VERTEX_ARRAY);	
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);	
+	glDisableClientState(GL_COLOR_ARRAY);	
+	glDisableClientState(GL_NORMAL_ARRAY);
 
 	CHECK_GL_ERROR();
 	

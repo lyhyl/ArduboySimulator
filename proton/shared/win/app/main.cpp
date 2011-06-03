@@ -59,7 +59,7 @@ void InitVideoSize()
 	AddVideoMode("Xoom Landscape", 800,1280, PLATFORM_ID_ANDROID);//set g_landScapeNoNeckHurtMode to true 
 
 	string desiredVideoMode = "Touchpad"; //name needs to match one of the ones defined below
-    g_landScapeNoNeckHurtMode = false; //if true, will rotate the screen so we can play in landscape mode in windows without hurting ourselves
+    g_landScapeNoNeckHurtMode = true; //if true, will rotate the screen so we can play in landscape mode in windows without hurting ourselves
 
 	SetVideoModeByName(desiredVideoMode);
 
@@ -1128,10 +1128,11 @@ void LogMsg ( const char* traceStr, ... )
 	if (g_isLoggerInitted)
 	{
 		GetBaseApp()->GetConsole()->AddLine(buffer);
-	}
-
+	
 	strcat(buffer, "\r\n");
 	AddText(buffer, "log.txt");
+	}
+
 }
 
 #endif
