@@ -22,7 +22,12 @@
 
 #ifdef RT_WEBOS
 #include <GLES/gl.h>
+#ifdef _IRR_STATIC_LIB_
+#include "Irrlicht/source/Irrlicht/gles-ext.h"
+#else
 #include <GLES/glext.h>
+#endif
+
 #else
 #include <GLES/egl.h>
 #include <GLES/gl.h>

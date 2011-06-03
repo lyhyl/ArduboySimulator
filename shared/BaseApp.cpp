@@ -227,7 +227,13 @@ void BaseApp::OnMessage(Message &m)
 			case MESSAGE_TYPE_GUI_CLICK_MOVE_RAW:
 				{
 				
-				
+					if (!m_touchTracker[m.GetParm3()].IsDown())
+					{
+						//ignore this, we don't want a move message from something that isn't fricken' down.  At least
+						//one known HP device is known to do this...
+						break;
+					}
+
 					if (m_inputMode == INPUT_MODE_NORMAL)
 					{
 						v.Get(0).Set((float)m.GetType());

@@ -55,10 +55,12 @@ void FPSControlComponent::OnAdd(Entity *pEnt)
 	m_pArrowEnt->GetFunction("OnOverStart")->sig_function.connect(1, boost::bind(&FPSControlComponent::OnOverStart, this, _1));	
 	m_pArrowEnt->GetFunction("OnOverEnd")->sig_function.connect(1, boost::bind(&FPSControlComponent::OnOverEnd, this, _1));	
 	
-	//limit it to touches only on the left side of the screen
+	/*
+	//limit it to touches only on the left side of the screen (no longer needed due to touchstrip's smart finger tracking)
 	EntityComponent *pFilter = m_pArrowEnt->AddComponent(new FilterInputComponent);
 	pFilter->GetVar("mode")->Set(uint32(FilterInputComponent::MODE_CLIP_INPUT_TO_ABSOLUTE_CLIP_RECT));
 	pFilter->GetVar("clipRect")->Set(CL_Rectf(0,0,GetScreenSizeXf()/2, GetScreenSizeY()));
+	*/
 	}
 
 	//turn arrows
@@ -67,16 +69,18 @@ void FPSControlComponent::OnAdd(Entity *pEnt)
 	EntityComponent *pStripComp = m_pTurnArrowEnt->AddComponent(new TouchStripComponent);
 	m_pTurnArrowEnt->GetVarWithDefault(string("touchPadding"), Variant(CL_Rectf(100, 100, 100, 100)))->GetRect();
 
-	m_pTurnArrowEnt->AddComponent(new TouchHandlerComponent);
+	//m_pTurnArrowEnt->AddComponent(new TouchHandlerComponent);
 
 	m_pTurnArrowEnt->GetFunction("OnTouchStripUpdate")->sig_function.connect(1, boost::bind(&FPSControlComponent::OnTurnStripUpdate, this, _1));	
 	m_pTurnArrowEnt->GetFunction("OnOverStart")->sig_function.connect(1, boost::bind(&FPSControlComponent::OnTurnOverStart, this, _1));	
 	m_pTurnArrowEnt->GetFunction("OnOverEnd")->sig_function.connect(1, boost::bind(&FPSControlComponent::OnTurnOverEnd, this, _1));	
 
-	//limit it to touches only on the left side of the screen
+	/*
+	//limit it to touches only on the left side of the screen  (no longer needed due to touchstrip's smart finger tracking)
 	EntityComponent *pFilter = m_pTurnArrowEnt->AddComponent(new FilterInputComponent);
 	pFilter->GetVar("mode")->Set(uint32(FilterInputComponent::MODE_CLIP_INPUT_TO_ABSOLUTE_CLIP_RECT));
 	pFilter->GetVar("clipRect")->Set(CL_Rectf(GetScreenSizeXf()/2,0,GetScreenSizeXf(), GetScreenSizeYf()));
+	*/
 
 	//m_pTurnArrowEnt->GetVar("ignoreTouchesOutsideRect")->Set(uint32(1));
 
