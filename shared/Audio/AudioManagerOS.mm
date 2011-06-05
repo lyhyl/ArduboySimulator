@@ -89,7 +89,7 @@ AudioObjectOS * AudioManagerOS::GetAudioObjectByFileName(const string &fName, bo
 	return &m_audioList.back();
 }
 
-AudioObjectOS * AudioManagerOS::GetAudioObjectByID(UInt32 id)
+AudioObjectOS * AudioManagerOS::GetAudioObjectByID(uint32 id)
 {
 	for (int i=0; i < m_audioList.size(); i++)
 	{
