@@ -52,7 +52,16 @@ FastTimerDX g_fastTimer(0);
 
 string GetBaseAppPath()
 {
-	return "";
+	// Get path to executable:
+	TCHAR szDllName[_MAX_PATH];
+	TCHAR szDrive[_MAX_DRIVE];
+	TCHAR szDir[_MAX_DIR];
+	TCHAR szFilename[256];
+	TCHAR szExt[256];
+	GetModuleFileName(0, szDllName, _MAX_PATH);
+	_splitpath(szDllName, szDrive, szDir, szFilename, szExt);
+
+	return string(szDrive) + string(szDir); 
 }
 string GetSavePath()
 {

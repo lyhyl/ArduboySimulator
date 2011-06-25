@@ -123,6 +123,7 @@ const IFileList* CProtonReader::getFileList() const
 IReadFile* CProtonReader::createAndOpenFile(const io::path& filename)
 {
 	int size;
+	
 	byte *pBytes = GetFileManager()->Get( filename.c_str(), &size, false);
 
 	if (!pBytes)

@@ -256,6 +256,7 @@ void SDLEventLoop()
 	
 	case SDL_ACTIVEEVENT:
 	
+#ifndef RT_RUNS_IN_BACKGROUND
 		if (ev.active.gain == 0)
 		{
 			g_isInForeground = false;
@@ -269,6 +270,7 @@ void SDLEventLoop()
 			GetBaseApp()->OnEnterForeground();
 			LogMsg("In foreground");
 		}
+#endif
 
  	break;
 		case SDL_MOUSEBUTTONDOWN:
@@ -448,7 +450,6 @@ int main(int argc, char *argv[])
 	static unsigned int gameTimer = 0;
 	static unsigned int fpsTimerLoopMS = 0;
 
-
 	while(1)
 	{
 		if (g_bAppFinished) break;
@@ -461,16 +462,15 @@ int main(int argc, char *argv[])
 				SDL_Delay(1); 
 			}
 			gameTimer = SDL_GetTicks()+fpsTimerLoopMS;
-
 		}
 
 		if (g_isInForeground)
 			GetBaseApp()->Update();
+
 		GetBaseApp()->Draw();
 
 		while (!GetBaseApp()->GetOSMessages()->empty())
 		{
-			
 			OSMessage m = GetBaseApp()->GetOSMessages()->front();
 			GetBaseApp()->GetOSMessages()->pop_front();
 			//LogMsg("Got OS message %d, %s", m.m_type, m.m_string.c_str());

@@ -438,6 +438,7 @@ const io::path& CFileSystem::getWorkingDirectory()
 //! Changes the current Working Directory to the given string.
 bool CFileSystem::changeWorkingDirectoryTo(const io::path& newDirectory)
 {
+	//LogMsg("Irrlicht: Changing working dir to %s", newDirectory.c_str());
 	bool success=false;
 
 	if (FileSystemType != FILESYSTEM_NATIVE)

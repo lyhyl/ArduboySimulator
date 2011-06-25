@@ -394,8 +394,9 @@ void AudioManagerSDL::SetFrequency( AudioHandle soundID, int freq )
 void AudioManagerSDL::SetPan( AudioHandle soundID, float pan )
 {
 	assert(soundID);
-//	SDL::Channel *pChannel = (SDL::Channel*) soundID;
-//	pChannel->setPan(pan);
+	
+	//SDL::Channel *pChannel = (SDL::Channel*) soundID;
+	//pChannel->setPan(pan);
 }
 
 uint32 AudioManagerSDL::GetPos( AudioHandle soundID )
@@ -416,7 +417,15 @@ void AudioManagerSDL::SetPos( AudioHandle soundID, uint32 posMS )
 
 void AudioManagerSDL::SetVol( AudioHandle soundID, float vol )
 {
-	assert(soundID);
+	int ivol =  int(vol*128.0f);
+
+#ifdef _DEBUG
+	//ivol = 128;
+	LogMsg("Setting audio handle %d to %d", soundID, ivol);
+
+#endif
+	Mix_Volume(soundID,ivol);
+	//assert(soundID);
 	//pChannel->setVolume(vol);
 }
 
