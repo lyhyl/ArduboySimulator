@@ -8,6 +8,7 @@ using namespace std;
 
 #ifdef RT_WEBOS_ARM
 #include "PlatformSetupWebOS.h"
+#include <dirent.h>
 
 #else
 #include "PlatformSetupWin.h"
@@ -22,7 +23,16 @@ vector<string> StringTokenize (const  string  & theString,  const  string  & the
 
 string GetBaseAppPath()
 {
-	return ""; //well, according to the docs PDL_GetCallingPath is deprecated
+#ifdef RT_WEBOS_ARM
+	char szDir[1024];
+	getcwd( szDir, 1024);
+	return string(szDir)+"/";
+
+	//return ""; //well, according to the docs PDL_GetCallingPath is deprecated
+
+#else
+return "";
+#endif
 }
 
 
@@ -173,6 +183,39 @@ int GetSystemData()
 
 void RemoveFile( string fileName, bool bAddSavePath)
 {
+
+	#ifdef WIN32
+
+	int ret;
+
+	if (bAddSavePath)
+	{
+		ret = _unlink( (GetSavePath()+fileName).c_str());
+	} else
+	{
+		ret =_unlink( (fileName).c_str());
+	}
+
+	if (ret == -1)
+	{
+		switch (errno)
+		{
+
+		case EACCES:
+			LogMsg("%s is read only", fileName.c_str());
+			break;
+
+		case ENOENT:
+#ifdef _DEBUG
+			LogMsg("%s not found to delete", fileName.c_str());
+#endif
+			break;
+
+		}
+
+
+	}
+#else
 	if (bAddSavePath)
 	{
 		fileName = GetSavePath()+fileName;
@@ -200,6 +243,7 @@ void RemoveFile( string fileName, bool bAddSavePath)
 break;
 		}
 	}
+#endif
 
 }
 
@@ -354,20 +398,20 @@ vector<string> GetDirectoriesAtPath(string path)
 	*/
 }
 
-
+#ifdef WIN32
+BOOL IsDots(const TCHAR* str) {
+	if(_tcscmp(str,".") && _tcscmp(str,"..")) return FALSE;
+	return TRUE;
+}
+#endif
 
 vector<string> GetFilesAtPath(string path)
 {
-	vector<string> v;
-
-	LogMsg(" GetFilesAtPath not done..copy from android version?");
-	assert(!"no!");
-return v;
-
-/*
+#ifdef WIN32
 
 	if (path.empty()) path += "."; //needed for relative paths
 
+	vector<string> v;
 	HANDLE hFind;    // file handle
 	WIN32_FIND_DATA FindFileData;
 
@@ -384,7 +428,36 @@ return v;
 
 	FindClose(hFind);
 	return v;
-	*/
+
+#else
+	vector<string> v;
+	dirent * buf, * ent;
+	DIR *dp;
+
+	dp = opendir(path.c_str());
+	if (!dp)
+	{
+		LogError("GetDirectoriesAtPath: opendir failed");
+		return v;
+	}
+
+	buf = (dirent*) malloc(sizeof(dirent)+512);
+	while (readdir_r(dp, buf, &ent) == 0 && ent)
+	{
+		if (ent->d_name[0] == '.' && ent->d_name[1] == 0) continue;
+		if (ent->d_name[0] == '.' && ent->d_name[1] == '.' && ent->d_name[2] == 0) continue;
+
+		//LogMsg("Got %s. type %d", ent->d_name, int(ent->d_type));
+		if (ent->d_type == DT_REG) //regular file
+		{
+			v.push_back(ent->d_name);
+		}
+	}
+
+	free (buf);
+	closedir(dp);
+	return v;
+#endif
 }
 
 //based on a snippet fromFeroz Zahid (http://www.codeguru.com/cpp/w-p/files/folderdirectorymaintenance/article.php/c8999/

@@ -111,6 +111,11 @@
 */
 #endif
 
+#if defined(RT_WEBOS_ARM) || defined (ANDROID_NDK)|| defined (IOS)
+#define _IRR_POSIX_API_
+
+#endif
+
 //! Define _IRR_COMPILE_WITH_JOYSTICK_SUPPORT_ if you want joystick events.
 //#define _IRR_COMPILE_WITH_JOYSTICK_EVENTS_
 

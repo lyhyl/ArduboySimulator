@@ -83,6 +83,7 @@ double GetSystemTimeAccurate();
 unsigned int GetFreeMemory();
 void LaunchURL(std::string url);
 void LogMsg(const char *lpFormat, ...);
+void LogError (const char* traceStr, ... );
 void SetLastStringInput(std::string s);
 std::string GetLastStringInput();
 void RemoveFile(std::string fileName, bool bAddSavePath = true);
