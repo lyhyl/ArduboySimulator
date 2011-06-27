@@ -283,7 +283,7 @@ private:
 
 //a VariantList holds a group of variants, we pass these when we don't know in advance how many variants we want to use
 
-#define C_MAX_VARIANT_LIST_PARMS 5
+#define C_MAX_VARIANT_LIST_PARMS 6
 
 /*
 //example of memory serialization of a VariantList
@@ -318,6 +318,7 @@ class VariantList
 		VariantList(Variant v0, Variant v1, Variant v2) {m_variant[0] = v0; m_variant[1] = v1; m_variant[2] = v2;}
 		VariantList(Variant v0, Variant v1, Variant v2, Variant v3) {m_variant[0] = v0; m_variant[1] = v1; m_variant[2] = v2; m_variant[3] = v3;}
 		VariantList(Variant v0, Variant v1, Variant v2, Variant v3, Variant v4) {m_variant[0] = v0; m_variant[1] = v1; m_variant[2] = v2; m_variant[3] = v3; m_variant[4] = v4;}
+		VariantList(Variant v0, Variant v1, Variant v2, Variant v3, Variant v4, Variant v5) {m_variant[0] = v0; m_variant[1] = v1; m_variant[2] = v2; m_variant[3] = v3; m_variant[4] = v4;  m_variant[5] = v5;}
 
 		void Reset()
 		{
