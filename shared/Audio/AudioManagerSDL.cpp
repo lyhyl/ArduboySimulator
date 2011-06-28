@@ -11,6 +11,9 @@
 #include "AudioManagerSDL.h"
 #include "util/MiscUtils.h"
 
+//0 is a valid channel in SDL audio, but 0 is a bad audio handle the rest of Proton, this hack gets around it
+#define C_CHANNEL_OFFSET_SO_ZERO_ISNT_USED 1
+
 
 AudioManagerSDL::AudioManagerSDL()
 {
@@ -227,6 +230,9 @@ void AudioManagerSDL::Preload( string fName, bool bLooping /*= false*/, bool bIs
 AudioHandle AudioManagerSDL::Play( string fName, bool bLooping /*= false*/, bool bIsMusic, bool bAddBasePath, bool bForceStreaming)
 {
 
+#ifdef _DEBUG
+	LogMsg("********** AudioSDL: Thinking of playing %s, music=%d", fName.c_str(), int(bIsMusic));
+#endif
 	if (!GetSoundEnabled()) return 0;
 	if ( !GetMusicEnabled() && bIsMusic )
 	{
@@ -259,10 +265,14 @@ AudioHandle AudioManagerSDL::Play( string fName, bool bLooping /*= false*/, bool
 
 		m_lastMusicFileName = fName;
 
+	
+		/*
 		if (GetFileExtension(fName) == "mp3")
 		{
 			fName = ModifyFileExtension(fName, "ogg");
 		}
+		*/
+
 
 		m_pMusicChannel = Mix_LoadMUS((GetBaseAppPath()+fName).c_str());
 		
@@ -295,8 +305,10 @@ AudioHandle AudioManagerSDL::Play( string fName, bool bLooping /*= false*/, bool
 		}
 	}
 
+	LogMsg("AudioSDL: Playing sfx %s", fName.c_str());
+
 	//play it
-	pObject->m_pLastChannelToUse = Mix_PlayChannel(-1, pObject->m_pSound, loops);
+	pObject->m_pLastChannelToUse = Mix_PlayChannel(-1, pObject->m_pSound, loops)+C_CHANNEL_OFFSET_SO_ZERO_ISNT_USED;
 	
 	return (AudioHandle)pObject->m_pLastChannelToUse ;
 }
@@ -325,7 +337,7 @@ void AudioManagerSDL::Stop( AudioHandle soundID )
 	}
 	//pChannel->stop();
 
-	Mix_HaltChannel(soundID);
+	Mix_HaltChannel(soundID-C_CHANNEL_OFFSET_SO_ZERO_ISNT_USED);
 
 }
 
@@ -343,7 +355,7 @@ bool AudioManagerSDL::IsPlaying( AudioHandle soundID )
 	{
 		return Mix_PlayingMusic() != 0;
 	}
-	return Mix_Playing(soundID) != 0;
+	return Mix_Playing(soundID-C_CHANNEL_OFFSET_SO_ZERO_ISNT_USED) != 0;
 }
 
 
@@ -421,10 +433,10 @@ void AudioManagerSDL::SetVol( AudioHandle soundID, float vol )
 
 #ifdef _DEBUG
 	//ivol = 128;
-	LogMsg("Setting audio handle %d to %d", soundID, ivol);
-
+//	LogMsg("Setting audio handle %d to %d", soundID, ivol);
 #endif
-	Mix_Volume(soundID,ivol);
+
+	Mix_Volume(soundID-C_CHANNEL_OFFSET_SO_ZERO_ISNT_USED,ivol);
 	//assert(soundID);
 	//pChannel->setVolume(vol);
 }

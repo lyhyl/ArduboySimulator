@@ -375,8 +375,32 @@ bool InitSDL()
 	return true;
 }
 
+#ifdef WIN32
+//needed so we don't have to set the correct working directory during windows emulator builds
+#include <direct.h>
+
+string GetExePath()
+{
+	// Get path to executable:
+	TCHAR szDllName[_MAX_PATH];
+	TCHAR szDrive[_MAX_DRIVE];
+	TCHAR szDir[_MAX_DIR];
+	TCHAR szFilename[256];
+	TCHAR szExt[256];
+	GetModuleFileName(0, szDllName, _MAX_PATH);
+	_splitpath(szDllName, szDrive, szDir, szFilename, szExt);
+
+	return string(szDrive) + string(szDir); 
+}
+
+#endif
+
 int main(int argc, char *argv[])
 {
+#ifdef WIN32
+	//first make sure our working directory is the .exe dir
+	_chdir(GetExePath().c_str());
+#endif
 
 #ifdef RT_WEBOS_ARM
 	openlog(GetBundleName(), LOG_PID, LOG_USER); 
@@ -482,9 +506,21 @@ int main(int argc, char *argv[])
 				GetMessageManager()->SendGUI(MESSAGE_TYPE_OS_CONNECTION_CHECKED, RT_kCFStreamEventOpenCompleted, 0);	
 				break;
 			case OSMessage::MESSAGE_OPEN_TEXT_BOX:
+				
+				if (IsIPADSize)
+				{
+					//for touchpad only.  Comment this out of you aren't using the 3.0 SDK but something older...
+					PDL_SetKeyboardState(PDL_TRUE);
+				}
 				break;
 			
 			case OSMessage::MESSAGE_CLOSE_TEXT_BOX:
+				if (IsIPADSize)
+				{
+					//for touchpad only.  Comment this out of you aren't using the 3.0 SDK but something older...
+					PDL_SetKeyboardState(PDL_FALSE);
+
+				}
 				SetIsUsingNativeUI(false);
 				break;
 				

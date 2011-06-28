@@ -20,6 +20,11 @@ LoopingSound::~LoopingSound()
 void LoopingSound::KillAudio()
 {
 	//kill any currently playing looping sound
+	
+#ifdef _DEBUG
+	//LogMsg("** Looping sound %s stopped", m_loopingIdle.c_str());
+#endif
+
 	if (m_loopingSoundHandle)
 	{
 		GetAudioManager()->Stop(m_loopingSoundHandle);

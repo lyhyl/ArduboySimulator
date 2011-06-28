@@ -21,7 +21,6 @@ void TouchDragComponent::OnAdd(Entity *pEnt)
 	m_pOnTouchDragUpdate = GetFunction("OnTouchDragUpdate");
 	m_pPos2d = &GetParent()->GetVar("pos2d")->GetVector2();
 	m_pSize2d = &GetParent()->GetVar("size2d")->GetVector2();
-	m_pMult = &GetVarWithDefault("mult", CL_Vec2f(1,1))->GetVector2();
 	m_pSwapXAndY = &GetVar("swapXAndY")->GetUINT32();
 	m_pReverseX = &GetVar("reverseX")->GetUINT32();
 	m_pReverseY = &GetVar("reverseY")->GetUINT32();
@@ -52,16 +51,16 @@ void TouchDragComponent::SetPosition(CL_Vec2f vInputPos)
 	{
 		swap(vPos.x, vPos.y);
 	}
+	
 	if (*m_pReverseX != 0)
 	{
-		vPos.x = 1-vPos.x;
+		vPos.x *= -1;
 	}
 	if (*m_pReverseY != 0)
 	{
-		vPos.y = 1-vPos.y;
+		vPos.y *= -1;
 	}
-	vPos.x *= m_pMult->x;
-	vPos.y *= m_pMult->y;
+
 
 	m_pOnTouchDragUpdate->sig_function(&VariantList(this, vPos));
 }
