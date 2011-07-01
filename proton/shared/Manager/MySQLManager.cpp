@@ -7,9 +7,12 @@
 #include <my_global.h>
 #include <mysql.h>
 
+#define C_MYSQL_PING_TIMER_MS (1000*60*60)*4
+
 MySQLManager::MySQLManager()
 {
 	m_conn = NULL;
+	m_pingTimer = 0;
 }
 
 MySQLManager::~MySQLManager()
@@ -28,7 +31,7 @@ void MySQLManager::Kill()
 
 void MySQLManager::ShowError()
 {
-	LogMsg("MySQLManager error: %u: %s", mysql_errno(m_conn), mysql_error(m_conn));
+	LogError("MySQLManager error: %u: %s", mysql_errno(m_conn), mysql_error(m_conn));
 }
 
 bool MySQLManager::DoesTableExist(string tableName)
@@ -116,21 +119,24 @@ bool MySQLManager::Init(string name, string password)
 {
 	LogMsg("MySQL client version: %s", mysql_get_client_info());
 	Kill();
-		
+	
+	
 	m_conn = mysql_init(NULL);
+	
 	if (!m_conn)
 	{
 		ShowError();
 		return false;
 	}
 
-	//actually connect
+	//actually connect?
 
 	if (!mysql_real_connect(m_conn, "localhost", name.c_str(), password.c_str(), NULL, 0, NULL, 0))
 	{
 		ShowError();
 		return false;
 	}
+
 	return true;
 }
 
@@ -158,4 +164,15 @@ int MySQLManager::GetArrayCountOfLastQuery()
 int MySQLManager::GetLastAutoIncrementInsertID()
 {
 	return (int)mysql_insert_id(m_conn);
+}
+
+void MySQLManager::Update()
+{
+
+	if (m_conn && m_pingTimer < GetSystemTimeTick())
+	{
+		LogMsg("Ping!");
+		DoesTableExist("BogusTable");
+		m_pingTimer = GetSystemTimeTick()+C_MYSQL_PING_TIMER_MS;
+	}
 }

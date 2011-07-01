@@ -102,7 +102,7 @@ void AudioManagerSDL::KillCachedSounds(bool bKillMusic, bool bKillLooping, int i
 		{
 			//are any channels currently using this sound?
 
-			if ((*itor)->m_pLastChannelToUse && IsPlaying( (AudioHandle)(*itor)->m_pLastChannelToUse) )
+			if ((*itor)->m_pLastChannelToUse-C_CHANNEL_OFFSET_SO_ZERO_ISNT_USED && IsPlaying( (AudioHandle)(*itor)->m_pLastChannelToUse-C_CHANNEL_OFFSET_SO_ZERO_ISNT_USED) )
 			{
 				itor++;
 				continue;
@@ -231,8 +231,9 @@ AudioHandle AudioManagerSDL::Play( string fName, bool bLooping /*= false*/, bool
 {
 
 #ifdef _DEBUG
-	LogMsg("********** AudioSDL: Thinking of playing %s, music=%d", fName.c_str(), int(bIsMusic));
+	//LogMsg("********** AudioSDL: Thinking of playing %s, music=%d", fName.c_str(), int(bIsMusic));
 #endif
+
 	if (!GetSoundEnabled()) return 0;
 	if ( !GetMusicEnabled() && bIsMusic )
 	{
@@ -305,7 +306,9 @@ AudioHandle AudioManagerSDL::Play( string fName, bool bLooping /*= false*/, bool
 		}
 	}
 
-	LogMsg("AudioSDL: Playing sfx %s", fName.c_str());
+#ifdef _DEBUG
+	//LogMsg("AudioSDL: Playing sfx %s", fName.c_str());
+#endif
 
 	//play it
 	pObject->m_pLastChannelToUse = Mix_PlayChannel(-1, pObject->m_pSound, loops)+C_CHANNEL_OFFSET_SO_ZERO_ISNT_USED;
