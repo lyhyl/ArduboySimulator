@@ -155,6 +155,23 @@ void LoopingSound::Update()
 			PlayIdleSound();
 		}
 		break;
+
+	case STATE_IDLE:
+		if (GetEmulatedPlatformID() == PLATFORM_ID_WEBOS)
+		{
+			//special hack to fix crappy SDL audio issues with looping cutting out
+			if (m_loopingSoundHandle > 0 && !GetAudioManager()->IsPlaying(m_loopingSoundHandle))
+			{
+				//restart it
+				#ifdef _DEBUG
+				//LogMsg("Kickstarting idle loop again");
+				#endif
+				PlayIdleSound();
+			}
+		}
+
+
+		break;
 	}
 
 }

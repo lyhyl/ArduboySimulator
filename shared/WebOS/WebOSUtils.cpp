@@ -580,7 +580,17 @@ bool HasVibration()
 
 string GetDeviceID()
 {
-	LogMsg("SETH: Add GetDeviceID() for WebOS, already!");
-	return "NONE";
+	const int buffSize = 128;
+	char buff[buffSize];
+	
+	PDL_Err status = PDL_GetUniqueID(buff, buffSize);
+
+	if (status != PDL_NOERROR)
+	{
+		LogMsg("Error getting DeviceID for some reason");
+		return "UNKNOWN";
+	}
+	LogMsg("Read %s as the deviceid", buff);
+	return buff;
 }
 #endif

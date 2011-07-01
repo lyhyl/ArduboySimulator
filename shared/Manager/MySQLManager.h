@@ -32,11 +32,15 @@ public:
 	int GetLastAutoIncrementInsertID();
 	int AddSelectResults(vector<VariantDB> &vdb); //adds to existing vector, returns how many items it added
 	int GetArrayCountOfLastQuery();
+	void Update(); //call every frame, it avoids disconnection by pinging its sql connection every once in a while
+	
 protected:
 	
 
 private:
 	MYSQL *m_conn;
+	uint32 m_pingTimer; //do a query every 4 hours to avoid being disconnected
+	
 };
 
 #endif // MySQLManager_h__
