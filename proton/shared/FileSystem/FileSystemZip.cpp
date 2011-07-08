@@ -288,7 +288,7 @@ int FileSystemZip::GetFileSize( string fileName )
 
 	if (itor == m_cache.end())
 	{
-		return 0; //not found in this zip
+		return -1; //not found in this zip
 	}
 	return true;
 	
@@ -300,7 +300,7 @@ int FileSystemZip::GetFileSize( string fileName )
 	if (err!=UNZ_OK)
 	{
 		LogError("error %d with unzGoToFilePos in unzGetCurrentFileInfo",err);
-		return 0;
+		return -1;
 	}
 
 	unz_file_info file_info;
@@ -314,5 +314,6 @@ int FileSystemZip::GetFileSize( string fileName )
 		return false;
 	}
 
-	return file_info.uncompressed_size;
+	LogMsg("File is filesize %d", (int)file_info.uncompressed_size );
+	return (int)file_info.uncompressed_size;
 }

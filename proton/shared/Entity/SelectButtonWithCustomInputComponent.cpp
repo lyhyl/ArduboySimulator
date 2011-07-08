@@ -36,10 +36,7 @@ void SelectButtonWithCustomInputComponent::OnRemove()
 
 void SelectButtonWithCustomInputComponent::ClickButton()
 {
-	CL_Vec2f vClickPos = GetParent()->GetVar("pos2d")->GetVector2();
-
-	SendFakeInputMessageToEntity(GetParent(), MESSAGE_TYPE_GUI_CLICK_START, vClickPos);
-	SendFakeInputMessageToEntity(GetParent(), MESSAGE_TYPE_GUI_CLICK_END, vClickPos);
+	FakeClickAnEntity(GetParent());
 }
 
 void SelectButtonWithCustomInputComponent::OnInputRaw( VariantList *pVList )

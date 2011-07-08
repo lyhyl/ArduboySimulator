@@ -305,3 +305,6 @@ FileManager * GetFileManager()
 {
 	return NULL;
 }
+
+int GetScreenSizeX() {assert(!"Not used"); return 0;}
+int GetScreenSizeY() {assert(!"Not used"); return 0;}

@@ -200,7 +200,8 @@ int FileManager::GetFileSize( string fileName, bool bAddBasePath /*= true*/ )
 	while (itor != m_fileSystems.rend())
 	{
 		//(*itor)->GetDeliveryTime() > m->GetDeliveryTime())
-		if ((*itor)->GetFileSize(fileName)) return true;
+		int fileSize = ((*itor)->GetFileSize(fileName));
+		if (fileSize >= 0) return fileSize;
 		itor++;
 	}
 

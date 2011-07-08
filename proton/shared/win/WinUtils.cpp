@@ -284,7 +284,7 @@ int GetDaysSinceDate(int month,int day, int year)
 	long time_passed = time_now - time_exp;
 
 	//now let's convert it back to days
-	if (time_passed == 0) return 0; //avoid devide by 0
+	if (time_passed == 0) return 0; //avoid divide by 0
 	return time_passed;
 }
 
