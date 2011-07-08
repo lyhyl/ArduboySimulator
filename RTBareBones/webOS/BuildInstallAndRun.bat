@@ -5,10 +5,10 @@ set IPK_NAME=%BUNDLEIDPREFIX%%APPNAME%_1.0.0_all.ipk
 del %APPNAME%
 del %IPK_NAME%
 call build.bat
-if not exist %APPNAME% beeper.exe /p
+if not exist %APPNAME% %RT_UTILS%\beeper.exe /p
 call packageit.bat
 call palm-install.bat -r %BUNDLEIDPREFIX%%APPNAME%
-if not exist %IPK_NAME% beeper.exe /p
+if not exist %IPK_NAME% %RT_UTILS%\beeper.exe /p
 call palm-install.bat %IPK_NAME%
 call RunOnDevice.bat
 

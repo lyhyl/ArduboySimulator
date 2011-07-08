@@ -118,4 +118,5 @@ void AdjustGUIElementForWindowView(Entity *pEnt, CL_Rectf r, float rotation);
 void ManuallySetAlignmentEntity(Entity *pEnt, eAlignment alignment); //takes into account rotation as in screen rotation
 bool IsDisabledEntity(Entity *pEnt);
 void RemovePaddingEntity(Entity *pEnt);
+void FakeClickAnEntity(Entity *pEnt); //good for pretending to click a Button2D programically or something
 #endif // EntityUtils_h__

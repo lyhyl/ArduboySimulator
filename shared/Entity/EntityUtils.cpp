@@ -1547,3 +1547,11 @@ void ManuallySetAlignmentEntity(Entity *pEnt, eAlignment alignment)
 	pt -= vOffset;
 	pEnt->GetVar("pos2d")->Set(pt);
 }
+
+void FakeClickAnEntity(Entity *pEnt)
+{
+	CL_Vec2f vClickPos = pEnt->GetVar("pos2d")->GetVector2();
+
+	SendFakeInputMessageToEntity(pEnt, MESSAGE_TYPE_GUI_CLICK_START, vClickPos);
+	SendFakeInputMessageToEntity(pEnt, MESSAGE_TYPE_GUI_CLICK_END, vClickPos);
+}

@@ -78,7 +78,7 @@ if %PIXI% equ 1 (
 echo %DEVICEOPTS%
 
 arm-none-linux-gnueabi-gcc  %DEFINES% %DEVICEOPTS% %INCLUDE_DIRS% %LIB_DIRS% -o %OUTFILE% %SRC% %APP_SRC% %COMPONENT_SRC% %ZLIB_SRC% -Wl,--allow-shlib-undefined %LIBS% -Wno-deprecated %FLAGS%
-if not exist %APPNAME% beeper.exe /p
+if not exist %APPNAME% %RT_UTILS%\beeper.exe /p
 
 goto :EOF
 

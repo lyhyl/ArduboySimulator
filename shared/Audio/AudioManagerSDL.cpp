@@ -240,7 +240,7 @@ AudioHandle AudioManagerSDL::Play( string fName, bool bLooping /*= false*/, bool
 		m_bLastMusicLooping = bLooping;
 		m_lastMusicFileName = fName;
 
-		return 0;
+		return AUDIO_HANDLE_BLANK;
 	}
 
 	if (bIsMusic && m_bLastMusicLooping == bLooping && m_lastMusicFileName == fName && m_bLastMusicLooping && IsPlaying((AudioHandle) m_pMusicChannel))
@@ -273,16 +273,26 @@ AudioHandle AudioManagerSDL::Play( string fName, bool bLooping /*= false*/, bool
 			fName = ModifyFileExtension(fName, "ogg");
 		}
 		*/
+		
 
 
 		m_pMusicChannel = Mix_LoadMUS((GetBaseAppPath()+fName).c_str());
 		
+		if (!m_pMusicChannel)
+		{
+			LogError("Unable to load music file %s. Missing?", (GetBaseAppPath()+fName).c_str());
+			return AUDIO_HANDLE_BLANK;
+		}
 		m_lastMusicID = (AudioHandle) m_pMusicChannel;
 		m_bLastMusicLooping = bLooping;
 		
 		SetMusicVol(m_musicVol);
 
-		Mix_PlayMusic(m_pMusicChannel, loops);
+		int ret = Mix_PlayMusic(m_pMusicChannel, loops);
+		if (ret == -1)
+		{
+			LogError("Unable to play music file %s.", (GetBaseAppPath()+fName).c_str());
+		}
 
 		return (AudioHandle) m_pMusicChannel;
 

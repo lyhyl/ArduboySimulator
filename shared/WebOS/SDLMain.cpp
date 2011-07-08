@@ -123,9 +123,21 @@ int initSDL_GLES()
 	// to speficy what OGL you want to use, it will be pure luck which one you
 	// get. Don't leave that up to chance. 
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 1);	// Force this to be version 1
-	
+
+
 #ifdef RT_WEBOS_ARM
-	g_screen = SDL_SetVideoMode(0 , 0, 0, videoFlags);
+	
+
+#ifdef FORCE_IPHONE_SIZE
+	//if defined, this is useful for letting us make the touchpad handle the zooming for us
+	g_winVideoScreenX = 320;
+	g_winVideoScreenY = 480;
+
+	LogMsg("Forcing GL to be %d, %d so the Touchpad will scale it up for us", g_winVideoScreenX, g_winVideoScreenY);
+	
+#endif
+	
+	g_screen = SDL_SetVideoMode(g_winVideoScreenX, g_winVideoScreenY, 0, videoFlags);
 	g_winVideoScreenX = g_screen->w;
 	g_winVideoScreenY = g_screen->h;
 
@@ -135,7 +147,7 @@ int initSDL_GLES()
 
 
 
-	LogMsg("Setting up GLES to %d by %d",g_screen->w, g_screen->h);
+	LogMsg("Setting up GLES to %d by %d.  PDK version is %d",g_screen->w, g_screen->h, PDL_GetPDKVersion());
 	
 	if ( g_screen == NULL )
 	{
@@ -463,6 +475,7 @@ int main(int argc, char *argv[])
 		goto cleanup;
 	}
 
+#ifndef FORCE_IPHONE_SIZE
 	if (GetLockedLandscape() && g_screen->w == 1024)
 	{
 		//it's a touchpad.  We need to rotate it manually, unlike with the smaller phones.  I don't know why
@@ -470,7 +483,7 @@ int main(int argc, char *argv[])
 		//PDL_SetOrientation(PDL_ORIENTATION_0);
 
 	}
-
+#endif
 	static unsigned int gameTimer = 0;
 	static unsigned int fpsTimerLoopMS = 0;
 
@@ -507,7 +520,7 @@ int main(int argc, char *argv[])
 				break;
 			case OSMessage::MESSAGE_OPEN_TEXT_BOX:
 				
-				if (IsIPADSize)
+				if (PDL_GetPDKVersion() >= 300)
 				{
 					//for touchpad only.  Comment this out of you aren't using the 3.0 SDK but something older...
 					PDL_SetKeyboardState(PDL_TRUE);
@@ -515,7 +528,7 @@ int main(int argc, char *argv[])
 				break;
 			
 			case OSMessage::MESSAGE_CLOSE_TEXT_BOX:
-				if (IsIPADSize)
+				if (PDL_GetPDKVersion() >= 300)
 				{
 					//for touchpad only.  Comment this out of you aren't using the 3.0 SDK but something older...
 					PDL_SetKeyboardState(PDL_FALSE);

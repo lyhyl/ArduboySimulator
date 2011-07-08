@@ -409,7 +409,7 @@ void StringReplace(const std::string& what, const std::string& with, std::string
 int GetFileSize(const string &fName)
 {
 	FILE * file;
-	int fileSizeBytes = 0;
+	int fileSizeBytes = -1;
 	file = fopen(fName.c_str(),"r");
 	if(file > 0)
 	{

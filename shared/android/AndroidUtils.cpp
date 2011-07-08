@@ -663,7 +663,7 @@ void AppRender(JNIEnv*  env)
 
 void AppUpdate(JNIEnv*  env)
 {
-
+	
 	if (g_pauseASAP)
 	{
 		g_pauseASAP = false;	
@@ -827,8 +827,8 @@ void AppOnKey( JNIEnv*  env, jobject jobj, jint type, jint keycode, jint c)
 {
 	
 #ifdef _DEBUG
-#endif
 	LogMsg("Native Got type %d, keycode %d, key %d (%c)", type, keycode, c, (char(c)));
+#endif
 
 	switch (keycode)
 	{

@@ -141,6 +141,10 @@ void FileWriteRAWPVR(const char* pszOutputFileName, CPVRTexture* texture, int nN
 #define GL_INT                            0x1404
 #define GL_UNSIGNED_INT                   0x1405
 
+#define GL_BYTE                           0x1400
+#define GL_UNSIGNED_BYTE                  0x1401
+#define GL_UNSIGNED_SHORT_5_6_5           0x8363
+
 	const ::uint32 PVRTC2_MIN_TEXWIDTH		= 16;
 	const ::uint32 PVRTC2_MIN_TEXHEIGHT		= 8;
 	const ::uint32 PVRTC4_MIN_TEXWIDTH		= 8;

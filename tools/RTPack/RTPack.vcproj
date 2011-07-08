@@ -261,6 +261,10 @@
 			RelativePath=".\PVRTexLib\Win32\PVRTexLib.lib"
 			>
 		</File>
+		<File
+			RelativePath=".\ReadMe.txt"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>
