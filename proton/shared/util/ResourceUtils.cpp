@@ -207,7 +207,7 @@ bool IsARTFile(byte *pFile)
 bool CompressFile(string fName)
 {
 	unsigned int size;
-	byte *pInput = LoadFileIntoMemoryBasic(fName, &size); //the basic means don't try to decompress it
+	byte *pInput = LoadFileIntoMemoryBasic(fName, &size, false, false); //the basic means don't try to decompress it
 
 	if (IsAPackedFile(pInput))
 	{
@@ -344,7 +344,7 @@ byte * LoadFileIntoMemory(string fileName, unsigned int *p_ui_size, bool bUseSav
 {
 	assert(p_ui_size && "You need to send in a valid int to be filled with the size, not a NULL.");
 
-	byte *p_resource = LoadFileIntoMemoryBasic(fileName, p_ui_size, bUseSavePath);
+	byte *p_resource = LoadFileIntoMemoryBasic(fileName, p_ui_size, bUseSavePath, false);
 
 	if (!p_resource)
 	{
