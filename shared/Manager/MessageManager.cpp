@@ -74,7 +74,13 @@ void MessageManager::SendGame( eMessageType type, const string msg, int deliverT
 	Send(m);
 }
 
-
+void MessageManager::SendGame( eMessageType type, const Variant &v, int deliverTimeMS, eTimingSystem timing)
+{
+	Message *m = new Message(MESSAGE_CLASS_GAME, timing, type);
+	m->Set(v);
+	m->SetDeliveryTime(deliverTimeMS);
+	Send(m);
+}
 void MessageManager::SendGUI( eMessageType type, int parm1, int parm2, int deliverTimeMS, eTimingSystem timing)
 {
 	Message *m = new Message(MESSAGE_CLASS_GUI, timing, type);

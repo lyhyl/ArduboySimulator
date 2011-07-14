@@ -1447,8 +1447,46 @@ void EntitySetScaleBySize(Entity *pEnt, CL_Vec2f vDestSize)
 		return; //avoid divide by 0
 	}
 	pEnt->GetVar("scale2d")->Set(CL_Vec2f( vDestSize.x / vSize.x, vDestSize.y / vSize.y));
-
 }
+
+//On an ipad sized device it does nothing, on anything else it resizes the entity to match the device size
+void EntityScaleiPad(Entity *pEnt, bool bPerserveAspectRatio)
+{
+	CL_Vec2f vSize = pEnt->GetVar("size2d")->GetVector2();
+	assert(vSize.x != 0 && vSize.y != 0);
+
+	if (vSize.x == 0 || vSize.y == 0)
+	{
+		assert(!"Huh?");
+		return; //avoid divide by 0
+	}
+	
+	CL_Vec2f vDestSize = vSize;
+
+	CL_Vec2f vScale = pEnt->GetVar("scale2d")->GetVector2();
+
+	//remove scaling from size temporarily
+	vSize.x /= vScale.x;
+	vSize.y /= vScale.y;
+
+	//Note:  I think the X/Y has to be reverses if the orientation is portrait... todo... - SAR
+	
+		if (bPerserveAspectRatio)
+		{
+			float scale = rt_min(GetScreenSizeXf()/1024, GetScreenSizeYf()/768);
+			vDestSize.x *= scale;
+			vDestSize.y *= scale;
+
+		} else
+		{
+			vDestSize.x *= GetScreenSizeXf()/1024;
+			vDestSize.y *= GetScreenSizeYf()/768;
+		}
+	
+	pEnt->GetVar("scale2d")->Set(CL_Vec2f( vDestSize.x / vSize.x, vDestSize.y / vSize.y));
+	
+}
+
 
 EntityComponent * AddHotKeyToButton(Entity *pEnt, uint32 keycode)
 {

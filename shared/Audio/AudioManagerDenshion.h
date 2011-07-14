@@ -30,6 +30,8 @@ public:
 	virtual void SetMusicEnabled( bool bNew );
 	virtual void Vibrate();
 	virtual void StopMusic();
+	virtual void SetVol( AudioHandle soundID, float vol );
+	virtual void SetMusicVol(float vol );
 
 protected:
 	void DestroyAudioCache();

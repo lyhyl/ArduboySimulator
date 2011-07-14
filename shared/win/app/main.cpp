@@ -43,6 +43,7 @@ void InitVideoSize()
 	//iOS
 	AddVideoMode("iPhone", 320, 480, PLATFORM_ID_IOS);
 	AddVideoMode("iPad", 768, 1024, PLATFORM_ID_IOS);
+	AddVideoMode("iPad HD", 768*2, 1024*2, PLATFORM_ID_IOS);
 	AddVideoMode("iPhone4", 640, 960, PLATFORM_ID_IOS);
 	
 	//Palm er, I mean HP
@@ -59,7 +60,7 @@ void InitVideoSize()
 	AddVideoMode("Nexus One Landscape", 480, 800, PLATFORM_ID_ANDROID); //set g_landScapeNoNeckHurtMode to true
 	AddVideoMode("Xoom Landscape", 800,1280, PLATFORM_ID_ANDROID);//set g_landScapeNoNeckHurtMode to true 
 
-	string desiredVideoMode = "Xoom Landscape"; //name needs to match one of the ones defined above
+	string desiredVideoMode = "Windows"; //name needs to match one of the ones defined above
     g_landScapeNoNeckHurtMode = true; //if true, will rotate the screen so we can play in landscape mode in windows without hurting ourselves
 
 	SetVideoModeByName(desiredVideoMode);
@@ -817,6 +818,7 @@ assert(!g_hDC);
 	//RedrawWindow(0, 0, 0, RDW_ALLCHILDREN|RDW_INVALIDATE|RDW_UPDATENOW);
 	
 	
+	
 	return true;
 }
 
@@ -845,8 +847,6 @@ void DestroyVideo(bool bDestroyHWNDAlso)
 	eglMakeCurrent(g_eglDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
 	eglTerminate(g_eglDisplay);
 	
-
-
 #endif
 
 	if (g_hDC && !ReleaseDC(g_hWnd,g_hDC))					// Are We Able To Release The DC
@@ -859,8 +859,6 @@ void DestroyVideo(bool bDestroyHWNDAlso)
 
 	if (bDestroyHWNDAlso)
 	{
-
-
 
 		if (g_hWnd && !DestroyWindow(g_hWnd))					// Are We Able To Destroy The Window?
 		{
@@ -1024,7 +1022,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 
 				g_bHasFocus = true;
 				GetBaseApp()->OnEnterBackground();
-
+				GetBaseApp()->m_sig_unloadSurfaces();
 #ifdef C_GL_MODE
 
 				DestroyVideo(false);
@@ -1039,7 +1037,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 #else
 				LogMsg("Ignoring SET_VIDEO_MODE, only setup to work with normal GL, not GLES");
 #endif
+				SetupOrtho();
 				GetBaseApp()->OnEnterForeground();
+				GetBaseApp()->m_sig_loadSurfaces();
+
+#ifdef _IRR_STATIC_LIB_
+	assert(!"Irrlicht doesn't properly reload its textures when resizing the screen in Windows.  But it works on android, so why not here?");
+#endif
+				
 				goto skipRender;
 				//continue;
 			}

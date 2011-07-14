@@ -443,17 +443,18 @@ string AddIPADToFileName(string file)
 //replace lowercase iphone with ipad in string if needed
 string ReplaceWithDeviceNameInFileName(const string &fName)
 {
-	if (IsIPADSize)
-	{
-		string final = fName;
-		StringReplace("iphone", "ipad", final);
-		return final;
-	}
 	
 	if (IsIphone4Size)
 	{
 		string final = fName;
 		StringReplace("iphone", "iphone4", final);
+		return final;
+	}
+
+	if (IsTabletSize())
+	{
+		string final = fName;
+		StringReplace("iphone", "ipad", final);
 		return final;
 	}
 
