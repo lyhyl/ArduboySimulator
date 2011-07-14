@@ -61,7 +61,7 @@ Entity * EnterNameMenuCreate(Entity *pParentEnt)
 	AddHotKeyToButton(pButtonEntity, VIRTUAL_KEY_BACK); //for android's back button, or escape key in windows
 
 	pButtonEntity = CreateTextLabelEntity(pBG, "name", vTextAreaPos.x, vTextAreaPos.y+73, "`$Name: ");
-	//pButtonEntity->GetComponentByName("TextRender")->GetVar("font")->Set(uint32(FONT_LARGE));
+//	pButtonEntity->GetComponentByName("TextRender")->GetVar("font")->Set(uint32(FONT_LARGE));
 	float nameWidth = pButtonEntity->GetVar("size2d")->GetVector2().x;
 
 	//create input box
