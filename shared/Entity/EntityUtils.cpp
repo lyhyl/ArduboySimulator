@@ -806,11 +806,13 @@ Entity * CreateInputTextEntity(Entity *pParentEnt, string name, float x, float y
 	pButtonEnt->AddComponent( new TouchHandlerComponent);
 	pComp->GetVar("text")->Set(text); //local to component
 	pButtonEnt->GetVar("pos2d")->Set(x, y);
+	
 	float fontHeight = GetBaseApp()->GetFont(FONT_SMALL)->GetLineHeight(1.0f);
 	if (sizeX == 0) sizeX = fontHeight*10;
 	if (sizeY == 0) sizeY = fontHeight+6;
 
 	pButtonEnt->GetVar("size2d")->Set(sizeX, sizeY);
+	
 	return pButtonEnt;
 }
 

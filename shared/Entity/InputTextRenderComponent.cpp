@@ -23,6 +23,15 @@ void InputTextRenderComponent::OnTextChanged(Variant *pDataObject)
 	{
 		SetLastStringInput(*m_pText);
 	}
+
+	float fontHeight = GetBaseApp()->GetFont(eFont(*m_pFontID))->GetLineHeight(m_pScale2d->x);
+//	float sizeX = 0;
+	float sizeY = 0;
+//	if (sizeX == 0) sizeX = fontHeight*10;
+	if (sizeY == 0) sizeY = fontHeight+6;
+
+	*m_pSize2d = CL_Vec2f(m_pSize2d->x, sizeY);
+
 }
 
 
