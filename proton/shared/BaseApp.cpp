@@ -5,7 +5,7 @@
 
 #if defined( WIN32)
 	//useful for debugging texture unloading, but we don't really need to do it for Windows builds
-	//#define C_SURFACE_UNLOAD_TEXTURES
+	#define C_SURFACE_UNLOAD_TEXTURES
 #endif
 
 #ifdef _IRR_STATIC_LIB_
@@ -326,6 +326,9 @@ void BaseApp::OnMessage(Message &m)
 			{
 				GetAudioManager()->Play(m.GetVarName());
 			}
+			break;
+		case MESSAGE_TYPE_SET_SOUND_ENABLED:
+			GetAudioManager()->SetSoundEnabled(m.Get().GetUINT32() != 0);
 			break;
 		case MESSAGE_TYPE_PRELOAD_SOUND:
 			if (GetAudioManager())

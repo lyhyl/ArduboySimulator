@@ -232,7 +232,7 @@
 	}
 }
 
-#define LEGAL	@"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+#define LEGAL	@"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-0123456789"
 #define LEGAL_FULL	@"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz~`1234567890!@#$%^&*()_+-=[]{}|;': ,.<>/?\\\""
 
 #define LEGAL_NUM	@"-0123456789."

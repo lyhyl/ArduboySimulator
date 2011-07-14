@@ -3,6 +3,7 @@
 #include <AudioToolbox/AudioToolbox.h>
 #include "CocosDenshion/SimpleAudioEngine.h"
 
+#import "CDAudioManager.h"
 #if TARGET_OS_IPHONE == 1
 #include <AVFoundation/AVFoundation.h>
 #endif
@@ -108,6 +109,8 @@ void AudioManagerDenshion::Preload(string fName, bool bLooping, bool bIsMusic, b
 
 AudioHandle AudioManagerDenshion::PlayWithAVPlayer( string fName)
 {
+	if (!m_bSoundEnabled) return AUDIO_HANDLE_BLANK;
+
 	NSString *soundFile =  [NSString stringWithCString:  fName.c_str() encoding: [NSString defaultCStringEncoding]];
 	
 	NSError *err;
@@ -124,6 +127,8 @@ AudioHandle AudioManagerDenshion::Play( string fName, bool bLooping /*= false*/,
 	#ifdef _DEBUG
 	LogMsg("Playing %s", fName.c_str());
 	#endif
+
+	if (!m_bSoundEnabled) return AUDIO_HANDLE_BLANK;
 
 	if (bIsMusic)
 	{
@@ -176,7 +181,7 @@ LogMsg("Music disabled, pretending to play");
 	m_lastMusicFileName = fName;
 	m_bLastMusicLooping = bLooping;
 	m_bDisabledMusicRecently = false;
-	
+		m_bgMusicPlayer.volume = m_musicVol;
 	[m_bgMusicPlayer prepareToPlay];
 
 	// when you want to play the file
@@ -269,4 +274,39 @@ void AudioManagerDenshion::StopMusic()
 			m_bDisabledMusicRecently = false;
 	
 }
+
+
+void AudioManagerDenshion::SetVol( AudioHandle soundID, float vol )
+{
+	if (!soundID) return;
+
+	
+	//half done..?
+	/*
+	CDSoundEngine *sndEng = [[SimpleAudioEngine sharedEngine]  getSoundEngine];
+	
+	CDSoundSource *snd = [sndEng soundSourceForSound: soundID sourceGroupId: 0];
+	if (snd)
+	{
+		LogMsg("Stopped sound");
+		[snd stop];	
+	} else
+	{
+		LogMsg("Can't find soundsource %d", soundID);	
+	}
+	 */
+	
+}
+
+void AudioManagerDenshion::SetMusicVol(float vol )
+{
+	
+	//CDSoundEngine *sndEng = [[SimpleAudioEngine sharedEngine]  getSoundEngine];
+	if (m_bgMusicPlayer)
+	{
+		m_bgMusicPlayer.volume =vol;
+	}
+	m_musicVol = vol;
+}
+
 

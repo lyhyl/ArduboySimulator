@@ -111,7 +111,6 @@ bool App::Init()
 	SetDefaultButtonStyle(Button2DComponent::BUTTON_STYLE_CLICK_ON_TOUCH_RELEASE);
 	SetManualRotationMode(true);
 
-	
 	switch (GetEmulatedPlatformID())
 	{
 	case PLATFORM_ID_ANDROID:

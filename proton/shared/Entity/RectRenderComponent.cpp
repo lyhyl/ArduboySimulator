@@ -51,6 +51,8 @@ void RectRenderComponent::OnRender(VariantList *pVList)
 
 		CL_Vec2f vRotationPt = vFinalPos;
 
+		g_globalBatcher.Flush();
+
 		if (*m_pRotation != 0)
 		{
 			SetupOrtho();

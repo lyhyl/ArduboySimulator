@@ -230,4 +230,8 @@ static CDBufferManager *bufferManager = nil;
 	}	
 }	
 
+-(CDSoundEngine*) getSoundEngine
+{
+	return soundEngine;	
+}
 @end 
