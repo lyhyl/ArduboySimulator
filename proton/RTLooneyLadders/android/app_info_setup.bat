@@ -3,7 +3,7 @@
 set APP_NAME=RTLooneyLadders
 set SMALL_PACKAGE_NAME=RTLooneyLadders
 set PACKAGE_NAME=com.rtsoft.RTLooneyLadders
-set PATH_TO_PROJECT_DIR_FROM_CYGWIN=/cygdrive/o/projects/proton/RTLooneyLadders
+set PATH_TO_PROJECT_DIR_FROM_CYGWIN=/cygdrive/d/projects/proton/RTLooneyLadders
 set EMULATOR_AVD=@AVD_22
 set ANDROID_DEVICE1=HT019P803554
 set ANDROID_DEVICE2=HT848GZ55018

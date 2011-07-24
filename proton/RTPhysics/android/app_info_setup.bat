@@ -3,7 +3,7 @@
 set APP_NAME=RTPhysics
 set SMALL_PACKAGE_NAME=rtphysics
 set PACKAGE_NAME=com.rtsoft.rtphysics
-set PATH_TO_PROJECT_DIR_FROM_CYGWIN=/cygdrive/o/projects/proton/RTPhysics
+set PATH_TO_PROJECT_DIR_FROM_CYGWIN=/cygdrive/d/projects/proton/RTPhysics
 set EMULATOR_AVD=@AVD_22
 set ANDROID_DEVICE1=HT019P803554
 set ANDROID_DEVICE2=HT848GZ55018

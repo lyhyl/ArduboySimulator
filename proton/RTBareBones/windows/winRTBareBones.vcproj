@@ -64,10 +64,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libgles_cm.lib fmodex_vc.lib zdll.lib wsock32.lib"
+				AdditionalDependencies="libgles_cm.lib zdll.lib wsock32.lib"
 				OutputFile="../bin/winRTBareBones.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\shared\win\powerVR\OGLES\WindowsPC\lib;..\..\shared\win\lib;..\..\shared\win\fmod"
+				AdditionalLibraryDirectories="..\..\shared\win\powerVR\OGLES\WindowsX86\Lib;..\..\shared\win\lib;..\..\shared\win\fmod"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)/RTBareBones.pdb"
 				SubSystem="2"
@@ -147,7 +147,7 @@
 				AdditionalDependencies="libgles_cm.lib fmodex_vc.lib zdll.lib wsock32.lib"
 				OutputFile="../bin/winRTBareBones.exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\shared\win\powerVR\OGLES\WindowsPC\lib;..\..\shared\win\lib;..\..\shared\win\fmod"
+				AdditionalLibraryDirectories="..\..\shared\win\powerVR\OGLES\WindowsX86\Lib;..\..\shared\win\lib;..\..\shared\win\fmod"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -1250,6 +1250,18 @@
 			<Filter
 				Name="ClanLib"
 				>
+				<File
+					RelativePath="..\..\shared\ClanLib-2.0\Sources\API\Core\Text\string16.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\ClanLib-2.0\Sources\API\Core\Text\string_data16.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\ClanLib-2.0\Sources\API\Core\Text\string_ref16.h"
+					>
+				</File>
 				<Filter
 					Name="Core"
 					>
@@ -1569,6 +1581,30 @@
 				<Filter
 					Name="Math"
 					>
+					<File
+						RelativePath="..\..\shared\ClanLib-2.0\Sources\API\Core\Math\angle.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\shared\ClanLib-2.0\Sources\API\Core\Math\mat3.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\shared\ClanLib-2.0\Sources\API\Core\Math\mat4.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\shared\ClanLib-2.0\Sources\API\Core\Math\rect.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\shared\ClanLib-2.0\Sources\API\Core\Math\vec2.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\shared\ClanLib-2.0\Sources\API\Core\Math\vec3.h"
+						>
+					</File>
 				</Filter>
 			</Filter>
 			<Filter

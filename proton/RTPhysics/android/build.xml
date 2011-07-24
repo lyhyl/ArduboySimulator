@@ -107,13 +107,13 @@ Here is where Seth setups a customized packaging so we can tell it to not compre
                 bootclasspathref="android.target.classpath"
                 verbose="${verbose}"
                 classpath="${extensible.classpath}"
-                classpathref="android.libraries.jars">
+                classpathref="project.libraries.jars">
           <src path="${source.absolute.dir}" />
           <src path="../../shared/android/src" />
           <src path="${gen.absolute.dir}" />
-          <src refid="android.libraries.src" />
+          <src refid="project.libraries.src" />
           <classpath>
-            <fileset dir="${external.libs.absolute.dir}" includes="*.jar" />
+            <fileset dir="./" includes="*.jar" />
             <fileset dir="${extensible.libs.classpath}" includes="*.jar" />
           </classpath>
         </javac>

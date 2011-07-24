@@ -227,7 +227,7 @@ bool COGLES1Driver::genericDriverInit(const core::dimension2d<u32>& screenSize, 
 	// load extensions
 	initExtensions(this,
 #if defined(EGL_VERSION_1_0)
-			2,
+			(EGLDisplay)2,
 #endif
 			stencilBuffer);
 	StencilBuffer=stencilBuffer;
