@@ -46,7 +46,7 @@ public:
 	/// \brief Constructs a StringReference
 	///
 	/// \param source = Std String
-	CL_StringRef16(const std::wstring &source);
+	//CL_StringRef16(const std::wstring &source);
 
 	/// \brief Constructs a StringReference
 	///

@@ -6,6 +6,8 @@
 #include "PlatformSetup.h"
 #ifndef _CONSOLE
 #include "BaseApp.h"
+#else
+bool IsTabletSize();
 #endif
 #endif
 

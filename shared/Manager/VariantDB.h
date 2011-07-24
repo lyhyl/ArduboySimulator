@@ -33,7 +33,10 @@ public:
 
 #else
 
-#if defined( __APPLE__) || defined(RTLINUX)
+#if defined( __APPLE__) || defined(RTLINUX)|| ANDROID_NDK
+
+#define _GLIBCXX_PERMIT_BACKWARD_HASH
+
 #include <ext/hash_map>
 
 namespace __gnu_cxx {

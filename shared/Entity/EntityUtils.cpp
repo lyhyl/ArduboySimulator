@@ -390,6 +390,30 @@ EntityComponent * MorphToVec2Entity(Entity *pEnt, string targetVar, CL_Vec2f vTa
 	return pComp;
 }
 
+
+EntityComponent * MorphToVec2EntityMulti(Entity *pEnt, string targetVar, CL_Vec2f vTargetSize, unsigned int speedMS, eInterpolateType interpolateType,  int delayBeforeActionMS)
+{
+	EntityComponent * pComp = pEnt->AddComponent( new InterpolateComponent);
+	pComp->SetName("ic_"+targetVar+"_multi");
+
+	pComp->GetVar("var_name")->Set(targetVar);
+	pComp->GetVar("target")->Set(vTargetSize);
+	pComp->GetVar("interpolation")->Set(uint32(interpolateType));
+	pComp->GetVar("on_finish")->Set(uint32(InterpolateComponent::ON_FINISH_DIE));
+
+	if (delayBeforeActionMS == 0)
+	{
+		//do it now
+		pComp->GetVar("duration_ms")->Set(uint32(speedMS));
+	} else
+	{
+		//trigger it to start later
+		GetMessageManager()->SetComponentVariable(pComp, delayBeforeActionMS, "duration_ms", Variant(uint32(speedMS)), GetBaseApp()->GetActiveTimingSystem());
+	}
+
+	return pComp;
+}
+
 EntityComponent * MorphToFloatEntity(Entity *pEnt, string targetVar, float target, unsigned int speedMS, eInterpolateType interpolateType,  int delayBeforeActionMS)
 {
 	EntityComponent * pComp = pEnt->GetComponentByName("ic_"+targetVar);
@@ -492,6 +516,11 @@ EntityComponent * ZoomToPositionEntity(Entity *pEnt, CL_Vec2f vPos, unsigned int
 EntityComponent * ZoomToPositionOffsetEntity(Entity *pEnt, CL_Vec2f vPos, unsigned int speedMS, eInterpolateType interpolateType, int delayBeforeActionMS)
 {
 	return MorphToVec2Entity(pEnt, "pos2d", pEnt->GetVar("pos2d")->GetVector2()+vPos, speedMS, interpolateType, delayBeforeActionMS);
+}
+
+EntityComponent * ZoomToPositionOffsetEntityMulti(Entity *pEnt, CL_Vec2f vPos, unsigned int speedMS, eInterpolateType interpolateType, int delayBeforeActionMS)
+{
+	return MorphToVec2EntityMulti(pEnt, "pos2d", pEnt->GetVar("pos2d")->GetVector2()+vPos, speedMS, interpolateType, delayBeforeActionMS);
 }
 
 EntityComponent * ZoomToPositionEntityMulti(Entity *pEnt, CL_Vec2f vPos, unsigned int speedMS, eInterpolateType interpolateType, int delayBeforeActionMS)

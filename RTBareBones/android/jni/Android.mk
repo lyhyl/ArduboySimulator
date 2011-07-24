@@ -9,6 +9,8 @@ SHARED := ../../../shared
 APP := ../../source
 LOCAL_ARM_MODE := arm
 
+
+
 COMPPATH := ../../../shared/Entity
 CLANMATH := $(SHARED)/ClanLib-2.0/Sources/Core/Math
 ZLIBPATH := $(SHARED)/util/zlib

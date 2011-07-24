@@ -200,7 +200,8 @@ enum
    ENET_PEER_PACKET_LOSS_INTERVAL         = 10000,
    ENET_PEER_WINDOW_SIZE_SCALE            = 64 * 1024,
 #ifdef _DEBUG
-   ENET_PEER_TIMEOUT_LIMIT                = 3200,
+ //  ENET_PEER_TIMEOUT_LIMIT                = 3200,
+   ENET_PEER_TIMEOUT_LIMIT                = 32,
 
 #else
    ENET_PEER_TIMEOUT_LIMIT                = 32,

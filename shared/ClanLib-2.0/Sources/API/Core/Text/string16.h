@@ -49,7 +49,7 @@ public:
 	/// \brief Constructs a StringContainer
 	///
 	/// \param source = Std String
-	CL_String16(const std::wstring &source);
+	//CL_String16(const std::wstring &source);
 
 	/// \brief Constructs a StringContainer
 	///

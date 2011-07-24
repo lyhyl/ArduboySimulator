@@ -95,7 +95,7 @@ public:
 	/// \brief std::wstring
 	///
 	/// \return operator
-	operator std::wstring() const;
+	//operator std::wstring() const;
 
 	/// \brief Convert object to a string reference
 	///

@@ -10,7 +10,7 @@
 
 SurfaceAnim g_surf;
  
-MessageManager g_messageManager;aaa
+MessageManager g_messageManager;
 MessageManager * GetMessageManager() {return &g_messageManager;}
 
 FileManager g_fileManager;
