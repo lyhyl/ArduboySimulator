@@ -1444,6 +1444,7 @@ bool CXMeshFileLoader::parseDataObjectMeshMaterialList(SXMesh &mesh)
 		else
 		if (objectName == "Material")
 		{
+			LogMsg("Got material..");
 			mesh.Materials.push_back(video::SMaterial());
 			if (!parseDataObjectMaterial(mesh.Materials.getLast()))
 				return false;
@@ -1514,22 +1515,76 @@ bool CXMeshFileLoader::parseDataObjectMaterial(video::SMaterial& material)
 			if (!parseDataObjectTextureFilename(TextureFileName))
 				return false;
 
+
+			//SETH - Check for rttex versions first
+
+			core::stringc texNameRTTEX;
+			texNameRTTEX = cutFilenameExtension(texNameRTTEX, TextureFileName)+".rttex";
+
+
+			bool bIsRttex = false;
+
 			// original name
-			if (FileSystem->existFile(TextureFileName))
-				material.setTexture(textureLayer, SceneManager->getVideoDriver()->getTexture(TextureFileName));
+			if (FileSystem->existFile(texNameRTTEX))
+			{
+				material.setTexture(textureLayer, SceneManager->getVideoDriver()->getTexture(texNameRTTEX));
+				bIsRttex = true;
+			}
 			// mesh path
 			else
 			{
-				TextureFileName=FilePath + FileSystem->getFileBasename(TextureFileName);
-				if (FileSystem->existFile(TextureFileName))
-					material.setTexture(textureLayer, SceneManager->getVideoDriver()->getTexture(TextureFileName));
+				texNameRTTEX=FilePath + FileSystem->getFileBasename(texNameRTTEX);
+				if (FileSystem->existFile(texNameRTTEX))
+				{
+					material.setTexture(textureLayer, SceneManager->getVideoDriver()->getTexture(texNameRTTEX));
+					bIsRttex = true;
+
+				}
 				// working directory
 				else
-					material.setTexture(textureLayer, SceneManager->getVideoDriver()->getTexture(FileSystem->getFileBasename(TextureFileName)));
+				{
+					if (FileSystem->existFile(FileSystem->getFileBasename(texNameRTTEX)))
+					{
+						bIsRttex = true;
+						material.setTexture(textureLayer, SceneManager->getVideoDriver()->getTexture(FileSystem->getFileBasename(texNameRTTEX)));
+					}
+				}
+			}
+
+			if (!bIsRttex)
+			{
+				// original name
+				if (FileSystem->existFile(TextureFileName))
+					material.setTexture(textureLayer, SceneManager->getVideoDriver()->getTexture(TextureFileName));
+				// mesh path
+				else
+				{
+					TextureFileName=FilePath + FileSystem->getFileBasename(TextureFileName);
+					if (FileSystem->existFile(TextureFileName))
+						material.setTexture(textureLayer, SceneManager->getVideoDriver()->getTexture(TextureFileName));
+					// working directory
+					else
+						material.setTexture(textureLayer, SceneManager->getVideoDriver()->getTexture(FileSystem->getFileBasename(TextureFileName)));
+				}
 			}
 			++textureLayer;
+			
+			
 			if (textureLayer==2)
 				material.MaterialType=video::EMT_LIGHTMAP;
+
+			//SETH - hack to detect this with my max exports from panda3d
+			
+			/*
+			core::stringc fNameLower = TextureFileName;
+			fNameLower.make_lower();
+
+			if (fNameLower.find("lightingmap") != -1)
+			{
+				material.MaterialType=video::EMT_LIGHTMAP;
+
+			}
+			*/
 		}
 		else
 		if (objectName.equals_ignore_case("NormalmapFilename"))

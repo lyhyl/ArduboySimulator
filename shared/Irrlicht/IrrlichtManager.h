@@ -7,6 +7,10 @@
 //  Programmer(s):  Seth A. Robinson (seth@rtsoft.com)
 //  ***************************************************************
 
+//To use Irrlicht, you must define _IRR_STATIC_LIB_
+
+//If you want to use Irrlicht's GUI stuff, you must define _IRR_COMPILE_WITH_GUI_
+
 #ifndef IrrlichtManager_h__
 #define IrrlichtManager_h__
 

@@ -339,6 +339,27 @@ byte * zLibInflateToMemory(byte *pInput, unsigned int compressedSize, unsigned i
 
 #endif
 
+void AppendStringToFile(string filename, string text)
+{
+	FILE *fp = fopen(filename.c_str(), "ab");
+
+	if (!fp)
+	{
+		fp = fopen(filename.c_str(), "wb");
+	}
+
+	if (!fp)
+	{
+		//Uhh.... bad idea, could create infinite loop
+		//LogError("Unable to create/append to %s", text);
+
+	}
+
+	fwrite(text.c_str(), text.size(), 1, fp);
+
+	fclose(fp);
+}
+
 //You must SAFE_FREE the pointer it returns at some point!
 byte * LoadFileIntoMemory(string fileName, unsigned int *p_ui_size, bool bUseSavePath)
 {

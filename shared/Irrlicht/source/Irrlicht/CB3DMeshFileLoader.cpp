@@ -879,6 +879,19 @@ bool CB3DMeshFileLoader::readChunkBRUS()
 			}
 		}
 
+		//detect if the same texture is used twice, and assume it's for translucency if so
+		for (i=1; i < num_textures; i++)
+		{
+				if (B3dMaterial.Textures[i] && B3dMaterial.Textures[i]->TextureName == B3dMaterial.Textures[0]->TextureName)
+				{
+					//SETH = hacked to mean "render with alpha", so I don't have to use b3dpipelines funky-ass custom materials
+					B3dMaterial.Textures[0]->Flags = B3dMaterial.Textures[0]->Flags | 0x2;
+					
+				}
+			
+		}
+
+
 		//If a preceeding texture slot is empty move the others down:
 		for (i=num_textures; i>0; --i)
 		{
@@ -894,30 +907,73 @@ bool CB3DMeshFileLoader::readChunkBRUS()
 
 		//------ Convert blitz flags/blend to irrlicht -------
 
+		/*
+		if (B3dMaterial.fx & 4) //flatshaded
+		{
+			//SETH = hacked to mean "render with alpha", so I don't have to use b3dpipelines funky-ass custom materials
+			B3dMaterial.Textures[0]->Flags = B3dMaterial.Textures[0]->Flags | 0x2;
+
+			//			B3dMaterial.Material.GouraudShading = false;
+		}
+		*/
+
 		//Two textures:
 		if (B3dMaterial.Textures[1])
 		{
-			if (B3dMaterial.alpha==1.f)
+			if (B3dMaterial.Textures[0]->Flags & 0x2) //(Alpha mapped)
 			{
-				if (B3dMaterial.Textures[1]->Blend == 5) //(Multiply 2)
-					B3dMaterial.Material.MaterialType = video::EMT_LIGHTMAP_M2;
+				if (B3dMaterial.fx & 4)
+				{
+					//they clicked "facetted" in max, let that mean "boolean alpha" mode, less processing. will cut off at 128 alpha
+					B3dMaterial.Material.MaterialType = video::EMT_TRANSPARENT_ALPHA_CHANNEL_REF; //this would be faster!
+
+				} else
+				{
+					//normal slow alpha
+					B3dMaterial.Material.MaterialType = video::EMT_TRANSPARENT_ALPHA_CHANNEL;
+					B3dMaterial.Material.ZWriteEnable = false;
+
+				}
+
+
+			} else
+			{
+
+				
+
+				if (B3dMaterial.alpha==1.f)
+				{
+					if (B3dMaterial.Textures[1]->Blend == 5) //(Multiply 2)
+						B3dMaterial.Material.MaterialType = video::EMT_LIGHTMAP_M2;
+					else
+						B3dMaterial.Material.MaterialType = video::EMT_LIGHTMAP;
+					B3dMaterial.Material.Lighting = false;
+				}
 				else
-					B3dMaterial.Material.MaterialType = video::EMT_LIGHTMAP;
-				B3dMaterial.Material.Lighting = false;
-			}
-			else
-			{
-				B3dMaterial.Material.MaterialType = video::EMT_TRANSPARENT_VERTEX_ALPHA;
-				B3dMaterial.Material.ZWriteEnable = false;
+				{
+					B3dMaterial.Material.MaterialType = video::EMT_TRANSPARENT_VERTEX_ALPHA;
+					B3dMaterial.Material.ZWriteEnable = false;
+				}
 			}
 		}
 		else if (B3dMaterial.Textures[0]) //One texture:
 		{
+
 			// Flags & 0x1 is usual SOLID, 0x8 is mipmap (handled before)
 			if (B3dMaterial.Textures[0]->Flags & 0x2) //(Alpha mapped)
 			{
-				B3dMaterial.Material.MaterialType = video::EMT_TRANSPARENT_ALPHA_CHANNEL;
-				B3dMaterial.Material.ZWriteEnable = false;
+				if (B3dMaterial.fx & 4)
+				{
+					//they clicked "facetted" in max, let that mean "boolean alpha" mode, less processing. will cut off at 128 alpha
+					B3dMaterial.Material.MaterialType = video::EMT_TRANSPARENT_ALPHA_CHANNEL_REF; //this would be faster!
+
+				} else
+				{
+					//normal slow alpha
+					B3dMaterial.Material.MaterialType = video::EMT_TRANSPARENT_ALPHA_CHANNEL;
+					B3dMaterial.Material.ZWriteEnable = false;
+
+				}
 			}
 			else if (B3dMaterial.Textures[0]->Flags & 0x4) //(Masked)
 				B3dMaterial.Material.MaterialType = video::EMT_TRANSPARENT_ALPHA_CHANNEL_REF; // TODO: create color key texture
@@ -960,8 +1016,12 @@ bool CB3DMeshFileLoader::readChunkBRUS()
 		if (B3dMaterial.fx & 2) //use vertex colors instead of brush color
 			B3dMaterial.Material.ColorMaterial=video::ECM_DIFFUSE_AND_AMBIENT;
 
+		
 		if (B3dMaterial.fx & 4) //flatshaded
+		{
 			B3dMaterial.Material.GouraudShading = false;
+		}
+		
 
 		if (B3dMaterial.fx & 16) //disable backface culling
 			B3dMaterial.Material.BackfaceCulling = false;

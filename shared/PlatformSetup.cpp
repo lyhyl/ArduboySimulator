@@ -36,17 +36,36 @@ string PlatformIDAsString(ePlatformID platformID)
 	switch (platformID)
 	{
 	case PLATFORM_ID_UNKNOWN: return "unknown";
-	case PLATFORM_ID_ANDROID: return "android";
-	case PLATFORM_ID_WEBOS: return "webos";
 	case PLATFORM_ID_WINDOWS: return "windows";
-	case PLATFORM_ID_LINUX: return "linux";
 	case PLATFORM_ID_IOS: return "iphone";
 	case PLATFORM_ID_OSX: return "osx";
+	case PLATFORM_ID_LINUX: return "linux";
+	case PLATFORM_ID_ANDROID: return "android";
+	case PLATFORM_ID_WINDOWS_MOBILE: return "winmo";
+	case PLATFORM_ID_WEBOS: return "webos";
 
 	}
 
 	return "";
 }
+
+string PlatformIDAsStringDisplay(ePlatformID platformID)
+{
+
+	switch (platformID)
+	{
+	case PLATFORM_ID_UNKNOWN: return "???";
+	case PLATFORM_ID_WINDOWS: return "Windows";
+	case PLATFORM_ID_IOS: return "iOS";
+	case PLATFORM_ID_OSX: return "OSX";
+	case PLATFORM_ID_LINUX: return "Linux";
+	case PLATFORM_ID_ANDROID: return "Android";
+	case PLATFORM_ID_WINDOWS_MOBILE: return "WinMo";
+	case PLATFORM_ID_WEBOS: return "WebOS";
+	}
+	return "";
+}
+
 string GetPlatformName()
 {
 	return PlatformIDAsString(GetEmulatedPlatformID());

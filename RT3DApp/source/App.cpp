@@ -191,22 +191,17 @@ void App::Update()
 void App::Draw()
 {
 	//turn normal GL back on
-	//GetBaseApp()->OnScreenSizeChange();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//draw our game stuff
-	//DrawFilledRect(0,80,GetScreenSizeX(),GetScreenSizeY()/2, MAKE_RGBA(200,0,0,100));
-	//RenderSpinningTriangle();
 	
 	GetIrrlichtManager()->IsRunning(); //let it do its own update tick
 	GetIrrlichtManager()->BeginScene(); //turn on irrlicht's 3d mode renderstates
 	GetIrrlichtManager()->Render(); //render its scenegraph
 	GetIrrlichtManager()->EndScene(); //tell irrlicht to go into 2d mode renderstates
-	
+	GetIrrlichtManager()->Render2D(); //If
 	g_lastBound = 0;
 	SetupOrtho();
 	//GetFont(FONT_SMALL)->Draw(0,50, " white `2Green `3Cyan `4Red `5Purp ");
 
-   //GetFont(FONT_SMALL)->DrawScaled(0,200, "Default - `2Green`` - default",1+SinPulseByMS(3000), MAKE_RGBA(255,255,255,50));
 	//the base handles actually drawing the GUI stuff over everything else
 	BaseApp::Draw();
 	PrepareForGL();

@@ -1223,6 +1223,11 @@ void LightBarOnChange(VariantList *pVList)
 	MorphToSizeEntity(pLightBar, pEnt->GetVar("size2d")->GetVector2()+(vOffset*2), 300);	
 }
 
+void SendFakeButtonPushToEntity(Entity *pEntity, int timeMS)
+{
+	VariantList vList(CL_Vec2f(pEntity->GetVar("pos2d")->GetVector2()), pEntity);
+	GetMessageManager()->CallEntityFunction(pEntity, timeMS, "OnButtonSelected", &vList);
+}
 void SetupLightBarSelect(Entity *pBG, string entNamePrefix, int defaultOption, uint32 color)
 {
 	//count how many buttons we can find
