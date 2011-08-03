@@ -142,6 +142,9 @@ bool MySQLManager::Init(string name, string password)
 
 bool MySQLManager::Query( string query )
 {
+#ifdef _DEBUG
+	//LogMsg("Queting %s", query.c_str() );
+#endif
 	if (mysql_query(m_conn, query.c_str()))
 	{
 		ShowError();

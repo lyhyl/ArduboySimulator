@@ -5,7 +5,7 @@
 
 #if defined( WIN32)
 	//useful for debugging texture unloading, but we don't really need to do it for Windows builds
-	#define C_SURFACE_UNLOAD_TEXTURES
+	//#define C_SURFACE_UNLOAD_TEXTURES
 #endif
 
 #ifdef _IRR_STATIC_LIB_

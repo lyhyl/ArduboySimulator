@@ -213,24 +213,24 @@ public:
 			return Y < 0 ? 90 : 270;
 
 		// don't use getLength here to avoid precision loss with s32 vectors
-		f64 tmp = Y / sqrt((f64)(X*X + Y*Y));
-		tmp = atan( core::squareroot(1 - tmp*tmp) / tmp) * RADTODEG64;
+		// avoid floating-point trouble as sqrt(y*y) is occasionally larger than y, so clamp
+		const f64 tmp = core::clamp(Y / sqrt((f64)(X*X + Y*Y)), -1.0, 1.0);
+		const f64 angle = atan( core::squareroot(1 - tmp*tmp) / tmp) * RADTODEG64;
 
 		if (X>0 && Y>0)
-			return tmp + 270;
+			return angle + 270;
 		else
-		if (X>0 && Y<0)
-			return tmp + 90;
-		else
-		if (X<0 && Y<0)
-			return 90 - tmp;
-		else
-		if (X<0 && Y>0)
-			return 270 - tmp;
+			if (X>0 && Y<0)
+				return angle + 90;
+			else
+				if (X<0 && Y<0)
+					return 90 - angle;
+				else
+					if (X<0 && Y>0)
+						return 270 - angle;
 
-		return tmp;
+		return angle;
 	}
-
 	//! Calculates the angle between this vector and another one in degree.
 	/** \param b Other vector to test with.
 	\return Returns a value between 0 and 90. */

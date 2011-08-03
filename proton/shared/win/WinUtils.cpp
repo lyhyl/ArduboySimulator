@@ -288,6 +288,18 @@ int GetDaysSinceDate(int month,int day, int year)
 	return time_passed;
 }
 
+string GetDateAndTimeAsString()
+{
+	time_t ltime;
+	time( &ltime );
+
+	tm today = *localtime( &ltime );
+
+	char stTemp[128];
+	sprintf(stTemp, "%d/%d at %d:%d:%d", today.tm_mday, today.tm_mon+1, today.tm_hour, today.tm_min, today.tm_sec);
+	return string(stTemp);
+}
+
 
 bool RTCreateDirectory(const std::string &dir_name)
 {

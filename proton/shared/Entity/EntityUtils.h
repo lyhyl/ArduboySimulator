@@ -103,6 +103,7 @@ void SetButtonClickSound(Entity *pEnt, string fileName);
 void SetAlphaEntity(Entity *pEnt, float alpha);
 void PreloadKeyboard(OSMessage::eParmKeyboardType keyboardType=OSMessage::PARM_KEYBOARD_TYPE_ASCII);
 void SendFakeInputMessageToEntity(Entity *pEnt, eMessageType msg, CL_Vec2f vClickPos);
+void SendFakeButtonPushToEntity(Entity *pEntity, int timeMS);
 void SetButtonRepeatDelayMS(Entity *pEnt, uint32 delayMS);
 void LightBarOnChange(VariantList *pVList);
 void SetupLightBarSelect(Entity *pBG, string entNamePrefix, int defaultOption, uint32 color);

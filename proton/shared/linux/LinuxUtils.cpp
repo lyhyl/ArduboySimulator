@@ -159,6 +159,19 @@ unsigned int GetSystemTimeTick()
 	gettimeofday(&tv, NULL);
 	return tv.tv_usec/1000 + tv.tv_sec*1000;
 }
+
+string GetDateAndTimeAsString()
+{
+	time_t ltime;
+	time( &ltime );
+
+	tm today = *localtime( &ltime );
+
+	char stTemp[128];
+	sprintf(stTemp, "%d/%d at %d:%d:%d", today.tm_mday, today.tm_mon+1, today.tm_hour, today.tm_min, today.tm_sec);
+	return string(stTemp);
+}
+
 double GetSystemTimeAccurate()
 {
 	return double(GetSystemTimeTick());
