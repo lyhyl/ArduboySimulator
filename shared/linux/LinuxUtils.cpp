@@ -74,7 +74,10 @@ void LogError ( const char* traceStr, ... )
 
 string GetBaseAppPath()
 {
-	return ""; //we mount the assets as zip, there really isn't a base path
+	char szDir[1024];
+	getcwd( szDir, 1024);
+	return string(szDir)+"/";
+
 }
 
 
