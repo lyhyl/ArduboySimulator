@@ -338,20 +338,29 @@ byte * zLibInflateToMemory(byte *pInput, unsigned int compressedSize, unsigned i
 }
 
 #endif
+
 void AppendStringToFile(string filename, string text)
 {
-	FILE *fp = fopen(filename.c_str(), "ab");
+	FILE *fp = NULL;
 
-	if (!fp)
+	if (GetPlatformID() == PLATFORM_ID_LINUX)
 	{
-		fp = fopen(filename.c_str(), "wb");
+		fp = fopen(filename.c_str(), "a+");
+
+	} else
+	{
+		fp = fopen(filename.c_str(), "ab");
+
+		if (!fp)
+		{
+			fp = fopen(filename.c_str(), "wb");
+		}
 	}
 
 	if (!fp)
 	{
 		//Uhh.... bad idea, could create infinite loop
 		//LogError("Unable to create/append to %s", text);
-
 	}
 
 	fwrite(text.c_str(), text.size(), 1, fp);
