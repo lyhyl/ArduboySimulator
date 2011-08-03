@@ -338,7 +338,6 @@ byte * zLibInflateToMemory(byte *pInput, unsigned int compressedSize, unsigned i
 }
 
 #endif
-
 void AppendStringToFile(string filename, string text)
 {
 	FILE *fp = fopen(filename.c_str(), "ab");
