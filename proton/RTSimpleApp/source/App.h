@@ -38,7 +38,7 @@ private:
 	VariantDB m_varDB; //holds all data we want to save/load
 	int m_special;
 };
-
+ 
 
 extern App g_App;
 
