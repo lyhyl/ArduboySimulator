@@ -66,6 +66,14 @@ Entity * EnterNameMenuCreate(Entity *pParentEnt)
 
 	//create input box
 	pButtonEntity = CreateInputTextEntity(pBG, "name_input_box", vTextAreaPos.x+nameWidth, vTextAreaPos.y+71, GetApp()->GetShared()->GetVarWithDefault("name", string("Player"))->GetString());
+	
+	//if you wanted to allow spaces and other symbols, change to "loose" filtering like this:
+	//pButtonEntity->GetComponentByName("InputTextRender")->GetVar("filtering")->Set(uint32(InputTextRenderComponent::FILTERING_LOOSE));
+
+	//if you wanted text that appear until it's activated:
+	//pButtonEntity->GetComponentByName("InputTextRender")->GetVar("placeHolderText")->Set("Tap here to enter your name");
+
+	
 	//pButtonEntity->GetComponentByName("InputTextRender")->GetVar("font")->Set(uint32(FONT_LARGE));
 
 	SlideScreen(pBG, true);
