@@ -64,6 +64,7 @@ private:
 	uint32 *m_pColorMod;
 	float *m_pAlpha;
 	string *m_pText;
+	string *m_pPlaceHolderText;
 	CL_Vec2f *m_pScale2d;
 	uint32 *m_pAlignment;
 	uint32 *m_pFontID;

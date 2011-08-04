@@ -105,7 +105,7 @@ void InputTextRenderComponent::ActivateKeyboard(VariantList *pVList)
 }
 void InputTextRenderComponent::OnLosingNativeGUIFocus(VariantList *pVList)
 {
-	GetFunction("CloseKeyboard")->sig_function(NULL);
+	GetFunction("CloseKeyboard")->sig_function(&VariantList(this));
 }
 
 void InputTextRenderComponent::OnEnterForeground(VariantList *pVList)
@@ -133,7 +133,7 @@ void InputTextRenderComponent::OnEnterBackground(VariantList *pVList)
 #ifdef _DEBUG
 		LogMsg("closing keyboard focus");
 #endif
-		GetFunction("CloseKeyboard")->sig_function(NULL);
+		GetFunction("CloseKeyboard")->sig_function(&VariantList(this));
 	}
 
 }
@@ -188,6 +188,8 @@ void InputTextRenderComponent::OnAdd(Entity *pEnt)
 
 	m_pText = &GetVar("text")->GetString(); //local to us
 	GetVar("text")->GetSigOnChanged()->connect(1, boost::bind(&InputTextRenderComponent::OnTextChanged, this, _1));
+
+	m_pPlaceHolderText = &GetVar("placeHolderText")->GetString(); //local to us
 
 	m_pFontID = &GetVarWithDefault("font", uint32(FONT_SMALL))->GetUINT32();
 	GetVar("font")->GetSigOnChanged()->connect(1, boost::bind(&InputTextRenderComponent::OnFontChanged, this, _1));
@@ -315,10 +317,18 @@ void InputTextRenderComponent::OnRender(VariantList *pVList)
 	
 	uint32 color = ColorCombine(*m_pColor, *m_pColorMod, alpha);
 
+	string *pTextToDraw = m_pText;
+
+	if (!m_bEditActive && !m_pPlaceHolderText->empty())
+	{
+		pTextToDraw = m_pPlaceHolderText;
+	}
 	switch(*m_pStyle)
 	{
 	case STYLE_NORMAL:
-		GetBaseApp()->GetFont(eFont(*m_pFontID))->DrawScaled(vFinalPos.x+m_pTextOffsetPos2d->x* m_pScale2d->x, vFinalPos.y+m_pTextOffsetPos2d->y* m_pScale2d->y, *m_pText, m_pScale2d->x, color);
+		
+		
+		GetBaseApp()->GetFont(eFont(*m_pFontID))->DrawScaled(vFinalPos.x+m_pTextOffsetPos2d->x* m_pScale2d->x, vFinalPos.y+m_pTextOffsetPos2d->y* m_pScale2d->y, *pTextToDraw, m_pScale2d->x, color);
 		break;
 	}
 
@@ -345,7 +355,6 @@ void InputTextRenderComponent::OnRender(VariantList *pVList)
 	}
 }
 
-
 void InputTextRenderComponent::OnInput( VariantList *pVList )
 {
 
@@ -370,10 +379,7 @@ void InputTextRenderComponent::OnInput( VariantList *pVList )
 			{
 				GetVar("text")->Set(input); //so everybody receives notifications that it has changed
 			}
-
-
 		}
-	
 		break;
 	
 	case MESSAGE_TYPE_GUI_CHAR:
@@ -389,8 +395,7 @@ void InputTextRenderComponent::OnInput( VariantList *pVList )
 		if (c == 13)
 		{
 			//enter
-			GetFunction("CloseKeyboard")->sig_function(NULL);
-
+			GetFunction("CloseKeyboard")->sig_function(&VariantList(this));
 		} else
 		if (c == 8)
 		{
