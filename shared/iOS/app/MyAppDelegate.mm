@@ -219,7 +219,7 @@
 	}
 }
 
-#define LEGAL	@" ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-0123456789"
+#define LEGAL	@"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-0123456789"
 #define LEGAL_FULL	@" ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz~`1234567890!@#$%^&*()_+-=[]{}|;': ,.<>/?\\\""
 
 #define LEGAL_NUM	@"-0123456789."
@@ -293,7 +293,10 @@
 // Terminates the editing session
 - (BOOL)textFieldShouldReturn:(UITextField*)textField
 {
-	//Terminate editing
+	//Send a fake ENTER keypress
+    GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, 13, 0);
+    
+    //Terminate editing
 	[textField resignFirstResponder];
 	
 	return YES;
