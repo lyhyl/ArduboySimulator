@@ -48,14 +48,14 @@ private:
 	CL_Vec2f *m_pPos2d;
 	CL_Vec2f *m_pSize2d;
 	uint32 *m_pFontID;
-	/*
+	
 	CL_Vec2f *m_pScale2d;
 	uint32 *m_pColor;
 	uint32 *m_pColorMod;
 	float *m_pAlpha;
 	uint32 *m_pAlignment;
 	float *m_pRotation; //in degrees
-	*/
+	
 	Console * m_pActiveConsole;
 	Console * m_pInternalConsole;
 };

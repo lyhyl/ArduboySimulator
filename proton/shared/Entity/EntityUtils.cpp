@@ -690,7 +690,7 @@ void FadeEntity(Entity *pEnt, bool bRecursive, float alpha, int timeMS, int dela
 {
 	if (!bAllowMultipleFadesActiveAtOnce)
 	{
-		pEnt->RemoveComponentByName("ic_fade");
+		while (pEnt->RemoveComponentByName("ic_fade"));
 
 	}
 	EntityComponent * pComp = pEnt->AddComponent( new InterpolateComponent);

@@ -35,6 +35,7 @@ int g_winVideoScreenY = 0;
 void StringReplace(const std::string& what, const std::string& with, std::string& in);
 vector<string> StringTokenize (const  string  & theString,  const  string  & theDelimiter );
 
+GetDateAndTimeAsString();
 
 void LogMsg ( const char* traceStr, ... )
 {
@@ -52,6 +53,9 @@ void LogMsg ( const char* traceStr, ... )
 	printf ((char*)buffer);
 	printf ("\r\n");
 	fflush(stdout);
+
+	AppendStringToFile( GetBaseAppPath()+"log.txt", GetDateAndTimeAsString()+": "+string(buffer)+"\r\n");
+
 }
 
 
