@@ -20,9 +20,6 @@
 	//LogMsg("Killing net init");
 	 if (m_ReadRef) 
 	 {
-       // CFReadStreamUnscheduleFromRunLoop(m_ReadRef, CFRunLoopGetCurrent(), kCFRunLoopCommonModes);
-        //(void) CFReadStreamSetClient(info->readStream, kCFStreamEventNone, NULL, NULL);
-        
         /* CFReadStreamClose terminates the stream. */
         CFReadStreamClose(m_ReadRef);
         CFRelease(m_ReadRef);
@@ -31,9 +28,6 @@
 
     if (m_WriteRef) 
 	{
-       // CFWriteStreamUnscheduleFromRunLoop(info->writeStream, CFRunLoopGetCurrent(), kCFRunLoopCommonModes);
-       // (void) CFWriteStreamSetClient(info->writeStream, kCFStreamEventNone, NULL, NULL);
-        
         /* CFWriteStreamClose terminates the stream. */
         
         CFWriteStreamClose(m_WriteRef);
@@ -56,10 +50,6 @@
 	[[UIAccelerometer sharedAccelerometer] setDelegate:nil];
 	[[UIAccelerometer sharedAccelerometer] setUpdateInterval:1.0f];
 
-	//[[UIAccelerometer sharedAccelerometer] setUpdateInterval:(1.0 / pMsg->m_x)];
-	//[[UIAccelerometer sharedAccelerometer] setDelegate:self];
-	
-
 	_textField = NULL;
 	m_inputboxMaxLen = 10;
 	m_requestedKeyboardType = UIKeyboardTypeASCIICapable; //default
@@ -73,11 +63,6 @@
 {
 	//LogMsg("%.2f, %.2f, %.2f", acceleration.x, acceleration.y, acceleration.z);
 	GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_ACCELEROMETER,  Variant(acceleration.x, acceleration.y, acceleration.z));
-	
-	//Use a basic low-pass filter to only keep the gravity in the accelerometer values
-	//accel[0] = acceleration.x * kFilteringFactor + accel[0] * (1.0 - kFilteringFactor);
-	//accel[1] = acceleration.y * kFilteringFactor + accel[1] * (1.0 - kFilteringFactor);
-	//accel[2] = acceleration.z * kFilteringFactor + accel[2] * (1.0 - kFilteringFactor);
 }
 
 - (void)OnOpenTextBox: (OSMessage *)pMsg
@@ -100,7 +85,9 @@
 	[_textField setAutocorrectionType: UITextAutocorrectionTypeNo];
 	[_textField setClearsOnBeginEditing: NO];
 	
-	switch (pMsg->m_parm2)
+    m_keyboardType = pMsg->m_parm2;
+    
+	switch (m_keyboardType)
 	{
 		case OSMessage::PARM_KEYBOARD_TYPE_NUMBERS:
 		m_requestedKeyboardType = UIKeyboardTypeNumbersAndPunctuation;
@@ -232,8 +219,8 @@
 	}
 }
 
-#define LEGAL	@"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-0123456789"
-#define LEGAL_FULL	@"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz~`1234567890!@#$%^&*()_+-=[]{}|;': ,.<>/?\\\""
+#define LEGAL	@" ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-0123456789"
+#define LEGAL_FULL	@" ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz~`1234567890!@#$%^&*()_+-=[]{}|;': ,.<>/?\\\""
 
 #define LEGAL_NUM	@"-0123456789."
 
@@ -257,7 +244,17 @@
 			break;
 			
 			case UIKeyboardTypeASCIICapable:
-				cs = [[NSCharacterSet characterSetWithCharactersInString:LEGAL] invertedSet];
+    
+                if (m_keyboardType == OSMessage::PARM_KEYBOARD_TYPE_ASCII_FULL)
+                {
+                    cs = [[NSCharacterSet characterSetWithCharactersInString:LEGAL_FULL] invertedSet];
+                
+                } else
+                {
+                    cs = [[NSCharacterSet characterSetWithCharactersInString:LEGAL] invertedSet];
+                    
+                }
+                
 				break;
 			
 			
