@@ -30,17 +30,17 @@ public:
 
 	enum eInputType
 	{
-		INPUT_TYPE_ASCII,
-		INPUT_TYPE_NUMBERS,
+		INPUT_TYPE_ASCII, //allows letters and numbers, no spaces.  Good for entering names
+		INPUT_TYPE_NUMBERS, //numbers only (plus negative symbol) - on an iPhone will bring up a number only keypad
 		INPUT_TYPE_URL,
-		INPUT_TYPE_ASCII_FULL, //untested
-		INPUT_TYPE_EMAIL //untested
+		INPUT_TYPE_ASCII_FULL, //allows things like spaces, commas, ect.  Good for text chat input
+		INPUT_TYPE_EMAIL
 	};
 
 	enum eInputFiltering
 	{
 		FILTERING_STRICT, //no spaces or weird symbols allowed
-		FILTERING_LOOSE //allows everything that could be an say, a URL
+		FILTERING_LOOSE //allows everything that could be a say, a URL
 	};
 private:
 
