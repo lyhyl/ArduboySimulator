@@ -22,7 +22,8 @@
 	CFReadStreamRef m_ReadRef;
 	CFWriteStreamRef m_WriteRef;
 	CFStreamClientContext context;
-	UIKeyboardType m_requestedKeyboardType;
+	UIKeyboardType m_requestedKeyboardType; //what we'll use on the iOS side
+    int m_keyboardType; //what proton actually requested, so we know what items to filter
 
 }
 
