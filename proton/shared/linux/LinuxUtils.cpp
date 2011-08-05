@@ -35,7 +35,7 @@ int g_winVideoScreenY = 0;
 void StringReplace(const std::string& what, const std::string& with, std::string& in);
 vector<string> StringTokenize (const  string  & theString,  const  string  & theDelimiter );
 
-void GetDateAndTimeAsString();
+string GetDateAndTimeAsString();
 void AppendStringToFile(string filename, string text);
 
 void LogMsg ( const char* traceStr, ... )
