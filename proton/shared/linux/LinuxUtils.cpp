@@ -36,6 +36,7 @@ void StringReplace(const std::string& what, const std::string& with, std::string
 vector<string> StringTokenize (const  string  & theString,  const  string  & theDelimiter );
 
 GetDateAndTimeAsString();
+void AppendStringToFile(string filename, string text);
 
 void LogMsg ( const char* traceStr, ... )
 {
