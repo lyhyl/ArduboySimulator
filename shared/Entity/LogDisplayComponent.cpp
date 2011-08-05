@@ -23,15 +23,13 @@ void LogDisplayComponent::OnAdd(Entity *pEnt)
 	m_pSize2d = &GetParent()->GetVar("size2d")->GetVector2();
 	m_pFontID = &GetVarWithDefault("font", uint32(FONT_SMALL))->GetUINT32();
 	
-	/*
-		m_pScale2d = &GetParent()->GetShared()->GetVarWithDefault("scale2d", Variant(1.0f, 1.0f))->GetVector2();
+	m_pScale2d = &GetParent()->GetShared()->GetVarWithDefault("scale2d", Variant(1.0f, 1.0f))->GetVector2();
 	m_pRotation = &GetParent()->GetVar("rotation")->GetFloat();  //in degrees
 
 	m_pColor = &GetParent()->GetShared()->GetVarWithDefault("color", Variant(MAKE_RGBA(255,255,255,255)))->GetUINT32();
 	m_pColorMod = &GetParent()->GetShared()->GetVarWithDefault("colorMod", Variant(MAKE_RGBA(255,255,255,255)))->GetUINT32();
 	m_pAlpha = &GetParent()->GetShared()->GetVarWithDefault("alpha", Variant(1.0f))->GetFloat();
 	m_pAlignment = &GetParent()->GetVar("alignment")->GetUINT32();
-	*/
 
 	if (!m_pActiveConsole) m_pActiveConsole = GetBaseApp()->GetConsole();
 	//register ourselves to render if the parent does
@@ -73,6 +71,9 @@ void LogDisplayComponent::OnRender(VariantList *pVList)
 	
 	int lines = m_pActiveConsole->GetTotalLines();
 
+	uint32 color = ColorCombine(*m_pColor, *m_pColorMod, *m_pAlpha);
+
+
 	eFont fontID = eFont(*m_pFontID);
 	float fontScale = 1.0f;
 	RTFont *pFont = GetBaseApp()->GetFont(fontID);
@@ -88,7 +89,7 @@ void LogDisplayComponent::OnRender(VariantList *pVList)
 	while (y > vFinalPos.y && curLine >= 0)
 	{
 		pFont->DrawScaled(vFinalPos.x, y, m_pActiveConsole->GetLine(curLine), fontScale,
-			MAKE_RGBA(255,255,255, 255), NULL, &b);
+			color, NULL, &b);
 
 		curLine--;
 		y -= pFont->GetLineHeight(fontScale);
