@@ -70,8 +70,12 @@ Entity * EnterNameMenuCreate(Entity *pParentEnt)
 	//if you wanted to allow spaces and other symbols, change to "loose" filtering like this:
 	//pButtonEntity->GetComponentByName("InputTextRender")->GetVar("filtering")->Set(uint32(InputTextRenderComponent::FILTERING_LOOSE));
 
+	//you also need to do this for loose filtering to make sure the best keyboard is chosen on the device
+	//pButtonEntity->GetComponentByName("InputTextRender")->GetVar("inputType")->Set(uint32(InputTextRenderComponent::INPUT_TYPE_ASCII_FULL));
+
 	//if you wanted text that appear until it's activated:
 	//pButtonEntity->GetComponentByName("InputTextRender")->GetVar("placeHolderText")->Set("Tap here to enter your name");
+
 
 	
 	//pButtonEntity->GetComponentByName("InputTextRender")->GetVar("font")->Set(uint32(FONT_LARGE));
