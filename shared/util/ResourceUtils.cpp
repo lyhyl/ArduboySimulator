@@ -537,3 +537,23 @@ string ReplaceMP3( const string &fName)
 	return final;
 }
 
+
+std::string StripColorCodes(const std::string text)
+{
+	std::string final;
+
+	final.reserve(text.size());
+
+	for (int i=0; i < text.size(); i++)
+	{
+		if (text[i] == '`')
+		{
+			if (text[i+1] != 0) i++; //skip the next letter too
+			continue;
+		}
+		final += text[i];
+
+	}
+
+	return final;
+}

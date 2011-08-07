@@ -124,23 +124,14 @@ void IrrlichtManager::ClearScene()
 {
 	if (m_pScene)
 	{
-		
-	/*
-		while (m_pDevice->getFileSystem()->getFileArchiveCount())
-		{
-			m_pDevice->getFileSystem()->removeFileArchive(0);
-		}
-	*/	
 	
 #ifdef RT_IRRBULLET
 		if (m_bBulletPhysicsEnabled)
 		{
-
-		
-		while(m_pWorld->getNumCollisionObjects() > 0)
-		{
-			m_pWorld->removeCollisionObject(m_pWorld->getCollisionObject(0));
-		}
+			while(m_pWorld->getNumCollisionObjects() > 0)
+			{
+				m_pWorld->removeCollisionObject(m_pWorld->getCollisionObject(0));
+			}
 		}
 #endif
 		
@@ -150,8 +141,6 @@ void IrrlichtManager::ClearScene()
 		const video::SMaterial m;
 		m_pDriver->setMaterial(m); 
 		m_pDriver->removeAllTextures();
-		
-
 	}
 }
 
@@ -297,7 +286,6 @@ void IrrlichtManager::OnLoadSurfaces()
 		m_pScene->OnResume();
 		m_pDriver->OnResume();
 	}
-
 }
 
 std::string PrintVector3(core::vector3df v)
