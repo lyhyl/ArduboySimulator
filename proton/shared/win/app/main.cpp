@@ -130,6 +130,7 @@ int GetPrimaryGLX()
 
 	return g_winVideoScreenX;
 }
+
 int GetPrimaryGLY() 
 {
 	if (g_landScapeNoNeckHurtMode)

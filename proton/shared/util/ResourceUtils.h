@@ -45,3 +45,4 @@ string ReplaceWithLargeInFileName(const string &fName); //replace "iphone" with 
 string ReplaceWithLargeInFileNameAndOSSpecific(const string &fName); //like above, but also changes to "win" if Windows is detected
 string ReplaceMP3( const string &fName); //changes mp3 to ogg in a filename if not on iOS
 void AppendStringToFile(string filename, string text);
+std::string StripColorCodes(const std::string text);
