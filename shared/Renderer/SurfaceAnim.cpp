@@ -63,7 +63,7 @@ void SurfaceAnim::BlitScaledAnim( float x, float y, int frameX , int frameY, CL_
 	assert(vScale.x != 0 && vScale.y != 0 && "Dahell?");
 	if (GetFrameWidth() == GetWidth() && GetFrameHeight() == GetHeight() && !flipX && !flipY) 
 	{
-		BlitScaled(x,y, vScale, alignment, rgba, rotation); //don't need the anim code
+		BlitScaledWithRotatePoint(x,y, vScale, alignment, rgba, rotation, vRotationPt); //don't need the anim code
 		return;
 	}
 

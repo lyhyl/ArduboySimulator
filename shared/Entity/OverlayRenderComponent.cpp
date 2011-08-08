@@ -131,8 +131,13 @@ void OverlayRenderComponent::OnRender(VariantList *pVList)
 
 		if (vFinalPos.y < -m_pSize2d->y && *m_pRotation == 0) return; //if rotation is enabled, we don't do this early exit check as it could be incorrect
 		if (vFinalPos.y > GetOrthoRenderSizeYf() && *m_pRotation == 0) return; //if rotation is enabled, we don't do this early exit check as it could be incorrect
-		CL_Vec2f vRotationPt = vFinalPos+m_pTex->GetFrameSize()/2;
-
+		CL_Vec2f vRotationPt = vFinalPos;
+		
+		vRotationPt.x += (m_pTex->GetFrameSize().x* (m_pScale2d->x)) /2;
+		vRotationPt.y += (m_pTex->GetFrameSize().y* (m_pScale2d->y)) /2;
+		
+	
+		
 		if (m_pScale2d->x != 1 || m_pScale2d->y != 1 || *m_pFlipX != 0 || *m_pFlipY != 0)
 		{
 			

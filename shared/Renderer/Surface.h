@@ -72,6 +72,7 @@ public:
 
 	void Blit(  float x, float y, unsigned int rgba = MAKE_RGBA(255,255,255,255), float rotation = 0, CL_Vec2f vRotatePt = CL_Vec2f(0,0));
 	void BlitScaled( float x, float y, CL_Vec2f vScale, eAlignment alignment = ALIGNMENT_CENTER, unsigned int rgba  = MAKE_RGBA(255,255,255,255), float rotation=0);
+	void BlitScaledWithRotatePoint( float x, float y, CL_Vec2f vScale, eAlignment alignment, unsigned int rgba, float rotation, CL_Vec2f vRotationPt);
 	void BlitEx(rtRectf dst, rtRectf src, unsigned int rgba = MAKE_RGBA(255,255,255,255), float rotation = 0, CL_Vec2f vRotatePt = CL_Vec2f(0,0)); //more advanced version, can do scaling and sub-texture blits
 	rtRectf GetRectf() {return rtRectf(0,0, float(m_originalWidth), float(m_originalWidth));}
 	void SetSmoothing( bool bSmoothing);
