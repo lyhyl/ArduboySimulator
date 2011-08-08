@@ -590,6 +590,11 @@ vertices[3*3+2] = 0;
 
 void Surface::BlitScaled( float x, float y, CL_Vec2f vScale, eAlignment alignment, unsigned int rgba, float rotation)
 {
+	BlitScaledWithRotatePoint(x,y,vScale,alignment,rgba,rotation,CL_Vec2f(x,y));
+}
+
+void Surface::BlitScaledWithRotatePoint( float x, float y, CL_Vec2f vScale, eAlignment alignment, unsigned int rgba, float rotation, CL_Vec2f vRotationPt)
+{
 	
 	assert(vScale.x != 0 && vScale.y != 0 && "Dahell?");
 
@@ -600,7 +605,7 @@ void Surface::BlitScaled( float x, float y, CL_Vec2f vScale, eAlignment alignmen
 	dst.AdjustPosition(vStart.x, vStart.y);
 	dst.Scale(alignment, vScale);
 
-	BlitEx(dst, src, rgba, rotation, CL_Vec2f(x,y));
+	BlitEx(dst, src, rgba, rotation, vRotationPt);
 }
 
 
