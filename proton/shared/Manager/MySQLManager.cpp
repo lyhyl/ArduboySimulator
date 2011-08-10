@@ -49,6 +49,21 @@ bool MySQLManager::DoesTableExist(string tableName)
 	return bSuccess;
 }
 
+bool MySQLManager::DoResultsExist()
+{
+	MYSQL_RES *result = NULL;
+	result = mysql_store_result(m_conn);
+
+	if (!result)
+	{
+		return false;
+	}
+	int rows = (int)mysql_num_rows(result);
+
+	return rows != 0;
+}
+
+
 int MySQLManager::AddSelectResults(vector<VariantDB> &vdb)
 {
 	MYSQL_RES *result = NULL;
