@@ -1051,15 +1051,52 @@ CL_Rectf MeasureEntityAndChildren(Entity *pEnt, bool bFirst)
 void SetupTextEntity(Entity *pEnt, eFont fontID, float scale)
 {
 	EntityComponent *pComp = pEnt->GetComponentByName("TextRender");
+
+	if (pComp)
+	{
+		//normal TextRender component
+		if (scale != 0)
+		{
+			pEnt->GetVar("scale2d")->Set(CL_Vec2f(scale, scale));
+		}
+	}
+	
+	if (!pComp && ( (pComp = pEnt->GetComponentByName("TextBoxRender"))  != 0))
+	{
+		//a textbox component, we handle font scale a different way, so it doesn't affect the text input box
+		//size
+		if (scale != 0)
+		{
+			pComp->GetVar("fontScale")->Set(scale);
+		}
+
+	} 
+
+	if (!pComp && ( (pComp = pEnt->GetComponentByName("LogDisplay")) != 0))
+	{
+		//a textbox component, we handle font scale a different way, so it doesn't affect the text input box
+		//size
+		if (scale != 0)
+		{
+			pComp->GetVar("fontScale")->Set(scale);
+		}
+
+	} 
+
+	if (!pComp && ( (pComp = pEnt->GetComponentByName("InputTextRender")) != 0))
+	{
+		//a textbox component, we handle font scale a different way, so it doesn't affect the text input box
+		//size
+		if (scale != 0)
+		{
+			pEnt->GetVar("scale2d")->Set(CL_Vec2f(scale, scale));
+		}
+
+	} 
 	if (!pComp)
 	{
 		assert(!"Huh?");
 		return;
-	}
-
-	if (scale != 0)
-	{
-		pEnt->GetVar("scale2d")->Set(CL_Vec2f(scale, scale));
 	}
 
 	pComp->GetVar("font")->Set(uint32(fontID));

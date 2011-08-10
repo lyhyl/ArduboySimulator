@@ -55,7 +55,8 @@ private:
 	float *m_pAlpha;
 	uint32 *m_pAlignment;
 	float *m_pRotation; //in degrees
-	
+	float *m_pFontScale; //so we can set it independently of our main size, although that will be applied to the font too
+
 	Console * m_pActiveConsole;
 	Console * m_pInternalConsole;
 };

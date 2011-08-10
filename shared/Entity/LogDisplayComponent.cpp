@@ -31,6 +31,10 @@ void LogDisplayComponent::OnAdd(Entity *pEnt)
 	m_pAlpha = &GetParent()->GetShared()->GetVarWithDefault("alpha", Variant(1.0f))->GetFloat();
 	m_pAlignment = &GetParent()->GetVar("alignment")->GetUINT32();
 
+	//our own stuff
+	m_pFontScale = &GetVarWithDefault("fontScale", Variant(1.0f))->GetFloat();
+
+
 	if (!m_pActiveConsole) m_pActiveConsole = GetBaseApp()->GetConsole();
 	//register ourselves to render if the parent does
 	GetParent()->GetFunction("OnRender")->sig_function.connect(1, boost::bind(&LogDisplayComponent::OnRender, this, _1));
@@ -55,7 +59,7 @@ void LogDisplayComponent::AddLine(VariantList *pVList)
  //word wrap it into lines if needed
  deque<string> lines;
 CL_Vec2f enclosedSize2d;
- GetBaseApp()->GetFont(eFont(*m_pFontID))->MeasureTextAndAddByLinesIntoDeque(*m_pSize2d, pVList->Get(0).GetString(), &lines, 1, enclosedSize2d);
+ GetBaseApp()->GetFont(eFont(*m_pFontID))->MeasureTextAndAddByLinesIntoDeque(*m_pSize2d, pVList->Get(0).GetString(), &lines, *m_pFontScale, enclosedSize2d);
 
  for (;lines.size();)
  {
@@ -75,12 +79,11 @@ void LogDisplayComponent::OnRender(VariantList *pVList)
 
 
 	eFont fontID = eFont(*m_pFontID);
-	float fontScale = 1.0f;
-	RTFont *pFont = GetBaseApp()->GetFont(fontID);
+RTFont *pFont = GetBaseApp()->GetFont(fontID);
 
 	float y = vFinalPos.y + m_pSize2d->y;
 	assert(m_pSize2d->y > 0);
-	y -= pFont->GetLineHeight(fontScale);
+	y -= pFont->GetLineHeight(*m_pFontScale);
 
 	int curLine = lines-1;
 	RenderBatcher b;
@@ -88,11 +91,11 @@ void LogDisplayComponent::OnRender(VariantList *pVList)
 	
 	while (y > vFinalPos.y && curLine >= 0)
 	{
-		pFont->DrawScaled(vFinalPos.x, y, m_pActiveConsole->GetLine(curLine), fontScale,
+		pFont->DrawScaled(vFinalPos.x, y, m_pActiveConsole->GetLine(curLine), *m_pFontScale,
 			color, NULL, &b);
 
 		curLine--;
-		y -= pFont->GetLineHeight(fontScale);
+		y -= pFont->GetLineHeight(*m_pFontScale);
 	}
 
 	b.Flush();
