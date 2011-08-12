@@ -65,6 +65,8 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.telephony.ServiceState;
+import android.telephony.TelephonyManager;
 
 
 public class SharedActivity extends Activity implements SensorEventListener
@@ -335,7 +337,19 @@ public class SharedActivity extends Activity implements SensorEventListener
             Build.TAGS.length()%10 + Build.TYPE.length()%10 +
             Build.USER.length()%10 ; //13 digits
 
-		return m_szDevIDShort;
+if (app.checkCallingOrSelfPermission("android.permission.READ_PHONE_STATE") == PackageManager.PERMISSION_GRANTED)
+{
+
+
+TelephonyManager tm = (TelephonyManager) app.getSystemService(Context.TELEPHONY_SERVICE);
+final String DeviceId, SerialNum;
+DeviceId = tm.getDeviceId();
+SerialNum = tm.getSimSerialNumber();
+return m_szDevIDShort + DeviceId + SerialNum;
+} else
+{
+return m_szDevIDShort;
+}
 	}
 
   @Override
