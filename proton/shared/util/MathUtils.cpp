@@ -121,7 +121,7 @@ unsigned int DecryptPiece(byte *data, unsigned int size, int key)
 
 #ifdef _DEBUG
 
-#define C_EXTRA_DEBUG_CHECKS
+//#define C_EXTRA_DEBUG_CHECKS
 
 #endif
 unsigned int EncryptPiece(byte *data, unsigned int size, int key)

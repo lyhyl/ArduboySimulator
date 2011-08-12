@@ -311,7 +311,7 @@ string GetDeviceID()
 	if (!env) return "";
 
 	jclass cls = env->FindClass(GetAndroidMainClassName());
-	jmethodID mid = env->GetStaticMethodID(cls,
+	jmethodID mid = env->GetStaticMethodID(cls,	
 		"get_deviceID",
 		"()Ljava/lang/String;");
 	jstring ret;
