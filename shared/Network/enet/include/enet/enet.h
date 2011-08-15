@@ -207,8 +207,16 @@ enum
    ENET_PEER_TIMEOUT_LIMIT                = 32,
 
 #endif
+   
+#ifdef _CONSOLE
+   //SETH changed these for his server.  Sorry for the hack.. make these dynamically setable later?
+   ENET_PEER_TIMEOUT_MINIMUM              = 3000,
+   ENET_PEER_TIMEOUT_MAXIMUM              = 10000,
+#else
    ENET_PEER_TIMEOUT_MINIMUM              = 5000,
    ENET_PEER_TIMEOUT_MAXIMUM              = 30000,
+
+#endif
    ENET_PEER_PING_INTERVAL                = 500,
    ENET_PEER_UNSEQUENCED_WINDOWS          = 64,
    ENET_PEER_UNSEQUENCED_WINDOW_SIZE      = 1024,

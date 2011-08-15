@@ -73,7 +73,8 @@ void LogError ( const char* traceStr, ... )
 
 
 	//__Linux_log_write(Linux_LOG_ERROR,GetAppName(), buffer);
-	printf ((char*)buffer);
+	LogMsg( "ERROR: %s"+buffer);
+	//printf ((char*)buffer);
 }
 
 
