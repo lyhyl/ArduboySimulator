@@ -1,7 +1,11 @@
 #include "PlatformPrecomp.h"
 #include "FileManager.h"
 #include "../util/ResourceUtils.h"
+#ifndef _CONSOLE
 #include "BaseApp.h"
+#else
+FileManager * GetFileManager();
+#endif
 #include "FileSystem.h"
 #include "StreamingInstanceFile.h"
 
