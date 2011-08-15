@@ -2,6 +2,7 @@
 #include "TextScanner.h"
 #include "util/ResourceUtils.h"
 #include "util/MiscUtils.h"
+#include "FileSystem/FileManager.h"
 
 TextScanner::TextScanner()
 {
@@ -130,4 +131,11 @@ string TextScanner::GetAll()
 	}
 
 	return s;
+}
+
+std::string TextScanner::GetParmStringFromLine( int lineNum, int index, string token /*= "|"*/ )
+{
+	assert(lineNum >= 0 && lineNum < m_lines.size());
+	assert(token.size() == 1 && "We don't actually support a non char delim yet");
+	return SeparateStringSTL(m_lines[lineNum], index, token[0]);
 }

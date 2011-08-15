@@ -456,14 +456,13 @@ void AudioManagerSDL::SetVol( AudioHandle soundID, float vol )
 
 void AudioManagerSDL::SetMusicVol(float vol )
 {
-	/*
+	int ivol =  int(vol*128.0f);
 	if (m_pMusicChannel)
 	{
-		m_pMusicChannel->setVolume(vol);
-
+		Mix_VolumeMusic(ivol);
 	}
 	m_musicVol = vol;
-	*/
+	
 }
 
 
