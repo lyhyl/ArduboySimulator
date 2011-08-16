@@ -210,8 +210,8 @@ enum
    
 #ifdef _CONSOLE
    //SETH changed these for his server.  Sorry for the hack.. make these dynamically setable later?
-   ENET_PEER_TIMEOUT_MINIMUM              = 3000,
-   ENET_PEER_TIMEOUT_MAXIMUM              = 10000,
+   ENET_PEER_TIMEOUT_MINIMUM              = 5000,
+   ENET_PEER_TIMEOUT_MAXIMUM              = 12000,
 #else
    ENET_PEER_TIMEOUT_MINIMUM              = 5000,
    ENET_PEER_TIMEOUT_MAXIMUM              = 30000,
