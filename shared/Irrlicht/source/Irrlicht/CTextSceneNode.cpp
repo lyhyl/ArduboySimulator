@@ -106,6 +106,9 @@ CBillboardTextSceneNode::CBillboardTextSceneNode(ISceneNode* parent, ISceneManag
 	Material.Lighting = false;
 	Material.ZBuffer = video::ECFN_LESSEQUAL;
 	Material.ZWriteEnable = false;
+	Material.setFlag(video::EMF_COLOR_MATERIAL, false);
+	Material.setFlag(video::EMF_COLOR_MASK, true);
+
 
 	if (font)
 	{
