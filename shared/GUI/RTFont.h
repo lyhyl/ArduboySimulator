@@ -37,6 +37,8 @@ public:
 	void DrawScaledFakeToUpdateState( const string &text, unsigned int color, FontStateStack *pState);
 	bool IsLoaded() {return m_surf.IsLoaded();}
 
+	unsigned int GetColorFromString(const char *pText);
+
 protected:
 	
 private:

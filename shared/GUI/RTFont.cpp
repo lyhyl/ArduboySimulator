@@ -619,3 +619,27 @@ void RTFont::OnLoadSurfaces()
 {
 	ReloadFontTextureOnly();
 }
+
+unsigned int RTFont::GetColorFromString( const char *pText )
+{
+	if (pText[0] == '`')
+	{
+
+		if (pText[1] == 0)
+		{
+			LogError("RTFont::GetColorFromString> Bad code");
+			return MAKE_RGBA(255,255,255,255); //malformed font code, remove this line if you want to be able to print ` codes
+		}
+		//it's a formatting command that is coming
+	
+		for (unsigned int i=0; i < m_fontStates.size(); i++)
+		{
+			if (pText[1] == m_fontStates[i].m_triggerChar)
+			{
+				return m_fontStates[i].m_color;
+			}
+		}
+	}
+
+	return MAKE_RGBA(255,255,255,255);
+}
