@@ -460,14 +460,23 @@ namespace irr
 		{
 			IImage *origImage = NULL;
 			bRequestReload = false;
+			bool bIsFont = false;
 
 			if (getName().getPath().find("#DefaultFont") != -1)
 			{
+
 #ifdef _IRR_COMPILE_WITH_GUI_
+				bool bIsFont = true;
+
+
 				//special case for the default font.  This is ugly but I don't know how else to do it...
 				io::path filename = "#DefaultFont";
 				io::IReadFile* file = io::createMemoryReadFile((void*)gui::BuiltInFontData, gui::BuiltInFontDataSize, filename, false);
+				// disable mipmaps+filtering
+		
 				origImage= Driver->createImageFromFile(file);
+
+
 #else
   assert(!"You have a font?  You may need _IRR_COMPILE_WITH_GUI_ defined.  Confused.");
 #endif
@@ -512,6 +521,18 @@ namespace irr
 			}
 
 			uploadTexture(true, 0);
+			
+			if (bIsFont)
+			{
+			
+			bool mipmap = Driver->getTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS);
+			Driver->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, false);
+
+			Driver->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, mipmap);
+			Driver->makeColorKeyTexture(this, core::position2di(0,0), false);
+			}
+			
+			
 			if (!KeepImage)
 			{
 				Image->drop();
