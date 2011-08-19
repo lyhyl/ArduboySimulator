@@ -95,7 +95,7 @@ void TextBoxRenderComponent::DrawTextNormal(CL_Vec2f vPos)
 		
 		if (vPos.y+lineHeight < 0) 
 		{
-			//it's above the screen and doesn' tneed to be drawn.. but we still want to process it for color information.
+			//it's above the screen and doesn't need to be drawn.. but we still want to process it for color information.
 			GetBaseApp()->GetFont(eFont(*m_pFontID))->DrawScaledFakeToUpdateState(m_lines[i],  color, &state);
 	
 			vPos.y += lineHeight;		

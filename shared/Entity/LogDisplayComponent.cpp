@@ -72,30 +72,49 @@ CL_Vec2f enclosedSize2d;
 void LogDisplayComponent::OnRender(VariantList *pVList)
 {
 	CL_Vec2f vFinalPos = pVList->m_variant[0].GetVector2()+*m_pPos2d;
-	
 	int lines = m_pActiveConsole->GetTotalLines();
+	if (*m_pAlpha == 0) return;
 
 	uint32 color = ColorCombine(*m_pColor, *m_pColorMod, *m_pAlpha);
 
-
 	eFont fontID = eFont(*m_pFontID);
-RTFont *pFont = GetBaseApp()->GetFont(fontID);
-
+	RTFont *pFont = GetBaseApp()->GetFont(fontID);
+	float fontHeight = pFont->GetLineHeight(*m_pFontScale);
+	vFinalPos.y -= fontHeight;
 	float y = vFinalPos.y + m_pSize2d->y;
+	
 	assert(m_pSize2d->y > 0);
-	y -= pFont->GetLineHeight(*m_pFontScale);
+	//y -= fontHeight;
 
 	int curLine = lines-1;
 	RenderBatcher b;
 
+	//first count how many lines we'll be able to display
 	
+
+	FontStateStack fontState;
+
+	int linesToDraw = 0;
+
 	while (y > vFinalPos.y && curLine >= 0)
 	{
-		pFont->DrawScaled(vFinalPos.x, y, m_pActiveConsole->GetLine(curLine), *m_pFontScale,
-			color, NULL, &b);
-
+		//pFont->DrawScaled(vFinalPos.x, y, m_pActiveConsole->GetLine(curLine), *m_pFontScale,
+		//	color, &fontState, &b);
 		curLine--;
-		y -= pFont->GetLineHeight(*m_pFontScale);
+		y -= fontHeight;
+		linesToDraw++;
+	}
+
+	
+	//that was fun practice, now let's draw the real thing
+	
+	for (int i=0; i < linesToDraw; i++)
+	{
+		curLine++;
+		y += fontHeight;
+		pFont->DrawScaled(vFinalPos.x, y, m_pActiveConsole->GetLine(curLine), *m_pFontScale,
+			color, &fontState, &b);
+	
 	}
 
 	b.Flush();
