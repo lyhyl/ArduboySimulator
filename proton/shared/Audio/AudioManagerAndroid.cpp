@@ -501,7 +501,7 @@ void AudioManagerAndroid::SetVol( AudioHandle soundID, float vol )
 	assert(soundID);
 	
 #ifdef _DEBUG
-	LogMsg("Setting vol to %.2f", vol);
+	//LogMsg("Setting vol to %.2f", vol);
 #endif
 	JNIEnv *env = GetJavaEnv();
 	if (env)
