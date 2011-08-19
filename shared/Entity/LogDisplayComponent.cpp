@@ -58,7 +58,7 @@ void LogDisplayComponent::AddLine(VariantList *pVList)
 
  //word wrap it into lines if needed
  deque<string> lines;
-CL_Vec2f enclosedSize2d;
+ CL_Vec2f enclosedSize2d;
  GetBaseApp()->GetFont(eFont(*m_pFontID))->MeasureTextAndAddByLinesIntoDeque(*m_pSize2d, pVList->Get(0).GetString(), &lines, *m_pFontScale, enclosedSize2d);
 
  for (;lines.size();)
@@ -80,23 +80,22 @@ void LogDisplayComponent::OnRender(VariantList *pVList)
 	eFont fontID = eFont(*m_pFontID);
 	RTFont *pFont = GetBaseApp()->GetFont(fontID);
 	float fontHeight = pFont->GetLineHeight(*m_pFontScale);
-	vFinalPos.y -= fontHeight;
+	//vFinalPos.y -= fontHeight;
 	float y = vFinalPos.y + m_pSize2d->y;
 	
 	assert(m_pSize2d->y > 0);
-	//y -= fontHeight;
+	y -= fontHeight;
 
 	int curLine = lines-1;
 	RenderBatcher b;
 
 	//first count how many lines we'll be able to display
-	
 
 	FontStateStack fontState;
 
 	int linesToDraw = 0;
 
-	while (y > vFinalPos.y && curLine >= 0)
+	while (y >= vFinalPos.y && curLine >= 0)
 	{
 		//pFont->DrawScaled(vFinalPos.x, y, m_pActiveConsole->GetLine(curLine), *m_pFontScale,
 		//	color, &fontState, &b);
