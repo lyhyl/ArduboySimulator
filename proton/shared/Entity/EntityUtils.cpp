@@ -1017,7 +1017,7 @@ void FadeScreenUp( Entity *pParent, float targetAlpha, int fadeDurationMS, bool 
 
 
 
-CL_Rectf MeasureEntityAndChildren(Entity *pEnt, bool bFirst)
+CL_Rectf MeasureEntityAndChildren(Entity *pEnt, CL_Vec2f *pVStartingPos,  bool bFirst)
 {
 	CL_Vec2f vSize = pEnt->GetVar("size2d")->GetVector2();
 	CL_Vec2f vPos = pEnt->GetVar("pos2d")->GetVector2();
@@ -1039,9 +1039,25 @@ CL_Rectf MeasureEntityAndChildren(Entity *pEnt, bool bFirst)
 	EntityList::iterator itor = pChildren->begin();
 	while (itor != pChildren->end())
 	{
-		CL_Rectf childR = MeasureEntityAndChildren(*itor, false);
+		CL_Rectf childR = MeasureEntityAndChildren(*itor, pVStartingPos, false);
 
-		r.bounding_rect(childR);
+		if (r.get_width() == 0 && r.get_height() == 0)
+		{
+			r.bounding_rect(childR);
+			
+			CL_Vec2f vSize = CL_Vec2f(r.get_width(), r.get_height());
+
+			r = childR;
+			if (pVStartingPos)
+			{
+				pVStartingPos->x = vSize.x - r.get_width();
+				pVStartingPos->y = vSize.y - r.get_height();
+
+			}
+		} else
+		{
+			r.bounding_rect(childR);
+		}
 		itor++;
 	}
 

@@ -77,7 +77,11 @@ void TouchStripComponent::OnInput(VariantList *pVList)
 
 	//0 = message type, 1 = parent coordinate offset
 
-	uint32 fingerID = pVList->Get(2).GetUINT32();
+	uint32 fingerID = 0;
+	if (pVList->Get(2).GetType() == Variant::TYPE_UINT32)
+	{
+		fingerID = pVList->Get(2).GetUINT32();
+	}
 
 	
 	switch (eMessageType( int(pVList->Get(0).GetFloat())))

@@ -91,7 +91,8 @@ void ScaleEntity(Entity *pEnt, float scaleStart, float scaleEnd, int timeMS, int
 void FadeEntity(Entity *pEnt, bool bRecursive, float alpha, int timeMS, int delayBeforeFadingMS = 0, bool bAllowMultipleFadesActiveAtOnce = false);
 void FadeScreen( Entity *pParent, float defaultStartAlpha, float targetAlpha, int fadeDurationMS, bool bDeleteWhenDone);
 
-CL_Rectf MeasureEntityAndChildren(Entity *pEnt, bool bFirst = true);
+//if pVStartingPos isn't null, the position where the rect starts as compared to the 0,0 of the parent entity is returned in it
+CL_Rectf MeasureEntityAndChildren(Entity *pEnt, CL_Vec2f *pVStartingPos = NULL, bool bFirst = true);
 
 //simple helpers to set parameters
 void SetupTextEntity(Entity *pEnt, eFont fontID, float scale=0); //0 means no change
