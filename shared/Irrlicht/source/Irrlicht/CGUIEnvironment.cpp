@@ -197,6 +197,7 @@ void CGUIEnvironment::OnResume()
 
 void CGUIEnvironment::loadBuiltInFont()
 {
+	LogMsg("******** Loading built in font ");
 	io::path filename = "#DefaultFont";
 
 	io::IReadFile* file = io::createMemoryReadFile((void*)BuiltInFontData, BuiltInFontDataSize, filename, false);
