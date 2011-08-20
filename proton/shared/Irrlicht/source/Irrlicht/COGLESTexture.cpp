@@ -488,7 +488,13 @@ namespace irr
 
 			if (!origImage)
 			{
+				
 				origImage = Driver->createImageFromFile(io::SNamedPath((std::string("game/")+string(getName().getPath().c_str())).c_str()));
+
+				if (origImage)
+				{
+					LogMsg("Did trick for reloading .xml font");
+				}
 			}
 			if (!origImage)
 			{
@@ -525,11 +531,11 @@ namespace irr
 			if (bIsFont)
 			{
 			
-			bool mipmap = Driver->getTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS);
-			Driver->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, false);
+				bool mipmap = Driver->getTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS);
+				Driver->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, false);
 
-			Driver->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, mipmap);
-			Driver->makeColorKeyTexture(this, core::position2di(0,0), false);
+				Driver->setTextureCreationFlag(video::ETCF_CREATE_MIP_MAPS, mipmap);
+				Driver->makeColorKeyTexture(this, core::position2di(0,0), false);
 			}
 			
 			

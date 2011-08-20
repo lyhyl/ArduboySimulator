@@ -30,7 +30,7 @@ void IrrHealthBar::SetHealthTarget( float target )
 	
 	core::dimension2df vSize = m_vSize;
 
-	LogMsg("Setting health to %.2f", target);
+//	LogMsg("Setting health to %.2f", target);
 	vSize.Width *= target;
 	if (vSize.Width == 0)
 	{

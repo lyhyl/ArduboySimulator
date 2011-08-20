@@ -375,7 +375,8 @@ bool Surface::LoadFileFromMemory( byte *pMem )
 
 void Surface::Bind()
 {
-	
+	if (m_texType == TYPE_NOT_OWNER) return;
+
 	if (m_glTextureID == NO_TEXTURE_LOADED && !m_textureLoaded.empty())
 	{
 		ReloadImage();
