@@ -9,7 +9,7 @@
 #ifndef RT_WEBOS
 	#include <direct.h>
 #endif
-
+ 
 vector<VideoModeEntry> g_videoModes;
 void AddVideoMode(string name, int x, int y, ePlatformID platformID);
 void SetVideoModeByName(string name);
@@ -60,7 +60,7 @@ void InitVideoSize()
 	AddVideoMode("Nexus One Landscape", 480, 800, PLATFORM_ID_ANDROID); //set g_landScapeNoNeckHurtMode to true
 	AddVideoMode("Xoom Landscape", 800,1280, PLATFORM_ID_ANDROID);//set g_landScapeNoNeckHurtMode to true 
 
-	string desiredVideoMode = "iPhone"; //name needs to match one of the ones defined above
+	string desiredVideoMode = "Droid Landscape"; //name needs to match one of the ones defined above
     g_landScapeNoNeckHurtMode = true; //if true, will rotate the screen so we can play in landscape mode in windows without hurting ourselves
 
 	SetVideoModeByName(desiredVideoMode);
