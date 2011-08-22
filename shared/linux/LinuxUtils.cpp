@@ -74,6 +74,7 @@ void LogError ( const char* traceStr, ... )
 
 	//__Linux_log_write(Linux_LOG_ERROR,GetAppName(), buffer);
 	LogMsg( "ERROR: %s", buffer);
+	AppendStringToFile( GetBaseAppPath()+"error.txt", GetDateAndTimeAsString()+": "+string(buffer)+"\r\n");
 	//printf ((char*)buffer);
 }
 
