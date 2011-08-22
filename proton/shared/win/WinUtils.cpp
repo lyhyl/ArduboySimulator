@@ -52,6 +52,7 @@ FastTimerDX g_fastTimer(0);
 
 string GetBaseAppPath()
 {
+
 	// Get path to executable:
 	TCHAR szDllName[_MAX_PATH];
 	TCHAR szDrive[_MAX_DRIVE];
