@@ -123,7 +123,7 @@ int MySQLManager::AddSelectResults(vector<VariantDB> &vdb)
 
 		}
 	}
-	printf("\n");
+	//printf("\n");
 
 	mysql_free_result(result);
 
