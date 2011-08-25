@@ -27,8 +27,8 @@ public:
 	bool Init(string name, string password);
 	void Kill();
 	void ShowError();
-	bool Query(string query);
-	bool DoesTableExist(string tableName);
+	bool Query(string query, bool bShowError = true);
+	bool DoesTableExist(string tableName, bool bShowErrors);
 	int GetLastAutoIncrementInsertID();
 	int AddSelectResults(vector<VariantDB> &vdb); //adds to existing vector, returns how many items it added
 	int GetArrayCountOfLastQuery();

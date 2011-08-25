@@ -34,12 +34,12 @@ void MySQLManager::ShowError()
 	LogError("MySQLManager error: %u: %s", mysql_errno(m_conn), mysql_error(m_conn));
 }
 
-bool MySQLManager::DoesTableExist(string tableName)
+bool MySQLManager::DoesTableExist(string tableName, bool bShowErrors)
 {
 	assert(m_conn);
 	MYSQL_RES *result = NULL;
 
-	bool bSuccess = Query("SELECT * FROM "+tableName);
+	bool bSuccess = Query("SELECT * FROM "+tableName, bShowErrors);
 
 	if (!bSuccess) return false;
 
@@ -155,14 +155,17 @@ bool MySQLManager::Init(string name, string password)
 	return true;
 }
 
-bool MySQLManager::Query( string query )
+bool MySQLManager::Query( string query, bool bShowError )
 {
 #ifdef _DEBUG
 	//LogMsg("Queting %s", query.c_str() );
 #endif
 	if (mysql_query(m_conn, query.c_str()))
 	{
-		ShowError();
+		if (bShowError)
+		{
+			ShowError();
+		}
 		return false;
 	}
 
@@ -189,8 +192,9 @@ void MySQLManager::Update()
 
 	if (m_conn && m_pingTimer < GetSystemTimeTick())
 	{
+		//keep the DB connection alive, if there were no accesses it can time-out
 		LogMsg("Ping! pingtimer is %u, system is %u.  Internval is %d", m_pingTimer, GetSystemTimeTick(), C_MYSQL_PING_TIMER_MS);
-		DoesTableExist("BogusTable");
+		DoesTableExist("BogusTable", false);
 		m_pingTimer = GetSystemTimeTick()+uint32(C_MYSQL_PING_TIMER_MS);
 	}
 }
