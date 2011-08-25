@@ -189,8 +189,8 @@ void MySQLManager::Update()
 
 	if (m_conn && m_pingTimer < GetSystemTimeTick())
 	{
-		LogMsg("Ping! pingtimer is %d, system is %d.  Internval is %d", m_pingTimer, GetSystemTimeTick(), C_MYSQL_PING_TIMER_MS);
+		LogMsg("Ping! pingtimer is %u, system is %u.  Internval is %d", m_pingTimer, GetSystemTimeTick(), C_MYSQL_PING_TIMER_MS);
 		DoesTableExist("BogusTable");
-		m_pingTimer = GetSystemTimeTick()+C_MYSQL_PING_TIMER_MS;
+		m_pingTimer = GetSystemTimeTick()+uint32(C_MYSQL_PING_TIMER_MS);
 	}
 }
