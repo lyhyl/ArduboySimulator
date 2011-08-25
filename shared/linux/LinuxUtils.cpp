@@ -8,6 +8,7 @@
 #include <cstdarg>
 #include <cassert>
 #include "PlatformSetup.h"
+#include <time.h>
 
 const char * GetAppName();
 const char * GetBundlePrefix();
@@ -165,9 +166,18 @@ int GetYOffset()
 
 unsigned int GetSystemTimeTick()
 {
-	struct timeval tv;
-	gettimeofday(&tv, NULL);
-	return tv.tv_usec/1000 + tv.tv_sec*1000;
+//	struct timeval tv;
+//	gettimeofday(&tv, NULL);
+//	return tv.tv_usec/1000 + tv.tv_sec*1000;
+
+  struct timespec time;
+  clock_gettime(CLOCK_MONOTONIC, &time);
+
+double accum;
+accum = time.tv_sec*1000 + time.tv_nsec/1000000;
+return accum;
+
+
 }
 
 string GetDateAndTimeAsString()
