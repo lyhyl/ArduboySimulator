@@ -175,7 +175,7 @@ unsigned int GetSystemTimeTick()
 
   if (time.tv_sec*1000 > 3000000000)
   {
-	  time.tv_sec = ( (time.tv_sec*1000) -= 1000000000); //help with timeoverun issues
+	  time.tv_sec = ( (time.tv_sec*1000) - 1000000000); //help with timeoverun issues
   }
 
 double accum;
