@@ -226,42 +226,6 @@ void InputTextRenderComponent::OnRemove()
 	EntityComponent::OnRemove();
 }
 
-bool isOrdinaryChar(char c, bool bStrict) 
-{
-	if (!bStrict)
-	{
-		if (c >= 32 && c <= 126)
-		{
-			return true;
-		}
-		return false;
-	}
-	
-	if (
-		(c >= 45 && c <= 46) ||
-		(c >= 48 && c <= 57) ||
-		(c >= 65 && c <= 90) ||
-		(c >= 97 && c <= 122)) return true;
-		
-	return false;
-}
-
-string FilterToValidAscii(const string &input, bool bStrict)
-{
-	string output;
-
-	for (unsigned int i=0; i < input.length(); i++)
-	{
-	
-		if ( isOrdinaryChar(input[i], bStrict))
-		{
-			output += input[i];
-		}
-	}
-	
-	return output;
-}
-
 void InputTextRenderComponent::OnUpdate(VariantList *pVList)
 {
 

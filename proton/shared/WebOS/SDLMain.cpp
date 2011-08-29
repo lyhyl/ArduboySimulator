@@ -332,34 +332,55 @@ void SDLEventLoop()
 			break;
 
 		case SDL_KEYDOWN:
-			
+		
 			switch (ev.key.keysym.sym)
 			{
+		
+				//touchpad doesn't seem to send these capslock events at all.  Uh.. why?
+
+			case SDLK_CAPSLOCK:
+				//LogMsg("Got Capslock: %d, mod of %d, scan of %d, unicode of %d", ev.key.keysym.sym, ev.key.keysym.mod, ev.key.keysym.scancode, ev.key.keysym.unicode);
+				break;
+			case SDLK_NUMLOCK:
+				//LogMsg("Got numlock: %d, mod of %d, scan of %d, unicode of %d", ev.key.keysym.sym, ev.key.keysym.mod, ev.key.keysym.scancode, ev.key.keysym.unicode);
+				break;
+
+			case SDLK_ESCAPE:
 				// Escape forces us to quit the app
 				// this is also sent when the user makes a back gesture
-				
-			
-			case SDLK_ESCAPE:
-
 				g_bAppFinished = true;
+				break;
+
+			case SDLK_WORLD_70:
+				//LogMsg("Got old keyboard change button");
+				break;
+			
+			case 24:
+				//LogMsg("Got new keyboard change button.. should lose focus");
+				SetIsUsingNativeUI(false);
+				PDL_SetKeyboardState(PDL_FALSE);
+
 				break;
 
 			default:
 				{
 
 				
-				if (ev.key.keysym.sym >= 32 && ev.key.keysym.sym <= 128 || ev.key.keysym.sym == 8 || ev.key.keysym.sym == 13)
-				{
-					signed char key = ev.key.keysym.sym;
-
-					if (ev.key.keysym.mod & KMOD_LSHIFT || ev.key.keysym.mod & KMOD_RSHIFT)
+					if (ev.key.keysym.sym >= 32 && ev.key.keysym.sym <= 128 || ev.key.keysym.sym == 8 || ev.key.keysym.sym == 13)
 					{
-						key = toupper(key);
+						signed char key = ev.key.keysym.sym;
+
+						if (ev.key.keysym.mod & KMOD_LSHIFT || ev.key.keysym.mod & KMOD_RSHIFT || ev.key.keysym.mod & KMOD_CAPS)
+						{
+							key = toupper(key);
+						}
+
+						GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, key, 0);  //lParam holds a lot of random data about the press, look it up if
+
+					} else
+					{
+						//LogMsg("Got unknown key: %d", ev.key.keysym.sym);
 					}
-
-					GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, key, 0);  //lParam holds a lot of random data about the press, look it up if
-
-				}
 				}
 
 				break;
