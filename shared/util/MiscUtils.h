@@ -51,3 +51,5 @@ void TruncateString(string &input, size_t len);
 bool IsInString(string &s, const char *search);
 void RotationToXYMod(float rotation, float *pXMod ,float *pYMod); //given a rotation in degrees, tells you what to flip
 void SetFloatWithTarget(float *p_out_dest, float r_target, float r_amount);
+string FilterToValidAscii(const string &input, bool bStrict);
+bool isOrdinaryChar(char c, bool bStrict);

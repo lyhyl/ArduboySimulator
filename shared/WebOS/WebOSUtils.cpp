@@ -590,7 +590,9 @@ string GetDeviceID()
 		LogMsg("Error getting DeviceID for some reason");
 		return "UNKNOWN";
 	}
+	#ifdef _DEBUG
 	LogMsg("Read %s as the deviceid", buff);
+	#endif
 	return buff;
 }
 #endif
