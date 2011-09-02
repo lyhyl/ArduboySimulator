@@ -40,6 +40,7 @@ Entity * CreateOverlayRectEntity(Entity *pParent, CL_Vec2f vPos, CL_Vec2f vBound
 Entity * CreateButtonHotspot(Entity *pParentEnt, string name, CL_Vec2f vPos, CL_Vec2f vBounds, Button2DComponent::eButtonStyle buttonStyle = Button2DComponent::BUTTON_STYLE_CLICK_ON_TOUCH);
 Entity * CreateTextBoxEntity(Entity *pParent, string entName, CL_Vec2f vPos, CL_Vec2f vTextAreaSize, string msg, float scale = 1.0f);
 Entity * CreateInputTextEntity(Entity *pParentEnt, string name, float x, float y, string text, float sizeX=0, float sizeY=0);
+Entity * CreateCheckbox(Entity *pBG, string name, string text, float x, float y, bool bChecked);
 
 void DisableAllButtonsEntity(Entity *pEnt, bool bRecursive = true);
 void SlideScreen(Entity *pEnt, bool bIn, int speedMS = 500, int delayToStartMS = 0);

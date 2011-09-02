@@ -192,13 +192,10 @@ void AnimateStopEntityAndSetFrame(Entity *pEnt, int delayToStartMS, int frameX, 
 		{
 			GetMessageManager()->SetComponentVariable(pComp, delayToStartMS, "frameX", Variant(uint32(frameX)));
 			GetMessageManager()->SetComponentVariable(pComp, delayToStartMS, "frameY", Variant(uint32(frameY)));
-
 		}
-
 	}
-
-
 }
+
 
 EntityComponent * SetupAnimEntity(Entity *pEnt, uint32 frameCountX, uint32 frameCountY, int curFrameX, int curFrameY)
 {
@@ -1367,7 +1364,7 @@ EntityComponent * DisableComponentByName(Entity *pEnt, const string &compName, i
 	EntityComponent *pComp = pEnt->GetComponentByName(compName);
 	if (!pComp)
 	{
-		assert("!Unable to find component");
+		assert(!"Unable to find component");
 		return NULL;
 	}
 
@@ -1681,4 +1678,49 @@ void FakeClickAnEntity(Entity *pEnt)
 
 	SendFakeInputMessageToEntity(pEnt, MESSAGE_TYPE_GUI_CLICK_START, vClickPos);
 	SendFakeInputMessageToEntity(pEnt, MESSAGE_TYPE_GUI_CLICK_END, vClickPos);
+}
+
+
+void OnCheckboxToggle(VariantList *pVList)
+{
+	Entity *pEntClicked = pVList->m_variant[1].GetEntity();
+	bool bIsChecked = pEntClicked->GetVar("checked")->GetUINT32() != 0;
+
+	if (bIsChecked)
+	{
+		//uncheck it
+		pEntClicked->GetVar("checked")->Set(uint32(0));
+		//the image too
+		AnimateStopEntityAndSetFrame(pEntClicked, 0, 0, 0);
+	} else
+	{
+		//check it
+		pEntClicked->GetVar("checked")->Set(uint32(1));
+		//the image too
+		AnimateStopEntityAndSetFrame(pEntClicked, 0, 1, 0);
+	}
+	OneTimeBobEntity(pEntClicked);
+}
+
+Entity * CreateCheckbox(Entity *pBG, string name, string text, float x, float y, bool bChecked)
+{
+	//harcoded a checkbox image here, it's 2 frames, horizontally.  First frame is unchecked
+
+	Entity *pEnt = CreateOverlayButtonEntity(pBG, name, "interface/checkbox.rttex", x, y);
+	SetupAnimEntity(pEnt, 2); //let it know its two frames, will default to showing the first one
+	pEnt->GetVar("checked")->Set(uint32(bChecked)); //default unchecked
+
+	RemovePaddingEntity(pEnt); //have to click exactly in the image to do anything
+
+	if (bChecked)
+	{
+		AnimateStopEntityAndSetFrame(pEnt, 0, 1, 0);
+	}
+
+	//add the text off to the right
+	CL_Vec2f vImageSize = pEnt->GetVar("size2d")->GetVector2();
+	CreateTextLabelEntity(pEnt, name+"_text", vImageSize.x+8, 3, text);
+	//if someone clicks it, toggle it...
+	pEnt->GetFunction("OnButtonSelected")->sig_function.connect(&OnCheckboxToggle);
+	return pEnt;
 }
