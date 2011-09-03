@@ -649,6 +649,28 @@ void DisableAllButtonsEntity(Entity *pEnt, bool bRecursive)
 	}
 }
 
+void EnableAllButtonsEntity(Entity *pEnt, bool bRecursive)
+{
+	EntityComponent * pComp = pEnt->GetComponentByName("Button2D");
+
+	if (pComp)
+	{
+		pComp->GetVar("disabled")->Set(uint32(0));
+	}
+
+	if (!bRecursive) return;
+
+	//also run this on all children
+	EntityList *pChildren = pEnt->GetChildren();
+
+	EntityList::iterator itor = pChildren->begin();
+	while (itor != pChildren->end())
+	{
+		EnableAllButtonsEntity( *itor, bRecursive);
+		itor++;
+	}
+}
+
 
 void FlashStopEntity(Entity *pEnt)
 {
@@ -1706,11 +1728,20 @@ Entity * CreateCheckbox(Entity *pBG, string name, string text, float x, float y,
 {
 	//harcoded a checkbox image here, it's 2 frames, horizontally.  First frame is unchecked
 
+	GetResourceManager()->GetSurfaceAnim("interface/checkbox.rttex")->SetSmoothing(false);
 	Entity *pEnt = CreateOverlayButtonEntity(pBG, name, "interface/checkbox.rttex", x, y);
 	SetupAnimEntity(pEnt, 2); //let it know its two frames, will default to showing the first one
 	pEnt->GetVar("checked")->Set(uint32(bChecked)); //default unchecked
 
 	RemovePaddingEntity(pEnt); //have to click exactly in the image to do anything
+	SetTouchPaddingEntity(pEnt, CL_Rectf(5, 5, 5, 5));
+
+	//only problem is it's too small and hard to click on an iPhone4..
+	if (IsIphone4() || IsLargeScreen() )
+	{
+		float size = 64;
+		EntitySetScaleBySize(pEnt, CL_Vec2f(size, size));
+	}
 
 	if (bChecked)
 	{
@@ -1719,7 +1750,7 @@ Entity * CreateCheckbox(Entity *pBG, string name, string text, float x, float y,
 
 	//add the text off to the right
 	CL_Vec2f vImageSize = pEnt->GetVar("size2d")->GetVector2();
-	CreateTextLabelEntity(pEnt, name+"_text", vImageSize.x+8, 3, text);
+	CreateTextLabelEntity(pEnt, name+"_text", vImageSize.x+iPhoneMapX(8), iPhoneMapY(3), text);
 	//if someone clicks it, toggle it...
 	pEnt->GetFunction("OnButtonSelected")->sig_function.connect(&OnCheckboxToggle);
 	return pEnt;
