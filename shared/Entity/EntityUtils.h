@@ -43,6 +43,7 @@ Entity * CreateInputTextEntity(Entity *pParentEnt, string name, float x, float y
 Entity * CreateCheckbox(Entity *pBG, string name, string text, float x, float y, bool bChecked);
 
 void DisableAllButtonsEntity(Entity *pEnt, bool bRecursive = true);
+void EnableAllButtonsEntity(Entity *pEnt, bool bRecursive = true);
 void SlideScreen(Entity *pEnt, bool bIn, int speedMS = 500, int delayToStartMS = 0);
 void SlideScreenVertical(Entity *pEnt, bool bIn, int speedMS = 500, int delayToStartMS = 0);
 void BobEntity(Entity *pEnt, float bobAmount = 3);
@@ -128,4 +129,5 @@ void ManuallySetAlignmentEntity(Entity *pEnt, eAlignment alignment); //takes int
 bool IsDisabledEntity(Entity *pEnt);
 void RemovePaddingEntity(Entity *pEnt);
 void FakeClickAnEntity(Entity *pEnt); //good for pretending to click a Button2D programically or something
+
 #endif // EntityUtils_h__
