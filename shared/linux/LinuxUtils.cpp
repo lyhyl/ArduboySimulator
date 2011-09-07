@@ -173,14 +173,13 @@ unsigned int GetSystemTimeTick()
   struct timespec time;
   clock_gettime(CLOCK_MONOTONIC, &time);
 
-  if (time.tv_sec > 3000000)
+  if (time.tv_sec > 10000000)
   {
-	  time.tv_sec -= 1000000; //help with timeoverun issues
+	  time.tv_sec -= 10000000; //help with timeoverun issues
   }
 
 double accum;
 accum = time.tv_sec*1000 + time.tv_nsec/1000000;
-if (accum > 3000000000) accum -= 1000000000; //more overrun protection because the above doesn't seem to work
 return accum;
 }
 
