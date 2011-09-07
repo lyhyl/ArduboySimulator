@@ -180,6 +180,7 @@ unsigned int GetSystemTimeTick()
 
 double accum;
 accum = time.tv_sec*1000 + time.tv_nsec/1000000;
+if (accum > 3000000000) accum -= 1000000000; //more overrun protection because the above doesn't seem to work
 return accum;
 }
 
