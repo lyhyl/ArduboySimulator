@@ -190,7 +190,7 @@ int MySQLManager::GetLastAutoIncrementInsertID()
 void MySQLManager::Update()
 {
 
-	if (m_conn && m_pingTimer < GetSystemTimeTick())
+	if (m_conn && m_pingTimer < GetSystemTimeTick() || GetSystemTimeTick() > m_pingTimer+C_MYSQL_PING_TIMER_MS )
 	{
 		//keep the DB connection alive, if there were no accesses it can time-out
 		LogMsg("Ping! pingtimer is %u, system is %u.  Internval is %d", m_pingTimer, GetSystemTimeTick(), C_MYSQL_PING_TIMER_MS);
