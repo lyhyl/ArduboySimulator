@@ -135,7 +135,7 @@ int Random(int range)
 
 int RandomRange(int rangeMin, int rangeMax)
 {
-	return rand() * ((rangeMax-rangeMin)+rangeMin);
+	return rand()% (rangeMax-rangeMin)+rangeMin;
 }
 
 float RandomRangeFloat(float rangeMin, float rangeMax)
