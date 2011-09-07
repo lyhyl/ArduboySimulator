@@ -130,12 +130,12 @@ int mod(int a, int b)
 
 int Random(int range)
 {
-	return static_cast<int>(double(rand()) / (RAND_MAX) * range);
+	return rand()%range;
 }
 
 int RandomRange(int rangeMin, int rangeMax)
 {
-	return static_cast<int>(double(rand()) / RAND_MAX * (rangeMax-rangeMin)+rangeMin);
+	return rand() * ((rangeMax-rangeMin)+rangeMin);
 }
 
 float RandomRangeFloat(float rangeMin, float rangeMax)
