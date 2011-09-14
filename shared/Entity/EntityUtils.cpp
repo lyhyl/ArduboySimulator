@@ -590,14 +590,14 @@ void MorphToColorEntity(Entity *pEnt, bool bRecursive, int timeMS, unsigned int 
 }
 
 
-EntityComponent * PulsateColorEntity(Entity *pEnt, bool bRecursive, unsigned int color)
+EntityComponent * PulsateColorEntity(Entity *pEnt, bool bRecursive, unsigned int color, unsigned int pulsateSpeedMS)
 {
 	EntityComponent * pComp = pEnt->AddComponent( new InterpolateComponent);
 	pComp->GetVar("var_name")->Set("colorMod");
 	pComp->GetVar("target")->Set(uint32(color));
 	pComp->GetVar("interpolation")->Set(uint32(INTERPOLATE_SMOOTHSTEP_AS_COLOR));
 	pComp->GetVar("on_finish")->Set(uint32(InterpolateComponent::ON_FINISH_BOUNCE));
-	pComp->GetVar("duration_ms")->Set(uint32(1000));
+	pComp->GetVar("duration_ms")->Set(uint32(pulsateSpeedMS));
 
 	if (!bRecursive) return pComp;
 
@@ -607,7 +607,7 @@ EntityComponent * PulsateColorEntity(Entity *pEnt, bool bRecursive, unsigned int
 	EntityList::iterator itor = pChildren->begin();
 	while (itor != pChildren->end())
 	{
-		PulsateColorEntity( *itor, bRecursive, color);
+		PulsateColorEntity( *itor, bRecursive, color, pulsateSpeedMS);
 		itor++;
 	}
 
