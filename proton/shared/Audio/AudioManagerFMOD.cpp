@@ -201,7 +201,7 @@ SoundObject * AudioManagerFMOD::GetSoundObjectByFileName(string fName)
 
 void AudioManagerFMOD::Preload( string fName, bool bLooping /*= false*/, bool bIsMusic /*= false*/, bool bAddBasePath /*= true*/, bool bForceStreaming )
 {
-	assert(system);
+	if (!system) return;
 
 	if (bIsMusic && !GetMusicEnabled()) return; //ignoring because music is off right now
 
@@ -274,8 +274,7 @@ void AudioManagerFMOD::Preload( string fName, bool bLooping /*= false*/, bool bI
 
 AudioHandle AudioManagerFMOD::Play( string fName, bool bLooping /*= false*/, bool bIsMusic, bool bAddBasePath, bool bForceStreaming)
 {
-	if (!GetSoundEnabled()) return 0;
-	assert(system);
+	if (!GetSoundEnabled() || !system) return 0;
 
 	if ( !GetMusicEnabled() && bIsMusic )
 	{
@@ -380,7 +379,8 @@ void AudioManagerFMOD::Update()
 
 void AudioManagerFMOD::Stop( AudioHandle soundID )
 {
-	assert(system);
+	if (!system) return;
+
 	if (!soundID) return;
 	FMOD::Channel *pChannel = (FMOD::Channel*) soundID;
 	pChannel->stop();

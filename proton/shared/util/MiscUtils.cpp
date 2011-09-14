@@ -183,8 +183,10 @@ char *float_to_money( double num, char *buf, int dec)
 {
       char tmp[256];
       int bf = 0, cm = 0, tm = 9 - dec + (!dec);
+	 
+	
 
-      sprintf(tmp, "%.9f", num);
+	  sprintf(tmp, "%.9f", fabs(num));
       StringReverse(tmp);
       if(dec)
       {
@@ -196,6 +198,11 @@ char *float_to_money( double num, char *buf, int dec)
                         buf[bf++] = ',';
             }
       
+			if (num < 0) 
+			{
+				buf[bf-1] = '-';
+				buf[bf] = 0;
+			}
       return StringReverse(buf);
       } else
       {
@@ -206,6 +213,12 @@ char *float_to_money( double num, char *buf, int dec)
                   if(++cm % 3 == 0 && tmp[tm])
                         buf[bf++] = ',';
             }
+	
+			if (num < 0) 
+			{
+				buf[bf-1] = '-';
+				buf[bf] = 0;
+			}
       return StringReverse(buf);
    
       }
