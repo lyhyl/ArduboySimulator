@@ -5,17 +5,17 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "winRTSimpleApp", "winRTSimp
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Common Debug|Win32 = Common Debug|Win32
 		Common Release|Win32 = Common Release|Win32
-		Commond Debug|Win32 = Commond Debug|Win32
 		Debug GL|Win32 = Debug GL|Win32
 		Debug WebOS|Win32 = Debug WebOS|Win32
 		Release GL|Win32 = Release GL|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{04D58809-BAE3-4CF4-AD22-15CBF470A0A5}.Common Debug|Win32.ActiveCfg = Common Debug|Win32
+		{04D58809-BAE3-4CF4-AD22-15CBF470A0A5}.Common Debug|Win32.Build.0 = Common Debug|Win32
 		{04D58809-BAE3-4CF4-AD22-15CBF470A0A5}.Common Release|Win32.ActiveCfg = Common Release|Win32
 		{04D58809-BAE3-4CF4-AD22-15CBF470A0A5}.Common Release|Win32.Build.0 = Common Release|Win32
-		{04D58809-BAE3-4CF4-AD22-15CBF470A0A5}.Commond Debug|Win32.ActiveCfg = Common Debug|Win32
-		{04D58809-BAE3-4CF4-AD22-15CBF470A0A5}.Commond Debug|Win32.Build.0 = Common Debug|Win32
 		{04D58809-BAE3-4CF4-AD22-15CBF470A0A5}.Debug GL|Win32.ActiveCfg = Debug GL|Win32
 		{04D58809-BAE3-4CF4-AD22-15CBF470A0A5}.Debug GL|Win32.Build.0 = Debug GL|Win32
 		{04D58809-BAE3-4CF4-AD22-15CBF470A0A5}.Debug WebOS|Win32.ActiveCfg = Debug WebOS|Win32

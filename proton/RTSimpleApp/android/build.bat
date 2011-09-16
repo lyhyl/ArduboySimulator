@@ -1,6 +1,6 @@
 call app_info_setup.bat
 :Get the emulator ready if it isn't, because it takes a freakin' long time to load
-start emulator %EMULATOR_AVD%
+:start emulator %EMULATOR_AVD%
 
 :build the C/C++ parts
 %CYGWIN_DIR%\bin\bash --login -i -c '%PATH_TO_PROJECT_DIR_FROM_CYGWIN%/android/build.sh'
