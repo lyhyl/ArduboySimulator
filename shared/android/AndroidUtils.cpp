@@ -846,6 +846,18 @@ void AppOnKey( JNIEnv*  env, jobject jobj, jint type, jint keycode, jint c)
 	
 	if (keycode >= VIRTUAL_KEY_BACK)
 	{
+		
+		if (GetIsUsingNativeUI())
+		{
+			//hitting back with the keyboard open?  Just pretend they closed the keyboard.
+			SetIsUsingNativeUI(false);
+			return;
+		} else
+		{
+			c = keycode;
+		}
+		
+
 		c = keycode;
 	}
 

@@ -26,6 +26,23 @@ void EnterNameMenuOnSelect(VariantList *pVList) //0=vec2 point of click, 1=entit
 	Entity *pEntClicked = pVList->m_variant[1].GetEntity();
 
 	//LogMsg("Clicked %s entity at %s", pEntClicked->GetName().c_str(),pVList->m_variant[0].Print().c_str());
+
+	if (pEntClicked->GetName() == "check_question")
+	{
+		bool bChecked = pEntClicked->GetVar("checked")->GetUINT32()!=0;
+		if (bChecked)
+		{
+			LogMsg("clicked checkbox.");
+		} else
+		{
+			LogMsg("un-clicked checkbox.");
+		}
+
+		//either way, save it to our db which will get saved when the app closes.
+		GetApp()->GetVar("like_checkboxes")->Set(uint32(bChecked));
+
+	}
+
 	if (pEntClicked->GetName() == "Continue")
 	{
 		string name = GetEntityRoot()->GetEntityByName("name_input_box")->GetComponentByName("InputTextRender")->GetVar("text")->GetString();
@@ -44,28 +61,26 @@ Entity * EnterNameMenuCreate(Entity *pParentEnt)
 
 	Entity *pButtonEntity;
 	CL_Vec2f vTextAreaPos = CL_Vec2f(45,40);
-	CL_Vec2f vTextAreaBounds = CL_Vec2f(384,234);
+	CL_Vec2f vTextAreaBounds = CL_Vec2f(384,170);
 	
-	string title = "`$New Highscore!";
+	string title = "`$Input some stuff!";
 	pButtonEntity = CreateTextLabelEntity(pBG, "title", vTextAreaPos.x, vTextAreaPos.y, title);
 	pButtonEntity->GetComponentByName("TextRender")->GetVar("font")->Set(uint32(FONT_LARGE));
 	pButtonEntity->GetVar("scale2d")->Set(CL_Vec2f(0.6f, 0.6f));
 	vTextAreaPos.y += 25;
 	
-	string msg = "Your score of `w"+FloatToMoney(500000)+"`` is a high score!  `wTap below`` to set your name.";
+	string msg = "`wTap below`` to set your name. Hey, word wrapping, cool.";
 	Entity *pText = CreateTextBoxEntity(pBG, "text", vTextAreaPos, vTextAreaBounds, msg);
 
-	//the continue button
-	pButtonEntity = CreateOverlayButtonEntity(pBG, "Continue","interface/summary_continue.rttex", 100, 282);
-	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&EnterNameMenuOnSelect);
-	AddHotKeyToButton(pButtonEntity, VIRTUAL_KEY_BACK); //for android's back button, or escape key in windows
-
-	pButtonEntity = CreateTextLabelEntity(pBG, "name", vTextAreaPos.x, vTextAreaPos.y+73, "`$Name: ");
+	float nameEntryY = vTextAreaPos.y + pText->GetVar("size2d")->GetVector2().y; //get the exact size that the
+	//final word wrapped text actually took.
+	nameEntryY += 10; //add some spacer too
+	pButtonEntity = CreateTextLabelEntity(pBG, "name", vTextAreaPos.x, nameEntryY, "`$Name: ");
 //	pButtonEntity->GetComponentByName("TextRender")->GetVar("font")->Set(uint32(FONT_LARGE));
 	float nameWidth = pButtonEntity->GetVar("size2d")->GetVector2().x;
 
 	//create input box
-	pButtonEntity = CreateInputTextEntity(pBG, "name_input_box", vTextAreaPos.x+nameWidth, vTextAreaPos.y+71, GetApp()->GetShared()->GetVarWithDefault("name", string("Player"))->GetString());
+	pButtonEntity = CreateInputTextEntity(pBG, "name_input_box", vTextAreaPos.x+nameWidth, nameEntryY, GetApp()->GetShared()->GetVarWithDefault("name", string("Player"))->GetString());
 	
 	//if you wanted to allow spaces and other symbols, change to "loose" filtering like this:
 	//pButtonEntity->GetComponentByName("InputTextRender")->GetVar("filtering")->Set(uint32(InputTextRenderComponent::FILTERING_LOOSE));
@@ -76,9 +91,23 @@ Entity * EnterNameMenuCreate(Entity *pParentEnt)
 	//if you wanted text that appear until it's activated:
 	//pButtonEntity->GetComponentByName("InputTextRender")->GetVar("placeHolderText")->Set("Tap here to enter your name");
 
-
 	
 	//pButtonEntity->GetComponentByName("InputTextRender")->GetVar("font")->Set(uint32(FONT_LARGE));
+
+
+	//let's add a checkbox too, for fun
+	bool bLikeCheckboxes = GetApp()->GetVar("like_checkboxes")->GetUINT32() != 0;
+	nameEntryY += 40;
+
+	Entity *pCheckbox = CreateCheckbox(pBG, "check_question", "I like checkboxes", vTextAreaPos.x, nameEntryY, bLikeCheckboxes);
+	pCheckbox->GetFunction("OnButtonSelected")->sig_function.connect(&EnterNameMenuOnSelect);
+
+
+	//the continue button
+	pButtonEntity = CreateOverlayButtonEntity(pBG, "Continue","interface/summary_continue.rttex", 100, 282);
+	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&EnterNameMenuOnSelect);
+	AddHotKeyToButton(pButtonEntity, VIRTUAL_KEY_BACK); //for android's back button, or escape key in windows
+
 
 	SlideScreen(pBG, true);
 	return pBG;

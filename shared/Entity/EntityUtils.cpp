@@ -1728,7 +1728,15 @@ Entity * CreateCheckbox(Entity *pBG, string name, string text, float x, float y,
 {
 	//harcoded a checkbox image here, it's 2 frames, horizontally.  First frame is unchecked
 
-	GetResourceManager()->GetSurfaceAnim("interface/checkbox.rttex")->SetSmoothing(false);
+	SurfaceAnim *pAnim = GetResourceManager()->GetSurfaceAnim("interface/checkbox.rttex");
+
+	if (pAnim)
+	{
+		pAnim->SetSmoothing(false);
+	} else
+	{
+		LogError("Um, the couldn't be loaded.  Rebuild resources?  Filename is hardcoded to be interface/checkbox.rttex right now.");
+	}
 	Entity *pEnt = CreateOverlayButtonEntity(pBG, name, "interface/checkbox.rttex", x, y);
 	SetupAnimEntity(pEnt, 2); //let it know its two frames, will default to showing the first one
 	pEnt->GetVar("checked")->Set(uint32(bChecked)); //default unchecked
