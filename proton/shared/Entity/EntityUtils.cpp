@@ -1724,7 +1724,7 @@ void OnCheckboxToggle(VariantList *pVList)
 	OneTimeBobEntity(pEntClicked);
 }
 
-Entity * CreateCheckbox(Entity *pBG, string name, string text, float x, float y, bool bChecked)
+Entity * CreateCheckbox(Entity *pBG, string name, string text, float x, float y, bool bChecked, eFont fontID, float fontScale)
 {
 	//harcoded a checkbox image here, it's 2 frames, horizontally.  First frame is unchecked
 
@@ -1740,7 +1740,6 @@ Entity * CreateCheckbox(Entity *pBG, string name, string text, float x, float y,
 	Entity *pEnt = CreateOverlayButtonEntity(pBG, name, "interface/checkbox.rttex", x, y);
 	SetupAnimEntity(pEnt, 2); //let it know its two frames, will default to showing the first one
 	pEnt->GetVar("checked")->Set(uint32(bChecked)); //default unchecked
-
 	RemovePaddingEntity(pEnt); //have to click exactly in the image to do anything
 	SetTouchPaddingEntity(pEnt, CL_Rectf(5, 5, 5, 5));
 
@@ -1756,10 +1755,14 @@ Entity * CreateCheckbox(Entity *pBG, string name, string text, float x, float y,
 		AnimateStopEntityAndSetFrame(pEnt, 0, 1, 0);
 	}
 
-	//add the text off to the right
-	CL_Vec2f vImageSize = pEnt->GetVar("size2d")->GetVector2();
-	CreateTextLabelEntity(pEnt, name+"_text", vImageSize.x+iPhoneMapX(8), iPhoneMapY(3), text);
 	//if someone clicks it, toggle it...
 	pEnt->GetFunction("OnButtonSelected")->sig_function.connect(&OnCheckboxToggle);
+
+	//add the text off to the right
+	CL_Vec2f vImageSize = pEnt->GetVar("size2d")->GetVector2();
+	Entity *pTextEnt = CreateTextLabelEntity(pEnt, name+"_text", vImageSize.x+iPhoneMapX(8), iPhoneMapY(3), text);
+	pTextEnt->GetVar("scale2d")->Set(CL_Vec2f(fontScale, fontScale));
+
+	pEnt->GetVar("scale2d")->Set(pEnt->GetVar("scale2d")->GetVector2()*fontScale);
 	return pEnt;
 }
