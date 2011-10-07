@@ -823,6 +823,23 @@ void AppOnTouch( JNIEnv*  env, jobject jobj,jint action, jfloat x, jfloat y, jin
 	//GetMessageManager()->SendGUI(messageType, x, y);
 }
 
+
+void AppOnSendGUIEx(JNIEnv*  env, jobject thiz,jint messageType, jint parm1, jint parm2, jint finger )
+{
+	GetMessageManager()->SendGUIEx((eMessageType)messageType, parm1, parm2, finger);  
+
+}
+
+void AppOnSendGUIStringEx(JNIEnv*  env, jobject thiz,jint messageType, jint parm1, jint parm2, jint finger, jstring s )
+{
+	const char * ss=env->GetStringUTFChars(s,0);
+	string str = ss;
+	env->ReleaseStringUTFChars(s, ss);
+
+	GetMessageManager()->SendGUIStringEx((eMessageType)messageType, parm1, parm2, finger, str);  
+
+}
+
 void AppOnKey( JNIEnv*  env, jobject jobj, jint type, jint keycode, jint c)
 {
 	
@@ -914,6 +931,11 @@ int AppOSMessageGet(JNIEnv* env)
 	}
 
 	return OSMessage::MESSAGE_NONE;
+}
+
+jstring AppGetLastOSMessageString(JNIEnv* env)
+{
+	 return(env->NewStringUTF(g_lastOSMessage.m_string.c_str()));
 }
 
 

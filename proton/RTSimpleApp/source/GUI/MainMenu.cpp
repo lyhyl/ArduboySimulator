@@ -71,7 +71,6 @@ Entity * MainMenuCreate(Entity *pParentEnt)
 	
 	AddFocusIfNeeded(pBG);
 	
-
 	//for android, so the back key (or escape on windows) will quit out of the game
 	EntityComponent *pComp = pBG->AddComponent(new CustomInputComponent);
 	//tell the component which key has to be hit for it to be activated

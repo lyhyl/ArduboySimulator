@@ -60,6 +60,19 @@ struct OSMessage
 		MESSAGE_SET_ACCELEROMETER_UPDATE_HZ,
 		MESSAGE_FINISH_APP, //only respected by windows and android right now.  webos and iphone don't really need it
 		MESSAGE_SET_VIDEO_MODE,
+		
+		//for tapjoy integration
+		MESSAGE_TAPJOY_GET_FEATURED_APP,
+		MESSAGE_TAPJOY_GET_AD,
+		MESSAGE_TAPJOY_GET_MOVIE,
+
+		MESSAGE_TAPJOY_SHOW_FEATURED_APP,  //used by AdManager
+		MESSAGE_TAPJOY_SHOW_AD, //used by AdManager
+		MESSAGE_TAPJOY_SHOW_MOVIE_AD, //used by AdManager
+
+		MESSAGE_IAP_PURCHASE, //used by IAPManager
+		MESSAGE_IAP_GET_PURCHASED_LIST, //for managed items with google billing, used by IAPManager
+
 		MESSAGE_USER = 1000
 	};
 

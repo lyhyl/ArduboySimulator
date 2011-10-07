@@ -10,6 +10,7 @@
 AudioManagerAndroid::AudioManagerAndroid()
 {
 	m_lastMusicID = 200000000; //doesn't matter, internal usage
+	m_globalVol = 1.0f;
 }
 
 AudioManagerAndroid::~AudioManagerAndroid()
@@ -288,12 +289,13 @@ AudioHandle AudioManagerAndroid::Play( string fName, bool bLooping /*= false*/, 
 			"sound_play",
 			"(IFFIIF)I");
 
-		int streamID = env->CallStaticIntMethod(cls, mid, pObject->m_soundID, jfloat(1.0f), jfloat(1.0f), jint(0), jint(loops), jfloat(1.0f));
+		int streamID = env->CallStaticIntMethod(cls, mid, pObject->m_soundID, jfloat(m_globalVol), jfloat(m_globalVol), jint(0), jint(loops), jfloat(1.0f));
 		if (streamID == 0)
 		{
 			//something is wrong... probably not loaded.  Reschedule
 			GetMessageManager()->SendGame(MESSAGE_TYPE_PLAY_SOUND, fName, 50, TIMER_SYSTEM);
 		}
+
 		return (AudioHandle) streamID;
 	}
 
@@ -446,8 +448,8 @@ void AudioManagerAndroid::SetPan( AudioHandle soundID, float pan )
 		float volLeft = rt_max(1, 1- pan);
 		float volRight = rt_max(1, 1- (-pan));
 
-		LogMsg("%.2f converted to l %.2f, r %.2f");
-		env->CallStaticIntMethod(cls, mid, jint(soundID), jfloat(volLeft), jfloat(volRight));
+		//LogMsg("%.2f converted to l %.2f, r %.2f");
+		env->CallStaticIntMethod(cls, mid, jint(soundID), jfloat(volLeft*m_globalVol), jfloat(volRight*m_globalVol));
 	}
 }
 
@@ -500,6 +502,14 @@ void AudioManagerAndroid::SetVol( AudioHandle soundID, float vol )
 	}
 	assert(soundID);
 	
+	if (soundID == -1)
+	{
+		m_globalVol = vol;
+		//LogMsg("AudioManagerAndroid: Set globalvol to %.2f", m_globalVol);
+		SetMusicVol(m_musicVol);
+		return;
+	}
+
 #ifdef _DEBUG
 	//LogMsg("Setting vol to %.2f", vol);
 #endif
@@ -510,7 +520,7 @@ void AudioManagerAndroid::SetVol( AudioHandle soundID, float vol )
 		jmethodID mid = env->GetStaticMethodID(cls,
 			"sound_set_vol",
 			"(IFF)V");
-		env->CallStaticIntMethod(cls, mid, jint(soundID), jfloat(vol), jfloat(vol));
+		env->CallStaticIntMethod(cls, mid, jint(soundID), jfloat(vol*m_globalVol), jfloat(vol*m_globalVol));
 	}
 
 }
@@ -526,7 +536,7 @@ void AudioManagerAndroid::SetMusicVol(float vol )
 		jmethodID mid = env->GetStaticMethodID(cls,
 			"music_set_volume",
 			"(F)V");
-		env->CallStaticVoidMethod(cls, mid, jfloat(vol));
+		env->CallStaticVoidMethod(cls, mid, jfloat(vol*m_globalVol));
 	}
 	
 }

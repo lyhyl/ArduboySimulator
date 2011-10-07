@@ -117,6 +117,14 @@ enum eMessageType
 	MESSAGE_TYPE_PRELOAD_SOUND,
 	MESSAGE_TYPE_GUI_CHAR_RAW,
 	MESSAGE_TYPE_SET_SOUND_ENABLED,
+	
+	MESSAGE_TYPE_TAPJOY_AD_READY,
+	MESSAGE_TYPE_TAPJOY_FEATURED_APP_READY,
+	MESSAGE_TYPE_TAPJOY_MOVIE_AD_READY,
+
+	MESSAGE_TYPE_IAP_RESULT,
+	MESSAGE_TYPE_IAP_ITEM_STATE,
+
 	MESSAGE_USER = 1000 //users can add their own messages starting here
 	
 };
@@ -193,6 +201,8 @@ public:
 	void SendGUI( eMessageType type, int parm1, int parm2 = 0, int deliverTimeMS = 0, eTimingSystem timing = TIMER_SYSTEM);
 	void SendGUI( eMessageType type, const Variant &v, int deliverTimeMS = 0);
 	void SendGUIEx( eMessageType type, int parm1, int parm2, int finger, int deliverTimeMS = 0, eTimingSystem timing = TIMER_SYSTEM);
+	void SendGUIStringEx( eMessageType type, int parm1, int parm2, int finger, string s, int deliverTimeMS = 0, eTimingSystem timing = TIMER_SYSTEM);
+
 	void SendGame( eMessageType type, const string msg, int deliverTimeMS = 0, eTimingSystem timing = TIMER_GAME);
 	void SendGame( eMessageType type, const Variant &v, int deliverTimeMS = 0, eTimingSystem timing = TIMER_GAME);
 	void SetEntityVariable( Entity *pEnt, int timeMS, const string &varName, const Variant &v, eTimingSystem timing = GetTiming());
@@ -217,7 +227,7 @@ private:
 	void DumpMessagesInList(list<Message*> m);
 	void Deliver(Message *m);
 	void DeleteAllMessages();
-	
+
 	//a separate queue for each timing system
 	list <Message*> m_gameMessages;
 	list <Message*> m_systemMessages;

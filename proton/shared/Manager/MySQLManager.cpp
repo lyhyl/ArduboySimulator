@@ -13,6 +13,7 @@ MySQLManager::MySQLManager()
 {
 	m_conn = NULL;
 	m_pingTimer = 0;
+	m_bLostServerConnection = false;
 }
 
 MySQLManager::~MySQLManager()
@@ -29,9 +30,12 @@ void MySQLManager::Kill()
 	}
 }
 
-void MySQLManager::ShowError()
+int MySQLManager::ShowError()
 {
-	LogError("MySQLManager error: %u: %s", mysql_errno(m_conn), mysql_error(m_conn));
+	int error = mysql_errno(m_conn);
+
+	LogError("MySQLManager error: %u: %s", error, mysql_error(m_conn));
+	return error;
 }
 
 bool MySQLManager::DoesTableExist(string tableName, bool bShowErrors)
@@ -134,8 +138,9 @@ bool MySQLManager::Init(string name, string password)
 {
 	LogMsg("MySQL client version: %s", mysql_get_client_info());
 	Kill();
-	
-	
+	m_bLostServerConnection = false;
+	//store these so we can re-connect ourselves if needed
+
 	m_conn = mysql_init(NULL);
 	
 	if (!m_conn)
@@ -164,7 +169,13 @@ bool MySQLManager::Query( string query, bool bShowError )
 	{
 		if (bShowError)
 		{
-			ShowError();
+			int error = ShowError();
+			if (error == 2006) //this should be CR_SERVER_GONE_ERROR, but I can't find the define..
+			{
+				//let our user know something is desparately wrong.  mysql service probably died, requiring a restart
+				m_bLostServerConnection = true;
+			}
+			
 		}
 		return false;
 	}
