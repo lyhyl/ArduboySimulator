@@ -10,6 +10,14 @@ extern "C"
 	{
 		AppOnKey(env, thiz, type, keycode, c);
 	}
+	JNIEXPORT void JNICALL Java_com_rtsoft_shared_SharedActivity_nativeSendGUIEx(  JNIEnv*  env, jobject thiz,jint messageType, jint parm1, jint parm2, jint finger )
+	{
+		AppOnSendGUIEx(env, thiz, messageType, parm1, parm2, finger);
+	}
+	JNIEXPORT void JNICALL Java_com_machineworksnorthwest_duke3d_SharedActivity_nativeSendGUIStringEx(  JNIEnv*  env, jobject thiz,jint messageType, jint parm1, jint parm2, jint finger, jstring s )
+	{
+		AppOnSendGUIStringEx(env, thiz, messageType, parm1, parm2, finger,s );
+	}
 	JNIEXPORT void JNICALL Java_com_rtsoft_shared_SharedActivity_nativeOnAccelerometerUpdate(  JNIEnv*  env, jobject thiz, jfloat x, jfloat y, jfloat z)
 	{
 		AppOnAccelerometerUpdate(env, thiz, x, y, z);

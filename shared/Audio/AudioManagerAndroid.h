@@ -89,7 +89,7 @@ private:
 
 protected:
 
-
+float m_globalVol;
 private:
 };
 

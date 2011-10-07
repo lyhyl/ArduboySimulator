@@ -28,4 +28,7 @@ int AppOSMessageGet(JNIEnv* env);
 float AppGetLastOSMessageX(JNIEnv* env);
 void AppOnAccelerometerUpdate(JNIEnv* env, jobject jobj, jfloat x, jfloat y, jfloat z);
 void AppOnTrackball(JNIEnv* env, jobject jobj, jfloat x, jfloat y);
+void AppOnSendGUIEx(JNIEnv*  env, jobject thiz,jint messageType, jint parm1, jint parm2, jint finger );
+jstring AppGetLastOSMessageString(JNIEnv* env);
+void AppOnSendGUIStringEx(JNIEnv* env, jobject thiz,jint messageType, jint parm1, jint parm2, jint finger, jstring s );
 #endif // WebOSUtils_h__

@@ -444,6 +444,45 @@ return m_szDevIDShort;
 	final static int VIRTUAL_KEY_SHIFT = 500011;
 	final static int VIRTUAL_KEY_TRACKBALL_DOWN = 500035;
 
+
+//messages we could call on Proton using nativeSendGUIEx:
+	final static int MESSAGE_TYPE_GUI_CLICK_START = 0;
+	final static int MESSAGE_TYPE_GUI_CLICK_END = 1;
+	final static int MESSAGE_TYPE_GUI_CLICK_MOVE = 2; //only send when button/finger is held down
+	final static int MESSAGE_TYPE_GUI_CLICK_MOVE_RAW = 3; //win only, the raw mouse move messages
+	final static int MESSAGE_TYPE_GUI_ACCELEROMETER = 4;
+	final static int MESSAGE_TYPE_GUI_TRACKBALL = 5;
+	final static int MESSAGE_TYPE_GUI_CHAR = 6; //the input box uses it on windows since we don't have a virtual keyboard
+	final static int MESSAGE_TYPE_GUI_COPY = 7;
+	final static int MESSAGE_TYPE_GUI_PASTE = 8;
+	final static int MESSAGE_TYPE_GUI_TOGGLE_FULLSCREEN = 9;
+
+	final static int MESSAGE_TYPE_SET_ENTITY_VARIANT = 10;
+	final static int MESSAGE_TYPE_CALL_ENTITY_FUNCTION = 11;
+	final static int MESSAGE_TYPE_CALL_COMPONENT_FUNCTION_BY_NAME = 12;
+	final static int MESSAGE_TYPE_PLAY_SOUND = 13;
+	final static int MESSAGE_TYPE_VIBRATE = 14;
+	final static int MESSAGE_TYPE_REMOVE_COMPONENT = 15;
+	final static int MESSAGE_TYPE_ADD_COMPONENT = 16;
+	final static int MESSAGE_TYPE_OS_CONNECTION_CHECKED = 17; //sent by macOS, will send an eOSSTreamEvent as parm1
+	final static int MESSAGE_TYPE_PLAY_MUSIC = 18;
+	final static int MESSAGE_TYPE_UNKNOWN = 19;
+	final static int MESSAGE_TYPE_PRELOAD_SOUND = 20;
+	final static int MESSAGE_TYPE_GUI_CHAR_RAW = 21;
+	final static int MESSAGE_TYPE_SET_SOUND_ENABLED = 22;
+	
+	final static int MESSAGE_TYPE_TAPJOY_AD_READY = 23;
+	final static int MESSAGE_TYPE_TAPJOY_FEATURED_APP_READY = 24;
+	final static int MESSAGE_TYPE_TAPJOY_MOVIE_AD_READY = 25;
+
+	//GOOGLE BILLING
+	final static int MESSAGE_TYPE_IAP_RESULT = 26;
+	final static int MESSAGE_TYPE_IAP_ITEM_STATE = 27;
+	
+	final static int MESSAGE_USER = 1000; //send your own messages after this #
+	
+	
+
 	public int TranslateKeycodeToProtonVirtualKey(int keycode)
 	{
 
@@ -873,6 +912,21 @@ class AppRenderer implements GLSurfaceView.Renderer
 	final static int MESSAGE_SET_FPS_LIMIT = 4;
 	final static int MESSAGE_SET_ACCELEROMETER_UPDATE_HZ = 5;
 	final static int MESSAGE_FINISH_APP = 6; //only respected by windows and android right now.  webos and iphone don't really need it
+	final static int MESSAGE_SET_VIDEO_MODE = 7; 
+
+	final static int MESSAGE_TAPJOY_GET_FEATURED_APP = 8; 
+	final static int MESSAGE_TAPJOY_GET_AD = 9; 
+	final static int MESSAGE_TAPJOY_GET_MOVIE = 10; 
+
+	final static int MESSAGE_TAPJOY_SHOW_FEATURED_APP = 11; 
+	final static int MESSAGE_TAPJOY_SHOW_AD = 12; 
+	final static int MESSAGE_TAPJOY_SHOW_MOVIE = 13; 
+	
+	final static int MESSAGE_IAP_PURCHASE = 14;
+	
+	final static int MESSAGE_IAP_GET_PURCHASED_LIST = 15;
+
+
 	static long m_gameTimer = 0;
 	static int m_timerLoopMS = 0; //every this MS, the loop runs.  0 for no fps limit
 
@@ -953,6 +1007,7 @@ class AppRenderer implements GLSurfaceView.Renderer
 
 	private static native int nativeOSMessageGet();
 	private static native float nativeGetLastOSMessageX();
+	private static native String nativeGetLastOSMessageString();
 	public SharedActivity app;
 
 

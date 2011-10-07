@@ -101,6 +101,17 @@ void MessageManager::SendGUIEx( eMessageType type, int parm1, int parm2, int fin
 	Send(m);
 }
 
+void MessageManager::SendGUIStringEx( eMessageType type, int parm1, int parm2, int finger, string s, int deliverTimeMS, eTimingSystem timing)
+{
+	Message *m = new Message(MESSAGE_CLASS_GUI, timing, type);
+	m->SetStringParm(s);
+	m->SetParm1(parm1);
+	m->SetParm2(parm2);
+	m->SetParm3(finger);
+	m->SetDeliveryTime(deliverTimeMS);
+	Send(m);
+}
+
 void MessageManager::SendGUI( eMessageType type, const Variant &v, int deliverTimeMS)
 {
 	Message *m = new Message(MESSAGE_CLASS_GUI, TIMER_SYSTEM, type);

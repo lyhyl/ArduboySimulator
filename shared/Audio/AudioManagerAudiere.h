@@ -93,11 +93,9 @@ private:
 	
 	AudioDevicePtr	   m_pDevice;
 
-	//FMOD::System     *system;
 	list<SoundObject*>	m_soundList;
-	//SoundObject*		m_pLastPlayedMusic;
-	//FMOD::Channel *m_pMusicChannel;
-	
+	float m_globalVol;
+
 protected:
 
 

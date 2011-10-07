@@ -8,6 +8,7 @@
 AudioManagerAudiere::AudioManagerAudiere()
 {
 	m_pDevice = NULL;
+	m_globalVol = 1.0f;
 }
 
 AudioManagerAudiere::~AudioManagerAudiere()
@@ -212,6 +213,10 @@ AudioHandle AudioManagerAudiere::Play( string fName, bool bLooping /*= false*/, 
 	pObject->m_pSound->setRepeat(bLooping);
 
 	pObject->m_pSound->play();
+	if (m_globalVol != 1.0f)
+	{
+		SetVol( (AudioHandle)pObject, 1.0f);
+	}
 	return (AudioHandle)pObject;
 }
 
@@ -325,7 +330,19 @@ void AudioManagerAudiere::SetPos( AudioHandle soundID, uint32 posMS )
 
 void AudioManagerAudiere::SetVol( AudioHandle soundID, float vol )
 {
-	
+
+	if (soundID == -1)
+	{
+		m_globalVol = vol;
+		return;
+	}
+
+	SoundObject *pObject = GetSoundObjectByPointer((void*)soundID);
+
+	if (pObject && pObject->m_pSound)
+	{
+		pObject->m_pSound->setVolume(vol*m_globalVol);
+	}
 }
 
 void AudioManagerAudiere::SetMusicVol(float vol )
@@ -336,7 +353,7 @@ void AudioManagerAudiere::SetMusicVol(float vol )
 	{
 		if ( (*itor)->m_bIsMusic)
 		{
-			(*itor)->m_pSound->setVolume(vol);
+			(*itor)->m_pSound->setVolume(vol*m_globalVol);
 		}
 		itor++;
 	}

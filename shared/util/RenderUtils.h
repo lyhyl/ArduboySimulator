@@ -15,7 +15,8 @@
 class Surface;
 class Entity;
 #ifdef _DEBUG
-#define CHECK_GL_ERROR() { GLenum __error = glGetError(); if(__error) LogError("OpenGL error 0x%04X (%d) in %s line %d\n", __error,__error, __FUNCTION__, __LINE__);}
+#define CALL_THE_QGL_VERSION_OF_glGetError glGetError
+#define CHECK_GL_ERROR() { GLenum __error = glGetError(); if(__error) {LogError("OpenGL error 0x%04X (%d) in %s line %d\n", __error,__error, __FUNCTION__, __LINE__); /*assert(0);*/ } }
 #else
 #define CHECK_GL_ERROR() 
 #endif

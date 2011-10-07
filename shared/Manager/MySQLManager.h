@@ -26,7 +26,7 @@ public:
 	virtual ~MySQLManager();
 	bool Init(string name, string password);
 	void Kill();
-	void ShowError();
+	int ShowError(); //also returns the error number
 	bool Query(string query, bool bShowError = true);
 	bool DoesTableExist(string tableName, bool bShowErrors);
 	int GetLastAutoIncrementInsertID();
@@ -34,14 +34,14 @@ public:
 	int GetArrayCountOfLastQuery();
 	void Update(); //call every frame, it avoids disconnection by pinging its sql connection every once in a while
 	bool DoResultsExist();
-
+	bool LostServerConnection() {return m_bLostServerConnection;}
 protected:
 	
 
 private:
 	MYSQL *m_conn;
 	uint32 m_pingTimer; //do a query every 4 hours to avoid being disconnected
-	
+	bool m_bLostServerConnection;
 };
 
 #endif // MySQLManager_h__
