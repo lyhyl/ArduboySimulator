@@ -13,6 +13,17 @@ InputTextRenderComponent::~InputTextRenderComponent()
 	GetFunction("CloseKeyboard")->sig_function(NULL);
 }
 
+void InputTextRenderComponent::OnVisibilityChanged(Variant *pDataObject)
+{
+	if (pDataObject->GetUINT32() == 0)
+	{
+		//we're no longer visible.  If we have focus and the keyboard is up, we should really put it down
+		CloseKeyboard(NULL);
+	}
+	
+}
+
+
 void InputTextRenderComponent::OnTextChanged(Variant *pDataObject)
 {
 	rtRectf rt;
@@ -174,7 +185,9 @@ void InputTextRenderComponent::OnAdd(Entity *pEnt)
 	GetParent()->GetFunction("OnLosingNativeGUIFocus")->sig_function.connect(1, boost::bind(&InputTextRenderComponent::OnLosingNativeGUIFocus, this, _1)); 
 	GetFunction("ActivateKeyboard")->sig_function.connect(1, boost::bind(&InputTextRenderComponent::ActivateKeyboard, this, _1)); 
 	GetFunction("CloseKeyboard")->sig_function.connect(1, boost::bind(&InputTextRenderComponent::CloseKeyboard, this, _1)); 
-	
+	m_pVisible = &GetParent()->GetVarWithDefault("visible", uint32(1))->GetUINT32();
+	GetParent()->GetVar("visible")->GetSigOnChanged()->connect(1, boost::bind(&InputTextRenderComponent::OnVisibilityChanged, this, _1));
+
 	//our own stuff
 	m_pDisabled = &GetVarWithDefault("disabled", uint32(0))->GetUINT32();
 	m_pStyle = &GetVarWithDefault("style", Variant(uint32(STYLE_NORMAL)))->GetUINT32();
@@ -204,12 +217,13 @@ void InputTextRenderComponent::OnAdd(Entity *pEnt)
 	GetBaseApp()->m_sig_enterforeground.connect(1, boost::bind(&InputTextRenderComponent::OnEnterForeground, this, _1));
 	GetBaseApp()->m_sig_enterbackground.connect(1, boost::bind(&InputTextRenderComponent::OnEnterBackground, this, _1));
 
-
 }
 
 
 void InputTextRenderComponent::OnTouchEnd(VariantList *pVList)
 {
+	if (*m_pVisible == 0) return;
+
 	if (*m_pDisabled == false)
 	{
 		ActivateKeyboard(NULL);
@@ -262,6 +276,8 @@ void InputTextRenderComponent::OnUpdate(VariantList *pVList)
 void InputTextRenderComponent::OnRender(VariantList *pVList)
 {
 	if (*m_pAlpha <= 0) return;
+
+	if (*m_pVisible == 0) return;
 
 	CL_Vec2f vFinalPos = pVList->m_variant[0].GetVector2()+*m_pPos2d;
 	//vFinalPos -= GetAlignmentOffset(*m_pSize2d, eAlignment(*m_pAlignment));
@@ -321,6 +337,7 @@ void InputTextRenderComponent::OnRender(VariantList *pVList)
 
 void InputTextRenderComponent::OnInput( VariantList *pVList )
 {
+	if (*m_pVisible == 0) return;
 
 	//0 = message type, 1 = parent coordinate offset, 2 = char, 3 reserved for filtering control messages
 	

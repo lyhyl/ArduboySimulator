@@ -56,6 +56,7 @@ private:
 	void OnLosingNativeGUIFocus(VariantList *pVList);
 	void OnEnterForeground(VariantList *pVList);
 	void OnEnterBackground(VariantList *pVList);
+	void OnVisibilityChanged(Variant *pDataObject);
 	CL_Vec2f *m_pPos2d;
 	CL_Vec2f *m_pTextOffsetPos2d;
 	CL_Vec2f *m_pSize2d;
@@ -76,6 +77,7 @@ private:
 	uint32 *m_pDisabled;
 	uint32 *m_pInputType;
 	uint32 *m_pFiltering;
+	uint32 *m_pVisible;
 
 };
 
