@@ -10,7 +10,11 @@ InputTextRenderComponent::InputTextRenderComponent()
 
 InputTextRenderComponent::~InputTextRenderComponent()
 {
-	GetFunction("CloseKeyboard")->sig_function(NULL);
+	//BigB's change
+	if (GetEntityWithNativeUIFocus() == GetParent())
+	{
+		GetFunction("CloseKeyboard")->sig_function(NULL);
+	}
 }
 
 void InputTextRenderComponent::OnVisibilityChanged(Variant *pDataObject)
