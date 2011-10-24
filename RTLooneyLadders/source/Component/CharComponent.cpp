@@ -165,7 +165,9 @@ void CharComponent::PlayerAI()
 
 			vLadderPos.y += 80;
 			GetBuilding()->EraseCellByWorldPos(vLadderPos);
-			GetMessageManager()->CallComponentFunction(GetCharManager(), 1, "InitEffect", &VariantList(vLadderPos, EFFECT_STARS));
+			
+            VariantList vList(vLadderPos, EFFECT_STARS);
+            GetMessageManager()->CallComponentFunction(GetCharManager(), 1, "InitEffect", &vList);
 
 			OnGotDoor();
 			
@@ -277,7 +279,8 @@ void CharComponent::OnDamage(VariantList *pVList)
 
 void CharComponent::PreExplode(VariantList *pVList)
 {
-	GetMessageManager()->CallComponentFunction(GetCharManager(), 1, "InitEffect", &VariantList(*m_pPos2d, EFFECT_EXPLODE));
+    VariantList vList(*m_pPos2d, EFFECT_EXPLODE);
+	GetMessageManager()->CallComponentFunction(GetCharManager(), 1, "InitEffect", &vList);
 }
 
 void CharComponent::Explode(VariantList *pVList)
@@ -288,7 +291,8 @@ void CharComponent::Explode(VariantList *pVList)
 	
 	Entity *pFolder = GetParent()->GetParent();
 
-	pFolder->CallFunctionRecursively("OnDamage", &VariantList(*m_pPos2d, this, radius, damage));
+    VariantList vList(*m_pPos2d, this, radius, damage);
+	pFolder->CallFunctionRecursively("OnDamage", &vList);
 
 	KillEntity(GetParent());
 
@@ -460,12 +464,17 @@ void CharComponent::UpLadder()
 
 		assert(pCell->m_type == BCell::TYPE_ELEVATOR);
 		GetAudioManager()->Play("audio/elevator.wav");
-		GetMessageManager()->CallComponentFunction(this, 500,"SetPositionByFloorAndCell",  &VariantList(pCell->m_elevatorTargetFloor, uint32(pCell->m_elevatorTargetCell)));
+		VariantList vList(pCell->m_elevatorTargetFloor, uint32(pCell->m_elevatorTargetCell));
+        GetMessageManager()->CallComponentFunction(this, 500,"SetPositionByFloorAndCell",  &vList);
 
 		CL_Vec2f vNewLocation = GetBuilding()->FloorAndCellToWorldPosForCharacter(pCell->m_elevatorTargetFloor, pCell->m_elevatorTargetCell);
 		CL_Vec2f vOffset = CL_Vec2f(0, 70);
-		GetMessageManager()->CallComponentFunction(GetCharManager(), 300, "InitEffect", &VariantList(vLadderPos+vOffset, EFFECT_TELEPORT));
-		GetMessageManager()->CallComponentFunction(GetCharManager(), 500, "InitEffect", &VariantList(vNewLocation, EFFECT_TELEPORT));
+        
+        vList = VariantList(vLadderPos+vOffset, EFFECT_TELEPORT);
+                            GetMessageManager()->CallComponentFunction(GetCharManager(), 300, "InitEffect", &vList);
+
+		vList = VariantList(vNewLocation, EFFECT_TELEPORT);
+        GetMessageManager()->CallComponentFunction(GetCharManager(), 500, "InitEffect", &vList);
 
 		FadeEntity(GetParent(), false, 0, 500, 0, false);
 		FadeEntity(GetParent(), false, 1, 500, 500, true);

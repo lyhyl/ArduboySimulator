@@ -119,13 +119,17 @@ void HTTPComponent::OnUpdate(VariantList *pVList)
 	{
 		//send a pointer to us, and the actual error
 		m_state = STATE_FINISHED;
-		GetFunction("OnError")->sig_function(&VariantList(this, uint32(m_netHTTP.GetError())));
+        VariantList vList(this, uint32(m_netHTTP.GetError()));
+                          
+		GetFunction("OnError")->sig_function(&vList);
 		return;
 	}
 
 	if (m_netHTTP.GetState() == NetHTTP::STATE_ACTIVE)
 	{
-		GetFunction("OnStatusUpdate")->sig_function(&VariantList(this, uint32(m_netHTTP.GetDownloadedBytes()),uint32(m_netHTTP.GetExpectedBytes())));
+        VariantList vList(this, uint32(m_netHTTP.GetDownloadedBytes()),uint32(m_netHTTP.GetExpectedBytes()));
+                          
+		GetFunction("OnStatusUpdate")->sig_function(&vList);
 	}
 
 	if (m_netHTTP.GetState() == NetHTTP::STATE_FINISHED)
@@ -136,10 +140,12 @@ void HTTPComponent::OnUpdate(VariantList *pVList)
 		m_state = STATE_FINISHED;
 		if (m_netHTTP.GetDownloadedData())
 		{
-			GetFunction("OnFinish")->sig_function(&VariantList(this,Variant((char*)m_netHTTP.GetDownloadedData())));
+            VariantList vList(this,Variant((char*)m_netHTTP.GetDownloadedData()));
+			GetFunction("OnFinish")->sig_function(&vList);
 		} else
 		{
-			GetFunction("OnFinish")->sig_function(&VariantList(this,Variant("")));
+            VariantList vList(this,Variant(""));
+			GetFunction("OnFinish")->sig_function(&vList);
 
 		}
 		
@@ -194,7 +200,8 @@ void HTTPComponent::OnOS(VariantList *pVList)
 			
 			if (m_prepareTryCount > C_MAX_PREPARE_TRIES)
 			{
-				GetFunction("OnError")->sig_function(&VariantList(this, uint32(event)));
+                VariantList vList(this, uint32(event));
+				GetFunction("OnError")->sig_function(&vList);
 				return;
 			}
 			GetMessageManager()->CallComponentFunction(this, 1000, "PrepareConnection");
@@ -203,7 +210,10 @@ void HTTPComponent::OnOS(VariantList *pVList)
 
 
 		default:
-		GetFunction("OnError")->sig_function(&VariantList(this, uint32(event)));
+            {
+                VariantList vList(this, uint32(event));
+                GetFunction("OnError")->sig_function(&vList);
+            }
 			break;
 		}
 	

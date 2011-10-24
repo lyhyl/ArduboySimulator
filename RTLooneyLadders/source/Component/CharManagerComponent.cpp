@@ -71,7 +71,8 @@ void CharManagerComponent::OnAdd(Entity *pEnt)
 		assert(!"error");
 		return;
 	}
-	pChar->GetFunction("SetPositionByFloorAndCell")->sig_function( &VariantList(uint32(0), uint32(pCell->m_cellID)));
+    VariantList vList(uint32(0), uint32(pCell->m_cellID));
+	pChar->GetFunction("SetPositionByFloorAndCell")->sig_function( &vList);
 }
 
 void CharManagerComponent::OnRemove()
@@ -99,7 +100,9 @@ void CharManagerComponent::AddCharEx( eID id, eAI ai, uint32 floorID, float x )
 	pEnt->AddComponent(pChar);
 	//	m_chars.push_back(pChar);
 
-	pChar->GetFunction("SetPositionByFloorAndX")->sig_function( &VariantList(uint32(floorID), float(x)));
+    VariantList vList(uint32(floorID), (float)x);
+	
+    pChar->GetFunction("SetPositionByFloorAndX")->sig_function( &vList);
 
 	}
 

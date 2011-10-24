@@ -150,9 +150,10 @@ void FPSControlComponent::OnStripUpdate(VariantList *pVList)
 {
 	m_lastTouchDir = (pVList->Get(1).GetVector2()*2) - CL_Vec2f(1, 1);
 
-	//update current position
-	OnOverEnd(&VariantList(CL_Vec2f(0,0)));
-	OnOverStart(&VariantList(CL_Vec2f(0,0)));
+	VariantList vList(CL_Vec2f(0,0));
+    //update current position
+	OnOverEnd(&vList);
+	OnOverStart(&vList);
 
 }
 

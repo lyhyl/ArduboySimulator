@@ -54,7 +54,7 @@
 				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
 				PBXFileTableDataSourceColumnWidthsKey = (
 					20,
-					981,
+					844,
 					20,
 					48,
 					43,
@@ -93,10 +93,11 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 325601910;
-			PBXWorkspaceStateSaveDate = 325601910;
+			PBXPerProjectTemplateStateSaveDate = 341048394;
+			PBXWorkspaceStateSaveDate = 341048394;
 		};
 		perUserProjectItems = {
+			5D0A0DA01453FC4F00B2EF35 /* PBXTextBookmark */ = 5D0A0DA01453FC4F00B2EF35 /* PBXTextBookmark */;
 			5D9D49B812E82D70006CD82C /* PlistBookmark */ = 5D9D49B812E82D70006CD82C /* PlistBookmark */;
 			5D9D49B912E82D70006CD82C /* PBXTextBookmark */ = 5D9D49B912E82D70006CD82C /* PBXTextBookmark */;
 			5D9D49BA12E82D70006CD82C /* PBXTextBookmark */ = 5D9D49BA12E82D70006CD82C /* PBXTextBookmark */;
@@ -109,12 +110,21 @@
 			5DB629E112E3F67B00753669 /* PBXBookmark */ = 5DB629E112E3F67B00753669 /* PBXBookmark */;
 			5DC9193113684CFF00AA176A /* PBXTextBookmark */ = 5DC9193113684CFF00AA176A /* PBXTextBookmark */;
 			5DC9193213684CFF00AA176A /* PBXTextBookmark */ = 5DC9193213684CFF00AA176A /* PBXTextBookmark */;
-			5DC9193313684CFF00AA176A /* XCBuildMessageTextBookmark */ = 5DC9193313684CFF00AA176A /* XCBuildMessageTextBookmark */;
 			5DC9194F13684FC900AA176A /* PBXTextBookmark */ = 5DC9194F13684FC900AA176A /* PBXTextBookmark */;
 		};
 		sourceControlManager = 5DB628E212DECD5900753669 /* Source Control */;
 		userBuildSettings = {
 		};
+	};
+	5D0A0DA01453FC4F00B2EF35 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5D8F8F5B12D6D69300E9B3B8 /* CProtonReader.cpp */;
+		name = "CProtonReader.cpp: 191";
+		rLen = 0;
+		rLoc = 4994;
+		rType = 0;
+		vrLen = 682;
+		vrLoc = 88;
 	};
 	5D0CC9400F79E0E1004D9AE9 /* ResourceUtils.cpp */ = {
 		uiCtxt = {
@@ -162,9 +172,9 @@
 	};
 	5D8F8F5B12D6D69300E9B3B8 /* CProtonReader.cpp */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1171, 2574}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1034, 2535}}";
 			sepNavSelRange = "{4994, 0}";
-			sepNavVisRange = "{0, 770}";
+			sepNavVisRange = "{88, 682}";
 			sepNavWindowFrame = "{{15, 4}, {1578, 1054}}";
 		};
 	};
@@ -359,15 +369,6 @@
 		rType = 0;
 		vrLen = 935;
 		vrLoc = 0;
-	};
-	5DC9193313684CFF00AA176A /* XCBuildMessageTextBookmark */ = {
-		isa = PBXTextBookmark;
-		comments = "../IrrlichtManager.h: No such file or directory";
-		fRef = 5D8F8F5B12D6D69300E9B3B8 /* CProtonReader.cpp */;
-		fallbackIsa = XCBuildMessageTextBookmark;
-		rLen = 1;
-		rLoc = 17;
-		rType = 1;
 	};
 	5DC9194F13684FC900AA176A /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;

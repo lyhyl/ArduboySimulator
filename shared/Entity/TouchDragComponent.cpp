@@ -61,8 +61,9 @@ void TouchDragComponent::SetPosition(CL_Vec2f vInputPos)
 		vPos.y *= -1;
 	}
 
+    VariantList vList(this, vPos);
 
-	m_pOnTouchDragUpdate->sig_function(&VariantList(this, vPos));
+	m_pOnTouchDragUpdate->sig_function(&vList);
 }
 
 
@@ -99,7 +100,9 @@ void TouchDragComponent::OnInput( VariantList *pVList )
 				TouchTrackInfo *pTouch = GetBaseApp()->GetTouch(pVList->Get(2).GetUINT32());
 				if (pTouch->WasHandled()) return;
 				pTouch->SetWasHandled(true);
-				GetParent()->GetFunction("OnOverStart")->sig_function(&VariantList(pt, GetParent(), uint32(fingerID)));
+                VariantList vList(pt, GetParent(), uint32(fingerID));
+                
+				GetParent()->GetFunction("OnOverStart")->sig_function(&vList);
 
 
 				m_lastPos = pt;
@@ -112,7 +115,8 @@ void TouchDragComponent::OnInput( VariantList *pVList )
 		
 		if (m_lastFingerID == fingerID)
 		{
-			GetParent()->GetFunction("OnOverEnd")->sig_function(&VariantList(pt, GetParent(), uint32(fingerID)));
+            VariantList vList(pt, GetParent(), uint32(fingerID));
+			GetParent()->GetFunction("OnOverEnd")->sig_function(&vList);
 			m_lastFingerID = -1;
 		}
 		//HandleClickEnd(pt);

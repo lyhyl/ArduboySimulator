@@ -128,7 +128,9 @@ void BaseApp::Draw()
 #ifdef _DEBUG
 //LogMsg("**********FRAME START");
 #endif
-	m_sig_render(&VariantList(Variant(0,0)));
+    VariantList vList(Variant(0,0));
+    
+	m_sig_render(&vList);
 
 	if (GetFPSVisible())
 	{

@@ -111,7 +111,9 @@ void DPadComponent::OnAdd(Entity *pEnt)
 	SetAlignmentEntity(m_pArrowEnt, ALIGNMENT_CENTER);
 
 	m_vArrowImageSizeOver2 = m_pArrowEnt->GetVar("size2d")->GetVector2()/2;
-	OnOverEnd(&VariantList());
+	
+    VariantList vList;
+    OnOverEnd(&vList);
 }
 
 void DPadComponent::OnRemove()

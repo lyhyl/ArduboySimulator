@@ -203,7 +203,8 @@ EntityComponent * SetupAnimEntity(Entity *pEnt, uint32 frameCountX, uint32 frame
 	
 	if (pEnt)
 	{
-		pComp->GetFunction("SetupAnim")->sig_function(&VariantList(frameCountX, frameCountY));
+        VariantList vList(frameCountX, frameCountY);
+		pComp->GetFunction("SetupAnim")->sig_function(&vList);
 
 		if (curFrameX != -1)
 		{
@@ -831,7 +832,8 @@ void KillEntity(Entity *pEnt, int timeMS)
 		pEnt->SetTaggedForDeletion();
 	} else
 	{
-		GetMessageManager()->CallEntityFunction(pEnt, timeMS, "OnDelete", &VariantList(pEnt));
+        VariantList vList(pEnt);
+		GetMessageManager()->CallEntityFunction(pEnt, timeMS, "OnDelete", &vList);
 	}
 }
 

@@ -29,7 +29,9 @@ void EntityComponent::OnRemove()
 	if (pFunc)
 	{
 		//looks like someone wanted notification
-		pFunc->sig_function(&VariantList(this));
+		VariantList vList(this);
+        
+        pFunc->sig_function(&vList);
 
 	}
 }

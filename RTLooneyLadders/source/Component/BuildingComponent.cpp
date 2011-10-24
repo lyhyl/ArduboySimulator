@@ -627,7 +627,8 @@ void BuildingComponent::OnUpdate(VariantList *pVList)
 	if (GetPlayer())
 	{
 		//focus camera in on player
-		FocusCamera(&VariantList(GetPlayer()->GetParent()->GetVar("pos2d")->GetVector2()));
+        VariantList vList(GetPlayer()->GetParent()->GetVar("pos2d")->GetVector2());
+		FocusCamera(&vList);
 
 	}
 }

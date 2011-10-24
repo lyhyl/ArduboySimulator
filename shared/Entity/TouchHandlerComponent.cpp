@@ -51,8 +51,10 @@ void TouchHandlerComponent::HandleClickStart(CL_Vec2f &pt, uint32 fingerID)
 	if (r.contains(pt))
 	{
 		m_pTouchOver->Set(uint32(1));
-		GetParent()->GetFunction("OnTouchStart")->sig_function(&VariantList(pt, GetParent(), fingerID));
-		GetParent()->GetFunction("OnOverStart")->sig_function(&VariantList(pt, GetParent(), fingerID));
+        VariantList vList(pt, GetParent(), fingerID);
+        
+		GetParent()->GetFunction("OnTouchStart")->sig_function(&vList);
+		GetParent()->GetFunction("OnOverStart")->sig_function(&vList);
 	}
 }
 
@@ -82,13 +84,15 @@ void TouchHandlerComponent::HandleClickMove( CL_Vec2f &pt, uint32 fingerID )
 			if (pFunc)
 			{
 				// I guess someone cares about knowing if it moves as well
-				pFunc->sig_function(&VariantList(pt, GetParent()));
+				VariantList vList(pt, GetParent());
+                pFunc->sig_function(&vList);
 			}
 
 		} else
 		{
 			m_pTouchOver->Set(uint32(0));
-			GetParent()->GetFunction("OnOverEnd")->sig_function(&VariantList(pt, GetParent(), fingerID));
+            VariantList vList(pt, GetParent(), fingerID);
+			GetParent()->GetFunction("OnOverEnd")->sig_function(&vList);
 		}
 	} else
 	{
@@ -97,7 +101,9 @@ void TouchHandlerComponent::HandleClickMove( CL_Vec2f &pt, uint32 fingerID )
 		if (r.contains(pt))
 		{
 			m_pTouchOver->Set(uint32(1));
-			GetParent()->GetFunction("OnOverStart")->sig_function(&VariantList(pt, GetParent(), fingerID));
+            VariantList vList(pt, GetParent(), fingerID);
+            
+			GetParent()->GetFunction("OnOverStart")->sig_function(&vList);
 		
 		} else
 		{
@@ -125,11 +131,13 @@ void TouchHandlerComponent::HandleClickEnd( CL_Vec2f &pt, uint32 fingerID )
 	}
 
 	m_pTouchOver->Set(uint32(0));
-	GetParent()->GetFunction("OnOverEnd")->sig_function(&VariantList(pt, GetParent(), fingerID));
+    VariantList vList(pt, GetParent(), fingerID);
+    
+	GetParent()->GetFunction("OnOverEnd")->sig_function(&vList);
 
 	if (r.contains(pt))
 	{
-			GetParent()->GetFunction("OnTouchEnd")->sig_function(&VariantList(pt, GetParent(), fingerID));
+			GetParent()->GetFunction("OnTouchEnd")->sig_function(&vList);
 	}
 }
 

@@ -358,7 +358,8 @@ void Entity::SetTaggedForDeletion()
 	if (m_bTaggedForDeletion) return; //already did it
 	m_bTaggedForDeletion = true;
 	//actually tell the deletion handler to do it ASAP
-	GetMessageManager()->CallEntityFunction(this, 0, "OnDelete", &VariantList(this));
+    VariantList vList(this);
+	GetMessageManager()->CallEntityFunction(this, 0, "OnDelete", &vList);
 }
 
 bool Entity::RemoveEntityByAddress(Entity *pEntToDelete, bool bDeleteAlso)

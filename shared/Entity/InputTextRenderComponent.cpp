@@ -120,7 +120,8 @@ void InputTextRenderComponent::ActivateKeyboard(VariantList *pVList)
 }
 void InputTextRenderComponent::OnLosingNativeGUIFocus(VariantList *pVList)
 {
-	GetFunction("CloseKeyboard")->sig_function(&VariantList(this));
+    VariantList vList(this);
+	GetFunction("CloseKeyboard")->sig_function(&vList);
 }
 
 void InputTextRenderComponent::OnEnterForeground(VariantList *pVList)
@@ -148,7 +149,8 @@ void InputTextRenderComponent::OnEnterBackground(VariantList *pVList)
 #ifdef _DEBUG
 		LogMsg("closing keyboard focus");
 #endif
-		GetFunction("CloseKeyboard")->sig_function(&VariantList(this));
+        VariantList vList(this);
+		GetFunction("CloseKeyboard")->sig_function(&vList);
 	}
 
 }
@@ -256,12 +258,15 @@ void InputTextRenderComponent::OnUpdate(VariantList *pVList)
 			if (curString.size() > m_pText->size())
 			{
 				//well, a character was added.  send it in case anybody cars
-				GetFunction("OnChar")->sig_function(&VariantList( this, uint32(curString[curString.size()-1]) ));
+                VariantList vList( this, uint32(curString[curString.size()-1]));
+				GetFunction("OnChar")->sig_function(&vList);
 			} else
 			{
 				if (curString.size() < m_pText->size())
 				{
-					GetFunction("OnChar")->sig_function(&VariantList( this, uint32(8) )); //send a delete char
+                    VariantList vList( this, uint32(8) );
+                    
+					GetFunction("OnChar")->sig_function(&vList); //send a delete char
 				}
 			}
 		
@@ -380,7 +385,8 @@ void InputTextRenderComponent::OnInput( VariantList *pVList )
 		if (c == 13)
 		{
 			//enter
-			GetFunction("CloseKeyboard")->sig_function(&VariantList(this));
+            VariantList vList(this);
+			GetFunction("CloseKeyboard")->sig_function(&vList);
 		} else
 		if (c == 8)
 		{

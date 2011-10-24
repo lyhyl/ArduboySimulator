@@ -80,7 +80,8 @@ void AboutMenuAddScrollContent(Entity *pParent)
 	//do something if someone clicks it
 
 	//automatically calculate the total size of this entity with all its children for the scroll bars, do this at the end
-	ResizeScrollBounds(&VariantList(pParent->GetParent()));
+	VariantList vList(pParent->GetParent());
+    ResizeScrollBounds(&vList);
 }
 
 
