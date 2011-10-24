@@ -103,7 +103,8 @@ void TouchStripComponent::OnInput(VariantList *pVList)
 				return;
 			}
 
-			GetParent()->GetFunction("OnOverStart")->sig_function(&VariantList(pt, GetParent(), fingerID));
+            VariantList vList(pt, GetParent(), fingerID);
+			GetParent()->GetFunction("OnOverStart")->sig_function(&vList);
 		}
 		}
 
@@ -112,7 +113,8 @@ void TouchStripComponent::OnInput(VariantList *pVList)
 		if (fingerID == m_activeFinger)
 		{
 		//	LogMsg("Finger %d released", fingerID);
-			GetParent()->GetFunction("OnOverEnd")->sig_function(&VariantList(pt, GetParent(), fingerID));
+			VariantList vList(pt, GetParent(), fingerID);
+            GetParent()->GetFunction("OnOverEnd")->sig_function(&vList);
 			m_activeFinger = -1;
 			
 			
@@ -137,7 +139,8 @@ void TouchStripComponent::OnInput(VariantList *pVList)
 
 					if (r.contains(pt))
 					{
-						GetParent()->GetFunction("OnOverStart")->sig_function(&VariantList(pt, GetParent(), fingerID));
+                        VariantList vList(pt, GetParent(), fingerID);
+						GetParent()->GetFunction("OnOverStart")->sig_function(&vList);
 					}
 					
 				}
@@ -187,6 +190,7 @@ void TouchStripComponent::SetPosition(CL_Vec2f vPos)
 	vPos.x *= m_pMult->x;
 	vPos.y *= m_pMult->y;
 	
-	m_pOnTouchStripUpdate->sig_function(&VariantList(this, vPos));
+    VariantList vList(this, vPos);
+	m_pOnTouchStripUpdate->sig_function(&vList);
 }
 

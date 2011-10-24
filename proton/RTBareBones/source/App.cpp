@@ -126,7 +126,8 @@ void App::OnAccel(VariantList *pVList)
 		if (pEnt)
 		{
 			//GetAudioManager()->Play("audio/click.wav");
-			pEnt->GetFunction("OnButtonSelected")->sig_function(&VariantList(CL_Vec2f(), pEnt));
+            VariantList vList(CL_Vec2f(), pEnt);
+			pEnt->GetFunction("OnButtonSelected")->sig_function(&vList);
 		}
 		LogMsg("Shake!");
 	}

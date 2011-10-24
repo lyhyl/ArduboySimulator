@@ -340,5 +340,6 @@ bool ArcadeInputComponent::GetDirectionKeysAsVector( CL_Vec2f *pVecOut )
 
 void AddKeyBinding(EntityComponent *pComp, string name, uint32 inputcode, uint32 outputcode)
 {
-	pComp->GetFunction("AddKeyBinding")->sig_function(&VariantList(name, inputcode, outputcode));
+    VariantList vList(name, inputcode, outputcode);
+	pComp->GetFunction("AddKeyBinding")->sig_function(&vList);
 }

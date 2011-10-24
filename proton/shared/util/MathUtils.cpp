@@ -275,7 +275,9 @@ CL_Rectf RotateGUIRect(CL_Rectf vRect, CL_Rectf r, float angle)
 		swap(vTopLeft.y, vBottomRight.y);
 	}
 
-	return CL_Rectf(vTopLeft, *(CL_Sizef*)&(vBottomRight-vTopLeft));
+    CL_Vec2f vTemp = vBottomRight-vTopLeft;
+    
+	return CL_Rectf(vTopLeft, *(CL_Sizef*)&(vTemp));
 }
 
 
