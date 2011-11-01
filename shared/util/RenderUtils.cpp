@@ -48,12 +48,15 @@ void RenderGLTriangle()
 	unsigned int rgba = MAKE_RGBA(255,0,0,255);
 	glColor4x( (rgba >>8 & 0xFF)*256,  (rgba>>16& 0xFF)*256, (rgba>>24& 0xFF)*256, (rgba&0xFF)*256);
 	glDisableClientState( GL_TEXTURE_COORD_ARRAY );
+
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 	//fix the color back to white
 	glColor4x(1 << 16, 1 << 16, 1 << 16, 1 << 16);
 
+
 	glEnableClientState( GL_TEXTURE_COORD_ARRAY );
 	glEnable(GL_TEXTURE_2D);
+	CHECK_GL_ERROR();
 }
 
 
@@ -379,6 +382,7 @@ bool SetupScreenInfoIPhone(int interfaceOrientation)
 
 void SetupScreenInfo(int x, int y, int orientation)
 {
+
 		SetupOriginalScreenSize(x, y);
 
 /*	

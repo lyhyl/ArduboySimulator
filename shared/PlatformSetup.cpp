@@ -43,6 +43,7 @@ string PlatformIDAsString(ePlatformID platformID)
 	case PLATFORM_ID_ANDROID: return "android";
 	case PLATFORM_ID_WINDOWS_MOBILE: return "winmo";
 	case PLATFORM_ID_WEBOS: return "webos";
+	case PLATFORM_ID_BBX: return "bbx";
 
 	}
 
@@ -62,6 +63,7 @@ string PlatformIDAsStringDisplay(ePlatformID platformID)
 	case PLATFORM_ID_ANDROID: return "Android";
 	case PLATFORM_ID_WINDOWS_MOBILE: return "WinMo";
 	case PLATFORM_ID_WEBOS: return "WebOS";
+	case PLATFORM_ID_BBX: return "BBX";
 	}
 	return "";
 }

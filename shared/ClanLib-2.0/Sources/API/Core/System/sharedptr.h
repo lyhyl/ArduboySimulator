@@ -35,9 +35,11 @@
 
 #include "../api_core.h"
 #include "system.h"
+#include <memory.h>
 #include "mutex.h"
 #include "exception.h"
 #include "memory_pool.h"
+#include "string.h"
 
 #ifndef WIN32
 #include <cstring>

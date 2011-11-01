@@ -81,7 +81,7 @@ void MessageManager::SendGame( eMessageType type, const Variant &v, int deliverT
 	m->SetDeliveryTime(deliverTimeMS);
 	Send(m);
 }
-void MessageManager::SendGUI( eMessageType type, int parm1, int parm2, int deliverTimeMS, eTimingSystem timing)
+void MessageManager::SendGUI( eMessageType type, float parm1, float parm2, int deliverTimeMS, eTimingSystem timing)
 {
 	Message *m = new Message(MESSAGE_CLASS_GUI, timing, type);
 	m->SetParm1(parm1);
@@ -91,7 +91,7 @@ void MessageManager::SendGUI( eMessageType type, int parm1, int parm2, int deliv
 	Send(m);
 }
 
-void MessageManager::SendGUIEx( eMessageType type, int parm1, int parm2, int finger, int deliverTimeMS, eTimingSystem timing)
+void MessageManager::SendGUIEx( eMessageType type, float parm1, float parm2, int finger, int deliverTimeMS, eTimingSystem timing)
 {
 	Message *m = new Message(MESSAGE_CLASS_GUI, timing, type);
 	m->SetParm1(parm1);
@@ -101,7 +101,7 @@ void MessageManager::SendGUIEx( eMessageType type, int parm1, int parm2, int fin
 	Send(m);
 }
 
-void MessageManager::SendGUIStringEx( eMessageType type, int parm1, int parm2, int finger, string s, int deliverTimeMS, eTimingSystem timing)
+void MessageManager::SendGUIStringEx( eMessageType type, float parm1, float parm2, int finger, string s, int deliverTimeMS, eTimingSystem timing)
 {
 	Message *m = new Message(MESSAGE_CLASS_GUI, timing, type);
 	m->SetStringParm(s);

@@ -60,11 +60,12 @@ void InitVideoSize()
 	AddVideoMode("Nexus One Landscape", 480, 800, PLATFORM_ID_ANDROID); //set g_landScapeNoNeckHurtMode to true
 	AddVideoMode("Xoom Landscape", 800,1280, PLATFORM_ID_ANDROID);//set g_landScapeNoNeckHurtMode to true 
 
-	string desiredVideoMode = "Droid Landscape"; //name needs to match one of the ones defined above
+	//RIM
+	AddVideoMode("Playbook Landscape", 600,1024, PLATFORM_ID_BBX);//set g_landScapeNoNeckHurtMode to true 
+
+	string desiredVideoMode = "Nexus One Landscape"; //name needs to match one of the ones defined above
     g_landScapeNoNeckHurtMode = true; //if true, will rotate the screen so we can play in landscape mode in windows without hurting ourselves
-
 	SetVideoModeByName(desiredVideoMode);
-
 	GetBaseApp()->OnPreInitVideo(); //gives the app level code a chance to override any of these parms if it wants to
 }
 
@@ -388,7 +389,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	
 		case VK_ESCAPE:
 
-			g_escapeMessageSent = true;
+			//g_escapeMessageSent = true;
 			break;
 
 		case VK_RETURN:
@@ -480,14 +481,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				if (!g_escapeMessageSent)
 				{
 					//work around for not registering escape messages on my dev machine sometimes
-					GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, key , 1);  
-					GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW, key , 1);  
+					GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, float(key) , float(1));  
+					GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW, float(key) , float(1));  
 				}
 				//g_escapeMessageSent
 
 				g_escapeMessageSent = false;
 			}
-			GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW, key , 0);  
+			GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW, float(key) , float(0));  
 		}
 	break;
 	
@@ -516,8 +517,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 			if (!g_bHasFocus) break;
 		
-			int xPos = GET_X_LPARAM(lParam);
-			int yPos = GET_Y_LPARAM(lParam) + GetYOffset();
+			float xPos = GET_X_LPARAM(lParam);
+			float yPos = GET_Y_LPARAM(lParam) + GetYOffset();
 			ConvertCoordinatesIfRequired(xPos, yPos);
 
 			GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_MOVE_RAW, xPos, yPos, 0);
@@ -817,9 +818,6 @@ assert(!g_hDC);
 
 	//UpdateWindow(g_hWnd);
 	//RedrawWindow(0, 0, 0, RDW_ALLCHILDREN|RDW_INVALIDATE|RDW_UPDATENOW);
-	
-	
-	
 	return true;
 }
 
@@ -868,7 +866,6 @@ void DestroyVideo(bool bDestroyHWNDAlso)
 		}
 		g_hWnd = NULL;
 	}
-
 }
 
 
@@ -889,7 +886,6 @@ string GetExePath()
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLine, int nCmdShow)
 {
 	
-
 #ifdef WIN32
 	::SetProcessAffinityMask( ::GetCurrentProcess(), 1 );
 #endif

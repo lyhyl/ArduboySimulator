@@ -20,7 +20,6 @@ void AdManager::SetTapjoyFeatureAppVisible( bool bVisible )
 {
 	if (bVisible)
 	{
-	
 		if (m_bTapjoyFeaturedAppReady)
 		{
 			LogMsg("Showing featured app!");
@@ -170,6 +169,6 @@ void AdManager::Init()
 {
 	//get going on caching these for later
 	CacheTapjoyAd();
-	CacheTapjoyFeaturedApp();
+	//CacheTapjoyFeaturedApp();
 }
 

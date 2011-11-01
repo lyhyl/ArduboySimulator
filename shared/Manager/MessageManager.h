@@ -141,10 +141,10 @@ class Message: public boost::signals::trackable
 		m_pComponent = NULL;
 	}
 
-	void SetParm1(int parm1) {m_parm1 = parm1;}
-	int GetParm1() {return m_parm1;}
-	void SetParm2(int parm2) {m_parm2 = parm2;}
-	int GetParm2() {return m_parm2;}
+	void SetParm1(float parm1) {m_parm1 = parm1;}
+	float GetParm1() {return m_parm1;}
+	void SetParm2(float parm2) {m_parm2 = parm2;}
+	float GetParm2() {return m_parm2;}
 	void SetParm3(int parm3) {m_parm3 = parm3;}
 	int GetParm3() {return m_parm3;}
 	eTimingSystem GetTimingMethod() {return m_timerMethod;}
@@ -176,8 +176,8 @@ private:
 	eMessageType m_type;
 	eTimingSystem m_timerMethod;
 	eMessageClass m_class;
-	int m_parm1;
-	int m_parm2;
+	float m_parm1;
+	float m_parm2;
 	int m_parm3;
 	unsigned int m_deliveryTime;
 	Variant m_variant;
@@ -198,10 +198,10 @@ public:
 	MessageManager();
 	virtual ~MessageManager();
  
-	void SendGUI( eMessageType type, int parm1, int parm2 = 0, int deliverTimeMS = 0, eTimingSystem timing = TIMER_SYSTEM);
+	void SendGUI( eMessageType type, float parm1, float parm2 = 0, int deliverTimeMS = 0, eTimingSystem timing = TIMER_SYSTEM);
 	void SendGUI( eMessageType type, const Variant &v, int deliverTimeMS = 0);
-	void SendGUIEx( eMessageType type, int parm1, int parm2, int finger, int deliverTimeMS = 0, eTimingSystem timing = TIMER_SYSTEM);
-	void SendGUIStringEx( eMessageType type, int parm1, int parm2, int finger, string s, int deliverTimeMS = 0, eTimingSystem timing = TIMER_SYSTEM);
+	void SendGUIEx( eMessageType type, float parm1, float parm2, int finger, int deliverTimeMS = 0, eTimingSystem timing = TIMER_SYSTEM);
+	void SendGUIStringEx( eMessageType type, float parm1, float parm2, int finger, string s, int deliverTimeMS = 0, eTimingSystem timing = TIMER_SYSTEM);
 
 	void SendGame( eMessageType type, const string msg, int deliverTimeMS = 0, eTimingSystem timing = TIMER_GAME);
 	void SendGame( eMessageType type, const Variant &v, int deliverTimeMS = 0, eTimingSystem timing = TIMER_GAME);

@@ -83,6 +83,7 @@ void BaseApp::InitializeGLDefaults()
 	glDepthFunc(GL_LEQUAL);
 	glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 	glColor4x(1 << 16, 1 << 16, 1 << 16, 1 << 16);
+	glClearColor(0,0,0,255);
 }
 
 bool BaseApp::Init()
@@ -429,6 +430,7 @@ ResourceManager * GetResourceManager()
 
 void BaseApp::SetManualRotationMode( bool bRotation )
 {
+	//if (GetPlatformID() == PLATFORM_ID_BBX) bRotation = false; //on BBX we never have to do that
 	LogMsg("AppManualRotation set to %d", int(bRotation));
 	m_bManualRotation = bRotation;
 }

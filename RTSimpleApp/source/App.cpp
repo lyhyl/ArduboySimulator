@@ -5,7 +5,6 @@
  *
  */
 
-
 #include "PlatformPrecomp.h"
 #include "App.h"
 #include "GUI/MainMenu.h"
@@ -51,7 +50,11 @@ AudioManagerSDL g_audioManager; //sound in windows and WebOS
 //AudioManager g_audioManager; //to disable sound
 #elif defined ANDROID_NDK
 AudioManagerAndroid g_audioManager; //sound for android
+#elif defined PLATFORM_BBX
+AudioManager g_audioManager;
+
 #else
+
 //in windows
 //AudioManager g_audioManager; //to disable sound
 
@@ -115,12 +118,19 @@ bool App::Init()
 	{
 	case PLATFORM_ID_ANDROID:
 	case PLATFORM_ID_OSX:
-	//if we do this, everything will be stretched/zoomed to fit the screen
+		//if we do this, everything will be stretched/zoomed to fit the screen
 		SetLockedLandscape(false);  //because it's set in the app manifest, we don't have to rotate ourselves
 		SetupFakePrimaryScreenSize(480,320); //game will think it's this size, and will be scaled up
 		break;
 
-	
+	case PLATFORM_ID_BBX:
+		//if we do this, everything will be stretched/zoomed to fit the screen
+		SetLockedLandscape(false);  //because it's set in the app manifest, we don't have to rotate ourselves
+		SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(), ORIENTATION_PORTRAIT);
+		SetupFakePrimaryScreenSize(480,320); //game will think it's this size, and will be scaled up
+
+		break;
+
 	default:
 		SetLockedLandscape(true); //we don't allow portrait mode for this game
 		SetupFakePrimaryScreenSize(320,480); //game will think it's this size, and will be scaled up

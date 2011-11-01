@@ -71,14 +71,14 @@ bool App::Init()
 		//SetupFakePrimaryScreenSize(320,480);
 	}
 
-	LogMsg("Save path is %s", GetSavePath().c_str());
+	LogMsg("The Save path is %s", GetSavePath().c_str());
 	LogMsg("Region string is %s", GetRegionString().c_str());
 
 #ifndef C_NO_ZLIB
 	//fonts need zlib to decompress.  When porting a new platform I define C_NO_ZLIB and add zlib support later sometimes
 	if (!GetFont(FONT_SMALL)->Load("interface/font_trajan.rtfont")) return false;
 #endif
-	
+
 	GetBaseApp()->SetFPSVisible(true);
 	return true;
 }
@@ -189,7 +189,7 @@ void App::Update()
 	
 	//game can think here.  The baseApp::Update() will run Update() on all entities, if any are added.  The only one
 	//we use in this example is one that is watching for the Back (android) or Escape key to quit that we setup earlier.
-	
+
 	BaseApp::Update();
 
 	if (!m_bDidPostInit)
@@ -212,13 +212,10 @@ void App::Update()
 		//SetAccelerometerUpdateHz(25); //default is 0, disabled
 		//GetBaseApp()->m_sig_accel.connect(1, boost::bind(&App::OnAccel, this, _1));
 
-
 		//TRACKBALL/ARCADETEST: Uncomment below to see log messages on trackball/key movement input
 		//pEnt->AddComponent(new ArcadeInputComponent);
 		//GetBaseApp()->m_sig_arcade_input.connect(1, boost::bind(&App::OnArcadeInput, this, _1));
-		
 	}
-
 
 	//game is thinking.  
 }

@@ -35,8 +35,11 @@
 
 
 #include "../api_core.h"
+#include <cstdio>
+#include <math.h>
 #include "../Text/string_types.h"
 #include <vector>
+#include <memory.h>
 
 /// (Internal ClanLib Class)
 /// \xmlonly !group=Core/System! !header=core.h! !hide! \endxmlonly
@@ -78,7 +81,7 @@ public:
 
 public:
 	/// \brief Allocates aligned memory
-	static void *aligned_alloc(size_t size, size_t alignment = 16);
+	//static void *aligned_alloc(size_t size, size_t alignment = 16);
 
 	/// \brief Frees aligned memory
 	static void aligned_free(void *ptr);
