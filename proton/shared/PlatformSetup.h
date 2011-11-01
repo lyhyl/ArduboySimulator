@@ -25,6 +25,10 @@
 #include "android/PlatformSetupAndroid.h"
 #endif
 
+#ifdef PLATFORM_BBX
+#include "bbx/PlatformSetupBBX.h"
+#endif
+
 #if defined(__cplusplus) || defined(__OBJC__)
 	#include <cstdio>
 	#include <string>
@@ -71,7 +75,7 @@ using namespace std;
 
 //this must exist somewhere, used for log messages	
 void LogMsg ( const char* traceStr, ... );
-void LogError(const char *lpFormat, ...);
+void LogError(const char* traceStr, ...);
 
 void SetEmulatedPlatformID(ePlatformID platformID);
 std::string AddPlatformNameURL();

@@ -32,7 +32,8 @@
 #pragma once
 
 #include "../api_core.h"
-#include <cmath>
+//#include <cmath>
+#include <math.h>
 
 #ifndef CL_PI
 #define CL_PI 3.141592653589793238462643383279f

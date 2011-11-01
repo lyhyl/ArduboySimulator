@@ -173,14 +173,24 @@ unsigned int GetSystemTimeTick()
   struct timespec time;
   clock_gettime(CLOCK_MONOTONIC, &time);
 
-  if (time.tv_sec > 10000000)
+  if (time.tv_sec > 100000000)
   {
-	  time.tv_sec -= 10000000; //help with timeoverun issues
+	  time.tv_sec -= 100000000; //help with timeoverun issues
   }
 
 double accum;
 accum = time.tv_sec*1000 + time.tv_nsec/1000000;
 return accum;
+}
+
+uint64 GetSystemTimeTickLong()
+{
+
+	struct timespec time;
+	clock_gettime(CLOCK_MONOTONIC, &time);
+	uint64 accum;
+	accum = time.tv_sec*1000 + time.tv_nsec/1000000;
+	return uint64;
 }
 
 string GetDateAndTimeAsString()

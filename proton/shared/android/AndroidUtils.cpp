@@ -826,7 +826,7 @@ void AppOnTouch( JNIEnv*  env, jobject jobj,jint action, jfloat x, jfloat y, jin
 
 void AppOnSendGUIEx(JNIEnv*  env, jobject thiz,jint messageType, jint parm1, jint parm2, jint finger )
 {
-	GetMessageManager()->SendGUIEx((eMessageType)messageType, parm1, parm2, finger);  
+	GetMessageManager()->SendGUIEx((eMessageType)messageType, (float)parm1, (float)parm2, finger);  
 
 }
 
@@ -836,7 +836,7 @@ void AppOnSendGUIStringEx(JNIEnv*  env, jobject thiz,jint messageType, jint parm
 	string str = ss;
 	env->ReleaseStringUTFChars(s, ss);
 
-	GetMessageManager()->SendGUIStringEx((eMessageType)messageType, parm1, parm2, finger, str);  
+	GetMessageManager()->SendGUIStringEx((eMessageType)messageType, (float)parm1, (float)parm2, finger, str);  
 
 }
 
@@ -881,15 +881,15 @@ void AppOnKey( JNIEnv*  env, jobject jobj, jint type, jint keycode, jint c)
 	switch (type)
 	{
 	case 1: //keydown
-		GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, c, 1);  
+		GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, (float)c, (float)1);  
 		
 		if (c < 128) c = toupper(c);
-		GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW, c, 1);  
+		GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW, (float)c, (float)1);  
 		break;
 
 	case 0: //key up
 		if (c < 128) c = toupper(c);
-		GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW, c, 0);  
+		GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW, (float)c, 0.0f);  
 		break;
 	}
 }
@@ -915,7 +915,7 @@ int AppOSMessageGet(JNIEnv* env)
 		if (g_lastOSMessage.m_type == OSMessage::MESSAGE_CHECK_CONNECTION)
 		{
 				//pretend we did it
-				GetMessageManager()->SendGUI(MESSAGE_TYPE_OS_CONNECTION_CHECKED, RT_kCFStreamEventOpenCompleted, 0);	
+				GetMessageManager()->SendGUI(MESSAGE_TYPE_OS_CONNECTION_CHECKED, (float)RT_kCFStreamEventOpenCompleted, 0.0f);	
 				GetBaseApp()->GetOSMessages()->pop_front();
 				continue;
 		}

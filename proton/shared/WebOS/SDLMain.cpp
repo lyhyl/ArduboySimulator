@@ -294,7 +294,7 @@ void SDLEventLoop()
 			float yPos = ev.motion.y;
 			ConvertCoordinatesIfRequired(xPos, yPos);
 			
-			GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_START, (int)xPos, (int)yPos, ev.motion.which);
+			GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_START, xPos, yPos, ev.motion.which);
 			}
 			break;
 		case SDL_MOUSEBUTTONUP:
@@ -304,14 +304,14 @@ void SDLEventLoop()
 				float xPos = ev.motion.x;
 				float yPos = ev.motion.y;
 				ConvertCoordinatesIfRequired(xPos, yPos);
-				GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_END, (int)xPos, (int)yPos, ev.motion.which);
+				GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_END, xPos, yPos, ev.motion.which);
 			}
 			break;
 	
 		case SDL_MOUSEMOTION:     
 			{
-				int xPos = ev.motion.x;
-				int yPos = ev.motion.y;
+				float xPos = ev.motion.x;
+				float yPos = ev.motion.y;
 				
 				
 				//ev.motion.which should hold which finger id
@@ -375,7 +375,7 @@ void SDLEventLoop()
 							key = toupper(key);
 						}
 
-						GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, key, 0);  //lParam holds a lot of random data about the press, look it up if
+						GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, (float)key, 0.0f);  //lParam holds a lot of random data about the press, look it up if
 
 					} else
 					{
@@ -537,7 +537,7 @@ int main(int argc, char *argv[])
 			{
 			case OSMessage::MESSAGE_CHECK_CONNECTION:
 				//pretend we did it
-				GetMessageManager()->SendGUI(MESSAGE_TYPE_OS_CONNECTION_CHECKED, RT_kCFStreamEventOpenCompleted, 0);	
+				GetMessageManager()->SendGUI(MESSAGE_TYPE_OS_CONNECTION_CHECKED, (float)RT_kCFStreamEventOpenCompleted, 0.0f);	
 				break;
 			case OSMessage::MESSAGE_OPEN_TEXT_BOX:
 				

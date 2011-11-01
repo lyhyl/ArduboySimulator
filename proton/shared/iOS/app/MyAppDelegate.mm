@@ -294,7 +294,7 @@
 - (BOOL)textFieldShouldReturn:(UITextField*)textField
 {
 	//Send a fake ENTER keypress
-    GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, 13, 0);
+    GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, (float)13, 0.0f);
     
     //Terminate editing
 	[textField resignFirstResponder];
@@ -377,6 +377,6 @@ static void MyWriteStreamCallback(CFWriteStreamRef streamRef,
     }
     //LogMsg("Connection is ready: %d", eventType);
     [v KillNetInit];
-	GetMessageManager()->SendGUI(MESSAGE_TYPE_OS_CONNECTION_CHECKED, eventType, 0);		
+	GetMessageManager()->SendGUI(MESSAGE_TYPE_OS_CONNECTION_CHECKED, (float)eventType, 0.0f);		
     CFRunLoopStop(CFRunLoopGetCurrent());
 }

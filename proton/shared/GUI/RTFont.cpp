@@ -32,7 +32,8 @@ void RTFont::ReloadFontTextureOnly()
 	{
 #ifdef _DEBUG
 		LogMsg("font %s already reloaded, ignoring", m_fileName.c_str());
-#endif	return;
+#endif
+return;
 	}
 #ifdef _DEBUG
 	LogMsg("Reloading font %s", m_fileName.c_str());

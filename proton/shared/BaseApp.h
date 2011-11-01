@@ -17,13 +17,14 @@
 
 using namespace std;
 
+#include "PlatformSetup.h"
 #include "Manager/GameTimer.h"
 #include "Manager/Console.h"
+#include "util/MiscUtils.h"
 #include "Manager/ResourceManager.h"
 #include "Renderer/RenderBatcher.h"
 
 //these aren't really used by this class but makes it easy for me to share these with everyone by only including this header
-#include "util/MiscUtils.h"
 #include "util/RenderUtils.h"
 #include "Manager/MessageManager.h"
 #include "FileSystem/FileManager.h"

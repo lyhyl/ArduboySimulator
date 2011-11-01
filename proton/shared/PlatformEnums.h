@@ -44,6 +44,7 @@ enum ePlatformID
 	PLATFORM_ID_ANDROID,
 	PLATFORM_ID_WINDOWS_MOBILE, //yeah, right.  Doesn't look like we'll be porting here anytime soon.
 	PLATFORM_ID_WEBOS,
+	PLATFORM_ID_BBX, //RIM Playbook
 	
 	//new platforms will be added above here.  Don't count on PLATFORM_ID_COUNT not changing!
 	PLATFORM_ID_COUNT

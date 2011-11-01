@@ -28,7 +28,7 @@
 #include "L_ParticleEffect.h"
 #include "L_ParticleMem.h"
 
-#if !defined(C_GL_MODE) &&  !defined( ANDROID_NDK)
+#if !defined(C_GL_MODE) &&  !defined( ANDROID_NDK) && !defined( PLATFORM_BBX)
 	#define RT_USE_POINT_SPRITES
 #endif
 

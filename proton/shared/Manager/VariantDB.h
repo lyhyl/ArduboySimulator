@@ -23,8 +23,11 @@ public:
 	boost::signal<void (VariantList*)> sig_function;
 };
 
-//#define C_USE_BOOSTS_HASHMAP 1
-
+#ifdef PLATFORM_BBX
+	//I'd rather not use this, but I couldn't get the hash_map versions to work with bb
+	#define C_USE_BOOSTS_HASHMAP 1
+#endif
+	
 #ifdef C_USE_BOOSTS_HASHMAP
 
 	#include "util/boost/boost/unordered/unordered_map.hpp"
@@ -58,34 +61,33 @@ typedef  __gnu_cxx::hash_map<string, Variant*> dataList;
 typedef  __gnu_cxx::hash_map<string, FunctionObject*> functionList;
 
 #else
-#include <hash_map>
+	#include <hash_map>
 
-#if defined RT_WEBOS_ARM || ANDROID_NDK
+		#if defined RT_WEBOS_ARM || ANDROID_NDK
 
-namespace __gnu_cxx {
-	/**
-	Explicit template specialization of hash of a string class,
-	which just uses the internal char* representation as a wrapper.
-	*/
-	template <>
-	struct hash<std::string> {
-		size_t operator() (const std::string& x) const {
-			return hash<const char*>()(x.c_str());
-			// hash<const char*> already exists
+		namespace __gnu_cxx {
+			/**
+			Explicit template specialization of hash of a string class,
+			which just uses the internal char* representation as a wrapper.
+			*/
+			template <>
+			struct hash<std::string> {
+				size_t operator() (const std::string& x) const {
+					return hash<const char*>()(x.c_str());
+					// hash<const char*> already exists
+				}
+			};
 		}
-	};
-}
 
-typedef  __gnu_cxx::hash_map<string, Variant*> dataList;
-typedef  __gnu_cxx::hash_map<string, FunctionObject*> functionList;
+		typedef  __gnu_cxx::hash_map<string, Variant*> dataList;
+		typedef  __gnu_cxx::hash_map<string, FunctionObject*> functionList;
 
-#else
-typedef stdext::hash_map<string, Variant*> dataList;
-typedef stdext::hash_map<string, FunctionObject*> functionList;
+		#else
+				typedef stdext::hash_map<string, Variant*> dataList;
+				typedef stdext::hash_map<string, FunctionObject*> functionList;
+		#endif
 
-#endif
-
-#endif
+	#endif
 
 #endif
 
