@@ -173,7 +173,7 @@ private:
 	CSkinnedMesh* AnimatedMesh;
 
 	c8* Buffer;
-	const c8* P;
+	const c8* m_pPointer;
 	c8* End;
 	// counter for number arrays in binary format
 	u32 BinaryNumCount;
