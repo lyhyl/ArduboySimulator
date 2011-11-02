@@ -29,7 +29,7 @@ namespace scene
 //! Constructor
 CXMeshFileLoader::CXMeshFileLoader(scene::ISceneManager* smgr, io::IFileSystem* fs)
 : SceneManager(smgr), FileSystem(fs), AllJoints(0), AnimatedMesh(0),
-	Buffer(0), P(0), End(0), BinaryNumCount(0), Line(0),
+	Buffer(0), m_pPointer(0), End(0), BinaryNumCount(0), Line(0),
 	CurFrame(0), MajorVersion(0), MinorVersion(0), BinaryFormat(false), FloatSize(0)
 {
 	#ifdef _DEBUG
@@ -86,7 +86,7 @@ IAnimatedMesh* CXMeshFileLoader::createMesh(io::IReadFile* f)
 	BinaryFormat=0;
 	BinaryNumCount=0;
 	FloatSize=0;
-	P=0;
+	m_pPointer=0;
 	End=0;
 	CurFrame=0;
 	TemplateMaterials.clear();
@@ -402,6 +402,7 @@ bool CXMeshFileLoader::readFileIntoMemory(io::IReadFile* file)
 		return false;
 	}
 
+
 	Buffer = new c8[size];
 
 	//! read all into memory
@@ -455,7 +456,7 @@ bool CXMeshFileLoader::readFileIntoMemory(io::IReadFile* file)
 		return false;
 	}
 
-	P = &Buffer[16];
+	m_pPointer = &Buffer[16];
 
 	readUntilEndOfLine();
 	FilePath = FileSystem->getFileDir(file->getFileName()) + "/";
@@ -1420,8 +1421,8 @@ bool CXMeshFileLoader::parseDataObjectMeshMaterialList(SXMesh &mesh)
 	// commented out version check, as version 03.03 exported from blender also has 2 semicolons
 	if (!BinaryFormat) // && MajorVersion == 3 && MinorVersion <= 2)
 	{
-		if (P[0] == ';')
-			++P;
+		if (m_pPointer[0] == ';')
+			++m_pPointer;
 	}
 
 	// read following data objects
@@ -1488,6 +1489,7 @@ bool CXMeshFileLoader::parseDataObjectMaterial(video::SMaterial& material)
 		return false;
 	}
 
+	LogMsg("*** Reading mat: %s", core::stringc(Line).c_str());
 	// read RGBA
 	readRGBA(material.DiffuseColor); checkForOneFollowingSemicolons();
 
@@ -1957,7 +1959,7 @@ bool CXMeshFileLoader::parseDataObjectAnimationKey(ISkinnedMesh::SJoint *joint)
 	}
 
 	if (!checkForOneFollowingSemicolons())
-		--P;
+		--m_pPointer;
 
 	if (!checkForClosingBrace())
 	{
@@ -2054,7 +2056,7 @@ bool CXMeshFileLoader::checkForOneFollowingSemicolons()
 		return true;
 	else
 	{
-		--P;
+		--m_pPointer;
 		return false;
 	}
 }
@@ -2070,7 +2072,7 @@ bool CXMeshFileLoader::checkForTwoFollowingSemicolons()
 	{
 		if (getNextToken() != ";")
 		{
-			--P;
+			--m_pPointer;
 			return false;
 		}
 	}
@@ -2117,30 +2119,30 @@ core::stringc CXMeshFileLoader::getNextToken()
 			case 1:
 				// name token
 				len = readBinDWord();
-				s = core::stringc(P, len);
-				P += len;
+				s = core::stringc(m_pPointer, len);
+				m_pPointer += len;
 				return s;
 			case 2:
 				// string token
 				len = readBinDWord();
-				s = core::stringc(P, len);
-				P += (len + 2);
+				s = core::stringc(m_pPointer, len);
+				m_pPointer += (len + 2);
 				return s;
 			case 3:
 				// integer token
-				P += 4;
+				m_pPointer += 4;
 				return "<integer>";
 			case 5:
 				// GUID token
-				P += 16;
+				m_pPointer += 16;
 				return "<guid>";
 			case 6:
 				len = readBinDWord();
-				P += (len * 4);
+				m_pPointer += (len * 4);
 				return "<int_list>";
 			case 7:
 				len = readBinDWord();
-				P += (len * FloatSize);
+				m_pPointer += (len * FloatSize);
 				return "<flt_list>";
 			case 0x0a:
 				return "{";
@@ -2199,23 +2201,23 @@ core::stringc CXMeshFileLoader::getNextToken()
 	{
 		findNextNoneWhiteSpace();
 
-		if (P >= End)
+		if (m_pPointer >= End)
 			return s;
 
-		while((P < End) && !core::isspace(P[0]))
+		while((m_pPointer < End) && !core::isspace(m_pPointer[0]))
 		{
 			// either keep token delimiters when already holding a token, or return if first valid char
-			if (P[0]==';' || P[0]=='}' || P[0]=='{' || P[0]==',')
+			if (m_pPointer[0]==';' || m_pPointer[0]=='}' || m_pPointer[0]=='{' || m_pPointer[0]==',')
 			{
 				if (!s.size())
 				{
-					s.append(P[0]);
-					++P;
+					s.append(m_pPointer[0]);
+					++m_pPointer;
 				}
 				break; // stop for delimiter
 			}
-			s.append(P[0]);
-			++P;
+			s.append(m_pPointer[0]);
+			++m_pPointer;
 		}
 	}
 	return s;
@@ -2229,14 +2231,14 @@ void CXMeshFileLoader::findNextNoneWhiteSpaceNumber()
 	if (BinaryFormat)
 		return;
 
-	while((P < End) && (P[0] != '-') && (P[0] != '.') &&
-		!( core::isdigit(P[0])))
+	while((m_pPointer < End) && (m_pPointer[0] != '-') && (m_pPointer[0] != '.') &&
+		!( core::isdigit(m_pPointer[0])))
 	{
 		// check if this is a comment
-		if ((P[0] == '/' && P[1] == '/') || P[0] == '#')
+		if ((m_pPointer[0] == '/' && m_pPointer[1] == '/') || m_pPointer[0] == '#')
 			readUntilEndOfLine();
 		else
-			++P;
+			++m_pPointer;
 	}
 }
 
@@ -2249,19 +2251,19 @@ void CXMeshFileLoader::findNextNoneWhiteSpace()
 
 	while(true)
 	{
-		while((P < End) && core::isspace(P[0]))
+		while((m_pPointer < End) && core::isspace(m_pPointer[0]))
 		{
-			if (*P=='\n')
+			if (*m_pPointer=='\n')
 				++Line;
-			++P;
+			++m_pPointer;
 		}
 
-		if (P >= End)
+		if (m_pPointer >= End)
 			return;
 
 		// check if this is a comment
-		if ((P[0] == '/' && P[1] == '/') ||
-			P[0] == '#')
+		if ((m_pPointer[0] == '/' && m_pPointer[1] == '/') ||
+			m_pPointer[0] == '#')
 			readUntilEndOfLine();
 		else
 			break;
@@ -2279,22 +2281,22 @@ bool CXMeshFileLoader::getNextTokenAsString(core::stringc& out)
 	}
 	findNextNoneWhiteSpace();
 
-	if (P >= End)
+	if (m_pPointer >= End)
 		return false;
 
-	if (P[0] != '"')
+	if (m_pPointer[0] != '"')
 		return false;
-	++P;
+	++m_pPointer;
 
-	while(P < End && P[0]!='"')
+	while(m_pPointer < End && m_pPointer[0]!='"')
 	{
-		out.append(P[0]);
-		++P;
+		out.append(m_pPointer[0]);
+		++m_pPointer;
 	}
 
-	if ( P[1] != ';' || P[0] != '"')
+	if ( m_pPointer[1] != ';' || m_pPointer[0] != '"')
 		return false;
-	P+=2;
+	m_pPointer+=2;
 
 	return true;
 }
@@ -2305,16 +2307,16 @@ void CXMeshFileLoader::readUntilEndOfLine()
 	if (BinaryFormat)
 		return;
 
-	while(P < End)
+	while(m_pPointer < End)
 	{
-		if (P[0] == '\n' || P[0] == '\r')
+		if (m_pPointer[0] == '\n' || m_pPointer[0] == '\r')
 		{
-			++P;
+			++m_pPointer;
 			++Line;
 			return;
 		}
 
-		++P;
+		++m_pPointer;
 	}
 }
 
@@ -2322,11 +2324,11 @@ void CXMeshFileLoader::readUntilEndOfLine()
 u16 CXMeshFileLoader::readBinWord()
 {
 #ifdef __BIG_ENDIAN__
-	const u16 tmp = os::Byteswap::byteswap(*(u16 *)P);
+	const u16 tmp = os::Byteswap::byteswap(*(u16 *)m_pPointer);
 #else
-	const u16 tmp = *(u16 *)P;
+	const u16 tmp = *(u16 *)m_pPointer;
 #endif
-	P += 2;
+	m_pPointer += 2;
 	return tmp;
 }
 
@@ -2334,11 +2336,11 @@ u16 CXMeshFileLoader::readBinWord()
 u32 CXMeshFileLoader::readBinDWord()
 {
 #ifdef __BIG_ENDIAN__
-	const u32 tmp = os::Byteswap::byteswap(*(u32 *)P);
+	const u32 tmp = os::Byteswap::byteswap(*(u32 *)m_pPointer);
 #else
-	const u32 tmp = *(u32 *)P;
+	const u32 tmp = *(u32 *)m_pPointer;
 #endif
-	P += 4;
+	m_pPointer += 4;
 	return tmp;
 }
 
@@ -2361,7 +2363,7 @@ u32 CXMeshFileLoader::readInt()
 	else
 	{
 		findNextNoneWhiteSpaceNumber();
-		return core::strtol10(P, &P);
+		return core::strtol10(m_pPointer, &m_pPointer);
 	}
 }
 
@@ -2383,29 +2385,33 @@ f32 CXMeshFileLoader::readFloat()
 		{
 #ifdef __BIG_ENDIAN__
 			c8 ctmp[8];
-			*((f32*)(ctmp+4)) = os::Byteswap::byteswap(*(f32 *)P);
-			*((f32*)(ctmp)) = os::Byteswap::byteswap(*(f32 *)P+4);
+			*((f32*)(ctmp+4)) = os::Byteswap::byteswap(*(f32 *)m_pPointer);
+			*((f32*)(ctmp)) = os::Byteswap::byteswap(*(f32 *)m_pPointer+4);
 			const f32 tmp = (f32)(*(f64 *)ctmp);
 #else
-			const f32 tmp = (f32)(*(f64 *)P);
+			const f32 tmp = (f32)(*(f64 *)m_pPointer);
 #endif
-			P += 8;
+			m_pPointer += 8;
 			return tmp;
 		}
 		else
 		{
 #ifdef __BIG_ENDIAN__
-			const f32 tmp = os::Byteswap::byteswap(*(f32 *)P);
+			const f32 tmp = os::Byteswap::byteswap(*(f32 *)m_pPointer);
 #else
-			const f32 tmp = *(f32 *)P;
+			//xcode 4.2's arm compiler really does NOT like this... -Seth
+			//const f32 tmp = *(f32 *)m_pPointer;
+			f32 tmp;
+			memcpy(&tmp, m_pPointer, 4);
+
 #endif
-			P += 4;
+			m_pPointer += 4;
 			return tmp;
 		}
 	}
 	findNextNoneWhiteSpaceNumber();
 	f32 ftmp;
-	P = core::fast_atof_move(P, ftmp);
+	m_pPointer = core::fast_atof_move(m_pPointer, ftmp);
 	return ftmp;
 }
 
