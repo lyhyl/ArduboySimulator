@@ -63,7 +63,7 @@ void InitVideoSize()
 	//RIM
 	AddVideoMode("Playbook Landscape", 600,1024, PLATFORM_ID_BBX);//set g_landScapeNoNeckHurtMode to true 
 
-	string desiredVideoMode = "Nexus One Landscape"; //name needs to match one of the ones defined above
+	string desiredVideoMode = "iPhone"; //name needs to match one of the ones defined above
     g_landScapeNoNeckHurtMode = true; //if true, will rotate the screen so we can play in landscape mode in windows without hurting ourselves
 	SetVideoModeByName(desiredVideoMode);
 	GetBaseApp()->OnPreInitVideo(); //gives the app level code a chance to override any of these parms if it wants to
