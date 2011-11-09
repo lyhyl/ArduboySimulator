@@ -51,7 +51,10 @@ AudioManagerSDL g_audioManager; //sound in windows and WebOS
 #elif defined ANDROID_NDK
 AudioManagerAndroid g_audioManager; //sound for android
 #elif defined PLATFORM_BBX
-AudioManager g_audioManager;
+
+//AudioManager g_audioManager; //to disable sound
+#include "Audio/AudioManagerBBX.h"
+AudioManagerBBX g_audioManager;
 
 #else
 

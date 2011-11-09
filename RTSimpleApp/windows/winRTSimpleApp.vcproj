@@ -2133,6 +2133,62 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\shared\Audio\AudioManagerBBX.cpp"
+					>
+					<FileConfiguration
+						Name="Common Debug|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Common Release|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug GL|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release GL|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug WebOS|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\shared\Audio\AudioManagerBBX.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\Audio\AudioManagerDenshion.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\Audio\AudioManagerDenshion.mm"
+					>
+				</File>
+				<File
 					RelativePath="..\..\shared\Audio\AudioManagerFMOD.cpp"
 					>
 					<FileConfiguration

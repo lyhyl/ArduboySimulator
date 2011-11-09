@@ -4,7 +4,7 @@
 //  Robinson Technologies Copyright (C) 2009 - All Rights Reserved
 //
 //  ***************************************************************
-//  Programmer(s):  Piotr "rzuf" Skrzypczynski (rzuf79@gmail.com)
+//  Programmer(s):  Seth A. Robinson
 //  ***************************************************************
 
 /*

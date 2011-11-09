@@ -110,11 +110,48 @@ void ProcessEvents()
 
 	        if (navigator_get_domain() == domain)
 	        {
-	            switch(code) {
+	        	LogMsg("Got nav msg: %d", code);
+
+	            switch(code)
+	            {
+
+	            case NAVIGATOR_ORIENTATION_CHECK:
+
+	            	LogMsg("Device rotated, but telling device to ignore it.  Change later?");
+	            	navigator_orientation_check_response(event, false); //tell it we won't rotate.. for now
+
+	            	break;
 	            case NAVIGATOR_EXIT:
+	            	LogMsg("Leaving BBX app");
 	            	exit_application = 1;
 
 	            	break;
+
+	            case NAVIGATOR_WINDOW_STATE:
+	            {
+
+	            	navigator_window_state_t winState = navigator_event_get_window_state(event);
+
+	            	switch (winState)
+	            	{
+	            	case NAVIGATOR_WINDOW_FULLSCREEN:
+	            		LogMsg("Full screen");
+
+	            		break;
+	            	case NAVIGATOR_WINDOW_THUMBNAIL:
+	            		          LogMsg("App thumbnailed");
+
+	            		            		break;
+
+	            	case NAVIGATOR_WINDOW_INVISIBLE:
+	            		LogMsg("App in background");
+	            		break;
+
+	            	}
+	            }
+
+	            	break;
+
 	            case NAVIGATOR_WINDOW_INACTIVE:
 	               // m_isPaused = true;
 	               // m_handler->onPause();
@@ -126,6 +163,7 @@ void ProcessEvents()
 	               GetBaseApp()->OnEnterForeground();
 	               break;
 	            }
+
 	        } else if (screen_get_domain() == domain)
 	        {
 	            screen_event_t screenEvent = screen_event_get_event(event);
@@ -143,12 +181,33 @@ void ProcessEvents()
 
 	            if (screenEventType == SCREEN_EVENT_MTOUCH_TOUCH)
 	            {
+	            	screen_get_event_property_iv(screenEvent, SCREEN_PROPERTY_TOUCH_ID,  &screenTouchID);
 	            	LogMsg("Touched");
+	        	  	float xPos = screenEventPosition[0];
+            	    float yPos = screenEventPosition[1];
+            	    ConvertCoordinatesIfRequired(xPos, yPos);
+        			GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_START, xPos, yPos, screenTouchID);
+
+
 	            	//    m_handler->onLeftPress(static_cast<float>(screenEventPosition[0]), static_cast<float>(screenEventPosition[1]));
 	            } else if (screenEventType == SCREEN_EVENT_MTOUCH_RELEASE)
 	            {
+	            	  screen_get_event_property_iv(screenEvent, SCREEN_PROPERTY_TOUCH_ID,  &screenTouchID);
 	            	   LogMsg("Touch release");
-	            //    m_handler->onLeftRelease(static_cast<float>(screenEventPosition[0]), static_cast<float>(screenEventPosition[1]));
+	            	 	float xPos = screenEventPosition[0];
+	            	    float yPos = screenEventPosition[1];
+	            	    ConvertCoordinatesIfRequired(xPos, yPos);
+	            	    GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_END, xPos, yPos, screenTouchID);
+    //    m_handler->onLeftRelease(static_cast<float>(screenEventPosition[0]), static_cast<float>(screenEventPosition[1]));
+	            } else if (screenEventType == SCREEN_EVENT_MTOUCH_MOVE)
+	            {
+	            	screen_get_event_property_iv(screenEvent, SCREEN_PROPERTY_TOUCH_ID,  &screenTouchID);
+
+	            	float xPos = screenEventPosition[0];
+	            	    float yPos = screenEventPosition[1];
+	            	    ConvertCoordinatesIfRequired(xPos, yPos);
+	            	    GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_MOVE, xPos, yPos, screenTouchID);
+    //    m_handler->onLeftRelease(static_cast<float>(screenEventPosition[0]), static_cast<float>(screenEventPosition[1]));
 	            } else if (screenEventType == SCREEN_EVENT_POINTER)
 	            {
 	                int pointerButton;
@@ -309,9 +368,12 @@ int main(int argc, char *argv[])
 
 	    ProcessEvents();
 
-    	GetBaseApp()->Update();
-    	GetBaseApp()->Draw();
-    	bbutil_swap();
+	    if (!GetBaseApp()->IsInBackground())
+	    {
+			GetBaseApp()->Update();
+			GetBaseApp()->Draw();
+			bbutil_swap();
+	    }
 
     	while (!GetBaseApp()->GetOSMessages()->empty())
     		{
