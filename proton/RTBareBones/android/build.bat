@@ -33,6 +33,6 @@ REM Waiting for device to get ready...
 
 REM Installing...
 REM adb -s %ANDROID_EMU% install -r bin\%APP_NAME%-debug.apk
-call InstallOnPhone.bat
+call InstallOnDefaultPhone.bat
 :adb logcat
 pause

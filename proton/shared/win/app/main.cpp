@@ -23,7 +23,7 @@ void InitVideoSize()
 	//the X/Y of the Windows setting is (usually) actually reversed.. it's confusing like this because most of the mobiles are "rotated" to landscape
 	//mode manually and it was just less changes to make to pretend we were rotating the Windows screen to play in "landscape" orientation
 	//to make testing consistent
-	AddVideoMode("Windows", 768, 1024, PLATFORM_ID_WINDOWS);
+	AddVideoMode("Windows", 1024, 768, PLATFORM_ID_WINDOWS);
 	AddVideoMode("Windows Wide", 800, 1280, PLATFORM_ID_WINDOWS);
 	
 #ifndef RT_WEBOS
@@ -58,13 +58,14 @@ void InitVideoSize()
 	AddVideoMode("Nexus One", 480, 800, PLATFORM_ID_ANDROID);
 	AddVideoMode("Droid Landscape", 480, 854, PLATFORM_ID_ANDROID); //set g_landScapeNoNeckHurtMode to true
 	AddVideoMode("Nexus One Landscape", 480, 800, PLATFORM_ID_ANDROID); //set g_landScapeNoNeckHurtMode to true
-	AddVideoMode("Xoom Landscape", 800,1280, PLATFORM_ID_ANDROID);//set g_landScapeNoNeckHurtMode to true 
+	AddVideoMode("Xoom Landscape", 1280,800, PLATFORM_ID_ANDROID);//set g_landScapeNoNeckHurtMode to false 
+	AddVideoMode("Xoom", 800,1280, PLATFORM_ID_ANDROID);//set g_landScapeNoNeckHurtMode to false (?)
 
 	//RIM
 	AddVideoMode("Playbook Landscape", 600,1024, PLATFORM_ID_BBX);//set g_landScapeNoNeckHurtMode to true 
 
-	string desiredVideoMode = "iPhone"; //name needs to match one of the ones defined above
-    g_landScapeNoNeckHurtMode = true; //if true, will rotate the screen so we can play in landscape mode in windows without hurting ourselves
+	string desiredVideoMode = "Xoom Landscape"; //name needs to match one of the ones defined above
+    g_landScapeNoNeckHurtMode = false; //if true, will rotate the screen so we can play in landscape mode in windows without hurting ourselves
 	SetVideoModeByName(desiredVideoMode);
 	GetBaseApp()->OnPreInitVideo(); //gives the app level code a chance to override any of these parms if it wants to
 }
@@ -273,7 +274,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			if (GetFakePrimaryScreenSizeX() != 0)
 			{
 				//more reliable way to get the aspect ratio
-				aspect_r=(float)GetFakePrimaryScreenSizeY()/(float)GetFakePrimaryScreenSizeX(); // aspect ratio
+				aspect_r=(float)GetFakePrimaryScreenSizeX()/(float)GetFakePrimaryScreenSizeY(); // aspect ratio
 			}
 			
 			// difference between window and client size
@@ -588,7 +589,7 @@ bool InitVideo(int width, int height, bool bFullscreen, float aspectRatio)
 
 	if (!g_landScapeNoNeckHurtMode)
 	{
-		swap(g_winVideoScreenX, g_winVideoScreenY);
+			swap(g_winVideoScreenX, g_winVideoScreenY);
 	}
 
 	// EGL variables
@@ -809,7 +810,11 @@ assert(!g_hDC);
 	
 	if (!g_landScapeNoNeckHurtMode && (GetOrientation() == ORIENTATION_LANDSCAPE_LEFT || GetPrimaryGLY() < GetPrimaryGLX()) )
 	{
-		SetupScreenInfo(GetPrimaryGLY(), GetPrimaryGLX(), GetOrientation());
+				SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(), GetOrientation());
+			
+				//why would we want these flipped in any case?  Fix later when I can test
+			//SetupScreenInfo(GetPrimaryGLY(), GetPrimaryGLX(), GetOrientation());
+		
 	} else
 	{
 		SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(), GetOrientation());

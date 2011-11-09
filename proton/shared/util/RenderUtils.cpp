@@ -186,6 +186,9 @@ int GetOriginalScreenSizeY()
 int GetFakePrimaryScreenSizeX()
 {
 	
+#ifdef WIN32
+	return g_fakePrimaryScreenSizeX;
+#endif
 	if (!g_landScapeNoNeckHurtMode)
 	{
 		return g_fakePrimaryScreenSizeY;
@@ -196,7 +199,9 @@ int GetFakePrimaryScreenSizeX()
 
 int GetFakePrimaryScreenSizeY()
 {
-
+#ifdef WIN32
+	return g_fakePrimaryScreenSizeY;
+#endif
 	if (!g_landScapeNoNeckHurtMode)
 	{
 		return g_fakePrimaryScreenSizeX;
@@ -405,12 +410,19 @@ void SetupScreenInfo(int x, int y, int orientation)
 			//recompute it using our fake information
 			if (x == GetPrimaryGLX())
 			{
+#ifdef _WINDOWS
+				//why can't we do it this way for everything?  Investigate later
+				x = GetFakePrimaryScreenSizeX();
+				y = GetFakePrimaryScreenSizeY();
+
+#else
 				y = GetFakePrimaryScreenSizeX();
 				x = GetFakePrimaryScreenSizeY();
+#endif
 
 			} else
 			{
-				//reversed
+				//normal
 				x = GetFakePrimaryScreenSizeX();
 				y = GetFakePrimaryScreenSizeY();
 
