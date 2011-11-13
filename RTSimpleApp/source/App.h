@@ -21,6 +21,7 @@ public:
 	virtual void Draw();
 	virtual void OnScreenSizeChange();
 	virtual void Update();
+	virtual void OnEnterBackground();
 
 	string GetVersionString();
 	float GetVersion();
@@ -33,6 +34,8 @@ public:
 	void OnExitApp(VariantList *pVarList);
 
 private:
+
+	void SaveOurStuff();
 
 	bool m_bDidPostInit;
 	VariantDB m_varDB; //holds all data we want to save/load
