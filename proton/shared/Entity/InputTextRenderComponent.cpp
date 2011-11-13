@@ -14,6 +14,12 @@ InputTextRenderComponent::~InputTextRenderComponent()
 	if (GetEntityWithNativeUIFocus() == GetParent())
 	{
 		GetFunction("CloseKeyboard")->sig_function(NULL);
+	} else
+	{
+		if (GetIsUsingNativeUI())
+		{
+			LogMsg("Keyboard is active, but proton isn't closing it because it doesn't look like this InputTextRenderComponent has focus.");
+		}
 	}
 }
 
@@ -166,7 +172,7 @@ void InputTextRenderComponent::CloseKeyboard( VariantList *pVList )
 
 	if (!m_bEditActive) return;
 
-	
+	LogMsg("Attempting to close onscreen keyboard");
 	m_bEditActive = false;
 	OSMessage o;
 	o.m_type = OSMessage::MESSAGE_CLOSE_TEXT_BOX;
@@ -238,10 +244,13 @@ void InputTextRenderComponent::OnTouchEnd(VariantList *pVList)
 
 void InputTextRenderComponent::OnRemove()
 {
+	/*
 	if (GetEntityWithNativeUIFocus() == GetParent())
 	{
 		SetEntityWithNativeUIFocus(NULL);
 	}
+	//Don't do this, otherwise we won't kill the keyboard properly in the deconstructor
+	*/
 
 	EntityComponent::OnRemove();
 }

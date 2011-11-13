@@ -73,7 +73,8 @@ void LaunchURL(string url)
 	LogMsg("Launching %s", url.c_str());
 
 	//PDL_LaunchBrowser(url.c_str());
-
+	char *pError;
+	navigator_invoke(url.c_str(), &pError);
 }
 
 string GetClipboardText()
@@ -137,12 +138,42 @@ int GetYOffset()
 	return 0;
 }
 
+
+// convert the timespec into milliseconds //thanks, cocos2d-x
+long time2millis(struct timespec *times)
+{
+    return times->tv_sec*1000 + times->tv_nsec/1000000;
+}
+
+
 unsigned int GetSystemTimeTick()
 {
+	/*
+
+	 //yeah, this works great in the simulator, too bad it's all goofy ass on the real device
 	struct timeval tv;
 		gettimeofday(&tv, NULL);
 		return tv.tv_usec/1000 + tv.tv_sec*1000;
+	*/
+
+	static timespec lastTime;
+	static bool bRanFirstTime = false;
+	static unsigned int t = 0;
+
+	if (!bRanFirstTime)
+	{
+		clock_gettime(CLOCK_REALTIME, &lastTime);
+		bRanFirstTime = true;
+	}
+
+	timespec curTime;
+	clock_gettime(CLOCK_REALTIME, &curTime);
+
+	t +=  (time2millis(&curTime)-time2millis(&lastTime)) ;
+	lastTime = curTime;
+	return t;
 }
+
 double GetSystemTimeAccurate()
 {
 	return (float)GetSystemTimeTick();

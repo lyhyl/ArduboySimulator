@@ -181,9 +181,15 @@ bool App::Init()
 	return true;
 }
 
+void App::SaveOurStuff()
+{
+	LogMsg("Saving our stuff");
+	m_varDB.Save("save.dat");
+}
+
 void App::Kill()
 {
-	m_varDB.Save("save.dat");
+	SaveOurStuff();
 	BaseApp::Kill();
 	g_pApp = NULL;
 }
@@ -214,6 +220,12 @@ void App::Draw()
 	BaseApp::Draw();
 }
 
+void App::OnEnterBackground()
+{
+	BaseApp::OnEnterBackground();
+	SaveOurStuff();
+
+}
 void App::OnScreenSizeChange()
 {
 	BaseApp::OnScreenSizeChange();

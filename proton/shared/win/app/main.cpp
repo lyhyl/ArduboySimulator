@@ -56,7 +56,7 @@ void InitVideoSize()
 	AddVideoMode("G1", 320, 480, PLATFORM_ID_ANDROID);
 	AddVideoMode("G1 Landscape", 480, 320, PLATFORM_ID_ANDROID);
 	AddVideoMode("Nexus One", 480, 800, PLATFORM_ID_ANDROID);
-	AddVideoMode("Droid Landscape", 480, 854, PLATFORM_ID_ANDROID); //set g_landScapeNoNeckHurtMode to true
+	AddVideoMode("Droid Landscape", 854, 480, PLATFORM_ID_ANDROID); //set g_landScapeNoNeckHurtMode to true
 	AddVideoMode("Nexus One Landscape", 480, 800, PLATFORM_ID_ANDROID); //set g_landScapeNoNeckHurtMode to true
 	AddVideoMode("Xoom Landscape", 1280,800, PLATFORM_ID_ANDROID);//set g_landScapeNoNeckHurtMode to false 
 	AddVideoMode("Xoom", 800,1280, PLATFORM_ID_ANDROID);//set g_landScapeNoNeckHurtMode to false (?)
@@ -64,7 +64,7 @@ void InitVideoSize()
 	//RIM
 	AddVideoMode("Playbook Landscape", 600,1024, PLATFORM_ID_BBX);//set g_landScapeNoNeckHurtMode to true 
 
-	string desiredVideoMode = "Xoom Landscape"; //name needs to match one of the ones defined above
+	string desiredVideoMode = "Droid Landscape"; //name needs to match one of the ones defined above
     g_landScapeNoNeckHurtMode = false; //if true, will rotate the screen so we can play in landscape mode in windows without hurting ourselves
 	SetVideoModeByName(desiredVideoMode);
 	GetBaseApp()->OnPreInitVideo(); //gives the app level code a chance to override any of these parms if it wants to

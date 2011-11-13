@@ -4,7 +4,7 @@
  *  Created on: Oct 26, 2011
  *      Author: User
  */
-
+//#include <curses.h>
 #include <assert.h>
 #include <screen/screen.h>
 #include <bps/navigator.h>
@@ -12,6 +12,8 @@
 #include <bps/bps.h>
 #include <bps/event.h>
 #include <bps/dialog.h>
+#include <bps/virtualkeyboard.h>
+#include <sys/keycodes.h>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -27,6 +29,8 @@
 
 using namespace std;
 int exit_application = 0;
+unsigned int fpsTimerLoopMS = 0; //set to 60 fps limit at the start
+//unsigned int fpsTimerLoopMS = (int) (1000.0f/30.0f); //set to 60 fps limit at the start
 
 static screen_context_t screen_cxt;
 //Query g_primaryGLX and g_primaryGLY of the window surface created by utility code
@@ -64,23 +68,6 @@ int initialize()
 		return EXIT_FAILURE;
 	}
 
-	 /*
-    glShadeModel(GL_SMOOTH);
-
-    //set clear color to white
-    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-
-    glViewport(0, 0, g_primaryGLX, g_primaryGLY);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-
-    glOrthof(0.0f, (float)(g_primaryGLX) / (float)(g_primaryGLY), 0.0f, 1.0f, -1.0f, 1.0f);
-
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-
-    glTranslatef((float)(g_primaryGLX) / (float)(g_primaryGLY) / 2, 0.5f, 0.0f);
-*/
 	return EXIT_SUCCESS;
 }
 
@@ -110,7 +97,6 @@ void ProcessEvents()
 
 	        if (navigator_get_domain() == domain)
 	        {
-	        	LogMsg("Got nav msg: %d", code);
 
 	            switch(code)
 	            {
@@ -121,7 +107,9 @@ void ProcessEvents()
 	            	navigator_orientation_check_response(event, false); //tell it we won't rotate.. for now
 
 	            	break;
+
 	            case NAVIGATOR_EXIT:
+
 	            	LogMsg("Leaving BBX app");
 	            	exit_application = 1;
 
@@ -140,7 +128,6 @@ void ProcessEvents()
 	            		break;
 	            	case NAVIGATOR_WINDOW_THUMBNAIL:
 	            		          LogMsg("App thumbnailed");
-
 	            		            		break;
 
 	            	case NAVIGATOR_WINDOW_INVISIBLE:
@@ -158,6 +145,7 @@ void ProcessEvents()
 		               LogMsg("Window unactive");
 		           	GetBaseApp()->OnEnterBackground();
 		               break;
+
 	            case NAVIGATOR_WINDOW_ACTIVE:
 	               LogMsg("Window active");
 	               GetBaseApp()->OnEnterForeground();
@@ -179,27 +167,35 @@ void ProcessEvents()
 
 	         //  LogMsg("Input type: %d, (touchid %d)", screenEventType, screenTouchID);
 
-	            if (screenEventType == SCREEN_EVENT_MTOUCH_TOUCH)
+	           switch (screenEventType)
+	           {
+
+	           case SCREEN_EVENT_MTOUCH_TOUCH:
 	            {
 	            	screen_get_event_property_iv(screenEvent, SCREEN_PROPERTY_TOUCH_ID,  &screenTouchID);
-	            	LogMsg("Touched");
+	            	//LogMsg("Touched");
 	        	  	float xPos = screenEventPosition[0];
             	    float yPos = screenEventPosition[1];
             	    ConvertCoordinatesIfRequired(xPos, yPos);
         			GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_START, xPos, yPos, screenTouchID);
 
+	            }
+	        	break;
 
 	            	//    m_handler->onLeftPress(static_cast<float>(screenEventPosition[0]), static_cast<float>(screenEventPosition[1]));
-	            } else if (screenEventType == SCREEN_EVENT_MTOUCH_RELEASE)
+	           case SCREEN_EVENT_MTOUCH_RELEASE:
 	            {
 	            	  screen_get_event_property_iv(screenEvent, SCREEN_PROPERTY_TOUCH_ID,  &screenTouchID);
-	            	   LogMsg("Touch release");
+	            	  // LogMsg("Touch release");
 	            	 	float xPos = screenEventPosition[0];
 	            	    float yPos = screenEventPosition[1];
 	            	    ConvertCoordinatesIfRequired(xPos, yPos);
 	            	    GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_END, xPos, yPos, screenTouchID);
     //    m_handler->onLeftRelease(static_cast<float>(screenEventPosition[0]), static_cast<float>(screenEventPosition[1]));
-	            } else if (screenEventType == SCREEN_EVENT_MTOUCH_MOVE)
+	            }
+	            break;
+
+	            case SCREEN_EVENT_MTOUCH_MOVE:
 	            {
 	            	screen_get_event_property_iv(screenEvent, SCREEN_PROPERTY_TOUCH_ID,  &screenTouchID);
 
@@ -208,7 +204,10 @@ void ProcessEvents()
 	            	    ConvertCoordinatesIfRequired(xPos, yPos);
 	            	    GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_MOVE, xPos, yPos, screenTouchID);
     //    m_handler->onLeftRelease(static_cast<float>(screenEventPosition[0]), static_cast<float>(screenEventPosition[1]));
-	            } else if (screenEventType == SCREEN_EVENT_POINTER)
+	            }
+	            break;
+
+	            case SCREEN_EVENT_POINTER:
 	            {
 	                int pointerButton;
 	                screen_get_event_property_iv(screenEvent, SCREEN_PROPERTY_BUTTONS, &pointerButton);
@@ -225,24 +224,22 @@ void ProcessEvents()
 	                	{
 
 	                     	g_leftMouseButtonDown = true;
-	          	  			LogMsg("Mouse down at %.2f, %.2f", xPos, yPos);
+	          	  			//LogMsg("Mouse down at %.2f, %.2f", xPos, yPos);
 	            			GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_START, xPos, yPos, screenTouchID);
-
-
 	                	} else
 	                	{
-	          	  			LogMsg("Mouse move at %.2f, %.2f", xPos, yPos);
+	          	  			//LogMsg("Mouse move at %.2f, %.2f", xPos, yPos);
 	          				GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_MOVE, xPos, yPos, screenTouchID);
 	                	}
 
 
 	                 } else
-	                {
+	                 {
 	                	  //well, it's the mouse moving or the button was released.  No way to tell which one in the
 	                	  //current API?
 	                  	if (g_leftMouseButtonDown)
 	                  	{
-	                  		LogMsg("Releasing mouse button");
+	                  		//LogMsg("Releasing mouse button");
 	                  		g_leftMouseButtonDown = false;
 	                   	  	float xPos = screenEventPosition[0];
 	                	    float yPos = screenEventPosition[1];
@@ -256,7 +253,44 @@ void ProcessEvents()
 	                  	}
 
 	                }
+
 	            }
+	            break;
+
+	            case SCREEN_EVENT_KEYBOARD:
+	          	            {
+	          	            	int flags, val;
+	          	            	screen_get_event_property_iv(screenEvent, SCREEN_PROPERTY_KEY_FLAGS, &flags);
+
+	          	            	screen_get_event_property_iv(screenEvent, SCREEN_PROPERTY_KEY_SYM, &val);
+	          					if (flags & KEY_DOWN)
+	          					{
+	          						GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, (float)val, (float)1);
+
+	          						if (! (flags & KEY_REPEAT))
+	          						{
+	          							if (val < 128) val = toupper(val);
+	          							GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW, (float)val, (float)1);
+	          						}
+
+	          					} else
+	          					{
+	          						//key released
+	          						if (val < 128) val = toupper(val);
+	          						GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW, (float)val, (float)0);
+	          					}
+	          	            }
+	                      	break;
+
+
+	            default:
+	            	LogMsg("Unhandled msg: %d", code);
+	            	break;
+
+
+
+	           }
+
 	        } else if (dialog_get_domain() == domain)
 	        {
 
@@ -273,6 +307,8 @@ void ProcessEvents()
 	        } else {
 	           LogMsg("Unrecognized and unrequested event! domain: %d, code: %d", domain, code);
 	        }
+
+	       // bps_event_destroy(event);  //Conflicting docs about needing this.. but it will crash, so no, I guess not
 	    }
 
 }
@@ -329,9 +365,7 @@ int main(int argc, char *argv[])
 		screen_destroy_context(screen_cxt);
 		return 0;
 	}
-
 	*/
-
 
 	//get proton going
 
@@ -362,11 +396,30 @@ int main(int argc, char *argv[])
 		SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(), ORIENTATION_PORTRAIT);
 	}
 
+   int gameTimer = 0;
+
    while(exit_application == 0)
     {
     	//Request and process BPS next available event
 
 	    ProcessEvents();
+
+	    if (exit_application != 0)
+	    	{
+	    		LogMsg("Exitting main game loop");
+	    		break;
+	    	}
+
+
+	    if (fpsTimerLoopMS != 0)
+	    		{
+	    			while (gameTimer > GetSystemTimeTick())
+	    			{
+	    				usleep(1); //give control back to the system for a bit
+	    			}
+	    			gameTimer = GetSystemTimeTick()+fpsTimerLoopMS;
+	    		}
+
 
 	    if (!GetBaseApp()->IsInBackground())
 	    {
@@ -382,8 +435,7 @@ int main(int argc, char *argv[])
 #ifdef _DEBUG
     			LogMsg("Got OS message %d, %s", m.m_type, m.m_string.c_str());
 #endif
-
-    			switch (m.m_type)
+	 			switch (m.m_type)
     			{
     			case OSMessage::MESSAGE_CHECK_CONNECTION:
     				//pretend we did it
@@ -391,18 +443,18 @@ int main(int argc, char *argv[])
     				break;
     			case OSMessage::MESSAGE_OPEN_TEXT_BOX:
 
-    				LogMsg("TODO: Open keyboard");
+    				int height;
+    				virtualkeyboard_get_height(&height); //use this later?
+    				virtualkeyboard_show();
     				break;
 
     			case OSMessage::MESSAGE_CLOSE_TEXT_BOX:
-    				LogMsg("TODO: Close keyboard");
-
+    				virtualkeyboard_hide();
     				SetIsUsingNativeUI(false);
     				break;
 
     			case OSMessage::MESSAGE_SET_FPS_LIMIT:
-    				LogMsg("Todo: FPS limit");
-    				//fpsTimerLoopMS = (int) (1000.0f/m.m_x);
+    				fpsTimerLoopMS = (int) (1000.0f/m.m_x);
     				break;
 
     			case OSMessage::MESSAGE_SET_ACCELEROMETER_UPDATE_HZ:
@@ -414,8 +466,19 @@ int main(int argc, char *argv[])
     		}
     }
 
-    //Stop requesting events from libscreen
-    screen_stop_events(screen_cxt);
+   LogMsg("Shutting down in main");
+
+
+   if (IsBaseAppInitted())
+   {
+	  // GetBaseApp()->OnEnterBackground();
+	   GetBaseApp()->Kill();
+   }
+
+	screen_stop_events(screen_cxt);
+
+	//Destroy libscreen context
+    screen_destroy_context(screen_cxt);
 
     //Shut down BPS library for this process
     bps_shutdown();
@@ -423,7 +486,5 @@ int main(int argc, char *argv[])
     //Use utility code to terminate EGL setup
     bbutil_terminate();
 
-    //Destroy libscreen context
-    screen_destroy_context(screen_cxt);
     return 0;
 }
