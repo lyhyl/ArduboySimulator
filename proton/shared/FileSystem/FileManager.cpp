@@ -120,7 +120,7 @@ byte * FileManager::Get( string fileName, int *pSizeOut, bool bAddBasePath )
 			{
 				
 				//not really an error, we might just want to know if a file exists
-				LogError("Proton FileManager says can't open %s.", fileName.c_str());
+				LogError("Proton FileManager says can't open %s", fileName.c_str());
 				//file not found	
 				if (!fp) return NULL;
 			}
@@ -255,6 +255,7 @@ bool FileManager::Copy(string srcFile, string dstFile, bool bAddBasePath)
 	if (!fp)
 	{
 		LogError("Unable to create file %s", dstFile.c_str());
+		SAFE_DELETE(pSrc);
 		return false;
 	}
 
@@ -269,5 +270,7 @@ bool FileManager::Copy(string srcFile, string dstFile, bool bAddBasePath)
 	}
 
 	fclose(fp);
+	SAFE_DELETE(pSrc);
+
 	return true;
 }

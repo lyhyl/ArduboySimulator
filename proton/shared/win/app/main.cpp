@@ -4,7 +4,7 @@
 #include "PlatformPrecomp.h"
 #include "main.h"
 #include "WebOS/SDLMain.h"
-#include "App.h"
+#include "BaseApp.h"
 
 #ifndef RT_WEBOS
 	#include <direct.h>
@@ -62,10 +62,10 @@ void InitVideoSize()
 	AddVideoMode("Xoom", 800,1280, PLATFORM_ID_ANDROID);//set g_landScapeNoNeckHurtMode to false (?)
 
 	//RIM
-	AddVideoMode("Playbook Landscape", 600,1024, PLATFORM_ID_BBX);//set g_landScapeNoNeckHurtMode to true 
+	AddVideoMode("Playbook Landscape", 1024,600, PLATFORM_ID_BBX);//set g_landScapeNoNeckHurtMode to true 
 
-	string desiredVideoMode = "Droid Landscape"; //name needs to match one of the ones defined above
-    g_landScapeNoNeckHurtMode = false; //if true, will rotate the screen so we can play in landscape mode in windows without hurting ourselves
+	string desiredVideoMode = "iPad"; //name needs to match one of the ones defined above
+    g_landScapeNoNeckHurtMode = true; //if true, will rotate the screen so we can play in landscape mode in windows without hurting ourselves
 	SetVideoModeByName(desiredVideoMode);
 	GetBaseApp()->OnPreInitVideo(); //gives the app level code a chance to override any of these parms if it wants to
 }
@@ -207,8 +207,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		return 1;
 
 	case WM_LBUTTONDOWN:
+	case WM_LBUTTONDBLCLK:
 		{
 			if (!g_bHasFocus) break;
+		
 			g_leftMouseButtonDown = true;
 			int xPos = GET_X_LPARAM(lParam);
 			int yPos = GET_Y_LPARAM(lParam) + GetYOffset();
@@ -216,6 +218,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_START, xPos, yPos, 0);
 			break;
 		}
+		break;
 
 	case WM_PAINT:
 		{
@@ -522,13 +525,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			float yPos = GET_Y_LPARAM(lParam) + GetYOffset();
 			ConvertCoordinatesIfRequired(xPos, yPos);
 
-			GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_MOVE_RAW, xPos, yPos, 0);
-
+		
 			if (g_leftMouseButtonDown)
 			{
 				GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_MOVE, xPos, yPos, 0);
 				break;
 			} 
+			GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_MOVE_RAW, xPos, yPos, 0);
+
 		}
 		//sreturn true;
 
@@ -631,10 +635,10 @@ bool InitVideo(int width, int height, bool bFullscreen, float aspectRatio)
 	SetRect(&sRect, 0, 0, width, height);
 	//for taking screenshots with no borders with Alt-Print screen, try this:
 	
-	DWORD style = WS_POPUP | WS_SYSMENU | WS_CAPTION | WS_SIZEBOX | WS_MAXIMIZEBOX | WS_MINIMIZEBOX;
+	DWORD style = WS_POPUP | WS_SYSMENU | WS_CAPTION | WS_SIZEBOX | WS_MAXIMIZEBOX | WS_MINIMIZEBOX | CS_DBLCLKS;
 	
 #ifdef C_BORDERLESS_WINDOW_MODE_FOR_SCREENSHOT_EASE
-	style = WS_POPUP;
+	style = WS_POPUP | CS_DBLCLKS;
 #endif
 	
 	if (bFullscreen)
@@ -888,11 +892,25 @@ string GetExePath()
 	return string(szDrive) + string(szDir); 
 }
 
+void ForceVideoUpdate()
+{
+	g_globalBatcher.Flush();
+
+#ifdef C_GL_MODE
+	SwapBuffers(g_hDC);
+#else
+	eglSwapBuffers(g_eglDisplay, g_eglSurface);
+#endif
+}
+
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLine, int nCmdShow)
 {
 	
 #ifdef WIN32
+	
+	//I don't *think* we need this...
 	::SetProcessAffinityMask( ::GetCurrentProcess(), 1 );
+	SetDoubleClickTime(0);
 #endif
 
 	//first make sure our working directory is the .exe dir

@@ -96,7 +96,6 @@ bool RemoveDirectoryRecursively(std::string path);
 std::vector<std::string> GetDirectoriesAtPath(std::string path);
 std::vector<std::string> GetFilesAtPath(std::string path);
 std::string GetRegionString();
-
 bool IsIphone();
 bool IsIPAD();
 bool IsIphoneOriPad();
@@ -116,5 +115,7 @@ std::string GetClipboardText();
 bool IsDesktop();
 bool HasVibration();
 std::string GetDeviceID(); //returns a string that is probably unique to the device
+void ForceVideoUpdate(); //force an early gl flip or whatever, sometimes useful.  Not implemented on ever platform
+
 #endif // platformenums_h__
 #endif

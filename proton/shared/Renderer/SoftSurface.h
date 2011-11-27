@@ -43,6 +43,10 @@ public:
 	eSurfaceType GetSurfaceType() {return m_surfaceType;}
 	int GetWidth(){return m_width;}
 	int GetHeight() {return m_height;}
+	int GetOriginalWidth() {return m_originalWidth;} //applicable to rttex images only
+	int GetOriginalHeight() {return m_originalHeight;} //applicable to rttex images only
+	int GetBytesPerPixel() {return m_bytesPerPixel;}
+
 	bool IsActive() {return m_surfaceType != SURFACE_NONE;}
 
 	bool Init(int sizex, int sizey, eSurfaceType type);
@@ -101,6 +105,7 @@ public:
 	bool GetModified() {return m_bModified;}
 	void SetModified(bool bNew) {m_bModified = bNew;}
 	void FlipY();
+	void Rotate90Degrees(bool bRotateLeft);
 	void DetectAndFixDinkShadows();
 	void BlitFromScreen(int dstX, int dstY, int srcX /*= 0*/, int srcY /*= 0*/, int srcWidth /*= 0*/, int srcHeight /*= 0*/);
 	
@@ -137,7 +142,8 @@ private:
 	int RGBAToPalette(const glColorBytes &color);
 	bool RLE8BitDecompress(byte *pDst, byte *pSrc, int dstSize, int srcSize);
 	void PreMultiplyAlpha();
-	
+	bool LoadBMPTexture(byte *pMem);
+	bool LoadRTTexture(byte *pMem);
 	eSurfaceType m_surfaceType;
 	int m_width, m_height;
 	byte *m_pPixels;
@@ -153,6 +159,9 @@ private:
 	int m_memUsed;
 	bool m_bAutoPremultiplyAlpha;
 	bool m_bHasPremultipliedAlpha;
+
+	//used only for RTTEX textures
+	int m_originalWidth,m_originalHeight;
 };
 
 #endif // SoftSurface_h__

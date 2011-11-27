@@ -24,6 +24,8 @@ public:
 
 	App()
 	{
+		m_bForceAlpha = false;
+		m_bNoPowerOf2 = false;
 		m_output = RTTEX;
 		SetPixelType(pvrtexlib::PixelType(0));
 		SetPixelTypeIfNotSquareOrTooBig(pvrtexlib::PixelType(0));
@@ -58,7 +60,11 @@ public:
 
 	void SetFlipV(bool bNew) {m_bFlipV = bNew;}
 	bool GetFlipV() {return m_bFlipV;}
-	
+	bool GetForceAlpha() {return m_bForceAlpha;}
+    void SetForceAlpha(bool bNew) {m_bForceAlpha = bNew;}
+	bool GetNoPowerOfTwo() {return m_bNoPowerOf2;}
+	void SetNoPowerOfTwo(bool bNew) {m_bNoPowerOf2 = bNew;}
+
 private:
 	
 	eOutput m_output;
@@ -69,6 +75,8 @@ private:
 	bool m_stretchImage;
 	bool m_forceSquare;
 	bool m_bFlipV;
+	bool m_bForceAlpha;
+	bool m_bNoPowerOf2;
 
 };
 

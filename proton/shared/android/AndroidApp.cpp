@@ -1,7 +1,7 @@
 
 #include <PlatformSetup.h>
 #include <jni.h>
-#include <App.h>
+#include <BaseApp.h>
 
 extern "C" 
 {

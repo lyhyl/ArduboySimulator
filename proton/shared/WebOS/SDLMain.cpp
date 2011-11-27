@@ -3,7 +3,7 @@
 #include "SDLMain.h"
 #include "PDL.h"
 #include "../win/app/main.h"
-#include "App.h"
+#include "BaseApp.h"
 
 SDL_Surface *g_screen = NULL;
 SDL_Joystick *g_pSDLJoystick = NULL;
@@ -317,16 +317,15 @@ void SDLEventLoop()
 				//ev.motion.which should hold which finger id
 				ConvertCoordinatesIfRequired(xPos, yPos);
 
-#ifdef WIN32
-				GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_MOVE_RAW, xPos, yPos, ev.motion.which);
-#endif
-
 				if (g_leftMouseButtonDown || GetPlatformID() == PLATFORM_ID_WEBOS)
 				{
 					GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_MOVE, xPos, yPos, ev.motion.which);
 					break;
 				} 
 
+#ifdef WIN32
+				GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_MOVE_RAW, xPos, yPos, ev.motion.which);
+#endif
 			}
 
 			break;

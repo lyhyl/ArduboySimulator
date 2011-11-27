@@ -18,7 +18,10 @@ string RemoveLastPartOfDir(string path);
 string BoolToEnabled(bool bEnabled);
 char *float_to_money( double num, char *buf, int dec); //for legacy code..
 string FloatToMoney(float f, int decimalsOfCents = 0);
-vector<string> StringTokenize(const string& str,const string& delimiters, const string & secondOptionalDelimiter);
+vector<string> StringTokenize(const string& str,const string& delimiters);
+
+//what is this below?  I don't see the implentation anywhere...
+vector<string> StringTokenize(const string& str,const string& theDelimiter, const string & secondOptionalDelimiter);
 //helper to turn anything into a string, like ints/floats
 void ForceRange(float &a, const float min, const float max);
 
@@ -35,7 +38,7 @@ std::string toString(C value)
 }
 string PrefixLeading(const string input, unsigned int leadingCount, string leadingChar, string insertAfterPrefix = "");
 string PostfixLeading(const string input, unsigned int leadingCount, string leadingChar, string insertAfterPrefix = "");
-vector<string> StringTokenize(const string& str,const string& delimiters);
+
 bool force_range(int * i_original, int i_min, int i_max);
 string GetCountryCode(); //return the 2 letter ISO country code, or 00 if we failed
 string StripWhiteSpace(const string &s);
