@@ -340,6 +340,7 @@ bool TexturePacker::ProcessTexture( string fName )
 	tempRect = finalRect;
 	stretchRect = finalRect; 
 
+	if (!GetApp()->GetNoPowerOfTwo())
 	if (!IsPowerOf2(pixBuff.get_width()) || !IsPowerOf2(pixBuff.get_height()))
 	{
 		//Not a power of two.  Let's remedy that little problem...
@@ -382,18 +383,27 @@ bool TexturePacker::ProcessTexture( string fName )
 		}
 	}
 
+	//SETH
+	LogMsg("(-forcealpha causing us to leave the unnecessary alpha channel in)");
+
 	if (!m_bUsesTransparency)
 	{
-		switch (GetApp()->GetPixelType())
+		if (GetApp()->GetForceAlpha())
 		{
-		case OGL_RGBA_8888:
-			GetApp()->SetPixelType(pvrtexlib::OGL_RGB_888);
-			break;
+			m_bUsesTransparency = true;
+		} else
+		{
+			switch (GetApp()->GetPixelType())
+			{
+			case OGL_RGBA_8888:
+				GetApp()->SetPixelType(pvrtexlib::OGL_RGB_888);
+				break;
 
-		case OGL_RGBA_4444:
-			GetApp()->SetPixelType(pvrtexlib::OGL_RGB_565);
-			break;
+			case OGL_RGBA_4444:
+				GetApp()->SetPixelType(pvrtexlib::OGL_RGB_565);
+				break;
 
+			}
 		}
 	}
 

@@ -432,6 +432,8 @@ void SetupOrtho()
 {
 
 	if (!NeedsOrthoSet()) return;
+	
+
 	CHECK_GL_ERROR();
 	g_globalBatcher.Flush();
 
@@ -439,6 +441,7 @@ void SetupOrtho()
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 	glLoadIdentity();
+	glEnable(GL_TEXTURE_2D);
 	glEnableClientState(GL_VERTEX_ARRAY);	
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);	
 	glDisableClientState(GL_COLOR_ARRAY);	

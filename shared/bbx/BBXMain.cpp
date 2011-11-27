@@ -25,7 +25,7 @@
 #include "bbutil.h"
 
 #include <string>
-#include "App.h"
+#include "BaseApp.h"
 
 using namespace std;
 int exit_application = 0;
@@ -123,15 +123,21 @@ void ProcessEvents()
 	            	switch (winState)
 	            	{
 	            	case NAVIGATOR_WINDOW_FULLSCREEN:
+	            		  GetBaseApp()->OnEnterForeground();
 	            		LogMsg("Full screen");
 
 	            		break;
 	            	case NAVIGATOR_WINDOW_THUMBNAIL:
-	            		          LogMsg("App thumbnailed");
-	            		            		break;
+
+	            		LogMsg("App thumbnailed");
+	                  	GetBaseApp()->OnEnterBackground();
+
+	            		break;
 
 	            	case NAVIGATOR_WINDOW_INVISIBLE:
 	            		LogMsg("App in background");
+	                  	GetBaseApp()->OnEnterBackground();
+
 	            		break;
 
 	            	}
@@ -157,12 +163,11 @@ void ProcessEvents()
 	            screen_event_t screenEvent = screen_event_get_event(event);
 	            int screenEventType;
 	            int screenEventPosition[2];
-	            int screenTouchID;
+	            int screenTouchID = 0;
 
 	            screen_get_event_property_iv(screenEvent, SCREEN_PROPERTY_TYPE, &screenEventType);
 	            screen_get_event_property_iv(screenEvent, SCREEN_PROPERTY_SOURCE_POSITION, screenEventPosition);
 
-	           screenTouchID = 0;
 	            // screen_get_event_property_iv(screenEvent, SCREEN_PROPERTY_TOUCH_ID,  &screenTouchID);
 
 	         //  LogMsg("Input type: %d, (touchid %d)", screenEventType, screenTouchID);
@@ -174,7 +179,12 @@ void ProcessEvents()
 	            {
 	            	screen_get_event_property_iv(screenEvent, SCREEN_PROPERTY_TOUCH_ID,  &screenTouchID);
 	            	//LogMsg("Touched");
-	        	  	float xPos = screenEventPosition[0];
+	        	  	if (screenTouchID > C_MAX_TOUCHES_AT_ONCE)
+					{
+						LogMsg("How can this be finger %d?!", screenTouchID);
+						break;;
+					}
+					float xPos = screenEventPosition[0];
             	    float yPos = screenEventPosition[1];
             	    ConvertCoordinatesIfRequired(xPos, yPos);
         			GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_START, xPos, yPos, screenTouchID);
@@ -186,7 +196,13 @@ void ProcessEvents()
 	           case SCREEN_EVENT_MTOUCH_RELEASE:
 	            {
 	            	  screen_get_event_property_iv(screenEvent, SCREEN_PROPERTY_TOUCH_ID,  &screenTouchID);
-	            	  // LogMsg("Touch release");
+	            	
+					  if (screenTouchID > C_MAX_TOUCHES_AT_ONCE)
+					  {
+						  LogMsg("How can this be finger %d?!", screenTouchID);
+						  break;;
+					  }
+					  // LogMsg("Touch release");
 	            	 	float xPos = screenEventPosition[0];
 	            	    float yPos = screenEventPosition[1];
 	            	    ConvertCoordinatesIfRequired(xPos, yPos);
@@ -198,7 +214,11 @@ void ProcessEvents()
 	            case SCREEN_EVENT_MTOUCH_MOVE:
 	            {
 	            	screen_get_event_property_iv(screenEvent, SCREEN_PROPERTY_TOUCH_ID,  &screenTouchID);
-
+					if (screenTouchID > C_MAX_TOUCHES_AT_ONCE)
+					{
+						LogMsg("How can this be finger %d?!", screenTouchID);
+						break;;
+					}
 	            	float xPos = screenEventPosition[0];
 	            	    float yPos = screenEventPosition[1];
 	            	    ConvertCoordinatesIfRequired(xPos, yPos);
@@ -209,10 +229,10 @@ void ProcessEvents()
 
 	            case SCREEN_EVENT_POINTER:
 	            {
-	                int pointerButton;
+	                int pointerButton = 0;
 	                screen_get_event_property_iv(screenEvent, SCREEN_PROPERTY_BUTTONS, &pointerButton);
 		          //	   LogMsg("PointerType: %d - ", screenEventType);
-
+					screenTouchID = 0;
 	                if (pointerButton == SCREEN_LEFT_MOUSE_BUTTON)
 	                {
 	              	  	float xPos = screenEventPosition[0];
@@ -284,7 +304,7 @@ void ProcessEvents()
 
 
 	            default:
-	            	LogMsg("Unhandled msg: %d", code);
+	            	//LogMsg("Unhandled msg: %d", code);
 	            	break;
 
 
@@ -487,4 +507,10 @@ int main(int argc, char *argv[])
     bbutil_terminate();
 
     return 0;
+}
+
+void ForceVideoUpdate()
+{
+	g_globalBatcher.Flush();
+	bbutil_swap();
 }

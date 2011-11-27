@@ -242,6 +242,7 @@ void BaseApp::OnMessage(Message &m)
 						v.Get(0).Set((float)m.GetType());
 						v.Get(1).Set(float(m.GetParm1()), float(m.GetParm2()) );
 						v.Get(2).Set(uint32(m.GetParm3()));
+						if (m.GetType() == MESSAGE_TYPE_GUI_CLICK_MOVE)
 						m_touchTracker[m.GetParm3()].SetPos(v.Get(1).GetVector2());
 						m_sig_input(&v);
 					} else
@@ -249,6 +250,7 @@ void BaseApp::OnMessage(Message &m)
 						v.Get(0).Set((float)m.GetType());
 						v.Get(1).Set(float(m.GetParm1()), float(m.GetParm2()) );
 						v.Get(2).Set(uint32(m.GetParm3()));
+						if (m.GetType() == MESSAGE_TYPE_GUI_CLICK_MOVE)
 						m_touchTracker[m.GetParm3()].SetPos(v.Get(1).GetVector2());
 						m_sig_input_move(&v);
 					}

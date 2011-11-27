@@ -139,3 +139,12 @@ std::string TextScanner::GetParmStringFromLine( int lineNum, int index, string t
 	assert(token.size() == 1 && "We don't actually support a non char delim yet");
 	return SeparateStringSTL(m_lines[lineNum], index, token[0]);
 }
+
+void TextScanner::Replace( const string &thisStr, const string &thatStr )
+{
+	for (unsigned int i=0; i < m_lines.size(); i++)
+	{
+		StringReplace(thisStr, thatStr, m_lines[i]);
+	}
+
+}

@@ -140,7 +140,7 @@ void ShowHelp()
 	LogMsg("");
 	LogMsg("More options/flags for making textures:\n");
 	LogMsg("RTPack.exe -pvrt4444 <image file> (Makes raw 16 bit 4444 or 565 if no alpha)");
-	LogMsg("RTPack.exe -pvrt8888 <image file> (Creates raw 32 bit .rttex");
+	LogMsg("RTPack.exe -pvrt8888 <image file> (Creates raw 32 bit .rttex, or 24 bit if no alpha");
 	LogMsg("RTPack.exe -pvrt4444 -o pvr <image file> (Writes a .pvr format output)");
 	LogMsg("Extra flags you can use with texture generation:");
 	LogMsg("-mipmaps (Causes mipmaps to be generated)");
@@ -149,13 +149,14 @@ void ShowHelp()
 	LogMsg("-4444_if_not_square_or_too_big (1024 width or height and non square will use -pvrt4444)");
 	LogMsg("-8888_if_not_square_or_too_big (1024 width or height and non square will use -pvrt8888)");
 	LogMsg("-flipv (vertical flip, applies to textures only)");
-
+	LogMsg("-forcealpha (force including the alpha channel, even if its not needed");
+	LogMsg("-nopowerof2 (stops rtpack from adjusting images to be power of 2)");
 }
 
 
 int main(int argc, char* argv[])
 {
-	LogMsg("\nRTPack V1.1 by Seth A. Robinson.  /h for help\n");
+	LogMsg("\nRTPack V1.2 by Seth A. Robinson.  /h for help\n");
 
 	
 #ifdef _DEBUG
@@ -240,6 +241,15 @@ int main(int argc, char* argv[])
 		GetApp()->SetPixelType(pvrtexlib::OGL_PVRTC4);
 
 	} 
+	if (GetApp()->ParmExists("-forcealpha"))
+	{
+		GetApp()->SetForceAlpha(true);
+	} 
+	if (GetApp()->ParmExists("-nopowerof2"))
+	{
+		GetApp()->SetNoPowerOfTwo(true);
+	} 
+
 	if (GetApp()->ParmExists("-pvrtc2"))
 	{
 		GetApp()->SetPixelType(pvrtexlib::OGL_PVRTC2);
@@ -308,3 +318,5 @@ FileManager * GetFileManager()
 
 int GetScreenSizeX() {assert(!"Not used"); return 0;}
 int GetScreenSizeY() {assert(!"Not used"); return 0;}
+
+bool IsTabletSize() {return false;}

@@ -110,19 +110,28 @@ public:
 	{
 		m_bHandled = false;
 		m_bIsDown = false;
+		m_vPos = m_vLastPos = CL_Vec2f(-1,-1);
 	}
 	
 	bool WasHandled() {return m_bHandled;}
 	CL_Vec2f GetPos() {return m_vPos;}
+	CL_Vec2f GetLastPos() {return m_vLastPos;}  //normally you wouldn't care, but this helps if you need to emulate the way iOS gives touch data
+
 	bool IsDown() {return m_bIsDown;}
 
-	void SetIsDown(bool bNew)  {m_bIsDown = bNew;}
-	void SetPos(const CL_Vec2f &vPos) {m_vPos = vPos;}
+	void SetIsDown(bool bNew)  { if (!bNew) m_vPos = m_vLastPos = CL_Vec2f(-1,-1);  m_bIsDown = bNew;}
+	void SetPos(const CL_Vec2f &vPos)
+	{
+		m_vLastPos = m_vPos;
+		m_vPos = vPos;
+		//LogMsg("pos: %.2f, last pos: %.2f", m_vPos, m_vLastPos);
+	}
 	void SetWasHandled(bool bNew) {m_bHandled = bNew;}
+
 private:
 	bool m_bHandled;
 	bool m_bIsDown;
-	CL_Vec2f m_vPos;
+	CL_Vec2f m_vPos, m_vLastPos;
 };
 
 

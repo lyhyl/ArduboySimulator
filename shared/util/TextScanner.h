@@ -61,7 +61,7 @@ public:
 	string GetMultipleLineStrings(string label, string token = "|");
 	string GetLine(int lineNum); //0 based, returns "" if out of range
 	vector<string> m_lines;
-
+	void Replace( const string &thisStr, const string &thatStr );
 	bool IsLoaded() {return !m_lines.empty();}
 	bool SetupFromMemoryAddress(const char *pCharArray);
 
