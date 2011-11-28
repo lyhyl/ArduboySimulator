@@ -4,11 +4,14 @@
 #include "PDL.h"
 #include <errno.h>
 
+
 using namespace std;
 
 #ifdef RT_WEBOS_ARM
 #include "PlatformSetupWebOS.h"
 #include <dirent.h>
+
+#include <sys/stat.h>
 
 #else
 #include "PlatformSetupWin.h"
@@ -18,6 +21,12 @@ using namespace std;
 #include <cstdarg>
 #include <cassert>
 
+
+
+#ifdef _WINDOWS_
+	#include <io.h>
+	#include <sys/stat.h>
+#endif
 void StringReplace(const std::string& what, const std::string& with, std::string& in);
 vector<string> StringTokenize (const  string  & theString,  const  string  & theDelimiter );
 
@@ -291,10 +300,6 @@ int GetDaysSinceDate(int month,int day, int year)
 bool RTCreateDirectory(const std::string &dir_name)
 {
 
-	LogMsg("RTCreateDirectory url not done");
-	assert(!"no!");
-	return 0;
-/*
 	if (dir_name.empty())
 		return false;
 
@@ -332,19 +337,17 @@ bool RTCreateDirectory(const std::string &dir_name)
 #ifdef WIN32
 	return ::CreateDirectory(full_path.c_str(), NULL) != 0;
 #else
+	LogMsg("Creating dir %s", full_path.c_str());
 	return ::mkdir(full_path.c_str(), 0755) == 0;
 #endif
-	*/
+	
 }
 
 
 void CreateDirectoryRecursively(string basePath, string path)
 {
-	LogMsg("CreateDirectoryRecursively not done");
-	assert(!"no!");
-	return;
 	
-	/*StringReplace("\\", "/", path);
+	StringReplace("\\", "/", path);
 	StringReplace("\\", "/", basePath);
 
 	vector<string> tok = StringTokenize(path, "/");
@@ -361,22 +364,23 @@ void CreateDirectoryRecursively(string basePath, string path)
 		RTCreateDirectory(basePath+path);
 		path += "/";
 	}
-	*/
+	
 }
 
 
+
+#ifdef WIN32
+BOOL IsDots(const TCHAR* str) {
+	if(_tcscmp(str,".") && _tcscmp(str,"..")) return FALSE;
+	return TRUE;
+}
+#endif
 
 vector<string> GetDirectoriesAtPath(string path)
 {
 	vector<string> v;
 
-
-	
-	LogMsg(" GetDirectoriesAtPathurl not done.. copy from android version?");
-	assert(!"no!");
-	return v;
-
-/*
+#ifdef WIN32
 	if (path.empty()) path += "."; //needed for relative paths
 
 	HANDLE hFind;    // file handle
@@ -394,16 +398,41 @@ vector<string> GetDirectoriesAtPath(string path)
 	}
 
 	FindClose(hFind);
-	return v;
-	*/
-}
 
-#ifdef WIN32
-BOOL IsDots(const TCHAR* str) {
-	if(_tcscmp(str,".") && _tcscmp(str,"..")) return FALSE;
-	return TRUE;
-}
+#else
+
+	//linux version
+
+	dirent * buf, * ent;
+	DIR *dp;
+
+		dp = opendir(path.c_str());
+	if (!dp)
+	{
+		LogError("GetDirectoriesAtPath: opendir failed to get %s", path.c_str());
+		return v;
+	}
+
+	buf = (dirent*) malloc(sizeof(dirent)+512);
+	while (readdir_r(dp, buf, &ent) == 0 && ent)
+	{
+		if (ent->d_name[0] == '.' && ent->d_name[1] == 0) continue;
+		if (ent->d_name[0] == '.' && ent->d_name[1] == '.' && ent->d_name[2] == 0) continue;
+
+		//LogMsg("Got %s. type %d", ent->d_name, int(ent->d_type));
+
+		if (ent->d_type == DT_DIR)
+		{
+			v.push_back(ent->d_name);
+		}
+	}
+
+	free (buf);
+	closedir(dp);
 #endif
+	return v;
+	
+}
 
 vector<string> GetFilesAtPath(string path)
 {
@@ -463,11 +492,7 @@ vector<string> GetFilesAtPath(string path)
 //based on a snippet fromFeroz Zahid (http://www.codeguru.com/cpp/w-p/files/folderdirectorymaintenance/article.php/c8999/
 bool RemoveDirectoryRecursively(string path)
 {
-	LogMsg(" RemoveDirectoryRecursively not done");
-	assert(!"no!");
-	return false;
-
-	/*
+#ifdef WIN32
 	const TCHAR* sPath = path.c_str();
 	HANDLE hFind;    // file handle
 	WIN32_FIND_DATA FindFileData;
@@ -491,27 +516,31 @@ bool RemoveDirectoryRecursively(string path)
 
 	bool bSearch = true;
 	while(bSearch) {    // until we find an entry
-		if(FindNextFile(hFind,&FindFileData)) {
+		if(FindNextFile(hFind,&FindFileData)) 
+		{
 			if(IsDots(FindFileData.cFileName)) continue;
 			_tcscat(FileName,FindFileData.cFileName);
 			if((FindFileData.dwFileAttributes &
-				FILE_ATTRIBUTE_DIRECTORY)) {
+				FILE_ATTRIBUTE_DIRECTORY))
+			{
 
 					// we have found a directory, recurse
-					if(!RemoveDirectoryRecursively(FileName)) {
+					if(!RemoveDirectoryRecursively(FileName))
+					{
 						FindClose(hFind);
 						return FALSE;    // directory couldn't be deleted
 					}
 					// remove the empty directory
 					RemoveDirectory(FileName);
 					_tcscpy(FileName,DirPath);
-			}
-			else {
-				if(FindFileData.dwFileAttributes &
-					FILE_ATTRIBUTE_READONLY)
+			} else 
+			{
+				if(FindFileData.dwFileAttributes & FILE_ATTRIBUTE_READONLY)
 					// change read-only file mode
 					_chmod(FileName, _S_IWRITE);
-				if(!DeleteFile(FileName)) {    // delete the file
+				
+				if(!DeleteFile(FileName))
+				{    // delete the file
 					FindClose(hFind);
 					return FALSE;
 				}
@@ -534,7 +563,54 @@ bool RemoveDirectoryRecursively(string path)
 	FindClose(hFind);                  // close the file handle
 
 	return RemoveDirectory(sPath) != 0;     // remove the empty directory
-*/
+#else
+
+
+	dirent * buf, * ent;
+	DIR *dp;
+
+	dp = opendir(path.c_str());
+	if (!dp)
+	{
+		LogError("RemoveDirectoryRecursively: opendir failed");
+		return false;
+	}
+
+	buf = (dirent*) malloc(sizeof(dirent)+512);
+	while (readdir_r(dp, buf, &ent) == 0 && ent)
+	{
+
+		if (ent->d_name[0] == '.' && ent->d_name[1] == 0) continue;
+		if (ent->d_name[0] == '.' && ent->d_name[1] == '.' && ent->d_name[2] == 0) continue;
+
+		//LogMsg("Got %s. type %d", ent->d_name, int(ent->d_type));
+		if (ent->d_type == DT_REG) //regular file
+		{
+			string fName = path+string("/")+ent->d_name;
+			//LogMsg("Deleting %s", fName.c_str());
+			unlink( fName.c_str());
+		}
+
+		if (ent->d_type == DT_DIR) //regular file
+		{
+			string fName = path+string("/")+ent->d_name;
+			//LogMsg("Entering DIR %s",fName.c_str());
+			if (!RemoveDirectoryRecursively(fName.c_str()))
+			{
+				LogError("Error removing dir %s", fName.c_str());
+				break;
+			}
+		}
+	}
+
+	free (buf);
+	closedir(dp);
+
+	//delete the final dir as well
+	rmdir( path.c_str());
+	return true; //success
+#endif
+
 }
 
 
@@ -595,4 +671,11 @@ string GetDeviceID()
 	#endif
 	return buff;
 }
+
+void CreateAppCacheDirIfNeeded()
+{
+	//only applicable to iOS
+}
+
+
 #endif

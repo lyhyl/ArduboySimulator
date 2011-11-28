@@ -11,3 +11,6 @@ del setenv.bat
 if errorlevel 1  %RT_UTILS%\beeper.exe /p
 call setenv.bat
 del setenv.bat
+
+set VERSION=1.0.0
+set DEBUG=1

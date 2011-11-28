@@ -145,11 +145,6 @@ return NULL;
 #endif
 }
 
-
-#ifndef UINT_MAX
-	//fix problem for webOS compile
-	#define UINT_MAX      0xffffffff
-#endif
 byte * LoadFileIntoMemoryBasic(string fileName, unsigned int *length, bool bUseSavePath, bool bAddBasePath)
 {
 	*length = 0;

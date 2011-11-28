@@ -134,17 +134,39 @@ bool App::Init()
 
 		break;
 
+	case PLATFORM_ID_WEBOS:
+		//if we do this, everything will be stretched/zoomed to fit the screen
+		if (IsIPADSize)
+		{
+			//doesn't need rotation
+			SetLockedLandscape(false);  //because it's set in the app manifest, we don't have to rotate ourselves
+			SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(), ORIENTATION_PORTRAIT);
+			SetupFakePrimaryScreenSize(480,320); //game will think it's this size, and will be scaled up
+		} else
+		{
+			//but the phones do
+			SetLockedLandscape(true); //we don't allow portrait mode for this game
+			SetupFakePrimaryScreenSize(320,480); //game will think it's this size, and will be scaled up
+
+			
+		}
+		break;
+
+		
 	default:
 		SetLockedLandscape(true); //we don't allow portrait mode for this game
 		SetupFakePrimaryScreenSize(320,480); //game will think it's this size, and will be scaled up
 	}
 	
-	if (GetPlatformID() == PLATFORM_ID_WEBOS && IsIPADSize )
+	
+	if (GetPlatformID() == PLATFORM_ID_WEBOS && !IsIPADSize)
 	{
-		LogMsg("Special handling for touchpad landscape mode..");
-		SetLockedLandscape(false);
-		SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(), ORIENTATION_PORTRAIT);
+		//non Touchpad webos devices are taller than they are higher.. fix that by rotating it
+		LogMsg("Special handling for webos devices to switch to landscape mode..");
+	//	SetLockedLandscape(true);
+	//	SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(), ORIENTATION_LANDSCAPE_LEFT);
 	}
+	
 
 	L_ParticleSystem::init(2000);
 

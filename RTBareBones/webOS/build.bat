@@ -8,7 +8,7 @@ REM @echo off
 @rem Use Pixi to allow running on either device
 set PRE=0
 set PIXI=1
-set DEBUG=0
+REM set DEBUG=0 //set in app_info_setup.bat, set to 1 for a debug build that isn't stripped during packging
 
 set SHARED=..\..\shared
 set APP=..\source
@@ -61,12 +61,16 @@ set LIB_DIRS="-L%PALMPDK%\device\lib"
 
 if %PRE% equ 0 if %PIXI% equ 0 goto :END
 
+
 if %DEBUG% equ 1 (
    set DEVICEOPTS=-g
+   set FLAGS=-O
+   set DEFINES=%DEFINES% -D _DEBUG
 ) else (
    set DEVICEOPTS=
-)
+   set DEFINES=%DEFINES% -D NDEBUG
 
+)
 if %PRE% equ 1 (
    set DEVICEOPTS=%DEVICEOPTS% -mcpu=cortex-a8 -mfpu=neon -mfloat-abi=softfp
 )
