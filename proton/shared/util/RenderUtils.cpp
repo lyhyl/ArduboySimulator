@@ -40,6 +40,8 @@ void RenderGLTriangle()
 		triSize, -triSize, 0.0f,
 		0.0f, triSize, 0.0f
 	};
+	glDisable(GL_BLEND);
+	glDisable(GL_ALPHA_TEST);
 
 	glDisable(GL_TEXTURE_2D);
 	glEnableClientState(GL_VERTEX_ARRAY);
@@ -62,11 +64,11 @@ void RenderGLTriangle()
 
 void RenderSpinningTriangle()
 {
-	
+
 	glPushMatrix();
+	glLoadIdentity();
 	glTranslatef(0,0,-2);
 	glRotatef(float( (GetBaseApp()->GetGameTick()/10) %360) , 0, 1, 0); //rotate it
-	//RenderGLTriangle();
 	glDisable(GL_CULL_FACE); //so we can see the back of the triangle too
 	RenderGLTriangle();
 	glEnable(GL_CULL_FACE); //so we can see the back of the triangle too

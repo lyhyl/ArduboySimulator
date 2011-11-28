@@ -28,7 +28,7 @@
 #include "L_ParticleEffect.h"
 #include "L_ParticleMem.h"
 
-#if !defined(C_GL_MODE) &&  !defined( ANDROID_NDK) && !defined( PLATFORM_BBX)
+#if !defined(C_GL_MODE) &&  !defined( ANDROID_NDK) && !defined( PLATFORM_BBX) && !defined( RT_WEBOS)
 	#define RT_USE_POINT_SPRITES
 #endif
 
@@ -472,6 +472,7 @@ void L_ParticleEffect::RenderPointSprites(SurfaceAnim *pSurf, int start, int cou
 	// Now that all of the VBOs have been used to configure the vertices, pointer size and color
 	// use glDrawArrays to draw the points
 	//NOTE: It crashes here on the WebOS GLES windows emulator .. but runs on the device.  driver bug I guess -Seth
+	//Another note:  It also can crash a Touchpad so.. not going to use this optimized point sprite stuff for webos :(
 	glDrawArrays(GL_POINTS, start,  count);
 	CHECK_GL_ERROR();
 	// Unbind the current VBO

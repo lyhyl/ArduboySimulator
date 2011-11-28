@@ -46,8 +46,10 @@ void InitVideoSize()
 	AddVideoMode("iPad HD", 768*2, 1024*2, PLATFORM_ID_IOS);
 	AddVideoMode("iPhone4", 640, 960, PLATFORM_ID_IOS);
 	
-	//Palm er, I mean HP
-	AddVideoMode("Pre Plus", 320, 480, PLATFORM_ID_WEBOS);
+	//Palm er, I mean HP. These should use the Debug WebOS build config in MSVC for the best results, it will
+	//use their funky SDL version
+	AddVideoMode("Pre", 320, 480, PLATFORM_ID_WEBOS);
+	AddVideoMode("Pre Landscape", 480, 320, PLATFORM_ID_WEBOS);
 	AddVideoMode("Pixi", 320, 400, PLATFORM_ID_WEBOS);
 	AddVideoMode("Pre 3", 480, 800, PLATFORM_ID_WEBOS);
 	AddVideoMode("Touchpad", 768, 1024, PLATFORM_ID_WEBOS);
@@ -64,8 +66,8 @@ void InitVideoSize()
 	//RIM
 	AddVideoMode("Playbook Landscape", 1024,600, PLATFORM_ID_BBX);//set g_landScapeNoNeckHurtMode to true 
 
-	string desiredVideoMode = "iPad"; //name needs to match one of the ones defined above
-    g_landScapeNoNeckHurtMode = true; //if true, will rotate the screen so we can play in landscape mode in windows without hurting ourselves
+	string desiredVideoMode = "Pre"; //name needs to match one of the ones defined above
+    g_landScapeNoNeckHurtMode = false; //if true, will rotate the screen so we can play in landscape mode in windows without hurting ourselves
 	SetVideoModeByName(desiredVideoMode);
 	GetBaseApp()->OnPreInitVideo(); //gives the app level code a chance to override any of these parms if it wants to
 }

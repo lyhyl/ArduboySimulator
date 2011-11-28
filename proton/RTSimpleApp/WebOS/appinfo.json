@@ -6,5 +6,5 @@
 	"version": "1.0.0",
 	"vendor": "Robinson Technologies",
 	"icon": "icon.png",
-  "requiredMemory": 20
+  "requiredMemory": 64
 }

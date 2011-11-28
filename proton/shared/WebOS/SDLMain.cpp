@@ -12,7 +12,7 @@ CL_Vec3f g_accelHold = CL_Vec3f(0,0,0);
 const char * GetBundleName();
 const char * GetBundlePrefix();
 
-
+ 
 bool g_isInForeground = true;
 #ifdef RT_WEBOS_ARM
 
@@ -404,7 +404,7 @@ bool InitSDL()
 
 	glClearColor(0,0,0,1);
 	glClear(GL_COLOR_BUFFER_BIT);
-	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_FALSE);
+	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 
 
 	return true;
@@ -509,6 +509,7 @@ int main(int argc, char *argv[])
 #endif
 	static unsigned int gameTimer = 0;
 	static unsigned int fpsTimerLoopMS = 0;
+	GetBaseApp()->OnScreenSizeChange();
 
 	while(1)
 	{

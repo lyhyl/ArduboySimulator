@@ -72,6 +72,10 @@ using namespace std;
 #define DEG2RAD(x) (M_PI * (x) / 180.0)
 #define RAD2DEG(x) (x * (180/M_PI))
 
+#ifndef UINT_MAX
+//fix problem for webOS compiles
+#define UINT_MAX      0xffffffff
+#endif
 
 //this must exist somewhere, used for log messages	
 void LogMsg ( const char* traceStr, ... );

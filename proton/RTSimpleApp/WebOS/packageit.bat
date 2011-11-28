@@ -21,7 +21,7 @@ xcopy ..\bin\interface %STAGING_DIR%\interface /E /F /Y
 mkdir %STAGING_DIR%\audio
 xcopy ..\bin\audio %STAGING_DIR%\audio /E /F /Y
 
-del %STAGING_DIR%\audio\*.mp3
+//del %STAGING_DIR%\audio\*.mp3
 
 mkdir %STAGING_DIR%\game
 xcopy ..\bin\game %STAGING_DIR%\game /E /F /Y

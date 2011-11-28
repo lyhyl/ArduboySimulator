@@ -74,6 +74,9 @@ bool App::Init()
 	LogMsg("The Save path is %s", GetSavePath().c_str());
 	LogMsg("Region string is %s", GetRegionString().c_str());
 
+#ifdef _DEBUG
+	LogMsg("Built in debug mode");
+#endif
 #ifndef C_NO_ZLIB
 	//fonts need zlib to decompress.  When porting a new platform I define C_NO_ZLIB and add zlib support later sometimes
 	if (!GetFont(FONT_SMALL)->Load("interface/font_trajan.rtfont")) return false;
@@ -184,6 +187,37 @@ void App::OnArcadeInput(VariantList *pVList)
 	LogMsg("Arcade input: Hit %d (%s) (%s)", vKey, keyName.c_str(), pressed.c_str());
 }
 
+
+void AppInput(VariantList *pVList)
+{
+
+	//0 = message type, 1 = parent coordinate offset
+	CL_Vec2f pt = pVList->Get(1).GetVector2();
+	//pt += GetAlignmentOffset(*m_pSize2d, eAlignment(*m_pAlignment));
+
+	uint32 fingerID = 0;
+	if (pVList->Get(2).GetType() == Variant::TYPE_UINT32)
+	{
+		fingerID = pVList->Get(2).GetUINT32();
+	}
+
+	CL_Vec2f vLastTouchPt = GetBaseApp()->GetTouch(fingerID)->GetLastPos();
+
+	switch (eMessageType( int(pVList->Get(0).GetFloat())))
+	{
+	case MESSAGE_TYPE_GUI_CLICK_START:
+		LogMsg("Touch start: X: %.2f YL %.2f (Finger %d)", pt.x, pt.y, fingerID);
+		break;
+	case MESSAGE_TYPE_GUI_CLICK_MOVE:
+		LogMsg("Touch mode: X: %.2f YL %.2f (Finger %d)", pt.x, pt.y, fingerID);
+		break;
+	case MESSAGE_TYPE_GUI_CLICK_END:
+		LogMsg("Touch end: X: %.2f YL %.2f (Finger %d)", pt.x, pt.y, fingerID);
+		break;
+	}	
+}
+
+
 void App::Update()
 {
 	
@@ -215,6 +249,10 @@ void App::Update()
 		//TRACKBALL/ARCADETEST: Uncomment below to see log messages on trackball/key movement input
 		//pEnt->AddComponent(new ArcadeInputComponent);
 		//GetBaseApp()->m_sig_arcade_input.connect(1, boost::bind(&App::OnArcadeInput, this, _1));
+	
+		//INPUT TEST - wire up input to some functions to manually handle.  AppInput will use LogMsg to
+		//send them to the log.  (Each device has a way to view a debug log in real-time)
+		GetBaseApp()->m_sig_input.connect(&AppInput);
 	}
 
 	//game is thinking.  
@@ -224,7 +262,8 @@ void App::Draw()
 {
 	//Use this to prepare for raw GL calls
 	PrepareForGL();
-
+	
+	glClearColor(0,0,0,1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 	//draw our game stuff
@@ -241,6 +280,8 @@ void App::Draw()
 		m_surf.LoadFile("interface/test.bmp");
 	}
 
+	//m_surf.Bind();
+	//RenderTexturedSpinningTriangle();
 	//blit the logo with the Y mirrored
 	//rtRect texRect = rtRect(0, m_surf.GetHeight(), m_surf.GetWidth(), 0);
 	//rtRect destRect = rtRect(0,0, m_surf.GetWidth(), m_surf.GetHeight());
@@ -251,6 +292,7 @@ void App::Draw()
 
 	//blit it normally
 	m_surf.Blit(0, 0);
+	//m_surf.Blit(100, 100);
 
 	//GetFont(FONT_SMALL)->Draw(0,0, "test");
 	GetFont(FONT_SMALL)->DrawScaled(0,GetScreenSizeYf()-50, "white `2Green `3Cyan `4Red `5Purp ",1+SinGamePulseByMS(3000)*0.7);
@@ -258,6 +300,8 @@ void App::Draw()
 	//the base handles actually drawing the GUI stuff over everything else, if applicable, which in this case it isn't.
 	BaseApp::Draw();
 }
+
+
 
 void App::OnScreenSizeChange()
 {
