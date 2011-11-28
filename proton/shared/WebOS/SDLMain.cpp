@@ -9,6 +9,9 @@ SDL_Surface *g_screen = NULL;
 SDL_Joystick *g_pSDLJoystick = NULL;
 CL_Vec3f g_accelHold = CL_Vec3f(0,0,0);
 
+const char * GetBundleName();
+const char * GetBundlePrefix();
+
 
 bool g_isInForeground = true;
 #ifdef RT_WEBOS_ARM
