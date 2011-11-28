@@ -190,7 +190,7 @@ uint64 GetSystemTimeTickLong()
 	clock_gettime(CLOCK_MONOTONIC, &time);
 	uint64 accum;
 	accum = time.tv_sec*1000 + time.tv_nsec/1000000;
-	return uint64;
+	return accum;
 }
 
 string GetDateAndTimeAsString()
