@@ -195,11 +195,8 @@ void AudioManagerSDL::Preload( string fName, bool bLooping /*= false*/, bool bIs
 
 	string basePath;
 
-	if (bAddBasePath)
-	{
-		basePath = GetBaseAppPath();
-	}
-	SoundObject *pObject = GetSoundObjectByFileName((GetBaseAppPath()+fName).c_str());
+
+	SoundObject *pObject = GetSoundObjectByFileName( fName.c_str());
 
 	if (!pObject)
 	{
@@ -207,7 +204,13 @@ void AudioManagerSDL::Preload( string fName, bool bLooping /*= false*/, bool bIs
 		pObject = new SoundObject;
 		pObject->m_fileName = fName;
 
-		assert(! (GetFileExtension(fName) == "mp3") && "SDL mixer doesn't support mp3 on webos yet though");
+		assert(! (GetFileExtension(fName) == "mp3") && "SDL mixer doesn't support mp3 for non music playback though");
+
+
+		if (bAddBasePath)
+		{
+			basePath = GetBaseAppPath();
+		}
 
 		pObject->m_pSound = Mix_LoadWAV( (basePath+fName).c_str());
 		if (!pObject->m_pSound)
@@ -266,7 +269,6 @@ AudioHandle AudioManagerSDL::Play( string fName, bool bLooping /*= false*/, bool
 
 		m_lastMusicFileName = fName;
 
-	
 		/*
 		if (GetFileExtension(fName) == "mp3")
 		{
@@ -274,13 +276,21 @@ AudioHandle AudioManagerSDL::Play( string fName, bool bLooping /*= false*/, bool
 		}
 		*/
 		
+		StopMusic();
+		m_pMusicChannel = Mix_LoadMUS( (basePath+fName).c_str());
 
+		if (!m_pMusicChannel && !bAddBasePath)
+		{
+			LogError("Couldn't load %s, trying again with full path", (basePath+fName).c_str());
 
-		m_pMusicChannel = Mix_LoadMUS((GetBaseAppPath()+fName).c_str());
-		
+			basePath = GetBaseAppPath();
+			//try again with the basepath added.. the SDL sound system on webos seems to require it
+			m_pMusicChannel = Mix_LoadMUS((basePath+fName).c_str());
+		}
+
 		if (!m_pMusicChannel)
 		{
-			LogError("Unable to load music file %s. Missing?", (GetBaseAppPath()+fName).c_str());
+			LogError("Unable to load music file %s. Missing?", (basePath+fName).c_str());
 			return AUDIO_HANDLE_BLANK;
 		}
 		m_lastMusicID = (AudioHandle) m_pMusicChannel;
@@ -297,7 +307,6 @@ AudioHandle AudioManagerSDL::Play( string fName, bool bLooping /*= false*/, bool
 		return (AudioHandle) m_pMusicChannel;
 
 	}
-
 
 	//non music
 
@@ -322,7 +331,13 @@ AudioHandle AudioManagerSDL::Play( string fName, bool bLooping /*= false*/, bool
 
 	//play it
 	pObject->m_pLastChannelToUse = Mix_PlayChannel(-1, pObject->m_pSound, loops)+C_CHANNEL_OFFSET_SO_ZERO_ISNT_USED;
-	
+
+	if (pObject->m_pLastChannelToUse == -1)
+	{
+		//error
+
+		return false;
+	}
 	return (AudioHandle)pObject->m_pLastChannelToUse ;
 }
 
@@ -364,10 +379,12 @@ bool AudioManagerSDL::IsPlaying( AudioHandle soundID )
 {
 	if (soundID == 0) return false;
 
+
 	if (soundID == (AudioHandle) m_pMusicChannel)
 	{
 		return Mix_PlayingMusic() != 0;
 	}
+
 	return Mix_Playing(soundID-C_CHANNEL_OFFSET_SO_ZERO_ISNT_USED) != 0;
 }
 
@@ -400,6 +417,7 @@ void AudioManagerSDL::StopMusic()
 	Mix_HaltMusic();
 	Mix_FreeMusic(m_pMusicChannel);
 	m_pMusicChannel = NULL;
+	m_lastMusicID = AUDIO_HANDLE_BLANK;
 }
 
 int AudioManagerSDL::GetMemoryUsed()
@@ -444,9 +462,10 @@ void AudioManagerSDL::SetVol( AudioHandle soundID, float vol )
 {
 	int ivol =  int(vol*128.0f);
 
+	if (soundID == AUDIO_HANDLE_BLANK) return;
 #ifdef _DEBUG
 	//ivol = 128;
-//	LogMsg("Setting audio handle %d to %d", soundID, ivol);
+	//LogMsg("Setting audio handle %d to %d", soundID, ivol);
 #endif
 
 	Mix_Volume(soundID-C_CHANNEL_OFFSET_SO_ZERO_ISNT_USED,ivol);

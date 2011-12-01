@@ -184,7 +184,11 @@ string GetSavePath()
 	sprintf(r,"%s",ss);
 	env->ReleaseStringUTFChars(ret, ss);
 	string retString = string(r)+"/";
-	//LogMsg("Normal dir is %s", string(retString).c_str());
+	
+	
+#ifdef _DEBUG
+	LogMsg("Save dir is %s", string(retString).c_str());
+#endif
 
 	return retString;
 }
@@ -234,10 +238,18 @@ string GetAppCachePath()
 			//LogMsg("External dir is %s", retString.c_str());
 
 			//looks valid
+#ifdef _DEBUG
+//LogMsg("GetAppCachePath returning %s",retString.c_str());
+#endif
 			return retString;
 		}
-	
-	return ""; //invalid
+
+		retString = GetSavePath();
+#ifdef _DEBUG
+	//	LogMsg("GetAppCachePath returned blank, so giving %s",retString.c_str());
+#endif
+
+	return retString; //invalid
 }
 
 void LaunchEmail(string subject, string content)
@@ -961,4 +973,11 @@ void AppOnAccelerometerUpdate(JNIEnv* env, jobject jobj, jfloat x, jfloat y, jfl
 	z *= -(1.0f/8.3f);
 
 	GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_ACCELEROMETER,  Variant(x, y, z));
+}
+
+
+void ForceVideoUpdate()
+{
+	g_globalBatcher.Flush();
+	assert(!"You really need this?  Add it.  It's supposed to force a gl flip or whatever now.. useful for some situations where you need to update mid-function call..");
 }

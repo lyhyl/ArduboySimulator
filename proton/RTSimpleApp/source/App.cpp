@@ -147,8 +147,6 @@ bool App::Init()
 			//but the phones do
 			SetLockedLandscape(true); //we don't allow portrait mode for this game
 			SetupFakePrimaryScreenSize(320,480); //game will think it's this size, and will be scaled up
-
-			
 		}
 		break;
 

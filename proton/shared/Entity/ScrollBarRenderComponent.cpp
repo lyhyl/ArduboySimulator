@@ -87,7 +87,8 @@ void ScrollBarRenderComponent::OnRender(VariantList *pVList)
 	
 	//NOTE: We don't support drawing a horizontal scroll bar yet!
 
-	
+
+		
 	//LogMsg("Drawing progress bar: %.2f", progress);
 	if (*m_pAlpha <= 0.07)
 	{
@@ -100,6 +101,17 @@ void ScrollBarRenderComponent::OnRender(VariantList *pVList)
 		//don't need a scroll bar
 		return;
 	}
+
+	GLboolean bScissorEnabled = false;
+	glGetBooleanv(GL_SCISSOR_TEST, &bScissorEnabled);
+
+	if (bScissorEnabled)
+	{
+		g_globalBatcher.Flush();
+		//disable it temporarily
+		glDisable(GL_SCISSOR_TEST);
+	}
+
 	float barHeight = m_pSize2d->y/contentAreaRatio;
 	if (!m_pSurf) return; //can't do anything without the graphics loaded
 	
@@ -128,5 +140,10 @@ void ScrollBarRenderComponent::OnRender(VariantList *pVList)
 	CL_Rectf r = CL_Rectf(0, 0, barWidth, barHeight);
 	ApplyOffset(&r, vFinalPos);
 	DrawFilledRect(r, color);
+	if (bScissorEnabled)
+	{
+		g_globalBatcher.Flush();
+		glEnable(GL_SCISSOR_TEST);
+	}
 	
 }

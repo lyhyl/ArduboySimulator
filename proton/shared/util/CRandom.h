@@ -43,6 +43,7 @@ public:
 	void   SetRandomSeed(unsigned int n);
 	unsigned int     GetRandomSeed(void);
 	void   Randomize(void);
+	unsigned int rand();
 };
 
 #endif // CRandom_h__

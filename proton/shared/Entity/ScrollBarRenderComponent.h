@@ -14,6 +14,9 @@
 #include "Entity.h"
 #include "Renderer/SurfaceAnim.h"
 
+//Note:  This component is not affected by the RenderScissorComponent.  If you need that for some reason, add that as
+//an optional setting
+
 class ScrollBarRenderComponent: public EntityComponent
 {
 public:

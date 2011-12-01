@@ -119,7 +119,7 @@ CL_Vec2f ConvertEntityClickToScreenCoords(CL_Vec2f pt, Entity *pEnt);
 void GetUsedTextures(vector<string> &usedTextures, Entity *pEnt);
 void DestroyUnusedTextures();
 bool EntityRetinaRemapIfNeeded(Entity *pEnt, bool bAdjustPosition = true, bool bAdjustScale = false, bool bApplyToIpadAlso = true, bool bPerserveAspectRatio = false); //moves and scale entities to fit a retina screen like an iphone screen
-void EntitySetScaleBySize(Entity *pEnt, CL_Vec2f vDestSize);
+void EntitySetScaleBySize(Entity *pEnt, CL_Vec2f vDestSize, bool bPerserveAspectRatio = false);
 void EntityScaleiPad(Entity *pEnt, bool bPerserveAspectRatio); //on ipad size does nothing, on anything else it scales to fit the same screen ratio.
 EntityComponent * AddHotKeyToButton(Entity *pEnt, uint32 keycode);
 EntityComponent * MakeButtonEmitVirtualGameKey(Entity *pEnt, uint32 keycode);

@@ -4,7 +4,16 @@
 
 Entity * CreateOverlayEntity(Entity *pParentEnt, string name, string fileName, float x, float y)
 {
-	Entity *pEnt = pParentEnt->AddEntity(new Entity(name));
+	Entity *pEnt = NULL;
+	
+	if (pParentEnt)
+	{
+		pEnt = pParentEnt->AddEntity(new Entity(name));
+	} else
+	{
+		pEnt = new Entity(name);
+	}
+	
 	if (!pEnt)
 	{
 		LogError("Failed creating entity");
@@ -1546,7 +1555,7 @@ bool EntityRetinaRemapIfNeeded(Entity *pEnt, bool bAdjustPosition, bool bAdjustS
 	return true;
 }
 
-void EntitySetScaleBySize(Entity *pEnt, CL_Vec2f vDestSize)
+void EntitySetScaleBySize(Entity *pEnt, CL_Vec2f vDestSize, bool bPerserveAspectRatio)
 {
 	CL_Vec2f vSize = pEnt->GetVar("size2d")->GetVector2();
 	assert(vSize.x != 0 && vSize.y != 0);
@@ -1556,6 +1565,14 @@ void EntitySetScaleBySize(Entity *pEnt, CL_Vec2f vDestSize)
 		assert(!"Huh?");
 		return; //avoid divide by 0
 	}
+
+	if (bPerserveAspectRatio)
+	{
+		float aspectRatio = vSize.x /vSize.y;
+		//knock the X setting out and replace with aspect correct size
+		vDestSize.x = vDestSize.y * aspectRatio;
+	}
+
 	pEnt->GetVar("scale2d")->Set(CL_Vec2f( vDestSize.x / vSize.x, vDestSize.y / vSize.y));
 }
 

@@ -432,6 +432,9 @@ void StringReplace(const std::string& what, const std::string& with, std::string
 
 int GetFileSize(const string &fName)
 {
+#ifdef _DEBUG
+	LogMsg("Getting filesize of %s", fName.c_str());
+#endif
 	FILE * file;
 	int fileSizeBytes = -1;
 	file = fopen(fName.c_str(),"r");
@@ -445,6 +448,10 @@ int GetFileSize(const string &fName)
 	{
 		LogMsg("Unable to open %s to get file size", fName.c_str());
 	}
+#ifdef _DEBUG
+	LogMsg("Filesize is %d", fileSizeBytes);
+#endif
+
 	return fileSizeBytes;
 }
 
