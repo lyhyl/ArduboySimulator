@@ -150,6 +150,11 @@ void Entity::OnDelete(VariantList *pVList)
 	if (GetParent())
 	{
 		GetParent()->RemoveEntityByAddress(this);
+	} else
+	{
+		//no parent?  Fine, kill us anyway
+		delete this;
+		return;
 	}
 
 }

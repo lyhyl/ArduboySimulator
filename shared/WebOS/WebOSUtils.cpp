@@ -340,13 +340,10 @@ bool RTCreateDirectory(const std::string &dir_name)
 	LogMsg("Creating dir %s", full_path.c_str());
 	return ::mkdir(full_path.c_str(), 0755) == 0;
 #endif
-	
 }
-
 
 void CreateDirectoryRecursively(string basePath, string path)
 {
-	
 	StringReplace("\\", "/", path);
 	StringReplace("\\", "/", basePath);
 
@@ -364,10 +361,7 @@ void CreateDirectoryRecursively(string basePath, string path)
 		RTCreateDirectory(basePath+path);
 		path += "/";
 	}
-	
 }
-
-
 
 #ifdef WIN32
 BOOL IsDots(const TCHAR* str) {
@@ -466,7 +460,7 @@ vector<string> GetFilesAtPath(string path)
 	dp = opendir(path.c_str());
 	if (!dp)
 	{
-		LogError("GetDirectoriesAtPath: opendir failed");
+		LogError("GetFilesAtPath: opendir failed to get %s", path.c_str());
 		return v;
 	}
 

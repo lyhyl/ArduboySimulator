@@ -66,8 +66,8 @@ void InitVideoSize()
 	//RIM
 	AddVideoMode("Playbook Landscape", 1024,600, PLATFORM_ID_BBX);//set g_landScapeNoNeckHurtMode to true 
 
-	string desiredVideoMode = "Pre"; //name needs to match one of the ones defined above
-    g_landScapeNoNeckHurtMode = false; //if true, will rotate the screen so we can play in landscape mode in windows without hurting ourselves
+	string desiredVideoMode = "iPhone"; //name needs to match one of the ones defined above
+    g_landScapeNoNeckHurtMode = true; //if true, will rotate the screen so we can play in landscape mode in windows without hurting ourselves
 	SetVideoModeByName(desiredVideoMode);
 	GetBaseApp()->OnPreInitVideo(); //gives the app level code a chance to override any of these parms if it wants to
 }
@@ -217,7 +217,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			int xPos = GET_X_LPARAM(lParam);
 			int yPos = GET_Y_LPARAM(lParam) + GetYOffset();
 			ConvertCoordinatesIfRequired(xPos, yPos);
-			GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_START, xPos, yPos, 0);
+			GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_START, (float)xPos, (float)yPos, 0);
 			break;
 		}
 		break;
@@ -378,7 +378,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				wParam = VIRTUAL_KEY_BACK;
 			}
 
-			GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, wParam, lParam);  //lParam holds a lot of random data about the press, look it up if
+			GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, (float)wParam, (float)lParam);  //lParam holds a lot of random data about the press, look it up if
 			//you actually want to access it
 			return 0;
 		}
@@ -470,7 +470,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		if (!isBitSet)
 		{
 			int vKey = ConvertWindowsKeycodeToProtonVirtualKey(wParam); 
-			GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW, vKey, 1);  
+			GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW, (float)vKey, 1.0f);  
 		}
 		}
 	
@@ -513,7 +513,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			int xPos = GET_X_LPARAM(lParam);
 			int yPos = GET_Y_LPARAM(lParam) + GetYOffset();
 			ConvertCoordinatesIfRequired(xPos, yPos);
-			GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_END, xPos, yPos, 0);
+			GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_END, (float)xPos, (float)yPos, 0);
 			g_leftMouseButtonDown = false;
 		}
 		return true;
@@ -523,18 +523,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 			if (!g_bHasFocus) break;
 		
-			float xPos = GET_X_LPARAM(lParam);
-			float yPos = GET_Y_LPARAM(lParam) + GetYOffset();
+			float xPos = (float)GET_X_LPARAM(lParam);
+			float yPos = (float)GET_Y_LPARAM(lParam) + GetYOffset();
 			ConvertCoordinatesIfRequired(xPos, yPos);
-
-		
+	
 			if (g_leftMouseButtonDown)
 			{
 				GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_MOVE, xPos, yPos, 0);
 				break;
 			} 
 			GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_MOVE_RAW, xPos, yPos, 0);
-
 		}
 		//sreturn true;
 

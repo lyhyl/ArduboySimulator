@@ -7,6 +7,11 @@ CRandom::CRandom(void)
 	mti=CMATH_N+1;
 }
 
+unsigned int CRandom::rand()
+{
+	return Random(RAND_MAX);
+}
+
 // Returns a number from 0 to n (excluding n)
 unsigned int CRandom::Random( unsigned int n )
 {

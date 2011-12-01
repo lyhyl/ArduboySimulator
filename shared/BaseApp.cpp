@@ -167,6 +167,7 @@ void BaseApp::Draw()
 		GetFont(FONT_SMALL)->DrawScaled(2,14, "LOW MEM!", 0.7f);
 	}
 
+	SetupOrtho();
 	g_globalBatcher.Flush();
 }
 
@@ -185,7 +186,7 @@ void BaseApp::OnScreenSizeChange()
 	//LogMsg("Changing screen-size to %d, %d, %d", GetScreenSizeX(), GetScreenSizeY(), GetOrientation());
 #endif
 	
-	GenerateSetPerspectiveFOV(C_APP_FOV,(GLfloat)GetScreenSizeX()/(GLfloat)GetScreenSizeY(),0.1f,500.0f);
+	GenerateSetPerspectiveFOV(C_APP_FOV, GetScreenSizeXf()/ GetScreenSizeYf(),0.1f,500.0f);
 }
 
 void BaseApp::SetConsoleVisible( bool bNew )

@@ -14,6 +14,24 @@
 #include "Entity.h"
 #include "Renderer/SurfaceAnim.h"
 
+/*
+
+  Allows finger/mouse scrolling of children content.
+
+  If you do the following, it will enforce fingerid tracking:
+  
+  pScrollComp->GetVar("fingerTracking")->Set(uint32(1)); 
+
+  This will do two things:
+
+  1. Any click marked "handled" will be ignored
+  2. It will mark its own click as "handled"
+
+  If you activate this, you probably want to move this component to the "bottom" so it gets processed AFTER its content is.
+
+  Example of its use is in RTSimpleApp example.
+*/
+
 class ScrollComponent: public EntityComponent
 {
 public:
@@ -28,6 +46,7 @@ public:
 		STYLE_MOMENTUM,
 		STYLE_EXACT
 	};
+
 
 private:
 
@@ -53,7 +72,8 @@ private:
 	float * m_pFriction, *m_pMaxScrollSpeed, *m_pPowerMod;
 	CL_Vec2f m_vecChildPos;
 	Variant * m_progressVar; //we write this out
-	
+	int m_activeFinger;
+	uint32 *m_pEnforceFingerTracking;
 };
 
 #endif // ScrollComponent_h__
