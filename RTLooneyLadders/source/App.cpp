@@ -97,20 +97,59 @@ bool App::Init()
 	SetDefaultButtonStyle(Button2DComponent::BUTTON_STYLE_CLICK_ON_TOUCH_RELEASE);
 	SetManualRotationMode(true);
 	//SetFPSLimit(30);
+
+	//we'll use a virtual screen size of this, and it will be scaled to any device
+	int scaleToX = 1024;
+	int scaleToY = 768;
+
 	switch (GetEmulatedPlatformID())
 	{
 	case PLATFORM_ID_ANDROID:
 	case PLATFORM_ID_OSX:
-	//if we do this, everything will be stretched/zoomed to fit the screen
+		//if we do this, everything will be stretched/zoomed to fit the screen
 		SetLockedLandscape(false);  //because it's set in the app manifest, we don't have to rotate ourselves
-		SetupFakePrimaryScreenSize(1024,768); //game will think its this size, and will be scaled up
+		SetupFakePrimaryScreenSize(scaleToX,scaleToY); //game will think it's this size, and will be scaled up
 		break;
-	
+
+	case PLATFORM_ID_BBX:
+		//if we do this, everything will be stretched/zoomed to fit the screen
+		SetLockedLandscape(false);  //because it's set in the app manifest, we don't have to rotate ourselves
+		SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(), ORIENTATION_PORTRAIT);
+		SetupFakePrimaryScreenSize(scaleToX,scaleToY); //game will think it's this size, and will be scaled up
+
+		break;
+
+	case PLATFORM_ID_WEBOS:
+		//if we do this, everything will be stretched/zoomed to fit the screen
+		if (IsIPADSize)
+		{
+			//doesn't need rotation
+			SetLockedLandscape(false);  //because it's set in the app manifest, we don't have to rotate ourselves
+			SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(), ORIENTATION_PORTRAIT);
+			SetupFakePrimaryScreenSize(scaleToX,scaleToY); //game will think it's this size, and will be scaled up
+		} else
+		{
+			//but the phones do
+			SetLockedLandscape(true); //we don't allow portrait mode for this game
+			SetupFakePrimaryScreenSize(scaleToY,scaleToX); //game will think it's this size, and will be scaled up
+		}
+		break;
+
+
 	default:
-		SetLockedLandscape(true); //we don't allow portrait mode for this game
-		SetupFakePrimaryScreenSize(768,1024); //game will think its this size, and will be scaled up
+		SetLockedLandscape(false); //we don't allow portrait mode for this game
+		SetupFakePrimaryScreenSize(scaleToX,scaleToY); //game will think it's this size, and will be scaled up
 	}
-	
+
+
+	if (GetPlatformID() == PLATFORM_ID_WEBOS && !IsIPADSize)
+	{
+		//non Touchpad webos devices are taller than they are higher.. fix that by rotating it
+		LogMsg("Special handling for webos devices to switch to landscape mode..");
+		//	SetLockedLandscape(true);
+		//	SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(), ORIENTATION_LANDSCAPE_LEFT);
+	}
+
 	L_ParticleSystem::init(2000);
 
 	if (m_bInitted)	

@@ -191,19 +191,21 @@ void App::OnArcadeInput(VariantList *pVList)
 void AppInput(VariantList *pVList)
 {
 
-	//0 = message type, 1 = parent coordinate offset
+	//0 = message type, 1 = parent coordinate offset, 2 is fingerID
+	eMessageType msgType = eMessageType( int(pVList->Get(0).GetFloat()));
 	CL_Vec2f pt = pVList->Get(1).GetVector2();
 	//pt += GetAlignmentOffset(*m_pSize2d, eAlignment(*m_pAlignment));
 
+	
 	uint32 fingerID = 0;
-	if (pVList->Get(2).GetType() == Variant::TYPE_UINT32)
+	if ( msgType != MESSAGE_TYPE_GUI_CHAR && pVList->Get(2).GetType() == Variant::TYPE_UINT32)
 	{
 		fingerID = pVList->Get(2).GetUINT32();
 	}
 
 	CL_Vec2f vLastTouchPt = GetBaseApp()->GetTouch(fingerID)->GetLastPos();
 
-	switch (eMessageType( int(pVList->Get(0).GetFloat())))
+	switch (msgType)
 	{
 	case MESSAGE_TYPE_GUI_CLICK_START:
 		LogMsg("Touch start: X: %.2f YL %.2f (Finger %d)", pt.x, pt.y, fingerID);
@@ -247,8 +249,8 @@ void App::Update()
 		//GetBaseApp()->m_sig_accel.connect(1, boost::bind(&App::OnAccel, this, _1));
 
 		//TRACKBALL/ARCADETEST: Uncomment below to see log messages on trackball/key movement input
-		//pEnt->AddComponent(new ArcadeInputComponent);
-		//GetBaseApp()->m_sig_arcade_input.connect(1, boost::bind(&App::OnArcadeInput, this, _1));
+		pEnt->AddComponent(new ArcadeInputComponent);
+		GetBaseApp()->m_sig_arcade_input.connect(1, boost::bind(&App::OnArcadeInput, this, _1));
 	
 		//INPUT TEST - wire up input to some functions to manually handle.  AppInput will use LogMsg to
 		//send them to the log.  (Each device has a way to view a debug log in real-time)
