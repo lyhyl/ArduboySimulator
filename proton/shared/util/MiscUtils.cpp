@@ -135,7 +135,7 @@ int Random(int range)
 
 int RandomRange(int rangeMin, int rangeMax)
 {
-	if (rangeMin == rangeMin) return rangeMin; //avoid divide by zero error
+	if (rangeMin == rangeMax) return rangeMin; //avoid divide by zero error
 	return rand()% (rangeMax-rangeMin)+rangeMin;
 }
 

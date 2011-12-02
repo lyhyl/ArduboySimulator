@@ -272,6 +272,7 @@ void BaseApp::OnMessage(Message &m)
 				{
 					v.Get(0).Set(uint32(m.GetParm1()));
 					v.Get(1).Set(uint32(m.GetParm2()));
+					v.Get(2).Set(uint32(m.GetParm3()));
 					m_sig_raw_keyboard(&v);
 					break;
 				}
