@@ -83,17 +83,20 @@ enum eVirtualKeys
 	VIRTUAL_KEY_F16,
 	VIRTUAL_KEY_TRACKBALL_DOWN = 500035,
 	
-	//xperia play
-	VIRTUAL_DPAD_BUTTON_X, //square
-	VIRTUAL_DPAD_BUTTON_Y, //triangle
-	VIRTUAL_DPAD_BACK, //0
-	VIRTUAL_DPAD_CENTER, //x.. should be called fire or X?  Oh well, copying from xperia play docs
+	//Controller buttons - laid out like an xbox controller
+
+	//Note:  For xperia play, you must use VIRTUAL_KEY_DIR_CENTER instead of VIRTUAL_DPAD_BUTTON_A, they
+	//use the same keycode when hit..., so I can't have it send VIRTUAL_DPAD_BUTTON_A unless I want
+	//to detect HW and that seems like a hassle.
+
+	VIRTUAL_DPAD_BUTTON_X, 
+	VIRTUAL_DPAD_BUTTON_Y, 
+	VIRTUAL_DPAD_BUTTON_A, //generally considered a select button
+	VIRTUAL_DPAD_BUTTON_B, //generally considered a back button
 	VIRTUAL_DPAD_SELECT,
 	VIRTUAL_DPAD_START,
 	VIRTUAL_DPAD_LBUTTON,
 	VIRTUAL_DPAD_RBUTTON,
-
-	
 	
 	VIRTUAL_KEY_CUSTOM_START = 510000 //if you add your own, do it after this
 };

@@ -249,9 +249,16 @@ void App::Update()
 		//GetBaseApp()->m_sig_accel.connect(1, boost::bind(&App::OnAccel, this, _1));
 
 		//TRACKBALL/ARCADETEST: Uncomment below to see log messages on trackball/key movement input
-		pEnt->AddComponent(new ArcadeInputComponent);
+		pComp = pEnt->AddComponent(new ArcadeInputComponent);
 		GetBaseApp()->m_sig_arcade_input.connect(1, boost::bind(&App::OnArcadeInput, this, _1));
 	
+		//these arrow keys will be triggered by the keyboard, if applicable
+		AddKeyBinding(pComp, "Left", VIRTUAL_KEY_DIR_LEFT, VIRTUAL_KEY_DIR_LEFT);
+		AddKeyBinding(pComp, "Right", VIRTUAL_KEY_DIR_RIGHT, VIRTUAL_KEY_DIR_RIGHT);
+		AddKeyBinding(pComp, "Up", VIRTUAL_KEY_DIR_UP, VIRTUAL_KEY_DIR_UP);
+		AddKeyBinding(pComp, "Down", VIRTUAL_KEY_DIR_DOWN, VIRTUAL_KEY_DIR_DOWN);
+		AddKeyBinding(pComp, "Fire", VIRTUAL_KEY_CONTROL, VIRTUAL_KEY_GAME_FIRE);
+
 		//INPUT TEST - wire up input to some functions to manually handle.  AppInput will use LogMsg to
 		//send them to the log.  (Each device has a way to view a debug log in real-time)
 		GetBaseApp()->m_sig_input.connect(&AppInput);

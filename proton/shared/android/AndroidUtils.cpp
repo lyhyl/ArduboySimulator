@@ -196,7 +196,11 @@ string GetSavePath()
 string GetAPKFile()
 {
 	JNIEnv *env = GetJavaEnv();
-	if (!env) return "";
+	if (!env)
+	{
+		LogMsg("GetAPKFile>  Error, can't do this yet, no java environment");
+		return "";
+	}
 
 	jclass cls = env->FindClass(GetAndroidMainClassName());
 	jmethodID mid = env->GetStaticMethodID(cls,
@@ -629,11 +633,17 @@ void AppResize( JNIEnv*  env, jobject  thiz, jint w, jint h )
 		LogMsg("Initializing BaseApp...");
 		srand( (unsigned)time(NULL) );
 		FileSystemZip *pFileSystem = new FileSystemZip();
+#ifdef _DEBUG
+		LogMsg("Filesystem new'ed");
+#endif
 		if (!pFileSystem->Init(GetAPKFile()))
 		{
 			LogMsg("Error finding APK file to load resources (%s", GetAPKFile().c_str());
 		}
 
+#ifdef _DEBUG
+	LogMsg("APK based Filesystem mounted.");
+#endif
 		/*
 		vector<string> contents = pFileSystem->GetContents();
 		for (int i=0; i < contents.size(); i++)
@@ -871,6 +881,35 @@ void AppOnKey( JNIEnv*  env, jobject jobj, jint type, jint keycode, jint c)
 	case 67: //back space
 		c = 8;
 		break;
+
+	case 99:
+		keycode = VIRTUAL_DPAD_BUTTON_X;
+		break;
+
+	case 100:
+		keycode = VIRTUAL_DPAD_BUTTON_Y;
+		break;
+
+
+	case 4:
+		//actually this will never get hit, the java side will send VIRTUAL_DPAD_BUTTON_B directly, because it
+		//shares stuff with the back button and has to detect which one it is on that side
+		keycode = VIRTUAL_DPAD_BUTTON_B;
+		break;
+	case 109:
+		keycode = VIRTUAL_DPAD_SELECT;
+		break;
+	case 108:
+		keycode =  VIRTUAL_DPAD_START;
+		break;
+
+	case 102:
+		keycode =  VIRTUAL_DPAD_LBUTTON;
+	break;
+	case 103:
+		keycode =  VIRTUAL_DPAD_RBUTTON;
+		break;
+
 	}
 	
 	if (keycode >= VIRTUAL_KEY_BACK)

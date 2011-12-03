@@ -443,7 +443,14 @@ return m_szDevIDShort;
 	final static int VIRTUAL_KEY_VOLUME_DOWN = 500010;
 	final static int VIRTUAL_KEY_SHIFT = 500011;
 	final static int VIRTUAL_KEY_TRACKBALL_DOWN = 500035;
-
+	final static int VIRTUAL_DPAD_BUTTON_X = 500036; //square on xperia
+	final static int VIRTUAL_DPAD_BUTTON_Y = 500037; //triangle on xperia
+	final static int VIRTUAL_DPAD_BUTTON_A = 500038; //O
+	final static int VIRTUAL_DPAD_BUTTON_B = 500039; //X
+	final static int VIRTUAL_DPAD_SELECT = 500040;
+	final static int VIRTUAL_DPAD_START = 500041;
+	final static int VIRTUAL_DPAD_LBUTTON = 500042;
+	final static int VIRTUAL_DPAD_RBUTTON = 500043;
 
 //messages we could call on Proton using nativeSendGUIEx:
 	final static int MESSAGE_TYPE_GUI_CLICK_START = 0;
@@ -552,7 +559,15 @@ return m_szDevIDShort;
 	
 		if (e.getRepeatCount() > 0) return super.onKeyDown(keycode, e);
 
-
+		if(e.isAltPressed() && keycode == KeyEvent.KEYCODE_BACK) 
+		{
+			//XPeria's O button, not the back button!
+			//Log.v("onKeyDown","Sending xperia back key");
+			nativeOnKey(1, VIRTUAL_DPAD_BUTTON_B, e.getUnicodeChar()); 
+		
+			return true; //signal that we handled it
+		}
+		
         switch (keycode)
 		{
 			case KeyEvent.KEYCODE_BACK:
@@ -571,6 +586,15 @@ return m_szDevIDShort;
     public boolean onKeyUp(int keycode, KeyEvent e)
 	{
     //    Log.v("onKeyUp","Keyup Got "+keycode+" "+Character.toString(Character.toChars(e.getUnicodeChar())[0]));
+       
+       	if(e.isAltPressed() && keycode == KeyEvent.KEYCODE_BACK) 
+		{
+			//XPeria's O button, not the back button!
+			//Log.v("onKeyDown","Sending xperia back key");
+			nativeOnKey(0, VIRTUAL_DPAD_BUTTON_B, e.getUnicodeChar()); 
+		
+			return true; //signal that we handled it
+		}
        
 		switch (keycode)
 		{

@@ -185,6 +185,10 @@ Entity * GameMenuCreate(Entity *pParentEnt)
 	AddKeyBinding(pComp, "Down", VIRTUAL_KEY_DIR_DOWN, VIRTUAL_KEY_DIR_DOWN);
 	AddKeyBinding(pComp, "Dynamite", VIRTUAL_KEY_CONTROL, VIRTUAL_KEY_GAME_FIRE);
 
+	//for xperia play on android
+	AddKeyBinding(pComp, "XperiaA", VIRTUAL_KEY_DIR_CENTER, VIRTUAL_KEY_GAME_FIRE); //for experia plays X button
+	AddKeyBinding(pComp, "XPeriaB", VIRTUAL_DPAD_BUTTON_B, VIRTUAL_KEY_GAME_FIRE); //for experia plays O button
+
 	GetBaseApp()->m_sig_arcade_input.connect(pBG->GetFunction("OnArcadeInput")->sig_function);
 	pBG->GetShared()->GetFunction("OnArcadeInput")->sig_function.connect(&OnArcadeInput);
 
