@@ -164,6 +164,10 @@ void SetupArrowSelector(Entity *pBG, int itemCount, uint32 defaultItem)
 	AddKeyBinding(pComp, "Enter", 13, 13);
 	AddKeyBinding(pComp, "Enter2", VIRTUAL_KEY_CONTROL, 13);
 	AddKeyBinding(pComp, "Unlock", 'U', 'U');
+	AddKeyBinding(pComp, "XPeriaStart", VIRTUAL_DPAD_START, 13); 
+	AddKeyBinding(pComp, "XPeriaSelect", VIRTUAL_DPAD_SELECT, VIRTUAL_KEY_DIR_DOWN); 
+	AddKeyBinding(pComp, "XperiaA", VIRTUAL_KEY_DIR_CENTER, 13); //for experia plays X button
+
 
 	PulsateColorEntity(pIcon, false, MAKE_RGBA(60,0,0,130));
 

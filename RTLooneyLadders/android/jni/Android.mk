@@ -43,13 +43,14 @@ $(COMPPATH)/HTTPComponent.cpp $(COMPPATH)/InputTextRenderComponent.cpp $(COMPPAT
 $(COMPPATH)/RectRenderComponent.cpp $(COMPPATH)/ScrollBarRenderComponent.cpp $(COMPPATH)/ScrollComponent.cpp $(COMPPATH)/TapSequenceDetectComponent.cpp $(COMPPATH)/TextBoxRenderComponent.cpp \
 $(COMPPATH)/TextRenderComponent.cpp $(COMPPATH)/TouchStripComponent.cpp $(COMPPATH)/TrailRenderComponent.cpp $(COMPPATH)/TyperComponent.cpp $(COMPPATH)/UnderlineRenderComponent.cpp \
 $(COMPPATH)/TouchHandlerComponent.cpp $(COMPPATH)/SelectButtonWithCustomInputComponent.cpp $(COMPPATH)/CustomInputComponent.cpp $(COMPPATH)/SliderComponent.cpp \
+$(COMPPATH)/ArcadeInputComponent.cpp $(COMPPATH)/EmitVirtualKeyComponent.cpp  $(COMPPATH)/DPadComponent.cpp \
 \
 \
 $(PPATH)/L_Defination.cpp $(PPATH)/L_DroppingEffect.cpp $(PPATH)/L_EffectEmitter.cpp $(PPATH)/L_ExplosionEffect.cpp $(PPATH)/L_MotionController.cpp $(PPATH)/L_Particle.cpp \
 $(PPATH)/L_ParticleEffect.cpp $(PPATH)/L_ParticleMem.cpp $(PPATH)/L_ParticleSystem.cpp $(PPATH)/L_ShootingEffect.cpp $(PPATH)/L_EffectManager.cpp \
 \
-$(APP)/App.cpp $(APP)/Component/ParticleTestComponent.cpp $(APP)/GUI/DebugMenu.cpp $(APP)/GUI/EnterNameMenu.cpp $(APP)/GUI/MainMenu.cpp \
-$(APP)/GUI/ParticleTestMenu.cpp $(APP)/GUI/AboutMenu.cpp
+$(APP)/App.cpp $(APP)/Component/BuildingComponent.cpp $(APP)/Component/CharComponent.cpp $(APP)/Component/CharManagerComponent.cpp $(APP)/Component/ExplosionComponent.cpp \
+$(APP)/Component/OverlayRenderComponentSpy.cpp $(APP)/GUI/AboutMenu.cpp $(APP)/GUI/GameMenu.cpp $(APP)/GUI/MainMenu.cpp
 
 
 LOCAL_LDLIBS := -lGLESv1_CM -ldl -llog -lz
