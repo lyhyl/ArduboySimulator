@@ -48,14 +48,14 @@ void SlideScreen(Entity *pEnt, bool bIn, int speedMS = 500, int delayToStartMS =
 void SlideScreenVertical(Entity *pEnt, bool bIn, int speedMS = 500, int delayToStartMS = 0);
 void BobEntity(Entity *pEnt, float bobAmount = 3);
 void OneTimeBobEntity(Entity *pEnt, float bobAmount = -10, int delayBeforeBob = 0, int durationMS = 100);
-void AddFocusIfNeeded(Entity *pEnt, bool bAlsoLinkMoveMessages = false, int delayInputMS = 0); //add input, think, and render focuses to an entity (if they don't exist)
+void AddFocusIfNeeded(Entity *pEnt, bool bAlsoLinkMoveMessages = false, int delayInputMS = 0, int updateAndRenderDelay = 0); //add input, think, and render focuses to an entity (if they don't exist)
 void AddInputMovementFocusIfNeeded(Entity *pEnt);
 void RemoveFocusIfNeeded(Entity *pEnt); //remove input, think, and render focuses from an entity
 void FadeOutEntity(Entity *pEnt, bool bRecursive=true, int timeMS=300, int delayBeforeFadingMS = 0);
 void FadeOutAndKillEntity(Entity *pEnt, bool bRecursive = true, int timeMS=300, int delayBeforeFadingMS = 0);
 void FadeOutAndKillChildrenEntities(Entity *pEnt, int timeMS=300, int delayBeforeFadingMS = 0);
 void FadeInEntity(Entity *pEnt, bool bRecursive=true, int timeMS=300, int delayBeforeFadingMS = 0);
-void KillEntity(Entity *pEnt, int timeMS = 0);
+void KillEntity(Entity *pEnt, int timeMS = 0, eTimingSystem timing = GetTiming());
 EntityComponent * PulsateColorEntity(Entity *pEnt, bool bRecursive, unsigned int color, unsigned int pulsateSpeedMS = 0);
 EntityComponent * TypeTextLabelEntity(Entity *pEnt, int delayBeforeActionMS = 0, uint32 textTypeSpeedMS = 50); //modifies an existing textlabel to 'type' itself out.  Deletes any pre-existing Typer effect
 

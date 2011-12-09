@@ -20,13 +20,12 @@
 #define CMATH_TEMPERING_SHIFT_S(y) (y << 7)
 #define CMATH_TEMPERING_SHIFT_T(y) (y << 15)
 #define CMATH_TEMPERING_SHIFT_L(y) (y >> 18)
-
+ 
 class CRandom {
 	// DATA
 	unsigned int             rseed;
 	unsigned long mt[CMATH_N];       /* the array for the state vector */
 	int mti;                 /* mti==N+1 means mt[N] is not initialized */
-
 
 	// FUNCTIONS
 public:

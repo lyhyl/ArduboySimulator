@@ -17,6 +17,7 @@
 #define IsIphoneSize ((GetScreenSizeX() == 320 && GetScreenSizeY() ==  480)|| (GetScreenSizeX() == 480 && GetScreenSizeY() ==  320))
 #define IsIphone4Size ((GetScreenSizeX() == 640 && GetScreenSizeY() ==  960)|| (GetScreenSizeX() == 960 && GetScreenSizeY() ==  640))
 #define IsIPADSize ((GetScreenSizeX() == 1024 && GetScreenSizeY() ==  768)|| (GetScreenSizeY() == 1024 && GetScreenSizeX() ==  768))
+#define IsXoomSize ((GetScreenSizeX() == 1280 && GetScreenSizeY() ==  800)|| (GetScreenSizeY() == 800 && GetScreenSizeX() ==  1280))
 
 enum eNetworkType
 {

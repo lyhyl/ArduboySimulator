@@ -2,10 +2,11 @@
 #include "BaseApp.h"
 #include "Renderer/RTGLESExt.h"
 
-
 #if defined( WIN32)
 	//useful for debugging texture unloading, but we don't really need to do it for Windows builds
+#ifdef _DEBUG
 	//#define C_SURFACE_UNLOAD_TEXTURES
+	#endif
 #endif
 
 #ifdef _IRR_STATIC_LIB_
@@ -25,8 +26,6 @@ bool IsBaseAppInitted()
 	return g_isLoggerInitted;
 }
 
-
-
 BaseApp::BaseApp()
 {
 		m_bCheatMode = false;
@@ -41,7 +40,6 @@ BaseApp::BaseApp()
 		
 		m_touchTracker.resize(C_MAX_TOUCHES_AT_ONCE);
 		ClearError();
-
 }
 
 BaseApp::~BaseApp()
@@ -162,9 +160,15 @@ void BaseApp::Draw()
 		DrawConsole();
 	}
 
-	if (GetLastError() != ERROR_NONE)
+	switch (GetLastError())
 	{
+	case ERROR_MEM:
 		GetFont(FONT_SMALL)->DrawScaled(2,14, "LOW MEM!", 0.7f);
+		break;
+
+	case ERROR_SPACE:
+		GetFont(FONT_SMALL)->DrawScaled(2,14, "LOW STORAGE SPACE!", 0.7f);
+		break;
 	}
 
 	SetupOrtho();

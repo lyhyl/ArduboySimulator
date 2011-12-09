@@ -9,7 +9,7 @@ CRandom::CRandom(void)
 
 unsigned int CRandom::rand()
 {
-	return Random(RAND_MAX);
+	return Random(RT_RAND_MAX);
 }
 
 // Returns a number from 0 to n (excluding n)

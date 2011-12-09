@@ -485,6 +485,15 @@ return m_szDevIDShort;
 	//GOOGLE BILLING
 	final static int MESSAGE_TYPE_IAP_RESULT = 26;
 	final static int MESSAGE_TYPE_IAP_ITEM_STATE = 27;
+
+	//more tapjoy stuff
+	final static int MESSAGE_TYPE_TAPJOY_TAP_POINTS_RETURN = 28;
+	final static int MESSAGE_TYPE_TAPJOY_TAP_POINTS_RETURN_ERROR = 29;
+	final static int MESSAGE_TYPE_TAPJOY_SPEND_TAP_POINTS_RETURN = 30;
+	final static int MESSAGE_TYPE_TAPJOY_SPEND_TAP_POINTS_RETURN_ERROR = 31;
+	final static int MESSAGE_TYPE_TAPJOY_AWARD_TAP_POINTS_RETURN = 32;
+	final static int MESSAGE_TYPE_TAPJOY_AWARD_TAP_POINTS_RETURN_ERROR = 33;
+	final static int MESSAGE_TYPE_TAPJOY_EARNED_TAP_POINTS = 34;
 	
 	final static int MESSAGE_USER = 1000; //send your own messages after this #
 	
@@ -1030,6 +1039,7 @@ class AppRenderer implements GLSurfaceView.Renderer
 	//yes, I probably should do this as a Java class and init it from C++ and send that over but..
 
 	private static native int nativeOSMessageGet();
+	private static native int nativeGetLastOSMessageParm1();
 	private static native float nativeGetLastOSMessageX();
 	private static native String nativeGetLastOSMessageString();
 	public SharedActivity app;

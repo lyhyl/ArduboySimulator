@@ -832,7 +832,7 @@ void ScaleEntity(Entity *pEnt, float scaleStart, float scaleEnd, int timeMS, int
 
 }
 
-void KillEntity(Entity *pEnt, int timeMS)
+void KillEntity(Entity *pEnt, int timeMS, eTimingSystem timingSystem)
 {
 	if (!pEnt) return;
 
@@ -842,14 +842,23 @@ void KillEntity(Entity *pEnt, int timeMS)
 	} else
 	{
         VariantList vList(pEnt);
-		GetMessageManager()->CallEntityFunction(pEnt, timeMS, "OnDelete", &vList);
+		GetMessageManager()->CallEntityFunction(pEnt, timeMS, "OnDelete", &vList, timingSystem);
 	}
 }
 
-
 Entity * CreateTextLabelEntity(Entity *pParentEnt, string name, float x, float y, string text)
 {
-	Entity *pButtonEnt = pParentEnt->AddEntity(new Entity(name));
+		
+	Entity *pButtonEnt = NULL;
+
+	if (pParentEnt)
+	{
+		pButtonEnt = pParentEnt->AddEntity(new Entity(name));
+	} else
+	{
+		pButtonEnt = new Entity(name);
+	}
+
 	EntityComponent *pComp  = pButtonEnt->AddComponent(new TextRenderComponent());
 	pComp->GetVar("text")->Set(text); //local to component
 	pButtonEnt->GetVar("pos2d")->Set(x, y);
@@ -860,7 +869,16 @@ Entity * CreateTextLabelEntity(Entity *pParentEnt, string name, float x, float y
 Entity * CreateInputTextEntity(Entity *pParentEnt, string name, float x, float y, string text, float sizeX, float sizeY)
 {
 	
-	Entity *pButtonEnt = pParentEnt->AddEntity(new Entity(name));
+	Entity *pButtonEnt = NULL;
+
+	if (pParentEnt)
+	{
+		pButtonEnt = pParentEnt->AddEntity(new Entity(name));
+	} else
+	{
+		pButtonEnt = new Entity(name);
+	}
+
 	EntityComponent *pComp  = pButtonEnt->AddComponent(new InputTextRenderComponent());
 	pButtonEnt->AddComponent( new TouchHandlerComponent);
 	pComp->GetVar("text")->Set(text); //local to component
@@ -877,7 +895,15 @@ Entity * CreateInputTextEntity(Entity *pParentEnt, string name, float x, float y
 
 Entity * CreateOverlayRectEntity(Entity *pParent, CL_Rectf posAndBoundsRect, uint32 color, RectRenderComponent::eVisualStyle style)
 {
-	Entity *pEnt = pParent->AddEntity(new Entity);
+	Entity *pEnt;
+	
+	if (pParent)
+	{
+		pEnt = pParent->AddEntity(new Entity);
+	} else
+	{
+		pEnt = new Entity;
+	}
 	EntityComponent *pComp = pEnt->AddComponent(new RectRenderComponent);
 	pEnt->GetVar("pos2d")->Set(posAndBoundsRect.get_top_left());
 	pEnt->GetVar("size2d")->Set(posAndBoundsRect.get_width(), posAndBoundsRect.get_height());
@@ -955,13 +981,33 @@ void RemoveFocusIfNeeded(Entity *pEnt)
 	pEnt->RemoveComponentByName("FocusUpdate");
 }
 
-void AddFocusIfNeeded(Entity *pEnt, bool bAlsoLinkMoveMessages, int delayInputMS)
+void AddFocusIfNeeded(Entity *pEnt, bool bAlsoLinkMoveMessages, int delayInputMS, int updateAndRenderDelay)
 {
 	if (!pEnt->GetComponentByName("FocusUpdate", true))
-		pEnt->AddComponent(new FocusUpdateComponent);
+	{
+		if (updateAndRenderDelay == 0)
+		{
+			pEnt->AddComponent(new FocusUpdateComponent);
+		} else
+		{
+			//schedule it
+			GetMessageManager()->AddComponent(pEnt, updateAndRenderDelay, new FocusUpdateComponent);
+
+		}
+	}
 
 	if (!pEnt->GetComponentByName("FocusRender", true))
-		pEnt->AddComponent(new FocusRenderComponent);
+	{
+		if (updateAndRenderDelay == 0)
+		{
+			pEnt->AddComponent(new FocusRenderComponent);
+		} else
+		{
+			//schedule it
+			GetMessageManager()->AddComponent(pEnt, updateAndRenderDelay, new FocusRenderComponent);
+
+		}
+	}
 
 	if (!pEnt->GetComponentByName("FocusInput", true))
 	{
@@ -1570,7 +1616,15 @@ void EntitySetScaleBySize(Entity *pEnt, CL_Vec2f vDestSize, bool bPerserveAspect
 	{
 		float aspectRatio = vSize.x /vSize.y;
 		//knock the X setting out and replace with aspect correct size
-		vDestSize.x = vDestSize.y * aspectRatio;
+		if (aspectRatio > 1.0)	
+		{
+			//actually, lets do it the other way
+			vDestSize.y = vDestSize.x * (1/aspectRatio);
+
+		} else
+		{
+			vDestSize.x = vDestSize.y * aspectRatio;
+		}
 	}
 
 	pEnt->GetVar("scale2d")->Set(CL_Vec2f( vDestSize.x / vSize.x, vDestSize.y / vSize.y));

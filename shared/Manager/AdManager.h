@@ -19,6 +19,16 @@ Seth's class to control Tapjoy ads on Android.  Needs special versions of the An
 class AdManager
 {
 public:
+	
+	enum eReturnState
+	{
+		RETURN_STATE_NONE,
+		RETURN_STATE_WAITING,
+		RETURN_STATE_ERROR,
+		RETURN_STATE_SUCCESS
+
+	};
+	
 	AdManager();
 	virtual ~AdManager();
 
@@ -31,9 +41,22 @@ public:
 	void CacheTapjoyAd();
 	void CacheTapjoyFeaturedApp();
 	bool IsTapJoyAdReady() {return m_bTapjoyAdReady;}
+	string GetPointsString();
+	void SetUsingTapPoints(bool bNew);
+	void OpenTapjoyOfferWall();
+	Variant m_tapPointVariant; //can hook onto this to get updated when it changes if needed, using sigslots
+	string GetLastErrorString();
+	void ClearError();
+	eReturnState GetReturnState();
+	bool IsReadyForTransaction(); //only need to check this to give/remove tap points
+	void ModifyTapPoints(int mod);
+	void GetTapPointsFromServer();
+
+	boost::signal<void (VariantList*)> m_sig_tappoints_awarded; //called when awarded tap points
 
 protected:
 
+	eReturnState m_returnState;
 	bool m_bTapjoyAdReady;
 	bool m_bTapjoyFeaturedAppReady;
 
@@ -45,6 +68,11 @@ protected:
 	bool m_bSendTapjoyFeaturedAppRequestASAP;
 
 	int m_errorCount;
+	int32 m_tapPoints; //currency used with tapjoy
+	bool m_bUsingTapPoints;
+	string m_tapCurrency;
+	string m_lastError;
+
 
 private:
 };

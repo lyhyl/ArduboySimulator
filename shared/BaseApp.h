@@ -69,10 +69,15 @@ struct OSMessage
 
 		MESSAGE_TAPJOY_SHOW_FEATURED_APP,  //used by AdManager
 		MESSAGE_TAPJOY_SHOW_AD, //used by AdManager
-		MESSAGE_TAPJOY_SHOW_MOVIE_AD, //used by AdManager
+		MESSAGE_TAPJOY_SHOW_MOVIE_AD, //used by AdManager  13
 
 		MESSAGE_IAP_PURCHASE, //used by IAPManager
 		MESSAGE_IAP_GET_PURCHASED_LIST, //for managed items with google billing, used by IAPManager
+
+		MESSAGE_TAPJOY_GET_TAP_POINTS,
+		MESSAGE_TAPJOY_SPEND_TAP_POINTS, // 17
+		MESSAGE_TAPJOY_AWARD_TAP_POINTS,
+		MESSAGE_TAPJOY_SHOW_OFFERS,
 
 		MESSAGE_USER = 1000
 	};
@@ -143,7 +148,8 @@ public:
 	enum eErrorType
 	{
 		ERROR_NONE,
-		ERROR_MEM
+		ERROR_MEM,
+		ERROR_SPACE
 	};
 
 	BaseApp();

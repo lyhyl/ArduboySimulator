@@ -254,6 +254,8 @@ public:
 
 	bool Save(FILE *fp, const string &varName ); //assumes you've already fopen'ed something and pass the file pointer in
 
+	void ClearConnections(); //clear any boost connections that were connections to its onchanged signal.
+
 	friend class VariantList;
 
 private:
@@ -263,7 +265,6 @@ private:
 		m_type = TYPE_UNUSED;
 		m_pSig_onChanged = NULL;
 	}
-
 	eType m_type;
 	void *m_pVoid;
 	
