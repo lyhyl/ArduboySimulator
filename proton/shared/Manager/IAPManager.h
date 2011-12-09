@@ -33,6 +33,7 @@ public:
 
 	void BuyItem(string itemName);
 	bool IsItemPurchased( const string item);
+
 protected:
 	
 	enum eState

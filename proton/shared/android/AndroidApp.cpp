@@ -47,7 +47,10 @@ extern "C"
 	{
 		return AppGetLastOSMessageX(env); 
 	}
-
+	JNIEXPORT int Java_com_rtsoft_shared_AppRenderer_nativeGetLastOSMessageParm1(JNIEnv*  env)
+	{
+		return AppGetLastOSMessageParm1(env); 
+	}
 	/* Call to initialize the graphics state */
 	JNIEXPORT void JNICALL Java_com_rtsoft_shared_AppRenderer_nativeInit( JNIEnv*  env )
 	{

@@ -26,6 +26,8 @@ bool g_pauseASAP = false;
 string g_musicToPlay;
 int g_musicPos = 0;
 
+bool g_bSurfacesUnloaded = false;
+
 //this delay fixes a problem with restoring surfaces before android 1.6 devices are ready for it resulting
 //in white textures -  update: unneeded
 #define C_DELAY_BEFORE_RESTORING_SURFACES_MS 1
@@ -693,6 +695,7 @@ void AppUpdate(JNIEnv*  env)
 		LogMsg("Pause");
 
 		GetBaseApp()->m_sig_unloadSurfaces();
+		g_bSurfacesUnloaded = true;
 		GetBaseApp()->OnEnterBackground();
 
 		GetAudioManager()->Kill();
@@ -718,6 +721,17 @@ void AppUpdate(JNIEnv*  env)
 	}
 
 	if (GetBaseApp()->IsInBackground()) return;
+	
+	if (g_bSurfacesUnloaded)
+	{
+		//this is a work around for a problem where surfaces don't get reloaded on the Xoom right after IAB is used
+		if (IsXoomSize)
+		{
+			g_bSurfacesUnloaded = false;
+		}
+		AppInit(NULL);
+	}
+
 	GetBaseApp()->Update();
 }
 
@@ -784,12 +798,17 @@ void AppResume(JNIEnv*  env)
 void AppInit(JNIEnv*  env)
 {
 	//happens after the gl surface is initialized
+
 	LogMsg("Initialized GL surfaces for game");
 	GetBaseApp()->InitializeGLDefaults();
 	LogMsg("gl defaults set");
 	GetBaseApp()->OnScreenSizeChange();
 	LogMsg("OnScreensizechange done");
-	GetBaseApp()->m_sig_loadSurfaces(); 
+	if (g_bSurfacesUnloaded)
+	{
+		GetBaseApp()->m_sig_loadSurfaces(); 
+		g_bSurfacesUnloaded = false;
+	}
 	LogMsg("Surfaces loaded");
 
 }
@@ -993,6 +1012,11 @@ jstring AppGetLastOSMessageString(JNIEnv* env)
 float AppGetLastOSMessageX(JNIEnv* env)
 {
 	return g_lastOSMessage.m_x;
+}
+
+float AppGetLastOSMessageParm1(JNIEnv* env)
+{
+	return g_lastOSMessage.m_parm1;
 }
 
 

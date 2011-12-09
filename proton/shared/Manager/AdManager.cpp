@@ -9,7 +9,11 @@ AdManager::AdManager()
 	m_bSendTapjoyFeaturedAppRequestASAP = false;
 	m_bShowTapjoyFeaturedAppASAP = false;
 	m_errorCount= 0;
-
+	m_tapPoints = -1; //-1 means don't know
+	m_bUsingTapPoints= false;
+	m_tapPointVariant.Set(m_tapPoints);
+	m_returnState = RETURN_STATE_NONE;
+	m_bShowTapjoyAdASAP = false;
 }
 
 AdManager::~AdManager()
@@ -63,8 +67,14 @@ void AdManager::SetTapjoyAdVisible(bool bVisible)
 		o.m_type = OSMessage::MESSAGE_TAPJOY_SHOW_AD;
 		o.m_x = 0; //stop showing ad
 		GetBaseApp()->AddOSMessage(o);
-
 	}
+}
+
+void AdManager::OpenTapjoyOfferWall()
+{
+	OSMessage o;
+	o.m_type = OSMessage::MESSAGE_TAPJOY_SHOW_OFFERS;
+	GetBaseApp()->AddOSMessage(o);
 }
 
 void AdManager::CacheTapjoyAd()
@@ -86,8 +96,49 @@ void AdManager::CacheTapjoyFeaturedApp()
 
 void AdManager::OnMessage( Message &m )
 {
+
+
+	
+	if (m_returnState == RETURN_STATE_WAITING)
+	{
+		switch (m.GetType())
+		{
+		case MESSAGE_TYPE_TAPJOY_SPEND_TAP_POINTS_RETURN:
+			m_returnState = RETURN_STATE_SUCCESS;
+			ClearError();
+			break;
+
+		case MESSAGE_TYPE_TAPJOY_SPEND_TAP_POINTS_RETURN_ERROR:
+			m_returnState = RETURN_STATE_ERROR;
+			m_lastError = m.GetStringParm();
+
+			break;
+		}
+	}
+
 	switch (m.GetType())
 	{
+
+	case MESSAGE_TYPE_TAPJOY_EARNED_TAP_POINTS:
+		{
+			LogMsg("We just got %d tappoints!", (int)m.GetParm1());
+			VariantList vList((int32)m.GetParm1());
+
+			m_sig_tappoints_awarded(&vList); //called when awarded tap points
+		}
+
+		break;
+
+	case MESSAGE_TYPE_TAPJOY_TAP_POINTS_RETURN:
+		
+		m_tapPoints = (int32)m.GetParm1();
+		m_tapPointVariant.Set(m_tapPoints);
+		m_tapCurrency = m.GetStringParm();
+#ifdef _DEBUG
+		LogMsg("Tap points set to %d %s", m_tapPoints, m_tapCurrency.c_str());
+#endif
+		break;
+
 		case MESSAGE_TYPE_TAPJOY_FEATURED_APP_READY:
 
 			if (m.GetParm1() == 1)
@@ -165,10 +216,81 @@ void AdManager::Update()
 
 }
 
+void AdManager::GetTapPointsFromServer()
+{
+	if (m_bUsingTapPoints)
+	{
+		LogMsg("Requesting latest info from Tapjoy");
+		OSMessage o;
+		o.m_type = OSMessage::MESSAGE_TAPJOY_GET_TAP_POINTS;
+		GetBaseApp()->AddOSMessage(o);
+	}
+}
+
 void AdManager::Init()
 {
-	//get going on caching these for later
-	CacheTapjoyAd();
+	
+//	GetTapPointsFromServer();
 	//CacheTapjoyFeaturedApp();
 }
 
+std::string AdManager::GetPointsString()
+{
+	if (m_tapPoints == -1)
+	{
+		return "Offline";
+	}
+
+	return toString(m_tapPoints)+" "+m_tapCurrency;
+}
+
+void AdManager::SetUsingTapPoints( bool bNew )
+{
+	if (bNew == m_bUsingTapPoints) return;
+
+	assert(bNew && "Why would you turn this off?");
+
+	m_bUsingTapPoints = bNew;
+
+}
+string AdManager::GetLastErrorString()
+{
+	return m_lastError;
+}
+
+void AdManager::ClearError()
+{
+	m_lastError.clear();
+
+
+}
+
+AdManager::eReturnState AdManager::GetReturnState()
+{
+	return m_returnState;
+}
+
+bool AdManager::IsReadyForTransaction()
+{
+	return !m_tapCurrency.empty();
+}
+
+void AdManager::ModifyTapPoints( int mod )
+{
+	m_returnState = RETURN_STATE_WAITING;
+	ClearError();
+
+	if (mod < 0)
+	{
+		OSMessage o;
+		o.m_type = OSMessage::MESSAGE_TAPJOY_SPEND_TAP_POINTS;
+		o.m_parm1 = abs(mod); //turn it positive
+		GetBaseApp()->AddOSMessage(o);
+	} else
+	{
+		OSMessage o;
+		o.m_type = OSMessage::MESSAGE_TAPJOY_AWARD_TAP_POINTS;
+		o.m_parm1 = mod;
+		GetBaseApp()->AddOSMessage(o);
+	}
+}

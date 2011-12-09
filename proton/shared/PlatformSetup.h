@@ -2,6 +2,9 @@
 #include "win/PlatformSetupWin.h"
 #endif
 
+//RAND_MAX is different on android? whatevs, we'll use our own
+#define RT_RAND_MAX 0x7FFF
+
 #ifdef __APPLE__
 
 #include "TargetConditionals.h"
@@ -59,6 +62,7 @@ using namespace std;
 #ifndef SAFE_FREE
 #define SAFE_FREE(p)      { if(p) { free (p); (p)=NULL; } }
 #endif
+
 
 #define MAKE_RGB(r, g, b)      ( ((uint32)(r) << 8) + ((uint32)(g) << 16) + ((uint32)(b) << 24) )
 #define MAKE_RGBA(r, g, b, a) ( ((uint32)(r) << 8) + ((uint32)(g) << 16) + ((uint32)(b) << 24) + ((uint32)(a)))

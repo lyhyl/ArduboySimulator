@@ -18,6 +18,11 @@ boost::signal<void (Variant*)> * Variant::GetSigOnChanged()
 	return m_pSig_onChanged;
 }
 
+void Variant::ClearConnections()
+{
+	SAFE_DELETE(m_pSig_onChanged);
+}
+
 void Variant::Set( string const &var )
 {
 	assert(m_type == TYPE_UNUSED || m_type == TYPE_STRING);

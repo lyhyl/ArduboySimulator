@@ -27,13 +27,13 @@ FileCopier::~FileCopier()
 bool FileCopier::Init( string fileNameSource, string fileNameDest )
 {
 	//open source
-#ifdef _DEBUG
+
 	if (fileNameDest == fileNameSource) 
 	{
-		LogMsg("Huh?");
+		LogMsg("FileCopier> Aborting, can't copy %s to %s?!", fileNameSource.c_str(), fileNameDest.c_str());
 		return false;
 	}
-#endif
+
 	m_pSrcStreamInstance = GetFileManager()->GetStreaming(fileNameSource, &m_sourceSizeBytes, false);
 
 	if (!m_pSrcStreamInstance)
@@ -101,6 +101,10 @@ bool FileCopier::InitAndCopy( string fileNameSource, string fileNameDest )
 	{
 		if (!Update(FILE_COPY_BUFFER_SIZE*2))
 		{
+			if (m_status != STATUS_FINISHED)
+			{
+				LogMsg("Copied %s to %s, status %d (1 is success)", fileNameSource.c_str(), fileNameDest.c_str(), m_status);
+			}
 			return m_status == STATUS_FINISHED;
 		}
 	}
