@@ -82,7 +82,7 @@ public:
 	virtual uint32 GetPos( AudioHandle soundID );
 	virtual void SetPos( AudioHandle soundID, uint32 posMS );
 	virtual void SetMusicVol(float vol);
-	virtual void Vibrate();
+	virtual void Vibrate(int duration = 300);
 private:
 
 	list<SoundObject*> m_soundList;

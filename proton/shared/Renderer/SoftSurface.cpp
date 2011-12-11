@@ -468,7 +468,7 @@ bool SoftSurface::LoadRTTexture(byte *pMem)
 #endif
 			assert( (internalColorFormat == GL_RGBA8 || internalColorFormat == GL_RGBA) && "We don't support non RGBA in SoftSurface");
 			
-			m_bUsesAlpha = bUsesAlpha;
+			m_bUsesAlpha = bUsesAlpha != 0;
 			Init(m_width, m_height, SURFACE_RGBA);
 
 			//copy image data
@@ -1039,7 +1039,6 @@ void SoftSurface::Rotate90Degrees( bool bRotateLeft )
 	int targetHeight = m_width; //flip those around
 	int targetPitch = targetWidth*m_bytesPerPixel;
 
-	unsigned int pixel;
 	//step through our current data pixel by pixel, from the top left, reading horizontally
 	for (int y=0; y < m_height; y++)
 	{

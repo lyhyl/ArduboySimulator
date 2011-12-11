@@ -515,4 +515,10 @@ bool HasVibration()
 	return false;
 }
 
+
+void CreateAppCacheDirIfNeeded()
+{
+	//only applicable to iOS
+}
+
 #endif

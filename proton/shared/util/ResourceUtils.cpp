@@ -546,7 +546,7 @@ std::string StripColorCodes(const std::string text)
 
 	final.reserve(text.size());
 
-	for (int i=0; i < text.size(); i++)
+	for (int i=0; i < (int)text.size(); i++)
 	{
 		if (text[i] == '`')
 		{

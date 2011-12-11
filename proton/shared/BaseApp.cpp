@@ -359,7 +359,7 @@ void BaseApp::OnMessage(Message &m)
 
 			if (GetAudioManager())
 			{
-				GetAudioManager()->Vibrate();
+				GetAudioManager()->Vibrate(m.Get().GetUINT32());
 			}
 			break;
 		}

@@ -548,7 +548,7 @@ void AudioManagerAndroid::SetPriority( AudioHandle soundID, int priority )
 
 }
 
-void AudioManagerAndroid::Vibrate()
+void AudioManagerAndroid::Vibrate(int duration)
 {
 	if (!m_bVibrationDisabled)
 	{
@@ -559,7 +559,7 @@ void AudioManagerAndroid::Vibrate()
 			jmethodID mid = env->GetStaticMethodID(cls,
 				"vibrate",
 				"(I)V");
-			env->CallStaticVoidMethod(cls, mid, jint(300));
+			env->CallStaticVoidMethod(cls, mid, jint(duration));
 		}
 	}
 }

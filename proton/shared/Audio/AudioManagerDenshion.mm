@@ -69,7 +69,7 @@ return false;
 
 #endif
 
-void AudioManagerDenshion::Vibrate()
+void AudioManagerDenshion::Vibrate(int duration)
 {
 #if TARGET_OS_IPHONE == 1
 
