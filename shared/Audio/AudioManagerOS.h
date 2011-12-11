@@ -42,7 +42,7 @@ public:
 	virtual void Preload(string fName, bool bLooping = false, bool bIsMusic = false, bool bAddBasePath = true, bool bForceStreaming = false);
 	virtual void Stop(AudioHandle id);
 	virtual void SetMusicEnabled( bool bNew );
-	virtual void Vibrate();
+	virtual void Vibrate(int duration = 300);
 	virtual void StopMusic();
 
 protected:

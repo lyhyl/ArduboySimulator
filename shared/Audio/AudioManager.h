@@ -46,7 +46,7 @@ public:
 	string GetLastMusicFileName() {return m_lastMusicFileName;}
 	bool GetLastMusicLooping() {return m_bLastMusicLooping;}
 	AudioHandle GetLastMusicID() {return m_lastMusicID;}
-	virtual void Vibrate(){ if (!m_bVibrationDisabled) {LogMsg("Vibrate!");} };
+	virtual void Vibrate(int duration = 300){ if (!m_bVibrationDisabled) {LogMsg("Vibrate!");} };
 	void SetVibrateDisabled(bool bNew) {m_bVibrationDisabled = bNew;}
 	virtual void StopMusic();
 	virtual void Update() {}; //must be called once per frame

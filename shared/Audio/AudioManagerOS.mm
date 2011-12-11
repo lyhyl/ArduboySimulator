@@ -99,7 +99,7 @@ AudioObjectOS * AudioManagerOS::GetAudioObjectByID(uint32 id)
 	return NULL;
 }
 
-void AudioManagerOS::Vibrate()
+void AudioManagerOS::Vibrate(int duration)
 {
 	if (!m_bVibrationDisabled)
 	{

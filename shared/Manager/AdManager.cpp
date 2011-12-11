@@ -119,6 +119,7 @@ void AdManager::OnMessage( Message &m )
 	switch (m.GetType())
 	{
 
+	
 	case MESSAGE_TYPE_TAPJOY_EARNED_TAP_POINTS:
 		{
 			LogMsg("We just got %d tappoints!", (int)m.GetParm1());
@@ -139,6 +140,16 @@ void AdManager::OnMessage( Message &m )
 #endif
 		break;
 
+	case MESSAGE_TYPE_TAPJOY_MOVIE_AD_READY:
+		if (m.GetParm1() == 1)
+		{
+			LogMsg("Video ad is ready!");
+		} else
+		{
+			LogMsg("Video ad failed %d - %s", m.GetParm2(), m.GetStringParm().c_str());
+		}
+
+		break;
 		case MESSAGE_TYPE_TAPJOY_FEATURED_APP_READY:
 
 			if (m.GetParm1() == 1)
