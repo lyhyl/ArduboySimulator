@@ -8,8 +8,7 @@
 
 #ifndef _CONSOLE
 #ifdef C_GL_MODE
-#include "GL/gl.h"
-#include "glext.h" //needed for GL_CLAMP_TO_EDGE
+#include "Renderer/GL/gl.h"
 
 //help with compatibility so I can use the GL ES calls with normal GL
 
@@ -17,6 +16,10 @@
 #define glFrustumf glFrustum
 #define glOrthof glOrtho
 #define glColor4x(r,g,b,a) glColor4f( (float(r)/65536.0f),  (float(g)/65536.0f) , (float(b)/65536.0f), (float(a)/65536.0f));
+#define glActiveTexture glActiveTextureARB
+#define glClientActiveTexture glClientActiveTextureARB
+
+#include "Renderer/RTGLESExt.h"
 
 #else
 

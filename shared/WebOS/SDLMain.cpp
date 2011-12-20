@@ -377,7 +377,7 @@ void SDLEventLoop()
 							key = toupper(key);
 						}
 
-						GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, (float)key, 0.0f);  //lParam holds a lot of random data about the press, look it up if
+						GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, (float)key, 0.0f); 
 
 					} else
 					{
@@ -448,17 +448,6 @@ int main(int argc, char *argv[])
 
 #endif
 
-/*
-	if (lpCmdLine[0])
-	{
-		vector<string> parms = StringTokenize(lpCmdLine, " ");
-
-		for (unsigned int i=0; i < parms.size(); i++)
-		{
-			GetBaseApp()->AddCommandLineParm(parms[i]);
-		}
-	}
-	*/
 	srand( (unsigned)time(NULL) );
 	RemoveFile("log.txt", false);
 
@@ -498,15 +487,7 @@ int main(int argc, char *argv[])
 		goto cleanup;
 	}
 
-#ifndef FORCE_IPHONE_SIZE
-	if (GetLockedLandscape() && g_screen->w == 1024)
-	{
-		//it's a touchpad.  We need to rotate it manually, unlike with the smaller phones.  I don't know why
-		LogMsg("Touchpad detected.  Rotating screen to landscape.");
-		//PDL_SetOrientation(PDL_ORIENTATION_0);
 
-	}
-#endif
 	static unsigned int gameTimer = 0;
 	static unsigned int fpsTimerLoopMS = 0;
 	GetBaseApp()->OnScreenSizeChange();
@@ -525,8 +506,10 @@ int main(int argc, char *argv[])
 			gameTimer = SDL_GetTicks()+fpsTimerLoopMS;
 		}
 
-		if (g_isInForeground)
+		if (g_isInForeground) 
+		{
 			GetBaseApp()->Update();
+		}
 
 		GetBaseApp()->Draw();
 
@@ -628,8 +611,4 @@ cleanup:
 
 	return 0;
 }
-
-
-
-
 #endif

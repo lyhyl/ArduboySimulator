@@ -10,6 +10,9 @@
 	#include <direct.h>
 #endif
  
+bool g_winAllowFullscreenToggle = true;
+bool g_winAllowWindowResize = true;
+
 vector<VideoModeEntry> g_videoModes;
 void AddVideoMode(string name, int x, int y, ePlatformID platformID);
 void SetVideoModeByName(string name);
@@ -52,6 +55,7 @@ void InitVideoSize()
 	AddVideoMode("Pre Landscape", 480, 320, PLATFORM_ID_WEBOS);
 	AddVideoMode("Pixi", 320, 400, PLATFORM_ID_WEBOS);
 	AddVideoMode("Pre 3", 480, 800, PLATFORM_ID_WEBOS);
+	AddVideoMode("Pre 3 Landscape", 800,480, PLATFORM_ID_WEBOS);
 	AddVideoMode("Touchpad", 768, 1024, PLATFORM_ID_WEBOS);
 
 	//'droid
@@ -66,7 +70,7 @@ void InitVideoSize()
 	//RIM
 	AddVideoMode("Playbook Landscape", 1024,600, PLATFORM_ID_BBX);//set g_landScapeNoNeckHurtMode to true 
 
-	string desiredVideoMode = "iPhone"; //name needs to match one of the ones defined above
+	string desiredVideoMode = "Touchpad"; //name needs to match one of the ones defined above
     g_landScapeNoNeckHurtMode = true; //if true, will rotate the screen so we can play in landscape mode in windows without hurting ourselves
 	SetVideoModeByName(desiredVideoMode);
 	GetBaseApp()->OnPreInitVideo(); //gives the app level code a chance to override any of these parms if it wants to
@@ -635,12 +639,16 @@ bool InitVideo(int width, int height, bool bFullscreen, float aspectRatio)
 	SetRect(&sRect, 0, 0, width, height);
 	//for taking screenshots with no borders with Alt-Print screen, try this:
 	
-	DWORD style = WS_POPUP | WS_SYSMENU | WS_CAPTION | WS_SIZEBOX | WS_MAXIMIZEBOX | WS_MINIMIZEBOX | CS_DBLCLKS;
+	DWORD style = WS_POPUP | WS_SYSMENU | WS_CAPTION | CS_DBLCLKS;
 	
 #ifdef C_BORDERLESS_WINDOW_MODE_FOR_SCREENSHOT_EASE
 	style = WS_POPUP | CS_DBLCLKS;
 #endif
 	
+	if (g_winAllowWindowResize)
+	{
+		style = style|WS_SIZEBOX | WS_MAXIMIZEBOX | WS_MINIMIZEBOX ;
+	}
 	if (bFullscreen)
 	{
 		//actually, do it this way:
@@ -969,6 +977,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 		goto cleanup;
 	}
 
+	if (!g_glesExt.InitExtensions())
+	{
+		MessageBox(NULL, "Error initializing GL extensions. Update your GL drivers!", "Missing GL Extensions", NULL);
+		goto cleanup;
+	}
+
 	//our main loop
 	static float fpsTimer=0;
 
@@ -980,12 +994,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 			SendMessage(g_hWnd, WM_CLOSE, 0, 0);
 		}
 
-		if (GetAsyncKeyState(VK_RETURN) && GetAsyncKeyState(VK_MENU))
+		if (g_winAllowFullscreenToggle)
 		{
-			LogMsg("Toggle fullscreen");
-			
-			GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_TOGGLE_FULLSCREEN, 0, 0);  //lParam holds a lot of random data about the press, look it up if
-			//return true;
+			if (GetAsyncKeyState(VK_RETURN) && GetAsyncKeyState(VK_MENU))
+			{
+				LogMsg("Toggle fullscreen");
+
+				GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_TOGGLE_FULLSCREEN, 0, 0);  //lParam holds a lot of random data about the press, look it up if
+				//return true;
+			}
+
 		}
 
 		if (g_bAppFinished) break;

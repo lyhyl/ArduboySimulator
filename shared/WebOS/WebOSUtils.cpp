@@ -87,8 +87,16 @@ bool IsIPhone3GS()
 
 bool IsDesktop()
 {
-	if (GetEmulatedPlatformID() == PLATFORM_ID_WEBOS) return false;
-	return true;
+	switch (GetEmulatedPlatformID())
+	{
+	case PLATFORM_ID_WINDOWS:
+	case PLATFORM_ID_LINUX:
+	case PLATFORM_ID_OSX:
+		return true;
+	}
+
+	
+	return false;
 }
 
 ePlatformID GetPlatformID()
@@ -133,7 +141,16 @@ eDeviceMemoryClass GetDeviceMemoryClass()
 	return C_DEVICE_MEMORY_CLASS_4;
 
 #else
-	return C_DEVICE_MEMORY_CLASS_2;
+	if (GetPrimaryGLX() == 1024 || GetPrimaryGLY() == 1024)
+	{
+		//touchpad, they have a lot of mem
+		return C_DEVICE_MEMORY_CLASS_3;
+
+	} else
+	{
+		//webos phone probably, who knows
+		return C_DEVICE_MEMORY_CLASS_2;
+	}
 #endif
 }
 
@@ -221,8 +238,6 @@ void RemoveFile( string fileName, bool bAddSavePath)
 			break;
 
 		}
-
-
 	}
 #else
 	if (bAddSavePath)
@@ -558,8 +573,6 @@ bool RemoveDirectoryRecursively(string path)
 
 	return RemoveDirectory(sPath) != 0;     // remove the empty directory
 #else
-
-
 	dirent * buf, * ent;
 	DIR *dp;
 

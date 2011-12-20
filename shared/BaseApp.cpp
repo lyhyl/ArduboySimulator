@@ -86,7 +86,6 @@ void BaseApp::InitializeGLDefaults()
 
 bool BaseApp::Init()
 {
-	//g_glesExt.InitExtensions();
 	
 	m_gameTimer.Reset();
 	GetEntityRoot()->SetName("root");
