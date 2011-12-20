@@ -10,7 +10,7 @@
 #ifndef RTGLESExt_h__
 #define RTGLESExt_h__
 
-#include "PlatformSetup.h"
+
 
 #ifdef _WIN32
 
@@ -18,13 +18,19 @@
 #endif
 
 
+extern PFNGLACTIVETEXTUREARBPROC glActiveTextureARB;
+extern PFNGLCLIENTACTIVETEXTUREARBPROC glClientActiveTextureARB;
+
 class RTGLESExt
 {
 public:
 	RTGLESExt();
 	virtual ~RTGLESExt();
 
-	void InitExtensions();
+	bool InitExtensions();
+
+
+
 /*
 
 	void extGlBindFramebuffer(GLenum target, GLuint framebuffer)

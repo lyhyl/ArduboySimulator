@@ -330,6 +330,7 @@ AudioHandle AudioManagerSDL::Play( string fName, bool bLooping /*= false*/, bool
 #endif
 
 	//play it
+	
 	pObject->m_pLastChannelToUse = Mix_PlayChannel(-1, pObject->m_pSound, loops)+C_CHANNEL_OFFSET_SO_ZERO_ISNT_USED;
 
 	if (pObject->m_pLastChannelToUse == -1)
@@ -338,6 +339,10 @@ AudioHandle AudioManagerSDL::Play( string fName, bool bLooping /*= false*/, bool
 
 		return false;
 	}
+
+	//need this because sometimes it's set to nothing by default??
+	SetVol(pObject->m_pLastChannelToUse, 1.0f);
+
 	return (AudioHandle)pObject->m_pLastChannelToUse ;
 }
 

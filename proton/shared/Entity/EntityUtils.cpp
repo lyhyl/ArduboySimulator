@@ -1024,7 +1024,10 @@ void AddFocusIfNeeded(Entity *pEnt, bool bAlsoLinkMoveMessages, int delayInputMS
 			//add the input focus, but wait a bit before doing it
 			GetMessageManager()->AddComponent(pEnt, delayInputMS, new FocusInputComponent);
 			//call a function on a component that doesn't exist yet, but will be added in 500 ms
-			GetMessageManager()->CallComponentFunction(pEnt, "FocusInput", delayInputMS, "LinkMoveMessages");
+			if (bAlsoLinkMoveMessages)
+			{
+				GetMessageManager()->CallComponentFunction(pEnt, "FocusInput", delayInputMS, "LinkMoveMessages");
+			}
 
 		}
 	}

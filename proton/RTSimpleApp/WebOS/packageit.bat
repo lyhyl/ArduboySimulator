@@ -27,4 +27,4 @@ mkdir %STAGING_DIR%\game
 xcopy ..\bin\game %STAGING_DIR%\game /E /F /Y
 
 echo filemode.755=%APPNAME% > %STAGING_DIR%\package.properties
-call palm-package %STAGING_DIR%
+call palm-package --use-v1-format %STAGING_DIR%

@@ -1,6 +1,7 @@
 #ifndef __glext_h_
 #define __glext_h_
 
+#define GL_GLEXT_PROTOTYPES
 /* $Revision: 6252 $ on $Date:: 2008-08-06 16:35:08 -0700 #$ */
 
 #ifdef __cplusplus
