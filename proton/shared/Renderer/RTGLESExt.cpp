@@ -4,6 +4,8 @@
 //you must call InitExtensions on this before using though.  I don't want it in the constructor because I want to be able to control
 //the order of initialization
 
+#if defined(_WIN32) && defined C_GL_MODE
+
 PFNGLACTIVETEXTUREARBPROC glActiveTextureARB = NULL;
 PFNGLCLIENTACTIVETEXTUREARBPROC glClientActiveTextureARB = NULL;
 
@@ -20,7 +22,7 @@ RTGLESExt::~RTGLESExt()
 bool RTGLESExt::InitExtensions()
 {
 	bool bResult = true;
-#ifdef WIN32
+
 	LogMsg("Initializing extensions");
 
 	glActiveTextureARB = (PFNGLACTIVETEXTUREARBPROC) wglGetProcAddress("glActiveTextureARB");
@@ -30,7 +32,9 @@ bool RTGLESExt::InitExtensions()
 	if (!glClientActiveTextureARB) bResult = false;
 
 
-#endif
+
 
 	return bResult;
 }
+
+#endif

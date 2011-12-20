@@ -977,11 +977,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 		goto cleanup;
 	}
 
+#ifdef C_GL_MODE
 	if (!g_glesExt.InitExtensions())
 	{
 		MessageBox(NULL, "Error initializing GL extensions. Update your GL drivers!", "Missing GL Extensions", NULL);
 		goto cleanup;
 	}
+#endif
 
 	//our main loop
 	static float fpsTimer=0;

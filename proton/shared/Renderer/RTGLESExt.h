@@ -12,15 +12,16 @@
 
 
 
-#ifdef _WIN32
+#if defined(_WIN32) && defined C_GL_MODE
 
 	#define _IRR_OGLES1_USE_EXTPOINTER_
-#endif
+
 
 
 extern PFNGLACTIVETEXTUREARBPROC glActiveTextureARB;
 extern PFNGLCLIENTACTIVETEXTUREARBPROC glClientActiveTextureARB;
 
+#endif
 class RTGLESExt
 {
 public:
