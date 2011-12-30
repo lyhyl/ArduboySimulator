@@ -107,10 +107,11 @@ public:
 	int DeleteVarsStartingWith(string deleteStr);
 	//you can load and save the variables in the DB on the fly.  (Does nothing with the functions)
 	bool Save(const string &fileName, bool bAddBasePath = true);
-	bool Load(const string &fileName, bool *pFileExistedOut, bool bAddBasePath = true);
+	bool Load(const string &fileName, bool *pFileExistedOut = NULL, bool bAddBasePath = true);
 	
 	string DumpAsString();
 	void Print(); //same as above, but sends to LogMsg()
+	void DeleteAll();
 
 VariantDB & operator= (const VariantDB &rhs)
 	{
@@ -134,7 +135,6 @@ VariantDB(const VariantDB & ref)
 
 private:
 
-	void DeleteAll();
 
 	dataList m_data;
 	functionList m_functionData;

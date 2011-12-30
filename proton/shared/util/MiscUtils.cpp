@@ -373,7 +373,7 @@ string GetPathFromString(const string &path)
 	return path;
 }
 
-
+//send the desired new extension without the peroid, like "zip", not ".zip"
 string ModifyFileExtension(string fileName, string extension)
 {
 	size_t index = fileName.find_last_of('.');
@@ -481,4 +481,18 @@ string FilterToValidAscii(const string &input, bool bStrict)
 	}
 
 	return output;
+}
+
+bool CaseInsensitiveCompare( const char*a, const char*b )
+{
+	int i = 0;
+	while(1)
+	{
+		if (a[i] != b[i]) return false;
+
+		if (a[i] == 0) return true;
+		i++;
+	}
+
+	return true;
 }

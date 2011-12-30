@@ -481,6 +481,13 @@ bool SoftSurface::LoadRTTexture(byte *pMem)
 
 	}
 
+	if (GetAutoPremultiplyAlpha() && !GetHasPremultipliedAlpha())
+	{
+		PreMultiplyAlpha();
+		SetHasPremultipliedAlpha(true);
+	}
+
+
 	return true;
 }
 
@@ -1023,6 +1030,19 @@ bool SoftSurface::IsPaletteTheSame( glColorBytes *palette, int colorCount)
 		if ( !m_palette[i].Compare(palette[i]) ) return false;
 	}
 	return true;
+}
+
+void SoftSurface::WriteRawDataOut(string fileName)
+{
+	FILE *fp = fopen(fileName.c_str(), "wb");
+	if (!fp)
+	{
+		LogError("Can't open file %s for writing", fileName.c_str());
+		return;
+	}
+
+	fwrite(GetPixelData(), m_width*m_height*m_bytesPerPixel, 1, fp);
+	fclose(fp);
 }
 
 void SoftSurface::Rotate90Degrees( bool bRotateLeft )
