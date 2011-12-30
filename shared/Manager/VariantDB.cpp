@@ -17,10 +17,11 @@ void VariantDB::DeleteAll()
 	dataList::iterator itor = m_data.begin();
 	while (itor != m_data.end())
 	{
-		delete (itor->second);
+		SAFE_DELETE (itor->second);
 		itor++;
 	}
 	
+	m_data.clear();
 	{ //so I can use "itor" again
 	functionList::iterator itor = m_functionData.begin();
 	while (itor != m_functionData.end())
@@ -29,6 +30,7 @@ void VariantDB::DeleteAll()
 		itor++;
 	}
 	}
+	m_functionData.clear();
 }
 
 Variant * VariantDB::GetVarIfExists(const string &keyName)
@@ -177,7 +179,7 @@ bool VariantDB::Load( const string &fileName, bool *pFileExistedOut, bool bAddBa
 
 	if (!fp)
 	{
-		pFileExistedOut = false;
+		if (pFileExistedOut) *pFileExistedOut = false;
 #ifdef _DEBUG
 		LogMsg("%s doesn't exist", f.c_str());
 #endif
@@ -186,7 +188,7 @@ bool VariantDB::Load( const string &fileName, bool *pFileExistedOut, bool bAddBa
 
 	//get the version
 	uint32 version;
-	*pFileExistedOut = true;
+	if (pFileExistedOut) *pFileExistedOut = true;
 	int bytesRead = fread(&version, 1, sizeof(uint32), fp);
 
 	if (bytesRead == 0 || version != 1)

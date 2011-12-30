@@ -303,7 +303,7 @@ int GetSystemData()
 
 	NSBundle *bundle = [NSBundle mainBundle];
 	NSDictionary *info = [bundle infoDictionary];
-	if ([info objectForKey: str] != nil)
+	if ([info keyExists: str] != nil)
 	{
 	 return C_PIRATED_YES;
 	}

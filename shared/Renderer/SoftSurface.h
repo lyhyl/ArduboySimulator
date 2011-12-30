@@ -108,7 +108,8 @@ public:
 	void Rotate90Degrees(bool bRotateLeft);
 	void DetectAndFixDinkShadows();
 	void BlitFromScreen(int dstX, int dstY, int srcX /*= 0*/, int srcY /*= 0*/, int srcWidth /*= 0*/, int srcHeight /*= 0*/);
-	
+	void WriteRawDataOut(string fileName);
+
 private:
 
 	void BlitRGBAFrom8Bit( int dstX, int dstY, SoftSurface *pSrc, int srcX /*= 0*/, int srcY /*= 0*/, int srcWidth /*= 0*/, int srcHeight /*= 0*/ );
@@ -144,6 +145,7 @@ private:
 	void PreMultiplyAlpha();
 	bool LoadBMPTexture(byte *pMem);
 	bool LoadRTTexture(byte *pMem);
+	
 	eSurfaceType m_surfaceType;
 	int m_width, m_height;
 	byte *m_pPixels;

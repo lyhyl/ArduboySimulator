@@ -8,6 +8,7 @@ void ToUpperCase(char *pCharArray);
 string ToLowerCaseString (const string & s);
 string ToUpperCaseString (const string & s);
 
+bool CaseInsensitiveCompare(const char*a, const char*b);
 void SetIntWithTarget(int32 *p_out_dest, int r_target, int r_amount);
 int mod(int a, int b);
 int Random(int range);
