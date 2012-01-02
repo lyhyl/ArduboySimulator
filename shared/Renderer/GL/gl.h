@@ -68,9 +68,9 @@ extern "C" {
 	typedef void GLvoid;
 
 	/* Patching for some better defines in the global system */
-#define GL_VERSION_1_2
-#define GL_VERSION_1_3
-#define GL_VERSION_1_4
+//#define GL_VERSION_1_2
+//#define GL_VERSION_1_3
+//#define GL_VERSION_1_4
 #include "glext.h"
 
 	/*************************************************************/
