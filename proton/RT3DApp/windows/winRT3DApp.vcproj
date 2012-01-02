@@ -1268,6 +1268,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\shared\Renderer\RTGLESExt.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\Renderer\RTGLESExt.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\shared\Renderer\SoftSurface.cpp"
 					>
 				</File>

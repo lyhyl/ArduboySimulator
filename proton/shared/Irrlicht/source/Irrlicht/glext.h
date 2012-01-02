@@ -4836,6 +4836,7 @@ typedef void (APIENTRYP PFNGLRESETMINMAXPROC) (GLenum target);
 #endif
 
 #ifndef GL_VERSION_1_3
+
 #define GL_VERSION_1_3 1
 #ifdef GL_GLEXT_PROTOTYPES
 GLAPI void APIENTRY glActiveTexture (GLenum texture);

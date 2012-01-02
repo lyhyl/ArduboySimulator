@@ -19,7 +19,13 @@
 #define glActiveTexture glActiveTextureARB
 #define glClientActiveTexture glClientActiveTextureARB
 
+
+#ifdef _IRR_STATIC_LIB_
+#include <Irrlicht/source/Irrlicht/glext.h>
+#endif
 #include "Renderer/RTGLESExt.h"
+
+
 
 #else
 
