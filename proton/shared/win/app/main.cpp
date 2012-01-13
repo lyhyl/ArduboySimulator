@@ -9,12 +9,16 @@
 #ifndef RT_WEBOS
 	#include <direct.h>
 #endif
- 
+
+//uncomment below and so you can use alt print-screen to take screenshots easier (no border)
+//#define C_BORDERLESS_WINDOW_MODE_FOR_SCREENSHOT_EASE 
+
 bool g_winAllowFullscreenToggle = true;
 bool g_winAllowWindowResize = true;
 
 vector<VideoModeEntry> g_videoModes;
-void AddVideoMode(string name, int x, int y, ePlatformID platformID);
+void AddVideoMode(string name, int x, int y, ePlatformID platformID, eOrientationMode forceOrientation = ORIENTATION_DONT_CARE);
+
 void SetVideoModeByName(string name);
 
 void InitVideoSize()
@@ -40,14 +44,19 @@ void InitVideoSize()
 #endif
 
 	//OSX
-	AddVideoMode("OSX", 768, 1024, PLATFORM_ID_OSX); //g_landScapeNoNeckHurtMode should be false when testing. Sort of buggy to emulate in Windows
+	AddVideoMode("OSX", 768, 1024, PLATFORM_ID_OSX); 
 	AddVideoMode("OSX Wide", 800, 1280, PLATFORM_ID_OSX); 
 
-	//iOS
+	//iOS - for testing on Windows, you should probably use the "Landscape" versions unless you want to hurt your
+	//neck.
+
 	AddVideoMode("iPhone", 320, 480, PLATFORM_ID_IOS);
+	AddVideoMode("iPhone Landscape", 480, 320, PLATFORM_ID_IOS, ORIENTATION_PORTRAIT); //force orientation for emulation so it's not sideways
 	AddVideoMode("iPad", 768, 1024, PLATFORM_ID_IOS);
+	AddVideoMode("iPad Landscape", 1024, 768, PLATFORM_ID_IOS, ORIENTATION_PORTRAIT); //force orientation for emulation so it's not sideways);
+	AddVideoMode("iPhone4", 640, 960, PLATFORM_ID_IOS, ORIENTATION_PORTRAIT); //force orientation for emulation so it's not sideways););
+	AddVideoMode("iPhone4 Landscape", 960,640, PLATFORM_ID_IOS);
 	AddVideoMode("iPad HD", 768*2, 1024*2, PLATFORM_ID_IOS);
-	AddVideoMode("iPhone4", 640, 960, PLATFORM_ID_IOS);
 	
 	//Palm er, I mean HP. These should use the Debug WebOS build config in MSVC for the best results, it will
 	//use their funky SDL version
@@ -58,37 +67,36 @@ void InitVideoSize()
 	AddVideoMode("Pre 3 Landscape", 800,480, PLATFORM_ID_WEBOS);
 	AddVideoMode("Touchpad", 768, 1024, PLATFORM_ID_WEBOS);
 
-	//'droid
+	//Android
 	AddVideoMode("G1", 320, 480, PLATFORM_ID_ANDROID);
 	AddVideoMode("G1 Landscape", 480, 320, PLATFORM_ID_ANDROID);
 	AddVideoMode("Nexus One", 480, 800, PLATFORM_ID_ANDROID);
-	AddVideoMode("Droid Landscape", 854, 480, PLATFORM_ID_ANDROID); //set g_landScapeNoNeckHurtMode to true
-	AddVideoMode("Nexus One Landscape", 480, 800, PLATFORM_ID_ANDROID); //set g_landScapeNoNeckHurtMode to true
-	AddVideoMode("Xoom Landscape", 1280,800, PLATFORM_ID_ANDROID);//set g_landScapeNoNeckHurtMode to false 
-	AddVideoMode("Xoom", 800,1280, PLATFORM_ID_ANDROID);//set g_landScapeNoNeckHurtMode to false (?)
+	AddVideoMode("Nexus One Landscape", 800, 480, PLATFORM_ID_ANDROID); 
+	AddVideoMode("Droid Landscape", 854, 480, PLATFORM_ID_ANDROID); 
+	AddVideoMode("Xoom Landscape", 1280,800, PLATFORM_ID_ANDROID);
+	AddVideoMode("Xoom", 800,1280, PLATFORM_ID_ANDROID);
+	AddVideoMode("Galaxy Tab 7.7 Landscape", 1024,600, PLATFORM_ID_ANDROID);
+	AddVideoMode("Galaxy Tab 10.1 Landscape", 1280,800, PLATFORM_ID_ANDROID);
 
-	//RIM
-	AddVideoMode("Playbook Landscape", 1024,600, PLATFORM_ID_BBX);//set g_landScapeNoNeckHurtMode to true 
+	//RIM Playbook OS/BBX/BB10/Whatever they name it to next week
+	AddVideoMode("Playbook", 600,1024, PLATFORM_ID_BBX);
+	AddVideoMode("Playbook Landscape", 1024,600, PLATFORM_ID_BBX);
 
 	string desiredVideoMode = "iPad"; //name needs to match one of the ones defined above
-    g_landScapeNoNeckHurtMode = true; //if true, will rotate the screen so we can play in landscape mode in windows without hurting ourselves
-	SetVideoModeByName(desiredVideoMode);
+ 	SetVideoModeByName(desiredVideoMode);
 	GetBaseApp()->OnPreInitVideo(); //gives the app level code a chance to override any of these parms if it wants to
 }
 
 //***************************************************************************
 
-bool g_landScapeNoNeckHurtMode = false;
 int g_winVideoScreenX = 0;
 int g_winVideoScreenY = 0;
 bool g_bIsFullScreen = false;
 int g_fpsLimit = 0; //0 for no fps limit (default)  Use MESSAGE_SET_FPS_LIMIT to set
-//#define C_BORDERLESS_WINDOW_MODE_FOR_SCREENSHOT_EASE //use this with alt print-screen to take fullscreen screenshots easier
 
-
-void AddVideoMode(string name, int x, int y, ePlatformID platformID)
+void AddVideoMode(string name, int x, int y, ePlatformID platformID, eOrientationMode forceOrientation)
 {
-	g_videoModes.push_back(VideoModeEntry(name, x, y, platformID));
+	g_videoModes.push_back(VideoModeEntry(name, x, y, platformID, forceOrientation));
 }
 
 void SetVideoModeByName(string name)
@@ -103,6 +111,7 @@ void SetVideoModeByName(string name)
 			g_winVideoScreenX = v->x;
 			g_winVideoScreenY = v->y;
 			SetEmulatedPlatformID(v->platformID);
+			SetForcedOrientation(v->forceOrientation);
 			return;
 		}
 	}
@@ -131,21 +140,11 @@ EGLSurface			g_eglSurface	= 0;
 
 int GetPrimaryGLX() 
 {
-	if (g_landScapeNoNeckHurtMode)
-	{
-		return g_winVideoScreenY;
-	}
-
 	return g_winVideoScreenX;
 }
 
 int GetPrimaryGLY() 
 {
-	if (g_landScapeNoNeckHurtMode)
-	{
-		return g_winVideoScreenX;
-	}
-
 	return g_winVideoScreenY;
 }	
 
@@ -197,7 +196,22 @@ int ConvertWindowsKeycodeToProtonVirtualKey(int keycode)
 	return keycode;
 }
 
-// Variable set in the message handler to finish the demo
+
+void ChangeEmulationOrientationIfPossible(int desiredX, int desiredY, eOrientationMode desiredOrienation)
+{
+#ifdef _DEBUG
+	if (GetKeyState(VK_CONTROL)& 0xfe)
+	{
+		if (GetForcedOrientation() != ORIENTATION_DONT_CARE)
+		{
+			LogMsg("Can't change orientation because SetForcedOrientation() is set.  Change to emulation of 'iPhone' instead of 'iPhone Landscape' for this to work.");
+			return;
+		}
+	
+		SetupScreenInfo(desiredX, desiredY, desiredOrienation);
+	}
+#endif
+}
 
 HGLRC		g_hRC=NULL;		// Permanent Rendering Context
 
@@ -244,8 +258,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 			return true;
 		}
-
-	
 
 	case WM_KILLFOCUS:
 #ifndef RT_RUNS_IN_BACKGROUND
@@ -323,8 +335,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	
 	case WM_SIZE:
 		{
-
-			
+	
 			// Respond to the message:				
 			int Width = LOWORD( lParam );
 			int Height = HIWORD( lParam ); 
@@ -415,30 +426,20 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			break;
 
 		case 'L': //left landscape mode
-			if (!g_landScapeNoNeckHurtMode)
-			{
-				SetupScreenInfo(GetPrimaryGLY(), GetPrimaryGLX(), ORIENTATION_LANDSCAPE_LEFT);
-			}
+			ChangeEmulationOrientationIfPossible(GetPrimaryGLY(), GetPrimaryGLX(), ORIENTATION_LANDSCAPE_LEFT);
 			break;
 
 		case 'R': //right landscape mode
-			if (!g_landScapeNoNeckHurtMode)
-			{
-				SetupScreenInfo(GetPrimaryGLY(), GetPrimaryGLX(), ORIENTATION_LANDSCAPE_RIGHT);
-			}
+			ChangeEmulationOrientationIfPossible(GetPrimaryGLY(), GetPrimaryGLX(), ORIENTATION_LANDSCAPE_RIGHT);
+		
 			break;
 
 		case 'P': //portrait mode
-			if (!g_landScapeNoNeckHurtMode)
-			{
-				SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(), ORIENTATION_PORTRAIT);
-			}
+			ChangeEmulationOrientationIfPossible(GetPrimaryGLX(), GetPrimaryGLY(), ORIENTATION_PORTRAIT);
+			
 			break;
 		case 'U': //Upside down portrait mode
-			if (!g_landScapeNoNeckHurtMode)
-			{
-				SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(), ORIENTATION_PORTRAIT_UPSIDE_DOWN);
-			}
+			ChangeEmulationOrientationIfPossible(GetPrimaryGLX(), GetPrimaryGLY(), ORIENTATION_PORTRAIT_UPSIDE_DOWN);
 			break;
 
 		case 'C':
@@ -592,13 +593,8 @@ bool InitVideo(int width, int height, bool bFullscreen, float aspectRatio)
 {
 
 	LogMsg("Setting native video mode to %d, %d - Fullscreen: %d  Aspect Ratio: %.2f", width, height, int(bFullscreen), aspectRatio);
-	g_winVideoScreenY = width;
-	g_winVideoScreenX = height;
-
-	if (!g_landScapeNoNeckHurtMode)
-	{
-			swap(g_winVideoScreenX, g_winVideoScreenY);
-	}
+	g_winVideoScreenY = height;
+	g_winVideoScreenX = width;
 
 	// EGL variables
 #ifndef C_GL_MODE
@@ -645,10 +641,12 @@ bool InitVideo(int width, int height, bool bFullscreen, float aspectRatio)
 	style = WS_POPUP | CS_DBLCLKS;
 #endif
 	
+#ifndef C_BORDERLESS_WINDOW_MODE_FOR_SCREENSHOT_EASE
 	if (g_winAllowWindowResize)
 	{
-		style = style|WS_SIZEBOX | WS_MAXIMIZEBOX | WS_MINIMIZEBOX ;
+		style = style |WS_SIZEBOX | WS_MAXIMIZEBOX | WS_MINIMIZEBOX ;
 	}
+#endif
 	if (bFullscreen)
 	{
 		//actually, do it this way:
@@ -820,18 +818,7 @@ assert(!g_hDC);
 	}
 	ShowWindow(g_hWnd, SW_SHOW);
 	
-	if (!g_landScapeNoNeckHurtMode && (GetOrientation() == ORIENTATION_LANDSCAPE_LEFT || GetPrimaryGLY() < GetPrimaryGLX()) )
-	{
-				SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(), GetOrientation());
-			
-				//why would we want these flipped in any case?  Fix later when I can test
-			//SetupScreenInfo(GetPrimaryGLY(), GetPrimaryGLX(), GetOrientation());
-		
-	} else
-	{
-		SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(), GetOrientation());
-
-	}
+	SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(), GetOrientation());
 
 	//UpdateWindow(g_hWnd);
 	//RedrawWindow(0, 0, 0, RDW_ALLCHILDREN|RDW_INVALIDATE|RDW_UPDATENOW);
@@ -1143,13 +1130,13 @@ void AddText(char *tex ,char *filename)
 	if (FileExists(filename) == false)
 	{
 
-		fp = fopen(filename, "wb");
+		fp = fopen( (GetBaseAppPath()+filename).c_str(), "wb");
 		fwrite( tex, strlen(tex), 1, fp);       /* current player */
 		fclose(fp);
 		return;
 	} else
 	{
-		fp = fopen(filename, "ab");
+		fp = fopen( (GetBaseAppPath()+filename).c_str(), "ab");
 		fwrite( tex, strlen(tex), 1, fp);       /* current player */
 		fclose(fp);
 	}

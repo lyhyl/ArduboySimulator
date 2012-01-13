@@ -29,7 +29,7 @@ struct rtpack_header
 	byte reserved[15];
 };
 
-
+#define RT_FORMAT_EMBEDDED_FILE 20000000
 #define C_RTFILE_TEXTURE_HEADER "RTTXTR"
 struct rttex_header
 {
@@ -38,11 +38,12 @@ struct rttex_header
 	//our custom header
 	int height;
 	int width;
-	int format; // probably GL_COMPRESSED_RGBA_ATI_TC
+	int format; // probably GL_UNSIGNED_BYTE , or GL_COMPRESSED_RGBA_ATI_TC, or RT_FORMAT_EMBEDDED_FILE for jpgs, etc
 	int originalHeight; //before we padded to be a power of 2, if applicable.
 	int originalWidth; //before we padded to be a power of 2, if applicable.
 	unsigned char bUsesAlpha;
-	unsigned char reservedFlags[3]; //keep it packed right
+	unsigned char bAlreadyCompressed; //if 1, it means we don't require additional compression
+	unsigned char reservedFlags[2]; //keep it packed right
 	int mipmapCount; //how many tex infos are followed...
 
 	int reserved[16];

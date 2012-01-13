@@ -41,8 +41,9 @@ bool UsesTransparency(CL_PixelBuffer &pixBuff)
 
 	if (pixBuff.get_format().get_depth() == 32)
 	{
-		
-		return true; //forcing it, because later I found I could avoid outline glitches when scaling up textured that were resized here
+	
+		//if (GetApp()->GetForceAlpha())
+		//return true; //forcing it, because later I found I could avoid outline glitches when scaling up textured that were resized here
 		//by using premultiplied alpha.
 
 		
@@ -145,6 +146,7 @@ void FileWriteRAWPVR(const char* pszOutputFileName, CPVRTexture* texture, int nN
 #define GL_UNSIGNED_BYTE                  0x1401
 #define GL_UNSIGNED_SHORT_5_6_5           0x8363
 
+
 	const ::uint32 PVRTC2_MIN_TEXWIDTH		= 16;
 	const ::uint32 PVRTC2_MIN_TEXHEIGHT		= 8;
 	const ::uint32 PVRTC4_MIN_TEXWIDTH		= 8;
@@ -202,6 +204,7 @@ void FileWriteRAWPVR(const char* pszOutputFileName, CPVRTexture* texture, int nN
 		rtTexHeader.bUsesAlpha = 1;
 	} else rtTexHeader.bUsesAlpha = 0;
 
+	rtTexHeader.bAlreadyCompressed = 0;
 	fwrite(&rtTexHeader, 1, sizeof(rttex_header), pFileOut);
 
 	int lastWidth = texture->getWidth();
@@ -230,13 +233,11 @@ void FileWriteRAWPVR(const char* pszOutputFileName, CPVRTexture* texture, int nN
 	
 
 		mipHeader.dataSize = CompressedImageSize;
-		
-	
-		
+				
 		mipHeader.mipLevel = nMipLevel;
 		//LogMsg("MIP %d: %d X %d", mipHeader.mipLevel, mipHeader.width,  mipHeader.height);
 
-			fwrite(&mipHeader, 1, sizeof(rttex_mip_header), pFileOut);
+		fwrite(&mipHeader, 1, sizeof(rttex_mip_header), pFileOut);
 
 		fwrite(texture->getSurfaceData(0)+dataOffset, sizeof(unsigned char),mipHeader.dataSize, pFileOut);
 		
@@ -264,6 +265,80 @@ int CountNumMipLevels(int nWidth, int nHeight)
 	}
 	return nNumPowersOfTwo;
 }
+
+
+
+
+void EmbedImageFileAsRTTEX(string outputFile, string fileToImbed, CL_PixelBuffer &pixBuff, int originalWidth, int originalHeight)
+{
+	FILE* pFileOut = NULL;
+	int nMipLevel;
+	fopen_s(&pFileOut, outputFile.c_str(), "wb");
+	int embedFileSize = GetFileSize(fileToImbed);
+	if (embedFileSize == 0)
+	{
+		throw CL_Error("Could not open temp file to embed");
+	}
+	if (pFileOut == NULL )
+	{
+		throw CL_Error("Could not open writing output file");
+	}
+
+	rttex_header rtTexHeader;
+	ZeroMemory(&rtTexHeader, sizeof(rttex_header));
+	memcpy(rtTexHeader.rtFileHeader.fileTypeID, C_RTFILE_TEXTURE_HEADER, 6);
+	
+	rtTexHeader.format = RT_FORMAT_EMBEDDED_FILE; //game will check the header to know it's actually a jpg or whatever
+	
+	rtTexHeader.height = pixBuff.get_height();
+	rtTexHeader.width = pixBuff.get_width();
+	rtTexHeader.originalHeight = originalHeight;
+	rtTexHeader.originalWidth = originalWidth;
+	rtTexHeader.mipmapCount = 1; //no extra mipmaps, just the main file
+	rtTexHeader.bUsesAlpha = 0;
+	rtTexHeader.bAlreadyCompressed = 1;
+	fwrite(&rtTexHeader, 1, sizeof(rttex_header), pFileOut);
+
+	int nNumMipLevels = 1;
+	int lastWidth = pixBuff.get_height();
+	int lastHeight = pixBuff.get_width();
+	
+	int dataOffset = 0;
+	
+	for (nMipLevel=0; nMipLevel<nNumMipLevels; nMipLevel++)
+	{
+		rttex_mip_header mipHeader;
+		ZeroMemory(&mipHeader, sizeof(rttex_mip_header));
+		mipHeader.height = lastHeight;
+		mipHeader.width = lastWidth;
+
+		mipHeader.dataSize = embedFileSize;
+
+		mipHeader.mipLevel = nMipLevel;
+		LogMsg("(Activating ultra compress - file crunched to %d bytes", embedFileSize);
+
+		fwrite(&mipHeader, 1, sizeof(rttex_mip_header), pFileOut);
+	
+		//load temp file
+		byte *pBuff = new byte[embedFileSize];
+	
+		FILE *fEmbed = fopen(fileToImbed.c_str(), "rb");
+		if (!fEmbed)
+		{
+			throw CL_Error("Could not open temp file to embed");
+		}
+
+		fread(pBuff, embedFileSize, 1, fEmbed);
+		
+		//append it to our current file we're writing
+		fwrite(pBuff, embedFileSize,1, pFileOut);
+		SAFE_DELETE_ARRAY(pBuff);
+		fclose(fEmbed);
+		dataOffset += mipHeader.dataSize;
+	}
+	fclose(pFileOut);
+}
+
 
 bool TexturePacker::ProcessTexture( string fName )
 {
@@ -384,13 +459,13 @@ bool TexturePacker::ProcessTexture( string fName )
 	}
 
 	//SETH
-	LogMsg("(-forcealpha causing us to leave the unnecessary alpha channel in)");
-
+	
 	if (!m_bUsesTransparency)
 	{
 		if (GetApp()->GetForceAlpha())
 		{
 			m_bUsesTransparency = true;
+			LogMsg("(-force_alpha causing us to leave the unnecessary alpha channel in)");
 		} else
 		{
 			switch (GetApp()->GetPixelType())
@@ -436,91 +511,122 @@ bool TexturePacker::ProcessTexture( string fName )
 	//if we wanted to save out a .png for testing
 	if (GetApp()->GetOutput() == App::PNG)
 	{
-		CL_ProviderFactory::save(finalBuff, path + string("/") + "test_"+ModifyFileExtension(fileNameOnly, "png"));
+		string outputName = path + string("/") + "test_"+ModifyFileExtension(fileNameOnly, "png");
+		CL_ProviderFactory::save(finalBuff, outputName);
+		LogMsg("(Wrote png of final output out to %s", outputName.c_str());
 	}
-	
-	// get the utilities instance 
-	PVRTextureUtilities *PVRU = PVRTextureUtilities::getPointer(); 
 
-	CPVRTexture sOriginalTexture( 
-		finalBuff.get_width(),      // u32Width, 
-		finalBuff.get_height(),    // u32Height, 
-		0,    // u32MipMapCount, 
-		1,    // u32NumSurfaces, 
-		false,     // bBorder, 
-		false,     // bTwiddled, 
-		false,     // bCubeMap, 
-		false,     // bVolume, 
-		false,     // bFalseMips, 
-		m_bUsesTransparency,     // bHasAlpha, 
-		!GetApp()->GetFlipV(), //flipped
-		DX10_R8G8B8A8_UNORM, // ePixelType, 
-		0.0f,    // fNormalMap, 
-		(pvrtexlib::uint8*)finalBuff.get_data()   // pPixelData 
-		); 
+	if (GetApp()->GetOutput() == App::JPG)
+	{
+		int quality = 100;
+		if (GetApp()->GetUltraCompressQuality() != 0) quality = GetApp()->GetUltraCompressQuality();
+		string outputName =  path + string("/") + "test_"+ModifyFileExtension(fileNameOnly, "jpg");
+		CL_JPEGProvider::save(finalBuff,outputName,0, quality);
+		LogMsg("(Wrote jpg of final output out to %s", outputName.c_str());
+	}
 
-	sOriginalTexture.convertToPrecMode(ePREC_INT8);
-	// make an empty texture for the destination of the preprocessing 
-	// copying the header settings 
-	CPVRTextureHeader texHeader(sOriginalTexture.getHeader());
-	
 	// write to file specified 
 	string fileName = ModifyFileExtension(fName, "rttex");
-	texHeader.setFalseMips(false);
-	
-	texHeader.setHeight(stretchRect.get_height());
-	texHeader.setWidth(stretchRect.get_width());
-	
-	int nNumMipLevels = CountNumMipLevels(stretchRect.get_width(), stretchRect.get_height());
-	nNumMipLevels = min(nNumMipLevels, GetApp()->GetMaxMipLevel()); 
+	int nNumMipLevels = 1;
 
-	texHeader.setMipMapCount(nNumMipLevels-1); 
-
-	// specify desired normal map height factor 
-	//sProcessTexture.setNormalMap(5.0f); 
-
-	try
+	if (GetApp()->GetUltraCompressQuality() != 0 && !m_bUsesTransparency)
 	{
-		PVRU->ProcessRawPVR(sOriginalTexture,texHeader); 
-	}
-	PVRCATCH(myException) 
-	{ 
-		LogError("Could not preprocess texture:\n%s\n",myException.what()); 
-	} 
+		//write out a temp file.. CL 1.x doesn't support writing this to a stream I think...
+		string tempFilePathAndName = path + string("/") + "rt_temp_"+ModifyFileExtension(fileNameOnly, "jpg");
+		CL_JPEGProvider::save(finalBuff, tempFilePathAndName,0, GetApp()->GetUltraCompressQuality());
 
-	// create texture to encode to 
-	CPVRTexture sCompressedTexture(sOriginalTexture.getHeader()); 
-
-	// set required encoded pixel type 
-	sCompressedTexture.setPixelType(GetApp()->GetPixelType()); 
-	sCompressedTexture.convertToPrecMode(ePREC_INT8);
-
-	// encode texture 
-	try
-	{
-		PVRU->CompressPVR(sOriginalTexture, sCompressedTexture); 
-	}
-	PVRCATCH(myException) 
-	{ 
-		LogError("Could not compress texture:\n%s\n",myException.what()); 
-	} 
-
-
-	if (GetApp()->GetOutput() == App::PVR)
-	{
-		sCompressedTexture.writeToFile((fileName = ModifyFileExtension(fName, "pvr")).c_str());  
-	} else if  (GetApp()->GetOutput() == App::PNG)
-	{
-
+		string outputFilename =  path + string("/") +ModifyFileExtension(fileNameOnly, "rttex");
+		EmbedImageFileAsRTTEX(outputFilename, tempFilePathAndName, finalBuff, originalX, originalY );
+		RemoveFile(tempFilePathAndName);
+		
 	} else
 	{
+
+
+
+		// get the utilities instance 
+		PVRTextureUtilities *PVRU = PVRTextureUtilities::getPointer(); 
+
+		CPVRTexture sOriginalTexture( 
+			finalBuff.get_width(),      // u32Width, 
+			finalBuff.get_height(),    // u32Height, 
+			0,    // u32MipMapCount, 
+			1,    // u32NumSurfaces, 
+			false,     // bBorder, 
+			false,     // bTwiddled, 
+			false,     // bCubeMap, 
+			false,     // bVolume, 
+			false,     // bFalseMips, 
+			m_bUsesTransparency,     // bHasAlpha, 
+			!GetApp()->GetFlipV(), //flipped
+			DX10_R8G8B8A8_UNORM, // ePixelType, 
+			0.0f,    // fNormalMap, 
+			(pvrtexlib::uint8*)finalBuff.get_data()   // pPixelData 
+			); 
+
+		sOriginalTexture.convertToPrecMode(ePREC_INT8);
+		// make an empty texture for the destination of the preprocessing 
+		// copying the header settings 
+		CPVRTextureHeader texHeader(sOriginalTexture.getHeader());
+
+		texHeader.setFalseMips(false);
+
+		texHeader.setHeight(stretchRect.get_height());
+		texHeader.setWidth(stretchRect.get_width());
+
+		nNumMipLevels = CountNumMipLevels(stretchRect.get_width(), stretchRect.get_height());
+		nNumMipLevels = min(nNumMipLevels, GetApp()->GetMaxMipLevel()); 
+
+		texHeader.setMipMapCount(nNumMipLevels-1); 
+
+		// specify desired normal map height factor 
+		//sProcessTexture.setNormalMap(5.0f); 
+
+		try
+		{
+			PVRU->ProcessRawPVR(sOriginalTexture,texHeader); 
+		}
+		PVRCATCH(myException) 
+		{ 
+			LogError("Could not preprocess texture:\n%s\n",myException.what()); 
+		} 
+
+		// create texture to encode to 
+		CPVRTexture sCompressedTexture(sOriginalTexture.getHeader()); 
+
+		// set required encoded pixel type 
+		sCompressedTexture.setPixelType(GetApp()->GetPixelType()); 
+		sCompressedTexture.convertToPrecMode(ePREC_INT8);
+
+		// encode texture 
+		try
+		{
+			PVRU->CompressPVR(sOriginalTexture, sCompressedTexture); 
+		}
+		PVRCATCH(myException) 
+		{ 
+			LogError("Could not compress texture:\n%s\n",myException.what()); 
+		} 
+
+
+		if (GetApp()->GetOutput() == App::PVR)
+		{
+			sCompressedTexture.writeToFile((fileName = ModifyFileExtension(fName, "pvr")).c_str());  
+		} else if  (GetApp()->GetOutput() == App::PNG)
+		{
+
+		} else
+		{
+
+			FileWriteRAWPVR(fileName.c_str(), &sCompressedTexture, nNumMipLevels, m_bUsesTransparency, originalX, originalY);
+		}
+
 		
-		FileWriteRAWPVR(fileName.c_str(), &sCompressedTexture, nNumMipLevels, m_bUsesTransparency, originalX, originalY);
 	}
-
 	LogMsg("Saved out %s (%d X %d) with %d mipmaps. %s (%s format)", fileName.c_str(), 
-		texHeader.getWidth(), texHeader.getHeight(), nNumMipLevels, m_bUsesTransparency==0 ? "" : "(uses alpha)", GetApp()->GetPixelTypeText().c_str());
+		pixBuff.get_width(), pixBuff.get_height(), nNumMipLevels, m_bUsesTransparency==0 ? "" : "(uses alpha)", GetApp()->GetPixelTypeText().c_str());
 
+	
 	return true;
 
 }

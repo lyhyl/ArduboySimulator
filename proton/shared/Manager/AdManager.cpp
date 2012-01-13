@@ -14,6 +14,7 @@ AdManager::AdManager()
 	m_tapPointVariant.Set(m_tapPoints);
 	m_returnState = RETURN_STATE_NONE;
 	m_bShowTapjoyAdASAP = false;
+	m_bShowingAd = false;
 }
 
 AdManager::~AdManager()
@@ -46,6 +47,8 @@ void AdManager::SetTapjoyFeatureAppVisible( bool bVisible )
 
 void AdManager::SetTapjoyAdVisible(bool bVisible)
 {
+	m_bShowingAd = bVisible;
+
 	if (bVisible)
 	{
 		if (m_bTapjoyAdReady)
@@ -54,6 +57,7 @@ void AdManager::SetTapjoyAdVisible(bool bVisible)
 			o.m_type = OSMessage::MESSAGE_TAPJOY_SHOW_AD;
 			o.m_x = 1; //show ad
 			GetBaseApp()->AddOSMessage(o);
+	
 		} else
 		{
 			//do it after it becomes ready
@@ -243,6 +247,7 @@ void AdManager::Init()
 	
 //	GetTapPointsFromServer();
 	//CacheTapjoyFeaturedApp();
+
 }
 
 std::string AdManager::GetPointsString()
@@ -304,4 +309,32 @@ void AdManager::ModifyTapPoints( int mod )
 		o.m_parm1 = mod;
 		GetBaseApp()->AddOSMessage(o);
 	}
+}
+
+void AdManager::OnRender()
+{
+
+#ifdef WIN32
+	if (m_bShowingAd)
+	{
+		
+		CL_Vec2f vRatio = CL_Vec2f(1,1);
+		if (GetFakePrimaryScreenSizeX() != 0)
+		{
+			vRatio.x = (GetScreenSizeXf()/float(GetOriginalScreenSizeX()));
+			vRatio.y =(GetScreenSizeYf()/float(GetOriginalScreenSizeY()));
+		}
+		rtRect r(0,0,480*vRatio.x,80*vRatio.y);
+		
+		//move to bottom
+		r.AdjustPosition(0, GetScreenSizeYf()-r.GetHeight());
+
+		//center
+		r.AdjustPosition( (GetScreenSizeXf()-r.GetWidth())/2, 0 );
+		
+		DrawRect(r, MAKE_RGBA(255,255,255,255));
+		
+	}
+#endif
+
 }

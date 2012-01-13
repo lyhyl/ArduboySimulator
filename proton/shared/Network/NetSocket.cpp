@@ -13,7 +13,12 @@
 	#include <arpa/inet.h>
 
 #ifdef ANDROID_NDK
+
 #include <fcntl.h>
+
+#elif defined(PLATFORM_BBX)
+#include <fcntl.h>
+
 
 #else
 	#include <sys/fcntl.h>
@@ -83,7 +88,10 @@ bool NetSocket::Init( string url, int port )
 	if ((hp= gethostbyname(url.c_str())) == NULL) 
 	{
 		/* do we know the host's */
+#ifndef PLATFORM_BBX
+		//no errno on bbx.  Wait, why am I even setting this?  Does this matter?
 		errno= ECONNREFUSED;                       /* address? */
+#endif
 		return false;                                /* no */
 	}
 

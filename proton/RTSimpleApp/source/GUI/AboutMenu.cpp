@@ -2,7 +2,7 @@
 #include "AboutMenu.h"
 #include "MainMenu.h"
 #include "Entity/EntityUtils.h"
-
+#include "Entity/RenderScissorComponent.h"
 
 void AboutMenuOnSelect(VariantList *pVList) //0=vec2 point of click, 1=entity sent from
 {
@@ -42,6 +42,10 @@ void AboutMenuOnSelect(VariantList *pVList) //0=vec2 point of click, 1=entity se
 
 void AboutMenuAddScrollContent(Entity *pParent)
 {
+	//here we add our actual content we want scrolled.  At the end, we'll calculate the size used using ResizeScrollBounds and the scroll bars
+	//can update.  If you are adding content over time, (like, downloading highscores or whatever) it's ok to call ResizeScrollBounds
+	//repeatedly to dynamically resize the scroll area as you go.
+
 	pParent = pParent->GetEntityByName("scroll_child");
 	pParent->RemoveAllEntities(); //clear it out in case we call this more than once, say, to update/change something
 
@@ -85,7 +89,6 @@ void AboutMenuAddScrollContent(Entity *pParent)
 }
 
 
-
 Entity * AboutMenuCreate( Entity *pParentEnt)
 {
 	Entity *pBG = NULL;
@@ -107,35 +110,30 @@ Entity * AboutMenuCreate( Entity *pParentEnt)
 	EntityComponent *pFilter = pScroll->AddComponent(new FilterInputComponent);
 	EntityComponent *pScrollComp = pScroll->AddComponent(new ScrollComponent);
 	
+	//turn on finger tracking enforcement, it means it will mark the tap as "handled" when touched.  Doesn't make a difference here,
+	//but good to know about in some cases.  (some entity types will ignore touches if they've been marked as "Handled")
+
+	pScrollComp->GetVar("fingerTracking")->Set(uint32(1)); 
+
 	//note: If you don't want to see a scroll bar progress indicator, comment out the next line.  Also note that it only draws
 	//a vertical progress bar if needed but doesn't draw a horizontal if needed (I just haven't needed a horizontal scroll bar yet)
 	EntityComponent *pScrollBarComp = pScroll->AddComponent(new ScrollBarRenderComponent); 	//also let's add a visual way to see the scroller position
+	
+	//if we wanted to change the scroll bar color we could do it this way:
 	//pScroll->GetVar("color")->Set(MAKE_RGBA(61,155, 193, 255)); 
+	
 	Entity *pScrollChild = pScroll->AddEntity(new Entity("scroll_child"));
 	
-	/*
-	//this is one way to clip the image on the bottom - glClipPlane is too slow/broken on Android so we actually won't use it
-	EntityComponent *pClip = pScroll->AddComponent(new RenderClipComponent);
-	pClip->GetVar("clipMode")->Set(uint32(RenderClipComponent::CLIP_MODE_BOTTOM));
-	*/
+	pScroll->AddComponent(new RenderScissorComponent()); //so the text/etc won't get drawn outside our scroll box
 
-	//another way would be to just blit a colored bar over the bottom:
-	//pEnt = CreateOverlayRectEntity(pBG, CL_Rectf(0, GetScreenSizeYf()-offsetFromBottom, GetScreenSizeXf(), 320), MAKE_RGBA(0,0,0,100));
-
-	//but the nicest way is to blit a matching bar at the bottom with transparency:
-	Entity *pOverlay = CreateOverlayEntity(pBG, "", "interface/bg_stone_overlay.rttex", 0, GetScreenSizeYf()+1); 
-	SetAlignmentEntity(pOverlay, ALIGNMENT_DOWN_LEFT);
-	
-	//actually add all our content
+	//actually add all our content that we'll be scrolling (if there is too much for one screen), as much as we want, any kind of entities ok
 	AboutMenuAddScrollContent(pBG);
-
 
 	//oh, let's put the Back button on the bottom bar thing
 	Entity * pEnt = CreateTextButtonEntity(pBG, "Back", 20, GetScreenSizeYf()-30, "Back", false);
 	pEnt->GetFunction("OnButtonSelected")->sig_function.connect(&AboutMenuOnSelect);
 	SetupTextEntity(pEnt, FONT_SMALL);
 	AddHotKeyToButton(pEnt, VIRTUAL_KEY_BACK); //for androids back button and window's Escape button
-
 	SlideScreen(pBG, true, 500);
 	return pBG;
 }

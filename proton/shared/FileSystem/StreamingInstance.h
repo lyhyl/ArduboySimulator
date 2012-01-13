@@ -22,6 +22,11 @@ public:
 	virtual bool IsFinished() = 0;
 	virtual int Read(byte * pBufferOut, int maxBytesToRead) = 0;
 	virtual void SeekFromStart(int byteCount);
+	
+	//some helpers that use Read() to return certain types
+	int32 ReadInt32();
+	float ReadFloat32();
+
 protected:
 private:
 };

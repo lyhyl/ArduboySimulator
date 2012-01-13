@@ -38,7 +38,7 @@ static screen_context_t screen_cxt;
 
  int GetPrimaryGLX() {return g_primaryGLX;}
  int GetPrimaryGLY() {return g_primaryGLY;}
- bool g_landScapeNoNeckHurtMode = false;
+
  bool g_leftMouseButtonDown = false;
 
 void handleScreenEvent(bps_event_t *event)
@@ -388,20 +388,6 @@ int main(int argc, char *argv[])
 	*/
 
 	//get proton going
-
-	/*
-	if (g_landScapeNoNeckHurtMode || GetOrientation() == ORIENTATION_PORTRAIT)
-	{
-		SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(), ORIENTATION_PORTRAIT);
-	} else
-	{
-		SetupScreenInfo(GetPrimaryGLY(), GetPrimaryGLX(), ORIENTATION_LANDSCAPE_LEFT);
-	}
-	*/
-
-	//Well, the emualtor is starting in landscape, let's do this for now
-
-	//SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(), ORIENTATION_LANDSCAPE_LEFT);
 
 	if (!GetBaseApp()->Init())
 	{

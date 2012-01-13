@@ -19,10 +19,12 @@ int g_fakePrimaryScreenSizeY = 0;
 int g_originalScreenSizeX = 0;
 int g_originalScreenSizeY = 0;
 
-
+eOrientationMode g_forcedOrientation = ORIENTATION_DONT_CARE;
 int g_orientation = ORIENTATION_PORTRAIT;
 bool g_lockedLandscape = false;
-extern bool g_landScapeNoNeckHurtMode;
+
+eOrientationMode GetForcedOrientation() {return g_forcedOrientation;}
+void SetForcedOrientation(eOrientationMode orientation) {g_forcedOrientation = orientation;}
 
 void RenderGLTriangle()
 {
@@ -187,34 +189,24 @@ int GetOriginalScreenSizeY()
 
 int GetFakePrimaryScreenSizeX()
 {
-	
-#ifdef WIN32
-	return g_fakePrimaryScreenSizeX;
-#endif
-	if (!g_landScapeNoNeckHurtMode)
-	{
-		return g_fakePrimaryScreenSizeY;
-	}
-	
 	return g_fakePrimaryScreenSizeX;
 }
 
 int GetFakePrimaryScreenSizeY()
 {
-#ifdef WIN32
-	return g_fakePrimaryScreenSizeY;
-#endif
-	if (!g_landScapeNoNeckHurtMode)
-	{
-		return g_fakePrimaryScreenSizeX;
-	}
-
 	return g_fakePrimaryScreenSizeY;
 }
 
 int g_undoFakeScreenSizeX = 0;
 int g_undoFakeScreenSizeY = 0;
 
+bool NeedToUseFakeScreenSize()
+{
+	if (g_fakePrimaryScreenSizeX == 0) return false;
+	if (g_fakePrimaryScreenSizeX == GetPrimaryGLX()
+		&& g_fakePrimaryScreenSizeY == GetPrimaryGLY())	 return false;
+	return true;
+}
 void UndoFakeScreenSize()
 {
 	if (GetFakePrimaryScreenSizeX() == 0) return; //not used
@@ -277,6 +269,11 @@ CL_Vec2f GetScreenSize()
 	return CL_Vec2f((float)g_screenSizeX, (float)g_screenSizeY);
 }
 
+CL_Rectf GetScreenRect()
+{
+	return CL_Rectf(0,0, (float)g_screenSizeX, (float)g_screenSizeY);
+}
+
 //true for anything larger than an iPhone
 bool IsLargeScreen()
 {
@@ -286,7 +283,6 @@ bool IsTabletSize()
 {
 	return g_screenSizeX>=1024 || g_screenSizeY >= 1024;
 }
-
 
 int GetOrientation() {return g_orientation;}
 
@@ -299,21 +295,9 @@ void SetLockedLandscape(bool bNew)
 		g_lockedLandscape = bNew;
 		if (GetOrientation() == ORIENTATION_PORTRAIT || GetOrientation() == ORIENTATION_PORTRAIT_UPSIDE_DOWN)
 		{
-			LogMsg("Forcing landscape mode");
-		#if defined(WIN32)
-			if (!g_landScapeNoNeckHurtMode)
-			{
-				SetupScreenInfo(GetScreenSizeY(), GetScreenSizeX(), ORIENTATION_LANDSCAPE_LEFT);
-
-			}
-		#else
 			SetupScreenInfoIPhone(ORIENTATION_LANDSCAPE_LEFT);
-		#endif
-			}
 		}
-	
-
-
+	}
 }
 
 
@@ -372,16 +356,14 @@ bool CanRotateTo(int orientation)
 bool SetupScreenInfoIPhone(int interfaceOrientation)
 {
 	
+	if (GetForcedOrientation() != ORIENTATION_DONT_CARE)
+	{
+		interfaceOrientation = GetForcedOrientation();
+	}
 	//note, this is slightly different from our usual orientation (UIDeviceOrientation) so let's convert it first
 	int orientation = interfaceOrientation;
 	
 	if (!CanRotateTo(orientation)) return false;
-
-	if (orientation ==  4 || orientation == 3)
-	{
-		SetupScreenInfo(GetPrimaryGLY(), GetPrimaryGLX(), orientation);
-		return false;
-	}
 	
 	SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(),orientation); 	
 	return false;
@@ -389,15 +371,12 @@ bool SetupScreenInfoIPhone(int interfaceOrientation)
 
 void SetupScreenInfo(int x, int y, int orientation)
 {
+	if (GetForcedOrientation() != ORIENTATION_DONT_CARE)
+	{
+		orientation = GetForcedOrientation();
+	}
 
-		SetupOriginalScreenSize(x, y);
-
-/*	
-		if (g_screenSizeX == x && g_screenSizeY == y && g_orientation == orientation)
-		{
-			return;
-		}
-		*/
+	SetupOriginalScreenSize(GetPrimaryGLX(), GetPrimaryGLY());
 
 #ifdef _DEBUG
 		LogMsg("Setting screen info to %d, %d, mode %d.  Original is %d, %d", x, y, orientation, GetOriginalScreenSizeX(), GetOriginalScreenSizeY());
@@ -406,29 +385,13 @@ void SetupScreenInfo(int x, int y, int orientation)
 		g_screenSizeX = x;
 		g_screenSizeY = y;
 		g_orientation = orientation;
-		
+	
 		if (GetFakePrimaryScreenSizeX())
 		{
 			//recompute it using our fake information
-			if (x == GetPrimaryGLX())
-			{
-#ifdef _WINDOWS
-				//why can't we do it this way for everything?  Investigate later
-				x = GetFakePrimaryScreenSizeX();
-				y = GetFakePrimaryScreenSizeY();
-
-#else
-				y = GetFakePrimaryScreenSizeX();
-				x = GetFakePrimaryScreenSizeY();
-#endif
-
-			} else
-			{
-				//normal
-				x = GetFakePrimaryScreenSizeX();
-				y = GetFakePrimaryScreenSizeY();
-
-			}
+			x = GetFakePrimaryScreenSizeX();
+			y = GetFakePrimaryScreenSizeY();
+		
 			g_screenSizeX = x;
 			g_screenSizeY = y;
 
@@ -479,11 +442,11 @@ void ConvertCoordinatesIfRequired(float &xPos, float &yPos)
 
 		case ORIENTATION_LANDSCAPE_LEFT:
 			swap(xPos, yPos);
-			yPos = float(GetOriginalScreenSizeY())-yPos;
+			yPos = float(GetOriginalScreenSizeX())-yPos;
 			break;
 
 		case ORIENTATION_LANDSCAPE_RIGHT:
-			yPos = float(GetOriginalScreenSizeX())-yPos;
+			yPos = float(GetOriginalScreenSizeY())-yPos;
 			swap(xPos, yPos);
 			break;
 
@@ -494,8 +457,18 @@ void ConvertCoordinatesIfRequired(float &xPos, float &yPos)
 		//remap to correct values
 		//LogMsg("CurY: %.2f - old y: %.2f",  GetScreenSizeYf(), float(GetOriginalScreenSizeY()));
 		//LogMsg("CurX: %.2f - old x: %.2f",  GetScreenSizeXf(), float(GetOriginalScreenSizeX()) );
-		xPos = (float(xPos) * (GetScreenSizeXf()/float(GetOriginalScreenSizeX())));
-		yPos = (float(yPos) * (GetScreenSizeYf()/float(GetOriginalScreenSizeY())));
+	
+		
+		float OriginalX = GetOriginalScreenSizeX();
+		float OriginalY = GetOriginalScreenSizeY();
+		
+		if (InLandscapeGUIMode()) 
+		{
+			swap(OriginalX, OriginalY);
+		}
+		
+		xPos = (float(xPos) * (GetScreenSizeXf()/OriginalX));
+		yPos = (float(yPos) * (GetScreenSizeYf()/OriginalY));
 	}
 	
 //	LogMsg("Converted coords to %d, %d", int(xPos), int(yPos));
@@ -521,7 +494,7 @@ void SetOrthoModeFlag()
 
 bool InLandscapeGUIMode()
 {
-	return GetOrientation() == 3 || GetOrientation() == 4 || GetScreenSizeX() >= GetScreenSizeY();
+	return GetOrientation() == 3 || GetOrientation() == 4;
 }
 
 //returns a range of -1 to 1 with the cycle matching the MS sent in, based on a sin wave
@@ -790,13 +763,13 @@ CL_Vec2f iPhoneMap2X( float x, float y )
 	return CL_Vec2f((int) (x*960/480), (int) (y*640/320));
 }
 
-
+/*
 rtRectf ConvertFakeScreenRectToReal(rtRectf r)
 {
 	if (GetFakePrimaryScreenSizeX() == 0) return r;
 
-	float ratioy = ((float)GetPrimaryGLY()/(float)GetFakePrimaryScreenSizeX());
-	float ratiox = ((float)GetPrimaryGLX()/(float)GetFakePrimaryScreenSizeY());
+	float ratioy = ((float)GetPrimaryGLY()/(float)GetFakePrimaryScreenSizeY());
+	float ratiox = ((float)GetPrimaryGLX()/(float)GetFakePrimaryScreenSizeX());
 
 	float widthHold = r.GetWidth();
 	float heightHold = r.GetHeight();
@@ -809,4 +782,40 @@ rtRectf ConvertFakeScreenRectToReal(rtRectf r)
 
 	return r;
 }
+*/
+
+//old version.. looks wrong!
+
+
+
+rtRectf ConvertFakeScreenRectToReal(rtRectf r)
+{
+	if (GetFakePrimaryScreenSizeX() == 0) return r;
+
+	float primaryY = (float)GetPrimaryGLY();
+	float primaryX = (float)GetPrimaryGLX();
+
+	float fakeX = (float)GetFakePrimaryScreenSizeX();
+	float fakeY = (float)GetFakePrimaryScreenSizeY();
+
+	if(InLandscapeGUIMode())
+	{
+		swap(primaryX , primaryY);
+	}
+	float ratiox = (primaryX/fakeX);
+	float ratioy = (primaryY/fakeY);
+
+	float widthHold = r.GetWidth();
+	float heightHold = r.GetHeight();
+
+	r.top *= ratioy;
+	r.left *= ratiox;
+
+	r.right = widthHold*ratiox+r.left;
+	r.bottom = heightHold*ratioy+r.top;
+
+	return r;
+}
+
+
 

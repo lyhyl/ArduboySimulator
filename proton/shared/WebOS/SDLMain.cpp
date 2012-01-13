@@ -470,15 +470,8 @@ int main(int argc, char *argv[])
 
 	SDL_JoystickEventState(SDL_IGNORE);
 	
-
-	if (g_landScapeNoNeckHurtMode || GetOrientation() == ORIENTATION_PORTRAIT)
-	{
-		SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(), ORIENTATION_PORTRAIT);
-	} else
-	{
-		SetupScreenInfo(GetPrimaryGLY(), GetPrimaryGLX(), ORIENTATION_LANDSCAPE_LEFT);
-	}
-
+	SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(), ORIENTATION_PORTRAIT);
+	
 	if (!GetBaseApp()->Init())
 	{
 #ifdef WIN32

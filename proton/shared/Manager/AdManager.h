@@ -52,6 +52,8 @@ public:
 	void ModifyTapPoints(int mod);
 	void GetTapPointsFromServer();
 
+	void OnRender(); //currently only used to render a fake rect on windows to show where the ad would be.  (ads only display in Android)
+
 	boost::signal<void (VariantList*)> m_sig_tappoints_awarded; //called when awarded tap points
 
 protected:
@@ -72,6 +74,7 @@ protected:
 	bool m_bUsingTapPoints;
 	string m_tapCurrency;
 	string m_lastError;
+	bool m_bShowingAd;
 
 
 private:

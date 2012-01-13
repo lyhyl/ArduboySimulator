@@ -1,8 +1,9 @@
 #include "PlatformPrecomp.h"
 #include "SoftSurface.h"
 #include "FileSystem/FileManager.h"
-#include "Renderer/bitmap.h"
+#include "bitmap.h"
 #include "BaseApp.h" //only needed for the memory statistics counter
+#include "JPGSurfaceLoader.h"
 
 SoftSurface::SoftSurface()
 {
@@ -13,6 +14,7 @@ SoftSurface::SoftSurface()
 	m_bAutoPremultiplyAlpha = true;
 	m_bHasPremultipliedAlpha = false;
 	m_originalHeight = m_originalWidth = 0;
+	m_height = m_width = 0;
 }
 
 SoftSurface::~SoftSurface()
@@ -41,8 +43,11 @@ bool SoftSurface::Init( int sizex, int sizey, eSurfaceType type )
 
 	m_width = sizex;
 	m_height = sizey;
-
 	m_surfaceType = type;
+
+	if (m_originalWidth == 0)	m_originalWidth = m_width;
+	if (m_originalHeight == 0) m_originalHeight = m_height;
+
 	switch (type)
 	{
 	case SURFACE_PALETTE_8BIT:
@@ -51,7 +56,10 @@ bool SoftSurface::Init( int sizex, int sizey, eSurfaceType type )
 	case SURFACE_RGBA:
 		m_bytesPerPixel = 4;
 		break;
-	}
+	case SURFACE_RGB:
+		m_bytesPerPixel = 3;
+		break;
+}
 	
 	int dataSize = sizex*sizey*m_bytesPerPixel;
 	m_pPixels = new byte[dataSize];
@@ -80,6 +88,17 @@ void SoftSurface::FillColor( glColorBytes color )
 				pSurf++;
 			}
 		
+	} else if (m_surfaceType == SURFACE_RGB)
+	{
+		byte *pSurf = m_pPixels;
+
+		for (int n=0; n < m_width*m_height; n+=1)
+		{
+			memcpy(pSurf, &color, 3);
+			pSurf +=3;
+			
+		}
+
 	} else if (m_surfaceType == SURFACE_PALETTE_8BIT)
 	{
 		int indexColor = color.r;
@@ -282,10 +301,14 @@ bool SoftSurface::LoadBMPTexture(byte *pMem)
 			}
 		}
 
-		if (GetAutoPremultiplyAlpha() && !GetHasPremultipliedAlpha())
+		if (GetSurfaceType() == SURFACE_RGBA)
 		{
-			PreMultiplyAlpha();
+			if (GetAutoPremultiplyAlpha() && !GetHasPremultipliedAlpha())
+			{
+				PreMultiplyAlpha();
+			}
 		}
+
 
 		//memset(pImg, 600, m_bytesPerPixel*GetWidth()*GetHeight());
 	} else if (srcBytesPerPixel == 1)
@@ -435,56 +458,80 @@ bool SoftSurface::LoadRTTexture(byte *pMem)
 
 	m_width = pTexHeader->width;
 	m_height = pTexHeader->height;
-	
+
 	int bUsesAlpha = pTexHeader->bUsesAlpha != 0;
 	int texType = pTexHeader->format;
 	m_originalWidth = pTexHeader->originalWidth;
 	m_originalHeight = pTexHeader->originalHeight;
 	byte *pCurPos = pMem + sizeof(rttex_header);
 
-	#define GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG			0x8C00 //35840
-	#define GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG			0x8C03 //35843
+#define GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG			0x8C00 //35840
+#define GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG			0x8C03 //35843
 
 
 	//for (int nMipLevel=0; nMipLevel < m_mipMapCount; nMipLevel++)
-	{
-		pMipSection = (rttex_mip_header*)pCurPos;
-		pCurPos += sizeof(rttex_mip_header);
-		byte *pTextureData =  (byte*)pCurPos ;
-	
-		//only load the first image, not the mipmaps, if we have any
-		if (pTexHeader->format < GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG || pTexHeader->format > GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG) //doesn't look like a compressed texture
-		{
-			int colorType = GL_RGBA;
-			if (!bUsesAlpha)
-			{
-				colorType = GL_RGB;
-			}
-			//			LogMsg("Loading surface: miplevel %d, internal color type:0x%02lX  colortype 0x%02lX, x%d y%d, format type: 0x%02lX", nMipLevel, colorTypeSource, colorType, pMipSection->width, pMipSection->height, pTexHeader->format );
-			int internalColorFormat = colorType;
-#ifdef C_GL_MODE
-			if (internalColorFormat == GL_RGBA) internalColorFormat = GL_RGBA8;
-			if (internalColorFormat == GL_RGB) internalColorFormat = GL_RGB8;
-#endif
-			assert( (internalColorFormat == GL_RGBA8 || internalColorFormat == GL_RGBA) && "We don't support non RGBA in SoftSurface");
-			
-			m_bUsesAlpha = bUsesAlpha != 0;
-			Init(m_width, m_height, SURFACE_RGBA);
+	pMipSection = (rttex_mip_header*)pCurPos;
+	pCurPos += sizeof(rttex_mip_header);
+	byte *pTextureData =  (byte*)pCurPos ;
 
-			//copy image data
-			assert(pMipSection->dataSize == m_width*m_height*4);
-			memcpy(m_pPixels, pTextureData, pMipSection->dataSize);
+	//only load the first image, not the mipmaps, if we have any
+	if (pTexHeader->format < GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG || pTexHeader->format > GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG) //doesn't look like a compressed texture
+	{
+		int colorType = GL_RGBA;
+		if (!bUsesAlpha)
+		{
+			colorType = GL_RGB;
+		}
+		//			LogMsg("Loading surface: miplevel %d, internal color type:0x%02lX  colortype 0x%02lX, x%d y%d, format type: 0x%02lX", nMipLevel, colorTypeSource, colorType, pMipSection->width, pMipSection->height, pTexHeader->format );
+		int internalColorFormat = colorType;
+#ifdef C_GL_MODE
+		if (internalColorFormat == GL_RGBA) internalColorFormat = GL_RGBA8;
+		if (internalColorFormat == GL_RGB) internalColorFormat = GL_RGB8;
+#endif
+		assert( (colorType == GL_RGBA || colorType == GL_RGB) && "We don't support anything other than RGB or RGBA at 8 bits per channel in SoftSurface rttex loading");
+
+		m_bUsesAlpha = bUsesAlpha != 0;
+
+		if (texType == RT_FORMAT_EMBEDDED_FILE)
+		{
+
+			if (!LoadFileFromMemory(pTextureData, SoftSurface::COLOR_KEY_NONE, pMipSection->dataSize))
+			{
+				LogMsg("(Failed to load jpg in SoftSurface)");
+				assert(!"failed to load jpg in SoftSurface");
+				return false;
+			}
+
 		} else
 		{
-			assert(!"SoftSurface can't decode PVR images!");
-		}
 
+			eSurfaceType surfType = SURFACE_RGBA;
+			
+			if (colorType == GL_RGB)
+			{
+				surfType = SURFACE_RGB;
+			}
+			
+			Init(m_width, m_height, surfType);
+
+			//copy image data
+			assert(pMipSection->dataSize == m_width*m_height*GetBytesPerPixel());
+			memcpy(m_pPixels, pTextureData, pMipSection->dataSize);
+		}
+	} else
+	{
+		assert(!"SoftSurface can't decode PVR images!");
 	}
 
-	if (GetAutoPremultiplyAlpha() && !GetHasPremultipliedAlpha())
+
+
+	if (GetSurfaceType() == SURFACE_RGBA)
 	{
-		PreMultiplyAlpha();
-		SetHasPremultipliedAlpha(true);
+		if (GetAutoPremultiplyAlpha() && !GetHasPremultipliedAlpha())
+		{
+			PreMultiplyAlpha();
+			SetHasPremultipliedAlpha(true);
+		}
 	}
 
 
@@ -492,14 +539,35 @@ bool SoftSurface::LoadRTTexture(byte *pMem)
 }
 
 
-bool SoftSurface::LoadFileFromMemory( byte *pMem, eColorKeyType colorKey )
+bool SoftSurface::LoadFileFromMemory( byte *pMem, eColorKeyType colorKey, int inputSize )
 {
 	
 	Kill();
 	SetColorKeyType(colorKey);
 
+	if (strncmp((char*)pMem, "ÿØ", 2) == 0)
+	{
+		//it's a jpg file.  Do we have the proper encoder?
+		#if defined(RT_JPG_SUPPORT)
 
-	if (strncmp((char*)pMem, "BM", 2) == 0)
+		JPGSurfaceLoader loader;
+		if (!loader.LoadFromMem(pMem, inputSize, this, false))
+		{
+			LogError("Error loading jpg from memory chunk");
+			return false;
+		} else
+		{
+			//LogMsg("Loaded jpg!");
+			return true;
+		}
+		#else
+		LogError("Can't open .jpg files unless RT_JPG_SUPPORT is defined and");
+		LogError("we're compiled with the LibJPeg files included. Check RTSimpleApp for an example of how to do this.");
+		assert(!"Not compiled with jpg support! Need it to load this image...!") ;
+		return false;
+		#endif
+
+	} else if (strncmp((char*)pMem, "BM", 2) == 0)
 	{
 		//we've got a bitmap on our hands it looks like
 		return LoadBMPTexture(pMem);
@@ -511,8 +579,6 @@ bool SoftSurface::LoadFileFromMemory( byte *pMem, eColorKeyType colorKey )
 		LogError("Surface: Unknown file type");
 		return false; 
 	}
-
-
 
 }
 
@@ -600,6 +666,8 @@ bool SoftSurface::RLE8BitDecompress(byte *pDst, byte *pSrc, int dstSize, int ima
 
 void SoftSurface::PreMultiplyAlpha()
 {
+
+
 	assert(GetSurfaceType() == SURFACE_RGBA && "This doesn't make sense premuliplying something that has no alpha!");
 
 	glColorBytes *pDestImage = (glColorBytes*)GetPointerToPixel(0, 0);

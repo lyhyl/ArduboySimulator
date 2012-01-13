@@ -60,7 +60,6 @@ void MainMenuOnSelect(VariantList *pVList) //0=vec2 point of click, 1=entity sen
 		AboutMenuCreate(pEntClicked->GetParent()->GetParent());
 	}
 
-
 	GetEntityRoot()->PrintTreeAsText(); //useful for debugging
 }
 
@@ -82,6 +81,10 @@ Entity * MainMenuCreate(Entity *pParentEnt)
 	float y = 40;
 	float ySpacer = 45;
 	
+	//let's add a background image to test the jpg loading
+	CreateOverlayEntity(pBG, "Cosmo", "interface/cosmo.jpg",0,0);
+
+
 	pButtonEntity = CreateTextButtonEntity(pBG, "ParticleTest", x, y, "ParticleTest"); y += ySpacer;
 	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MainMenuOnSelect);
 
@@ -98,6 +101,7 @@ Entity * MainMenuCreate(Entity *pParentEnt)
 	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MainMenuOnSelect);
 
 	SlideScreen(pBG, true);
+	
 	return pBG;
 }
 

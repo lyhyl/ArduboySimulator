@@ -42,8 +42,8 @@ float ModNearestInt(float a, float b);
 bool AnglesAreClose(float a, float b, float angleTolerance);
 float GetAngleBetweenTwoAnglesRadians(float a, float b);
 
-CL_Vec3f LerpVector(const CL_Vec3f &vOriginal, const CL_Vec3f &Target, float f_percent);
-CL_Vec2f RotateGUIPoint(CL_Vec2f vPos, CL_Rectf r, float rotation); //used for calculating screen positions for splitscreen modes
-CL_Rectf RotateGUIRect(CL_Rectf vRect, CL_Rectf r, float angle); //used for calculating screen positions for splitscreen modes
 
+CL_Vec3f LerpVector(const CL_Vec3f &vOriginal, const CL_Vec3f &Target, float f_percent);
+CL_Vec2f RotateGUIPoint(CL_Vec2f vPos, CL_Rectf r, float rotation, CL_Vec2f destRectSize = CL_Vec2f(0,0)); //used for calculating screen positions for a splitscreen mode
+CL_Rectf RotateGUIRect(CL_Rectf vRect, CL_Rectf inputRect, float angle, CL_Vec2f destRectSize = CL_Vec2f(0,0)); //used for calculating screen positions for a splitscreen mode
 #endif // MathUtils_h__

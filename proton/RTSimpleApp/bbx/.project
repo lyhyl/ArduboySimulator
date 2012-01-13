@@ -10,10 +10,6 @@
 			<triggers>clean,full,incremental,</triggers>
 			<arguments>
 				<dictionary>
-					<key>?children?</key>
-					<value>?name?=outputEntries\|?children?=?name?=entry\\\\\\\|\\\|?name?=entry\\\\\\\|\\\|?name?=entry\\\\\\\|\\\|?name?=entry\\\\\\\|\\\|?name?=entry\\\\\\\|\\\|?name?=entry\\\\\\\|\\\|?name?=entry\\\\\\\|\\\|\||</value>
-				</dictionary>
-				<dictionary>
 					<key>?name?</key>
 					<value></value>
 				</dictionary>
@@ -31,7 +27,7 @@
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.buildLocation</key>
-					<value>${workspace_loc:/TestCpp/Device-Debug}</value>
+					<value>${workspace_loc:/TestCpp/Device-Release}</value>
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.contents</key>
@@ -520,6 +516,16 @@
 			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/RenderClipComponent.h</locationURI>
 		</link>
 		<link>
+			<name>shared/Entity/RenderScissorComponent.cpp</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/RenderScissorComponent.cpp</locationURI>
+		</link>
+		<link>
+			<name>shared/Entity/RenderScissorComponent.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/RenderScissorComponent.h</locationURI>
+		</link>
+		<link>
 			<name>shared/Entity/ScrollBarRenderComponent.cpp</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/ScrollBarRenderComponent.cpp</locationURI>
@@ -775,6 +781,16 @@
 			<locationURI>PARENT-2-PROJECT_LOC/shared/Math/rtRect.h</locationURI>
 		</link>
 		<link>
+			<name>shared/Renderer/JPGSurfaceLoader.cpp</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Renderer/JPGSurfaceLoader.cpp</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/JPGSurfaceLoader.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Renderer/JPGSurfaceLoader.h</locationURI>
+		</link>
+		<link>
 			<name>shared/Renderer/RenderBatcher.cpp</name>
 			<type>1</type>
 			<location>D:/projects/proton/shared/Renderer/RenderBatcher.cpp</location>
@@ -813,6 +829,11 @@
 			<name>shared/Renderer/SurfaceAnim.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/shared/Renderer/SurfaceAnim.h</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
 			<name>shared/Renderer/linearparticle</name>
@@ -908,6 +929,236 @@
 			<name>shared/ClanLib-2.0/Sources/Core</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jcapimin.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jcapimin.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jcapistd.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jcapistd.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jccoefct.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jccoefct.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jccolor.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jccolor.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jcdctmgr.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jcdctmgr.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jchuff.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jchuff.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jcinit.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jcinit.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jcmainct.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jcmainct.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jcmarker.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jcmarker.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jcmaster.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jcmaster.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jcomapi.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jcomapi.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jcparam.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jcparam.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jcphuff.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jcphuff.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jcprepct.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jcprepct.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jcsample.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jcsample.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jctrans.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jctrans.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jdapimin.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jdapimin.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jdapistd.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jdapistd.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jdatadst.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jdatadst.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jdatasrc.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jdatasrc.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jdcoefct.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jdcoefct.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jdcolor.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jdcolor.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jddctmgr.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jddctmgr.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jdhuff.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jdhuff.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jdinput.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jdinput.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jdmainct.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jdmainct.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jdmarker.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jdmarker.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jdmaster.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jdmaster.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jdmerge.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jdmerge.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jdphuff.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jdphuff.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jdpostct.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jdpostct.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jdsample.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jdsample.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jdtrans.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jdtrans.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jerror.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jerror.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jfdctflt.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jfdctflt.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jfdctfst.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jfdctfst.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jfdctint.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jfdctint.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jidctflt.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jidctflt.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jidctfst.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jidctfst.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jidctint.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jidctint.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jidctred.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jidctred.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jmemmgr.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jmemmgr.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jmemnobs.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jmemnobs.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jquant1.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jquant1.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jquant2.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jquant2.c</locationURI>
+		</link>
+		<link>
+			<name>shared/Renderer/jpeglib/jutils.c</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jutils.c</locationURI>
 		</link>
 		<link>
 			<name>shared/Renderer/linearparticle/sources</name>

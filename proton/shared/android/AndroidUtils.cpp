@@ -2,6 +2,7 @@
 #include <errno.h>
 #include <stdio.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <dirent.h>
 
 #include <jni.h>
@@ -51,8 +52,6 @@ list<AndroidMessageCache> g_messageCache;
 
 JavaVM* g_pJavaVM = NULL;
 
-bool g_landScapeNoNeckHurtMode = false;
-
 int g_winVideoScreenX = 0;
 int g_winVideoScreenY = 0;
 
@@ -83,20 +82,11 @@ extern "C"
 
 int GetPrimaryGLX() 
 {
-	if (g_landScapeNoNeckHurtMode)
-	{
-		return g_winVideoScreenY;
-	}
 
 	return g_winVideoScreenX;
 }
 int GetPrimaryGLY() 
 {
-	if (g_landScapeNoNeckHurtMode)
-	{
-		return g_winVideoScreenX;
-	}
-
 	return g_winVideoScreenY;
 }	
 
@@ -204,6 +194,7 @@ string GetAPKFile()
 		return "";
 	}
 
+	LogMsg("Getting apk file for %s from the Java side...",GetAndroidMainClassName());
 	jclass cls = env->FindClass(GetAndroidMainClassName());
 	jmethodID mid = env->GetStaticMethodID(cls,
 		"get_apkFileName",
@@ -632,7 +623,7 @@ void AppResize( JNIEnv*  env, jobject  thiz, jint w, jint h )
 	if (!GetBaseApp()->IsInitted())
 	{
 		SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(), ORIENTATION_PORTRAIT);
-		LogMsg("Initializing BaseApp...");
+		LogMsg("Initializing BaseApp.  APK filename is %s", GetAPKFile().c_str());
 		srand( (unsigned)time(NULL) );
 		FileSystemZip *pFileSystem = new FileSystemZip();
 #ifdef _DEBUG
@@ -1043,4 +1034,30 @@ void ForceVideoUpdate()
 {
 	g_globalBatcher.Flush();
 	assert(!"You really need this?  Add it.  It's supposed to force a gl flip or whatever now.. useful for some situations where you need to update mid-function call..");
+}
+
+bool IsDirectoryDateNewerThan(string dir, int day, int month, int year)
+{
+	struct stat st;
+	int ierr = stat (dir.c_str(), &st);
+	if (ierr != 0) 
+	{
+		LogMsg("Unable to get date of %s", dir.c_str());
+		return true;
+	}
+	
+	time_t t = st.st_mtime;
+	struct tm* my_tm = localtime(&t);
+	//fix to match what was passed in
+	my_tm->tm_year += 1900;
+	my_tm->tm_mday += 1;
+	my_tm->tm_mon += 1;
+
+	//LogMsg("Date is %d, %d, %d", my_tm->tm_mday, my_tm->tm_mon, my_tm->tm_year);
+
+	if (my_tm->tm_year > year) return true;
+	if (my_tm->tm_mon > month) return true;
+	if (my_tm->tm_mday > day) return true;
+
+	return true;
 }

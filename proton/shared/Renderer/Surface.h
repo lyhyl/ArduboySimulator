@@ -25,7 +25,7 @@ struct glColorBytes
 	GLubyte r,g,b,a;
 };
 
-
+class SoftSurface;
 
 #define NO_TEXTURE_LOADED (2000000000) //I had this as 4294967294u but saw some weirdness with some compiles
 
@@ -55,8 +55,8 @@ public:
 	virtual ~Surface();
 
 	
-	bool LoadFile(string fName); //will autodetect what kind of file it is, rttext or .rttex supported
-	virtual bool LoadFileFromMemory(byte *pMem); //will autodetect what kind of file it is, rttext or .rttex supported
+	bool LoadFile(string fName); //will autodetect what kind of file it is
+	virtual bool LoadFileFromMemory( byte *pMem, int inputSize=0 ); //will autodetect what kind of file it is
 	void Bind();
 	bool IsLoaded() {return m_glTextureID != NO_TEXTURE_LOADED || !m_textureLoaded.empty();}
 	bool UsesAlpha() {return m_bUsesAlpha;}
@@ -81,6 +81,7 @@ public:
 	int GetMIPMapCount() {return m_mipMapCount;}
 
 	virtual bool InitBlankSurface(int x, int y); //initialize a blank surface to do whatever to
+	virtual bool InitFromSoftSurface(SoftSurface *pSurf);
 	bool IsRenderTarget() {return m_frameBuffer != 0;}
 	void CopyFromScreen();
 	void UpdateSurfaceRect(rtRect dstRect, byte *pPixelData, bool bUpsideDownMode = true);
@@ -90,6 +91,7 @@ public:
 	void OnUnloadSurfaces();
 
 protected:
+
 	virtual void ReloadImage();
 
 	enum eTextureCreationMethod //helps me to know how to restore it when losing surfaces
