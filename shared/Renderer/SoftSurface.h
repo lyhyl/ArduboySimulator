@@ -29,7 +29,8 @@ public:
 	{
 		SURFACE_NONE,
 		SURFACE_PALETTE_8BIT,
-		SURFACE_RGBA
+		SURFACE_RGBA,
+		SURFACE_RGB
 	};
 
 	enum eColorKeyType
@@ -54,11 +55,10 @@ public:
 	void FillColor(glColorBytes color);
 	byte * GetPixelData() {return m_pPixels;}
 	bool LoadFile(string fName, eColorKeyType colorKey, bool addBasePath = true);
-	bool LoadFileFromMemory(byte *pMem, eColorKeyType colorKey);
-
+	bool LoadFileFromMemory( byte *pMem, eColorKeyType colorKey, int inputSize = 0 );
 	void Blit(int dstX, int dstY, SoftSurface *pSrc, int srcX = 0, int srcY = 0, int srcWidth = 0, int srcHeight = 0); //paste an image over ours
 	Surface * CreateGLTexture();
-
+	unsigned int GetSizeInBytes() {return m_memUsed;}
 	void SetAutoPremultiplyAlpha(bool bYes) {m_bAutoPremultiplyAlpha = bYes;} //will convert to pre multiplied alpha ASAP, during the next copy to 32 bit surface in the case of 8 bit images
 	bool GetAutoPremultiplyAlpha() {return m_bAutoPremultiplyAlpha;}
 	void SetHasPremultipliedAlpha(bool bYes) {m_bHasPremultipliedAlpha = bYes;}; //current state of premultiplied alpha
@@ -131,7 +131,11 @@ private:
 			return m_pPixels + ( ((m_height-1)-y)*(m_usedPitch+m_pitchOffset)+x);
 
 		case SURFACE_RGBA:
+		case SURFACE_RGB:
 			return m_pPixels + m_usedPitch*y+(x*m_bytesPerPixel);
+		
+		default:
+			assert(!"Unknown pixel type");
 		}
 		return 0;
 	}

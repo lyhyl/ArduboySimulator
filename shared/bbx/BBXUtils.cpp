@@ -17,6 +17,7 @@ using namespace std;
 #include <cstdlib>
 #include <cstdarg>
 #include <cassert>
+#include <sys/types.h>
 
 #include <time.h>
 
@@ -33,6 +34,11 @@ string GetBaseAppPath()
 	return string(szDir)+"/";
 	*/
 
+}
+
+void CreateAppCacheDirIfNeeded()
+{
+	//only applicable to iOS
 }
 
 
@@ -65,14 +71,12 @@ string GetAppCachePath()
 
 void LaunchEmail(string subject, string content)
 {
-	//PDL_LaunchEmail(subject.c_str(), "");
+	LogMsg("no way to send email from BBX NDK?!");
 }
 
 void LaunchURL(string url)
 {
 	LogMsg("Launching %s", url.c_str());
-
-	//PDL_LaunchBrowser(url.c_str());
 	char *pError;
 	navigator_invoke(url.c_str(), &pError);
 }
@@ -107,15 +111,11 @@ bool IsIphoneOriPad()
 bool IsIphone()
 {
 	//return false; //act like an iTouch, useful for knowing when not to show stuff about vibration and camera
-	if (IsIPAD() || IsIphone4()) return false;
-
-	return true;  //act like an iPhone
+	return false;
 }
 
 bool IsIphone4()
 {
-	//return false; //act like an iTouch, useful for knowing when not to show stuff about vibration and camera
-	if (GetPrimaryGLX() == 960 || GetPrimaryGLY() == 960) return true;
 	return false; 
 }
 
@@ -127,9 +127,7 @@ bool IsIPAD()
 
 eDeviceMemoryClass GetDeviceMemoryClass()
 {
-
-	return C_DEVICE_MEMORY_CLASS_2;
-
+	return C_DEVICE_MEMORY_CLASS_3;
 }
 
 
@@ -334,60 +332,26 @@ int GetDaysSinceDate(int month,int day, int year)
 bool RTCreateDirectory(const std::string &dir_name)
 {
 
-	LogMsg("RTCreateDirectory url not done");
-	assert(!"no!");
-	return 0;
-/*
+
 	if (dir_name.empty())
 		return false;
 
 	// this will be a full path
 	std::string full_path; 	// calculate the full path
 
-#ifdef WIN32
-	DWORD buff_len = ::GetFullPathName(dir_name.c_str(), 0, 0, 0);
-
-	if (buff_len == 0)
-		// can't calculate, return bad status
-		return false;
-	else
-	{
-		char * buffer = new char[buff_len + 1];
-		char * buffer_ptr_to_filename = 0;
-		// Obtaining full path
-		buff_len = ::GetFullPathName(dir_name.c_str(), buff_len, buffer, &buffer_ptr_to_filename);
-		if (buff_len == 0)
-		{
-			delete[] buffer;
-			// can't obtain full path, return bad status
-			return false;
-		}
-
-		// ok, save it
-		full_path = buffer;
-		delete[] buffer;
-	}
-#else
 	// TODO: add here Linux version of GetFullPathName
 	full_path = dir_name;
-#endif
 
-#ifdef WIN32
-	return ::CreateDirectory(full_path.c_str(), NULL) != 0;
-#else
+
 	return ::mkdir(full_path.c_str(), 0755) == 0;
-#endif
-	*/
+
+
 }
 
 
 void CreateDirectoryRecursively(string basePath, string path)
 {
-	LogMsg("CreateDirectoryRecursively not done");
-	assert(!"no!");
-	return;
-	
-	/*StringReplace("\\", "/", path);
+	StringReplace("\\", "/", path);
 	StringReplace("\\", "/", basePath);
 
 	vector<string> tok = StringTokenize(path, "/");
@@ -404,7 +368,7 @@ void CreateDirectoryRecursively(string basePath, string path)
 		RTCreateDirectory(basePath+path);
 		path += "/";
 	}
-	*/
+
 }
 
 
@@ -414,31 +378,41 @@ vector<string> GetDirectoriesAtPath(string path)
 	vector<string> v;
 
 
-	
-	LogMsg(" GetDirectoriesAtPathurl not done.. copy from android version?");
-	assert(!"no!");
-	return v;
+#ifdef _DEBUG
+	//LogMsg("GetDirectoriesAtPath: %s", path.c_str());
+#endif
 
-/*
-	if (path.empty()) path += "."; //needed for relative paths
+	dirent * ent;
+	DIR *dp;
 
-	HANDLE hFind;    // file handle
-	WIN32_FIND_DATA FindFileData;
+	dirent_extra *pExtra = NULL;
 
-	hFind = FindFirstFile((path+"\\*").c_str(),&FindFileData);
-	while (FindNextFile(hFind,&FindFileData))
+	dp = opendir(path.c_str());
+	if (!dp)
 	{
-		if(IsDots(FindFileData.cFileName)) continue;
+		LogError("GetDirectoriesAtPath: opendir failed");
+		return v;
+	}
 
-		if((FindFileData.dwFileAttributes &	FILE_ATTRIBUTE_DIRECTORY))
+	errno = EOK;
+	while (ent = readdir(dp))
+	{
+		pExtra = _DEXTRA_FIRST(ent);
+		if (ent->d_name[0] == '.' && ent->d_name[1] == 0) continue;
+		if (ent->d_name[0] == '.' && ent->d_name[1] == '.' && ent->d_name[2] == 0) continue;
+
+		LogMsg("Got %s. type %d", ent->d_name, int(pExtra->d_type));
+
+		if (pExtra->d_type == 0) //DT_DIR not defined.. er... but it's 0, verified it on playbook
 		{
-			v.push_back(string(FindFileData.cFileName));
+			v.push_back(ent->d_name);
 		}
 	}
 
-	FindClose(hFind);
+
+	closedir(dp);
 	return v;
-	*/
+
 }
 
 #ifdef WIN32
@@ -454,6 +428,7 @@ vector<string> GetFilesAtPath(string path)
 	vector<string> v;
 	dirent * buf, * ent;
 	DIR *dp;
+	dirent_extra *pExtra = NULL;
 
 	dp = opendir(path.c_str());
 	if (!dp)
@@ -465,11 +440,12 @@ vector<string> GetFilesAtPath(string path)
 	buf = (dirent*) malloc(sizeof(dirent)+512);
 	while (readdir_r(dp, buf, &ent) == 0 && ent)
 	{
+		pExtra = _DEXTRA_FIRST(ent);
 		if (ent->d_name[0] == '.' && ent->d_name[1] == 0) continue;
 		if (ent->d_name[0] == '.' && ent->d_name[1] == '.' && ent->d_name[2] == 0) continue;
 
 		//LogMsg("Got %s. type %d", ent->d_name, int(ent->d_type));
-	//	if (ent->d_type == DT_REG) //regular file
+		if (pExtra->d_type != 0) //regular file
 		{
 			v.push_back(ent->d_name);
 		}
@@ -484,78 +460,51 @@ vector<string> GetFilesAtPath(string path)
 //based on a snippet fromFeroz Zahid (http://www.codeguru.com/cpp/w-p/files/folderdirectorymaintenance/article.php/c8999/
 bool RemoveDirectoryRecursively(string path)
 {
-	LogMsg(" RemoveDirectoryRecursively not done");
-	assert(!"no!");
-	return false;
+		dirent * buf, * ent;
+		DIR *dp;
+		dirent_extra *pExtra = NULL;
 
-	/*
-	const TCHAR* sPath = path.c_str();
-	HANDLE hFind;    // file handle
-	WIN32_FIND_DATA FindFileData;
+		dp = opendir(path.c_str());
+		if (!dp)
+		{
+			LogError("RemoveDirectoryRecursively: opendir failed");
+			return false;
+		}
 
-	TCHAR DirPath[MAX_PATH];
-	TCHAR FileName[MAX_PATH];
+		buf = (dirent*) malloc(sizeof(dirent)+512);
+		while (readdir_r(dp, buf, &ent) == 0 && ent)
+		{
+			pExtra = _DEXTRA_FIRST(ent);
 
-	_tcscpy(DirPath,sPath);
-	_tcscat(DirPath,"\\*");    // searching all files
-	_tcscpy(FileName,sPath);
-	_tcscat(FileName,"\\");
+			if (ent->d_name[0] == '.' && ent->d_name[1] == 0) continue;
+			if (ent->d_name[0] == '.' && ent->d_name[1] == '.' && ent->d_name[2] == 0) continue;
 
-	// find the first file
-
-	//SETH: This is actually wrong as it's ignoring the first file.  But since it's always "." which means the current dir it doesn't
-	//matter, right?
-
-	hFind = FindFirstFile(DirPath,&FindFileData);
-	if(hFind == INVALID_HANDLE_VALUE) return FALSE;
-	_tcscpy(DirPath,FileName);
-
-	bool bSearch = true;
-	while(bSearch) {    // until we find an entry
-		if(FindNextFile(hFind,&FindFileData)) {
-			if(IsDots(FindFileData.cFileName)) continue;
-			_tcscat(FileName,FindFileData.cFileName);
-			if((FindFileData.dwFileAttributes &
-				FILE_ATTRIBUTE_DIRECTORY)) {
-
-					// we have found a directory, recurse
-					if(!RemoveDirectoryRecursively(FileName)) {
-						FindClose(hFind);
-						return FALSE;    // directory couldn't be deleted
-					}
-					// remove the empty directory
-					RemoveDirectory(FileName);
-					_tcscpy(FileName,DirPath);
+			//LogMsg("Got %s. type %d", ent->d_name, int(ent->d_type));
+			if (pExtra->d_type == 4) //regular file
+			{
+				string fName = path+string("/")+ent->d_name;
+				//LogMsg("Deleting %s", fName.c_str());
+				unlink( fName.c_str());
 			}
-			else {
-				if(FindFileData.dwFileAttributes &
-					FILE_ATTRIBUTE_READONLY)
-					// change read-only file mode
-					_chmod(FileName, _S_IWRITE);
-				if(!DeleteFile(FileName)) {    // delete the file
-					FindClose(hFind);
-					return FALSE;
+
+			if (pExtra->d_type == 0) //regular file
+			{
+				string fName = path+string("/")+ent->d_name;
+				//LogMsg("Entering DIR %s",fName.c_str());
+				if (!RemoveDirectoryRecursively(fName.c_str()))
+				{
+					LogError("Error removing dir %s", fName.c_str());
+					break;
 				}
-				_tcscpy(FileName,DirPath);
 			}
 		}
-		else {
-			// no more files there
-			if(GetLastError() == ERROR_NO_MORE_FILES)
-				bSearch = false;
-			else {
-				// some error occurred; close the handle and return FALSE
-				FindClose(hFind);
-				return FALSE;
-			}
 
-		}
+		free (buf);
+		closedir(dp);
 
-	}
-	FindClose(hFind);                  // close the file handle
-
-	return RemoveDirectory(sPath) != 0;     // remove the empty directory
-*/
+		//delete the final dir as well
+		rmdir( path.c_str());
+		return true; //success
 }
 
 

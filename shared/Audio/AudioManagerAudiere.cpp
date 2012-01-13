@@ -212,7 +212,8 @@ AudioHandle AudioManagerAudiere::Play( string fName, bool bLooping /*= false*/, 
 	pObject->m_pSound->reset();
 	pObject->m_pSound->setRepeat(bLooping);
 
-	pObject->m_pSound->play();
+	if (GetSoundEnabled()) pObject->m_pSound->play();
+	
 	if (m_globalVol != 1.0f)
 	{
 		SetVol( (AudioHandle)pObject, 1.0f);

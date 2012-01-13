@@ -174,7 +174,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 			
 		case OSMessage::MESSAGE_CHECK_CONNECTION:
 			//pretend we did it
-			GetMessageManager()->SendGUI(MESSAGE_TYPE_OS_CONNECTION_CHECKED, RT_kCFStreamEventOpenCompleted, 0);	
+			GetMessageManager()->SendGUI(MESSAGE_TYPE_OS_CONNECTION_CHECKED, (float)RT_kCFStreamEventOpenCompleted, 0.0f);	
 			break;
 			
 		case OSMessage::MESSAGE_CLOSE_TEXT_BOX:
@@ -305,21 +305,21 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 {
 	unichar c = [[theEvent charactersIgnoringModifiers] characterAtIndex:0];
 
-	GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR,  ConvertOSXKeycodeToProtonVirtualKey(c), 0);  //lParam holds a lot of random data about the press, look it up if
+	GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR,  (float)ConvertOSXKeycodeToProtonVirtualKey(c), 0.0f);  //lParam holds a lot of random data about the press, look it up if
 	
 	if (theEvent.isARepeat == NO)
 	{
 		//if it's not a key repeat, also send here for the more arcade-like key up/down messages
 		c =  [[[NSString stringWithCharacters:&c length:1] uppercaseString] characterAtIndex: 0]; //make it uppercase, same as Win
 
-		GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW,   ConvertOSXKeycodeToProtonVirtualKey(c), 1);  
+		GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW,   (float)ConvertOSXKeycodeToProtonVirtualKey(c), 1.0f);  
 	}
 }
 
 - (void)keyUp:(NSEvent *)theEvent
 {
 	unichar c = [[theEvent charactersIgnoringModifiers] characterAtIndex:0];
-	GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW,   ConvertOSXKeycodeToProtonVirtualKey(c), 0);  
+	GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW,   (float)ConvertOSXKeycodeToProtonVirtualKey(c), 0.0f);  
 }
 
 - (void) startAnimation

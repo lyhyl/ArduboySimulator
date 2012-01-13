@@ -17,7 +17,6 @@
 
 
 using namespace std;
-bool g_landScapeNoNeckHurtMode = false; //not really used, but the SDK needs it
 
 extern bool g_isLoggerInitted;
 void LogMsg(const char *lpFormat, ...)
@@ -291,6 +290,9 @@ int GetPrimaryGLY() {return g_primaryGLY;}
 int GetSystemData()
 {	
 	
+	//this is .. just don't use it anymore, unsafe
+	
+	/*
 	//I didn't want the text SignerIdentity existing in the exe for simple text searches to find
 	string encoded = "Zqpxp%7EVrt%7E%85%7B%87%8D";
 	URLDecoder decode;
@@ -307,7 +309,8 @@ int GetSystemData()
 	{
 	 return C_PIRATED_YES;
 	}
-
+	*/
+	
 	return C_PIRATED_NO;
 }
 	

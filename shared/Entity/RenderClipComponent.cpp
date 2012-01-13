@@ -33,7 +33,6 @@ void RenderClipComponent::OnAdd(Entity *pEnt)
 	m_pClipMode = &GetParent()->GetVarWithDefault("clipMode", uint32(CLIP_MODE_BOTTOM))->GetUINT32();
 
 	//our own vars
-
 }
 
 void RenderClipComponent::OnRemove()

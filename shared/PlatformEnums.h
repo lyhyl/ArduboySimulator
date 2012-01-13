@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-//using namespace std;
+//this is a bit ugly.. at least I should make a macro to get rid of the redundency of writing the rez twice.. sure, later.. -Seth
 
 #define IsPixiSize ((GetScreenSizeX() == 400 && GetScreenSizeY() ==  320)|| (GetScreenSizeX() == 320 && GetScreenSizeY() ==  480))
 #define IsNexusOneSize (GetScreenSizeX() == 800 || GetScreenSizeY() ==  480)
@@ -17,7 +17,12 @@
 #define IsIphoneSize ((GetScreenSizeX() == 320 && GetScreenSizeY() ==  480)|| (GetScreenSizeX() == 480 && GetScreenSizeY() ==  320))
 #define IsIphone4Size ((GetScreenSizeX() == 640 && GetScreenSizeY() ==  960)|| (GetScreenSizeX() == 960 && GetScreenSizeY() ==  640))
 #define IsIPADSize ((GetScreenSizeX() == 1024 && GetScreenSizeY() ==  768)|| (GetScreenSizeY() == 1024 && GetScreenSizeX() ==  768))
-#define IsXoomSize ((GetScreenSizeX() == 1280 && GetScreenSizeY() ==  800)|| (GetScreenSizeY() == 800 && GetScreenSizeX() ==  1280))
+#define IsXoomSize ((GetScreenSizeX() == 1280 && GetScreenSizeY() ==  800)|| (GetScreenSizeX() == 800 && GetScreenSizeY() ==  1280))
+#define IsPlaybookSize ((GetScreenSizeX() == 1024 && GetScreenSizeY() ==  600)|| (GetScreenSizeX() == 600 && GetScreenSizeY() ==  1024))
+
+//here we test for the REAL dimensions, ignoring any screen stretching we have enabled
+#define IsPrimaryPlaybookSize ((GetPrimaryGLX() == 1024 && GetPrimaryGLY() ==  600)|| (GetPrimaryGLX() == 600 && GetPrimaryGLY() ==  1024))
+
 
 enum eNetworkType
 {
@@ -25,7 +30,6 @@ enum eNetworkType
 	C_NETWORK_CELL,
 	C_NETWORK_WIFI
 };
-
 
 enum eDeviceMemoryClass
 {
@@ -49,7 +53,6 @@ enum ePlatformID
 	
 	//new platforms will be added above here.  Don't count on PLATFORM_ID_COUNT not changing!
 	PLATFORM_ID_COUNT
-
 };
 
 enum eMarketID
@@ -57,18 +60,19 @@ enum eMarketID
 	MARKET_ID_UNSPECIFIED,
 	MARKET_ID_ANDROID_MARKET, 
 	MARKET_ID_APPLE_APPSTORE, 
-	MARKET_AMAZON_MARKET
+	MARKET_ID_AMAZON_MARKET
 };
 
 enum eOrientationMode
 {
 	//these match the iphone versions
+	ORIENTATION_DONT_CARE,
 	ORIENTATION_PORTRAIT = 1,
 	ORIENTATION_PORTRAIT_UPSIDE_DOWN,
 	ORIENTATION_LANDSCAPE_LEFT,
-	ORIENTATION_LANDSCAPE_RIGHT
+	ORIENTATION_LANDSCAPE_RIGHT,
+	
 };
-
 
 //stuff available to platform specific code:
 
@@ -106,7 +110,7 @@ int GetPrimaryGLX();
 int GetPrimaryGLY();
 #define C_PIRATED_YES 0
 #define C_PIRATED_NO 18263
-int GetSystemData(); //returns C_PIRATED_YES or C_PIRATED_NO
+int GetSystemData(); //returns C_PIRATED_YES or C_PIRATED_NO, only on systems where we can tell. (iOS only at this time)
 void CreateDirectoryRecursively(std::string basePath, std::string path);
 eNetworkType IsNetReachable(std::string url);
 void InitDeviceScreenInfo();

@@ -3,7 +3,7 @@
 #include "bitmap.h"
 #include "BaseApp.h"
 #include "RTGLESExt.h"
- 
+#include "SoftSurface.h"
 #include <cmath>
 
 #define GL_RGBA8 0x8058
@@ -39,6 +39,8 @@ void Surface::SetDefaults()
 	m_blendingMode = BLENDING_NORMAL;
 	m_mipMapCount = 0;
 	m_frameBuffer = 0;
+	m_originalHeight = 0; //sometimes useful to know, if case we had to pad the image to be power of 2 for instance
+	m_originalWidth = 0;
 	m_textureCreationMethod = TEXTURE_CREATION_NONE;
 	
 }
@@ -245,7 +247,6 @@ bool Surface::LoadRTTexture(byte *pMem)
 	rttex_header *pTexHeader = (rttex_header*)pMem;
 	rttex_mip_header *pMipSection;
 	
-	PrepareGLForNewTexture();
 
 	m_texWidth = pTexHeader->width;
 	m_texHeight = pTexHeader->height;
@@ -271,6 +272,30 @@ bool Surface::LoadRTTexture(byte *pMem)
 		pCurPos += sizeof(rttex_mip_header);
 		byte *pTextureData =  (byte*)pCurPos ;
 		memUsed += pMipSection->dataSize;
+	
+		
+		if (texType == RT_FORMAT_EMBEDDED_FILE)
+		{
+			SoftSurface s;
+			
+			if (!s.LoadFileFromMemory(pTextureData, SoftSurface::COLOR_KEY_NONE, pMipSection->dataSize))
+			{
+				LogMsg("(Failed to load jpg)");
+				assert(!"failed to load jpg");
+				return false;
+			}
+			//s.FillColor(glColorBytes(255,0,0,255));
+			return InitFromSoftSurface(&s);
+		
+		} else
+		{
+
+		if (nMipLevel == 0)
+		{
+			PrepareGLForNewTexture();
+
+		}
+		
 		if (pTexHeader->format < GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG || pTexHeader->format > GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG) //doesn't look like a compressed texture
 		{
 			int colorType = GL_RGBA;
@@ -320,6 +345,7 @@ bool Surface::LoadRTTexture(byte *pMem)
 #endif
 		}
 	
+		}
 		pCurPos += pMipSection->dataSize;
 		
 		CHECK_GL_ERROR();
@@ -336,7 +362,7 @@ bool Surface::LoadRTTexture(byte *pMem)
 	return true;
 }
 
-bool Surface::LoadFileFromMemory( byte *pMem )
+bool Surface::LoadFileFromMemory( byte *pMem, int inputSize )
 {
 	Kill();
 	
@@ -356,6 +382,17 @@ bool Surface::LoadFileFromMemory( byte *pMem )
 	
 	}
 
+	if (strncmp((char*)pMem, "ÿØ", 2) == 0)
+	{
+		SoftSurface s;
+		if (!s.LoadFileFromMemory(pMem, SoftSurface::COLOR_KEY_NONE, inputSize))
+		{
+			LogMsg("(Failed to load jpg)");
+			return false;
+		}
+		return InitFromSoftSurface(&s);
+		
+	}else
 	if (strncmp((char*)pMem, "BM", 2) == 0)
 	{
 		//we've got a bitmap on our hands it looks like
@@ -366,6 +403,7 @@ bool Surface::LoadFileFromMemory( byte *pMem )
 	} else
 	{
 		LogError("Surface: Unknown file type");
+		assert(!"Unknown file type");
 		return false; 
 	}
 
@@ -416,7 +454,7 @@ bool Surface::LoadFile( string fName )
 	
 	m_textureLoaded = fName;
 	m_textureCreationMethod = TEXTURE_CREATION_FILE;
-	return LoadFileFromMemory(f.GetAsBytes());
+	return LoadFileFromMemory(f.GetAsBytes(), f.GetSize());
 }
 
 typedef struct
@@ -907,8 +945,7 @@ bool Surface::InitBlankSurface( int x, int y)
 	GLenum pixelFormat = GL_UNSIGNED_BYTE;
 	int bytesPerPixel = 4;
 	m_textureCreationMethod = TEXTURE_CREATION_BLANK;
-	
-	
+		
 	if (m_texWidth == 0)
 	{
 		//load manually, these kinds of surfaces are probably needed right away
@@ -918,8 +955,6 @@ bool Surface::InitBlankSurface( int x, int y)
 		GetBaseApp()->m_sig_unloadSurfaces.connect(1, boost::bind(&Surface::OnUnloadSurfaces, this));
 
 	}
-//	g_glesExt.extGlGenFramebuffers(1, &m_frameBuffer);
-//	g_glesExt.extGlBindFramebuffer(GL_FRAMEBUFFER_OES, m_frameBuffer);
 
 	m_originalWidth = x;
 	m_originalHeight = y;
@@ -937,13 +972,7 @@ bool Surface::InitBlankSurface( int x, int y)
 	
 	int dataSize = m_texWidth*m_texHeight*bytesPerPixel;
 
-	bool bClearFirst = false;
-
-//#ifdef _WIN32
-	//the GL driver on the iPhone seems to start with a buffer of transparent pixels, on my windows box .. it's random
-	//crap.  So we'll take the time to give it a default buffer of nothing first under win32.
-	bClearFirst = true;
-//#endif
+	bool bClearFirst = true;
 
 if (bClearFirst)
 {
@@ -958,11 +987,14 @@ if (bClearFirst)
 }
 
 	int internalColorFormat = colorFormat;
+
+/*
 #ifdef C_GL_MODE
 	if (internalColorFormat == GL_RGBA) internalColorFormat = GL_RGBA8;
 	if (internalColorFormat == GL_RGB) internalColorFormat = GL_RGB8;
 
 #endif
+ */
 	
 	glTexImage2D( GL_TEXTURE_2D, 0, internalColorFormat, m_texWidth, m_texHeight, 0, colorFormat, pixelFormat, pPixelData );
 
@@ -971,13 +1003,6 @@ if (bClearFirst)
 	SetTextureStates();
 	CHECK_GL_ERROR();
 
-	/*
-	g_glesExt.extGlFramebufferTexture2D(GL_FRAMEBUFFER_OES,
-		GL_COLOR_ATTACHMENT0_OES,
-		GL_TEXTURE_2D,
-		m_glTextureID,
-		0);
-		*/
 
 	CHECK_GL_ERROR();
 	return true;
@@ -1023,4 +1048,73 @@ void Surface::OnUnloadSurfaces()
 	#endif
 		Kill();
 	}
+}
+
+bool Surface::InitFromSoftSurface( SoftSurface *pSurf )
+{
+	Kill();
+
+	m_texWidth =  nextPowerOfTwo(pSurf->GetWidth());
+	m_texHeight =  nextPowerOfTwo(pSurf->GetHeight());
+	
+	if (m_originalHeight == 0) m_originalHeight = pSurf->GetOriginalHeight();
+	if (m_originalWidth == 0) m_originalWidth = pSurf->GetOriginalWidth();
+
+	
+	assert(m_texWidth && m_texHeight);
+	GLenum colorFormat = GL_RGBA;
+	GLenum pixelFormat = GL_UNSIGNED_BYTE;
+	int bytesPerPixel = 4;
+
+	if (pSurf->GetSurfaceType() == SoftSurface::SURFACE_RGB) 
+	{
+		colorFormat = GL_RGB;
+		bytesPerPixel = 3;
+	}
+
+	m_textureCreationMethod = TEXTURE_CREATION_BLANK;
+
+	PrepareGLForNewTexture();	
+	
+	m_bUsesAlpha = (colorFormat == GL_RGBA);
+	
+	int internalColorFormat = colorFormat;
+	
+	int dataSize = m_texWidth*m_texHeight*bytesPerPixel;
+
+	if (m_texHeight == pSurf->GetHeight() && m_texWidth == pSurf->GetWidth())
+	{
+		//great, no size trickery needed
+		glTexImage2D( GL_TEXTURE_2D, 0, internalColorFormat, m_texWidth, m_texHeight, 0, colorFormat, pixelFormat, pSurf->GetPixelData() );
+	
+	} else
+	{
+	
+		byte *pPixelData = new byte[dataSize];
+		assert(pPixelData);
+		if (!pPixelData)
+		{
+			LogMsg("Low mem?");
+			return false;
+		}
+
+		memset(pPixelData, 0, dataSize);
+		glTexImage2D( GL_TEXTURE_2D, 0, internalColorFormat, m_texWidth, m_texHeight, 0, colorFormat, pixelFormat, pPixelData );
+		SAFE_DELETE_ARRAY(pPixelData);
+		int yStart = 0;
+
+		bool bUpsideDownMode = true;
+		if (bUpsideDownMode)
+		{
+			yStart += (m_texHeight-m_originalHeight);
+		} 
+		
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, yStart, pSurf->GetWidth(), pSurf->GetHeight(), internalColorFormat, pixelFormat, pSurf->GetPixelData());
+		
+	}
+
+	IncreaseMemCounter(dataSize);
+	SetTextureStates();
+	CHECK_GL_ERROR();
+	return true;
 }

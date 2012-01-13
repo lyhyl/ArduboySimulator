@@ -135,6 +135,8 @@
 									<listOptionValue builtIn="false" value="_HAS_ITERATOR_DEBUGGING=0"/>
 									<listOptionValue builtIn="false" value="_NO_DEBUG_HEAP=1"/>
 									<listOptionValue builtIn="false" value="_SECURE_SCL=0"/>
+									<listOptionValue builtIn="false" value="RT_JPG_SUPPORT"/>
+									<listOptionValue builtIn="false" value="NDEBUG"/>
 								</option>
 								<option id="com.qnx.qcc.option.compiler.pie.178558437" name="Position Independent Executable (-fPIE)" superClass="com.qnx.qcc.option.compiler.pie" value="true" valueType="boolean"/>
 								<option id="com.qnx.qcc.option.compiler.includePath.294719708" name="Include Directories (-I)" superClass="com.qnx.qcc.option.compiler.includePath" valueType="includePath">

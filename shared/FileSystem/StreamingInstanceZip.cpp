@@ -107,7 +107,6 @@ int StreamingInstanceZip::Read( byte * pBufferOut, int maxBytesToRead )
 {
 	if (m_bIsFinished) return 0;
 
-
 	if (m_pFile)
 	{
 		//special way using a real file pointer
@@ -120,7 +119,6 @@ int StreamingInstanceZip::Read( byte * pBufferOut, int maxBytesToRead )
 		}
 		return bytesRead;
 	}
-
 
 	int totalBytesWritten = 0;
 
@@ -135,8 +133,6 @@ int StreamingInstanceZip::Read( byte * pBufferOut, int maxBytesToRead )
 			if (maxBytesToRead == 0) return totalBytesWritten;
 		}
 
-	
-		
 		//if we got here, it means we need to fill our buffer again
 		int err = unzReadCurrentFile(m_uf,m_buffer,BUFFER_SIZE);
 		if (err<0)	
@@ -176,11 +172,9 @@ void StreamingInstanceZip::Close()
 			return;
 		}
 		m_bIsFinished = true;
-
 	}
 
 	if (m_pFile) fclose(m_pFile);
-
 }
 
 void StreamingInstanceZip::SeekFromStart( int byteCount )
@@ -212,8 +206,5 @@ void StreamingInstanceZip::SeekFromStart( int byteCount )
 
 		fseek(m_pFile, offset, SEEK_SET);
 	}
-
-
-
 
 }

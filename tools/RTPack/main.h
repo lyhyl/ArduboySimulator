@@ -19,7 +19,8 @@ public:
 	{
 		RTTEX,
 		PVR,
-		PNG
+		PNG,
+		JPG
 	};
 
 	App()
@@ -33,6 +34,7 @@ public:
 		SetStretchImage(false);
 		SetForceSquare(false);
 		SetFlipV(false);
+		m_ultraCompressQuality= 0;
 	}
 
 	bool ParmExistsWithData(string parm, string *parmData);
@@ -64,6 +66,8 @@ public:
     void SetForceAlpha(bool bNew) {m_bForceAlpha = bNew;}
 	bool GetNoPowerOfTwo() {return m_bNoPowerOf2;}
 	void SetNoPowerOfTwo(bool bNew) {m_bNoPowerOf2 = bNew;}
+	void SetUltraCompressQuality(int quality) {m_ultraCompressQuality = quality;}
+	int GetUltraCompressQuality() {return m_ultraCompressQuality;}
 
 private:
 	
@@ -77,6 +81,7 @@ private:
 	bool m_bFlipV;
 	bool m_bForceAlpha;
 	bool m_bNoPowerOf2;
+	int m_ultraCompressQuality; //0 if disabled
 
 };
 

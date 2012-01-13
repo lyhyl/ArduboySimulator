@@ -2,11 +2,13 @@
 #include "BaseApp.h"
 #include "Renderer/RTGLESExt.h"
 
-#if defined( WIN32)
-	//useful for debugging texture unloading, but we don't really need to do it for Windows builds
-#ifdef _DEBUG
+#if defined( WIN32)&& defined(_DEBUG)
+	//useful for debugging texture unloading, but we don't really need to do it for Windows builds.
+	//If defined, losing focus (clicking outside the window) will completely unload all textures, and clicking
+	//back will reload them.  If you're doing custom texture stuff, you'll probably want to hook into the
+	//m_sig_unloadSurfaces and m_sig_loadSurfaces signals to know when to do it.
+
 	//#define C_SURFACE_UNLOAD_TEXTURES
-	#endif
 #endif
 
 #ifdef _IRR_STATIC_LIB_
@@ -457,7 +459,6 @@ void BaseApp::OnEnterBackground()
 #endif
 	 
 	#ifdef C_SURFACE_UNLOAD_TEXTURES
-	
 		m_sig_unloadSurfaces();	
 	#endif
 	
@@ -488,11 +489,11 @@ void BaseApp::OnEnterForeground()
 		
 		if (GetEmulatedPlatformID() != PLATFORM_ID_ANDROID)
 		{
-		//emulate the android way a bit better, helps when fixing bugs under windows
-		InitializeGLDefaults();
-		LogMsg("gl defaults set");
-		OnScreenSizeChange();
-		LogMsg("OnScreensizechange done");
+			//emulate the android way a bit better, helps when fixing bugs under windows
+			InitializeGLDefaults();
+			LogMsg("gl defaults set");
+			OnScreenSizeChange();
+			LogMsg("OnScreensizechange done");
 		}
 		
 		GetBaseApp()->m_sig_loadSurfaces(); //for anyone who cares
@@ -557,7 +558,7 @@ bool BaseApp::OnPreInitVideo()
 	//SetEmulatedPlatformID(PLATFORM_ID_WINDOWS);
 	//g_winVideoScreenX = 768;
 	//g_winVideoScreenY = 1024;
-	//g_landScapeNoNeckHurtMode = true;
+
 	
 	return true; //no error
 }
@@ -587,6 +588,7 @@ void BaseApp::OnFullscreenToggleRequest()
 
 TouchTrackInfo * BaseApp::GetTouch( int index )
 {
+	if (this == 0) return NULL;
 	if (index >= C_MAX_TOUCHES_AT_ONCE)
 	{
 		assert(!"Uh no");

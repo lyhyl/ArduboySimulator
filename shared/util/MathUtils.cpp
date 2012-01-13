@@ -234,7 +234,7 @@ inline double sethround(double val)
 
 float ModNearestInt(float a, float b)
 {
-	return a - b * sethround(a / b);
+	return  (float)(a - b * sethround(a / b));
 }
 
 /*
@@ -263,12 +263,10 @@ float GetAngleBetweenTwoAnglesRadians(float a, float b)
 }
 
 
-CL_Rectf RotateGUIRect(CL_Rectf vRect, CL_Rectf r, float angle)
+CL_Rectf RotateGUIRect(CL_Rectf vRect, CL_Rectf inputRect, float angle, CL_Vec2f destRectSize)
 {
-
-
-	CL_Vec2f vTopLeft =  RotateGUIPoint(vRect.get_top_left(), r, angle);
-	CL_Vec2f vBottomRight =  RotateGUIPoint(vRect.get_bottom_right(), r, angle);
+	CL_Vec2f vTopLeft =  RotateGUIPoint(vRect.get_top_left(), inputRect, angle, destRectSize);
+	CL_Vec2f vBottomRight =  RotateGUIPoint(vRect.get_bottom_right(), inputRect, angle, destRectSize);
 
 	if (angle == 90 ||angle == 270)
 	{
@@ -286,11 +284,16 @@ CL_Vec3f LerpVector(const CL_Vec3f &vOriginal, const CL_Vec3f &vTarget, float f_
 	return (vOriginal - ((vOriginal-vTarget)*f_percent));
 }
 
-
-CL_Vec2f RotateGUIPoint(CL_Vec2f vPos, CL_Rectf r, float angle)
+CL_Vec2f RotateGUIPoint(CL_Vec2f vPos, CL_Rectf r, float angle, CL_Vec2f destRectSize)
 {
 #ifndef _CONSOLE
-	CL_Vec2f destSize = GetScreenSize();
+
+	if (destRectSize.x == 0 && destRectSize.y == 0)
+	{
+		//set to default, for compatibility with older stuff
+		destRectSize = GetScreenSize();
+	}
+	CL_Vec2f destSize = destRectSize;
 
 	assert(angle >=0 && angle < 360);
 	if (angle == 90 || angle == 270) 
@@ -321,14 +324,14 @@ CL_Vec2f RotateGUIPoint(CL_Vec2f vPos, CL_Rectf r, float angle)
 
 	}
 
-	float xRatio = r.get_width()/ GetScreenSizeXf();
-	float yRatio = r.get_height()/ GetScreenSizeYf();
+	float xRatio = r.get_width()/ destRectSize.x;
+	float yRatio = r.get_height()/ destRectSize.y;
 
 	if (destSize.x != GetScreenSizeXf())
 	{
 		//need to apply a new aspect ratio
-		yRatio *= (destSize.x / GetScreenSizeXf());
-		xRatio *= (destSize.y / GetScreenSizeYf());
+		yRatio *= (destSize.x / destRectSize.x);
+		xRatio *= (destSize.y / destRectSize.y);
 	} 
 
 

@@ -7,8 +7,6 @@ RenderScissorComponent::RenderScissorComponent()
 {
 	SetName("RenderScissor");
 	m_bOldScissorEnabled= false;
-	
-	
 }
 
 RenderScissorComponent::~RenderScissorComponent()
@@ -31,13 +29,58 @@ void RenderScissorComponent::OnAdd(Entity *pEnt)
 	m_pScissorMode = &GetParent()->GetVarWithDefault("ScissorMode", uint32(POSITION_FROM_SIZE))->GetUINT32();
 
 	//our own vars
-
 }
 
 void RenderScissorComponent::OnRemove()
 {
 	GetParent()->OnFilterRemove();
 	EntityComponent::OnRemove();
+}
+
+
+//Imagine you have rect area located on a 480X320 screen, but you rotate the screen to be 320X480, and you want that
+//rect area rotated along with it, so it's still in the same relative position? That's what this does, needed it
+//to properly handle what a GL cliprect would be after rotating, as that's one of the few things that rotating GL
+//coords doesn't handle
+
+CL_Rectf RotateRect(CL_Rect r, float angleDegrees, CL_Vec2f srcScreenSize)
+{
+	//Clanlib is missing functions for CL_Mat2 and CL_Vec2f.. so I'll do it this way..
+
+	CL_Mat4f mat = CL_Mat4f::rotate(CL_Angle(-angleDegrees, cl_degrees), 0,0,1);
+
+	switch ((int)angleDegrees)
+	{
+	case 90:
+		mat = mat * CL_Mat4f::translate(0, srcScreenSize.x, 0);
+		break;
+	case 180:
+		mat = mat * CL_Mat4f::translate(srcScreenSize.x, srcScreenSize.y, 0);
+		break;
+	case 270:
+		mat = mat * CL_Mat4f::translate(srcScreenSize.y, 0, 0);
+		break;
+
+	case 0:
+
+		break;
+	default:
+		assert(!"Unsupported angle.. uh..");
+	}
+	
+	//apply
+	CL_Vec3f v;
+
+	v = mat.get_transformed_point(CL_Vec3f(r.left, r.top, 0));
+	r.left = v.x;
+	r.top = v.y;
+
+	v = mat.get_transformed_point(CL_Vec3f(r.right, r.bottom, 0));
+	r.right = v.x;
+	r.bottom = v.y;
+
+	r.normalize();
+	return r;
 }
 
 void RenderScissorComponent::FilterOnRender(VariantList *pVList)
@@ -56,11 +99,41 @@ void RenderScissorComponent::FilterOnRender(VariantList *pVList)
 		m_oldScissorPos = CL_Vec2f(nums[0], nums[1]);
 		m_oldScissorSize = CL_Vec2f(nums[2], nums[3]);
 	}
+
 	CL_Vec2f vFinalPos = pVList->m_variant[0].GetVector2()+*m_pPos2d;
 	//vFinalPos -= GetAlignmentOffset(*m_pSize2d, eAlignment(*m_pAlignment));	
+
+	CL_Rectf clipRect(vFinalPos.x, vFinalPos.y, vFinalPos.x+m_pSize2d->x, vFinalPos.y+m_pSize2d->y);
+		
+	if (NeedToUseFakeScreenSize())
+	{
+		//Oh shit-sticks. We're stretching our content and using a fake screensize.  We'll need to convert
+		//our glScissor rect to match the real gl surface size.
 	
-	//remember, glScissors x/y is the LOWER LEFT of the rect, not upper left.
-	glScissor(vFinalPos.x, (GetScreenSizeY()-vFinalPos.y)-m_pSize2d->y, m_pSize2d->x, m_pSize2d->y);
+		float angle = OrientationToDegrees(GetOrientation());
+		while (angle < 0)
+		{
+			angle+= 360;
+		}
+		rtRectf r = rtRect(clipRect.left, clipRect.top, clipRect.right, clipRect.bottom);
+		r = ConvertFakeScreenRectToReal(r);
+		clipRect = CL_Rectf(r.left, r.top, r.right, r.bottom);
+
+		float primaryX = GetPrimaryGLX();
+		float primaryY = GetPrimaryGLY();
+		
+		if (InLandscapeGUIMode())
+		{
+			swap(primaryX, primaryY);
+		}
+		
+		clipRect = RotateRect(clipRect, angle, CL_Vec2f(primaryX, primaryY));
+
+	}
+
+	//remember, glScissors x/y is the LOWER LEFT of the rect, not upper left. (and lower left is 0,0)
+	glScissor(clipRect.left, GetPrimaryGLY()-(clipRect.top+clipRect.get_height()), clipRect.get_width(), clipRect.get_height());
+
 	glEnable(GL_SCISSOR_TEST);
 
 }

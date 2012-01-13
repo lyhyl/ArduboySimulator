@@ -48,9 +48,9 @@ void SurfaceAnim::BlitAnim(float x, float y, int frameX, int frameY, unsigned in
 }
 
 
-bool SurfaceAnim::LoadFileFromMemory( byte *pMem )
+bool SurfaceAnim::LoadFileFromMemory( byte *pMem, int inputSize )
 {
-	if (!Surface::LoadFileFromMemory(pMem)) return false;
+	if (!Surface::LoadFileFromMemory(pMem, inputSize)) return false;
 
 	m_frameWidth = (float)GetWidth();
 	m_frameHeight = (float)GetHeight();
@@ -110,6 +110,7 @@ void SurfaceAnim::ReloadImage()
 	m_frameWidth = frameWidth;
 	m_frameHeight = frameHeight;
 }
+
 bool SurfaceAnim::InitBlankSurface( int x, int y )
 {
 	if (!Surface::InitBlankSurface(x,y)) return false;
@@ -119,3 +120,11 @@ bool SurfaceAnim::InitBlankSurface( int x, int y )
 	return true;
 }
 
+bool SurfaceAnim::InitFromSoftSurface( SoftSurface *pSurf )
+{
+	if (!Surface::InitFromSoftSurface(pSurf)) return false;
+
+	m_frameWidth = (float)GetWidth();
+	m_frameHeight = (float)GetHeight();
+	return true;
+}

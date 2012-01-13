@@ -100,3 +100,17 @@ void StreamingInstance::SeekFromStart( int byteCount )
 	assert(!"Seek not supported with this this streaming implementation");
 
 }
+
+int32 StreamingInstance::ReadInt32()
+{
+	int tmp;
+	Read((byte*)&tmp, sizeof(int32));
+	return tmp;
+}
+
+float StreamingInstance::ReadFloat32()
+{
+	float tmp;
+	Read((byte*)&tmp, sizeof(int32));
+	return tmp;
+}

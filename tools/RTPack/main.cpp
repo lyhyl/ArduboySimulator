@@ -137,11 +137,12 @@ void ShowHelp()
 	LogMsg("RTPack.exe -make_font <filename.txt> (Create a .rtfont)");
 	
 	LogMsg("RTPack.exe -pvrtc4 <image file> (Makes pvrtc .rttex)");
+	LogMsg("RTPack.exe -pvrtc2 <image file> (Makes low quality pvrtc .rttex)");
 	LogMsg("");
 	LogMsg("More options/flags for making textures:\n");
-	LogMsg("RTPack.exe -pvrt4444 <image file> (Makes raw 16 bit 4444 or 565 if no alpha)");
+	LogMsg("RTPack.exe -pvrt4444 <image file> (Makes raw 16 bit 4444 or 565 if no alpha .rttex)");
 	LogMsg("RTPack.exe -pvrt8888 <image file> (Creates raw 32 bit .rttex, or 24 bit if no alpha");
-	LogMsg("RTPack.exe -pvrt4444 -o pvr <image file> (Writes a .pvr format output)");
+	LogMsg("RTPack.exe -pvrt8888 -ultra_compress 70 <image file> (Writes .rttex with good compression when there isn't alpha)");
 	LogMsg("Extra flags you can use with texture generation:");
 	LogMsg("-mipmaps (Causes mipmaps to be generated)");
 	LogMsg("-stretch (Stretches instead of pads to reach power of 2)");
@@ -149,8 +150,10 @@ void ShowHelp()
 	LogMsg("-4444_if_not_square_or_too_big (1024 width or height and non square will use -pvrt4444)");
 	LogMsg("-8888_if_not_square_or_too_big (1024 width or height and non square will use -pvrt8888)");
 	LogMsg("-flipv (vertical flip, applies to textures only)");
-	LogMsg("-forcealpha (force including the alpha channel, even if its not needed");
+	LogMsg("-force_alpha (force including the alpha channel, even if its not needed");
+	LogMsg("-ultra_compress <0 to 100> (100 is best quality.  only applied to things that DON'T use alpha)");
 	LogMsg("-nopowerof2 (stops rtpack from adjusting images to be power of 2)");
+	LogMsg("-o <format> Writes final output as a normal image, useful for testing.  Formats can be: png, jpg, or pvr");
 }
 
 
@@ -191,8 +194,24 @@ int main(int argc, char* argv[])
 		{
 			GetApp()->SetOutput(App::PNG);
 		}
+		if (outputFormat == "jpg")
+		{
+			GetApp()->SetOutput(App::JPG);
+		}
 	}
 
+	string qualityLevel;
+	if (GetApp()->ParmExistsWithData("-ultra_compress", &qualityLevel))
+	{
+		int quality = atoi(qualityLevel.c_str());
+		if (quality < 1 || quality > 100)
+		{
+			LogMsg("ERROR:  -ultra_compress has invalid quality level set. Should be 1 to 100. Example: -ultracompress 70");
+			WaitForKey();
+			return -1;
+		}
+		GetApp()->SetUltraCompressQuality(quality);
+	}
 	if (GetApp()->ParmExists("-mipmaps"))
 	{
 		GetApp()->SetMaxMipLevel(20);
@@ -234,7 +253,6 @@ int main(int argc, char* argv[])
 		CompressFile(GetApp()->m_parms[0]);
 		return 0;
 	}
-
 	
 	if (GetApp()->ParmExists("-pvrtc4"))
 	{
@@ -242,6 +260,10 @@ int main(int argc, char* argv[])
 
 	} 
 	if (GetApp()->ParmExists("-forcealpha"))
+	{
+		GetApp()->SetForceAlpha(true);
+	} 
+	if (GetApp()->ParmExists("-force_alpha"))
 	{
 		GetApp()->SetForceAlpha(true);
 	} 

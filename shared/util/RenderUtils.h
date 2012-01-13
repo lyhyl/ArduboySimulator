@@ -91,4 +91,8 @@ void UndoFakeScreenSize();
 void RedoFakeScreenSize();
 bool IsTabletSize();
 rtRectf ConvertFakeScreenRectToReal(rtRectf r);
+eOrientationMode GetForcedOrientation();
+void SetForcedOrientation(eOrientationMode orientation);
+bool NeedToUseFakeScreenSize(); //true if using a fake (stretched to device) screen and it's a different size than our primary screen
+CL_Rectf GetScreenRect();
 #endif // RenderUtils_h__

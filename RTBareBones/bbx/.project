@@ -220,6 +220,16 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
+			<name>shared/Entity/ArcadeInputComponent.cpp</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/ArcadeInputComponent.cpp</locationURI>
+		</link>
+		<link>
+			<name>shared/Entity/ArcadeInputComponent.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/ArcadeInputComponent.h</locationURI>
+		</link>
+		<link>
 			<name>shared/Entity/Component.cpp</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/Component.cpp</locationURI>

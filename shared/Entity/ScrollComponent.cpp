@@ -16,7 +16,11 @@ ScrollComponent::~ScrollComponent()
 		//mark the touch we were using as unhandled now, so if we're recreated right at the same place controls don't
 		//go dead until they release and touch again
 		TouchTrackInfo *pTouch = GetBaseApp()->GetTouch(m_activeFinger);
-		pTouch->SetWasHandled(false);
+		if (pTouch)
+		{
+			pTouch->SetWasHandled(false);
+		}
+
 	}
 }
 

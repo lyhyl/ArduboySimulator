@@ -150,7 +150,11 @@ bool IsIphone4()
 
 bool IsIPAD()
 {
-	if (GetPrimaryGLX() == 1024 || GetPrimaryGLY() == 1024) return true;
+	if (GetEmulatedPlatformID() == PLATFORM_ID_IOS)
+	{
+		if (GetPrimaryGLX() == 1024 || GetPrimaryGLY() == 1024) return true;
+	}
+
 	return false;
 }
 

@@ -19,7 +19,6 @@
 const char * GetAppName();
 
 using namespace std;
-bool g_landScapeNoNeckHurtMode = false; //not really used, but the SDK needs it
 
 extern bool g_isLoggerInitted;
 void LogMsg(const char *lpFormat, ...)
