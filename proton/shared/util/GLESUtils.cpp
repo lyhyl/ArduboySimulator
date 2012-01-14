@@ -464,7 +464,18 @@ void SetupOrtho()
 	g_renderOrthoRenderSizeX = GetScreenSizeXf();
 	g_renderOrthoRenderSizeY = GetScreenSizeYf();
 
-	glOrthof( 0,  g_renderOrthoRenderSizeX, g_renderOrthoRenderSizeY, 0,  -1, 1 );		
+	
+	float tempX = g_renderOrthoRenderSizeX;
+	float tempY = g_renderOrthoRenderSizeY;
+
+	/*
+	if (InLandscapeGUIMode())
+	{
+		swap(tempX, tempY);
+	}
+	*/
+
+	glOrthof( 0,  tempX, tempY, 0,  -1, 1 );		
 	
 	CHECK_GL_ERROR();
 

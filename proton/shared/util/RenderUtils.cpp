@@ -295,7 +295,8 @@ void SetLockedLandscape(bool bNew)
 		g_lockedLandscape = bNew;
 		if (GetOrientation() == ORIENTATION_PORTRAIT || GetOrientation() == ORIENTATION_PORTRAIT_UPSIDE_DOWN)
 		{
-			SetupScreenInfoIPhone(ORIENTATION_LANDSCAPE_LEFT);
+			//flip 'er around
+			SetupScreenInfo(GetPrimaryGLY(),GetPrimaryGLX(), ORIENTATION_LANDSCAPE_LEFT);
 		}
 	}
 }
@@ -365,7 +366,8 @@ bool SetupScreenInfoIPhone(int interfaceOrientation)
 	
 	if (!CanRotateTo(orientation)) return false;
 	
-	SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(),orientation); 	
+	SetupScreenInfo(g_screenSizeX,g_screenSizeY,orientation); 	
+	
 	return false;
 }
 
