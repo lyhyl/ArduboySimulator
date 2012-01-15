@@ -93,10 +93,10 @@ StreamingInstance * FileManager::GetStreaming( string fileName, int *pSizeOut, b
 
 byte * FileManager::Get( string fileName, int *pSizeOut, bool bAddBasePath )
 {
-	if (bAddBasePath)
-	{
-		fileName = GetBaseAppPath() + fileName;
-	}
+		if (bAddBasePath)
+		{
+			fileName = GetBaseAppPath() + fileName;
+		}
 
 		byte * pData = NULL;
 
