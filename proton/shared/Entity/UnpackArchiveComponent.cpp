@@ -65,18 +65,21 @@ void UnpackArchiveComponent::OnUpdate(VariantList *pVList)
 			if (m_tarHandler.ProcessChunk())
 			{
 				//still unzipping
-				GetFunction("OnStatusUpdate")->sig_function(&VariantList(this, uint32(m_tarHandler.GetBytesWritten()),uint32(m_tarHandler.GetTotalBytes())));
+                VariantList vList(this, uint32(m_tarHandler.GetBytesWritten()),uint32(m_tarHandler.GetTotalBytes()));
+				GetFunction("OnStatusUpdate")->sig_function(&vList);
 			}
 
 			if (m_tarHandler.GetState() == TarHandler::STATE_DONE)
 			{
+                VariantList vList(this, uint32(m_tarHandler.GetBytesWritten()),uint32(m_tarHandler.GetTotalBytes()));
 				GetVar("firstDirCreated")->Set(m_tarHandler.GetFirstDirCreated()); //just in case they want this..
-				GetFunction("OnFinish")->sig_function(&VariantList(this, uint32(m_tarHandler.GetBytesWritten()),uint32(m_tarHandler.GetTotalBytes())));
+				GetFunction("OnFinish")->sig_function(&vList);
 			}
 
 			if (m_tarHandler.GetState() == TarHandler::STATE_ERROR)
 			{
-				GetFunction("OnError")->sig_function(&VariantList(this, uint32(m_tarHandler.GetError())));
+                VariantList vList(this, uint32(m_tarHandler.GetError()));
+				GetFunction("OnError")->sig_function(&vList);
 			}
 			break;
 	}
