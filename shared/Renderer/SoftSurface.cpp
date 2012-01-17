@@ -469,7 +469,6 @@ bool SoftSurface::LoadRTTexture(byte *pMem)
 #define GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG			0x8C03 //35843
 
 
-	//for (int nMipLevel=0; nMipLevel < m_mipMapCount; nMipLevel++)
 	pMipSection = (rttex_mip_header*)pCurPos;
 	pCurPos += sizeof(rttex_mip_header);
 	byte *pTextureData =  (byte*)pCurPos ;
@@ -494,7 +493,6 @@ bool SoftSurface::LoadRTTexture(byte *pMem)
 
 		if (texType == RT_FORMAT_EMBEDDED_FILE)
 		{
-
 			if (!LoadFileFromMemory(pTextureData, SoftSurface::COLOR_KEY_NONE, pMipSection->dataSize))
 			{
 				LogMsg("(Failed to load jpg in SoftSurface)");
@@ -523,8 +521,6 @@ bool SoftSurface::LoadRTTexture(byte *pMem)
 		assert(!"SoftSurface can't decode PVR images!");
 	}
 
-
-
 	if (GetSurfaceType() == SURFACE_RGBA)
 	{
 		if (GetAutoPremultiplyAlpha() && !GetHasPremultipliedAlpha())
@@ -533,7 +529,6 @@ bool SoftSurface::LoadRTTexture(byte *pMem)
 			SetHasPremultipliedAlpha(true);
 		}
 	}
-
 
 	return true;
 }

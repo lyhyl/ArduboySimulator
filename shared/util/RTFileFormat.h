@@ -43,7 +43,7 @@ struct rttex_header
 	int originalWidth; //before we padded to be a power of 2, if applicable.
 	unsigned char bUsesAlpha;
 	unsigned char bAlreadyCompressed; //if 1, it means we don't require additional compression
-	unsigned char reservedFlags[2]; //keep it packed right
+	unsigned char reservedFlags[2]; //keep this struct packed right
 	int mipmapCount; //how many tex infos are followed...
 
 	int reserved[16];

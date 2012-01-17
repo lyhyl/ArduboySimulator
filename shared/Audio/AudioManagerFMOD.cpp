@@ -69,7 +69,16 @@ bool AudioManagerFMOD::Init()
 	}
 	else
 	{
-		result = system->getDriverCaps(0, &caps, 0, 0, &speakermode);
+
+		
+#if defined( __APPLE__) && (TARGET_OS_IPHONE == 1)
+        //Huh, the latest FMOD for iPhone (downloaded 1-14-2012) wants 4 args, not 5.. -Seth
+        result = system->getDriverCaps(0, &caps, 0, &speakermode);
+#else
+    
+        //older and Win/osx FMOD versions want 5 parms still I assume?
+         result = system->getDriverCaps(0, &caps, 0, 0, &speakermode);
+#endif
 		ERRCHECK(result);
 
 		result = system->setSpeakerMode(speakermode);       /* Set the user selected speaker mode. */
