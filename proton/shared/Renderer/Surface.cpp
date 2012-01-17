@@ -174,11 +174,25 @@ void Surface::PrepareGLForNewTexture()
 	#define GL_UNSIGNED_SHORT_4_4_4_4         0x8033
 #endif
 
+int GetIntFromMemImplementation(byte *pMem)
+{
+	int temp;
+	assert(sizeof(int) == 4);
+	memcpy(&temp, pMem, sizeof(int));
+	return temp;
+}
+
+#define GetIntFromMem(var) GetIntFromMemImplementation( (byte*)var)
 
 void Surface::PreMultiplyAlpha(byte *pBytes, int width, int height, int format)
 {
-	assert(format == GL_UNSIGNED_SHORT_4_4_4_4  || format == GL_UNSIGNED_BYTE && "This doesn't make sense premuliplying something that has no alpha!");
-
+ 	assert(format == GL_UNSIGNED_SHORT_4_4_4_4  || format == GL_UNSIGNED_BYTE && "This doesn't make sense premuliplying something that has no alpha!");
+   
+	if (pBytes == 0) 
+	{
+		LogMsg("Can't premult, it's null");
+		return;
+	}
 	if (format == GL_UNSIGNED_SHORT_4_4_4_4)
 	{
 		uint16 *pDestImage = (uint16 *)pBytes;
@@ -217,6 +231,7 @@ void Surface::PreMultiplyAlpha(byte *pBytes, int width, int height, int format)
 
 	} else if (format == GL_UNSIGNED_BYTE)
 	{
+ 
 		glColorBytes *pDestImage = (glColorBytes*)pBytes;
 
 		//slower way that supports transparency
@@ -238,15 +253,12 @@ void Surface::PreMultiplyAlpha(byte *pBytes, int width, int height, int format)
 		assert(0);
 	}
 
-	
-
 }
 
 bool Surface::LoadRTTexture(byte *pMem)
 {
 	rttex_header *pTexHeader = (rttex_header*)pMem;
 	rttex_mip_header *pMipSection;
-	
 
 	m_texWidth = pTexHeader->width;
 	m_texHeight = pTexHeader->height;
@@ -265,15 +277,31 @@ bool Surface::LoadRTTexture(byte *pMem)
 	const uint32 ETC_MIN_TEXHEIGHT		= 4;
 	int memUsed = 0;
 	
+	int rttexHeaderSize = sizeof(rttex_header);
+	int rttexMipSectionSize = sizeof(rttex_mip_header);
+
+
+	assert (rttexHeaderSize%4 == 0 && "Can't be right, structure packing changed?");
+	assert (rttexMipSectionSize%4 == 0 && "Can't be right, structure packing changed?");
+
 	for (int nMipLevel=0; nMipLevel < m_mipMapCount; nMipLevel++)
 	{
-	
 		pMipSection = (rttex_mip_header*)pCurPos;
 		pCurPos += sizeof(rttex_mip_header);
-		byte *pTextureData =  (byte*)pCurPos ;
+		byte *pTextureData =  pCurPos ;
 		memUsed += pMipSection->dataSize;
-	
+			
+		//actually, let's move the texture data into something byte aligned.. it shouldn't need this but if I don't,
+		//crashes in release mode on iPhone 3GS and older when using xcode 4 and targetting OS 3.2+.  It should already be
+		//int aligned (at least for mip 0..) so I don't know why this is required.  -Seth
 		
+		pTextureData = new byte[pMipSection->dataSize];
+		memcpy(pTextureData, pCurPos,pMipSection->dataSize );
+		//let's do it manually now
+        int width = GetIntFromMem(&pMipSection->width);
+        int height = GetIntFromMem(&pMipSection->height);
+        int format = GetIntFromMem(&pTexHeader->format);
+        
 		if (texType == RT_FORMAT_EMBEDDED_FILE)
 		{
 			SoftSurface s;
@@ -285,70 +313,69 @@ bool Surface::LoadRTTexture(byte *pMem)
 				return false;
 			}
 			//s.FillColor(glColorBytes(255,0,0,255));
+			SAFE_DELETE_ARRAY(pTextureData);
 			return InitFromSoftSurface(&s);
 		
 		} else
 		{
+			if (nMipLevel == 0)
+			{
+				PrepareGLForNewTexture();
+			}
+	 		
+			if (pTexHeader->format < GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG || pTexHeader->format > GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG) //doesn't look like a compressed texture
+			{
+				  int colorType = GL_RGBA;
+				if (!m_bUsesAlpha)
+				{
+					colorType = GL_RGB;
+				}
+	//			LogMsg("Loading surface: miplevel %d, internal color type:0x%02lX  colortype 0x%02lX, x%d y%d, format type: 0x%02lX", nMipLevel, colorTypeSource, colorType, pMipSection->width, pMipSection->height, pTexHeader->format );
+				int internalColorFormat = colorType;
+	#ifdef C_GL_MODE
+				if (internalColorFormat == GL_RGBA) internalColorFormat = GL_RGBA8;
+				if (internalColorFormat == GL_RGB) internalColorFormat = GL_RGB8;
+	#endif
 
-		if (nMipLevel == 0)
-		{
-			PrepareGLForNewTexture();
+ 				if (m_texType == TYPE_GUI && m_bUsesAlpha)
+				{
+					//Go ahead and activate premultiplied alpha processing.  This will allow us to zoom in on textures and not have ugly artifacts
+					//around the edges.
+					m_blendingMode = BLENDING_PREMULTIPLIED_ALPHA;
+				}
 
-		}
+  				if (m_blendingMode == BLENDING_PREMULTIPLIED_ALPHA && m_bUsesAlpha)
+				{
+					PreMultiplyAlpha(pTextureData, width, height, format);
+				}
+	 
+				glTexImage2D( GL_TEXTURE_2D, nMipLevel, internalColorFormat, width, height, 0, colorType, format, pTextureData );
+			} else
+			{
+				
+	#ifdef C_GL_MODE
+
+				assert(!"You cannot use PVR compressed textures in GL mode!");
+	#else
 		
-		if (pTexHeader->format < GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG || pTexHeader->format > GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG) //doesn't look like a compressed texture
-		{
-			int colorType = GL_RGBA;
-			if (!m_bUsesAlpha)
-			{
-				colorType = GL_RGB;
+				glCompressedTexImage2D(
+					GL_TEXTURE_2D, 
+					nMipLevel, 
+					pTexHeader->format, 
+					pMipSection->width, 
+					pMipSection->height, 
+					0, 
+					pMipSection->dataSize, 
+					pTextureData);
+	#endif
 			}
-//			LogMsg("Loading surface: miplevel %d, internal color type:0x%02lX  colortype 0x%02lX, x%d y%d, format type: 0x%02lX", nMipLevel, colorTypeSource, colorType, pMipSection->width, pMipSection->height, pTexHeader->format );
-			int internalColorFormat = colorType;
-#ifdef C_GL_MODE
-			if (internalColorFormat == GL_RGBA) internalColorFormat = GL_RGBA8;
-			if (internalColorFormat == GL_RGB) internalColorFormat = GL_RGB8;
-#endif
-
-			if (m_texType == TYPE_GUI && m_bUsesAlpha)
-			{
-				//Go ahead and activate premultiplied alpha processing.  This will allow us to zoom in on textures and not have ugly artifacts
-				//around the edges.
-				m_blendingMode = BLENDING_PREMULTIPLIED_ALPHA;
-			}
-
-			if (m_blendingMode == BLENDING_PREMULTIPLIED_ALPHA && m_bUsesAlpha)
-			{
-				//let's do it manually now
-				PreMultiplyAlpha(pTextureData, pMipSection->width, pMipSection->height, pTexHeader->format);
-
-			}
-
-			glTexImage2D( GL_TEXTURE_2D, nMipLevel, internalColorFormat, pMipSection->width, pMipSection->height, 0, colorType, pTexHeader->format, pTextureData );
-		} else
-		{
-			
-#ifdef C_GL_MODE
-
-			assert(!"You cannot use PVR compressed textures in GL mode!");
-#else
-	
-			glCompressedTexImage2D(
-				GL_TEXTURE_2D, 
-				nMipLevel, 
-				pTexHeader->format, 
-				pMipSection->width, 
-				pMipSection->height, 
-				0, 
-				pMipSection->dataSize, 
-				pTextureData);
-#endif
-		}
-	
+		
 		}
 		pCurPos += pMipSection->dataSize;
 		
 		CHECK_GL_ERROR();
+		SAFE_DELETE_ARRAY(pTextureData);
+
 	}
 
 

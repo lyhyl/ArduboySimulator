@@ -290,25 +290,11 @@ bool GetLockedLandscape() {return g_lockedLandscape;}
 
 void SetLockedLandscape(bool bNew)
 {
-	
 	if (g_lockedLandscape != bNew)
 	{
 		g_lockedLandscape = bNew;
 		if (GetOrientation() == ORIENTATION_PORTRAIT || GetOrientation() == ORIENTATION_PORTRAIT_UPSIDE_DOWN)
 		{
-			
-			if (GetForcedOrientation() != ORIENTATION_DONT_CARE)
-			{
-				if (GetForcedOrientation() == ORIENTATION_PORTRAIT || GetForcedOrientation() == ORIENTATION_PORTRAIT_UPSIDE_DOWN )
-				{
-					//can't lock landscape, pretending we're portrait mode, hack for emulating screens that require we manually
-					//rotate (usually for speed on certain devices)
-					SetupScreenInfo(GetPrimaryGLX(),GetPrimaryGLY(), ORIENTATION_LANDSCAPE_LEFT);
-					return;
-
-				}
-			}
-			
 			//flip 'er around
 			SetupScreenInfo(GetPrimaryGLY(),GetPrimaryGLX(), ORIENTATION_LANDSCAPE_LEFT);
 		}
