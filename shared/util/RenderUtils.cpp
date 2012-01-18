@@ -519,6 +519,12 @@ float SinPulseByMS(int ms)
 	return (float)(sin (   (float(tick)/float(ms))  *M_PI*2   ));
 }
 
+float SinPulseByCustomTimerMS(int ms, unsigned int timerMS)
+{
+	int tick = timerMS%ms;
+	return (float)(sin (   (float(tick)/float(ms))  *M_PI*2   ));
+}
+
 float SinGamePulseByMS(int ms)
 {
 	int tick = GetBaseApp()->GetGameTick()%ms;
