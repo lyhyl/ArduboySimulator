@@ -55,7 +55,7 @@ public:
 	void FillColor(glColorBytes color);
 	byte * GetPixelData() {return m_pPixels;}
 	bool LoadFile(string fName, eColorKeyType colorKey, bool addBasePath = true);
-	bool LoadFileFromMemory( byte *pMem, eColorKeyType colorKey, int inputSize = 0 );
+	bool LoadFileFromMemory( byte *pMem, eColorKeyType colorKey, int inputSize = 0, bool bAddAlphaChannelIfNotPowerOfTwo =false );
 	void Blit(int dstX, int dstY, SoftSurface *pSrc, int srcX = 0, int srcY = 0, int srcWidth = 0, int srcHeight = 0); //paste an image over ours
 	Surface * CreateGLTexture();
 	unsigned int GetSizeInBytes() {return m_memUsed;}
@@ -106,9 +106,9 @@ public:
 	void SetModified(bool bNew) {m_bModified = bNew;}
 	void FlipY();
 	void Rotate90Degrees(bool bRotateLeft);
-	void DetectAndFixDinkShadows();
 	void BlitFromScreen(int dstX, int dstY, int srcX /*= 0*/, int srcY /*= 0*/, int srcWidth /*= 0*/, int srcHeight /*= 0*/);
 	void WriteRawDataOut(string fileName);
+	void WriteBMPOut(string fileName);
 
 private:
 

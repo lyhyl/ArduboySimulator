@@ -136,19 +136,19 @@ void ShowHelp()
 	LogMsg("RTPack.exe <any file> (Compresses it as an rtpack without changing the name)");
 	LogMsg("RTPack.exe -make_font <filename.txt> (Create a .rtfont)");
 	
-	LogMsg("RTPack.exe -pvrtc4 <image file> (Makes pvrtc .rttex)");
-	LogMsg("RTPack.exe -pvrtc2 <image file> (Makes low quality pvrtc .rttex)");
 	LogMsg("");
 	LogMsg("More options/flags for making textures:\n");
-	LogMsg("RTPack.exe -pvrt4444 <image file> (Makes raw 16 bit 4444 or 565 if no alpha .rttex)");
-	LogMsg("RTPack.exe -pvrt8888 <image file> (Creates raw 32 bit .rttex, or 24 bit if no alpha");
-	LogMsg("RTPack.exe -pvrt8888 -ultra_compress 70 <image file> (Writes .rttex with good compression when there isn't alpha)");
-	LogMsg("Extra flags you can use with texture generation:");
+	LogMsg("RTPack.exe -4444 <image file> (Makes raw rgba 16 bit 4444 or 565 if no alpha .rttex)");
+	LogMsg("RTPack.exe -8888 <image file> (Creates raw rgba 32 bit .rttex, or 24 bit if no alpha");
+	LogMsg("RTPack.exe -8888 -ultra_compress 90 <image file> (Writes .rttex with good compression when there isn't alpha)");
+	LogMsg("RTPack.exe -pvrtc4 <image file> (Makes pvrtc .rttex)");
+	LogMsg("RTPack.exe -pvrtc2 <image file> (Makes low quality pvrtc .rttex)");
+	LogMsg("More extra flags you can use with texture generation:");
 	LogMsg("-mipmaps (Causes mipmaps to be generated)");
 	LogMsg("-stretch (Stretches instead of pads to reach power of 2)");
 	LogMsg("-force_square (forces textures to be square in addition to being power of 2)");
-	LogMsg("-4444_if_not_square_or_too_big (1024 width or height and non square will use -pvrt4444)");
-	LogMsg("-8888_if_not_square_or_too_big (1024 width or height and non square will use -pvrt8888)");
+	LogMsg("-4444_if_not_square_or_too_big (1024 width or height and non square will use -4444)");
+	LogMsg("-8888_if_not_square_or_too_big (1024 width or height and non square will use -8888)");
 	LogMsg("-flipv (vertical flip, applies to textures only)");
 	LogMsg("-force_alpha (force including the alpha channel, even if its not needed");
 	LogMsg("-ultra_compress <0 to 100> (100 is best quality.  only applied to things that DON'T use alpha)");
@@ -159,8 +159,7 @@ void ShowHelp()
 
 int main(int argc, char* argv[])
 {
-	LogMsg("\nRTPack V1.2 by Seth A. Robinson.  /h for help\n");
-
+	LogMsg("\nRTPack V1.3 by Seth A. Robinson.  /h for help\n");
 	
 #ifdef _DEBUG
 	//printf("Got %d parms:", argc-1);
@@ -277,11 +276,11 @@ int main(int argc, char* argv[])
 		GetApp()->SetPixelType(pvrtexlib::OGL_PVRTC2);
 	
 	} 
-	if (GetApp()->ParmExists("-pvrt4444"))
+	if (GetApp()->ParmExists("-pvrt4444") || GetApp()->ParmExists("-4444"))
 		{
 			GetApp()->SetPixelType(pvrtexlib::OGL_RGBA_4444);
 		}
-		if (GetApp()->ParmExists("-pvrt8888"))
+		if (GetApp()->ParmExists("-pvrt8888") || GetApp()->ParmExists("-8888"))
 		{
 			GetApp()->SetPixelType(pvrtexlib::OGL_RGBA_8888);
 		}

@@ -740,6 +740,13 @@ assert(!g_hDC);
 	pi32ConfigAttribs[i++] = 0;
 	pi32ConfigAttribs[i++] = EGL_SURFACE_TYPE;
 	pi32ConfigAttribs[i++] = EGL_WINDOW_BIT;
+	
+	//Hmm, seems to ignore this.  Too bad, I'd like to test with smaller depth buffers sometimes.
+	/*
+	pi32ConfigAttribs[i++] = EGL_DEPTH_SIZE;
+	pi32ConfigAttribs[i++] = 16;
+	*/
+	
 	pi32ConfigAttribs[i++] = EGL_NONE;
 
 	int iConfigs;
@@ -1067,10 +1074,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 				SetupOrtho();
 				GetBaseApp()->OnEnterForeground();
 				GetBaseApp()->m_sig_loadSurfaces();
-
-#ifdef _IRR_STATIC_LIB_
-	assert(!"Irrlicht doesn't properly reload its textures when resizing the screen in Windows.  But it works on android, so why not here?");
-#endif
 				
 				goto skipRender;
 				//continue;

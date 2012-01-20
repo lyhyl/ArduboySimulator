@@ -7,6 +7,7 @@
 #include "TouchTestMenu.h"
 #include "Entity/CustomInputComponent.h"
 #include "AboutMenu.h"
+#include "Renderer/SoftSurface.h"
 
 void MainMenuOnSelect(VariantList *pVList) //0=vec2 point of click, 1=entity sent from
 {
@@ -65,6 +66,11 @@ void MainMenuOnSelect(VariantList *pVList) //0=vec2 point of click, 1=entity sen
 
 Entity * MainMenuCreate(Entity *pParentEnt)
 {
+	
+	SoftSurface s;
+	s.LoadFile("interface/cosmo.jpg", SoftSurface::COLOR_KEY_NONE);
+	s.WriteBMPOut("cosmo.bmp");
+	
 	//Entity *pBG = CreateOverlayEntity(pParentEnt, "MainMenu", "interface/summary_bg.rttex", 0,0);
 	Entity *pBG = pParentEnt->AddEntity(new Entity);
 	
@@ -81,9 +87,12 @@ Entity * MainMenuCreate(Entity *pParentEnt)
 	float y = 40;
 	float ySpacer = 45;
 	
+	
+	//If we wanted a rect color bg we could do the folowing
+	//CreateOverlayRectEntity(pBG,GetScreenRect(),MAKE_RGBA(255,0,0,255));
+	
 	//let's add a background image to test the jpg loading
 	CreateOverlayEntity(pBG, "Cosmo", "interface/cosmo.jpg",0,0);
-
 
 	pButtonEntity = CreateTextButtonEntity(pBG, "ParticleTest", x, y, "ParticleTest"); y += ySpacer;
 	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MainMenuOnSelect);

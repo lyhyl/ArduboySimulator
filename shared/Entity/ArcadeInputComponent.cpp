@@ -195,31 +195,29 @@ void ArcadeInputComponent::ActivateBinding(ArcadeKeyBind *pBind, bool bDown)
 {
 	//special handling for directional keys, so they work in tandem with the trackball or whatever else also does directions
 
-	switch (pBind->m_inputkeycode)
+	switch (pBind->m_outputkeycode)
 	{
 		case VIRTUAL_KEY_DIR_LEFT:  m_buttons[MOVE_BUTTON_DIR_LEFT].OnPressToggle(bDown, m_customSignal);  break;
 		case VIRTUAL_KEY_DIR_RIGHT:  m_buttons[MOVE_BUTTON_DIR_RIGHT].OnPressToggle(bDown, m_customSignal);  break;
 		case VIRTUAL_KEY_DIR_UP:  m_buttons[MOVE_BUTTON_DIR_UP].OnPressToggle(bDown, m_customSignal);  break;
 		case VIRTUAL_KEY_DIR_DOWN:  m_buttons[MOVE_BUTTON_DIR_DOWN].OnPressToggle(bDown, m_customSignal); break;
-
-	default:
-
-		//for other keys, just send it through the arcade signal:
-		{
-			VariantList v;
-			v.Get(0).Set(pBind->m_outputkeycode);
-			v.Get(1).Set(uint32(bDown != 1)); 
-			
-			if (m_customSignal)
-			{
-				(*m_customSignal)(&v);
-			} else
-			{
-				GetBaseApp()->m_sig_arcade_input(&v);
-			}
-		}
 	}
-	
+
+	//for other keys, just send it through the arcade signal:
+	VariantList v;
+	v.Get(0).Set(pBind->m_outputkeycode);
+	v.Get(1).Set(uint32(bDown != 1)); 
+
+	if (m_customSignal)
+	{
+		(*m_customSignal)(&v);
+	} else
+	{
+		GetBaseApp()->m_sig_arcade_input(&v);
+	}
+
+
+
 }
 
 void ArcadeInputComponent::OnRawKeyboard(VariantList *pVList)

@@ -325,9 +325,7 @@ void COpenGLTexture::uploadTexture(bool newTexture, void* mipmapData, u32 level)
 
 	if (Image->getColorFormat() == ECF_PVRTC)
 	{
-		
 		assert(newTexture && "Why are you copying this again?  It's already loaded on the hardware");
-
 		HasMipMaps = false;
 
 		Surface s;
@@ -338,9 +336,17 @@ void COpenGLTexture::uploadTexture(bool newTexture, void* mipmapData, u32 level)
 		if (s.GetMIPMapCount() > 1)
 		{
 			HasMipMaps = true;
+		} 
+
+		if (HasMipMaps) // might have changed in regenerateMipMapLevels
+		{
+			// enable bilinear mipmap filter
+			glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST );
+			glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		}
 		if (Driver->testGLError())
 			os::Printer::log("Could not glTexImage2D", ELL_ERROR);
+
 
 		return;
 
