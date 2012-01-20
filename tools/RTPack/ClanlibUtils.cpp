@@ -1,9 +1,14 @@
 #include "ClanlibUtils.h"
 #include "util/ResourceUtils.h"
-#include "Clanlib/core.h"
+#include "ClanLib/core.h"
 
+#ifdef _WIN32
 #include "process.h"
+#endif
 
+using namespace std;
+
+#ifdef _WIN32
 bool RunRTPackByCommandLine(string command_string)
 {
 
@@ -23,7 +28,7 @@ bool RunRTPackByCommandLine(string command_string)
 	//error!
 	return false;
 }
-
+#endif
 
 
 bool TextScanner::LoadFile( string fName )

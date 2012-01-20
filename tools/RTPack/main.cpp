@@ -3,6 +3,8 @@
 #include "FontPacker.h"
 #include "FileSystem/FileManager.h"
 
+using namespace std;
+
 App g_App;
 
 App * GetApp() {return &g_App;}
@@ -13,7 +15,7 @@ void WaitForKey();
 int GetPrimaryGLX() {return 0;}
 int GetPrimaryGLY() {return 0;}
 
-
+#ifdef _WIN32
 void LogMsg ( const char* traceStr, ... )
 {
 	va_list argsVA;
@@ -29,7 +31,7 @@ void LogMsg ( const char* traceStr, ... )
 	printf(buffer);
 	printf("\n");
 }
-
+#endif
 
 void LogError ( const char* traceStr, ... )
 {
@@ -39,8 +41,13 @@ void LogError ( const char* traceStr, ... )
 	memset ( (void*)buffer, 0, logSize );
 
 	va_start ( argsVA, traceStr );
+#ifdef _WIN32
 	vsnprintf_s( buffer, logSize, logSize, traceStr, argsVA );
+#else
+	vsnprintf( buffer, logSize, traceStr, argsVA );
+#endif
 	va_end( argsVA );
+
 	LogMsg("ERROR: %s\n", buffer);
 	WaitForKey();
 }
@@ -130,19 +137,25 @@ void App::SetPixelType( pvrtexlib::PixelType ptype )
 		SetPixelTypeText("Unknown");
 	}
 }
+
+#ifdef _WIN32
+#define EXE .exe
+#else
+#define EXE
+#endif
 void ShowHelp()
-{ 
+{
 	LogMsg("Help and examples\n");
-	LogMsg("RTPack.exe <any file> (Compresses it as an rtpack without changing the name)");
-	LogMsg("RTPack.exe -make_font <filename.txt> (Create a .rtfont)");
+	LogMsg("RTPack <any file> (Compresses it as an rtpack without changing the name)");
+	LogMsg("RTPack -make_font <filename.txt> (Create a .rtfont)");
 	
 	LogMsg("");
 	LogMsg("More options/flags for making textures:\n");
-	LogMsg("RTPack.exe -4444 <image file> (Makes raw rgba 16 bit 4444 or 565 if no alpha .rttex)");
-	LogMsg("RTPack.exe -8888 <image file> (Creates raw rgba 32 bit .rttex, or 24 bit if no alpha");
-	LogMsg("RTPack.exe -8888 -ultra_compress 90 <image file> (Writes .rttex with good compression when there isn't alpha)");
-	LogMsg("RTPack.exe -pvrtc4 <image file> (Makes pvrtc .rttex)");
-	LogMsg("RTPack.exe -pvrtc2 <image file> (Makes low quality pvrtc .rttex)");
+	LogMsg("RTPack -4444 <image file> (Makes raw rgba 16 bit 4444 or 565 if no alpha .rttex)");
+	LogMsg("RTPack -8888 <image file> (Creates raw rgba 32 bit .rttex, or 24 bit if no alpha");
+	LogMsg("RTPack -8888 -ultra_compress 90 <image file> (Writes .rttex with good compression when there isn't alpha)");
+	LogMsg("RTPack -pvrtc4 <image file> (Makes pvrtc .rttex - for PowerVR chipsets)");
+	LogMsg("RTPack -pvrtc2 <image file> (Makes low quality pvrtc .rttex - for PowerVR chipsets)");
 	LogMsg("More extra flags you can use with texture generation:");
 	LogMsg("-mipmaps (Causes mipmaps to be generated)");
 	LogMsg("-stretch (Stretches instead of pads to reach power of 2)");
@@ -154,6 +167,7 @@ void ShowHelp()
 	LogMsg("-ultra_compress <0 to 100> (100 is best quality.  only applied to things that DON'T use alpha)");
 	LogMsg("-nopowerof2 (stops rtpack from adjusting images to be power of 2)");
 	LogMsg("-o <format> Writes final output as a normal image, useful for testing.  Formats can be: png, jpg, or pvr");
+
 }
 
 
@@ -173,7 +187,6 @@ int main(int argc, char* argv[])
 			printf(argv[i]);
 			printf(" ");
 #endif
-
 			g_App.m_parms.push_back(argv[i]);
 		}
 	}

@@ -1,3 +1,6 @@
+#ifndef main_h__
+#define main_h__
+
 #pragma once
 
 //a windows only tool to turn any image into a .rttex or .rtfont file
@@ -5,8 +8,8 @@
 #include "PlatformSetup.h"
 #include "util/MiscUtils.h"
 #include "util/ResourceUtils.h"
-#include <clanlib/core.h>
-#include <Clanlib/display.h>
+#include <ClanLib/core.h>
+#include <ClanLib/display.h>
 #include "PVRTexLib/PVRTexLib.h"
 #include "util/RTFileFormat.h"
 #include "ClanlibUtils.h"
@@ -37,16 +40,16 @@ public:
 		m_ultraCompressQuality= 0;
 	}
 
-	bool ParmExistsWithData(string parm, string *parmData);
-	bool ParmExists(string parm); //not case sensitive
-	vector<string> m_parms;
-	string GetLastParm();
+	bool ParmExistsWithData(std::string parm, std::string *parmData);
+	bool ParmExists(std::string parm); //not case sensitive
+	std::vector<std::string> m_parms;
+	std::string GetLastParm();
 	eOutput GetOutput() {return m_output;}
 	void SetOutput(eOutput o) {m_output = o;}
 	void SetPixelType(pvrtexlib::PixelType ptype );
 	pvrtexlib::PixelType GetPixelType() {return m_pixelType;}
-	void SetPixelTypeText(string s);
-	string GetPixelTypeText();
+	void SetPixelTypeText(std::string s);
+	std::string GetPixelTypeText();
 	
 	void SetMaxMipLevel(int maxMip) {m_maxMipLevel = maxMip;}
 	int GetMaxMipLevel() {return m_maxMipLevel;}
@@ -74,7 +77,7 @@ private:
 	eOutput m_output;
 	pvrtexlib::PixelType m_pixelType;
 	pvrtexlib::PixelType m_pixelTypeIfNotSquareOrTooBig;
-	string m_pixelTypeText;
+	std::string m_pixelTypeText;
 	int m_maxMipLevel;
 	bool m_stretchImage;
 	bool m_forceSquare;
@@ -88,3 +91,8 @@ private:
 App * GetApp();
 
 
+#ifndef _WIN32
+#define ZeroMemory(pntr, s) memset((pntr), 0, (s))
+#endif
+
+#endif // #define main_h__

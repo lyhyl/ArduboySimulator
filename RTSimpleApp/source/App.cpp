@@ -45,7 +45,7 @@ FileManager * GetFileManager() {return &g_fileManager;}
 #include "Audio/AudioManagerSDL.h"
 #include "Audio/AudioManagerAndroid.h"
 
-#ifdef RT_WEBOS
+#if defined RT_WEBOS || defined RTLINUX
 AudioManagerSDL g_audioManager; //sound in windows and WebOS
 //AudioManager g_audioManager; //to disable sound
 #elif defined ANDROID_NDK

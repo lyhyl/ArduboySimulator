@@ -18,14 +18,14 @@ class FontPacker
 public:
 	FontPacker();
 	virtual ~FontPacker();
-	bool PackFont(string fileName);
+	bool PackFont(std::string fileName);
 
 private:
 
-	bool WriteHeader(FILE *fp, string fntFile, rtfont_header &header);
+	bool WriteHeader(FILE *fp, std::string fntFile, rtfont_header &header);
 	bool WriteFontStates(FILE *fp, TextScanner &t);
-	bool WriteHeaderBitMapFontGenerator(FILE *fp, string fntFile, rtfont_header &header);
-	vector<FontState> m_fontStates;
+	bool WriteHeaderBitMapFontGenerator(FILE *fp, std::string fntFile, rtfont_header &header);
+	std::vector<FontState> m_fontStates;
 
 };
 
