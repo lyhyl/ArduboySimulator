@@ -10,7 +10,8 @@
 #include "PlatformSetup.h"
 #include <time.h>
 
-const char * GetAppName();
+using namespace std;
+
 const char * GetBundlePrefix();
 const char * GetBundleName();
 
@@ -28,10 +29,6 @@ int g_musicPos = 0;
 //out how to make/pass java structs
 
 bool g_landScapeNoNeckHurtMode = false;
-
-int g_winVideoScreenX = 0;
-int g_winVideoScreenY = 0;
-
 
 void StringReplace(const std::string& what, const std::string& with, std::string& in);
 vector<string> StringTokenize (const  string  & theString,  const  string  & theDelimiter );
@@ -58,25 +55,6 @@ void LogMsg ( const char* traceStr, ... )
 
 	AppendStringToFile( GetBaseAppPath()+"log.txt", GetDateAndTimeAsString()+": "+string(buffer)+"\r\n");
 
-}
-
-
-void LogError ( const char* traceStr, ... )
-{
-	va_list argsVA;
-	const int logSize = 4096;
-	char buffer[logSize];
-	memset ( (void*)buffer, 0, logSize );
-
-	va_start ( argsVA, traceStr );
-	vsnprintf( buffer, logSize, traceStr, argsVA );
-	va_end( argsVA );
-
-
-	//__Linux_log_write(Linux_LOG_ERROR,GetAppName(), buffer);
-	LogMsg( "ERROR: %s", buffer);
-	AppendStringToFile( GetBaseAppPath()+"log.txt", GetDateAndTimeAsString()+": "+string(buffer)+"\r\n");
-	//printf ((char*)buffer);
 }
 
 

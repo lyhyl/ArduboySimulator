@@ -21,8 +21,8 @@ class FileInstance
 {
 public:
 	
-	FileInstance(const string &fileName);
-	FileInstance(const string &fileName, bool bAddBasePath);
+	FileInstance(const std::string &fileName);
+	FileInstance(const std::string &fileName, bool bAddBasePath);
 	FileInstance() { m_size = 0; m_pData = NULL;}
 
 	~FileInstance();
@@ -31,7 +31,7 @@ public:
 	byte * GetAsBytes() {return m_pData;}
 	char * GetAsChars() {return (char*)m_pData;}
 	int GetSize() {return m_size;}
-	bool Load(string fileName, bool bAddBasePath = true);
+	bool Load(std::string fileName, bool bAddBasePath = true);
 
 private:
 	
@@ -49,13 +49,13 @@ class FileManager
 public:
 	FileManager();
 	virtual ~FileManager();
-	byte * Get(string fileName, int *pSizeOut, bool bAddBasePath = true); //it news' it, up to you to SAFE_DELETE_ARRAY()
-	StreamingInstance * GetStreaming(string fileName, int *pSizeOut, bool bAddBasePath = true); //pSizeOut currently always set to 0.  Returns null on fail. You must DELETE !
+	byte * Get(std::string fileName, int *pSizeOut, bool bAddBasePath = true); //it news' it, up to you to SAFE_DELETE_ARRAY()
+	StreamingInstance * GetStreaming(std::string fileName, int *pSizeOut, bool bAddBasePath = true); //pSizeOut currently always set to 0.  Returns null on fail. You must DELETE !
 	void MountFileSystem(FileSystem* pFileSystem);
-	bool FileExists(string fileName, bool bAddBasePath = true);
-	int GetFileSize(string fileName, bool bAddBasePath = true);
+	bool FileExists(std::string fileName, bool bAddBasePath = true);
+	int GetFileSize(std::string fileName, bool bAddBasePath = true);
 	FileSystem * GetFileSystem(int index); //returns null if invalid index
-	bool Copy(string srcFile, string dstFile, bool bAddBasePath = true); //copy a file to a file.  Destination can't be inside a zip, but src can be.
+	bool Copy(std::string srcFile, std::string dstFile, bool bAddBasePath = true); //copy a file to a file.  Destination can't be inside a zip, but src can be.
 
 private:
 

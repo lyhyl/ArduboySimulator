@@ -82,7 +82,7 @@ void InitVideoSize()
 	AddVideoMode("Playbook", 600,1024, PLATFORM_ID_BBX);
 	AddVideoMode("Playbook Landscape", 1024,600, PLATFORM_ID_BBX);
 
-	string desiredVideoMode = "Xoom Landscape"; //name needs to match one of the ones defined above
+	string desiredVideoMode = "iPhone Landscape"; //name needs to match one of the ones defined above
  	SetVideoModeByName(desiredVideoMode);
 	GetBaseApp()->OnPreInitVideo(); //gives the app level code a chance to override any of these parms if it wants to
 }

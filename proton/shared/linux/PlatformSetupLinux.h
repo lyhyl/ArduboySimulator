@@ -20,9 +20,20 @@
 
 #ifndef _CONSOLE
 
-typedef float GLdouble;
-#define glClipPlane glClipPlanef
-#endif
+#ifdef C_GL_MODE
+#include "Renderer/GL/gl.h"
+
+//help with compatibility so I can use the GL ES calls with normal GL
+
+#define glTexParameterx glTexParameteri
+#define glFrustumf glFrustum
+#define glOrthof glOrtho
+#define glColor4x(r,g,b,a) glColor4f( (float(r)/65536.0f),  (float(g)/65536.0f) , (float(b)/65536.0f), (float(a)/65536.0f));
+#define glActiveTexture glActiveTextureARB
+#define glClientActiveTexture glClientActiveTextureARB
+#endif  // #ifdef C_GL_MODE
+
+#endif  // #ifndef _CONSOLE
 
 #ifndef M_PI
 #define M_PI 3.141592f

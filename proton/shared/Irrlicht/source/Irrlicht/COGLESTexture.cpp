@@ -194,6 +194,7 @@ namespace irr
 					os::Printer::log("Could not bind Texture", ELL_ERROR);
 
 				Surface s;
+				s.SetCreateMipMapsIfNeeded(true);
 				s.SetTextureType(Surface::TYPE_NOT_OWNER);
 				s.LoadFileFromMemory((byte*)Image->lock());
 				Image->unlock();

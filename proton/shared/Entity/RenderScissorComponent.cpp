@@ -71,13 +71,13 @@ CL_Rectf RotateRect(CL_Rect r, float angleDegrees, CL_Vec2f srcScreenSize)
 	//apply
 	CL_Vec3f v;
 
-	v = mat.get_transformed_point(CL_Vec3f(r.left, r.top, 0));
-	r.left = v.x;
-	r.top = v.y;
+	v = mat.get_transformed_point(CL_Vec3f((float)r.left, (float)r.top, 0.0f));
+	r.left = (int)v.x;
+	r.top = (int)v.y;
 
-	v = mat.get_transformed_point(CL_Vec3f(r.right, r.bottom, 0));
-	r.right = v.x;
-	r.bottom = v.y;
+	v = mat.get_transformed_point(CL_Vec3f((float)r.right, (float)r.bottom, 0.0f));
+	r.right = (int)v.x;
+	r.bottom = (int)v.y;
 
 	r.normalize();
 	return r;
@@ -89,15 +89,15 @@ void RenderScissorComponent::FilterOnRender(VariantList *pVList)
 
 	GLboolean b = false;
 	glGetBooleanv(GL_SCISSOR_TEST, &b);
-	m_bOldScissorEnabled = b;
+	m_bOldScissorEnabled = b != 0;
 	
 	if (m_bOldScissorEnabled)
 	{
 		//warning: Untested code...
 		GLint nums[4];
 		glGetIntegerv(GL_SCISSOR_BOX, &nums[0]);
-		m_oldScissorPos = CL_Vec2f(nums[0], nums[1]);
-		m_oldScissorSize = CL_Vec2f(nums[2], nums[3]);
+		m_oldScissorPos = CL_Vec2f((float)nums[0],(float) nums[1]);
+		m_oldScissorSize = CL_Vec2f((float)nums[2],(float) nums[3]);
 	}
 
 	CL_Vec2f vFinalPos = pVList->m_variant[0].GetVector2()+*m_pPos2d;
@@ -115,12 +115,12 @@ void RenderScissorComponent::FilterOnRender(VariantList *pVList)
 		{
 			angle+= 360;
 		}
-		rtRectf r = rtRect(clipRect.left, clipRect.top, clipRect.right, clipRect.bottom);
+		rtRectf r = rtRectf(clipRect.left, clipRect.top, clipRect.right, clipRect.bottom);
 		r = ConvertFakeScreenRectToReal(r);
 		clipRect = CL_Rectf(r.left, r.top, r.right, r.bottom);
 
-		float primaryX = GetPrimaryGLX();
-		float primaryY = GetPrimaryGLY();
+		float primaryX = (float)GetPrimaryGLX();
+		float primaryY = (float)GetPrimaryGLY();
 		
 		if (InLandscapeGUIMode())
 		{
@@ -128,11 +128,10 @@ void RenderScissorComponent::FilterOnRender(VariantList *pVList)
 		}
 		
 		clipRect = RotateRect(clipRect, angle, CL_Vec2f(primaryX, primaryY));
-
 	}
 
 	//remember, glScissors x/y is the LOWER LEFT of the rect, not upper left. (and lower left is 0,0)
-	glScissor(clipRect.left, GetPrimaryGLY()-(clipRect.top+clipRect.get_height()), clipRect.get_width(), clipRect.get_height());
+	glScissor((GLint)clipRect.left, (GLint)GetPrimaryGLY()-((GLint)clipRect.top+(GLint)clipRect.get_height()), (GLint)clipRect.get_width(),(GLint) clipRect.get_height());
 
 	glEnable(GL_SCISSOR_TEST);
 
@@ -144,7 +143,7 @@ void RenderScissorComponent::PostOnRender(VariantList *pVList)
 	if (m_bOldScissorEnabled)
 	{
 		//leave it enabled.. setup the box to how it was
-		glScissor(m_oldScissorPos.x, m_oldScissorPos.y, m_oldScissorSize.x, m_oldScissorSize.y);
+		glScissor((GLint)m_oldScissorPos.x, (GLint)m_oldScissorPos.y,(GLsizei) m_oldScissorSize.x, (GLsizei)m_oldScissorSize.y);
 	} else
 	{
 		glDisable(GL_SCISSOR_TEST);

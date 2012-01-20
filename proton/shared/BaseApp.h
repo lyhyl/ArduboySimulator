@@ -35,8 +35,6 @@ using namespace std;
 #include "Entity/Entity.h"
 #include "Audio/AudioManager.h"
 
-#pragma message("Compiling BaseApp.h - this should happen just once per project.\n")
-
 enum eFont
 {
 	FONT_SMALL,

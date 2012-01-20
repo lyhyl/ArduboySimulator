@@ -46,6 +46,9 @@ BaseApp::BaseApp()
 
 BaseApp::~BaseApp()
 {
+	m_entityRoot.RemoveAllEntities();
+	m_resourceManager.KillAllResources();
+	m_commandLineParms.clear();
 	g_isLoggerInitted = false;
 }
 

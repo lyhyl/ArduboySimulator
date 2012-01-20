@@ -58,7 +58,7 @@ public:
 	char m_triggerChar;
 };
 
-typedef deque<FontState> FontStateStack;
+typedef std::deque<FontState> FontStateStack;
 
 
 #endif // RTFontFileFormat_h__

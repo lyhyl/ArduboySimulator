@@ -10,4 +10,7 @@
 #ifndef LinuxUtils_h__
 #define LinuxUtils_h__
 #include "../PlatformEnums.h"
-#endif // WebOSUtils_h__
+
+const char * GetAppName();
+
+#endif // LinuxUtils_h__
