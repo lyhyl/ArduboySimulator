@@ -77,7 +77,8 @@ string GetAppCachePath()
 void LaunchURL(string url)
 {
 	//LogMsg("Launching %s", url.c_str());
-	int result = (int)ShellExecute(NULL, "open", url.c_str(), NULL, NULL, SW_SHOWNORMAL);
+	//weird double cast to get away from MSVC warning
+	int result = (int)(LONG_PTR)ShellExecute(NULL, "open", url.c_str(), NULL, NULL, SW_SHOWNORMAL);
 
 	if ( (result < 32) && (result != 2))
 	{

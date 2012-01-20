@@ -81,7 +81,7 @@ public:
 	int GetMIPMapCount() {return m_mipMapCount;}
 
 	virtual bool InitBlankSurface(int x, int y); //initialize a blank surface to do whatever to
-	virtual bool InitFromSoftSurface(SoftSurface *pSurf);
+	virtual bool InitFromSoftSurface(SoftSurface *pSurf, bool bCreateSurface = true, int mipLevel = 0);
 	bool IsRenderTarget() {return m_frameBuffer != 0;}
 	void CopyFromScreen();
 	void UpdateSurfaceRect(rtRect dstRect, byte *pPixelData, bool bUpsideDownMode = true);
