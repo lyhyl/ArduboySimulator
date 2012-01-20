@@ -15,8 +15,9 @@ REM -pvrtc4 for compressed, -pvrt4444 or -pvrt8888 (32 bit)  for uncompressed
 
 :Note:  You'd probably also want to add .jpg to below, but I don't because I want to test the .jpg loader, not turn it into an .rttex.
 
+
 cd game
-for /r %%f in (*.bmp *.png) do ..\%PACK_EXE%  -pvrt8888  -ultra_compress 90 %%f
+for /r %%f in (*.bmp *.png) do ..\%PACK_EXE%  -pvrt8888 -ultra_compress 90 %%f
 cd ..
 
 cd interface

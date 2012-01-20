@@ -75,7 +75,7 @@ void JPGSurfaceLoader::output_message(j_common_ptr cinfo)
 	LogError("JPEG FATAL ERROR: %s",temp1);
 }
 
-bool JPGSurfaceLoader::LoadFromMem( byte *pMem, int inputSize, SoftSurface *pSurf, bool bAddAlphaChannelIfPadded )
+bool JPGSurfaceLoader::LoadFromMem( byte *pMem, int inputSize, SoftSurface *pSurf, bool bAddAlphaChannelIfNotPowerOfTwo )
 {
 	// allocate and initialize JPEG decompression object
 	struct jpeg_decompress_struct cinfo;
@@ -181,10 +181,8 @@ bool JPGSurfaceLoader::LoadFromMem( byte *pMem, int inputSize, SoftSurface *pSur
 
 	SoftSurface::eSurfaceType surfType = SoftSurface::SURFACE_RGB;
 
-	if (bAddAlphaChannelIfPadded && 
-		(pSurf->GetOriginalHeight() != pSurf->GetHeight() )
-		&&
-		(pSurf->GetOriginalWidth() != pSurf->GetWidth() )
+	if (bAddAlphaChannelIfNotPowerOfTwo &&
+		( !IsPowerOf2(width) || !IsPowerOf2(height) )
 		)
 	{
 		//why would we add an alpha channel? Well, due to padding the texture, we can get artifacts around the
@@ -256,5 +254,8 @@ bool JPGSurfaceLoader::LoadFromMem( byte *pMem, int inputSize, SoftSurface *pSur
 	//jpg will be upside down if we don't do this.. uhh.. investigate why later.
 	pSurf->FlipY();
 	SAFE_DELETE_ARRAY(output);
+	
+	//if we wanted to test our decompression..
+	//pSurf->WriteBMPOut("CRAP.BMP");
 	return true; //success
 }

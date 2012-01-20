@@ -38,7 +38,7 @@ struct rttex_header
 	//our custom header
 	int height;
 	int width;
-	int format; // probably GL_UNSIGNED_BYTE , or GL_COMPRESSED_RGBA_ATI_TC, or RT_FORMAT_EMBEDDED_FILE for jpgs, etc
+	int format; // probably GL_UNSIGNED_BYTE , or GL_UNSIGNED_SHORT_5_6_5, GL_UNSIGNED_SHORT_4_4_4_4, or RT_FORMAT_EMBEDDED_FILE for jpgs, etc
 	int originalHeight; //before we padded to be a power of 2, if applicable.
 	int originalWidth; //before we padded to be a power of 2, if applicable.
 	unsigned char bUsesAlpha;

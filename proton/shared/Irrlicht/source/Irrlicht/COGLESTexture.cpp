@@ -201,6 +201,32 @@ namespace irr
 				if (s.GetMIPMapCount() > 1)
 				{
 					HasMipMaps = true;
+					MipLevelStored = s.GetMIPMapCount();
+					#ifdef _DEBUG
+					//LogMsg("%s has %d mipmaps", Image->getDebugName(), MipLevelStored);
+					#endif
+				} else
+				{
+					//HasMipMaps = false;
+					/*
+					if (Driver->queryFeature(EVDF_MIP_MAP_AUTO_UPDATE))
+					{
+						// automatically generate and update mipmaps
+						glTexParameteri( GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE );
+						AutomaticMipmapUpdate=true;
+					}
+					else
+					{
+						AutomaticMipmapUpdate=false;
+						regenerateMipMapLevels(mipmapData);
+					}
+					if (HasMipMaps) // might have changed in regenerateMipMapLevels
+					{
+						// enable bilinear mipmap filter
+						glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST );
+						glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+					}
+					*/
 				}
 				if (Driver->testGLError())
 					os::Printer::log("Could not glTexImage2D", ELL_ERROR);

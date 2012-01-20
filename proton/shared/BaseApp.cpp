@@ -109,6 +109,10 @@ bool BaseApp::Init()
 
 	InitializeGLDefaults();
 	
+	GLint depthbits;
+	glGetIntegerv(GL_DEPTH_BITS, &depthbits);
+	LogMsg("GL depth buffer: %d bit", depthbits);
+
 	CHECK_GL_ERROR();
 
 	if (GetAudioManager())

@@ -16,7 +16,8 @@
 #include "os.h"
 
 #ifdef _DEBUG
-#define _B3D_READER_DEBUG
+	//debug
+	//#define _B3D_READER_DEBUG
 #endif
 
 namespace irr

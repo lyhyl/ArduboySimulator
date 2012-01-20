@@ -10,7 +10,7 @@ TexturePacker::TexturePacker()
 TexturePacker::~TexturePacker()
 {
 }
-
+ 
 void CreateTransparencyFromColorKey(CL_PixelBuffer &pixBuff, CL_Color color)
 {
 	unsigned int *p_data = (unsigned int*)pixBuff.get_data();
@@ -34,7 +34,6 @@ int GetLowestPowerOf2(int n)
 	while(lowest < n) lowest <<= 1;
 	return lowest;
 }
-
 
 bool UsesTransparency(CL_PixelBuffer &pixBuff)
 {
@@ -266,7 +265,7 @@ void FileWriteRAWPVR(string pathAndFileName, CPVRTexture* texture, int nNumMipLe
 			finalBuff.lock();
 			memcpy(finalBuff.get_data(),  texture->getSurfaceData(0)+dataOffset, CompressedImageSize);
 			finalBuff.unlock(); 
-
+			
 			//save and load the jpg because I don't know how to get clanlib to write it directly to memory and don't feel like digging
 			//into it right now
 			string tempFilePathAndName = path+"rt_temp_"+ModifyFileExtension(fName, "jpg");
@@ -288,16 +287,32 @@ void FileWriteRAWPVR(string pathAndFileName, CPVRTexture* texture, int nNumMipLe
 				LogError("Error: %s", e.message.c_str());
 				return ;
 			}
-			
-
+		
 			unsigned int size;
 			byte *pJpgData = LoadFileIntoMemory(tempFilePathAndName, &size);
 			RemoveFile(tempFilePathAndName);
 			
-			mipHeader.dataSize = size;
-			//LogMsg("MIP %d: %d X %d", mipHeader.mipLevel, mipHeader.width,  mipHeader.height);
-			fwrite(&mipHeader, 1, sizeof(rttex_mip_header), pFileOut);
-			fwrite(pJpgData, sizeof(unsigned char),mipHeader.dataSize, pFileOut);
+			//note:  this would work to mix jpgs and raw rgb data (for tiny mipmaps) in  the same .rttex, but I'd need to vflip
+			//the raw data.. maybe play with this later if I noticed jpg decompression being an issue
+
+			bool bUseJpg = true;
+
+			if (bUseJpg)
+			{
+				//write the jpg out
+				mipHeader.dataSize = size;
+				//LogMsg("MIP %d: %d X %d", mipHeader.mipLevel, mipHeader.width,  mipHeader.height);
+				fwrite(&mipHeader, 1, sizeof(rttex_mip_header), pFileOut);
+				fwrite(pJpgData, sizeof(unsigned char),mipHeader.dataSize, pFileOut);
+			} else
+			{
+				//write pure data instead, better than jpg for small texture sizes?
+				mipHeader.dataSize = CompressedImageSize;
+				//LogMsg("MIP %d: %d X %d", mipHeader.mipLevel, mipHeader.width,  mipHeader.height);
+				fwrite(&mipHeader, 1, sizeof(rttex_mip_header), pFileOut);
+				fwrite(texture->getSurfaceData(0)+dataOffset, sizeof(unsigned char),mipHeader.dataSize, pFileOut);
+
+			}
 
 			SAFE_FREE(pJpgData);
 
@@ -640,6 +655,8 @@ bool TexturePacker::ProcessTexture( string fName )
 	*/
 	
 	bool bFlipped = !GetApp()->GetFlipV();
+	
+	
 	if (GetApp()->GetPixelType() == OGL_RGB_888 && ImageCanBeUltraCompressed(m_bUsesTransparency,finalBuff.get_width(), finalBuff.get_height()))
 	{
 		//Jpgs should not be flipped.  In fact, probably nothing should be (??) this is legacy, I'm not sure which way is right.  But jpgs

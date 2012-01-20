@@ -513,7 +513,7 @@ bool SoftSurface::LoadRTTexture(byte *pMem)
 			Init(m_width, m_height, surfType);
 
 			//copy image data
-			assert(pMipSection->dataSize == m_width*m_height*GetBytesPerPixel());
+			assert(pMipSection->dataSize == m_width*m_height*GetBytesPerPixel() && "We only support RGB and RGBA when loading rttex from SoftSurface");
 			memcpy(m_pPixels, pTextureData, pMipSection->dataSize);
 		}
 	} else
@@ -534,7 +534,7 @@ bool SoftSurface::LoadRTTexture(byte *pMem)
 }
 
 
-bool SoftSurface::LoadFileFromMemory( byte *pMem, eColorKeyType colorKey, int inputSize )
+bool SoftSurface::LoadFileFromMemory( byte *pMem, eColorKeyType colorKey, int inputSize, bool bAddAlphaChannelIfPadded)
 {
 	
 	Kill();
@@ -546,7 +546,7 @@ bool SoftSurface::LoadFileFromMemory( byte *pMem, eColorKeyType colorKey, int in
 		#if defined(RT_JPG_SUPPORT)
 
 		JPGSurfaceLoader loader;
-		if (!loader.LoadFromMem(pMem, inputSize, this, false))
+		if (!loader.LoadFromMem(pMem, inputSize, this, bAddAlphaChannelIfPadded))
 		{
 			LogError("Error loading jpg from memory chunk");
 			return false;
@@ -909,28 +909,6 @@ void SoftSurface::Blit8BitFrom8Bit( int dstX, int dstY, SoftSurface *pSrc, int s
 	}
 }
 
-void SoftSurface::DetectAndFixDinkShadows()
-{
-	//TODO
-	assert(GetSurfaceType() == SURFACE_RGBA);
-
-	/*
-	glColorBytes black(0,0,0,255);
-	glColorBytes trans(0,0,0,0);
-
-	byte *pData = GetPixelData();
-	for (int y=0; y < y; y++)
-	{
-		for (int x=0; x < m_width; x++)
-		{
-			
-
-		}
-
-	}
-	 */
-}
-
 
 void SoftSurface::FlipY()
 {
@@ -999,16 +977,11 @@ void SoftSurface::Blit( int dstX, int dstY, SoftSurface *pSrc, int srcX /*= 0*/,
 		dstX = 0;
 	}
 
-
 	//truncate to our size
 	srcWidth = rt_min(GetWidth()-dstX, srcWidth);
 	srcHeight = rt_min(GetHeight()-dstY, srcHeight);
 
-//	assert(dstX >= 0 && dstY >= 0);
-
-
 	SetModified(true);
-	
 	
 	if (GetSurfaceType() == SURFACE_RGBA)
 	{
@@ -1075,12 +1048,9 @@ Surface * SoftSurface::CreateGLTexture()
 		{
 			pSurf->SetBlendingMode(Surface::BLENDING_PREMULTIPLIED_ALPHA);
 		}
-
 	}
 	
 	pSurf->SetUsesAlpha(GetUsesAlpha());
-
-	
 	return pSurf;
 }
 
@@ -1148,4 +1118,85 @@ void SoftSurface::Rotate90Degrees( bool bRotateLeft )
 	swap(m_width, m_height);
 	swap(m_originalHeight, m_originalWidth);
 	m_usedPitch = targetPitch;
+}
+
+void SoftSurface::WriteBMPOut( string fileName )
+{
+	if (GetSurfaceType() != SURFACE_RGB && GetSurfaceType() != SURFACE_RGBA)
+	{
+		LogError("Can't only save bmps for RGB and RGBA formats, not 8 bit stuff.");
+		return;
+	}
+
+	//assert(sizeof(BMPFileHeader) == 14); //fails.. but instead of figuring out the packing commands for each os, I'll work around it
+	
+	//write it
+	FILE *fp = fopen(fileName.c_str(), "wb");
+	if (!fp)
+	{
+		LogError("Unable to open %s for writing", fileName.c_str());
+		return;
+	}
+
+	const char *fileHeader="BM";
+	fwrite(fileHeader, 2, 1, fp);
+	unsigned int temp = 0;
+	fwrite(&temp, 4, 1, fp);
+	fwrite(&temp, 4, 1, fp);
+	temp = 14+sizeof(BMPImageHeader);
+	fwrite(&temp, 4, 1, fp);
+
+	BMPImageHeader bmpImageInfo;
+	memset(&bmpImageInfo, 0, sizeof(BMPImageHeader));
+	
+	assert(sizeof(BMPImageHeader) == 40);
+
+	bmpImageInfo.Size = sizeof(BMPImageHeader);
+	bmpImageInfo.Width = m_width;
+	bmpImageInfo.Height = m_height;
+	bmpImageInfo.BitCount = m_bytesPerPixel*8;
+	bmpImageInfo.Compression = BMP_COMPRESSION_NONE;
+	
+	fwrite(&bmpImageInfo, sizeof(BMPImageHeader), 1, fp);
+
+	//now write the data
+
+	int totalPitch = m_width*m_bytesPerPixel;
+	int imagePitch = totalPitch;
+
+	while (totalPitch%4 != 0) totalPitch++;
+
+	for (int y=0; y < m_height; y++)
+	{
+		for (int x=0; x < m_width; x++)
+		{
+			byte *pSrc = &m_pPixels[y*imagePitch+x*m_bytesPerPixel];
+			
+			unsigned int color;
+			if (m_bytesPerPixel == 4)
+			{
+				glColorBytes(pSrc[2], pSrc[1], pSrc[0], pSrc[3]);
+				fwrite(&color, 4, 1, fp);
+			} else
+			{
+				fwrite(&pSrc[2], 1, 1, fp);
+				fwrite(&pSrc[1], 1, 1, fp);
+				fwrite(&pSrc[0], 1, 1, fp);
+
+			}
+
+			if (x == m_width-1)
+			{
+				//writing padding if needed
+				for (int j=0; j < (totalPitch-imagePitch); j++)
+				{
+					char crap = 0;
+					fwrite(&crap, 1, 1, fp);
+				}
+			}
+
+		}
+	}
+	fclose(fp);
+
 }

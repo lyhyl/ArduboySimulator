@@ -17,7 +17,8 @@
 #include "IReadFile.h"
 
 #ifdef _DEBUG
-#define _XREADER_DEBUG
+	//debug
+	//#define _XREADER_DEBUG
 #endif
 //#define BETTER_MESHBUFFER_SPLITTING_FOR_X
 
