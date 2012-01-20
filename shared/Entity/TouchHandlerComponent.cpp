@@ -2,7 +2,7 @@
 
 #include "TouchHandlerComponent.h"
 #include "Manager/MessageManager.h"
-#include "Util/MiscUtils.h"
+#include "util/MiscUtils.h"
 #include "BaseApp.h"
 
 TouchHandlerComponent::TouchHandlerComponent()

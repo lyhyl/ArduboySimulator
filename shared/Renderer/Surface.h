@@ -79,7 +79,7 @@ public:
 	void SetBlendingMode(eBlendingMode mode) {m_blendingMode = mode;}
 	eBlendingMode GetBlendingMode() {return m_blendingMode;}
 	int GetMIPMapCount() {return m_mipMapCount;}
-
+	void SetCreateMipMapsIfNeeded(bool bCreateMipMapsIfNeeded) {m_bCreateMipMapsIfNeeded = bCreateMipMapsIfNeeded;}
 	virtual bool InitBlankSurface(int x, int y); //initialize a blank surface to do whatever to
 	virtual bool InitFromSoftSurface(SoftSurface *pSurf, bool bCreateSurface = true, int mipLevel = 0);
 	bool IsRenderTarget() {return m_frameBuffer != 0;}
@@ -121,6 +121,7 @@ private:
 	GLuint m_frameBuffer;
 	int m_memUsed; //for internal memory monitering
 	string m_textureLoaded;
+	bool m_bCreateMipMapsIfNeeded;
 	eTextureCreationMethod m_textureCreationMethod;
 	
 };

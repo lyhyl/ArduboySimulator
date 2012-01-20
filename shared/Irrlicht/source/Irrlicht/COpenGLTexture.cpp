@@ -329,6 +329,7 @@ void COpenGLTexture::uploadTexture(bool newTexture, void* mipmapData, u32 level)
 		HasMipMaps = false;
 
 		Surface s;
+		s.SetCreateMipMapsIfNeeded(true);
 		s.SetTextureType(Surface::TYPE_NOT_OWNER);
 		s.LoadFileFromMemory((byte*)Image->lock());
 		Image->unlock();

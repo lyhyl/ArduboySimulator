@@ -2,7 +2,7 @@
 
 //NOTE:  Much of this code is from the tiltodemo sample from the Palm WebBOS PDK
 
-#ifdef RT_WEBOS
+#if defined RT_WEBOS || defined RT_USE_SDL_AUDIO
 
 #include "SDL.h"
 
@@ -350,7 +350,7 @@ AudioHandle AudioManagerSDL::Play( string fName, int vol, int pan /*= 0*/ )
 {	
 	
 	assert(!"We don't support this");
-	return NULL;
+	return AUDIO_HANDLE_BLANK;
 }
 
 void AudioManagerSDL::Update()
@@ -363,7 +363,7 @@ void AudioManagerSDL::Stop( AudioHandle soundID )
 	
 	if (!soundID) return;
 	
-	if (soundID == (int)m_pMusicChannel)
+	if (soundID == (AudioHandle)m_pMusicChannel)
 	{
 		StopMusic();
 		return;

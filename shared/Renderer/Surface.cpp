@@ -41,6 +41,7 @@ void Surface::SetDefaults()
 	m_originalHeight = 0; //sometimes useful to know, if case we had to pad the image to be power of 2 for instance
 	m_originalWidth = 0;
 	m_textureCreationMethod = TEXTURE_CREATION_NONE;
+	m_bCreateMipMapsIfNeeded = false;
 	
 }
 
@@ -280,13 +281,16 @@ bool Surface::LoadRTTexture(byte *pMem)
 	assert (rttexMipSectionSize%4 == 0 && "Can't be right, structure packing changed?");
 	int format = GetIntFromMem(&pTexHeader->format);
 
-	if (m_mipMapCount == 1 && m_texType != TYPE_GUI)
+	if (m_bCreateMipMapsIfNeeded)
 	{
-		m_mipMapCount = 2; //guess, exact # doesn't matter
-		glTexParameteri( GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE );
-	} else
-	{
-		glTexParameteri( GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_FALSE );
+		if (m_mipMapCount == 1)
+		{
+			m_mipMapCount = 8; //guess, exact # doesn't matter, just must be more than 1
+			glTexParameteri( GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE );
+		} else
+		{
+			glTexParameteri( GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_FALSE );
+		}
 	}
 
 	for (int nMipLevel=0; nMipLevel < pTexHeader->mipmapCount; nMipLevel++)
@@ -330,7 +334,6 @@ bool Surface::LoadRTTexture(byte *pMem)
 			} else
 			{
 			
-				//WORK - loading jpg in rttex
 				SoftSurface s;
 
 				if (!s.LoadFileFromMemory(pTextureData, SoftSurface::COLOR_KEY_NONE, pMipSection->dataSize))
@@ -339,9 +342,8 @@ bool Surface::LoadRTTexture(byte *pMem)
 					assert(!"Failed to load image inside of rttex");
 					return false;
 				}
-				//s.FillColor(glColorBytes(255,0,0,255));
+	
 				SAFE_DELETE_ARRAY(pTextureData);
-				//if ()
 				bool bResult = InitFromSoftSurface(&s, false, nMipLevel);
 
 				if (!bResult)
@@ -361,7 +363,7 @@ bool Surface::LoadRTTexture(byte *pMem)
 				{
 					colorType = GL_RGB;
 				}
-				//			LogMsg("Loading surface: miplevel %d, internal color type:0x%02lX  colortype 0x%02lX, x%d y%d, format type: 0x%02lX", nMipLevel, colorTypeSource, colorType, pMipSection->width, pMipSection->height, pTexHeader->format );
+				//LogMsg("Loading surface: miplevel %d, internal color type:0x%02lX  colortype 0x%02lX, x%d y%d, format type: 0x%02lX", nMipLevel, colorTypeSource, colorType, pMipSection->width, pMipSection->height, pTexHeader->format );
 				int internalColorFormat = colorType;
 #ifdef C_GL_MODE
 				if (internalColorFormat == GL_RGBA) internalColorFormat = GL_RGBA8;
@@ -413,6 +415,7 @@ bool Surface::LoadRTTexture(byte *pMem)
 
 	IncreaseMemCounter(memUsed);
 	SetTextureStates();
+	glTexParameteri( GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_FALSE );
 
 	return true;
 }

@@ -31,6 +31,12 @@ string BoolToEnabled(bool bEnabled)
 	return "Disabled";
 }
 
+#ifdef _WIN32
+#define PATH_SEPARATOR '\\'
+#else
+#define PATH_SEPARATOR '/'
+#endif
+
 string RemoveLastPartOfDir(string path)
 {
 
@@ -43,7 +49,7 @@ string RemoveLastPartOfDir(string path)
 	{
 		path = path.substr(0, path.find_last_of("\\/"));
 	}
-	path = path.substr(0, path.find_last_of("\\/")) + '\\';
+	path = path.substr(0, path.find_last_of("\\/")) + PATH_SEPARATOR;
 	return path;
 }
 

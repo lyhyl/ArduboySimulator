@@ -21,7 +21,7 @@
 #define AudioManager_h__
 
 
-typedef uint32 AudioHandle;
+typedef uintptr_t AudioHandle;
 
 #define AUDIO_HANDLE_BLANK 0
 

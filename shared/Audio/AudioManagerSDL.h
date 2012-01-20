@@ -12,7 +12,7 @@
 
 #include "AudioManager.h"
 
-#ifdef RT_WEBOS
+#if defined RT_WEBOS || defined RT_USE_SDL_AUDIO
 
 #include "SDL_mixer.h"
 
@@ -24,7 +24,7 @@ public:
 	{
 		m_pSound = NULL;
 		m_bIsLooping = false;
-		m_pLastChannelToUse = NULL;
+		m_pLastChannelToUse = 0;
 	}
 
 	~SoundObject()
@@ -33,7 +33,7 @@ public:
 		{
 			Mix_FreeChunk(m_pSound);
 			m_pSound = NULL;
-			m_pLastChannelToUse = NULL;
+			m_pLastChannelToUse = 0;
 		}
 	}
 

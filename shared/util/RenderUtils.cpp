@@ -472,10 +472,9 @@ void ConvertCoordinatesIfRequired(float &xPos, float &yPos)
 		//remap to correct values
 		//LogMsg("CurY: %.2f - old y: %.2f",  GetScreenSizeYf(), float(GetOriginalScreenSizeY()));
 		//LogMsg("CurX: %.2f - old x: %.2f",  GetScreenSizeXf(), float(GetOriginalScreenSizeX()) );
-	
 		
-		float OriginalX = GetOriginalScreenSizeX();
-		float OriginalY = GetOriginalScreenSizeY();
+		float OriginalX = (float)GetOriginalScreenSizeX();
+		float OriginalY = (float)GetOriginalScreenSizeY();
 		
 		if (InLandscapeGUIMode()) 
 		{
@@ -715,6 +714,9 @@ CL_Vec3f GetOGLPos(int x, int y, float z, CL_Vec3f *pNormalOut, CL_Mat4f *pModel
 }
 
 
+//I see I'm truncating the floats to ints here, but I can't remember if I had a decent reason.  Oh well, this stuff
+//is rather old don't use it
+
 float iPhoneMapY( float y )
 {
 	return (int)(y*GetScreenSizeYf())/320.0f; //I cast to int because it helps with "middle of the pixel" jaggies
@@ -727,61 +729,60 @@ float iPhoneMapX( float x )
 
 CL_Vec2f iPhoneMap( CL_Vec2f vPos )
 {
-	return CL_Vec2f((int) (vPos.x*GetScreenSizeXf()/480.0f), (int) (vPos.y*GetScreenSizeYf()/320.0f));
+	return CL_Vec2f((float)(int) (vPos.x*GetScreenSizeXf()/480.0f), (float)(int) (vPos.y*GetScreenSizeYf()/320.0f));
 }
 
 
 CL_Vec2f iPhoneMap( float x, float y )
 {
-	return CL_Vec2f((int) (x*GetScreenSizeXf()/480.0f), (int) (y*GetScreenSizeYf()/320.0f));
+	return CL_Vec2f((float)(int) (x*GetScreenSizeXf()/480.0f), (float)(int) (y*GetScreenSizeYf()/320.0f));
 }
 
 float iPadMapY( float y )
 {
-	return (int)(y*GetScreenSizeYf())/768.0f; //I cast to int because it helps with "middle of the pixel" jaggies
+	return (float)(int)(y*GetScreenSizeYf())/768.0f; //I cast to int because it helps with "middle of the pixel" jaggies
 }
 
 float iPadMapX( float x )
 {
-	return (int)(x*GetScreenSizeXf())/1024.0f;  //I cast to int because it helps with "middle of the pixel" jaggies
+	return(float) (int)(x*GetScreenSizeXf())/1024.0f;  //I cast to int because it helps with "middle of the pixel" jaggies
 }
 
 CL_Vec2f iPadMap( CL_Vec2f vPos )
 {
-	return CL_Vec2f((int) (vPos.x*GetScreenSizeXf()/1024.0f), (int) (vPos.y*GetScreenSizeYf()/768.0f));
+	return CL_Vec2f((float)(int) (vPos.x*GetScreenSizeXf()/1024.0f), (float)(int) (vPos.y*GetScreenSizeYf()/768.0f));
 }
-
 
 CL_Vec2f iPadMap( float x, float y )
 {
-	return CL_Vec2f((int) (x*GetScreenSizeXf()/1024.0f), (int) (y*GetScreenSizeYf()/768.0f));
+	return CL_Vec2f((float)(int) (x*GetScreenSizeXf()/1024.0f), (float)(int) (y*GetScreenSizeYf()/768.0f));
 }
 
 
 float iPhoneMapX2X( float x )
 {
 	if (!IsLargeScreen()) return x;
-	return (int)(x*960)/480;
+	return (float)(int)(x*960)/480;
 }
 
 
 float iPhoneMapY2X( float y )
 {
 	if (!IsLargeScreen()) return y;
-	return (int)(y*649)/320;
+	return (float)(int)(y*649)/320;
 }
 
 CL_Vec2f iPhoneMap2X( CL_Vec2f vPos )
 {
 	if (!IsLargeScreen()) return vPos;
 	
-	return CL_Vec2f((int) (vPos.x*960/480), (int) (vPos.y*640/320));
+	return CL_Vec2f((float)(int) (vPos.x*960/480), (float)(int) (vPos.y*640/320));
 }
 
 CL_Vec2f iPhoneMap2X( float x, float y )
 {
 	if (!IsLargeScreen()) return CL_Vec2f(x, y);
-	return CL_Vec2f((int) (x*960/480), (int) (y*640/320));
+	return CL_Vec2f((float)(int) (x*960/480), (float)(int) (y*640/320));
 }
 
 /*
