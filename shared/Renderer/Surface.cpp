@@ -290,22 +290,28 @@ bool Surface::LoadRTTexture(byte *pMem)
 		pCurPos += sizeof(rttex_mip_header);
 		byte *pTextureData =  pCurPos ;
 		memUsed += pMipSection->dataSize;
-			
+
 		//actually, let's move the texture data into something byte aligned.. it shouldn't need this but if I don't,
 		//crashes in release mode on iPhone 3GS and older when using xcode 4 and targetting OS 3.2+.  It should already be
 		//int aligned (at least for mip 0..) so I don't know why this is required.  -Seth
-		
+
 		pTextureData = new byte[pMipSection->dataSize];
 		memcpy(pTextureData, pCurPos,pMipSection->dataSize );
 		//let's do it manually now
-        int width = GetIntFromMem(&pMipSection->width);
-        int height = GetIntFromMem(&pMipSection->height);
-        int format = GetIntFromMem(&pTexHeader->format);
-        
+		int width = GetIntFromMem(&pMipSection->width);
+		int height = GetIntFromMem(&pMipSection->height);
+		int format = GetIntFromMem(&pTexHeader->format);
+
+		if (nMipLevel == 0)
+		{
+			PrepareGLForNewTexture();
+		}
+
+
 		if (texType == RT_FORMAT_EMBEDDED_FILE)
 		{
 			SoftSurface s;
-			
+
 			if (!s.LoadFileFromMemory(pTextureData, SoftSurface::COLOR_KEY_NONE, pMipSection->dataSize))
 			{
 				LogMsg("(Failed to load jpg)");
@@ -314,50 +320,54 @@ bool Surface::LoadRTTexture(byte *pMem)
 			}
 			//s.FillColor(glColorBytes(255,0,0,255));
 			SAFE_DELETE_ARRAY(pTextureData);
-			return InitFromSoftSurface(&s);
-		
+			//if ()
+			bool bResult = InitFromSoftSurface(&s, false, nMipLevel);
+
+			if (!bResult)
+			{
+				LogMsg("Failed to init from surface?");
+				return bResult;
+			}
+
 		} else
 		{
-			if (nMipLevel == 0)
-			{
-				PrepareGLForNewTexture();
-			}
-	 		
+
+
 			if (pTexHeader->format < GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG || pTexHeader->format > GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG) //doesn't look like a compressed texture
 			{
-				  int colorType = GL_RGBA;
+				int colorType = GL_RGBA;
 				if (!m_bUsesAlpha)
 				{
 					colorType = GL_RGB;
 				}
-	//			LogMsg("Loading surface: miplevel %d, internal color type:0x%02lX  colortype 0x%02lX, x%d y%d, format type: 0x%02lX", nMipLevel, colorTypeSource, colorType, pMipSection->width, pMipSection->height, pTexHeader->format );
+				//			LogMsg("Loading surface: miplevel %d, internal color type:0x%02lX  colortype 0x%02lX, x%d y%d, format type: 0x%02lX", nMipLevel, colorTypeSource, colorType, pMipSection->width, pMipSection->height, pTexHeader->format );
 				int internalColorFormat = colorType;
-	#ifdef C_GL_MODE
+#ifdef C_GL_MODE
 				if (internalColorFormat == GL_RGBA) internalColorFormat = GL_RGBA8;
 				if (internalColorFormat == GL_RGB) internalColorFormat = GL_RGB8;
-	#endif
+#endif
 
- 				if (m_texType == TYPE_GUI && m_bUsesAlpha)
+				if (m_texType == TYPE_GUI && m_bUsesAlpha)
 				{
 					//Go ahead and activate premultiplied alpha processing.  This will allow us to zoom in on textures and not have ugly artifacts
 					//around the edges.
 					m_blendingMode = BLENDING_PREMULTIPLIED_ALPHA;
 				}
 
-  				if (m_blendingMode == BLENDING_PREMULTIPLIED_ALPHA && m_bUsesAlpha)
+				if (m_blendingMode == BLENDING_PREMULTIPLIED_ALPHA && m_bUsesAlpha)
 				{
 					PreMultiplyAlpha(pTextureData, width, height, format);
 				}
-	 
+
 				glTexImage2D( GL_TEXTURE_2D, nMipLevel, internalColorFormat, width, height, 0, colorType, format, pTextureData );
 			} else
 			{
-				
-	#ifdef C_GL_MODE
+
+#ifdef C_GL_MODE
 
 				assert(!"You cannot use PVR compressed textures in GL mode!");
-	#else
-		
+#else
+
 				glCompressedTexImage2D(
 					GL_TEXTURE_2D, 
 					nMipLevel, 
@@ -367,25 +377,28 @@ bool Surface::LoadRTTexture(byte *pMem)
 					0, 
 					pMipSection->dataSize, 
 					pTextureData);
-	#endif
+#endif
 			}
-		
+
 		}
+
 		pCurPos += pMipSection->dataSize;
-		
+
 		CHECK_GL_ERROR();
 		SAFE_DELETE_ARRAY(pTextureData);
 
 	}
 
 
-	if (m_mipMapCount > 1 && m_glTextureID != NO_TEXTURE_LOADED)
-	{
-		glTexParameterx( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR );
-	}
 	
 	IncreaseMemCounter(memUsed);
 	SetTextureStates();
+
+	if (m_mipMapCount > 1 && m_glTextureID != NO_TEXTURE_LOADED && m_texType != TYPE_GUI)
+	{
+		glTexParameterx( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR );
+	}
+
 	return true;
 }
 
@@ -1063,7 +1076,6 @@ void Surface::OnLoadSurfaces()
 			break;
 		}
 }
-	
 
 void Surface::OnUnloadSurfaces()
 {
@@ -1077,18 +1089,19 @@ void Surface::OnUnloadSurfaces()
 	}
 }
 
-bool Surface::InitFromSoftSurface( SoftSurface *pSurf )
+bool Surface::InitFromSoftSurface( SoftSurface *pSurf, bool bCreateSurface, int mipLevel )
 {
-	Kill();
+	if (mipLevel == 0)
+	{
 
-	m_texWidth =  nextPowerOfTwo(pSurf->GetWidth());
-	m_texHeight =  nextPowerOfTwo(pSurf->GetHeight());
-	
-	if (m_originalHeight == 0) m_originalHeight = pSurf->GetOriginalHeight();
-	if (m_originalWidth == 0) m_originalWidth = pSurf->GetOriginalWidth();
+		m_texWidth =  nextPowerOfTwo(pSurf->GetWidth());
+		m_texHeight =  nextPowerOfTwo(pSurf->GetHeight());
 
+		if (m_originalHeight == 0) m_originalHeight = pSurf->GetOriginalHeight();
+		if (m_originalWidth == 0) m_originalWidth = pSurf->GetOriginalWidth();
 	
-	assert(m_texWidth && m_texHeight);
+	}
+	assert(pSurf->GetWidth() && pSurf->GetHeight());
 	GLenum colorFormat = GL_RGBA;
 	GLenum pixelFormat = GL_UNSIGNED_BYTE;
 	int bytesPerPixel = 4;
@@ -1099,24 +1112,26 @@ bool Surface::InitFromSoftSurface( SoftSurface *pSurf )
 		bytesPerPixel = 3;
 	}
 
-	m_textureCreationMethod = TEXTURE_CREATION_BLANK;
+	if (bCreateSurface)
+	{
+		Kill();
+		PrepareGLForNewTexture();	
+		m_textureCreationMethod = TEXTURE_CREATION_BLANK;
+	}
 
-	PrepareGLForNewTexture();	
-	
 	m_bUsesAlpha = (colorFormat == GL_RGBA);
 	
 	int internalColorFormat = colorFormat;
 	
-	int dataSize = m_texWidth*m_texHeight*bytesPerPixel;
+	int dataSize = pSurf->GetWidth()*pSurf->GetHeight()*bytesPerPixel;
 
-	if (m_texHeight == pSurf->GetHeight() && m_texWidth == pSurf->GetWidth())
+	if ( (m_texHeight == pSurf->GetHeight() && m_texWidth == pSurf->GetWidth()) || mipLevel > 0)
 	{
 		//great, no size trickery needed
-		glTexImage2D( GL_TEXTURE_2D, 0, internalColorFormat, m_texWidth, m_texHeight, 0, colorFormat, pixelFormat, pSurf->GetPixelData() );
+		glTexImage2D( GL_TEXTURE_2D, mipLevel, internalColorFormat, pSurf->GetWidth(), pSurf->GetHeight(), 0, colorFormat, pixelFormat, pSurf->GetPixelData() );
 	
 	} else
 	{
-	
 		byte *pPixelData = new byte[dataSize];
 		assert(pPixelData);
 		if (!pPixelData)
@@ -1126,7 +1141,7 @@ bool Surface::InitFromSoftSurface( SoftSurface *pSurf )
 		}
 
 		memset(pPixelData, 0, dataSize);
-		glTexImage2D( GL_TEXTURE_2D, 0, internalColorFormat, m_texWidth, m_texHeight, 0, colorFormat, pixelFormat, pPixelData );
+		glTexImage2D( GL_TEXTURE_2D, mipLevel, internalColorFormat, m_texWidth, m_texHeight, 0, colorFormat, pixelFormat, pPixelData );
 		SAFE_DELETE_ARRAY(pPixelData);
 		int yStart = 0;
 
@@ -1136,12 +1151,14 @@ bool Surface::InitFromSoftSurface( SoftSurface *pSurf )
 			yStart += (m_texHeight-m_originalHeight);
 		} 
 		
-		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, yStart, pSurf->GetWidth(), pSurf->GetHeight(), internalColorFormat, pixelFormat, pSurf->GetPixelData());
-		
+		glTexSubImage2D(GL_TEXTURE_2D, mipLevel, 0, yStart, pSurf->GetWidth(), pSurf->GetHeight(), internalColorFormat, pixelFormat, pSurf->GetPixelData());
 	}
 
-	IncreaseMemCounter(dataSize);
-	SetTextureStates();
+	if (bCreateSurface)
+	{
+		IncreaseMemCounter(dataSize);
+		SetTextureStates();
+	}
 	CHECK_GL_ERROR();
 	return true;
 }

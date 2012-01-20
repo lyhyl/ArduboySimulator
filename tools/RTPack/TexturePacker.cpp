@@ -117,15 +117,26 @@ void ClearPixelBuffer(CL_PixelBuffer* pPixelBuffer, CL_Color color)
 	pPixelBuffer->unlock();
 }
 
+bool ImageCanBeUltraCompressed(bool bUsesTransparency, int width, int height)
+{
+	//later, we may wish to limit using this to only larger sizes etc, that's why I pass in size now
+
+	if (!bUsesTransparency && GetApp()->GetUltraCompressQuality() != 0)
+	{
+		return true;
+	}
+
+	return false;
+}
 
 //-----------------------------------------------------------------------------
-void FileWriteRAWPVR(const char* pszOutputFileName, CPVRTexture* texture, int nNumMipLevels, bool bUsesTransparency, int originalWidth, int originalHeight)
+void FileWriteRAWPVR(string pathAndFileName, CPVRTexture* texture, int nNumMipLevels, bool bUsesTransparency, int originalWidth, int originalHeight)
 //-----------------------------------------------------------------------------
 {
 	FILE* pFileOut = NULL;
 	int nMipLevel;
 
-	fopen_s(&pFileOut, pszOutputFileName, "wb");
+	fopen_s(&pFileOut, pathAndFileName.c_str(), "wb");
 
 	if (pFileOut == NULL )
 	{
@@ -146,7 +157,6 @@ void FileWriteRAWPVR(const char* pszOutputFileName, CPVRTexture* texture, int nN
 #define GL_UNSIGNED_BYTE                  0x1401
 #define GL_UNSIGNED_SHORT_5_6_5           0x8363
 
-
 	const ::uint32 PVRTC2_MIN_TEXWIDTH		= 16;
 	const ::uint32 PVRTC2_MIN_TEXHEIGHT		= 8;
 	const ::uint32 PVRTC4_MIN_TEXWIDTH		= 8;
@@ -155,14 +165,13 @@ void FileWriteRAWPVR(const char* pszOutputFileName, CPVRTexture* texture, int nN
 	const ::uint32 ETC_MIN_TEXHEIGHT		= 4;
 
 	rttex_header rtTexHeader;
-
- 
 	ZeroMemory(&rtTexHeader, sizeof(rttex_header));
-
 	memcpy(rtTexHeader.rtFileHeader.fileTypeID, C_RTFILE_TEXTURE_HEADER, 6);
 
 	float bytesPerPixel = 1;
- 
+	rtTexHeader.bAlreadyCompressed = 0;
+
+	bool bUltraCompress = false;
 	if (texture->getPixelType() == OGL_PVRTC2)
 	{
 		rtTexHeader.format = bUsesTransparency ? GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG :GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG;
@@ -187,6 +196,15 @@ void FileWriteRAWPVR(const char* pszOutputFileName, CPVRTexture* texture, int nN
 	{
 		bytesPerPixel = 3;
 		rtTexHeader.format = GL_UNSIGNED_BYTE;
+
+		if (ImageCanBeUltraCompressed(bUsesTransparency, texture->getWidth(), texture->getHeight()))
+		{
+			bUltraCompress = true;
+			rtTexHeader.format = RT_FORMAT_EMBEDDED_FILE; //game will check the header to know it's actually a jpg or whatever
+			GetApp()->SetPixelTypeText("Ultra compress RGB bit");
+				rtTexHeader.bAlreadyCompressed = 1;
+		}
+
 	} else
 	{
 		LogError("Don't know how to process (%d) %s", GetApp()->GetPixelType(), GetApp()->GetPixelTypeText().c_str());
@@ -204,7 +222,6 @@ void FileWriteRAWPVR(const char* pszOutputFileName, CPVRTexture* texture, int nN
 		rtTexHeader.bUsesAlpha = 1;
 	} else rtTexHeader.bUsesAlpha = 0;
 
-	rtTexHeader.bAlreadyCompressed = 0;
 	fwrite(&rtTexHeader, 1, sizeof(rttex_header), pFileOut);
 
 	int lastWidth = texture->getWidth();
@@ -212,6 +229,13 @@ void FileWriteRAWPVR(const char* pszOutputFileName, CPVRTexture* texture, int nN
 	assert(texture->getNumSurfaces() == 1 && "We don't support more yet");
 
 	int dataOffset = 0;
+
+	StringReplace("\\", "/", pathAndFileName);
+
+	string fName = GetFileNameFromString(pathAndFileName);
+	string path = GetPathFromString(pathAndFileName);
+	if (!path.empty()) path += "/";
+
 	for (nMipLevel=0; nMipLevel<nNumMipLevels; nMipLevel++)
 	{
 		rttex_mip_header mipHeader;
@@ -231,17 +255,62 @@ void FileWriteRAWPVR(const char* pszOutputFileName, CPVRTexture* texture, int nN
 			CompressedImageSize = ( rt_max(mipHeader.width, PVRTC4_MIN_TEXWIDTH) * rt_max(mipHeader.height, PVRTC4_MIN_TEXHEIGHT) * 4 + 7) / 8;
 		}
 	
-
-		mipHeader.dataSize = CompressedImageSize;
-				
 		mipHeader.mipLevel = nMipLevel;
-		//LogMsg("MIP %d: %d X %d", mipHeader.mipLevel, mipHeader.width,  mipHeader.height);
 
-		fwrite(&mipHeader, 1, sizeof(rttex_mip_header), pFileOut);
+		if (bUltraCompress)
+		{
+			//convoluted way to convert the data to a jpg, then pack it in the rttex.
 
-		fwrite(texture->getSurfaceData(0)+dataOffset, sizeof(unsigned char),mipHeader.dataSize, pFileOut);
+			CL_PixelBuffer finalBuff(mipHeader.width, mipHeader.height,mipHeader.width*3, CL_PixelFormat::bgr888);
 		
-		dataOffset += mipHeader.dataSize;
+			finalBuff.lock();
+			memcpy(finalBuff.get_data(),  texture->getSurfaceData(0)+dataOffset, CompressedImageSize);
+			finalBuff.unlock(); 
+
+			//save and load the jpg because I don't know how to get clanlib to write it directly to memory and don't feel like digging
+			//into it right now
+			string tempFilePathAndName = path+"rt_temp_"+ModifyFileExtension(fName, "jpg");
+			try
+			{
+				CL_JPEGProvider::save(finalBuff, tempFilePathAndName,0, GetApp()->GetUltraCompressQuality());
+
+				if (GetApp()->GetOutput() == App::JPG)
+				{
+					//if "-o jpg" was specified on the command line, we'll write out the mipmaps for debugging purposes
+					CL_JPEGProvider::save(finalBuff, path+"test_mip_"+toString(mipHeader.mipLevel)+ModifyFileExtension(fName, "jpg"),0, GetApp()->GetUltraCompressQuality());
+
+
+				}
+
+			}
+			catch (CL_Error e)
+			{
+				LogError("Error: %s", e.message.c_str());
+				return ;
+			}
+			
+
+			unsigned int size;
+			byte *pJpgData = LoadFileIntoMemory(tempFilePathAndName, &size);
+			RemoveFile(tempFilePathAndName);
+			
+			mipHeader.dataSize = size;
+			//LogMsg("MIP %d: %d X %d", mipHeader.mipLevel, mipHeader.width,  mipHeader.height);
+			fwrite(&mipHeader, 1, sizeof(rttex_mip_header), pFileOut);
+			fwrite(pJpgData, sizeof(unsigned char),mipHeader.dataSize, pFileOut);
+
+			SAFE_FREE(pJpgData);
+
+			//LogMsg("Writing jpg");
+		} else
+		{
+			mipHeader.dataSize = CompressedImageSize;
+			//LogMsg("MIP %d: %d X %d", mipHeader.mipLevel, mipHeader.width,  mipHeader.height);
+			fwrite(&mipHeader, 1, sizeof(rttex_mip_header), pFileOut);
+			fwrite(texture->getSurfaceData(0)+dataOffset, sizeof(unsigned char),mipHeader.dataSize, pFileOut);
+		}
+
+		dataOffset += CompressedImageSize;
 		lastHeight /=2;
 		lastWidth /=2;
 
@@ -476,6 +545,12 @@ bool TexturePacker::ProcessTexture( string fName )
 
 			case OGL_RGBA_4444:
 				GetApp()->SetPixelType(pvrtexlib::OGL_RGB_565);
+				
+				if (ImageCanBeUltraCompressed(m_bUsesTransparency,finalRect.right, finalRect.bottom))
+				{
+					//let's use jpg compression, probably smaller
+					GetApp()->SetPixelType(pvrtexlib::OGL_RGB_888);
+				}
 				break;
 
 			}
@@ -512,7 +587,16 @@ bool TexturePacker::ProcessTexture( string fName )
 	if (GetApp()->GetOutput() == App::PNG)
 	{
 		string outputName = path + string("/") + "test_"+ModifyFileExtension(fileNameOnly, "png");
-		CL_ProviderFactory::save(finalBuff, outputName);
+		try
+		{
+			CL_ProviderFactory::save(finalBuff, outputName);
+		}
+		catch (CL_Error e)
+		{
+			LogError("Error: %s", e.message.c_str());
+			return false;
+		}
+		
 		LogMsg("(Wrote png of final output out to %s", outputName.c_str());
 	}
 
@@ -521,28 +605,49 @@ bool TexturePacker::ProcessTexture( string fName )
 		int quality = 100;
 		if (GetApp()->GetUltraCompressQuality() != 0) quality = GetApp()->GetUltraCompressQuality();
 		string outputName =  path + string("/") + "test_"+ModifyFileExtension(fileNameOnly, "jpg");
-		CL_JPEGProvider::save(finalBuff,outputName,0, quality);
-		LogMsg("(Wrote jpg of final output out to %s", outputName.c_str());
+		try
+		{
+			CL_JPEGProvider::save(finalBuff,outputName,0, quality);
+		}
+		catch (CL_Error e)
+		{
+			LogError("Error: %s", e.message.c_str());
+			return false;
+		}
+		
+		//LogMsg("(Wrote jpg of final output out to %s", outputName.c_str());
 	}
 
 	// write to file specified 
 	string fileName = ModifyFileExtension(fName, "rttex");
 	int nNumMipLevels = 1;
 
-	if (GetApp()->GetUltraCompressQuality() != 0 && !m_bUsesTransparency)
+	/*
+	if (ImageCanBeUltraCompressed(bUsesTransparency,finalBuff->getWidth(), finalBuff->getHeight()))
 	{
+		//this is the version we'll use when we don't need mipmaps
+
 		//write out a temp file.. CL 1.x doesn't support writing this to a stream I think...
 		string tempFilePathAndName = path + string("/") + "rt_temp_"+ModifyFileExtension(fileNameOnly, "jpg");
 		CL_JPEGProvider::save(finalBuff, tempFilePathAndName,0, GetApp()->GetUltraCompressQuality());
 
+		//pack it as .rttex
 		string outputFilename =  path + string("/") +ModifyFileExtension(fileNameOnly, "rttex");
 		EmbedImageFileAsRTTEX(outputFilename, tempFilePathAndName, finalBuff, originalX, originalY );
 		RemoveFile(tempFilePathAndName);
 		
 	} else
+	*/
+	
+	bool bFlipped = !GetApp()->GetFlipV();
+	if (GetApp()->GetPixelType() == OGL_RGB_888 && ImageCanBeUltraCompressed(m_bUsesTransparency,finalBuff.get_width(), finalBuff.get_height()))
 	{
-
-
+		//Jpgs should not be flipped.  In fact, probably nothing should be (??) this is legacy, I'm not sure which way is right.  But jpgs
+		//shouldn't be..
+		bFlipped = !bFlipped;
+	}
+	
+	{
 
 		// get the utilities instance 
 		PVRTextureUtilities *PVRU = PVRTextureUtilities::getPointer(); 
@@ -558,7 +663,7 @@ bool TexturePacker::ProcessTexture( string fName )
 			false,     // bVolume, 
 			false,     // bFalseMips, 
 			m_bUsesTransparency,     // bHasAlpha, 
-			!GetApp()->GetFlipV(), //flipped
+			bFlipped, //flipped
 			DX10_R8G8B8A8_UNORM, // ePixelType, 
 			0.0f,    // fNormalMap, 
 			(pvrtexlib::uint8*)finalBuff.get_data()   // pPixelData 
@@ -623,6 +728,9 @@ bool TexturePacker::ProcessTexture( string fName )
 
 		
 	}
+
+	
+
 	LogMsg("Saved out %s (%d X %d) with %d mipmaps. %s (%s format)", fileName.c_str(), 
 		pixBuff.get_width(), pixBuff.get_height(), nNumMipLevels, m_bUsesTransparency==0 ? "" : "(uses alpha)", GetApp()->GetPixelTypeText().c_str());
 

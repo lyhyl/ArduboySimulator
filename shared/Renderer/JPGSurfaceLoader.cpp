@@ -253,6 +253,7 @@ bool JPGSurfaceLoader::LoadFromMem( byte *pMem, int inputSize, SoftSurface *pSur
 		}
 	}
 
+	//jpg will be upside down if we don't do this.. uhh.. investigate why later.
 	pSurf->FlipY();
 	SAFE_DELETE_ARRAY(output);
 	return true; //success
