@@ -1,7 +1,9 @@
 #include "FontPacker.h"
 #include "FileSystem/FileManager.h"
-#include "Clanlib/core.h"
+#include "ClanLib/core.h"
 #include "TexturePacker.h"
+
+using namespace std;
 
 FontPacker::FontPacker()
 {
@@ -236,7 +238,7 @@ bool FontPacker::PackFont( string fileName )
 
 	if (!pData)
 	{
-		LogError("Unable to open %s", path + ModifyFileExtension(fontImage, "rttex").c_str());
+		LogError("Unable to open %s", (path + ModifyFileExtension(fontImage, "rttex")).c_str());
 	} else
 	{
 		fwrite(pData, size, 1, fp);

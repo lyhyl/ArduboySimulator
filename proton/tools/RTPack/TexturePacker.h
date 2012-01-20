@@ -17,7 +17,7 @@ public:
 	TexturePacker();
 	virtual ~TexturePacker();
 
-	bool ProcessTexture(string fName);
+	bool ProcessTexture(std::string fName);
 	void SetCompressionType(pvrtexlib::PixelType pix) {m_pixType = pix;}
 
 protected:

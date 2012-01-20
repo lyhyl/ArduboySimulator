@@ -7,18 +7,18 @@ class TextScanner
 {
 public:
 
-	TextScanner(string fName);
+	TextScanner(std::string fName);
 	~TextScanner();
 
 	void Kill();
 
-	bool LoadFile(string fName);
+	bool LoadFile(std::string fName);
 
-	string GetParmString(string label, int index);
+	std::string GetParmString(std::string label, int index);
 
-	string GetMultipleLineStrings(string label, string token = "|");
+	std::string GetMultipleLineStrings(std::string label, std::string token = "|");
 
-	vector<string> m_lines;
+	std::vector<std::string> m_lines;
 
 private:
 	char *m_pBuff;
@@ -26,6 +26,6 @@ private:
 	int m_lastLine; //used during searches to remember the state
 };
 
-bool RunRTPackByCommandLine(string command_string);
+bool RunRTPackByCommandLine(std::string command_string);
 
 #endif // ClanlibUtils_h__

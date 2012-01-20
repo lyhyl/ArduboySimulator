@@ -1,6 +1,7 @@
 #include "TexturePacker.h"
 
-using namespace pvrtexlib; 
+using namespace pvrtexlib;
+using namespace std;
 
 TexturePacker::TexturePacker()
 {
@@ -135,7 +136,11 @@ void FileWriteRAWPVR(string pathAndFileName, CPVRTexture* texture, int nNumMipLe
 	FILE* pFileOut = NULL;
 	int nMipLevel;
 
+#ifdef _WIN32
 	fopen_s(&pFileOut, pathAndFileName.c_str(), "wb");
+#else
+	pFileOut = fopen(pathAndFileName.c_str(), "wb");
+#endif
 
 	if (pFileOut == NULL )
 	{
@@ -357,7 +362,11 @@ void EmbedImageFileAsRTTEX(string outputFile, string fileToImbed, CL_PixelBuffer
 {
 	FILE* pFileOut = NULL;
 	int nMipLevel;
+#ifdef _WIN32
 	fopen_s(&pFileOut, outputFile.c_str(), "wb");
+#else
+	pFileOut = fopen(outputFile.c_str(), "wb");
+#endif
 	int embedFileSize = GetFileSize(fileToImbed);
 	if (embedFileSize == 0)
 	{
@@ -426,16 +435,24 @@ void EmbedImageFileAsRTTEX(string outputFile, string fileToImbed, CL_PixelBuffer
 
 bool TexturePacker::ProcessTexture( string fName )
 {
+#ifdef _WIN32
 	CL_SetupCore::set_instance(GetModuleHandle(NULL));
+#endif
 	CL_SetupCore::init(true);
 	// Initialize the ClanLib display component
 	CL_SetupDisplay setup_display;
 	CL_PixelBuffer pixBuff;
-	TCHAR szDirectory[MAX_PATH] = "";
-
 	string path = CL_String::get_path(fName);
 	string fileNameOnly = CL_String::get_filename(fName);
+
+#ifdef _WIN32
+	TCHAR szDirectory[MAX_PATH] = "";
 	if(!::GetCurrentDirectory(sizeof(szDirectory) - 1, szDirectory))
+#else
+	const int MAX_PATH = 4096;
+	char szDirectory[MAX_PATH] = "";
+	if(!getcwd(szDirectory, sizeof(szDirectory)))
+#endif
 	{
 	}
 
@@ -665,9 +682,13 @@ bool TexturePacker::ProcessTexture( string fName )
 	}
 	
 	{
-
+// The singleton interface is no more in PVRTexLib version >= 3.20
+#if (PVRTLMAJORVERSION * 1000 + PVRTLMINORVERSION) < (3 * 1000 + 20)
 		// get the utilities instance 
-		PVRTextureUtilities *PVRU = PVRTextureUtilities::getPointer(); 
+		PVRTextureUtilities &PVRU = *(PVRTextureUtilities::getPointer()); 
+#else
+		PVRTextureUtilities PVRU;
+#endif
 
 		CPVRTexture sOriginalTexture( 
 			finalBuff.get_width(),      // u32Width, 
@@ -706,7 +727,7 @@ bool TexturePacker::ProcessTexture( string fName )
 
 		try
 		{
-			PVRU->ProcessRawPVR(sOriginalTexture,texHeader); 
+			PVRU.ProcessRawPVR(sOriginalTexture,texHeader); 
 		}
 		PVRCATCH(myException) 
 		{ 
@@ -723,7 +744,7 @@ bool TexturePacker::ProcessTexture( string fName )
 		// encode texture 
 		try
 		{
-			PVRU->CompressPVR(sOriginalTexture, sCompressedTexture); 
+			PVRU.CompressPVR(sOriginalTexture, sCompressedTexture); 
 		}
 		PVRCATCH(myException) 
 		{ 
