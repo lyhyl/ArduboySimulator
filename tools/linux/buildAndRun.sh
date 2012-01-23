@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [[ ! -f "CMakeLists.txt" ]];
 then
@@ -25,7 +25,11 @@ fi
 
 # Update media
 cd ../../media
-$TOOLDIR/update_media.sh
+if [[ -f texture_conversion_flags.txt ]]; then
+	$TOOLDIR/update_media.sh `cat texture_conversion_flags.txt`
+else
+ 	$TOOLDIR/update_media.sh
+fi
 
 # Run
 cd ../bin
