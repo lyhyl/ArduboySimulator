@@ -25,11 +25,7 @@ fi
 
 # Update media
 cd ../../media
-if [[ -f texture_conversion_flags.txt ]]; then
-	$TOOLDIR/update_media.sh `cat texture_conversion_flags.txt`
-else
- 	$TOOLDIR/update_media.sh
-fi
+$TOOLDIR/update_media.sh
 
 # Run
 cd ../bin

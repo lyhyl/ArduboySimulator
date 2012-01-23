@@ -14,20 +14,12 @@ cat <<EOF
 Usage: $0 [options]
 
 Options:
--t <opt>         Pass option <opt> to RTPack tool when converting textures. A dash is prepended to the option.
-                 For example "-t 'ultra_compress 90'" would call the RTPack tool as 'RTPack -ultra_compress 90'.
-                 If provided multiple times all arguments are concatenated.
 -h               Print this help and exit
 EOF
 )
 
-TEXTURE_CONVERSION_OPTS=""
-
-while getopts "t:h" OPTION; do
+while getopts "h" OPTION; do
 	case "$OPTION" in
-		t)
-			TEXTURE_CONVERSION_OPTS="$TEXTURE_CONVERSION_OPTS -$OPTARG"
-			;;
 		h)
 			echo "$usage"
 			exit 0
@@ -48,20 +40,18 @@ find . -depth -name 'font*.txt' -exec ${PACK_EXE} -make_font '{}' ';'
 
 echo Process our images and textures and copy them into the bin directory
 
-# Note:  You'd probably also want to add .jpg to below, but I don't because I want to test the .jpg loader, not turn it into an .rttex.
-
 process_directory_images() {
 	if [[ -d "$1" ]];
 	then
 		cd "$1"
-		find . -depth \( -name '*.bmp' -o -name '*.png' \) -exec ${PACK_EXE} ${TEXTURE_CONVERSION_OPTS} '{}' ';'
+		TEXTURE_CONVERSION_OPTS=$(cat texture_conversion_flags.txt)
+		find . -depth \( -name '*.jpg' -o -name '*.bmp' -o -name '*.png' \) -exec ${PACK_EXE} ${TEXTURE_CONVERSION_OPTS} '{}' ';'
 		cd -
 	fi
 }
 
 process_directory_images game
 process_directory_images interface
-
 
 echo Final compression
 
