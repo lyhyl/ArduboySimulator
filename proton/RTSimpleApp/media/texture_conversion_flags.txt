@@ -1,0 +1,1 @@
+-t pvrt8888 -t 'ultra_compress 90'
