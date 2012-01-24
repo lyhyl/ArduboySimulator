@@ -13,6 +13,12 @@
 //uncomment below and so you can use alt print-screen to take screenshots easier (no border)
 //#define C_BORDERLESS_WINDOW_MODE_FOR_SCREENSHOT_EASE 
 
+//My system, or the PVR GLES emulator or something often has issues with WM_CHAR missing messages.  So I work around it with this:
+#define C_DONT_USE_WM_CHAR
+
+//If this is uncommented, the app won't suspend/resume when losing focus in windows, but always runs
+//#define RT_RUNS_IN_BACKGROUND
+
 bool g_winAllowFullscreenToggle = true;
 bool g_winAllowWindowResize = true;
 
@@ -27,11 +33,8 @@ void InitVideoSize()
 	return;
 #endif
 
-	//the X/Y of the Windows setting is (usually) actually reversed.. it's confusing like this because most of the mobiles are "rotated" to landscape
-	//mode manually and it was just less changes to make to pretend we were rotating the Windows screen to play in "landscape" orientation
-	//to make testing consistent
 	AddVideoMode("Windows", 1024, 768, PLATFORM_ID_WINDOWS);
-	AddVideoMode("Windows Wide", 800, 1280, PLATFORM_ID_WINDOWS);
+	AddVideoMode("Windows Wide", 1280, 800, PLATFORM_ID_WINDOWS);
 	
 #ifndef RT_WEBOS
 	// get native window size
@@ -44,8 +47,8 @@ void InitVideoSize()
 #endif
 
 	//OSX
-	AddVideoMode("OSX", 768, 1024, PLATFORM_ID_OSX); 
-	AddVideoMode("OSX Wide", 800, 1280, PLATFORM_ID_OSX); 
+	AddVideoMode("OSX", 1024,768, PLATFORM_ID_OSX); 
+	AddVideoMode("OSX Wide", 1280,800, PLATFORM_ID_OSX); 
 
 	//iOS - for testing on Windows, you should probably use the "Landscape" versions unless you want to hurt your
 	//neck.
@@ -66,6 +69,7 @@ void InitVideoSize()
 	AddVideoMode("Pre 3", 480, 800, PLATFORM_ID_WEBOS);
 	AddVideoMode("Pre 3 Landscape", 800,480, PLATFORM_ID_WEBOS);
 	AddVideoMode("Touchpad", 768, 1024, PLATFORM_ID_WEBOS);
+	AddVideoMode("Touchpad Landscape", 1024, 768, PLATFORM_ID_WEBOS);
 
 	//Android
 	AddVideoMode("G1", 320, 480, PLATFORM_ID_ANDROID);
@@ -211,6 +215,32 @@ void ChangeEmulationOrientationIfPossible(int desiredX, int desiredY, eOrientati
 		SetupScreenInfo(desiredX, desiredY, desiredOrienation);
 	}
 #endif
+}
+
+
+//0 signals bad key
+int VKeyToWMCharKey(int vKey)
+{
+	if (vKey > 0 && vKey < 255)
+	{
+		static unsigned char  keystate[256];
+		static HKL _gkey_layout = GetKeyboardLayout(0);
+
+		int      result;
+		unsigned short    val = 0;
+
+		if (GetKeyboardState(keystate) == FALSE) return 0;
+		result = ToAsciiEx(vKey,vKey,keystate,&val,0,_gkey_layout);
+
+		//LogMsg("Got val: %c", val);
+		vKey = val;
+	} else 
+	{
+		//out of range, ignore
+		vKey = 0;
+	}
+
+	return vKey;
 }
 
 HGLRC		g_hRC=NULL;		// Permanent Rendering Context
@@ -381,6 +411,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	case WM_CHAR:
 		{
+
 			if (!g_bHasFocus) break;
 
 			const bool isBitSet = (lParam & (1 << 30)) != 0;
@@ -393,9 +424,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				wParam = VIRTUAL_KEY_BACK;
 			}
 
+			#ifdef C_DONT_USE_WM_CHAR
+				break;
+			#endif
+
 			GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, (float)wParam, (float)lParam);  //lParam holds a lot of random data about the press, look it up if
 			//you actually want to access it
-			return 0;
 		}
 
 		break;
@@ -462,23 +496,47 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				{
 					GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_PASTE, Variant(text), 0);  //lParam holds a lot of random data about the press, look it up if
 				}
-				;
+				
 			}
 		break;
 		}
-		
-		{
+
+		{//this is to get around issue with the goto skipping the var init
+
 		//send the raw key data as well
 		VariantList v;
 		const bool isBitSet = (lParam & (1 << 30)) != 0;
 
-		if (!isBitSet)
-		{
-			int vKey = ConvertWindowsKeycodeToProtonVirtualKey(wParam); 
-			GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW, (float)vKey, 1.0f);  
-		}
-		}
-	
+			if (!isBitSet)
+			{
+				int vKey = ConvertWindowsKeycodeToProtonVirtualKey(wParam); 
+				GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW, (float)vKey, 1.0f);  
+
+			#ifdef C_DONT_USE_WM_CHAR
+
+			//also send as a normal key press.
+				int wmCharKey = VKeyToWMCharKey(wParam);
+				if (wmCharKey != 0)
+				{
+					GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, (float)wmCharKey, 1.0f);  
+				}
+
+			#endif
+			}else
+			{
+				//repeat key
+				#ifdef C_DONT_USE_WM_CHAR
+				int vKey = ConvertWindowsKeycodeToProtonVirtualKey(wParam); 
+				int wmCharKey = VKeyToWMCharKey(wParam);
+				if (wmCharKey != 0)
+				{
+					GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, (float)wmCharKey, 1.0f);  
+				}
+
+				#endif
+			}
+
+		} 
 		break;
 	
 
@@ -1134,18 +1192,21 @@ void AddText(char *tex ,char *filename)
 	{
 
 		fp = fopen( (GetBaseAppPath()+filename).c_str(), "wb");
+		if (!fp) return;
 		fwrite( tex, strlen(tex), 1, fp);       /* current player */
 		fclose(fp);
 		return;
 	} else
 	{
 		fp = fopen( (GetBaseAppPath()+filename).c_str(), "ab");
+		if (!fp) return;
 		fwrite( tex, strlen(tex), 1, fp);       /* current player */
 		fclose(fp);
 	}
 }
 
 extern bool g_isLoggerInitted;
+
 void LogMsg ( const char* traceStr, ... )
 {
 	va_list argsVA;

@@ -64,10 +64,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libgles_cm.lib  audiere.lib zdll.lib wsock32.lib libGLES_CM.lib"
+				AdditionalDependencies="audiere.lib zdll.lib wsock32.lib libGLES_CM.lib"
 				OutputFile="../bin/RTPhysicsDebug.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\shared\win\powerVR\OGLES\WindowsPC\lib;..\..\shared\win\lib;..\..\shared\win\fmod\api\lib;..\..\shared\win\audiere\lib"
+				AdditionalLibraryDirectories="..\..\shared\win\powerVR\OGLES\WindowsX86\Lib;..\..\shared\win\lib;..\..\shared\win\fmod\api\lib;..\..\shared\win\audiere\lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)/RTPhysics.pdb"
 				SubSystem="2"
