@@ -90,7 +90,7 @@ bool App::Init()
 	
 	SetDefaultButtonStyle(Button2DComponent::BUTTON_STYLE_CLICK_ON_TOUCH_RELEASE);
 	
-	if (GetEmulatedPlatformID() != PLATFORM_ID_ANDROID)
+	if (GetEmulatedPlatformID() == PLATFORM_ID_IOS)
 	{
 		SetLockedLandscape(true); //we don't allow portrait mode for this game.  Android doesn't count
 		//because its landscape mode is addressed like portrait mode when set in the manifest.
