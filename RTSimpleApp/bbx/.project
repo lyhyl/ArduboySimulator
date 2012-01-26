@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>RTSimpleApp</name>
+	<name>RTBareBones</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -9,6 +9,10 @@
 			<name>org.eclipse.cdt.managedbuilder.core.genmakebuilder</name>
 			<triggers>clean,full,incremental,</triggers>
 			<arguments>
+				<dictionary>
+					<key>?children?</key>
+					<value>?name?=outputEntries\|?children?=?name?=entry\\\\\\\|\\\|?name?=entry\\\\\\\|\\\|?name?=entry\\\\\\\|\\\|?name?=entry\\\\\\\|\\\|?name?=entry\\\\\\\|\\\|?name?=entry\\\\\\\|\\\|?name?=entry\\\\\\\|\\\|\||</value>
+				</dictionary>
 				<dictionary>
 					<key>?name?</key>
 					<value></value>
@@ -27,7 +31,7 @@
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.buildLocation</key>
-					<value>${workspace_loc:/TestCpp/Device-Release}</value>
+					<value>${workspace_loc:/TestCpp/Device-Debug}</value>
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.contents</key>
@@ -88,22 +92,12 @@
 		<link>
 			<name>Source/App.cpp</name>
 			<type>1</type>
-			<location>D:/projects/proton/RTSimpleApp/source/App.cpp</location>
+			<location>D:/projects/proton/RTBareBones/source/App.cpp</location>
 		</link>
 		<link>
 			<name>Source/App.h</name>
 			<type>1</type>
-			<location>D:/projects/proton/RTSimpleApp/source/App.h</location>
-		</link>
-		<link>
-			<name>Source/Component</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>Source/GUI</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
+			<location>D:/projects/proton/RTBareBones/source/App.h</location>
 		</link>
 		<link>
 			<name>shared/Audio</name>
@@ -181,86 +175,6 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>Source/Component/ParticleTestComponent.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/source/Component/ParticleTestComponent.cpp</locationURI>
-		</link>
-		<link>
-			<name>Source/Component/ParticleTestComponent.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/source/Component/ParticleTestComponent.h</locationURI>
-		</link>
-		<link>
-			<name>Source/Component/TouchTestComponent.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/source/Component/TouchTestComponent.cpp</locationURI>
-		</link>
-		<link>
-			<name>Source/Component/TouchTestComponent.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/source/Component/TouchTestComponent.h</locationURI>
-		</link>
-		<link>
-			<name>Source/GUI/AboutMenu.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/source/GUI/AboutMenu.cpp</locationURI>
-		</link>
-		<link>
-			<name>Source/GUI/AboutMenu.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/source/GUI/AboutMenu.h</locationURI>
-		</link>
-		<link>
-			<name>Source/GUI/DebugMenu.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/source/GUI/DebugMenu.cpp</locationURI>
-		</link>
-		<link>
-			<name>Source/GUI/DebugMenu.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/source/GUI/DebugMenu.h</locationURI>
-		</link>
-		<link>
-			<name>Source/GUI/EnterNameMenu.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/source/GUI/EnterNameMenu.cpp</locationURI>
-		</link>
-		<link>
-			<name>Source/GUI/EnterNameMenu.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/source/GUI/EnterNameMenu.h</locationURI>
-		</link>
-		<link>
-			<name>Source/GUI/MainMenu.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/source/GUI/MainMenu.cpp</locationURI>
-		</link>
-		<link>
-			<name>Source/GUI/MainMenu.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/source/GUI/MainMenu.h</locationURI>
-		</link>
-		<link>
-			<name>Source/GUI/ParticleTestMenu.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/source/GUI/ParticleTestMenu.cpp</locationURI>
-		</link>
-		<link>
-			<name>Source/GUI/ParticleTestMenu.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/source/GUI/ParticleTestMenu.h</locationURI>
-		</link>
-		<link>
-			<name>Source/GUI/TouchTestMenu.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/source/GUI/TouchTestMenu.cpp</locationURI>
-		</link>
-		<link>
-			<name>Source/GUI/TouchTestMenu.h</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/source/GUI/TouchTestMenu.h</locationURI>
-		</link>
-		<link>
 			<name>shared/Audio/AudioManager.cpp</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/shared/Audio/AudioManager.cpp</locationURI>
@@ -269,16 +183,6 @@
 			<name>shared/Audio/AudioManager.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/shared/Audio/AudioManager.h</locationURI>
-		</link>
-		<link>
-			<name>shared/Audio/AudioManagerBBX.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Audio/AudioManagerBBX.cpp</locationURI>
-		</link>
-		<link>
-			<name>shared/Audio/AudioManagerBBX.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Audio/AudioManagerBBX.h</locationURI>
 		</link>
 		<link>
 			<name>shared/BBX/BBXMain.cpp</name>
@@ -326,16 +230,6 @@
 			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/ArcadeInputComponent.h</locationURI>
 		</link>
 		<link>
-			<name>shared/Entity/Button2DComponent.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/Button2DComponent.cpp</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/Button2DComponent.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/Button2DComponent.h</locationURI>
-		</link>
-		<link>
 			<name>shared/Entity/Component.cpp</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/Component.cpp</locationURI>
@@ -356,26 +250,6 @@
 			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/CustomInputComponent.h</locationURI>
 		</link>
 		<link>
-			<name>shared/Entity/DPadComponent.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/DPadComponent.cpp</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/DPadComponent.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/DPadComponent.h</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/EmitVirtualKeyComponent.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/EmitVirtualKeyComponent.cpp</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/EmitVirtualKeyComponent.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/EmitVirtualKeyComponent.h</locationURI>
-		</link>
-		<link>
 			<name>shared/Entity/Entity.cpp</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/Entity.cpp</locationURI>
@@ -384,26 +258,6 @@
 			<name>shared/Entity/Entity.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/Entity.h</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/EntityUtils.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/EntityUtils.cpp</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/EntityUtils.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/EntityUtils.h</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/FilterComponent.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/FilterComponent.cpp</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/FilterComponent.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/FilterComponent.h</locationURI>
 		</link>
 		<link>
 			<name>shared/Entity/FilterInputComponent.cpp</name>
@@ -444,226 +298,6 @@
 			<name>shared/Entity/FocusUpdateComponent.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/FocusUpdateComponent.h</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/InputTextRenderComponent.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/InputTextRenderComponent.cpp</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/InputTextRenderComponent.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/InputTextRenderComponent.h</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/InterpolateComponent.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/InterpolateComponent.cpp</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/InterpolateComponent.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/InterpolateComponent.h</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/LogDisplayComponent.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/LogDisplayComponent.cpp</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/LogDisplayComponent.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/LogDisplayComponent.h</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/OverlayRenderComponent.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/OverlayRenderComponent.cpp</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/OverlayRenderComponent.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/OverlayRenderComponent.h</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/ProgressBarComponent.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/ProgressBarComponent.cpp</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/ProgressBarComponent.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/ProgressBarComponent.h</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/RectRenderComponent.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/RectRenderComponent.cpp</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/RectRenderComponent.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/RectRenderComponent.h</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/RenderClipComponent.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/RenderClipComponent.cpp</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/RenderClipComponent.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/RenderClipComponent.h</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/RenderScissorComponent.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/RenderScissorComponent.cpp</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/RenderScissorComponent.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/RenderScissorComponent.h</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/ScrollBarRenderComponent.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/ScrollBarRenderComponent.cpp</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/ScrollBarRenderComponent.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/ScrollBarRenderComponent.h</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/ScrollComponent.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/ScrollComponent.cpp</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/ScrollComponent.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/ScrollComponent.h</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/SelectButtonWithCustomInputComponent.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/SelectButtonWithCustomInputComponent.cpp</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/SelectButtonWithCustomInputComponent.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/SelectButtonWithCustomInputComponent.h</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/SliderComponent.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/SliderComponent.cpp</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/SliderComponent.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/SliderComponent.h</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/TapSequenceDetectComponent.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/TapSequenceDetectComponent.cpp</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/TapSequenceDetectComponent.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/TapSequenceDetectComponent.h</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/TemplateComponent.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/TemplateComponent.cpp</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/TemplateComponent.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/TemplateComponent.h</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/TextBoxRenderComponent.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/TextBoxRenderComponent.cpp</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/TextBoxRenderComponent.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/TextBoxRenderComponent.h</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/TextRenderComponent.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/TextRenderComponent.cpp</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/TextRenderComponent.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/TextRenderComponent.h</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/TouchDragComponent.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/TouchDragComponent.cpp</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/TouchDragComponent.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/TouchDragComponent.h</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/TouchHandlerComponent.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/TouchHandlerComponent.cpp</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/TouchHandlerComponent.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/TouchHandlerComponent.h</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/TouchStripComponent.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/TouchStripComponent.cpp</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/TouchStripComponent.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/TouchStripComponent.h</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/TrailRenderComponent.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/TrailRenderComponent.cpp</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/TrailRenderComponent.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/TrailRenderComponent.h</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/TyperComponent.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/TyperComponent.cpp</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/TyperComponent.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/TyperComponent.h</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/UnderlineRenderComponent.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/UnderlineRenderComponent.cpp</locationURI>
-		</link>
-		<link>
-			<name>shared/Entity/UnderlineRenderComponent.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Entity/UnderlineRenderComponent.h</locationURI>
 		</link>
 		<link>
 			<name>shared/FileSystem/FileManager.cpp</name>
@@ -781,16 +415,6 @@
 			<locationURI>PARENT-2-PROJECT_LOC/shared/Math/rtRect.h</locationURI>
 		</link>
 		<link>
-			<name>shared/Renderer/JPGSurfaceLoader.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Renderer/JPGSurfaceLoader.cpp</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/JPGSurfaceLoader.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Renderer/JPGSurfaceLoader.h</locationURI>
-		</link>
-		<link>
 			<name>shared/Renderer/RenderBatcher.cpp</name>
 			<type>1</type>
 			<location>D:/projects/proton/shared/Renderer/RenderBatcher.cpp</location>
@@ -829,16 +453,6 @@
 			<name>shared/Renderer/SurfaceAnim.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/shared/Renderer/SurfaceAnim.h</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/linearparticle</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
 			<name>shared/util/CRandom.cpp</name>
@@ -931,241 +545,6 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>shared/Renderer/jpeglib/jcapimin.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jcapimin.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jcapistd.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jcapistd.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jccoefct.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jccoefct.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jccolor.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jccolor.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jcdctmgr.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jcdctmgr.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jchuff.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jchuff.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jcinit.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jcinit.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jcmainct.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jcmainct.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jcmarker.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jcmarker.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jcmaster.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jcmaster.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jcomapi.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jcomapi.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jcparam.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jcparam.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jcphuff.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jcphuff.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jcprepct.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jcprepct.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jcsample.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jcsample.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jctrans.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jctrans.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jdapimin.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jdapimin.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jdapistd.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jdapistd.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jdatadst.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jdatadst.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jdatasrc.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jdatasrc.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jdcoefct.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jdcoefct.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jdcolor.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jdcolor.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jddctmgr.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jddctmgr.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jdhuff.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jdhuff.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jdinput.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jdinput.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jdmainct.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jdmainct.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jdmarker.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jdmarker.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jdmaster.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jdmaster.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jdmerge.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jdmerge.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jdphuff.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jdphuff.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jdpostct.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jdpostct.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jdsample.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jdsample.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jdtrans.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jdtrans.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jerror.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jerror.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jfdctflt.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jfdctflt.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jfdctfst.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jfdctfst.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jfdctint.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jfdctint.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jidctflt.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jidctflt.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jidctfst.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jidctfst.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jidctint.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jidctint.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jidctred.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jidctred.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jmemmgr.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jmemmgr.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jmemnobs.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jmemnobs.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jquant1.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jquant1.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jquant2.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jquant2.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/jpeglib/jutils.c</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Irrlicht/source/Irrlicht/jpeglib/jutils.c</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/linearparticle/sources</name>
-			<type>2</type>
-			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
 			<name>shared/util/boost/boost</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
@@ -1184,116 +563,6 @@
 			<name>shared/ClanLib-2.0/Sources/Core/Math</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/linearparticle/sources/L_Defination.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Renderer/linearparticle/sources/L_Defination.cpp</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/linearparticle/sources/L_Defination.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Renderer/linearparticle/sources/L_Defination.h</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/linearparticle/sources/L_DroppingEffect.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Renderer/linearparticle/sources/L_DroppingEffect.cpp</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/linearparticle/sources/L_DroppingEffect.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Renderer/linearparticle/sources/L_DroppingEffect.h</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/linearparticle/sources/L_EffectEmitter.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Renderer/linearparticle/sources/L_EffectEmitter.cpp</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/linearparticle/sources/L_EffectEmitter.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Renderer/linearparticle/sources/L_EffectEmitter.h</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/linearparticle/sources/L_EffectManager.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Renderer/linearparticle/sources/L_EffectManager.cpp</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/linearparticle/sources/L_EffectManager.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Renderer/linearparticle/sources/L_EffectManager.h</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/linearparticle/sources/L_ExplosionEffect.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Renderer/linearparticle/sources/L_ExplosionEffect.cpp</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/linearparticle/sources/L_ExplosionEffect.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Renderer/linearparticle/sources/L_ExplosionEffect.h</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/linearparticle/sources/L_MotionController.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Renderer/linearparticle/sources/L_MotionController.cpp</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/linearparticle/sources/L_MotionController.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Renderer/linearparticle/sources/L_MotionController.h</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/linearparticle/sources/L_Particle.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Renderer/linearparticle/sources/L_Particle.cpp</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/linearparticle/sources/L_Particle.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Renderer/linearparticle/sources/L_Particle.h</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/linearparticle/sources/L_ParticleEffect.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Renderer/linearparticle/sources/L_ParticleEffect.cpp</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/linearparticle/sources/L_ParticleEffect.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Renderer/linearparticle/sources/L_ParticleEffect.h</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/linearparticle/sources/L_ParticleMem.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Renderer/linearparticle/sources/L_ParticleMem.cpp</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/linearparticle/sources/L_ParticleMem.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Renderer/linearparticle/sources/L_ParticleMem.h</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/linearparticle/sources/L_ParticleSystem.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Renderer/linearparticle/sources/L_ParticleSystem.cpp</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/linearparticle/sources/L_ParticleSystem.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Renderer/linearparticle/sources/L_ParticleSystem.h</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/linearparticle/sources/L_ShootingEffect.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Renderer/linearparticle/sources/L_ShootingEffect.cpp</locationURI>
-		</link>
-		<link>
-			<name>shared/Renderer/linearparticle/sources/L_ShootingEffect.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/shared/Renderer/linearparticle/sources/L_ShootingEffect.h</locationURI>
 		</link>
 		<link>
 			<name>shared/util/boost/boost/signals</name>

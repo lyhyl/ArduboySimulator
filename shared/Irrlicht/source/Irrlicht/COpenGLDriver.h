@@ -35,6 +35,10 @@ namespace video
 	{
 	public:
 
+		//Note:   _IRR_COMPILE_WITH_WINDOWS_DEVICE_ should be defined for *any* platform - (Win, OSX, etc) -
+		//it's had the windows specific code commented out and should work for anything.  This way we can
+		//only deal with CIrrDeviceWin32 and not have to fool with more than one. -Seth
+
 		#ifdef _IRR_COMPILE_WITH_WINDOWS_DEVICE_
 		COpenGLDriver(const SIrrlichtCreationParameters& params, io::IFileSystem* io, CIrrDeviceWin32* device);
 		//! inits the windows specific parts of the open gl driver
@@ -484,14 +488,17 @@ namespace video
 		};
 		core::array<RequestedLight> RequestedLights;
 
-		#ifdef _IRR_WINDOWS_API_
-			HDC HDc; // Private GDI Device Context
-			HWND Window;
-		#ifdef _IRR_COMPILE_WITH_WINDOWS_DEVICE_
-			CIrrDeviceWin32 *Device;
+		#if defined( _IRR_WINDOWS_API_) || defined(_IRR_COMPILE_WITH_WINDOWS_DEVICE_)
+			//HDC HDc; // Private GDI Device Context
+			//HWND Window;
+        //Seth changed to platform agnostic
+        int HDc;
+        void * Window;
+        CIrrDeviceWin32 *Device;
 		#endif
-		#endif
-		#ifdef _IRR_COMPILE_WITH_X11_DEVICE_
+
+        /*
+        #ifdef _IRR_COMPILE_WITH_X11_DEVICE_
 			GLXDrawable Drawable;
 			Display* X11Display;
 			CIrrDeviceLinux *Device;
@@ -502,6 +509,7 @@ namespace video
 		#ifdef _IRR_COMPILE_WITH_SDL_DEVICE_
 			CIrrDeviceSDL *Device;
 		#endif
+         */
 
 		E_DEVICE_TYPE DeviceType;
 	};

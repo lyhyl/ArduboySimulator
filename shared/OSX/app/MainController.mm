@@ -397,6 +397,7 @@
 		GetBaseApp()->OnEnterBackground();
 		GetBaseApp()->Kill();
 	}
+    openGLView->m_bQuitASAP = true;
 	
 	CGLUnlockContext( (_CGLContextObject*) [[openGLView openGLContext] CGLContextObj]);
 	

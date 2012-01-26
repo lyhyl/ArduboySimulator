@@ -25,6 +25,7 @@ void RotateGLIfNeeded();
 #include <SDL/SDL.h>
 #endif
 
+
 namespace irr
 {
 namespace video
@@ -43,7 +44,7 @@ COpenGLDriver::COpenGLDriver(const irr::SIrrlichtCreationParameters& params,
 	CurrentRendertargetSize(0,0), ColorFormat(ECF_R8G8B8),
 	CurrentTarget(ERT_FRAME_BUFFER),
 	Doublebuffer(params.Doublebuffer), Stereo(params.Stereobuffer),
-	HDc(0), Window(static_cast<HWND>(params.WindowId)), Device(device),
+	 Device(device),
 	DeviceType(EIDT_WIN32)
 {
 	#ifdef _DEBUG
@@ -54,7 +55,8 @@ COpenGLDriver::COpenGLDriver(const irr::SIrrlichtCreationParameters& params,
 
 bool COpenGLDriver::changeRenderContext(const SExposedVideoData& videoData, CIrrDeviceWin32* device)
 {
-	if (videoData.OpenGLWin32.HWnd && videoData.OpenGLWin32.HDc && videoData.OpenGLWin32.HRc)
+	/*
+    if (videoData.OpenGLWin32.HWnd && videoData.OpenGLWin32.HDc && videoData.OpenGLWin32.HRc)
 	{
 		if (!wglMakeCurrent((HDC)videoData.OpenGLWin32.HDc, (HGLRC)videoData.OpenGLWin32.HRc))
 		{
@@ -79,6 +81,7 @@ bool COpenGLDriver::changeRenderContext(const SExposedVideoData& videoData, CIrr
 			HDc = (HDC)ExposedData.OpenGLWin32.HDc;
 		}
 	}
+     */
 	return true;
 }
 
@@ -89,6 +92,7 @@ bool COpenGLDriver::initDriver(irr::SIrrlichtCreationParameters params, CIrrDevi
 	genericDriverInit(params.WindowSize, params.Stencilbuffer);
 	return true; //SETH
 
+    /*
 	// Create a window to test antialiasing support
 	const fschar_t* ClassName = __TEXT("GLCIrrDeviceWin32");
 	HINSTANCE lhInstance = GetModuleHandle(0);
@@ -453,6 +457,7 @@ bool COpenGLDriver::initDriver(irr::SIrrlichtCreationParameters params, CIrrDevi
 		wglSwapIntervalEXT(params.Vsync ? 1 : 0);
 #endif
 	return true;
+     */
 }
 
 #endif // _IRR_COMPILE_WITH_WINDOWS_DEVICE_
@@ -605,6 +610,7 @@ COpenGLDriver::~COpenGLDriver()
 	if (DeviceType == EIDT_WIN32)
 	{
 
+		/*
 		if (ExposedData.OpenGLWin32.HRc)
 		{
 			if (!wglMakeCurrent(0, 0))
@@ -616,6 +622,7 @@ COpenGLDriver::~COpenGLDriver()
 
 		if (HDc)
 			ReleaseDC(Window, HDc);
+			*/
 	}
 #endif
 }
@@ -772,8 +779,8 @@ bool COpenGLDriver::endScene()
 	glFlush();
 
 #ifdef _IRR_COMPILE_WITH_WINDOWS_DEVICE_
-	if (DeviceType == EIDT_WIN32)
-		return SwapBuffers(HDc) == TRUE;
+	//if (DeviceType == EIDT_WIN32)
+	//	return SwapBuffers(HDc) == TRUE;
 #endif
 
 #ifdef _IRR_COMPILE_WITH_X11_DEVICE_

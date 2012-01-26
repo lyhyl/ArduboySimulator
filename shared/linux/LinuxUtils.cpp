@@ -144,21 +144,27 @@ int GetYOffset()
 
 unsigned int GetSystemTimeTick()
 {
-//	struct timeval tv;
-//	gettimeofday(&tv, NULL);
-//	return tv.tv_usec/1000 + tv.tv_sec*1000;
 
-  struct timespec time;
-  clock_gettime(CLOCK_MONOTONIC, &time);
+	//Note:  Due to using an unsigned int for millseconds, the timer kept rolling over on my linux game server I wrote for
+	//Tanked - so I changed this to start at 0, which gives me 46 days of running before the roll-over.  Why don't I just change
+	//my stuff to handle timing roll-overs or perhaps use a bigger type for timing?  Well.. hmm.  Ok, maybe, but for now this. -Seth
+	
+	static unsigned int incrementingTimer = 0;
+	static double buildUp = 0;
+	static double lastTime = 0;
 
-  if (time.tv_sec > 100000000)
-  {
-	  time.tv_sec -= 100000000; //help with timeoverun issues
-  }
-
-double accum;
-accum = time.tv_sec*1000 + time.tv_nsec/1000000;
-return accum;
+    struct timespec time;
+	clock_gettime(CLOCK_MONOTONIC, &time);
+	double timeDouble = time.tv_sec*1000 + time.tv_nsec/1000000;
+	
+	double change = timeDouble -lastTime;
+	if (change > 0 and change < 500)
+	{
+		incrementingTimer += change;
+	}
+	lastTime = timeDouble;
+	
+	return incrementingTimer;
 }
 
 uint64 GetSystemTimeTickLong()
