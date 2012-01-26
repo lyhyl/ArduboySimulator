@@ -20,7 +20,7 @@ VideoMode::VideoMode(string name, int x, int y, ePlatformID platformID, eOrienta
 {
 }
 
-std::string VideoMode::getName() const
+string VideoMode::getName() const
 {
 	return name;
 }
@@ -45,11 +45,13 @@ eOrientationMode VideoMode::getOrientationMode() const
 	return orientationMode;
 }
 
-std::map<std::string, VideoMode> VideoModeSelector::g_videoModes;
+map<string, VideoMode> VideoModeSelector::g_videoModes;
+vector<string> VideoModeSelector::g_videoModeNames;
 
 void VideoModeSelector::addVideoMode(string name, int x, int y, ePlatformID platformID, eOrientationMode orientationMode)
 {
 	g_videoModes[name] = VideoMode(name, x, y, platformID, orientationMode);
+	g_videoModeNames.push_back(name);
 }
 
 void VideoModeSelector::initializeModes() {
@@ -121,7 +123,7 @@ VideoModeSelector::VideoModeSelector()
 	initializeModes();
 }
 
-const VideoMode* VideoModeSelector::getNamedMode(const std::string& name) const
+const VideoMode* VideoModeSelector::getNamedMode(const string& name) const
 {
 	map<string, VideoMode>::const_iterator it(g_videoModes.find(name));
 	
@@ -130,4 +132,9 @@ const VideoMode* VideoModeSelector::getNamedMode(const std::string& name) const
 	}
 	
 	return NULL;
+}
+
+const vector<string>& VideoModeSelector::getModeNames() const
+{
+	return g_videoModeNames;
 }
