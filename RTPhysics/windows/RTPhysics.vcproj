@@ -14093,7 +14093,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\shared\Bullet\BulletCollision\CollisionShapes\bttrianglemeshshape.cpp"
+						RelativePath="..\..\shared\Bullet\BulletCollision\CollisionShapes\btTriangleMeshShape.cpp"
 						>
 						<FileConfiguration
 							Name="Common Debug|Win32"

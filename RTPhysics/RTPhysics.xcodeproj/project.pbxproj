@@ -389,7 +389,7 @@
 		5D9D498312E82851006CD82C /* btTriangleIndexVertexArray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9D48C912E82851006CD82C /* btTriangleIndexVertexArray.cpp */; };
 		5D9D498412E82851006CD82C /* btTriangleIndexVertexMaterialArray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9D48CB12E82851006CD82C /* btTriangleIndexVertexMaterialArray.cpp */; };
 		5D9D498512E82851006CD82C /* btTriangleMesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9D48CE12E82851006CD82C /* btTriangleMesh.cpp */; };
-		5D9D498612E82851006CD82C /* bttrianglemeshshape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9D48D012E82851006CD82C /* bttrianglemeshshape.cpp */; };
+		5D9D498612E82851006CD82C /* btTriangleMeshShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9D48D012E82851006CD82C /* btTriangleMeshShape.cpp */; };
 		5D9D498712E82851006CD82C /* btUniformScalingShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9D48D312E82851006CD82C /* btUniformScalingShape.cpp */; };
 		5D9D498812E82851006CD82C /* Doxyfile in Resources */ = {isa = PBXBuildFile; fileRef = 5D9D48D512E82851006CD82C /* Doxyfile */; };
 		5D9D498912E82851006CD82C /* btContactProcessing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9D48D912E82851006CD82C /* btContactProcessing.cpp */; };
@@ -1389,7 +1389,7 @@
 		5D9D48CD12E82851006CD82C /* btTriangleInfoMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = btTriangleInfoMap.h; sourceTree = "<group>"; };
 		5D9D48CE12E82851006CD82C /* btTriangleMesh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = btTriangleMesh.cpp; sourceTree = "<group>"; };
 		5D9D48CF12E82851006CD82C /* btTriangleMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = btTriangleMesh.h; sourceTree = "<group>"; };
-		5D9D48D012E82851006CD82C /* bttrianglemeshshape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bttrianglemeshshape.cpp; sourceTree = "<group>"; };
+		5D9D48D012E82851006CD82C /* btTriangleMeshShape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = btTriangleMeshShape.cpp; sourceTree = "<group>"; };
 		5D9D48D112E82851006CD82C /* btTriangleMeshShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = btTriangleMeshShape.h; sourceTree = "<group>"; };
 		5D9D48D212E82851006CD82C /* btTriangleShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = btTriangleShape.h; sourceTree = "<group>"; };
 		5D9D48D312E82851006CD82C /* btUniformScalingShape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = btUniformScalingShape.cpp; sourceTree = "<group>"; };
@@ -2792,7 +2792,7 @@
 				5D9D48CD12E82851006CD82C /* btTriangleInfoMap.h */,
 				5D9D48CE12E82851006CD82C /* btTriangleMesh.cpp */,
 				5D9D48CF12E82851006CD82C /* btTriangleMesh.h */,
-				5D9D48D012E82851006CD82C /* bttrianglemeshshape.cpp */,
+				5D9D48D012E82851006CD82C /* btTriangleMeshShape.cpp */,
 				5D9D48D112E82851006CD82C /* btTriangleMeshShape.h */,
 				5D9D48D212E82851006CD82C /* btTriangleShape.h */,
 				5D9D48D312E82851006CD82C /* btUniformScalingShape.cpp */,
@@ -3495,7 +3495,7 @@
 				5D9D498312E82851006CD82C /* btTriangleIndexVertexArray.cpp in Sources */,
 				5D9D498412E82851006CD82C /* btTriangleIndexVertexMaterialArray.cpp in Sources */,
 				5D9D498512E82851006CD82C /* btTriangleMesh.cpp in Sources */,
-				5D9D498612E82851006CD82C /* bttrianglemeshshape.cpp in Sources */,
+				5D9D498612E82851006CD82C /* btTriangleMeshShape.cpp in Sources */,
 				5D9D498712E82851006CD82C /* btUniformScalingShape.cpp in Sources */,
 				5D9D498912E82851006CD82C /* btContactProcessing.cpp in Sources */,
 				5D9D498A12E82851006CD82C /* btGenericPoolAllocator.cpp in Sources */,
