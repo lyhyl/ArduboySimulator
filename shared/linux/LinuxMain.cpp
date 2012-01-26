@@ -1,4 +1,5 @@
 #include "BaseApp.h"
+#include "util/VideoModeSelector.h"
 #include "LinuxUtils.h"
 #include <SDL.h>
 
@@ -241,12 +242,22 @@ int main(int argc, char *argv[])
 	srand( (unsigned)time(NULL) );
 	RemoveFile("log.txt", false);
 
-//	InitVideoSize();
-	// Simplified InitVideoSize() from win version to this:
-	g_winVideoScreenX = 320;
-	g_winVideoScreenY = 480;
-	SetEmulatedPlatformID(PLATFORM_ID_LINUX);
-	SetForcedOrientation(ORIENTATION_DONT_CARE);
+	VideoModeSelector vms;
+	const char *requestedVideoMode = "iPhone Landscape";
+	const VideoMode *videoMode = vms.getNamedMode(requestedVideoMode);
+	if (videoMode != NULL) {
+		g_winVideoScreenX = videoMode->getX();
+		g_winVideoScreenY = videoMode->getY();
+		SetEmulatedPlatformID(videoMode->getPlatformID());
+		SetForcedOrientation(videoMode->getOrientationMode());
+	} else {
+		LogMsg("Requested video mode '%s' not found. Setting default video mode.", requestedVideoMode);
+		g_winVideoScreenX = 320;
+		g_winVideoScreenY = 480;
+		SetEmulatedPlatformID(PLATFORM_ID_LINUX);
+		SetForcedOrientation(ORIENTATION_DONT_CARE);
+	}
+
 	GetBaseApp()->OnPreInitVideo(); //gives the app level code a chance to override any of these parms if it wants to
 
 	if (!InitSDL())
