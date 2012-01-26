@@ -17,8 +17,8 @@ void DPADButton::OnButtonChange(int key, bool bDown)
 		
 		if (!m_bDown)
 		{
-			GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, key , bDown);  
-			GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW, key , bDown);  
+			GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, (float)key , (float)bDown);  
+			GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW, (float)key , (float)bDown);  
 //			LogMsg("DOWN: Got %d down is %d", key, int(bDown));
 			m_bDown = true;
 		}
@@ -28,7 +28,7 @@ void DPADButton::OnButtonChange(int key, bool bDown)
 		if (m_bDown)
 		{
 			m_bDown = false;
-			GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW, key , bDown);  
+			GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW, (float)key , (float)bDown);  
 //			LogMsg("RELEASE: Got %d down is %d", key, int(bDown));
 		}
 	}

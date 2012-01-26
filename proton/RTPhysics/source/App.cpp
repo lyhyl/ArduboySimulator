@@ -11,7 +11,6 @@
 #include "Irrlicht/IrrlichtManager.h"
 #include "FileSystem/FileSystemZip.h"
 
-
 //create the classes that our globally library expects to exist somewhere.
 
 MessageManager g_messageManager;

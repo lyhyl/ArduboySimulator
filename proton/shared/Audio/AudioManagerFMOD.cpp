@@ -18,18 +18,6 @@ AudioManagerFMOD::AudioManagerFMOD()
 {
 	system = NULL;
 	m_pMusicChannel = NULL;
-//	m_midiSoundBankFile = "dink/midi/FluidR3_GSs.sf2";
-//	m_midiSoundBankFile = "dink/midi/Hollywood.dls";
-	//m_midiSoundBankFile = "dink/midi/gu_gs_aud.dls";
-	
-	
-	//this is the good one
-	//m_midiSoundBankFile = "dink/midi/TimGM6mbTiny.dls";
-	
-	
-	//m_midiSoundBankFile = "dink/midi/gm.dls";
-	//m_midiSoundBankFile = "dink/midi/gmtest.dls";
-
 }
 
 AudioManagerFMOD::~AudioManagerFMOD()
@@ -71,14 +59,9 @@ bool AudioManagerFMOD::Init()
 	{
 
 		
-#if defined( __APPLE__) && (TARGET_OS_IPHONE == 1)
-        //Huh, the latest FMOD for iPhone (downloaded 1-14-2012) wants 4 args, not 5.. -Seth
+        //if you get an error about incorrect number of args, go download the latest fmod version! -Seth
         result = system->getDriverCaps(0, &caps, 0, &speakermode);
-#else
-    
-        //older and Win/osx FMOD versions want 5 parms still I assume?
-         result = system->getDriverCaps(0, &caps, 0, 0, &speakermode);
-#endif
+
 		ERRCHECK(result);
 
 		result = system->setSpeakerMode(speakermode);       /* Set the user selected speaker mode. */

@@ -20,32 +20,26 @@ public:
 	virtual void Kill();
 	virtual void Draw();
 	virtual void OnScreenSizeChange();
-	virtual void Update();
 	virtual void OnEnterBackground();
-
-	string GetVersionString();
-	float GetVersion();
-	int GetBuild();
-	void GetServerInfo(string &server, uint32 &port);
-	VariantDB * GetShared() {return &m_varDB;}
-	Variant * GetVar(const string &keyName );
-	Variant * GetVarWithDefault(const string &varName, const Variant &var) {return m_varDB.GetVarWithDefault(varName, var);}
-	int GetSpecial();
+	virtual void OnEnterForeground();
+	virtual void Update();
 	void OnExitApp(VariantList *pVarList);
+	
+	
+	//we'll wire these to connect to some signals we care about
+	void OnAccel(VariantList *pVList);
+	void OnArcadeInput(VariantList *pVList);
 
 private:
 
-	void SaveOurStuff();
-
 	bool m_bDidPostInit;
-	VariantDB m_varDB; //holds all data we want to save/load
-	int m_special;
+	Surface m_surf; //for testing
 };
- 
+
 
 extern App g_App;
 
 App * GetApp();
 const char * GetAppName();
-const char * GetBundleName();
 const char * GetBundlePrefix();
+const char * GetBundleName();

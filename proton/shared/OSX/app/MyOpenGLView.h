@@ -21,6 +21,10 @@
 	
 	CVDisplayLinkRef displayLink;
 	BOOL isAnimating;
+    
+@public
+    
+    BOOL m_bQuitASAP;
 }
 
 - (id) initWithFrame:(NSRect)frameRect;

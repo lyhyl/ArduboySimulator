@@ -1,3 +1,17 @@
+/*
+
+The idea here is we use the CirrDeviveWin32 for ALL platforms that want to use GL.  I've commented out
+all the platform specific stuff as we want Proton to handle it.
+
+For GLES, we do the same, but we use the CIrrDeviceiPhone device.  
+
+Optimally, we should probably use the same device for both, and rename it CIrrDeviceProton or CIrrDeviceGeneric.
+
+
+-Seth
+*/
+
+
 // Copyright (C) 2002-2009 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
@@ -12,12 +26,7 @@
 #include "IrrlichtDevice.h"
 #include "IImagePresenter.h"
 
-#define WIN32_LEAN_AND_MEAN
-#if !defined(_IRR_XBOX_PLATFORM_)
-	#include <windows.h>
-	#include <mmsystem.h> // For JOYCAPS
-	#include <Windowsx.h>
-#endif
+
 
 namespace irr
 {
@@ -112,20 +121,22 @@ namespace irr
 		static void ReportLastWinApiError();
 
 		// convert an Irrlicht texture to a windows cursor
-		HCURSOR TextureToCursor(HWND hwnd, irr::video::ITexture * tex, const core::rect<s32>& sourceRect, const core::position2d<s32> &hotspot);
+		//HCURSOR TextureToCursor(HWND hwnd, irr::video::ITexture * tex, const core::rect<s32>& sourceRect, const core::position2d<s32> &hotspot);
 
 		//! Implementation of the win32 cursor control
 		class CCursorControl : public gui::ICursorControl
 		{
 		public:
 
-			CCursorControl(CIrrDeviceWin32* device, const core::dimension2d<u32>& wsize, HWND hwnd, bool fullscreen);
+			CCursorControl(CIrrDeviceWin32* device, const core::dimension2d<u32>& wsize,  bool fullscreen);
 			~CCursorControl();
 
 			//! Changes the visible state of the mouse cursor.
 			virtual void setVisible(bool visible)
 			{
-				CURSORINFO info;
+				
+                /*
+                CURSORINFO info;
 				info.cbSize = sizeof(CURSORINFO);
 				BOOL gotCursorInfo = GetCursorInfo(&info);
 				while ( gotCursorInfo )
@@ -143,6 +154,7 @@ namespace irr
 					info.cbSize = sizeof(CURSORINFO);	// yes, it really must be set each time
 					gotCursorInfo = GetCursorInfo(&info);
 				}
+                 */
 				IsVisible = visible;
 			}
 
@@ -162,10 +174,12 @@ namespace irr
 			//! Sets the new position of the cursor.
 			virtual void setPosition(f32 x, f32 y)
 			{
+                /*
 				if (!UseReferenceRect)
 					setPosition(core::round32(x*WindowSize.Width), core::round32(y*WindowSize.Height));
 				else
 					setPosition(core::round32(x*ReferenceRect.getWidth()), core::round32(y*ReferenceRect.getHeight()));
+                 */
 			}
 
 			//! Sets the new position of the cursor.
@@ -177,6 +191,7 @@ namespace irr
 			//! Sets the new position of the cursor.
 			virtual void setPosition(s32 x, s32 y)
 			{
+                /*
 				if (UseReferenceRect)
 				{
 					SetCursorPos(ReferenceRect.UpperLeftCorner.X + x,
@@ -188,7 +203,7 @@ namespace irr
 					if (GetWindowRect(HWnd, &rect))
 						SetCursorPos(x + rect.left + BorderX, y + rect.top + BorderY);
 				}
-
+                */
 				CursorPos.X = x;
 				CursorPos.Y = y;
 			}
@@ -253,6 +268,7 @@ namespace irr
 			/** Used to notify the cursor that the window resizable settings changed. */
 			void updateBorderSize(bool fullscreen, bool resizable)
 			{
+                /*
 			   if (!fullscreen)
 			   {
 				  if (resizable)
@@ -270,6 +286,7 @@ namespace irr
 			   {
 				  BorderX = BorderY = 0;
 			   }
+                 */
 			}
 
 
@@ -298,7 +315,8 @@ namespace irr
 			//! Updates the internal cursor position
 			void updateInternalCursorPosition()
 			{
-				POINT p;
+			/*
+                POINT p;
 				if (!GetCursorPos(&p))
 				{
 					DWORD xy = GetMessagePos();
@@ -327,19 +345,20 @@ namespace irr
 						CursorPos.Y = -1;
 					}
 				}
+             */
 			}
 
             CIrrDeviceWin32* Device;
 			core::position2d<s32> CursorPos;
 			core::dimension2d<u32> WindowSize;
 			core::dimension2d<f32> InvWindowSize;
-			HWND HWnd;
+			//HWND HWnd;
 
 			s32 BorderX, BorderY;
 			core::rect<s32> ReferenceRect;
 			bool UseReferenceRect;
 			bool IsVisible;
-
+/*
 
 			struct CursorFrameW32
 			{
@@ -361,6 +380,7 @@ namespace irr
 			};
 
 			core::array<CursorW32> Cursors;
+ */
 			gui::ECURSOR_ICON ActiveIcon;
 			u32 ActiveIconStartTime;
 
@@ -381,7 +401,7 @@ namespace irr
 
 		void pollJoysticks();
 
-		HWND HWnd;
+		//HWND HWnd;
 
 		bool ChangedToFullScreen;
 		bool IsNonNTWindows;

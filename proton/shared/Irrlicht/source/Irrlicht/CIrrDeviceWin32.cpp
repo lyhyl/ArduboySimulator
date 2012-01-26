@@ -16,7 +16,7 @@
 #include "COSOperator.h"
 #include "dimension2d.h"
 #include "IGUISpriteBank.h"
-#include <winuser.h>
+//#include <winuser.h>
 #include "SExposedVideoData.h"
 
 namespace irr
@@ -214,15 +214,16 @@ namespace
 {
 	struct SEnvMapper
 	{
-		HWND hWnd;
+		//HWND hWnd;
 		irr::CIrrDeviceWin32* irrDev;
 	};
 	irr::core::list<SEnvMapper> EnvMap;
 
-	HKL KEYBOARD_INPUT_HKL=0;
+	//HKL KEYBOARD_INPUT_HKL=0;
 	unsigned int KEYBOARD_INPUT_CODEPAGE = 1252;
 };
 
+/*
 SEnvMapper* getEnvMapperFromHWnd(HWND hWnd)
 {
 	irr::core::list<SEnvMapper>::Iterator it = EnvMap.begin();
@@ -243,8 +244,9 @@ irr::CIrrDeviceWin32* getDeviceFromHWnd(HWND hWnd)
 
 	return 0;
 }
+*/
 
-
+/*
 LRESULT CALLBACK WndProcSeth(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	#ifndef WM_MOUSEWHEEL
@@ -505,14 +507,14 @@ LRESULT CALLBACK WndProcSeth(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPar
 	}
 	return DefWindowProc(hWnd, message, wParam, lParam);
 }
-
+*/
 
 namespace irr
 {
 
 //! constructor
 CIrrDeviceWin32::CIrrDeviceWin32(const SIrrlichtCreationParameters& params)
-: CIrrDeviceStub(params), HWnd(0), ChangedToFullScreen(false),
+: CIrrDeviceStub(params),  ChangedToFullScreen(false),
 	IsNonNTWindows(false), Resized(false),
 	ExternalWindow(false), Win32CursorControl(0)
 {
@@ -521,6 +523,8 @@ CIrrDeviceWin32::CIrrDeviceWin32(const SIrrlichtCreationParameters& params)
 	#endif
 
 	// get windows version and create OS operator
+	
+	/*
 	core::stringc winversion;
 	getWindowsVersion(winversion);
 	Operator = new COSOperator(winversion.c_str());
@@ -620,9 +624,9 @@ CIrrDeviceWin32::CIrrDeviceWin32(const SIrrlichtCreationParameters& params)
 
 	Win32CursorControl = new CCursorControl(this, CreationParams.WindowSize, HWnd, CreationParams.Fullscreen);
 	CursorControl = Win32CursorControl;
-
+*/
 	// initialize doubleclicks with system values
-	MouseMultiClicks.DoubleClickTime = GetDoubleClickTime();
+	//MouseMultiClicks.DoubleClickTime = GetDoubleClickTime();
 
 	// create driver
 
@@ -635,7 +639,7 @@ CIrrDeviceWin32::CIrrDeviceWin32(const SIrrlichtCreationParameters& params)
 
 	SEnvMapper em;
 	em.irrDev = this;
-	em.hWnd = HWnd;
+	//em.hWnd = HWnd;
 	EnvMap.push_back(em);
 
 	// set this as active window
@@ -643,8 +647,8 @@ CIrrDeviceWin32::CIrrDeviceWin32(const SIrrlichtCreationParameters& params)
 	//SetForegroundWindow(HWnd);
 
 	// get the codepage used for keyboard input
-	KEYBOARD_INPUT_HKL = GetKeyboardLayout(0);
-	KEYBOARD_INPUT_CODEPAGE = LocaleIdToCodepage( LOWORD(KEYBOARD_INPUT_HKL) );
+	//KEYBOARD_INPUT_HKL = GetKeyboardLayout(0);
+	//KEYBOARD_INPUT_CODEPAGE = LocaleIdToCodepage( LOWORD(KEYBOARD_INPUT_HKL) );
 }
 
 
@@ -656,7 +660,7 @@ CIrrDeviceWin32::~CIrrDeviceWin32()
 	irr::core::list<SEnvMapper>::Iterator it = EnvMap.begin();
 	for (; it!= EnvMap.end(); ++it)
 	{
-		if ((*it).hWnd == HWnd)
+		//if ((*it).hWnd == HWnd)
 		{
 			EnvMap.erase(it);
 			break;
@@ -834,12 +838,13 @@ bool CIrrDeviceWin32::run()
 //! Pause the current process for the minimum time allowed only to allow other processes to execute
 void CIrrDeviceWin32::yield()
 {
-	Sleep(1);
+	//Sleep(1);
 }
 
 //! Pause execution and let other processes to run for a specified amount of time.
 void CIrrDeviceWin32::sleep(u32 timeMs, bool pauseTimer)
 {
+	/*
 	const bool wasStopped = Timer ? Timer->isStopped() : true;
 	if (pauseTimer && !wasStopped)
 		Timer->stop();
@@ -848,11 +853,13 @@ void CIrrDeviceWin32::sleep(u32 timeMs, bool pauseTimer)
 
 	if (pauseTimer && !wasStopped)
 		Timer->start();
+		*/
 }
 
 
 void CIrrDeviceWin32::resizeIfNecessary()
 {
+	/*
 	if (!Resized)
 		return;
 
@@ -874,7 +881,7 @@ void CIrrDeviceWin32::resizeIfNecessary()
 		getVideoDriver()->OnResize(irr::core::dimension2du((u32)r.right, (u32)r.bottom));
 		getWin32CursorControl()->OnResize(getVideoDriver()->getScreenSize());
 	}
-
+*/
 	Resized = false;
 }
 
@@ -882,6 +889,7 @@ void CIrrDeviceWin32::resizeIfNecessary()
 //! sets the caption of the window
 void CIrrDeviceWin32::setWindowCaption(const wchar_t* text)
 {
+	/*
 	DWORD dwResult;
 	if (IsNonNTWindows)
 	{
@@ -904,12 +912,14 @@ void CIrrDeviceWin32::setWindowCaption(const wchar_t* text)
 				SMTO_ABORTIFHUNG, 2000, &dwResult);
 #endif
 	}
+	*/
 }
 
 
 //! presents a surface in the client area
 bool CIrrDeviceWin32::present(video::IImage* image, void* windowId, core::rect<s32>* src)
 {
+	/*
 	HWND hwnd = HWnd;
 	if ( windowId )
 		hwnd = reinterpret_cast<HWND>(windowId);
@@ -953,6 +963,7 @@ bool CIrrDeviceWin32::present(video::IImage* image, void* windowId, core::rect<s
 
 		ReleaseDC(hwnd, dc);
 	}
+	*/
 	return true;
 }
 
@@ -960,6 +971,7 @@ bool CIrrDeviceWin32::present(video::IImage* image, void* windowId, core::rect<s
 //! notifies the device that it should close itself
 void CIrrDeviceWin32::closeDevice()
 {
+	/*
 	MSG msg;
 	PeekMessage(&msg, NULL, WM_QUIT, WM_QUIT, PM_REMOVE);
 	PostQuitMessage(0);
@@ -971,6 +983,7 @@ void CIrrDeviceWin32::closeDevice()
 		HINSTANCE hInstance = GetModuleHandle(0);
 		UnregisterClass(ClassName, hInstance);
 	}
+	*/
 	Close=true;
 }
 
@@ -978,23 +991,26 @@ void CIrrDeviceWin32::closeDevice()
 //! returns if window is active. if not, nothing needs to be drawn
 bool CIrrDeviceWin32::isWindowActive() const
 {
-	_IRR_IMPLEMENT_MANAGED_MARSHALLING_BUGFIX;
-	return (GetActiveWindow() == HWnd);
+	//_IRR_IMPLEMENT_MANAGED_MARSHALLING_BUGFIX;
+	//return (GetActiveWindow() == HWnd);
+	return true;
 }
 
 
 //! returns if window has focus
 bool CIrrDeviceWin32::isWindowFocused() const
 {
-	bool ret = (GetFocus() == HWnd);
-	_IRR_IMPLEMENT_MANAGED_MARSHALLING_BUGFIX;
-	return ret;
+	//bool ret = (GetFocus() == HWnd);
+	//_IRR_IMPLEMENT_MANAGED_MARSHALLING_BUGFIX;
+	//return ret;
+	return true;
 }
 
 
 //! returns if window is minimized
 bool CIrrDeviceWin32::isWindowMinimized() const
 {
+	/*
 	WINDOWPLACEMENT plc;
 	plc.length=sizeof(WINDOWPLACEMENT);
 	bool ret=false;
@@ -1002,12 +1018,15 @@ bool CIrrDeviceWin32::isWindowMinimized() const
 		ret=(plc.showCmd & SW_SHOWMINIMIZED)!=0;
 	_IRR_IMPLEMENT_MANAGED_MARSHALLING_BUGFIX;
 	return ret;
+	*/
+	return true;
 }
 
 
 //! switches to fullscreen
 bool CIrrDeviceWin32::switchToFullScreen(bool reset)
 {
+	/*
 	if (!CreationParams.Fullscreen)
 		return true;
 	if (reset)
@@ -1062,7 +1081,9 @@ bool CIrrDeviceWin32::switchToFullScreen(bool reset)
 		break;
 	}
 	_IRR_IMPLEMENT_MANAGED_MARSHALLING_BUGFIX;
-	return ret;
+	*/
+	return 0;
+	//return ret;
 }
 
 
@@ -1077,6 +1098,7 @@ CIrrDeviceWin32::CCursorControl* CIrrDeviceWin32::getWin32CursorControl()
 //! by the gfx adapter.
 video::IVideoModeList* CIrrDeviceWin32::getVideoModeList()
 {
+	/*
 	if (!VideoModeList.getVideoModeCount())
 	{
 		// enumerate video modes.
@@ -1096,11 +1118,13 @@ video::IVideoModeList* CIrrDeviceWin32::getVideoModeList()
 		if (EnumDisplaySettings(NULL, ENUM_CURRENT_SETTINGS, &mode))
 			VideoModeList.setDesktop(mode.dmBitsPerPel, core::dimension2d<u32>(mode.dmPelsWidth, mode.dmPelsHeight));
 	}
+	*/
 
 	return &VideoModeList;
 }
 
-typedef BOOL (WINAPI *PGPI)(DWORD, DWORD, DWORD, DWORD, PDWORD);
+    
+//typedef BOOL (WINAPI *PGPI)(DWORD, DWORD, DWORD, DWORD, PDWORD);
 // Needed for old windows apis
 #define PRODUCT_ULTIMATE                            0x00000001
 #define PRODUCT_HOME_BASIC                          0x00000002
@@ -1122,7 +1146,7 @@ typedef BOOL (WINAPI *PGPI)(DWORD, DWORD, DWORD, DWORD, PDWORD);
 #define PRODUCT_PROFESSIONAL_E                      0x00000045
 #define PRODUCT_ENTERPRISE_E                        0x00000046
 #define PRODUCT_ULTIMATE_E                          0x00000047
-
+/*
 void CIrrDeviceWin32::getWindowsVersion(core::stringc& out)
 {
     OSVERSIONINFOEX osvi;
@@ -1310,7 +1334,7 @@ void CIrrDeviceWin32::getWindowsVersion(core::stringc& out)
         break;
     }
 }
-
+*/
 //! Notifies the device, that it has been resized
 void CIrrDeviceWin32::OnResized()
 {
@@ -1320,6 +1344,8 @@ void CIrrDeviceWin32::OnResized()
 //! Sets if the window should be resizable in windowed mode.
 void CIrrDeviceWin32::setResizable(bool resize)
 {
+
+	/*
 	if (ExternalWindow || !getVideoDriver() || CreationParams.Fullscreen)
 		return;
 
@@ -1351,39 +1377,46 @@ void CIrrDeviceWin32::setResizable(bool resize)
 		SWP_FRAMECHANGED | SWP_NOMOVE | SWP_SHOWWINDOW);
 
 	static_cast<CCursorControl*>(CursorControl)->updateBorderSize(CreationParams.Fullscreen, resize);
+	*/
 }
 
 
 //! Minimizes the window.
 void CIrrDeviceWin32::minimizeWindow()
 {
+	/*
 	WINDOWPLACEMENT wndpl;
 	wndpl.length = sizeof(WINDOWPLACEMENT);
 	GetWindowPlacement(HWnd, &wndpl);
 	wndpl.showCmd = SW_SHOWMINNOACTIVE;
 	SetWindowPlacement(HWnd, &wndpl);
+	*/
 }
 
 
 //! Maximizes the window.
 void CIrrDeviceWin32::maximizeWindow()
 {
+	/*
 	WINDOWPLACEMENT wndpl;
 	wndpl.length = sizeof(WINDOWPLACEMENT);
 	GetWindowPlacement(HWnd, &wndpl);
 	wndpl.showCmd = SW_SHOWMAXIMIZED;
 	SetWindowPlacement(HWnd, &wndpl);
+	*/
 }
 
 
 //! Restores the window to its original size.
 void CIrrDeviceWin32::restoreWindow()
 {
+	/*
 	WINDOWPLACEMENT wndpl;
 	wndpl.length = sizeof(WINDOWPLACEMENT);
 	GetWindowPlacement(HWnd, &wndpl);
 	wndpl.showCmd = SW_SHOWNORMAL;
 	SetWindowPlacement(HWnd, &wndpl);
+	*/
 }
 
 
@@ -1516,6 +1549,7 @@ void CIrrDeviceWin32::pollJoysticks()
 //! Set the current Gamma Value for the Display
 bool CIrrDeviceWin32::setGammaRamp( f32 red, f32 green, f32 blue, f32 brightness, f32 contrast )
 {
+	/*
 	bool r;
 	u16 ramp[3][256];
 
@@ -1527,11 +1561,14 @@ bool CIrrDeviceWin32::setGammaRamp( f32 red, f32 green, f32 blue, f32 brightness
 	r = SetDeviceGammaRamp ( dc, ramp ) == TRUE;
 	ReleaseDC(HWnd, dc);
 	return r;
+	*/
+	return true;
 }
 
 //! Get the current Gamma Value for the Display
 bool CIrrDeviceWin32::getGammaRamp( f32 &red, f32 &green, f32 &blue, f32 &brightness, f32 &contrast )
 {
+	/*
 	bool r;
 	u16 ramp[3][256];
 
@@ -1550,22 +1587,27 @@ bool CIrrDeviceWin32::getGammaRamp( f32 &red, f32 &green, f32 &blue, f32 &bright
 	contrast = 0.f;
 
 	return r;
+	*/
+	return true;
 
 }
 
 //! Remove all messages pending in the system message loop
 void CIrrDeviceWin32::clearSystemMessages()
 {
+	/*
 	MSG msg;
 	while (PeekMessage(&msg, NULL, WM_KEYFIRST, WM_KEYLAST, PM_REMOVE))
 	{}
 	while (PeekMessage(&msg, NULL, WM_MOUSEFIRST, WM_MOUSELAST, PM_REMOVE))
 	{}
+	*/
 }
 
 // shows last error in a messagebox to help internal debugging.
 void CIrrDeviceWin32::ReportLastWinApiError()
 {
+	/*
 	// (based on code from ovidiucucu from http://www.codeguru.com/forum/showthread.php?t=318721)
 	LPCTSTR pszCaption = __TEXT("Windows SDK Error Report");
 	DWORD dwError      = GetLastError();
@@ -1598,8 +1640,9 @@ void CIrrDeviceWin32::ReportLastWinApiError()
 			MessageBox(NULL, __TEXT("Unknown error"), pszCaption, MB_OK|MB_ICONERROR);
 		}
 	}
+	*/
 }
-
+/*
 // Convert an Irrlicht texture to a Windows cursor
 // Based on http://www.codeguru.com/cpp/w-p/win32/cursors/article.php/c4529/
 HCURSOR CIrrDeviceWin32::TextureToCursor(HWND hwnd, irr::video::ITexture * tex, const core::rect<s32>& sourceRect, const core::position2d<s32> &hotspot)
@@ -1674,13 +1717,15 @@ HCURSOR CIrrDeviceWin32::TextureToCursor(HWND hwnd, irr::video::ITexture * tex, 
 	return cursor;
 }
 
+*/
 
-CIrrDeviceWin32::CCursorControl::CCursorControl(CIrrDeviceWin32* device, const core::dimension2d<u32>& wsize, HWND hwnd, bool fullscreen)
+CIrrDeviceWin32::CCursorControl::CCursorControl(CIrrDeviceWin32* device, const core::dimension2d<u32>& wsize, bool fullscreen)
     : Device(device), WindowSize(wsize), InvWindowSize(0.0f, 0.0f),
-        HWnd(hwnd), BorderX(0), BorderY(0),
+         BorderX(0), BorderY(0),
         UseReferenceRect(false), IsVisible(true)
         , ActiveIcon(gui::ECI_NORMAL), ActiveIconStartTime(0)
 {
+	/*
     if (WindowSize.Width!=0)
         InvWindowSize.Width = 1.0f / WindowSize.Width;
 
@@ -1689,10 +1734,12 @@ CIrrDeviceWin32::CCursorControl::CCursorControl(CIrrDeviceWin32* device, const c
 
     updateBorderSize(fullscreen, false);
     initCursors();
+	*/
 }
 
 CIrrDeviceWin32::CCursorControl::~CCursorControl()
 {
+	/*
 	for ( u32 i=0; i < Cursors.size(); ++i )
 	{
 		for ( u32 f=0; f < Cursors[i].Frames.size(); ++f )
@@ -1700,11 +1747,13 @@ CIrrDeviceWin32::CCursorControl::~CCursorControl()
 			DestroyCursor(Cursors[i].Frames[f].IconHW);
 		}
 	}
+	*/
 }
 
 
 void CIrrDeviceWin32::CCursorControl::initCursors()
 {
+	/*
     Cursors.push_back( CursorW32(LoadCursor(NULL, IDC_ARROW)) );
     Cursors.push_back( CursorW32(LoadCursor(NULL, IDC_CROSS)) );
     Cursors.push_back( CursorW32(LoadCursor(NULL, IDC_HAND)) );
@@ -1718,11 +1767,13 @@ void CIrrDeviceWin32::CCursorControl::initCursors()
     Cursors.push_back( CursorW32(LoadCursor(NULL, IDC_SIZENS)) );
     Cursors.push_back( CursorW32(LoadCursor(NULL, IDC_SIZEWE)) );
     Cursors.push_back( CursorW32(LoadCursor(NULL, IDC_UPARROW)) );
+	*/
 }
 
 
 void CIrrDeviceWin32::CCursorControl::update()
 {
+	/*
 	if ( !Cursors[ActiveIcon].Frames.empty() && Cursors[ActiveIcon].FrameTime )
 	{
 		// update animated cursors. This could also be done by X11 in case someone wants to figure that out (this way was just easier to implement)
@@ -1730,11 +1781,13 @@ void CIrrDeviceWin32::CCursorControl::update()
 		u32 frame = ((now - ActiveIconStartTime) / Cursors[ActiveIcon].FrameTime) % Cursors[ActiveIcon].Frames.size();
 		SetCursor( Cursors[ActiveIcon].Frames[frame].IconHW );
 	}
+	*/
 }
 
 //! Sets the active cursor icon
 void CIrrDeviceWin32::CCursorControl::setActiveIcon(gui::ECURSOR_ICON iconId)
 {
+	/*
     if ( iconId >= (s32)Cursors.size() )
         return;
 
@@ -1742,12 +1795,14 @@ void CIrrDeviceWin32::CCursorControl::setActiveIcon(gui::ECURSOR_ICON iconId)
     ActiveIconStartTime = Device->getTimer()->getRealTime();
     if ( Cursors[ActiveIcon].Frames.size() )
         SetCursor( Cursors[ActiveIcon].Frames[0].IconHW );
+		*/
 }
 
 
 //! Add a custom sprite as cursor icon.
 gui::ECURSOR_ICON CIrrDeviceWin32::CCursorControl::addIcon(const gui::SCursorSprite& icon)
 {
+	/*
 	if ( icon.SpriteId >= 0 )
 	{
 	    CursorW32 cW32;
@@ -1766,6 +1821,7 @@ gui::ECURSOR_ICON CIrrDeviceWin32::CCursorControl::addIcon(const gui::SCursorSpr
 		Cursors.push_back( cW32 );
 		return (gui::ECURSOR_ICON)(Cursors.size() - 1);
 	}
+	*/
 	return gui::ECI_NORMAL;
 }
 
@@ -1773,6 +1829,7 @@ gui::ECURSOR_ICON CIrrDeviceWin32::CCursorControl::addIcon(const gui::SCursorSpr
 //! replace the given cursor icon.
 void CIrrDeviceWin32::CCursorControl::changeIcon(gui::ECURSOR_ICON iconId, const gui::SCursorSprite& icon)
 {
+	/*
 	if ( iconId >= (s32)Cursors.size() )
 		return;
 
@@ -1795,18 +1852,23 @@ void CIrrDeviceWin32::CCursorControl::changeIcon(gui::ECURSOR_ICON iconId, const
 
 		Cursors[iconId] = cW32;
 	}
+	*/
 }
 
 
 //! Return a system-specific size which is supported for cursors. Larger icons will fail, smaller icons might work.
 core::dimension2di CIrrDeviceWin32::CCursorControl::getSupportedIconSize() const
 {
+	/*
     core::dimension2di result;
 
     result.Width = GetSystemMetrics(SM_CXCURSOR);
     result.Height = GetSystemMetrics(SM_CYCURSOR);
 
     return result;
+	*/
+	assert(0 && "Huh?");
+	return core::dimension2di(0,0); //don't care
 }
 
 

@@ -62,6 +62,17 @@
 	#include <SDL/SDL_video.h>
 	#include <SDL/SDL_opengl.h>
 	#include "glext.h"
+#elif defined (_IRR_OSX_PLATFORM_)
+
+    //Little odd, I know - Seth
+    #if defined(_IRR_OPENGL_USE_EXTPOINTER_)
+    #define GL_GLEXT_LEGACY 1
+    #endif
+    #include <OpenGL/gl.h>
+    #if defined(_IRR_OPENGL_USE_EXTPOINTER_)
+    #include "glext.h"
+    #endif
+
 #else
 	#if defined(_IRR_OPENGL_USE_EXTPOINTER_)
 		#define GL_GLEXT_LEGACY 1
@@ -70,6 +81,7 @@
 		#define GL_GLEXT_PROTOTYPES 1
 		#define GLX_GLXEXT_PROTOTYPES 1
 	#endif
+
 	#include <GL/gl.h>
 	#include <GL/glx.h>
 	#if defined(_IRR_OPENGL_USE_EXTPOINTER_)

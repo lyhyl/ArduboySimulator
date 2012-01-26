@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'RT3DApp' target in the 'RT3DApp' project
+//
+
+#ifdef __OBJC__
+    #import <Cocoa/Cocoa.h>
+#endif

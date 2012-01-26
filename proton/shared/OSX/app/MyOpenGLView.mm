@@ -79,8 +79,6 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	
 	
 	
-	
-	
 	if (self = [super initWithFrame:frameRect])
 	{
 		[[self openGLContext] makeCurrentContext];
@@ -185,6 +183,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 		case OSMessage::MESSAGE_SET_ACCELEROMETER_UPDATE_HZ:
 			break;
 		case OSMessage::MESSAGE_FINISH_APP:
+            m_bQuitASAP = YES;
 			[NSApp terminate:nil];
 			break;
 		case OSMessage::MESSAGE_SET_VIDEO_MODE:
@@ -237,7 +236,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	// Make sure we draw to the right context
 	[[self openGLContext] makeCurrentContext];
 	
-	if (GetBaseApp()->IsInitted())
+	if (GetBaseApp()->IsInitted() && !m_bQuitASAP)
 	{
 		GetBaseApp()->Draw();
 	}
@@ -336,13 +335,14 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 
 - (void) dealloc
 {
-	
+	m_bQuitASAP = true;
 	// Stop and release the display link
 	CVDisplayLinkStop(displayLink);
     CVDisplayLinkRelease(displayLink);
 	
 	// Destroy the context
 	[openGLContext release];
+    openGLContext = NULL;
 	[pixelFormat release];
 	
 	[[NSNotificationCenter defaultCenter] removeObserver:self 

@@ -84,6 +84,7 @@
 
 #if defined(__APPLE__) || defined(MACOSX)
 
+#define _IRR_OSX_PLATFORM_
 /*
 #if !defined(MACOSX)
 #define MACOSX // legacy support

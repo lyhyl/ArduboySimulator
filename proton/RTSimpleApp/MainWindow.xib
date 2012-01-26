@@ -295,7 +295,7 @@
 			</object>
 		</object>
 		<int key="IBDocument.localizationMode">0</int>
-		<string key="IBDocument.LastKnownRelativeProjectPath">RTSimpleApp.xcodeproj</string>
+		<string key="IBDocument.LastKnownRelativeProjectPath">RTBareBones.xcodeproj</string>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 	</data>
 </archive>

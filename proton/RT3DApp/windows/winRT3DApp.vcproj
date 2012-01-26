@@ -11834,6 +11834,18 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="OSX"
+				>
+				<File
+					RelativePath="..\..\shared\OSX\OSXUtils.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\OSX\PlatformSetupOSX.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>

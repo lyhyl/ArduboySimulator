@@ -19,7 +19,6 @@ MessageManager * GetMessageManager() {return &g_messageManager;}
 FileManager g_fileManager;
 FileManager * GetFileManager() {return &g_fileManager;}
 
-
 #ifdef __APPLE__
 
 #if TARGET_OS_IPHONE == 1
@@ -29,8 +28,9 @@ AudioManagerOS g_audioManager;
 #else
 //it's being compiled as a native OSX app
 #include "Audio/AudioManagerFMOD.h"
+//AudioManagerFMOD g_audioManager; //dummy with no sound
+AudioManager g_audioManager; //to disable sound
 
-AudioManagerFMOD g_audioManager; //dummy with no sound
 #endif
 
 #else
@@ -89,7 +89,7 @@ bool App::Init()
 	
 	SetDefaultButtonStyle(Button2DComponent::BUTTON_STYLE_CLICK_ON_TOUCH_RELEASE);
 	
-	if (GetEmulatedPlatformID() != PLATFORM_ID_ANDROID)
+	if (GetEmulatedPlatformID() == PLATFORM_ID_IOS)
 	{
 		SetLockedLandscape(true); //we don't allow portrait mode for this game.  Android doesn't count
 		//because its landscape mode is addressed like portrait mode when set in the manifest.
