@@ -60,7 +60,7 @@ Entity::eFilterCommunication GetFilterSetting( Entity *pEnt, string functionName
 	EntityComponent *pComp = pEnt->GetComponentByName(string("FilterComp")+functionName);
 	if (!pComp)
 	{
-		LogMsg("Warning: Can't find filter %s", functionName);
+		LogMsg("Warning: Can't find filter %s", functionName.c_str());
 		return Entity::FILTER_ALLOW;
 	}
 
@@ -72,7 +72,7 @@ void SetFilterSetting( Entity *pEnt, string functionName, Entity::eFilterCommuni
 	EntityComponent *pComp = pEnt->GetComponentByName(string("FilterComp")+functionName);
 	if (!pComp)
 	{
-		LogMsg("Warning: Can't find filter %s", functionName);
+		LogMsg("Warning: Can't find filter %s", functionName.c_str());
 		return;
 	}
 
