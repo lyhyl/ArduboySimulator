@@ -103,13 +103,11 @@
 
 
 #if !defined(_IRR_WINDOWS_API_) && !defined(_IRR_OSX_PLATFORM_)
-/*
 #ifndef _IRR_SOLARIS_PLATFORM_
 #define _IRR_LINUX_PLATFORM_
 #endif
 #define _IRR_POSIX_API_
-#define _IRR_COMPILE_WITH_X11_DEVICE_
-*/
+// #define _IRR_COMPILE_WITH_X11_DEVICE_
 #endif
 
 #if defined(RT_WEBOS_ARM) || defined (ANDROID_NDK)|| defined (IOS)
