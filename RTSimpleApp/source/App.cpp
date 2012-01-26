@@ -4,38 +4,91 @@
  *  For license info, check the license.txt file that should have come with this.
  *
  */
+
 #include "PlatformPrecomp.h"
 #include "App.h"
+#include "GUI/MainMenu.h"
+#include "Renderer/LinearParticle.h"
+#include "Entity/EntityUtils.h"//create the classes that our globally library expects to exist somewhere.
+#include "Renderer/SoftSurface.h"
 
-#include "Entity/CustomInputComponent.h" //used for the back button (android)
-#include "Entity/FocusInputComponent.h" //needed to let the input component see input messages
-#include "Entity/ArcadeInputComponent.h" 
-
+SurfaceAnim g_surf;
+ 
 MessageManager g_messageManager;
 MessageManager * GetMessageManager() {return &g_messageManager;}
 
 FileManager g_fileManager;
 FileManager * GetFileManager() {return &g_fileManager;}
 
-#include "Audio/AudioManager.h"
-AudioManager g_audioManager; //to disable sound, this is a dummy
+#ifdef __APPLE__
+
+#if TARGET_OS_IPHONE == 1
+	//it's an iPhone or iPad
+	//#include "Audio/AudioManagerOS.h"
+	//AudioManagerOS g_audioManager;
+	#include "Audio/AudioManagerDenshion.h"
+	
+	AudioManagerDenshion g_audioManager;
+#else
+	//it's being compiled as a native OSX app
+   #include "Audio/AudioManagerFMOD.h"
+  AudioManagerFMOD g_audioManager; //dummy with no sound
+
+//in theory, CocosDenshion should work for the Mac builds, but right now it seems to want a big chunk of
+//Cocos2d included so I'm not fiddling with it for now
+
+//#include "Audio/AudioManagerDenshion.h"
+//AudioManagerDenshion g_audioManager;
+#endif
+	
+#else
+#include "Audio/AudioManagerSDL.h"
+#include "Audio/AudioManagerAndroid.h"
+
+#if defined RT_WEBOS || defined RTLINUX
+AudioManagerSDL g_audioManager; //sound in windows and WebOS
+//AudioManager g_audioManager; //to disable sound
+#elif defined ANDROID_NDK
+AudioManagerAndroid g_audioManager; //sound for android
+#elif defined PLATFORM_BBX
+
+//AudioManager g_audioManager; //to disable sound
+#include "Audio/AudioManagerBBX.h"
+AudioManagerBBX g_audioManager;
+
+#else
+
+//in windows
+//AudioManager g_audioManager; //to disable sound
+
+#include "Audio/AudioManagerAudiere.h"
+AudioManagerAudiere g_audioManager;  //Use Audiere for audio
+
+//#include "Audio/AudioManagerFMOD.h"
+//AudioManagerFMOD g_audioManager; //if we wanted FMOD sound in windows
+
+#endif
+#endif
+
 
 AudioManager * GetAudioManager(){return &g_audioManager;}
 
 App *g_pApp = NULL;
-
 BaseApp * GetBaseApp() 
 {
 	if (!g_pApp)
 	{
+		#ifndef NDEBUG
+		LogMsg("Creating app object");
+		#endif
 		g_pApp = new App;
 	}
+
 	return g_pApp;
 }
 
 App * GetApp() 
 {
-	assert(g_pApp && "GetBaseApp must be called used first");
 	return g_pApp;
 }
 
@@ -46,296 +99,188 @@ App::App()
 
 App::~App()
 {
+	L_ParticleSystem::deinit();
+}
+
+void App::OnExitApp(VariantList *pVarList)
+{
+	LogMsg("Exiting the app");
+
+	OSMessage o;
+	o.m_type = OSMessage::MESSAGE_FINISH_APP;
+	GetBaseApp()->AddOSMessage(o);
 }
 
 bool App::Init()
 {
-	
+	//SetDefaultAudioClickSound("audio/enter.wav");
+	SetDefaultButtonStyle(Button2DComponent::BUTTON_STYLE_CLICK_ON_TOUCH_RELEASE);
+	SetManualRotationMode(true);
+	int scaleToX = 480;
+	int scaleToY = 320;
+
+	switch (GetEmulatedPlatformID())
+	{
+		//special handling for certain platforms to tweak the video settings
+
+	case PLATFORM_ID_WEBOS:
+		//if we do this, everything will be stretched/zoomed to fit the screen
+		if (IsIPADSize)
+		{
+			//doesn't need rotation
+			SetLockedLandscape(false);  //because it's set in the app manifest, we don't have to rotate ourselves
+			SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(), ORIENTATION_PORTRAIT);
+			SetupFakePrimaryScreenSize(scaleToX,scaleToY); //game will think it's this size, and will be scaled up
+		} else
+		{
+			//but the phones do
+			SetLockedLandscape(true); //we don't allow portrait mode for this game
+			SetupFakePrimaryScreenSize(scaleToY,scaleToX); //game will think it's this size, and will be scaled up
+		}
+		break;
+
+		case PLATFORM_ID_IOS:
+			SetLockedLandscape(true); //we stay in portrait but manually rotate, gives better fps on older devices
+			SetupFakePrimaryScreenSize(scaleToX,scaleToY); //game will think it's this size, and will be scaled up
+			break;
+			
+	default:
+		
+		//Default settings for other platforms
+
+		SetLockedLandscape(false); //we don't allow portrait mode for this game
+		SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(), ORIENTATION_PORTRAIT);
+		SetupFakePrimaryScreenSize(scaleToX,scaleToY); //game will think it's this size, and will be scaled up
+	}
+
+	L_ParticleSystem::init(2000);
+
 	if (m_bInitted)	
 	{
 		return true;
 	}
 	
 	if (!BaseApp::Init()) return false;
-	
-	if (GetEmulatedPlatformID() == PLATFORM_ID_IOS || GetEmulatedPlatformID() == PLATFORM_ID_WEBOS)
+
+
+	LogMsg("Save path is %s", GetSavePath().c_str());
+
+	if (!GetFont(FONT_SMALL)->Load("interface/font_trajan.rtfont")) 
 	{
-		//SetLockedLandscape(true); //if we don't allow portrait mode for this game
-		SetManualRotationMode(true);
+		LogMsg("Can't load font 1");
+		return false;
 	}
-
-	if (GetEmulatedPlatformID() == PLATFORM_ID_ANDROID)
+	if (!GetFont(FONT_LARGE)->Load("interface/font_trajan_big.rtfont"))
 	{
-		//by doing this, we can pretend the screen is 320X480 in our code, but actually it will be
-		//scaled up/down to whatever the HW is.  Yeah, it stretches it so it's not going to look great.
-		//SetupFakePrimaryScreenSize(320,480);
+		LogMsg("Can't load font 2");
+		return false;
 	}
-
-	LogMsg("The Save path is %s", GetSavePath().c_str());
-	LogMsg("Region string is %s", GetRegionString().c_str());
-
-#ifdef _DEBUG
-	LogMsg("Built in debug mode");
-#endif
-#ifndef C_NO_ZLIB
-	//fonts need zlib to decompress.  When porting a new platform I define C_NO_ZLIB and add zlib support later sometimes
-	if (!GetFont(FONT_SMALL)->Load("interface/font_trajan.rtfont")) return false;
-#endif
+	//GetFont(FONT_SMALL)->SetSmoothing(false); //if we wanted to disable bilinear filtering on the font
 
 	GetBaseApp()->SetFPSVisible(true);
+	
+	bool bFileExisted;
+	m_varDB.Load("save.dat", &bFileExisted);
+ 
+	//preload audio
+	GetAudioManager()->Preload("audio/click.wav");
+
 	return true;
+}
+
+void App::SaveOurStuff()
+{
+	LogMsg("Saving our stuff");
+	m_varDB.Save("save.dat");
 }
 
 void App::Kill()
 {
+	SaveOurStuff();
 	BaseApp::Kill();
+	g_pApp = NULL;
 }
-
-void App::OnExitApp(VariantList *pVarList)
-{
-	LogMsg("Exiting the app");
-	OSMessage o;
-	o.m_type = OSMessage::MESSAGE_FINISH_APP;
-	GetBaseApp()->AddOSMessage(o);
-}
-
-#define kFilteringFactor 0.1f
-#define C_DELAY_BETWEEN_SHAKES_MS 500
-
-//testing accelerometer readings. To enable the test, search below for "ACCELTEST"
-//Note: You'll need to look at the  debug log to see the output. (For android, run PhoneLog.bat from RTBareBones/android)
-void App::OnAccel(VariantList *pVList)
-{
-	
-	if ( int(pVList->m_variant[0].GetFloat()) != MESSAGE_TYPE_GUI_ACCELEROMETER) return;
-
-	CL_Vec3f v = pVList->m_variant[1].GetVector3();
-
-	LogMsg("Accel: %s", PrintVector3(v).c_str());
-
-	v.x = v.x * kFilteringFactor + v.x * (1.0f - kFilteringFactor);
-	v.y = v.y * kFilteringFactor + v.y * (1.0f - kFilteringFactor);
-	v.z = v.z * kFilteringFactor + v.z * (1.0f - kFilteringFactor);
-
-	// Compute values for the three axes of the acceleromater
-	float x = v.x - v.x;
-	float y = v.y - v.x;
-	float z = v.z - v.x;
-
-	//Compute the intensity of the current acceleration 
-	if (sqrt(x * x + y * y + z * z) > 2.0f)
-	{
-		Entity *pEnt = GetEntityRoot()->GetEntityByName("jumble");
-		if (pEnt)
-		{
-			//GetAudioManager()->Play("audio/click.wav");
-            VariantList vList(CL_Vec2f(), pEnt);
-			pEnt->GetFunction("OnButtonSelected")->sig_function(&vList);
-		}
-		LogMsg("Shake!");
-	}
-}
-
-
-//test for arcade keys.  To enable this test, search for TRACKBALL/ARCADETEST: below and uncomment the stuff under it.
-//Note: You'll need to look at the debug log to see the output.  (For android, run PhoneLog.bat from RTBareBones/android)
-void App::OnArcadeInput(VariantList *pVList)
-{
-
-	int vKey = pVList->Get(0).GetUINT32();
-	eVirtualKeyInfo keyInfo = (eVirtualKeyInfo) pVList->Get(1).GetUINT32();
-	
-	string pressed;
-
-	switch (keyInfo)
-	{
-		case VIRTUAL_KEY_PRESS:
-			pressed = "pressed";
-			break;
-
-		case VIRTUAL_KEY_RELEASE:
-			pressed = "released";
-			break;
-
-		default:
-			LogMsg("OnArcadeInput> Bad value of %d", keyInfo);
-	}
-	
-
-	string keyName = "unknown";
-
-	switch (vKey)
-	{
-		case VIRTUAL_KEY_DIR_LEFT:
-			keyName = "Left";
-			break;
-
-		case VIRTUAL_KEY_DIR_RIGHT:
-			keyName = "Right";
-			break;
-
-		case VIRTUAL_KEY_DIR_UP:
-			keyName = "Up";
-			break;
-
-		case VIRTUAL_KEY_DIR_DOWN:
-			keyName = "Down";
-			break;
-
-	}
-	
-	LogMsg("Arcade input: Hit %d (%s) (%s)", vKey, keyName.c_str(), pressed.c_str());
-}
-
-
-void AppInput(VariantList *pVList)
-{
-
-	//0 = message type, 1 = parent coordinate offset, 2 is fingerID
-	eMessageType msgType = eMessageType( int(pVList->Get(0).GetFloat()));
-	CL_Vec2f pt = pVList->Get(1).GetVector2();
-	//pt += GetAlignmentOffset(*m_pSize2d, eAlignment(*m_pAlignment));
-
-	
-	uint32 fingerID = 0;
-	if ( msgType != MESSAGE_TYPE_GUI_CHAR && pVList->Get(2).GetType() == Variant::TYPE_UINT32)
-	{
-		fingerID = pVList->Get(2).GetUINT32();
-	}
-
-	CL_Vec2f vLastTouchPt = GetBaseApp()->GetTouch(fingerID)->GetLastPos();
-
-	switch (msgType)
-	{
-	case MESSAGE_TYPE_GUI_CLICK_START:
-		LogMsg("Touch start: X: %.2f YL %.2f (Finger %d)", pt.x, pt.y, fingerID);
-		break;
-	case MESSAGE_TYPE_GUI_CLICK_MOVE:
-		LogMsg("Touch mode: X: %.2f YL %.2f (Finger %d)", pt.x, pt.y, fingerID);
-		break;
-	case MESSAGE_TYPE_GUI_CLICK_END:
-		LogMsg("Touch end: X: %.2f YL %.2f (Finger %d)", pt.x, pt.y, fingerID);
-		break;
-	}	
-}
-
 
 void App::Update()
 {
-	
-	//game can think here.  The baseApp::Update() will run Update() on all entities, if any are added.  The only one
-	//we use in this example is one that is watching for the Back (android) or Escape key to quit that we setup earlier.
-
 	BaseApp::Update();
 
 	if (!m_bDidPostInit)
 	{
-		//stuff I want loaded during the first "Update"
 		m_bDidPostInit = true;
-		
-		//for android, so the back key (or escape on windows) will quit out of the game
-		Entity *pEnt = GetEntityRoot()->AddEntity(new Entity);
-		EntityComponent *pComp = pEnt->AddComponent(new CustomInputComponent);
-		//tell the component which key has to be hit for it to be activated
-		pComp->GetVar("keycode")->Set(uint32(VIRTUAL_KEY_BACK));
-		//attach our function so it is called when the back key is hit
-		pComp->GetFunction("OnActivated")->sig_function.connect(1, boost::bind(&App::OnExitApp, this, _1));
+		m_special = GetSystemData() != C_PIRATED_NO;
 
-		//nothing will happen unless we give it input focus
-		pEnt->AddComponent(new FocusInputComponent);
-
-		//ACCELTEST:  To test the accelerometer uncomment below: (will print values to the debug output)
-		//SetAccelerometerUpdateHz(25); //default is 0, disabled
-		//GetBaseApp()->m_sig_accel.connect(1, boost::bind(&App::OnAccel, this, _1));
-
-		//TRACKBALL/ARCADETEST: Uncomment below to see log messages on trackball/key movement input
-		pComp = pEnt->AddComponent(new ArcadeInputComponent);
-		GetBaseApp()->m_sig_arcade_input.connect(1, boost::bind(&App::OnArcadeInput, this, _1));
-	
-		//these arrow keys will be triggered by the keyboard, if applicable
-		AddKeyBinding(pComp, "Left", VIRTUAL_KEY_DIR_LEFT, VIRTUAL_KEY_DIR_LEFT);
-		AddKeyBinding(pComp, "Right", VIRTUAL_KEY_DIR_RIGHT, VIRTUAL_KEY_DIR_RIGHT);
-		AddKeyBinding(pComp, "Up", VIRTUAL_KEY_DIR_UP, VIRTUAL_KEY_DIR_UP);
-		AddKeyBinding(pComp, "Down", VIRTUAL_KEY_DIR_DOWN, VIRTUAL_KEY_DIR_DOWN);
-		AddKeyBinding(pComp, "Fire", VIRTUAL_KEY_CONTROL, VIRTUAL_KEY_GAME_FIRE);
-
-		//INPUT TEST - wire up input to some functions to manually handle.  AppInput will use LogMsg to
-		//send them to the log.  (Each device has a way to view a debug log in real-time)
-		GetBaseApp()->m_sig_input.connect(&AppInput);
+		//build a dummy entity called "GUI" to put our GUI menu entities under
+		Entity *pGUIEnt = GetEntityRoot()->AddEntity(new Entity("GUI"));
+		MainMenuCreate(pGUIEnt);
 	}
-
-	//game is thinking.  
 }
 
 void App::Draw()
 {
-	//Use this to prepare for raw GL calls
 	PrepareForGL();
-	
-	glClearColor(0,0,0,1);
+//	glClearColor(0.6,0.6,0.6,1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
-	//draw our game stuff
-	DrawFilledRect(10,10,GetScreenSizeX()/3,GetScreenSizeY()/3, MAKE_RGBA(255,255,0,255));
-	DrawFilledRect(0,0,64,64, MAKE_RGBA(0,255,0,100));
 
-	//after our 2d rect call above, we need to prepare for raw GL again. (it keeps it in ortho mode if we don't for speed)
-	PrepareForGL();
-	RenderSpinningTriangle();
 	
-	//let's blit a bmp, but first load it if needed
-	if (!m_surf.IsLoaded())
-	{
-		m_surf.LoadFile("interface/test.bmp");
-	}
-
-	//m_surf.Bind();
-	//RenderTexturedSpinningTriangle();
-	//blit the logo with the Y mirrored
-	//rtRect texRect = rtRect(0, m_surf.GetHeight(), m_surf.GetWidth(), 0);
-	//rtRect destRect = rtRect(0,0, m_surf.GetWidth(), m_surf.GetHeight());
-	//m_surf.BlitEx(destRect, texRect);
-
-	//make the logo spin like a wheel, whee!
-	//m_surf.BlitEx(destRect, texRect, MAKE_RGBA(255,255,255,255) , 180*SinGamePulseByMS(3000), CL_Vec2f(m_surf.GetWidth()/2,m_surf.GetHeight()/2));
-
-	//blit it normally
-	m_surf.Blit(0, 0);
-	//m_surf.Blit(100, 100);
-
-	//GetFont(FONT_SMALL)->Draw(0,0, "test");
-	GetFont(FONT_SMALL)->DrawScaled(0,GetScreenSizeYf()-50, "white `2Green `3Cyan `4Red `5Purp ",1+SinGamePulseByMS(3000)*0.7);
-	
-	//the base handles actually drawing the GUI stuff over everything else, if applicable, which in this case it isn't.
 	BaseApp::Draw();
 }
 
+void App::OnEnterBackground()
+{
+	BaseApp::OnEnterBackground();
+	SaveOurStuff();
 
-
+}
 void App::OnScreenSizeChange()
 {
 	BaseApp::OnScreenSizeChange();
 }
 
-void App::OnEnterBackground()
+void App::GetServerInfo( string &server, uint32 &port )
 {
-	//save your game stuff here, as on some devices (Android <cough>) we never get another notification of quitting.
-	LogMsg("Entered background");
-	BaseApp::OnEnterBackground();
+#if defined (_DEBUG) && defined(WIN32)
+	server = "localhost";
+	port = 8080;
+
+	//server = "www.rtsoft.com";
+	//port = 80;
+#else
+
+	server = "rtsoft.com";
+	port = 80;
+#endif
 }
 
-void App::OnEnterForeground()
+int App::GetSpecial()
 {
-	LogMsg("Entered foreground");
-	BaseApp::OnEnterForeground();
+	return m_special; //1 means pirated copy
 }
 
-const char * GetAppName() {return "BareBones";}
+Variant * App::GetVar( const string &keyName )
+{
+	return GetShared()->GetVar(keyName);
+}
 
-//the stuff below is for android/webos builds.  Your app needs to be named like this.
+std::string App::GetVersionString()
+{
+	return "V0.7";
+}
 
-//note: these are put into vars like this to be compatible with my command-line parsing stuff that grabs the vars
+float App::GetVersion()
+{
+	return 0.7f;
+}
 
+int App::GetBuild()
+{
+	return 1;
+}
+
+const char * GetAppName() {return "SimpleApp";}
+
+//for palm webos and android
 const char * GetBundlePrefix()
 {
 	char * bundlePrefix = "com.rtsoft.";
@@ -344,6 +289,6 @@ const char * GetBundlePrefix()
 
 const char * GetBundleName()
 {
-	char * bundleName = "rtbarebones";
+	char * bundleName = "rtsimpleapp";
 	return bundleName;
 }

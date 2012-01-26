@@ -1,6 +1,6 @@
 call vcvars32.bat
-del ..\bin\winRTBareBonesl.exe
-devenv ..\windows\iphoneRTBareBones.sln /build "Release GL" 
+del ..\bin\winRTSimpleAppl.exe
+devenv ..\windows\iphoneRTSimpleApp.sln /build "Release GL" 
 
 echo Let's zip it up
 cd ..\bin
