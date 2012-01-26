@@ -1,4 +1,4 @@
-set D_APPNAME=RTBareBones
+set D_APPNAME=RTSimpleApp
 set D_BUILDNAME=AddHoc
 
 set D_FILE_NAME=iPhone_%D_APPNAME%_AdHoc_%DATE:~4,2%_%DATE:~7,2%
