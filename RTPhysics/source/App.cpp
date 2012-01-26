@@ -37,7 +37,7 @@ AudioManagerFMOD g_audioManager; //dummy with no sound
 #include "Audio/AudioManagerSDL.h"
 #include "Audio/AudioManagerAndroid.h"
 
-#ifdef RT_WEBOS
+#if defined RT_WEBOS || defined RT_USE_SDL_AUDIO
 AudioManagerSDL g_audioManager; //sound in windows and WebOS
 //AudioManager g_audioManager; //to disable sound
 #elif defined ANDROID_NDK

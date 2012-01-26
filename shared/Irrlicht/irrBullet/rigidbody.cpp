@@ -12,7 +12,7 @@
 #include "collisionshape.h"
 #include "motionstate.h"
 #include "irrbullet_compile_config.h"
-#include "BulletWorld.h"
+#include "bulletworld.h"
 
 using namespace irr;
 using namespace core;
