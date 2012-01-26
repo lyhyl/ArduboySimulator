@@ -61,6 +61,7 @@ class VideoModeSelector
 {
 private:
 	static std::map<std::string, VideoMode> g_videoModes;
+	static std::vector<std::string> g_videoModeNames;
 
 	static void addVideoMode(std::string name, int x, int y, ePlatformID platformID, eOrientationMode orientationMode = ORIENTATION_DONT_CARE);
 
@@ -74,6 +75,8 @@ public:
 	 * can't be found returns \c NULL.
 	 */
 	const VideoMode* getNamedMode(const std::string& name) const;
+	
+	const std::vector<std::string>& getModeNames() const;
 };
 
 #endif

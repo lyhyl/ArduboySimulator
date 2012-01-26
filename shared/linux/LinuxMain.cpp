@@ -239,11 +239,25 @@ void SDLEventLoop()
 
 int main(int argc, char *argv[])
 {
+	VideoModeSelector vms;
+
+	string requestedVideoMode("iPhone Landscape");
+	if (argc > 1) {
+		if (string(argv[1]) == "-l") {
+			LogMsg("Available video modes:\n");
+			const vector<string>& modeNames = vms.getModeNames();
+			for (vector<string>::const_iterator it(modeNames.begin()); it != modeNames.end(); it++) {
+				LogMsg("%s", it->c_str());
+			}
+			return 0;
+		}
+		
+		requestedVideoMode = argv[1];
+	}
+	
 	srand( (unsigned)time(NULL) );
 	RemoveFile("log.txt", false);
-
-	VideoModeSelector vms;
-	const char *requestedVideoMode = "iPhone Landscape";
+	
 	const VideoMode *videoMode = vms.getNamedMode(requestedVideoMode);
 	if (videoMode != NULL) {
 		g_winVideoScreenX = videoMode->getX();
@@ -251,7 +265,8 @@ int main(int argc, char *argv[])
 		SetEmulatedPlatformID(videoMode->getPlatformID());
 		SetForcedOrientation(videoMode->getOrientationMode());
 	} else {
-		LogMsg("Requested video mode '%s' not found. Setting default video mode.", requestedVideoMode);
+		LogMsg("Requested video mode '%s' not found. Setting default video mode.", requestedVideoMode.c_str());
+		LogMsg("Get available video mode names by using the -l command line argument.");
 		g_winVideoScreenX = 320;
 		g_winVideoScreenY = 480;
 		SetEmulatedPlatformID(PLATFORM_ID_LINUX);
