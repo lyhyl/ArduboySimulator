@@ -5,7 +5,7 @@
 
 #include "CIrrDeviceIPhone.h"
 
-//#ifdef _IRR_COMPILE_WITH_IPHONE_DEVICE_
+#ifdef _IRR_COMPILE_WITH_IPHONE_DEVICE_
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -287,5 +287,5 @@ void CIrrDeviceIPhone::onWindowActive(MIrrIPhoneDevice * dev, int active)
 
 } // end namespace
 
-//#endif // _IRR_COMPILE_WITH_IPHONE_DEVICE_
+#endif // _IRR_COMPILE_WITH_IPHONE_DEVICE_
 
