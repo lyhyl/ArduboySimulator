@@ -226,7 +226,7 @@ public:
 	void AddCommandLineParm(string parm);
 	vector<string> GetCommandLineParms();
 	void SetAccelerometerUpdateHz(float hz); //another way to think of hz is "how many times per second to update"
-	void BaseApp::SetAllowScreenDimming(bool bAllowDimming); //respected by iOS only for now
+	void SetAllowScreenDimming(bool bAllowDimming); //respected by iOS only for now
     void PrintGLString(const char *name, GLenum s);
 	bool IsInitted() {return m_bInitted;}
 	virtual void InitializeGLDefaults();
