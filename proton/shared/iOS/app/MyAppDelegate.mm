@@ -180,7 +180,7 @@
 
 - (void)onOSMessage:(OSMessage *)pMsg
 {
-	
+  
 	switch (pMsg->m_type)
 	{
 	
@@ -213,7 +213,23 @@
 				
 			}
 			break;
-			
+        
+        case OSMessage::MESSAGE_ALLOW_SCREEN_DIMMING:
+        {
+            //I read setting it to NO, then YES fixes a bug on iOS 3.0, so thats
+            //why I'm doing it that way. -Seth
+            
+            UIApplication *myApp = [UIApplication sharedApplication];
+            myApp.idleTimerDisabled = NO;
+
+            if (pMsg->m_x == 0)
+            {
+                //disable it
+                myApp.idleTimerDisabled = YES;
+            }
+        }
+            break;
+            
 		default:
 			LogMsg("Error, unknown message type: %d", pMsg->m_type);
 	}

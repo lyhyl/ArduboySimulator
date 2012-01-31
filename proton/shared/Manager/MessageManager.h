@@ -89,22 +89,28 @@ enum eVirtualKeys
 	//use the same keycode when hit..., so I can't have it send VIRTUAL_DPAD_BUTTON_A unless I want
 	//to detect HW and that seems like a hassle.
 
-	VIRTUAL_DPAD_BUTTON_X, 
-	VIRTUAL_DPAD_BUTTON_Y, 
-	VIRTUAL_DPAD_BUTTON_A, //generally considered a select button
-	VIRTUAL_DPAD_BUTTON_B, //generally considered a back button
+	VIRTUAL_DPAD_BUTTON_LEFT, 
+	VIRTUAL_DPAD_BUTTON_UP, 
+	VIRTUAL_DPAD_BUTTON_RIGHT, //generally considered a select button
+	VIRTUAL_DPAD_BUTTON_DOWN, //generally considered a back button
 	VIRTUAL_DPAD_SELECT,
 	VIRTUAL_DPAD_START,
 	VIRTUAL_DPAD_LBUTTON,
 	VIRTUAL_DPAD_RBUTTON,
-	
+	VIRTUAL_DPAD_LTRIGGER,
+	VIRTUAL_DPAD_RTRIGGER,
+	VIRTUAL_DPAD_HAT_UP, //a hat is like the DPAD thingie on a 360 controller
+	VIRTUAL_DPAD_HAT_RIGHT,
+	VIRTUAL_DPAD_HAT_DOWN,
+	VIRTUAL_DPAD_HAT_LEFT,
+
 	VIRTUAL_KEY_CUSTOM_START = 510000 //if you add your own, do it after this
 };
 
 enum eVirtualKeyInfo
 {
-	VIRTUAL_KEY_PRESS,
-	VIRTUAL_KEY_RELEASE
+	VIRTUAL_KEY_RELEASE,
+	VIRTUAL_KEY_PRESS
 };
 
 enum eMessageType

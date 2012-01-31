@@ -266,12 +266,6 @@ bool Surface::LoadRTTexture(byte *pMem)
 	m_mipMapCount = pTexHeader->mipmapCount;
 	byte *pCurPos = pMem + sizeof(rttex_header);
 
-	const uint32 PVRTC2_MIN_TEXWIDTH		= 16;
-	const uint32 PVRTC2_MIN_TEXHEIGHT		= 8;
-	const uint32 PVRTC4_MIN_TEXWIDTH		= 8;
-	const uint32 PVRTC4_MIN_TEXHEIGHT		= 8;
-	const uint32 ETC_MIN_TEXWIDTH			= 4;
-	const uint32 ETC_MIN_TEXHEIGHT		= 4;
 	int memUsed = 0;
 	
 	int rttexHeaderSize = sizeof(rttex_header);

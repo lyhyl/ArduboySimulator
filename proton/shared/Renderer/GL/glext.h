@@ -6581,7 +6581,7 @@ typedef GLboolean (APIENTRYP PFNGLISPROGRAMARBPROC) (GLuint program);
 #endif
 
 #ifndef GL_ARB_vertex_buffer_object
-#define GL_ARB_vertex_buffer_object 1
+//#define GL_ARB_vertex_buffer_object 1
 #ifdef GL_GLEXT_PROTOTYPES
 GLAPI void APIENTRY glBindBufferARB (GLenum target, GLuint buffer);
 GLAPI void APIENTRY glDeleteBuffersARB (GLsizei n, const GLuint *buffers);

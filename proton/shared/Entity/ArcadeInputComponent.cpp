@@ -157,7 +157,6 @@ void ArcadeInputComponent::AddKeyBinding(VariantList *pVList)
 	b.m_name = pVList->Get(0).GetString();
 	b.m_inputkeycode = pVList->Get(1).GetUINT32();
 	b.m_outputkeycode = pVList->Get(2).GetUINT32();
-
 	m_bindings.push_back(b);
 }
 
@@ -167,7 +166,7 @@ void ArcadeInputComponent::AddKeyBinding(VariantList *pVList)
 //returns false if no direction is active (if no keys are down)
 bool ConvertKeysToDirectionVector(bool bLeft, bool bRight, bool bUp, bool bDown, CL_Vec2f * pVecOut)
 {
-	
+
 	if (!bLeft && !bRight && !bUp && !bDown)
 	{
 		*pVecOut = CL_Vec2f(0,0);
@@ -179,7 +178,6 @@ bool ConvertKeysToDirectionVector(bool bLeft, bool bRight, bool bUp, bool bDown,
 	if (bUp) *pVecOut = CL_Vec2f(0,-1); else
 	*pVecOut = CL_Vec2f(0, 1); //must have hit down
 
-
 	//check diagonals
 
 	if (bUp && bLeft) *pVecOut = CL_Vec2f(-C_ANGLE_VEC,-C_ANGLE_VEC); else
@@ -189,7 +187,6 @@ bool ConvertKeysToDirectionVector(bool bLeft, bool bRight, bool bUp, bool bDown,
 
 	return true;
 }
-
 
 void ArcadeInputComponent::ActivateBinding(ArcadeKeyBind *pBind, bool bDown)
 {
@@ -206,7 +203,7 @@ void ArcadeInputComponent::ActivateBinding(ArcadeKeyBind *pBind, bool bDown)
 	//for other keys, just send it through the arcade signal:
 	VariantList v;
 	v.Get(0).Set(pBind->m_outputkeycode);
-	v.Get(1).Set(uint32(bDown != 1)); 
+	v.Get(1).Set(uint32(bDown)); 
 
 	if (m_customSignal)
 	{
@@ -215,9 +212,6 @@ void ArcadeInputComponent::ActivateBinding(ArcadeKeyBind *pBind, bool bDown)
 	{
 		GetBaseApp()->m_sig_arcade_input(&v);
 	}
-
-
-
 }
 
 void ArcadeInputComponent::OnRawKeyboard(VariantList *pVList)

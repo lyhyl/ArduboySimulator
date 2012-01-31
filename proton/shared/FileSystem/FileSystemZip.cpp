@@ -56,8 +56,6 @@ void FileSystemZip::CacheIndex()
 	{
 		char filename_inzip[512];
 		unz_file_info file_info;
-		uLong ratio=0;
-		char charCrypt=' ';
 		err = unzGetCurrentFileInfo(m_uf,&file_info,filename_inzip,sizeof(filename_inzip),NULL,0,NULL,0);
 	
 		if (err!=UNZ_OK)

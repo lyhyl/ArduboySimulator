@@ -4,6 +4,10 @@
 #include <TCHAR.h>
 #include "time.h"
 
+#ifndef PLATFORM_WINDOWS
+#define PLATFORM_WINDOWS
+#endif
+
 #define snprintf _snprintf
 
 #ifndef _CONSOLE
