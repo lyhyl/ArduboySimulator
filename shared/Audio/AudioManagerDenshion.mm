@@ -26,6 +26,13 @@ bool AudioManagerDenshion::Init()
 	[CDSoundEngine setMixerSampleRate: 22050];
 	[SimpleAudioEngine sharedEngine];
 
+    //Let's make sure it's fully initialized before continuing, fixes issues with
+    //using the 60beat joystick with this..(it uses the audio system for the mic..)
+    
+    while ([CDAudioManager sharedManagerState] != kAMStateInitialised) 
+    {
+		[NSThread sleepForTimeInterval:0.1];
+	}	
 	[[CDAudioManager sharedManager].soundEngine setSourceGroupNonInterruptible:0 isNonInterruptible:TRUE];
 	[[CDAudioManager sharedManager] setResignBehavior:kAMRBStopPlay autoHandle:YES];
 	

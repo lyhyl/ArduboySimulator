@@ -1842,3 +1842,5 @@ Entity * CreateCheckbox(Entity *pBG, string name, string text, float x, float y,
 	pEnt->GetVar("scale2d")->Set(pEnt->GetVar("scale2d")->GetVector2()*fontScale);
 	return pEnt;
 }
+
+

@@ -35,6 +35,8 @@ using namespace std;
 #include "Entity/Entity.h"
 #include "Audio/AudioManager.h"
 
+class GamepadManager;
+
 enum eFont
 {
 	FONT_SMALL,
@@ -79,6 +81,7 @@ struct OSMessage
 
 		MESSAGE_HOOKED_SHOW_RATE_DIALOG,
 
+        MESSAGE_ALLOW_SCREEN_DIMMING, //send 1 for yes, 0 to no (supported by iOS only right now)
 		MESSAGE_USER = 1000
 	};
 
@@ -223,7 +226,8 @@ public:
 	void AddCommandLineParm(string parm);
 	vector<string> GetCommandLineParms();
 	void SetAccelerometerUpdateHz(float hz); //another way to think of hz is "how many times per second to update"
-	void PrintGLString(const char *name, GLenum s);
+	void BaseApp::SetAllowScreenDimming(bool bAllowDimming); //respected by iOS only for now
+    void PrintGLString(const char *name, GLenum s);
 	bool IsInitted() {return m_bInitted;}
 	virtual void InitializeGLDefaults();
 	CL_Mat4f * GetProjectionMatrix() {return &m_projectionMatrix;}
@@ -268,7 +272,7 @@ MessageManager * GetMessageManager(); //supply this yourself
 FileManager * GetFileManager(); //supply this yourself
 AudioManager * GetAudioManager();  //supply this yourself
 Entity * GetEntityRoot(); //we supply this
-
+GamepadManager * GetGamepadManager(); //supply this yourself, if you want gamepads
 ResourceManager * GetResourceManager();
 unsigned int GetTick(eTimingSystem timingSystem = GetBaseApp()->GetActiveTimingSystem()); //faster to write
 eTimingSystem GetTiming();

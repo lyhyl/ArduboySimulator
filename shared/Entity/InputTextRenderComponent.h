@@ -78,6 +78,7 @@ private:
 	uint32 *m_pInputType;
 	uint32 *m_pFiltering;
 	uint32 *m_pVisible;
+	uint32 *m_pGetFocusOnEnter; //if true, hitting enter (while no keyboard is on the screen and nothing else has focus) will automatically  give this focus
 
 };
 

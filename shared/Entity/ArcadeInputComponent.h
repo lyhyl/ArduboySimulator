@@ -130,11 +130,12 @@ public:
 		TRACKBALL_MODE_MENU_SELECTION //suitable for moving up/down menus, sends an up/down notification every 1.0f of notches are reached
 	};
 
+	void OnRawKeyboard(VariantList *pVList); //can call or signal bind to this to feed it more keys if needed
+
 private:
 
 	void OnUpdate(VariantList *pVList);
 	void OnTrackball(VariantList *pVList);
-	void OnRawKeyboard(VariantList *pVList);
 	void AddKeyBinding(VariantList *pVList);
 	void ActivateBinding(ArcadeKeyBind *pBind, bool bDown);
 	void OnTrackballModeChanged(Variant *pVar);

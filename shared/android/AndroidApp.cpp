@@ -14,7 +14,7 @@ extern "C"
 	{
 		AppOnSendGUIEx(env, thiz, messageType, parm1, parm2, finger);
 	}
-	JNIEXPORT void JNICALL Java_com_machineworksnorthwest_duke3d_SharedActivity_nativeSendGUIStringEx(  JNIEnv*  env, jobject thiz,jint messageType, jint parm1, jint parm2, jint finger, jstring s )
+	JNIEXPORT void JNICALL Java_com_rtsoft_shared_SharedActivity_nativeSendGUIStringEx(  JNIEnv*  env, jobject thiz,jint messageType, jint parm1, jint parm2, jint finger, jstring s )
 	{
 		AppOnSendGUIStringEx(env, thiz, messageType, parm1, parm2, finger,s );
 	}

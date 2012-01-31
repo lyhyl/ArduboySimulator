@@ -22,6 +22,9 @@
  $Id$
  */
 
+#ifdef RT_IOS_60BEAT_GAMEPAD_SUPPORT
+    #import "SBJoystick.h" //support for the 60beat gamepad
+#endif
 
 #import "CDAudioManager.h"
 
@@ -212,7 +215,8 @@ extern void managerInterruptionCallback (void *inUserData, UInt32 interruptionSt
 	}	
 }	
 
--(void)audioPlayerBeginInterruption:(AVAudioPlayer *)player {
+-(void)audioPlayerBeginInterruption:(AVAudioPlayer *)player 
+{
 	CDLOG(@"Denshion::CDLongAudioSource - audio player interrupted");
 }
 
@@ -716,11 +720,18 @@ static BOOL configured = FALSE;
 -(void) beginInterruption {
 	CDLOG(@"Denshion::CDAudioManager - begin interruption");
 	[self audioSessionInterrupted];
+    
+#ifdef RT_IOS_60BEAT_GAMEPAD_SUPPORT
+    [[SBJoystick sharedInstance] beginInterruption];
+#endif
 }
 
 -(void) endInterruption {
 	CDLOG(@"Denshion::CDAudioManager - end interruption");
 	[self audioSessionResumed];
+#ifdef RT_IOS_60BEAT_GAMEPAD_SUPPORT
+    [[SBJoystick sharedInstance] endInterruption];
+#endif
 }
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 40000

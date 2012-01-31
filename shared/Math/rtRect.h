@@ -11,6 +11,8 @@
 #define rtRect_h__
 #include "ClanLib-2.0/Sources/API/Core/Math/vec2.h"
 
+//this alignment naming below suffers from "add as you go with no plan".  They aren't really clear.. -Seth
+
 enum eAlignment
 {
 	ALIGNMENT_UPPER_LEFT,
@@ -18,7 +20,8 @@ enum eAlignment
 	ALIGNMENT_DOWN_CENTER,
 	ALIGNMENT_UPPER_RIGHT,
 	ALIGNMENT_DOWN_LEFT,
-	ALIGNMENT_UPPER_CENTER
+	ALIGNMENT_UPPER_CENTER,
+	ALIGNMENT_LEFT_CENTER
 };
 
 struct rtRect

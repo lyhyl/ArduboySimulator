@@ -64,7 +64,9 @@ void FilterInputComponent::FilterOnInput(VariantList *pVList)
 			{
 				//fine, you may pass
 			}
-		}
+           break;
+                
+        }
 
 		break;
 

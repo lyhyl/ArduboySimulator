@@ -94,6 +94,12 @@ void rtRectf::Scale( eAlignment alignment, CL_Vec2f vScale )
 			left -= changeX;
 			top -= changeY;
 			break;
+		
+		case ALIGNMENT_LEFT_CENTER:
+			right += changeX;
+			top -= changeY/2;
+			bottom += changeY/2;
+			break;
 
 		default:
 

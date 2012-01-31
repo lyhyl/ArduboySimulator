@@ -276,8 +276,8 @@ void BaseApp::OnMessage(Message &m)
 					v.Get(0).Set((float)m.GetType());
 					v.Get(1).Set(m.Get().GetVector3());
 					m_sig_accel(&v);				
-					break;
 				}
+				break;
 			//like MESSAGE_TYPE_GUI_CHAR, but handles up AND down events, and ignores things like key-repeat, better for
 			//arcade action
 			case MESSAGE_TYPE_GUI_CHAR_RAW:
@@ -286,22 +286,22 @@ void BaseApp::OnMessage(Message &m)
 					v.Get(1).Set(uint32(m.GetParm2()));
 					v.Get(2).Set(uint32(m.GetParm3()));
 					m_sig_raw_keyboard(&v);
-					break;
 				}
-			
+				break;
+
 			//usually used for text input
 			case MESSAGE_TYPE_GUI_CHAR:
 				{
 #ifdef _DEBUG
-					//LogMsg("Got char: %c (%d)", m.GetParm1(), int(m.GetParm1()));
+					//LogMsg("Got char: %c (%d)", (char)m.GetParm1(), int(m.GetParm1()));
 #endif
 					v.Get(0).Set((float)m.GetType());
 					v.Get(1).Set(0,0);
 					v.Get(2).Set(uint32(m.GetParm1()));
 					m_sig_input(&v);
-					break;
 				}
-			
+				break;
+
 			case MESSAGE_TYPE_GUI_PASTE:
 				{
 					v.Get(0).Set((float)m.GetType());
@@ -527,6 +527,20 @@ void BaseApp::SetAccelerometerUpdateHz(float hz) //another way to think of hz is
 	GetBaseApp()->AddOSMessage(o);
 }
 
+void BaseApp::SetAllowScreenDimming(bool bAllowDimming) 
+{
+	OSMessage o;
+	o.m_type = OSMessage::MESSAGE_ALLOW_SCREEN_DIMMING;
+    if (bAllowDimming)
+    {
+        o.m_x = 1;
+    } else
+    {
+        o.m_x = 0;
+    }
+    
+	GetBaseApp()->AddOSMessage(o);
+}
 void BaseApp::SetFPSLimit(float fps) 
 {
 	OSMessage o;

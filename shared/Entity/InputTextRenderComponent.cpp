@@ -198,6 +198,7 @@ void InputTextRenderComponent::OnAdd(Entity *pEnt)
 	GetFunction("ActivateKeyboard")->sig_function.connect(1, boost::bind(&InputTextRenderComponent::ActivateKeyboard, this, _1)); 
 	GetFunction("CloseKeyboard")->sig_function.connect(1, boost::bind(&InputTextRenderComponent::CloseKeyboard, this, _1)); 
 	m_pVisible = &GetParent()->GetVarWithDefault("visible", uint32(1))->GetUINT32();
+	m_pGetFocusOnEnter = &GetVarWithDefault("getFocusOnEnter", uint32(0))->GetUINT32();
 	GetParent()->GetVar("visible")->GetSigOnChanged()->connect(1, boost::bind(&InputTextRenderComponent::OnVisibilityChanged, this, _1));
 
 	//our own stuff
@@ -357,9 +358,32 @@ void InputTextRenderComponent::OnInput( VariantList *pVList )
 {
 	if (*m_pVisible == 0) return;
 
+	eMessageType messageType = eMessageType( int(pVList->Get(0).GetFloat()));
+
+	if (!m_bEditActive)
+	{
+		//well, there is one exception to a keypress we'll process, if nobody else focus, and it's an enter, and we're
+		//instructed to give ourselves focus if enter is hit, then ok.
+		if (messageType == MESSAGE_TYPE_GUI_CHAR)
+		{
+			char c = (char)pVList->Get(2).GetUINT32();
+			
+			if (c == 13)
+			{
+				if ( *m_pGetFocusOnEnter && GetEntityWithNativeUIFocus() == NULL)
+				{
+					//they hit enter, give ourselves focus!
+					GetFunction("ActivateKeyboard")->sig_function(NULL);
+				}
+			}
+		}
+		
+		return; //don't process text if we're not active
+	}
+
 	//0 = message type, 1 = parent coordinate offset, 2 = char, 3 reserved for filtering control messages
 	
-	switch (eMessageType( int(pVList->Get(0).GetFloat())))
+	switch (messageType)
 	{
 	case MESSAGE_TYPE_GUI_PASTE:
 		{
@@ -383,13 +407,12 @@ void InputTextRenderComponent::OnInput( VariantList *pVList )
 	
 	case MESSAGE_TYPE_GUI_CHAR:
 #ifdef _DEBUG		
-		//LogMsg("Got key %c", (char)pVList->Get(2).GetUINT32());
+		LogMsg("Got key %c", (char)pVList->Get(2).GetUINT32());
 #endif
 
-		if (!m_bEditActive) return; //ignore, we don't have focus
-
 		char c = (char)pVList->Get(2).GetUINT32();
-			string input = GetLastStringInput();
+		
+		string input = GetLastStringInput();
 
 		if (c == 13)
 		{

@@ -530,6 +530,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				int wmCharKey = VKeyToWMCharKey(wParam);
 				if (wmCharKey != 0)
 				{
+					LogMsg("Sending repeat key..");
 					GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, (float)wmCharKey, 1.0f);  
 				}
 
@@ -542,7 +543,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	case WM_KEYUP:
 		{
-			//LogMsg("Got key up %d", (int)wParam);
+	//		LogMsg("Got key up %d", (int)wParam);
 			uint32 key = ConvertWindowsKeycodeToProtonVirtualKey(wParam);
 
 			if (key == VIRTUAL_KEY_BACK)
@@ -628,7 +629,6 @@ bool TestEGLError(HWND hWnd, char* pszLocation)
 
 	return true;
 }
-
 
 void CenterWindow(HWND hWnd)
 {
@@ -762,7 +762,6 @@ assert(!g_hDC);
 	eglWindow = g_hWnd;
 #endif
 
-
 	// Get the associated device context
 	g_hDC = GetDC(g_hWnd);
 	if (!g_hDC)
@@ -838,7 +837,6 @@ assert(!g_hDC);
 	{
 		return false;
 	}
-
 		/*
 	
 	GLuint viewFramebuffer;
@@ -909,7 +907,6 @@ void DestroyVideo(bool bDestroyHWNDAlso)
 		g_hRC=NULL;										// Set RC To NULL
 	}
 
-
 #else
 
 	eglMakeCurrent(g_eglDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
@@ -923,7 +920,6 @@ void DestroyVideo(bool bDestroyHWNDAlso)
 		g_hDC=NULL;										// Set DC To NULL
 	}
 	g_hDC = NULL;
-
 
 	if (bDestroyHWNDAlso)
 	{

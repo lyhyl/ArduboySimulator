@@ -14,6 +14,9 @@
 #include <MacTypes.h>
 #include "iOSUtils.h"
 
+#ifndef PLATFORM_IOS
+#define PLATFORM_IOS
+#endif
 
 #ifndef _SINT64
 typedef int64_t sint64;

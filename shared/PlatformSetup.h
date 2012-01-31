@@ -64,6 +64,9 @@ using namespace std;
 #define SAFE_FREE(p)      { if(p) { free (p); (p)=NULL; } }
 #endif
 
+#ifndef SAFE_RELEASE
+#define SAFE_RELEASE(p)      { if(p) {(p)->Release(); (p)=NULL; } }
+#endif
 
 #define MAKE_RGB(r, g, b)      ( ((uint32)(r) << 8) + ((uint32)(g) << 16) + ((uint32)(b) << 24) )
 #define MAKE_RGBA(r, g, b, a) ( ((uint32)(r) << 8) + ((uint32)(g) << 16) + ((uint32)(b) << 24) + ((uint32)(a)))
