@@ -272,13 +272,13 @@ const char * GetAppName() {return "Looney Ladders by Seth A. Robinson (rtsoft.co
 //for palm webos and android
 const char * GetBundlePrefix()
 {
-	char * bundlePrefix = "com.rtsoft.";
+	const char * bundlePrefix = "com.rtsoft.";
 	return bundlePrefix;
 }
 
 const char * GetBundleName()
 {
-	char * bundleName = "RTLooneyLadders";
+	const char * bundleName = "RTLooneyLadders";
 	return bundleName;
 }
 
