@@ -86,6 +86,15 @@ bool InitSDL()
 	return true;
 }
 
+void ChangeEmulationOrientationIfPossible(int desiredX, int desiredY, eOrientationMode desiredOrienation)
+{
+	if (GetForcedOrientation() != ORIENTATION_DONT_CARE) {
+		LogMsg("Can't change orientation because SetForcedOrientation() is set.");
+	} else {
+		SetupScreenInfo(desiredX, desiredY, desiredOrienation);
+	}
+}
+
 int ConvertSDLKeycodeToProtonVirtualKey(SDLKey sdlkey)
 {
 	int keycode = sdlkey;
@@ -222,32 +231,51 @@ void SDLEventLoop()
 			break;
 
 		case SDL_KEYDOWN:
-			switch (ev.key.keysym.sym)
 			{
-				case SDLK_ESCAPE:
-					// Escape forces us to quit the app
-					// this is also sent when the user makes a back gesture
-					g_bAppFinished = true;
-					break;
+				switch (ev.key.keysym.sym)
+				{
+					case SDLK_ESCAPE:
+						// Escape forces us to quit the app
+						// this is also sent when the user makes a back gesture
+						g_bAppFinished = true;
+						break;
+				}
 				
-				default:
+				if (ev.key.keysym.mod & KMOD_CTRL) {
+					switch (ev.key.keysym.sym)
 					{
-						int vKey = ConvertSDLKeycodeToProtonVirtualKey(ev.key.keysym.sym);
-						GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW, (float)vKey, 1.0f);
-						
-						if (vKey >= SDLK_SPACE && vKey <= SDLK_DELETE || vKey == SDLK_BACKSPACE || vKey == SDLK_RETURN)
-						{
-							signed char key = vKey;
+						case SDLK_l: // Left landscape mode
+							ChangeEmulationOrientationIfPossible(GetPrimaryGLY(), GetPrimaryGLX(), ORIENTATION_LANDSCAPE_LEFT);
+							break;
 
-							if (ev.key.keysym.mod & KMOD_SHIFT || ev.key.keysym.mod & KMOD_CAPS)
-							{
-								key = toupper(key);
-							}
+						case SDLK_r: // Right landscape mode
+							ChangeEmulationOrientationIfPossible(GetPrimaryGLY(), GetPrimaryGLX(), ORIENTATION_LANDSCAPE_RIGHT);
+							break;
 
-							GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, (float)key, 1.0f);
-						}
+						case SDLK_p: // Portrait mode
+							ChangeEmulationOrientationIfPossible(GetPrimaryGLX(), GetPrimaryGLY(), ORIENTATION_PORTRAIT);
+							break;
+							
+						case SDLK_u: // Upside down portrait mode
+							ChangeEmulationOrientationIfPossible(GetPrimaryGLX(), GetPrimaryGLY(), ORIENTATION_PORTRAIT_UPSIDE_DOWN);
+							break;
 					}
-					break;
+				}
+				
+				int vKey = ConvertSDLKeycodeToProtonVirtualKey(ev.key.keysym.sym);
+				GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW, (float)vKey, 1.0f);
+				
+				if (vKey >= SDLK_SPACE && vKey <= SDLK_DELETE || vKey == SDLK_BACKSPACE || vKey == SDLK_RETURN)
+				{
+					signed char key = vKey;
+					
+					if (ev.key.keysym.mod & KMOD_SHIFT || ev.key.keysym.mod & KMOD_CAPS)
+					{
+						key = toupper(key);
+					}
+					
+					GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, (float)key, 1.0f);
+				}
 			}
 			break;
 			
