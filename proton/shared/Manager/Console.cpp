@@ -24,6 +24,8 @@ void Console::AddLine( string line )
 	{
 		m_log.pop_front();
 	}
+
+	m_sig_on_text_added();
 }
 
 string Console::GetAsSingleString()

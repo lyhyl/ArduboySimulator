@@ -41,7 +41,7 @@ void Button2DComponent::OnAdd(Entity *pEnt)
 	m_pFileName = &GetVar("fileName")->GetString();
 	m_pOverFileName = &GetVar("overFileName")->GetString();
 	m_pTouchOver = &GetParent()->GetVar("touchOver")->GetUINT32();
-	m_pAlpha = &GetParent()->GetShared()->GetVarWithDefault("alpha", Variant(1.0f))->GetFloat();
+	m_pAlpha = &GetParent()->GetVarWithDefault("alpha", Variant(1.0f))->GetFloat();
 
 	m_repeatTimer = 0;
 

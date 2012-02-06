@@ -107,7 +107,6 @@ Entity * AboutMenuCreate( Entity *pParentEnt)
 	pScroll->GetVar("size2d")->Set(vTextAreaBounds);
 	pScroll->AddComponent(new TouchHandlerComponent);
 
-	EntityComponent *pFilter = pScroll->AddComponent(new FilterInputComponent);
 	EntityComponent *pScrollComp = pScroll->AddComponent(new ScrollComponent);
 	
 	//turn on finger tracking enforcement, it means it will mark the tap as "handled" when touched.  Doesn't make a difference here,
@@ -117,7 +116,7 @@ Entity * AboutMenuCreate( Entity *pParentEnt)
 
 	//note: If you don't want to see a scroll bar progress indicator, comment out the next line.  Also note that it only draws
 	//a vertical progress bar if needed but doesn't draw a horizontal if needed (I just haven't needed a horizontal scroll bar yet)
-	EntityComponent *pScrollBarComp = pScroll->AddComponent(new ScrollBarRenderComponent); 	//also let's add a visual way to see the scroller position
+	EntityComponent *pScrollBarComp = pScroll->AddComponent(new ScrollBarRenderComponent); 	//add a visual way to see the scroller position
 	
 	//if we wanted to change the scroll bar color we could do it this way:
 	//pScroll->GetVar("color")->Set(MAKE_RGBA(61,155, 193, 255)); 
@@ -134,6 +133,8 @@ Entity * AboutMenuCreate( Entity *pParentEnt)
 	pEnt->GetFunction("OnButtonSelected")->sig_function.connect(&AboutMenuOnSelect);
 	SetupTextEntity(pEnt, FONT_SMALL);
 	AddHotKeyToButton(pEnt, VIRTUAL_KEY_BACK); //for androids back button and window's Escape button
+	
+	//slide it in with movement
 	SlideScreen(pBG, true, 500);
 	return pBG;
 }

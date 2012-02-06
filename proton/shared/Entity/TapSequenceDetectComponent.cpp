@@ -21,7 +21,7 @@ void TapSequenceDetectComponent::OnAdd(Entity *pEnt)
 	m_curTapTarget = 0;
 	m_pPos2d = &GetParent()->GetVar("pos2d")->GetVector2();
 	m_pSize2d = &GetParent()->GetVar("size2d")->GetVector2();
-	m_pScale2d = &GetParent()->GetShared()->GetVarWithDefault("scale2d", Variant(1.0f, 1.0f))->GetVector2();
+	m_pScale2d = &GetParent()->GetVarWithDefault("scale2d", Variant(1.0f, 1.0f))->GetVector2();
 	m_pAlignment = &GetParent()->GetVar("alignment")->GetUINT32();
 
 	GetFunction("AddTapRegion")->sig_function.connect(1, boost::bind(&TapSequenceDetectComponent::AddTapRegion, this, _1));

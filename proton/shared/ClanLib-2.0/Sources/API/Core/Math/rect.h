@@ -494,6 +494,7 @@ public:
 	CL_Rectf(const CL_Sizex<float> &s) : CL_Rectx<float>(s) {}
 	CL_Rectf(float new_left, float new_top, float new_right, float new_bottom) : CL_Rectx<float>(new_left, new_top, new_right, new_bottom) {}
 	CL_Rectf(const CL_Pointx<float> &p, const CL_Sizex<float> &size) : CL_Rectx<float>(p, size) {}
+	CL_Rectf(const CL_Pointx<float> &p, const CL_Pointx<float> &size) : CL_Rectx<float>(p, CL_Sizef(size.x, size.y)) {}
 	CL_Rectf(const CL_Rectx<int> &rect) : CL_Rectx<float>(rect) {}
 	CL_Rectf(const CL_Rectx<float> &rect) : CL_Rectx<float>(rect) {}
 	CL_Rectf(const CL_Rectx<double> &rect) : CL_Rectx<float>(rect) {}

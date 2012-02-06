@@ -45,13 +45,15 @@ void InputTextRenderComponent::OnTextChanged(Variant *pDataObject)
 		SetLastStringInput(*m_pText);
 	}
 
-	float fontHeight = GetBaseApp()->GetFont(eFont(*m_pFontID))->GetLineHeight(m_pScale2d->x);
+	//float fontHeight = GetBaseApp()->GetFont(eFont(*m_pFontID))->GetLineHeight(m_pScale2d->x);
 //	float sizeX = 0;
-	float sizeY = 0;
+	//float sizeY = 0;
 //	if (sizeX == 0) sizeX = fontHeight*10;
-	if (sizeY == 0) sizeY = fontHeight+6;
+//	float recommendedSizeY = fontHeight+6;
+//	float sizeY = m_pSize2d->y;
+//	if (sizeY < recommendedSizeY) sizeY = fontHeight+6;
 
-	*m_pSize2d = CL_Vec2f(m_pSize2d->x, sizeY);
+//	*m_pSize2d = CL_Vec2f(m_pSize2d->x, sizeY);
 
 }
 
@@ -187,11 +189,11 @@ void InputTextRenderComponent::OnAdd(Entity *pEnt)
 	m_bEditActive = false;
 	m_pPos2d = &GetParent()->GetVar("pos2d")->GetVector2();
 	m_pSize2d = &GetParent()->GetVar("size2d")->GetVector2();
-	m_pScale2d = &GetParent()->GetShared()->GetVarWithDefault("scale2d", Variant(1.0f, 1.0f))->GetVector2();
+	m_pScale2d = &GetParent()->GetVarWithDefault("scale2d", Variant(1.0f, 1.0f))->GetVector2();
 	m_pAlignment = &GetParent()->GetVar("alignment")->GetUINT32();
-	m_pColor = &GetParent()->GetShared()->GetVarWithDefault("color", Variant(MAKE_RGBA(255,255,255,255)))->GetUINT32();
-	m_pColorMod = &GetParent()->GetShared()->GetVarWithDefault("colorMod", Variant(MAKE_RGBA(255,255,255,255)))->GetUINT32();
-	m_pAlpha = &GetParent()->GetShared()->GetVarWithDefault("alpha", Variant(1.0f))->GetFloat();
+	m_pColor = &GetParent()->GetVarWithDefault("color", Variant(MAKE_RGBA(255,255,255,255)))->GetUINT32();
+	m_pColorMod = &GetParent()->GetVarWithDefault("colorMod", Variant(MAKE_RGBA(255,255,255,255)))->GetUINT32();
+	m_pAlpha = &GetParent()->GetVarWithDefault("alpha", Variant(1.0f))->GetFloat();
 	GetParent()->GetFunction("OnTouchEnd")->sig_function.connect(1, boost::bind(&InputTextRenderComponent::OnTouchEnd, this, _1));
 	GetParent()->GetFunction("OnInput")->sig_function.connect(1, boost::bind(&InputTextRenderComponent::OnInput, this, _1)); //used for keyboard keys on Win
 	GetParent()->GetFunction("OnLosingNativeGUIFocus")->sig_function.connect(1, boost::bind(&InputTextRenderComponent::OnLosingNativeGUIFocus, this, _1)); 

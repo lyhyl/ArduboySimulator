@@ -21,10 +21,10 @@ void ScrollBarRenderComponent::OnAdd(Entity *pEnt)
 	//shared with the rest of the entity
 	m_pPos2d = &GetParent()->GetVar("pos2d")->GetVector2();
 	m_pSize2d = &GetParent()->GetVar("size2d")->GetVector2();
-	m_pScale2d = &GetParent()->GetShared()->GetVarWithDefault("scale2d", Variant(1.0f, 1.0f))->GetVector2();
-	m_pAlpha = &GetParent()->GetShared()->GetVarWithDefault("alpha", Variant(0.3f))->GetFloat();
-	m_pColor = &GetParent()->GetShared()->GetVarWithDefault("color", Variant(MAKE_RGBA(224,188,130,255)))->GetUINT32();
-	m_pColorMod = &GetParent()->GetShared()->GetVarWithDefault("colorMod", Variant(MAKE_RGBA(255,255,255,255)))->GetUINT32();
+	m_pScale2d = &GetParent()->GetVarWithDefault("scale2d", Variant(1.0f, 1.0f))->GetVector2();
+	m_pAlpha = &GetParent()->GetVarWithDefault("alpha", Variant(0.3f))->GetFloat();
+	m_pColor = &GetParent()->GetVarWithDefault("color", Variant(MAKE_RGBA(224,188,130,255)))->GetUINT32();
+	m_pColorMod = &GetParent()->GetVarWithDefault("colorMod", Variant(MAKE_RGBA(255,255,255,255)))->GetUINT32();
 	
 	m_pFileName = &GetVar("fileName")->GetString(); //local to us
 	
@@ -40,7 +40,10 @@ void ScrollBarRenderComponent::OnAdd(Entity *pEnt)
 	EntityComponent *pScrollComp = GetParent()->GetComponentByName("Scroll");
 	if (!pScrollComp)
 	{
-		LogError("ScrollBarRenderComponent expects an entity with a ScrollComponent attached");
+		//assume our stuff will get set from the outside
+		m_pBoundsRect = &GetParent()->GetVar("boundsRect")->GetRect();
+		m_pProgress2d = &GetParent()->GetVar("progress2d")->GetVector2();
+
 	} else
 	{
 		m_pBoundsRect = &pScrollComp->GetVar("boundsRect")->GetRect();
@@ -84,11 +87,8 @@ void ScrollBarRenderComponent::OnUpdate(VariantList *pVList)
 
 void ScrollBarRenderComponent::OnRender(VariantList *pVList)
 {
-	
 	//NOTE: We don't support drawing a horizontal scroll bar yet!
-
-
-		
+	
 	//LogMsg("Drawing progress bar: %.2f", progress);
 	if (*m_pAlpha <= 0.07)
 	{
@@ -125,7 +125,7 @@ void ScrollBarRenderComponent::OnRender(VariantList *pVList)
 	if (vFinalPos.x >= GetScreenSizeXf())
 	{
 		//position on the inside, not the outside
-		vFinalPos.x -= barWidth*2;
+		vFinalPos.x -= ( barWidth+(iPadMapX(8) )); //adjust the spacer with the screensize
 	}
 	//slide it down to the right position:
 	vFinalPos.y += (m_pSize2d->y - barHeight)* m_pProgress2d->y;

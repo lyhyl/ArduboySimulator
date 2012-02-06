@@ -22,13 +22,13 @@ void SliderComponent::OnAdd(Entity *pEnt)
 	m_pPos2d = &GetParent()->GetVar("pos2d")->GetVector2();
 	m_pSize2d = &GetParent()->GetVar("size2d")->GetVector2();
 
-	m_pColor = &GetParent()->GetShared()->GetVarWithDefault("color", Variant(MAKE_RGBA(255,255,255,255)))->GetUINT32();
-	m_pColorMod = &GetParent()->GetShared()->GetVarWithDefault("colorMod", Variant(MAKE_RGBA(255,255,255,255)))->GetUINT32();
-	m_pAlpha = &GetParent()->GetShared()->GetVarWithDefault("alpha", Variant(1.0f))->GetFloat();
-	m_pSliderButton = GetParent()->GetShared()->GetVarWithDefault("sliderButton", (Entity*)NULL)->GetEntity();
+	m_pColor = &GetParent()->GetVarWithDefault("color", Variant(MAKE_RGBA(255,255,255,255)))->GetUINT32();
+	m_pColorMod = &GetParent()->GetVarWithDefault("colorMod", Variant(MAKE_RGBA(255,255,255,255)))->GetUINT32();
+	m_pAlpha = &GetParent()->GetVarWithDefault("alpha", Variant(1.0f))->GetFloat();
+	m_pSliderButton = GetParent()->GetVarWithDefault("sliderButton", (Entity*)NULL)->GetEntity();
 
 	/*
-	m_pScale2d = &GetParent()->GetShared()->GetVarWithDefault("scale2d", Variant(1.0f, 1.0f))->GetVector2();
+	m_pScale2d = &GetParent()->GetVarWithDefault("scale2d", Variant(1.0f, 1.0f))->GetVector2();
 	m_pRotation = &GetParent()->GetVar("rotation")->GetFloat();  //in degrees
 
 	m_pAlignment = &GetParent()->GetVar("alignment")->GetUINT32();

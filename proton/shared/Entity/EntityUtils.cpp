@@ -1158,8 +1158,7 @@ void SetupTextEntity(Entity *pEnt, eFont fontID, float scale)
 	
 	if (!pComp && ( (pComp = pEnt->GetComponentByName("TextBoxRender"))  != 0))
 	{
-		//a textbox component, we handle font scale a different way, so it doesn't affect the text input box
-		//size
+		//we handle font scale a different way, so it doesn't affect the text input box size
 		if (scale != 0)
 		{
 			pComp->GetVar("fontScale")->Set(scale);
@@ -1169,8 +1168,7 @@ void SetupTextEntity(Entity *pEnt, eFont fontID, float scale)
 
 	if (!pComp && ( (pComp = pEnt->GetComponentByName("LogDisplay")) != 0))
 	{
-		//a textbox component, we handle font scale a different way, so it doesn't affect the text input box
-		//size
+		//we handle font scale a different way, so it doesn't affect the text input box size
 		if (scale != 0)
 		{
 			pComp->GetVar("fontScale")->Set(scale);
@@ -1180,8 +1178,6 @@ void SetupTextEntity(Entity *pEnt, eFont fontID, float scale)
 
 	if (!pComp && ( (pComp = pEnt->GetComponentByName("InputTextRender")) != 0))
 	{
-		//a textbox component, we handle font scale a different way, so it doesn't affect the text input box
-		//size
 		if (scale != 0)
 		{
 			pEnt->GetVar("scale2d")->Set(CL_Vec2f(scale, scale));
@@ -1411,6 +1407,13 @@ void SetupLightBarSelect(Entity *pBG, string entNamePrefix, int defaultOption, u
 void ResizeScrollBounds(VariantList *pVList)
 {
 	Entity *pScroll = pVList->Get(0).GetEntity()->GetEntityByName("scroll");
+	
+	if (!pScroll)
+	{
+		LogError("This is sort of hardcoded to need the entity sent in to have an entity named scroll..");
+		assert(!"No entity named scroll!");
+		return;
+	}
 	Entity *pScrollChild = pScroll->GetEntityByName("scroll_child");
 	if (!pScroll || !pScrollChild)
 	{
@@ -1844,3 +1847,18 @@ Entity * CreateCheckbox(Entity *pBG, string name, string text, float x, float y,
 }
 
 
+Entity * SetLabelTextByEntityName(const string &entityName, string text, Entity *pRootEntity)
+{
+	Entity *pEnt = pRootEntity->GetEntityByName(entityName);
+	if (!pEnt) return NULL; //couldn't find it
+
+	EntityComponent *pTextComp = pEnt->GetComponentByName("TextRender");
+	if (!pTextComp)
+	{
+		assert(!"Well, we found the entity but it doesn't have a TextRender component.  How the heck can we change its label?");
+		return NULL;
+	}
+
+	pTextComp->GetVar("text")->Set(text);
+	return pEnt; //changed it
+}

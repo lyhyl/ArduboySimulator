@@ -47,14 +47,14 @@ void TextBoxRenderComponent::OnAdd(Entity *pEnt)
 	//shared with the rest of the entity
 	
 	m_pPos2d = &GetParent()->GetVar("pos2d")->GetVector2();
-	m_pSize2d = &GetParent()->GetShared()->GetVarWithDefault("size2d", CL_Vec2f(300,200))->GetVector2();
-	m_pEnclosedSize2d = &GetParent()->GetShared()->GetVarWithDefault("enclosedSize2d", CL_Vec2f(0,0))->GetVector2();
-	m_pScale2d = &GetParent()->GetShared()->GetVarWithDefault("scale2d", Variant(1.0f, 1.0f))->GetVector2();
+	m_pSize2d = &GetParent()->GetVarWithDefault("size2d", CL_Vec2f(300,200))->GetVector2();
+	m_pEnclosedSize2d = &GetParent()->GetVarWithDefault("enclosedSize2d", CL_Vec2f(0,0))->GetVector2();
+	m_pScale2d = &GetParent()->GetVarWithDefault("scale2d", Variant(1.0f, 1.0f))->GetVector2();
 	m_pAlignment = &GetParent()->GetVar("alignment")->GetUINT32();
-	m_pColor = &GetParent()->GetShared()->GetVarWithDefault("color", Variant(MAKE_RGBA(255,255,255,255)))->GetUINT32();
-	m_pColorMod = &GetParent()->GetShared()->GetVarWithDefault("colorMod", Variant(MAKE_RGBA(255,255,255,255)))->GetUINT32();
-	m_pAlpha = &GetParent()->GetShared()->GetVarWithDefault("alpha", Variant(1.0f))->GetFloat();
-	m_pTimingSystem = &GetParent()->GetShared()->GetVarWithDefault("timingSystem", Variant(uint32(GetBaseApp()->GetActiveTimingSystem())))->GetUINT32();
+	m_pColor = &GetParent()->GetVarWithDefault("color", Variant(MAKE_RGBA(255,255,255,255)))->GetUINT32();
+	m_pColorMod = &GetParent()->GetVarWithDefault("colorMod", Variant(MAKE_RGBA(255,255,255,255)))->GetUINT32();
+	m_pAlpha = &GetParent()->GetVarWithDefault("alpha", Variant(1.0f))->GetFloat();
+	m_pTimingSystem = &GetParent()->GetVarWithDefault("timingSystem", Variant(uint32(GetBaseApp()->GetActiveTimingSystem())))->GetUINT32();
 
 	//our own stuff
 	m_pFontScale = &GetVarWithDefault("fontScale", Variant(1.0f))->GetFloat();
