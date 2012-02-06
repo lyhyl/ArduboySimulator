@@ -192,12 +192,25 @@ void ArcadeInputComponent::ActivateBinding(ArcadeKeyBind *pBind, bool bDown)
 {
 	//special handling for directional keys, so they work in tandem with the trackball or whatever else also does directions
 
+	bool bWasDirectionalKey = true;
+
 	switch (pBind->m_outputkeycode)
 	{
 		case VIRTUAL_KEY_DIR_LEFT:  m_buttons[MOVE_BUTTON_DIR_LEFT].OnPressToggle(bDown, m_customSignal);  break;
 		case VIRTUAL_KEY_DIR_RIGHT:  m_buttons[MOVE_BUTTON_DIR_RIGHT].OnPressToggle(bDown, m_customSignal);  break;
 		case VIRTUAL_KEY_DIR_UP:  m_buttons[MOVE_BUTTON_DIR_UP].OnPressToggle(bDown, m_customSignal);  break;
 		case VIRTUAL_KEY_DIR_DOWN:  m_buttons[MOVE_BUTTON_DIR_DOWN].OnPressToggle(bDown, m_customSignal); break;
+			
+		default:
+
+			bWasDirectionalKey = false;
+			break;
+	}
+
+	if (bWasDirectionalKey) 
+	{
+		//avoid sending it twice, we already would above
+		return;
 	}
 
 	//for other keys, just send it through the arcade signal:
@@ -220,7 +233,7 @@ void ArcadeInputComponent::OnRawKeyboard(VariantList *pVList)
 	bool bDown = pVList->Get(1).GetUINT32() == 1;
 
 #ifdef _DEBUG
-	//LogMsg("Got key %d, %d", keyCode, int(bDown));
+	LogMsg("Got key %d, %d", keyCode, int(bDown));
 #endif
 
 	ArcadeBindList::iterator itor = m_bindings.begin();
