@@ -158,7 +158,7 @@ unsigned int GetSystemTimeTick()
 	double timeDouble = time.tv_sec*1000 + time.tv_nsec/1000000;
 	
 	double change = timeDouble -lastTime;
-	if (change > 0 and change < 500)
+	if (change > 0 && change < 500)
 	{
 		incrementingTimer += change;
 	}
