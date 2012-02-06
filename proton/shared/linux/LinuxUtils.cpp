@@ -103,8 +103,12 @@ bool IsIPhone3GS()
 
 bool IsDesktop()
 {
-	if (GetEmulatedPlatformID() == PLATFORM_ID_LINUX) return false;
-	return true;
+	if (GetEmulatedPlatformID() == PLATFORM_ID_WINDOWS ||
+	    GetEmulatedPlatformID() == PLATFORM_ID_OSX ||
+	    GetEmulatedPlatformID() == PLATFORM_ID_LINUX) {
+		return true;
+	}
+	return false;
 }
 
 ePlatformID GetPlatformID()
