@@ -10,6 +10,8 @@
 #ifndef Console_h__
 #define Console_h__
 
+#include "Manager/VariantDB.h" //to get the sig/slot includes
+
 using namespace std;
 
 class Console
@@ -25,6 +27,8 @@ public:
 	size_t GetTotalLines(){return m_log.size();}
 	string GetLine(int index) {return m_log.at(index);}
 	
+	boost::signal<void()> m_sig_on_text_added; //if you want notification when text is added here, connect to this
+
 private:
 
 	unsigned int m_maxLines;

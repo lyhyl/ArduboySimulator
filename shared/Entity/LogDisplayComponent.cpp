@@ -1,18 +1,27 @@
 #include "PlatformPrecomp.h"
 #include "LogDisplayComponent.h"
-#include "Entity/EntityUtils.h"
+#include "EntityUtils.h"
+
+//needed for the scroll bar
+#include "ScrollBarRenderComponent.h"
+#include "TouchDragComponent.h"
+#include "RenderScissorComponent.h"
 
 LogDisplayComponent::LogDisplayComponent()
 {
 	SetName("LogDisplay");
 	m_pActiveConsole = NULL;
 	m_pInternalConsole = NULL;
+	m_pScrollBarComp = NULL;
+	m_bIsDraggingLook= false;
+	m_curLine = 0;
+	m_bUsingCustomConsole = false;
+
 }
 
 LogDisplayComponent::~LogDisplayComponent()
 {
-
-	SAFE_DELETE(m_pInternalConsole);
+		SAFE_DELETE(m_pInternalConsole);
 }
 
 void LogDisplayComponent::OnAdd(Entity *pEnt)
@@ -23,23 +32,30 @@ void LogDisplayComponent::OnAdd(Entity *pEnt)
 	m_pSize2d = &GetParent()->GetVar("size2d")->GetVector2();
 	m_pFontID = &GetVarWithDefault("font", uint32(FONT_SMALL))->GetUINT32();
 	
-	m_pScale2d = &GetParent()->GetShared()->GetVarWithDefault("scale2d", Variant(1.0f, 1.0f))->GetVector2();
+	m_pScale2d = &GetParent()->GetVarWithDefault("scale2d", Variant(1.0f, 1.0f))->GetVector2();
 	m_pRotation = &GetParent()->GetVar("rotation")->GetFloat();  //in degrees
 
-	m_pColor = &GetParent()->GetShared()->GetVarWithDefault("color", Variant(MAKE_RGBA(255,255,255,255)))->GetUINT32();
-	m_pColorMod = &GetParent()->GetShared()->GetVarWithDefault("colorMod", Variant(MAKE_RGBA(255,255,255,255)))->GetUINT32();
-	m_pAlpha = &GetParent()->GetShared()->GetVarWithDefault("alpha", Variant(1.0f))->GetFloat();
+	m_pColor = &GetParent()->GetVarWithDefault("color", Variant(MAKE_RGBA(255,255,255,255)))->GetUINT32();
+	m_pColorMod = &GetParent()->GetVarWithDefault("colorMod", Variant(MAKE_RGBA(255,255,255,255)))->GetUINT32();
+	m_pAlpha = &GetParent()->GetVarWithDefault("alpha", Variant(1.0f))->GetFloat();
 	m_pAlignment = &GetParent()->GetVar("alignment")->GetUINT32();
 
 	//our own stuff
 	m_pFontScale = &GetVarWithDefault("fontScale", Variant(1.0f))->GetFloat();
+	
+	//for the momentum stuff
+	m_pFriction = &GetVarWithDefault("friction", 0.1f)->GetFloat();
+	m_pMaxScrollSpeed = &GetVarWithDefault("maxScrollSpeed", float(7))->GetFloat();
+	m_pPowerMod = &GetVarWithDefault("powerMod", float(0.15))->GetFloat();
 
+	m_pEnableScrolling = &GetParent()->GetVar("enableScrolling")->GetUINT32();
+	GetVar("enableScrolling")->GetSigOnChanged()->connect(boost::bind(&LogDisplayComponent::OnEnableScrollingChanged, this, _1));
 
 	if (!m_pActiveConsole) m_pActiveConsole = GetBaseApp()->GetConsole();
 	//register ourselves to render if the parent does
 	GetParent()->GetFunction("OnRender")->sig_function.connect(1, boost::bind(&LogDisplayComponent::OnRender, this, _1));
 	GetFunction("AddLine")->sig_function.connect(1, boost::bind(&LogDisplayComponent::AddLine, this, _1));
-//	GetParent()->GetFunction("OnUpdate")->sig_function.connect(1, boost::bind(&LogDisplayComponent::OnUpdate, this, _1));
+	GetParent()->GetFunction("OnUpdate")->sig_function.connect(1, boost::bind(&LogDisplayComponent::OnUpdate, this, _1));
 }
 
 void LogDisplayComponent::OnRemove()
@@ -47,26 +63,152 @@ void LogDisplayComponent::OnRemove()
 	EntityComponent::OnRemove();
 }
 
-
 void LogDisplayComponent::AddLine(VariantList *pVList)
 {
- if (!m_pInternalConsole)
- {
-	 m_pInternalConsole = new Console;
-	 m_pActiveConsole = m_pInternalConsole;
- }
+	if (!m_bUsingCustomConsole && !m_pInternalConsole)
+	{
+		m_pInternalConsole = new Console;
+		m_pActiveConsole = m_pInternalConsole;
+	}
 
- //word wrap it into lines if needed
- deque<string> lines;
- CL_Vec2f enclosedSize2d;
- GetBaseApp()->GetFont(eFont(*m_pFontID))->MeasureTextAndAddByLinesIntoDeque(*m_pSize2d, pVList->Get(0).GetString(), &lines, *m_pFontScale, enclosedSize2d);
+	//word wrap it into lines if needed
+	deque<string> lines;
+	CL_Vec2f enclosedSize2d;
+	GetBaseApp()->GetFont(eFont(*m_pFontID))->MeasureTextAndAddByLinesIntoDeque(*m_pSize2d, pVList->Get(0).GetString(), &lines, *m_pFontScale, enclosedSize2d);
 
- for (;lines.size();)
- {
-	 m_pActiveConsole->AddLine(lines.front());
-	 lines.pop_front();
- }
+	for (;lines.size();)
+	{
+		m_pActiveConsole->AddLine(lines.front());
+		lines.pop_front();
+	}
+}
 
+void LogDisplayComponent::OnTextAdded()
+{
+	LogMsg("Updating..");
+	if (!m_bIsDraggingLook)
+	{
+		m_curLine = (float)m_pActiveConsole->GetTotalLines(); //move to last line.  Cur means the last line that we can see.
+	}
+	UpdateScrollBar();
+}
+
+void LogDisplayComponent::OnEnableScrollingChanged(Variant *pVariant)
+{
+	if (pVariant->GetUINT32() != 1)
+	{
+		assert(!"Actually we don't support turning this off if it was already on.  Hope you know that!");
+		return;
+	}
+
+	if (m_pScrollBarComp)
+	{
+		//already initted
+		return;
+	}
+
+	//to get the OnOverStart and OnOverEnd messages
+	GetParent()->AddComponent(new TouchHandlerComponent);
+	//to get drag messages
+	EntityComponent *pDragComp = GetParent()->AddComponent(new TouchDragComponent);
+	GetParent()->AddComponent(new RenderScissorComponent);
+	//add touch drag handler, so we can respond when the user drags the screen
+	pDragComp->GetFunction("OnTouchDragUpdate")->sig_function.connect(1, boost::bind(&LogDisplayComponent::OnTouchDragUpdate, this, _1));	
+	pDragComp->GetFunction("OnOverStart")->sig_function.connect(1, boost::bind(&LogDisplayComponent::OnOverStart, this, _1));	
+	pDragComp->GetFunction("OnOverEnd")->sig_function.connect(1, boost::bind(&LogDisplayComponent::OnOverEnd, this, _1));	
+
+	//to see the scroll bar, we'll create a child entity and throw a scroll bar render in it
+	Entity *pScrollEnt = GetParent()->AddEntity(new Entity());
+	m_pScrollBarComp = pScrollEnt->AddComponent(new ScrollBarRenderComponent); 	//add a visual way to see the scroller position
+
+	//set the size to match ours
+	pScrollEnt->GetVar("size2d")->Set(*m_pSize2d);
+
+	//let its size update when ours does
+	GetParent()->GetVar("size2d")->GetSigOnChanged()->connect(boost::bind(&Variant::SetVariant, pScrollEnt->GetVar("size2d"), _1));
+	m_curLine = (float)m_pActiveConsole->GetTotalLines(); //move to last line.  Cur means the last line that we can see.
+	UpdateScrollBar();
+}
+
+void LogDisplayComponent::OnTouchDragUpdate(VariantList *pVList)
+{
+	CL_Vec2f vMovement = pVList->Get(1).GetVector2();
+
+#ifdef _DEBUG
+	//LogMsg("offset %s", PrintVector2(vMovement).c_str());
+#endif
+
+	//for exact movement we'd do this:
+	//ModCurLine(-(vMovement.y*0.07f));
+
+	//for momentum mode:
+	m_vecDisplacement += vMovement* *m_pPowerMod;
+}
+
+void LogDisplayComponent::OnUpdate(VariantList *pVList)
+{
+	if (m_pScrollBarComp)
+	{
+		//handle update for momentum movement of the scroller
+		ModByDistance(-(m_vecDisplacement.y*GetBaseApp()->GetDelta()));
+		m_vecDisplacement *= (1- (*m_pFriction*GetBaseApp()->GetDelta()));
+	}
+}
+
+void LogDisplayComponent::ModByDistance(float mod)
+{
+	RTFont *pFont = GetBaseApp()->GetFont(eFont(*m_pFontID));
+	float fontHeight = pFont->GetLineHeight(*m_pFontScale);
+	ModCurLine(mod/fontHeight);
+}
+
+void LogDisplayComponent::ModCurLine(float mod)
+{
+	m_curLine += mod;
+	//make sure we're within valid ranges
+	
+	CL_Rectf vTotalBounds = CL_Rectf(*m_pPos2d, CL_Sizef(m_pSize2d->x, m_pSize2d->y));
+
+	RTFont *pFont = GetBaseApp()->GetFont(eFont(*m_pFontID));
+	float fontHeight = pFont->GetLineHeight(*m_pFontScale);
+	float linePerScreen = vTotalBounds.get_height()/fontHeight;
+
+	if (m_curLine < linePerScreen) m_curLine = linePerScreen;
+	if (m_curLine > m_pActiveConsole->GetTotalLines())
+	{
+		m_curLine = (float)m_pActiveConsole->GetTotalLines();
+	}
+	UpdateScrollBar();
+}
+
+void LogDisplayComponent::OnOverStart(VariantList *pVList)
+{
+	m_bIsDraggingLook = true;
+}
+
+void LogDisplayComponent::OnOverEnd(VariantList *pVList)
+{
+	m_bIsDraggingLook = false;
+}
+
+void LogDisplayComponent::UpdateScrollBar()
+{
+	if (!m_pScrollBarComp) return;
+
+	CL_Rectf vTotalBounds = CL_Rectf(*m_pPos2d, CL_Sizef(m_pSize2d->x, m_pSize2d->y));
+
+	eFont fontID = eFont(*m_pFontID);
+	RTFont *pFont = GetBaseApp()->GetFont(fontID);
+	float fontHeight = pFont->GetLineHeight(*m_pFontScale);
+	float linePerScreen =  (vTotalBounds.get_height()/fontHeight);
+	vTotalBounds.bottom = vTotalBounds.top;
+	vTotalBounds.top = vTotalBounds.bottom - fontHeight*m_pActiveConsole->GetTotalLines();
+
+	float percent = (m_curLine-linePerScreen) / ((float) (m_pActiveConsole->GetTotalLines()-linePerScreen));
+
+//	LogMsg("Percent is %.2f", percent);
+	m_pScrollBarComp->GetParent()->GetVar("boundsRect")->Set(vTotalBounds);
+	m_pScrollBarComp->GetParent()->GetVar("progress2d")->Set(CL_Vec2f(0, percent));
 }
 
 void LogDisplayComponent::OnRender(VariantList *pVList)
@@ -80,13 +222,19 @@ void LogDisplayComponent::OnRender(VariantList *pVList)
 	eFont fontID = eFont(*m_pFontID);
 	RTFont *pFont = GetBaseApp()->GetFont(fontID);
 	float fontHeight = pFont->GetLineHeight(*m_pFontScale);
-	//vFinalPos.y -= fontHeight;
-	float y = vFinalPos.y + m_pSize2d->y;
+	float remainder = m_curLine - (int)m_curLine;
+	float y = (vFinalPos.y + m_pSize2d->y);
+
+	y-=remainder* fontHeight; //start a line lower to cover half lines during scrolling, hopefully we have a glscissor component
 	
+	//if (remainder != 0)
+	{
+		vFinalPos.y -= fontHeight;
+	}
 	assert(m_pSize2d->y > 0);
 	y -= fontHeight;
 
-	int curLine = lines-1;
+	int curLine = (int)m_curLine-1;
 	RenderBatcher b;
 
 	//first count how many lines we'll be able to display
@@ -104,7 +252,10 @@ void LogDisplayComponent::OnRender(VariantList *pVList)
 		linesToDraw++;
 	}
 
-	
+	if (remainder != 0)
+	{
+		linesToDraw++;
+	}
 	//that was fun practice, now let's draw the real thing
 	
 	for (int i=0; i < linesToDraw; i++)
@@ -113,12 +264,30 @@ void LogDisplayComponent::OnRender(VariantList *pVList)
 		y += fontHeight;
 		pFont->DrawScaled(vFinalPos.x, y, m_pActiveConsole->GetLine(curLine), *m_pFontScale,
 			color, &fontState, &b);
-	
 	}
 
 	b.Flush();
 }
 
+void LogDisplayComponent::SetConsole( Console *pConsole )
+{
+	if (m_pActiveConsole)
+	{
+		//remove any old signals we had
+	}
+	SAFE_DELETE(m_pInternalConsole);
+	m_pActiveConsole = pConsole;
+	if (pConsole)
+	{
+		m_bUsingCustomConsole = true;
+	} else
+	{
+		m_bUsingCustomConsole = false;
+	}
+	m_pActiveConsole->m_sig_on_text_added.connect(boost::bind(&LogDisplayComponent::OnTextAdded, this));
+
+	
+}
 
 void SetConsole(bool bOn)
 {

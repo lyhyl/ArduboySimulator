@@ -67,7 +67,6 @@ void TouchDragComponent::SetPosition(CL_Vec2f vInputPos)
 }
 
 
-
 void TouchDragComponent::OnInput( VariantList *pVList )
 {
 	//0 = message type, 1 = parent coordinate offset
@@ -84,8 +83,6 @@ void TouchDragComponent::OnInput( VariantList *pVList )
 	case MESSAGE_TYPE_GUI_CLICK_START:
 		//first, determine if the click is on our area
 		{
-		
-		
 			CL_Rectf r(*m_pPos2d, CL_Sizef(m_pSize2d->x, m_pSize2d->y));
 
 			if (r.contains(pt))
@@ -104,7 +101,6 @@ void TouchDragComponent::OnInput( VariantList *pVList )
                 
 				GetParent()->GetFunction("OnOverStart")->sig_function(&vList);
 
-
 				m_lastPos = pt;
 				m_lastFingerID = fingerID;
 			}
@@ -119,14 +115,16 @@ void TouchDragComponent::OnInput( VariantList *pVList )
 			GetParent()->GetFunction("OnOverEnd")->sig_function(&vList);
 			m_lastFingerID = -1;
 		}
-		//HandleClickEnd(pt);
+	
 		break;
+	
 	case MESSAGE_TYPE_GUI_CLICK_MOVE:
+		
 		if (m_lastFingerID == fingerID)
 		{
 			SetPosition(pt);
 		}
-		//HandleClickMove(pt);
+	
 		break;
 	}	
 

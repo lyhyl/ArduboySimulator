@@ -14,8 +14,27 @@
 #include "Entity.h"
 #include "Renderer/SurfaceAnim.h"
 
-//Note:  This component is not affected by the RenderScissorComponent.  If you need that for some reason, add that as
-//an optional setting
+/*
+Note:  This component is not affected by the RenderScissorComponent.  If you need that for some reason, add that as
+an optional setting
+
+If it finds a sister component named "Scroll", it will connect to it to get bounds and progress data.  If it doesn't,
+you can manually set the vars in its parent entity to make it perform.
+
+The things it will check is:
+
+pos2d (where the upper left corner of the view area is)
+sized2d (size of the window where we can see stuff)
+boundsRect (size of the total content minus the display area.  So a bounds of 0, -50, 0, 0 means it can scroll up by 50 pixels.
+two to figure out how big the bar should be)
+
+//optional
+
+fileName - set a custom image to use for the scroll bar.  default is interface/scroll_bar_caps.rttex
+color - color tinting (defaults to MAKE_RGBA(224,188,130,255), a sort of brown)
+
+
+*/
 
 class ScrollBarRenderComponent: public EntityComponent
 {
