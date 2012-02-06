@@ -86,6 +86,34 @@ bool InitSDL()
 	return true;
 }
 
+int ConvertSDLKeycodeToProtonVirtualKey(SDLKey sdlkey)
+{
+	int keycode = sdlkey;
+	
+	switch (sdlkey)
+	{
+	case SDLK_LEFT: keycode = VIRTUAL_KEY_DIR_LEFT; break;
+	case SDLK_RIGHT: keycode = VIRTUAL_KEY_DIR_RIGHT; break;
+	case SDLK_UP: keycode = VIRTUAL_KEY_DIR_UP; break;
+	case SDLK_DOWN: keycode = VIRTUAL_KEY_DIR_DOWN; break;
+	
+	case SDLK_RSHIFT:
+	case SDLK_LSHIFT: keycode = VIRTUAL_KEY_SHIFT; break;
+	case SDLK_RCTRL:
+	case SDLK_LCTRL: keycode = VIRTUAL_KEY_CONTROL; break;
+	
+	case SDLK_ESCAPE: keycode = VIRTUAL_KEY_BACK; break;
+
+	default:
+		if (sdlkey >= SDLK_F1 && sdlkey <= SDLK_F15)
+		{
+				keycode = VIRTUAL_KEY_F1 + (sdlkey - SDLK_F1);
+		}
+	}
+
+	return keycode;
+}
+
 bool g_leftMouseButtonDown = false; //to help emulate how an iphone works
 
 void SDLEventLoop()
@@ -196,16 +224,6 @@ void SDLEventLoop()
 		case SDL_KEYDOWN:
 			switch (ev.key.keysym.sym)
 			{
-				//touchpad doesn't seem to send these capslock events at all.  Uh.. why?
-
-				case SDLK_CAPSLOCK:
-					//LogMsg("Got Capslock: %d, mod of %d, scan of %d, unicode of %d", ev.key.keysym.sym, ev.key.keysym.mod, ev.key.keysym.scancode, ev.key.keysym.unicode);
-					break;
-					
-				case SDLK_NUMLOCK:
-					//LogMsg("Got numlock: %d, mod of %d, scan of %d, unicode of %d", ev.key.keysym.sym, ev.key.keysym.mod, ev.key.keysym.scancode, ev.key.keysym.unicode);
-					break;
-
 				case SDLK_ESCAPE:
 					// Escape forces us to quit the app
 					// this is also sent when the user makes a back gesture
@@ -214,24 +232,30 @@ void SDLEventLoop()
 				
 				default:
 					{
-						if (ev.key.keysym.sym >= 32 && ev.key.keysym.sym <= 128 || ev.key.keysym.sym == 8 || ev.key.keysym.sym == 13)
+						int vKey = ConvertSDLKeycodeToProtonVirtualKey(ev.key.keysym.sym);
+						GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW, (float)vKey, 1.0f);
+						
+						if (vKey >= SDLK_SPACE && vKey <= SDLK_DELETE || vKey == SDLK_BACKSPACE || vKey == SDLK_RETURN)
 						{
-							signed char key = ev.key.keysym.sym;
+							signed char key = vKey;
 
-							if (ev.key.keysym.mod & KMOD_LSHIFT || ev.key.keysym.mod & KMOD_RSHIFT || ev.key.keysym.mod & KMOD_CAPS)
+							if (ev.key.keysym.mod & KMOD_SHIFT || ev.key.keysym.mod & KMOD_CAPS)
 							{
 								key = toupper(key);
 							}
 
-							GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, (float)key, 0.0f); 
-
-						} else
-						{
-							//LogMsg("Got unknown key: %d", ev.key.keysym.sym);
+							GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, (float)key, 1.0f);
 						}
 					}
 					break;
 			}
+			break;
+			
+		case SDL_KEYUP:
+		{
+			int vKey = ConvertSDLKeycodeToProtonVirtualKey(ev.key.keysym.sym);
+			GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW, (float)vKey, 0.0f);
+		}
 		break;
 		}
 	}
