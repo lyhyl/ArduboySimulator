@@ -114,8 +114,8 @@ void LogDisplayComponent::OnEnableScrollingChanged(Variant *pVariant)
 	GetParent()->AddComponent(new RenderScissorComponent);
 	//add touch drag handler, so we can respond when the user drags the screen
 	pDragComp->GetFunction("OnTouchDragUpdate")->sig_function.connect(1, boost::bind(&LogDisplayComponent::OnTouchDragUpdate, this, _1));	
-	pDragComp->GetFunction("OnOverStart")->sig_function.connect(1, boost::bind(&LogDisplayComponent::OnOverStart, this, _1));	
-	pDragComp->GetFunction("OnOverEnd")->sig_function.connect(1, boost::bind(&LogDisplayComponent::OnOverEnd, this, _1));	
+	GetParent()->GetFunction("OnOverStart")->sig_function.connect(1, boost::bind(&LogDisplayComponent::OnOverStart, this, _1));	
+	GetParent()->GetFunction("OnOverEnd")->sig_function.connect(1, boost::bind(&LogDisplayComponent::OnOverEnd, this, _1));	
 
 	//to see the scroll bar, we'll create a child entity and throw a scroll bar render in it
 	Entity *pScrollEnt = GetParent()->AddEntity(new Entity());

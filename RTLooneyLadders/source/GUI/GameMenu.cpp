@@ -81,7 +81,7 @@ void OnArcadeInput(VariantList *pVList)
 {
 
 	int vKey = pVList->Get(0).GetUINT32();
-	bool bIsDown = pVList->Get(1).GetUINT32() == 0;
+	bool bIsDown = pVList->Get(1).GetUINT32() != 0;
 
 	//LogMsg("GameMenuArcade: Key %d, down is %d", vKey, int(bIsDown));
 

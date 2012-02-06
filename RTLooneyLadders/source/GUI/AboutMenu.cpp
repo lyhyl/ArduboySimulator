@@ -66,7 +66,6 @@ void AboutMenuAddScrollContent(Entity *pParent)
 }
 
 
-
 Entity * AboutMenuCreate( Entity *pParentEnt)
 {
 	Entity *pBG = NULL;
@@ -94,15 +93,6 @@ Entity * AboutMenuCreate( Entity *pParentEnt)
 	//pScroll->GetVar("color")->Set(MAKE_RGBA(61,155, 193, 255)); 
 	Entity *pScrollChild = pScroll->AddEntity(new Entity("scroll_child"));
 	
-	/*
-	//this is one way to clip the image on the bottom - glClipPlane is too slow/broken on Android so we actually won't use it
-	EntityComponent *pClip = pScroll->AddComponent(new RenderClipComponent);
-	pClip->GetVar("clipMode")->Set(uint32(RenderClipComponent::CLIP_MODE_BOTTOM));
-	*/
-
-	//another way would be to just blit a colored bar over the bottom:
-	//pEnt = CreateOverlayRectEntity(pBG, CL_Rectf(0, GetScreenSizeYf()-offsetFromBottom, GetScreenSizeXf(), 320), MAKE_RGBA(0,0,0,100));
-
 	//but the nicest way is to blit a matching bar at the bottom with transparency:
 	Entity *pOverlay = CreateOverlayEntity(pBG, "", "interface/bg_overlay.rttex", 0, GetScreenSizeYf()+1); 
 	SetAlignmentEntity(pOverlay, ALIGNMENT_DOWN_LEFT);
@@ -116,7 +106,7 @@ Entity * AboutMenuCreate( Entity *pParentEnt)
 	pEnt->GetFunction("OnButtonSelected")->sig_function.connect(&AboutMenuOnSelect);
 	SetupTextEntity(pEnt, FONT_SMALL);
 	AddHotKeyToButton(pEnt, VIRTUAL_KEY_BACK); //for androids back button and window's Escape button
-	AddHotKeyToButton(pEnt, 13); //for androids back button and window's Escape button
+	AddHotKeyToButton(pEnt, 13); //heck, let enter trigger this too
 
 	SlideScreen(pBG, true, 500);
 	return pBG;

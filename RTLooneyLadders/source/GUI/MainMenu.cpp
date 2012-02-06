@@ -122,12 +122,10 @@ void UnlockAllLevels()
 
 void OnSelectInput(VariantList *pVList)
 {
-
 	int vKey = pVList->Get(0).GetUINT32();
-	bool bIsDown = pVList->Get(1).GetUINT32() == 0;
+	bool bIsDown = pVList->Get(1).GetUINT32() != 0;
 
 	if (!bIsDown) return;
-
 
 	switch(vKey)
 	{
@@ -136,9 +134,9 @@ void OnSelectInput(VariantList *pVList)
 		break;
 
 	case 'U':
-	
 		UnlockAllLevels();
 		break;
+	
 	case VIRTUAL_KEY_DIR_UP:
 		SelectionMove(false);
 	break;
@@ -149,8 +147,6 @@ void OnSelectInput(VariantList *pVList)
 	}
 
 }
-
-
 
 void SetupArrowSelector(Entity *pBG, int itemCount, uint32 defaultItem)
 {
@@ -168,21 +164,27 @@ void SetupArrowSelector(Entity *pBG, int itemCount, uint32 defaultItem)
 	AddKeyBinding(pComp, "XPeriaSelect", VIRTUAL_DPAD_SELECT, VIRTUAL_KEY_DIR_DOWN); 
 	AddKeyBinding(pComp, "XperiaA", VIRTUAL_KEY_DIR_CENTER, 13); //for experia plays X button
 
-
 	PulsateColorEntity(pIcon, false, MAKE_RGBA(60,0,0,130));
 
-	GetBaseApp()->m_sig_arcade_input.connect(pBG->GetFunction("OnArcadeInput")->sig_function);
-	pBG->GetShared()->GetFunction("OnArcadeInput")->sig_function.connect(&OnSelectInput);
-	if (defaultItem > itemCount) defaultItem = 1;
+	//route signals directly from the ArcadeInputComponent to our main menu parent, pBG
+	VariantList vList(pBG);
+	pComp->GetFunction("SetOutputEntity")->sig_function(&vList); //redirect its messages to our parent entity, will call OnArcadeInput
+	pBG->GetFunction("OnArcadeInput")->sig_function.connect(&OnSelectInput);	
+
+	//another way is don't tell it to route anywhere, it will default to using GetBaseApp()->m_sig_arcade_input instead..
+	//Because I don't want to stay connected after this menu dies, one way is to connect to an entity, then connect the
+	//entity to my static OnSelectInput... this way when the entity dies, input won't still get routed there.
+    //GetBaseApp()->m_sig_arcade_input.connect(pBG->GetFunction("OnArcadeInput")->sig_function);
+    //pBG->GetFunction("OnArcadeInput")->sig_function.connect(&OnSelectInput);
+	
+	if (defaultItem > (uint32)itemCount) defaultItem = 1;
 
 	pIcon->GetVar("itemCount")->Set(uint32(itemCount));
 	pIcon->GetVar("curSelection")->Set(uint32(defaultItem));
 
-
 	Entity *pActiveSel = pBG->GetEntityByName(toString(defaultItem));
 	CL_Vec2f vPos = pActiveSel->GetVar("pos2d")->GetVector2()+CL_Vec2f(-60, 0);
 	pIcon->GetVar("pos2d")->Set(vPos);
-	
 	
 }
 
@@ -234,8 +236,6 @@ Entity * MainMenuCreate(Entity *pParentEnt)
     pButtonEntity = CreateTextButtonEntity(pBG, toString(TOTAL_LEVELS+1), x, y, "About"); y += ySpacer;
 	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MainMenuOnSelect);
 
-
-	
 	SetupArrowSelector(pBG, TOTAL_LEVELS+1, GetApp()->GetVar("level")->GetUINT32());
 
 	SlideScreen(pBG, true);

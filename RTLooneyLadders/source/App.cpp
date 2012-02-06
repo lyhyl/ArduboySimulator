@@ -40,13 +40,13 @@ AudioManagerSDL g_audioManager; //sound in windows and WebOS
 AudioManagerAndroid g_audioManager; //sound for android
 #else
 //in windows
+
+#include "Audio/AudioManagerAudiere.h"
+//#include "Audio/AudioManagerFMOD.h"
+
+AudioManagerAudiere g_audioManager;  //Use Audiere for audio
+//AudioManagerFMOD g_audioManager; //if we wanted FMOD sound in windows
 //AudioManager g_audioManager; //to disable sound
-
-//#include "Audio/AudioManagerAudiere.h"
-//AudioManagerAudiere g_audioManager;  //Use Audiere for audio
-
-#include "Audio/AudioManagerFMOD.h"
-AudioManagerFMOD g_audioManager; //if we wanted FMOD sound in windows
 
 #endif
 #endif
