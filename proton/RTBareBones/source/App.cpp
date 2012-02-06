@@ -338,12 +338,12 @@ const char * GetAppName() {return "BareBones";}
 
 const char * GetBundlePrefix()
 {
-	char * bundlePrefix = "com.rtsoft.";
+	const char * bundlePrefix = "com.rtsoft.";
 	return bundlePrefix;
 }
 
 const char * GetBundleName()
 {
-	char * bundleName = "rtbarebones";
+	const char * bundleName = "rtbarebones";
 	return bundleName;
 }

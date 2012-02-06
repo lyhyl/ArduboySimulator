@@ -281,14 +281,14 @@ const char * GetAppName() {return "RTPhysics";};
 //for palm webos, android, App Store
 const char * GetBundlePrefix()
 {
-	char * bundlePrefix = "com.rtsoft.";
+	const char * bundlePrefix = "com.rtsoft.";
 	return bundlePrefix;
 }
 
 //applicable to Palm WebOS builds only
 const char * GetBundleName()
 {
-	char * bundleName = "rtphysics";
+	const char * bundleName = "rtphysics";
 	return bundleName;
 }
 

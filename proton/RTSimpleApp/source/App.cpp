@@ -283,12 +283,12 @@ const char * GetAppName() {return "SimpleApp";}
 //for palm webos and android
 const char * GetBundlePrefix()
 {
-	char * bundlePrefix = "com.rtsoft.";
+	const char * bundlePrefix = "com.rtsoft.";
 	return bundlePrefix;
 }
 
 const char * GetBundleName()
 {
-	char * bundleName = "rtsimpleapp";
+	const char * bundleName = "rtsimpleapp";
 	return bundleName;
 }
