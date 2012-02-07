@@ -572,7 +572,7 @@ return m_szDevIDShort;
 		{
 			//XPeria's O button, not the back button!
 			//Log.v("onKeyDown","Sending xperia back key");
-			nativeOnKey(1, VIRTUAL_DPAD_BUTTON_B, e.getUnicodeChar()); 
+			nativeOnKey(1, VIRTUAL_DPAD_BUTTON_DOWN, e.getUnicodeChar()); 
 		
 			return true; //signal that we handled it
 		}
@@ -600,7 +600,7 @@ return m_szDevIDShort;
 		{
 			//XPeria's O button, not the back button!
 			//Log.v("onKeyDown","Sending xperia back key");
-			nativeOnKey(0, VIRTUAL_DPAD_BUTTON_B, e.getUnicodeChar()); 
+			nativeOnKey(0, VIRTUAL_DPAD_BUTTON_DOWN, e.getUnicodeChar()); 
 		
 			return true; //signal that we handled it
 		}
