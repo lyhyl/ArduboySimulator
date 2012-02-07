@@ -263,7 +263,7 @@ void SDLEventLoop()
 				}
 				
 				int vKey = ConvertSDLKeycodeToProtonVirtualKey(ev.key.keysym.sym);
-				GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW, (float)vKey, 1.0f);
+				GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW, (float)vKey, (float)VIRTUAL_KEY_PRESS);
 				
 				if (vKey >= SDLK_SPACE && vKey <= SDLK_DELETE || vKey == SDLK_BACKSPACE || vKey == SDLK_RETURN)
 				{
@@ -274,7 +274,7 @@ void SDLEventLoop()
 						key = toupper(key);
 					}
 					
-					GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, (float)key, 1.0f);
+					GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, (float)key, (float)VIRTUAL_KEY_PRESS);
 				}
 			}
 			break;
@@ -282,7 +282,7 @@ void SDLEventLoop()
 		case SDL_KEYUP:
 		{
 			int vKey = ConvertSDLKeycodeToProtonVirtualKey(ev.key.keysym.sym);
-			GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW, (float)vKey, 0.0f);
+			GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW, (float)vKey, (float)VIRTUAL_KEY_RELEASE);
 		}
 		break;
 		}
