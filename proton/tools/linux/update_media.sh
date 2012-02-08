@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PACK_EXE=$(cd ../../tools/RTPack/build/; pwd)/RTPack
+PACK_EXE=$(cd `dirname $0`/../RTPack/build/; pwd)/RTPack
 
 if [[ ! -x ${PACK_EXE} ]];
 then
@@ -58,7 +58,7 @@ echo Final compression
 find . -depth -name '*.rttex' -exec ${PACK_EXE} '{}' ';'
 
 echo Delete things we do not want copied
-rm interface/font_*.rttex
+rm -f interface/font_*.rttex
 
 rm -rf ../bin/interface
 rm -rf ../bin/audio
