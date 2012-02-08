@@ -30,7 +30,6 @@
 using namespace std;
 int exit_application = 0;
 unsigned int fpsTimerLoopMS = 0; //set to 60 fps limit at the start
-//unsigned int fpsTimerLoopMS = (int) (1000.0f/30.0f); //set to 60 fps limit at the start
 
 static screen_context_t screen_cxt;
 //Query g_primaryGLX and g_primaryGLY of the window surface created by utility code

@@ -57,7 +57,7 @@ void FadeOutAndKillChildrenEntities(Entity *pEnt, int timeMS=300, int delayBefor
 void FadeInEntity(Entity *pEnt, bool bRecursive=true, int timeMS=300, int delayBeforeFadingMS = 0);
 void KillEntity(Entity *pEnt, int timeMS = 0, eTimingSystem timing = GetTiming());
 EntityComponent * PulsateColorEntity(Entity *pEnt, bool bRecursive, unsigned int color, unsigned int pulsateSpeedMS = 0);
-EntityComponent * TypeTextLabelEntity(Entity *pEnt, int delayBeforeActionMS = 0, uint32 textTypeSpeedMS = 50); //modifies an existing textlabel to 'type' itself out.  Deletes any pre-existing Typer effect
+EntityComponent * TypeTextLabelEntity(Entity *pEnt, int delayBeforeActionMS = 0, uint32 textTypeSpeedMS = 50, TyperComponent::eMode = TyperComponent::MODE_ONCE_AND_REMOVE_SELF); //modifies an existing textlabel to 'type' itself out.  Deletes any pre-existing Typer effect
 
 EntityComponent * ZoomToPositionFromThisOffsetEntity(Entity *pEnt, CL_Vec2f vPos, unsigned int speedMS, eInterpolateType interpolateType = INTERPOLATE_SMOOTHSTEP,  int delayBeforeActionMS = 0);
 EntityComponent * ZoomToPositionEntity(Entity *pEnt, CL_Vec2f vPos, unsigned int speedMS, eInterpolateType interpolateType = INTERPOLATE_SMOOTHSTEP,  int delayBeforeActionMS = 0);
