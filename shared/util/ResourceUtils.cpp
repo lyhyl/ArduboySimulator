@@ -559,3 +559,14 @@ std::string StripColorCodes(const std::string text)
 
 	return final;
 }
+
+
+bool StringFromStartMatches(const std::string &line, const std::string textToMatch)
+{
+	for (uint32 i=0; i < textToMatch.size(); i++)
+	{
+		if (i >= line.length()) return false;
+		if (line[i] != textToMatch[i]) return false;
+	}
+	return true;
+}

@@ -1201,11 +1201,9 @@ void SetAlignmentEntity(Entity *pEnt, eAlignment align)
 Entity * CreateTextBoxEntity(Entity *pParent, string entName, CL_Vec2f vPos, CL_Vec2f vTextAreaSize, string msg, float scale)
 {
 	Entity *pText = pParent->AddEntity(new Entity(entName));
-	
 	/*
 	EntityComponent *pClip = pText->AddComponent(new RenderClipComponent);
 	pClip->GetVar("clipMode")->Set(uint32(RenderClipComponent::CLIP_MODE_BOTTOM));
-
 	*/
 
 	EntityComponent *pTextComp = pText->AddComponent(new TextBoxRenderComponent);
@@ -1253,7 +1251,7 @@ EntityComponent * SetButtonStyleEntity(Entity *pEnt, Button2DComponent::eButtonS
 	return pComp;
 }
 
-EntityComponent * TypeTextLabelEntity( Entity *pEnt, int delayBeforeActionMS, uint32 textTypeSpeedMS)
+EntityComponent * TypeTextLabelEntity( Entity *pEnt, int delayBeforeActionMS, uint32 textTypeSpeedMS, TyperComponent::eMode mode)
 {
 	EntityComponent *pText = pEnt->GetComponentByName("TextRender");
 	
@@ -1272,7 +1270,7 @@ EntityComponent * TypeTextLabelEntity( Entity *pEnt, int delayBeforeActionMS, ui
 	if (pTextTyper) pEnt->RemoveComponentByAddress(pTextTyper); //kill any existing ones
  
 	pTextTyper = pEnt->AddComponent(new TyperComponent);
-	pTextTyper->GetVar("mode")->Set(uint32(TyperComponent::MODE_ONCE_AND_REMOVE_SELF));
+	pTextTyper->GetVar("mode")->Set(uint32(mode));
 	pTextTyper->GetVar("speedMS")->Set(textTypeSpeedMS);
 
 

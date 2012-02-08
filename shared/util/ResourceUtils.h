@@ -46,3 +46,4 @@ std::string ReplaceWithLargeInFileNameAndOSSpecific(const std::string &fName); /
 std::string ReplaceMP3( const std::string &fName); //changes mp3 to ogg in a filename if not on iOS
 void AppendStringToFile(const std::string filename, const std::string text);
 std::string StripColorCodes(const std::string text);
+bool StringFromStartMatches(const std::string &line, const std::string textToMatch); //like an strnstr for strings
