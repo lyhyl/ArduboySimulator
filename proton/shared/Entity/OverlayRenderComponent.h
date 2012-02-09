@@ -14,6 +14,25 @@
 #include "Entity.h"
 #include "Renderer/SurfaceAnim.h"
 
+/**
+ * A component that renders a \c SurfaceAnim.
+ * 
+ * The name of the component is initially set to "OverlayRender".
+ * 
+ * The following named variants are used from the parent \c Entity:
+ * - <b>"pos2d" (Vector2):</b> specifies the position. You can move this component by changing this.
+ * - <b>"size2d" (Vector2):</b> stores the size of the drawn surface. This is used internally, don't set this. Use "scale2d" instead.
+ * - <b>"scale2d" (Vector2):</b> specifies the scale for the drawn surface. Default is (1.0, 1.0).
+ * - <b>"rotation" (float):</b> specifies the rotation of the drawn surface. The value is in degrees.
+ * - <b>"color" (uint32), "colorMod" (uint32), "alpha" (float):</b> these values are passed to \c ColorCombine() function and the result specifies a color tint for the drawn surface. See \c SurfaceAnim::Blit for specifics how the tinting works. The defaults are pure opaque white for "color" and "colorMod" and 1.0 for "alpha". The defaults are such that the color tinting has no effect on the resulting image.
+ * - <b>"alignment" (uint32):</b> not used for anything?
+ * - <b>"visible" (uint32):</b> sets whether the surface is visible or not. 0 means not visible, all other values mean visible.
+ * 
+ * The following named variants are used inside the component itself:
+ * - <b>"frameX" (uint32), "frameY" (uint32):</b> sets the drawn frame for the \c SurfaceAnim.
+ * - <b>"flipX" (uint32), "flipY" (uint32):</b> sets if the drawn frame should be fipped horizontally or vertically. 0 means no flipping, all other values enable the flipping.
+ * - <b>"fileName" (string):</b> specifies the name of the image to be loaded into the \c SurfaceAnim.
+ */
 class OverlayRenderComponent: public EntityComponent
 {
 public:

@@ -33,7 +33,29 @@
 
 Entity * CreateTextLabelEntity(Entity *pParentEnt, string name, float x, float y, string text);
 Entity * CreateTextButtonEntity(Entity *pParentEnt, string name, float x, float y, string text, bool bUnderline = true);
+/**
+ * Creates a new \c Entity and adds an \c OverlayRenderComponent to it.
+ *
+ * If \a pParentEnt is not \c NULL the new \c Entity is added as a child to that \c Entity.
+ * If \a pParentEnt is \c NULL then the new \c Entity will have no parent.
+ *
+ * The argument \a name sets the name of the new \c Entity.
+ *
+ * Arguments \a x and \a y specify the position of the new \c Entity. The position
+ * of the \c OverlayRenderComponent follows the position of its parent \c Entity
+ * so these also set the position of that.
+ *
+ * \see OverlayRenderComponent
+ *
+ * \return The newly created \c Entity or \c NULL if the creation failed for any reason.
+ */
 Entity * CreateOverlayEntity(Entity *pParentEnt, string name, string fileName, float x, float y);
+/**
+ * Like \c CreateOverlayEntity() but additionally adds a \c TouchHandlerComponent and a
+ * \c Button2DComponent to the created \c Entity too.
+ *
+ * \see TouchHandlerComponent, Button2DComponent
+ */
 Entity * CreateOverlayButtonEntity(Entity *pParentEnt, string name, string fileName, float x, float y);
 Entity * CreateOverlayRectEntity(Entity *pParent, CL_Rectf posAndBoundsRect, uint32 color, RectRenderComponent::eVisualStyle style = RectRenderComponent::STYLE_NORMAL);
 Entity * CreateOverlayRectEntity(Entity *pParent, CL_Vec2f vPos, CL_Vec2f vBounds, uint32 color, RectRenderComponent::eVisualStyle style = RectRenderComponent::STYLE_NORMAL);
@@ -48,6 +70,24 @@ void SlideScreen(Entity *pEnt, bool bIn, int speedMS = 500, int delayToStartMS =
 void SlideScreenVertical(Entity *pEnt, bool bIn, int speedMS = 500, int delayToStartMS = 0);
 void BobEntity(Entity *pEnt, float bobAmount = 3);
 void OneTimeBobEntity(Entity *pEnt, float bobAmount = -10, int delayBeforeBob = 0, int durationMS = 100);
+/**
+ * Ensures that the given \c Entity has needed focus \link EntityComponent \c EntityComponents \endlink.
+ *
+ * Three components will be added to \a pEnt, one instance of each of these classes:
+ * - FocusUpdateComponent
+ * - FocusRenderComponent
+ * - FocusInputComponent
+ *
+ * If any focus component is already on the \c Entity they are not added again. Hence it's safe to
+ * call this method multiple times for an \c Entity.
+ *
+ * \param pEnt this is the \c Entity where the components are added. Mustn't be \c NULL.
+ * \param bAlsoLinkMoveMessages if \c true, calls the \link FocusInputComponent::LinkMoveMessages()
+ *        \c LinkMoveMessages() \endlink method for the added \c FocusInputComponent.
+ * \param delayInputMS specifies a delay in milliseconds after which the \c FocusInputComponent is added to the \c Entity.
+ * \param updateAndRenderDelay specifies a delay in milliseconds after which the \c FocusUpdateComponent and
+ *        \c FocusRenderComponent are added to the \c Entity.
+ */
 void AddFocusIfNeeded(Entity *pEnt, bool bAlsoLinkMoveMessages = false, int delayInputMS = 0, int updateAndRenderDelay = 0); //add input, think, and render focuses to an entity (if they don't exist)
 void AddInputMovementFocusIfNeeded(Entity *pEnt);
 void RemoveFocusIfNeeded(Entity *pEnt); //remove input, think, and render focuses from an entity
@@ -60,6 +100,18 @@ EntityComponent * PulsateColorEntity(Entity *pEnt, bool bRecursive, unsigned int
 EntityComponent * TypeTextLabelEntity(Entity *pEnt, int delayBeforeActionMS = 0, uint32 textTypeSpeedMS = 50, TyperComponent::eMode = TyperComponent::MODE_ONCE_AND_REMOVE_SELF); //modifies an existing textlabel to 'type' itself out.  Deletes any pre-existing Typer effect
 
 EntityComponent * ZoomToPositionFromThisOffsetEntity(Entity *pEnt, CL_Vec2f vPos, unsigned int speedMS, eInterpolateType interpolateType = INTERPOLATE_SMOOTHSTEP,  int delayBeforeActionMS = 0);
+/**
+ * Adds a position animation to an \c Entity.
+ *
+ * The animation starts from the current position of the \c Entity.
+ * \param pEnt the \c Entity to animate.
+ * \param vPos the end position of the animation.
+ * \param speedMS the duration of the animation in milliseconds.
+ * \param interpolateType the type of the interpolation.
+ * \param delayBeforeActionMS delay in milliseconds before the animation is started.
+ *        If set to 0 the animation is started immediately.
+ * \return the \c EntityComponent that performs the animation.
+ */
 EntityComponent * ZoomToPositionEntity(Entity *pEnt, CL_Vec2f vPos, unsigned int speedMS, eInterpolateType interpolateType = INTERPOLATE_SMOOTHSTEP,  int delayBeforeActionMS = 0);
 EntityComponent * ZoomFromPositionEntity(Entity *pEnt, CL_Vec2f vPos, unsigned int speedMS, eInterpolateType interpolateType = INTERPOLATE_SMOOTHSTEP,  int delayBeforeActionMS = 0);
 EntityComponent * ZoomToPositionOffsetEntity(Entity *pEnt, CL_Vec2f vPos, unsigned int speedMS, eInterpolateType interpolateType = INTERPOLATE_SMOOTHSTEP,  int delayBeforeActionMS = 0);

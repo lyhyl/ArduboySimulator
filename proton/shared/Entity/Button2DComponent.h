@@ -20,6 +20,30 @@ index 1 is the parent entity
 #include "Entity.h"
 #include "Renderer/Surface.h"
 
+/**
+ * A component that adds button behaviour to an \c Entity.
+ *
+ * The name of the component is initially set to "Button2D".
+ *
+ * This component works nicely together with \c TouchHandlerComponent which
+ * calls appropriate functions on the parent \c Entity. This component listens
+ * calls to those functions and behaves like a button.
+ *
+ * The following named variants are used inside the component itself:
+ * - <b>"onClickAudioFile" (string):</b> the name of the audio file that is played
+ *   when the button is clicked. By default is whatever is the current global
+ *   default click sound. See SetDefaultAudioClickSound().
+ * - <b>"disabled" (uint32):</b> used to disable the button. 0 (the default) means
+ *   the button is enabled, any other values disables it.
+ * - <b>"buttonStyle" (uint32):</b> determines the button's behaviour style. This
+ *   needs to be one of the values of \link Button2DComponent::eButtonStyle \c eButtonStyle \endlink.
+
+ * When the button is clicked the "OnButtonSelected" function of the parent \c Entity gets called.
+ * This function gets a \c VariantList that contains three members:
+ * - 0: the touch point of type \c CL_Vec2f
+ * - 1: a pointer to the \c Entity that was touched
+ * - 2: the id of the finger, type is uint32
+ */
 class Button2DComponent: public EntityComponent
 {
 public:
@@ -36,10 +60,16 @@ public:
 		STYLE_INVISIBLE_UNTIL_CLICKED //like above, but invisible unless clicked/hovered
 	};
 
+	/**
+	 * Button behaviour styles.
+	 */
 	enum eButtonStyle
 	{
+		/// The button is clicked after it has been pressed and subsequently released.
 		BUTTON_STYLE_CLICK_ON_TOUCH_RELEASE,
+		/// The button is clicked immeditely when it's pressed.
 		BUTTON_STYLE_CLICK_ON_TOUCH,
+		/// No idea what this is. Seems to be exactly what BUTTON_STYLE_CLICK_ON_TOUCH is too.
 		BUTTON_STYLE_CLICK_ON_TOUCH_IGNORE_DRAGGING
 	};
 
@@ -69,7 +99,19 @@ private:
 
 //All my buttons in blip arcade are 'click on touch' but mind wall's buttons are click on release, calling this
 //lets me set the global default so I don't have to set it everywhere
+/**
+ * Sets a global default button style.
+ *
+ * This setting has effect only for buttons that are created after this call.
+ * Initially this is set to \link Button2DComponent::BUTTON_STYLE_CLICK_ON_TOUCH BUTTON_STYLE_CLICK_ON_TOUCH \endlink.
+ */
 void SetDefaultButtonStyle(Button2DComponent::eButtonStyle style);
+/**
+ * Sets a global default audio file name for the click sound.
+ *
+ * This setting has effect only for buttons that are created after this call.
+ * Initially this is set to "audio/click.wav".
+ */
 void SetDefaultAudioClickSound(string fileName);
 
 #endif // Button2DComponent_h__

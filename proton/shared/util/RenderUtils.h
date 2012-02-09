@@ -71,6 +71,20 @@ float SinGamePulseByMS(int ms); //will pause when the game is paused
 float SinToZeroToOneRange(float sinIn); //a helper to use with the above functions when you just want 0-1 range
 
 uint32 ColorCombineMix(uint32 c1, uint32 c2, float progress);
+
+/**
+ * Performs a "linear burn" operation for the colors \a c1 and \a c2.
+ * This is achieved by summing the color component values together and
+ * subtracting 255 from the result. The result of this is then clamped
+ * to the accepted range of [0, 255]. Note that this operation is also
+ * performed for the alpha channel.
+ * 
+ * Finally the alpha value is multiplied with \a alphaMod.
+ * 
+ * http://en.wikipedia.org/wiki/Blend_modes#Dodge_and_burn
+ * 
+ * \return The final resulting color of the operation.
+ */
 uint32 ColorCombine(uint32 c1, uint32 c2, float alphaMod);
 void SetLockedLandscape(bool bNew);
 bool GetLockedLandscape();
