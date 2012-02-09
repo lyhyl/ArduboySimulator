@@ -575,7 +575,6 @@ uint32 ColorCombineMix(uint32 c1, uint32 c2, float progress)
 	return MAKE_RGBA(r,g,b,a);
 }
 
-//modifies c1 with c2, also applies alphaMod at the end
 uint32 ColorCombine(uint32 c1, uint32 c2, float alphaMod)
 {
 	int r,g,b,a;
