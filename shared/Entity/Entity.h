@@ -69,7 +69,19 @@ public:
 	void RemoveAllComponents();
 	void PrintTreeAsText(int indent = 0); //recursively print every member of this tree to text log, for debugging
 	VariantDB * GetShared() {return &m_sharedDB;}
+	/**
+	 * Gets a named \c Variant from this \c Entity's variant DB.
+	 *
+	 * If the named variant doesn't exist in the database a default variant is constructed
+	 * and inserted to the database. This new variant can then be set to any value and type.
+	 */
 	Variant * GetVar(const string &varName) {return m_sharedDB.GetVar(varName);}
+	/**
+	 * Gets a named \c Variant from this \c Entity's variant DB.
+	 *
+	 * If the named variant doesn't exist in the database a new variant is constructed
+	 * from the supplied default value and inserted to the database.
+	 */
 	Variant * GetVarWithDefault(const string &varName, const Variant &var) {return m_sharedDB.GetVarWithDefault(varName, var);}
 	FunctionObject * GetFunction(const string &funcName) {return m_sharedDB.GetFunction(funcName);}
 	

@@ -190,21 +190,55 @@ public:
 	eInputMode GetInputMode() {return m_inputMode;}
 	virtual void OnMemoryWarning();
 	//FocusComponents connect to these, which will tricky down their hierarchy
-	boost::signal<void (VariantList*)> m_sig_input; //taps, clicks, and basic keyboard input
-	boost::signal<void (VariantList*)> m_sig_input_move; //"move" touch messages, if INPUT_MODE_SEPARATE_MOVE_TOUCHES was set, otherwise they go to m_sig_input
-	boost::signal<void (VariantList*)> m_sig_os; //messages from the platform itself (do eMessageType mType = (eMessageType)(int)pVList->m_variant[0].GetFloat(); to get message)
-	boost::signal<void (VariantList*)> m_sig_update; //called once per frame, usually.  For your game logic.
-	boost::signal<void (VariantList*)> m_sig_render; //called once per frame. You should render but not do game logic.
-	boost::signal<void (VariantList*)> m_sig_pre_enterbackground; //early signal that we are about to enter background, don't mess with video here, useful for shutting down audio on android
-	boost::signal<void (VariantList*)> m_sig_enterbackground; //game lost focus
-	boost::signal<void (VariantList*)> m_sig_enterforeground; //game restored focus
-	boost::signal<void (VariantList*)> m_sig_accel; //accelerometer data from iphone
-	boost::signal<void (VariantList*)> m_sig_trackball; //used for android trackball move data
-	boost::signal<void (VariantList*)> m_sig_arcade_input; //for arcade movement controls like left/right/up/down, if MovementInputComponent is used, trackball/wasd are converted to send through this as well
-	boost::signal<void (VariantList*)> m_sig_raw_keyboard; //for raw data from keyboards that give pressed/released messages.  Generally you would convert them into arcade messages
+	boost::signal<void (VariantList*)> m_sig_input; ///< Taps, clicks, and basic keyboard input
+	/**
+	 * "Move" touch messages.
+	 * Used if INPUT_MODE_SEPARATE_MOVE_TOUCHES was set. Otherwise they are signaled
+	 * via m_sig_input.
+	 */
+	boost::signal<void (VariantList*)> m_sig_input_move;
+	/**
+	 * Messages from the platform itself.
+	 * To get the type of the message use code like this:
+	 * \code eMessageType mType = (eMessageType)(int)pVList->m_variant[0].GetFloat(); \endcode
+	 */
+	boost::signal<void (VariantList*)> m_sig_os;
+	/**
+	 * Update signal for the game logic.
+	 * Called once per frame, usually.
+	 */
+	boost::signal<void (VariantList*)> m_sig_update;
+	/**
+	 * Signal for doing rendering.
+	 * Called once per frame. You should render but not do game logic here.
+	 */
+	boost::signal<void (VariantList*)> m_sig_render;
+	/**
+	 * Early signal that we are about to enter background.
+	 * Don't mess with video here. Useful for shutting down audio on android.
+	 */
+	boost::signal<void (VariantList*)> m_sig_pre_enterbackground;
+	boost::signal<void (VariantList*)> m_sig_enterbackground; ///< Game lost focus
+	boost::signal<void (VariantList*)> m_sig_enterforeground; ///< Game restored focus
+	boost::signal<void (VariantList*)> m_sig_accel; ///< Accelerometer data from iphone
+	boost::signal<void (VariantList*)> m_sig_trackball; ///< Used for android trackball move data
+	/**
+	 * For arcade movement controls like left/right/up/down.
+	 * If MovementInputComponent is used, trackball/wasd are converted to send through this as well.
+	 */
+	boost::signal<void (VariantList*)> m_sig_arcade_input;
+	/**
+	 * For raw data from keyboards that give pressed/released messages.
+	 * Generally you would convert them into arcade messages.
+	 */
+	boost::signal<void (VariantList*)> m_sig_raw_keyboard;
 	
-	boost::signal<void (void)> m_sig_unloadSurfaces; //some phones may want you to release surfaces sometimes
-	boost::signal<void (void)> m_sig_loadSurfaces; //some phones may want you to reload surfaces sometimes
+	/**
+	 * Signal to notify that it's time to release surfaces.
+	 * Sent for example when the app goes to background.
+	 */
+	boost::signal<void (void)> m_sig_unloadSurfaces;
+	boost::signal<void (void)> m_sig_loadSurfaces; ///< Signal to notify that it's time to reload surfaces.
 
 	deque <OSMessage> * GetOSMessages() {return &m_OSMessages;}
 	void AddOSMessage(OSMessage &m);
