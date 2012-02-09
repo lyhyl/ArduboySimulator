@@ -30,10 +30,29 @@ void RenderTexturedGLTriangle();
 void RenderTexturedRectangle(float RectSize=1.0f);
 void RenderSpinningTriangle();
 
+/**
+ * Returns the current height of the scene viewport. Usually this is the same as the height
+ * of the application window. But it can be also different if the fake screen size mode
+ * is used.
+ */
 int GetScreenSizeY();
+/**
+ * Returns the current width of the scene viewport. Usually this is the same as the width
+ * of the application window. But it can be also different if the fake screen size mode
+ * is used.
+ */
 int GetScreenSizeX();
+/**
+ * Returns the same as \c GetScreenSizeY() but as a float.
+ */
 float GetScreenSizeYf();
+/**
+ * Returns the same as \c GetScreenSizeX() but as a float.
+ */
 float GetScreenSizeXf();
+/**
+ * Constructs a vector from the values returned by \c GetScreenSizeXf() and \c GetScreenSizeYf().
+ */
 CL_Vec2f GetScreenSize();
 
 void SetupScreenInfo(int x, int y, int orientation);
