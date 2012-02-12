@@ -190,11 +190,36 @@ public:
 	eInputMode GetInputMode() {return m_inputMode;}
 	virtual void OnMemoryWarning();
 	//FocusComponents connect to these, which will tricky down their hierarchy
-	boost::signal<void (VariantList*)> m_sig_input; ///< Taps, clicks, and basic keyboard input
+	/**
+	 * Taps, clicks, and basic keyboard input.
+	 *
+	 * The parameter variant list contains the following:
+	 * - 0: the type of the event cast to a float. One of:
+	 *   - \link eMessageType::MESSAGE_TYPE_GUI_CLICK_START MESSAGE_TYPE_GUI_CLICK_START\endlink
+	 *   - \link eMessageType::MESSAGE_TYPE_GUI_CLICK_END MESSAGE_TYPE_GUI_CLICK_END\endlink
+	 *   - \link eMessageType::MESSAGE_TYPE_GUI_CLICK_MOVE MESSAGE_TYPE_GUI_CLICK_MOVE\endlink
+	 *   - \link eMessageType::MESSAGE_TYPE_GUI_CLICK_MOVE_RAW MESSAGE_TYPE_GUI_CLICK_MOVE_RAW\endlink
+	 *   - \link eMessageType::MESSAGE_TYPE_GUI_CHAR MESSAGE_TYPE_GUI_CHAR\endlink
+	 *   - \link eMessageType::MESSAGE_TYPE_GUI_PASTE MESSAGE_TYPE_GUI_PASTE\endlink
+	 * - 1: the position of the event as a Vector2 if it makes sense. If the first member (the type)
+	 *   is either \link eMessageType::MESSAGE_TYPE_GUI_CHAR MESSAGE_TYPE_GUI_CHAR\endlink or
+	 *   \link eMessageType::MESSAGE_TYPE_GUI_PASTE MESSAGE_TYPE_GUI_PASTE\endlink then this is always (0, 0).
+	 * - 2: this parameter depends on the value of the first member (the type).
+	 *   - For \link eMessageType::MESSAGE_TYPE_GUI_CLICK_START MESSAGE_TYPE_GUI_CLICK_START\endlink,
+	 *     \link eMessageType::MESSAGE_TYPE_GUI_CLICK_END MESSAGE_TYPE_GUI_CLICK_END\endlink,
+	 *     \link eMessageType::MESSAGE_TYPE_GUI_CLICK_MOVE MESSAGE_TYPE_GUI_CLICK_MOVE\endlink,
+	 *     \link eMessageType::MESSAGE_TYPE_GUI_CLICK_MOVE_RAW MESSAGE_TYPE_GUI_CLICK_MOVE_RAW\endlink
+	 *     this parameter defines the id of the finger used for the touch event as a uint32.
+	 *   - For \link eMessageType::MESSAGE_TYPE_GUI_CHAR MESSAGE_TYPE_GUI_CHAR\endlink this
+	 *     parameter contains the keycode of the pressed key as a uint32.
+	 *   - For \link eMessageType::MESSAGE_TYPE_GUI_PASTE MESSAGE_TYPE_GUI_PASTE\endlink this
+	 *     parameter contains the contents of the clipboard as a \c Variant.
+	 */
+	boost::signal<void (VariantList*)> m_sig_input;
 	/**
 	 * "Move" touch messages.
-	 * Used if INPUT_MODE_SEPARATE_MOVE_TOUCHES was set. Otherwise they are signaled
-	 * via m_sig_input.
+	 * Used if eInputMode::INPUT_MODE_SEPARATE_MOVE_TOUCHES was set. Otherwise they are signaled
+	 * via \c BaseApp::m_sig_input.
 	 */
 	boost::signal<void (VariantList*)> m_sig_input_move;
 	/**
@@ -230,6 +255,11 @@ public:
 	/**
 	 * For raw data from keyboards that give pressed/released messages.
 	 * Generally you would convert them into arcade messages.
+	 *
+	 * The parameter variant list contains two members:
+	 * - 0: the keycode of the pressed or released key as a uint32.
+	 * - 1: VIRTUAL_KEY_PRESS or VIRTUAL_KEY_RELEASE as a uint32 depending on whether
+	 *   the event was a key press or release.
 	 */
 	boost::signal<void (VariantList*)> m_sig_raw_keyboard;
 	

@@ -22,6 +22,7 @@ void FocusInputComponent::OnAdd(Entity *pEnt)
 	}
 
 	GetFunction("LinkMoveMessages")->sig_function.connect(1, boost::bind(&FocusInputComponent::LinkMoveMessages, this, _1));
+	GetFunction("LinkRawMessages")->sig_function.connect(1, boost::bind(&FocusInputComponent::LinkRawMessages, this, _1));
 }
 
 void FocusInputComponent::LinkMoveMessages(VariantList *pVList)
@@ -32,6 +33,11 @@ void FocusInputComponent::LinkMoveMessages(VariantList *pVList)
 	}
 }
 
+void FocusInputComponent::LinkRawMessages(VariantList *pVList)
+{
+	GetBaseApp()->m_sig_raw_keyboard.connect(1, boost::bind(&FocusInputComponent::OnInputRaw, this, _1));
+}
+
 void FocusInputComponent::OnRemove()
 {
 	EntityComponent::OnRemove();
@@ -40,5 +46,10 @@ void FocusInputComponent::OnRemove()
 void FocusInputComponent::OnInput(VariantList *pVList)
 {
 	//the 1 is because the pt we need modified is index 1 of the VariantList
-	GetParent()->CallFunctionRecursivelyWithUpdatedVar("OnInput", pVList, string("pos2d"), 1, Entity::RECURSIVE_VAR_OP_SUBTRACTION_PLUS_ALIGNMENT_OFFSET); 
+	GetParent()->CallFunctionRecursivelyWithUpdatedVar("OnInput", pVList, string("pos2d"), 1, Entity::RECURSIVE_VAR_OP_SUBTRACTION_PLUS_ALIGNMENT_OFFSET);
+}
+
+void FocusInputComponent::OnInputRaw(VariantList *pVList)
+{
+	GetParent()->CallFunctionRecursively("OnInputRaw", pVList);
 }
