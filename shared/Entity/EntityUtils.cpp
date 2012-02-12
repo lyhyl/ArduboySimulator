@@ -1049,6 +1049,17 @@ void AddInputMovementFocusIfNeeded(Entity *pEnt)
 	}
 }
 
+void EnableRawMessageFocusInput(Entity *pEnt)
+{
+	EntityComponent *pInputComp = pEnt->GetComponentByName("FocusInput", true);
+
+	if (pInputComp)
+	{
+		pInputComp->GetFunction("LinkRawMessages")->sig_function(NULL);
+	}
+}
+
+
 void FadeScreen( Entity *pParent, float defaultStartAlpha, float targetAlpha, int fadeDurationMS, bool bDeleteWhenDone )
 {
 	
@@ -1605,7 +1616,7 @@ bool EntityRetinaRemapIfNeeded(Entity *pEnt, bool bAdjustPosition, bool bAdjustS
 	return true;
 }
 
-void EntitySetScaleBySize(Entity *pEnt, CL_Vec2f vDestSize, bool bPerserveAspectRatio)
+void EntitySetScaleBySize(Entity *pEnt, CL_Vec2f vDestSize, bool bPreserveAspectRatio)
 {
 	CL_Vec2f vSize = pEnt->GetVar("size2d")->GetVector2();
 	assert(vSize.x != 0 && vSize.y != 0);
@@ -1616,7 +1627,7 @@ void EntitySetScaleBySize(Entity *pEnt, CL_Vec2f vDestSize, bool bPerserveAspect
 		return; //avoid divide by 0
 	}
 
-	if (bPerserveAspectRatio)
+	if (bPreserveAspectRatio)
 	{
 		float aspectRatio = vSize.x /vSize.y;
 		//knock the X setting out and replace with aspect correct size

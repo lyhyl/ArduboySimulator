@@ -90,6 +90,16 @@ void OneTimeBobEntity(Entity *pEnt, float bobAmount = -10, int delayBeforeBob = 
  */
 void AddFocusIfNeeded(Entity *pEnt, bool bAlsoLinkMoveMessages = false, int delayInputMS = 0, int updateAndRenderDelay = 0); //add input, think, and render focuses to an entity (if they don't exist)
 void AddInputMovementFocusIfNeeded(Entity *pEnt);
+/**
+ * Commands a \c FocusInputComponent in \a pEnt to also recognize the raw keyboard input messages.
+ *
+ * The \c FocusInputComponent is searched for in \a pEnt and its parent \link Entity
+ * \c Entities.\endlink If no \c FocusInputComponent is found then this method has
+ * no effect.
+ *
+ * \see FocusInputComponent
+ */
+void EnableRawMessageFocusInput(Entity *pEnt);
 void RemoveFocusIfNeeded(Entity *pEnt); //remove input, think, and render focuses from an entity
 void FadeOutEntity(Entity *pEnt, bool bRecursive=true, int timeMS=300, int delayBeforeFadingMS = 0);
 void FadeOutAndKillEntity(Entity *pEnt, bool bRecursive = true, int timeMS=300, int delayBeforeFadingMS = 0);
@@ -171,7 +181,19 @@ CL_Vec2f ConvertEntityClickToScreenCoords(CL_Vec2f pt, Entity *pEnt);
 void GetUsedTextures(vector<string> &usedTextures, Entity *pEnt);
 void DestroyUnusedTextures();
 bool EntityRetinaRemapIfNeeded(Entity *pEnt, bool bAdjustPosition = true, bool bAdjustScale = false, bool bApplyToIpadAlso = true, bool bPerserveAspectRatio = false); //moves and scale entities to fit a retina screen like an iphone screen
-void EntitySetScaleBySize(Entity *pEnt, CL_Vec2f vDestSize, bool bPerserveAspectRatio = false);
+/**
+ * Sets the scale of \a pEnt such that the resulting size of it will be \a vDestSize.
+ *
+ * If the \a bPreserveAspectRatio is set to \c true the resulting scale is uniform.
+ * This means that \a pEnt's appearance will preserve its aspect ratio.
+ * If \a pEnt is wider than it's tall \a vDestSize.y is ignored and the resulting
+ * width of \a pEnt will be \a vDestSize.x. The height of \a pEnt will be whatever
+ * it needs to be to preserve the aspect ratio. Similarly if \a pEnt is taller than
+ * it's wide <b>or it's square</b> \a vDestSize.x is ignored and the resulting
+ * height of \a pEnt will be \a vDestSize.y. The width of \a pEnt will be whatever
+ * it needs to be to preserve the aspect ratio.
+ */
+void EntitySetScaleBySize(Entity *pEnt, CL_Vec2f vDestSize, bool bPreserveAspectRatio = false);
 void EntityScaleiPad(Entity *pEnt, bool bPerserveAspectRatio); //on ipad size does nothing, on anything else it scales to fit the same screen ratio.
 EntityComponent * AddHotKeyToButton(Entity *pEnt, uint32 keycode);
 EntityComponent * MakeButtonEmitVirtualGameKey(Entity *pEnt, uint32 keycode);
