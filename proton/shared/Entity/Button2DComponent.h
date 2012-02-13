@@ -32,15 +32,18 @@ index 1 is the parent entity
  * The following named variants are used inside the component itself:
  * - <b>"onClickAudioFile" (string):</b> the name of the audio file that is played
  *   when the button is clicked. By default is whatever is the current global
- *   default click sound. See SetDefaultAudioClickSound().
+ *   default click sound. See \c SetDefaultAudioClickSound().
  * - <b>"disabled" (uint32):</b> used to disable the button. 0 (the default) means
  *   the button is enabled, any other values disables it.
  * - <b>"buttonStyle" (uint32):</b> determines the button's behaviour style. This
  *   needs to be one of the values of \link Button2DComponent::eButtonStyle \c eButtonStyle \endlink.
-
+ *   By default is whatever is the current global default button style. See \c SetDefaultButtonStyle().
+ * - <b>"repeatDelayMS" (uint32):</b> a delay in milliseconds during which a button is
+ *   non-clickable after it has been clicked. Default is 250 milliseconds.
+ *
  * When the button is clicked the "OnButtonSelected" function of the parent \c Entity gets called.
  * This function gets a \c VariantList that contains three members:
- * - 0: the touch point of type \c CL_Vec2f
+ * - 0: the touch point of type \c Vector2
  * - 1: a pointer to the \c Entity that was touched
  * - 2: the id of the finger, type is uint32
  */

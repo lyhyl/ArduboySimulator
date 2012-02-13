@@ -19,6 +19,16 @@ OverlayRenderComponent::~OverlayRenderComponent()
 
 }
 
+void OverlayRenderComponent::UpdateFrameSizeVar()
+{
+	if (m_pTex && m_pTex->IsLoaded())
+	{
+		GetVar("frameSize2d")->Set(m_pTex->GetFrameSize());
+	} else {
+		GetVar("frameSize2d")->Set(0.0f, 0.0f);
+	}
+}
+
 void OverlayRenderComponent::SetSurface( SurfaceAnim *pSurf, bool bDeleteSurface )
 {
 	if (m_bDeleteSurface)
@@ -33,6 +43,7 @@ void OverlayRenderComponent::SetSurface( SurfaceAnim *pSurf, bool bDeleteSurface
 	{
 		*m_pSize2d = CL_Vec2f((float)m_pTex->GetFrameWidth()* m_pScale2d->x, (float)m_pTex->GetFrameHeight()* m_pScale2d->y);
 	}
+	UpdateFrameSizeVar();
 }
 
 void OverlayRenderComponent::OnFileNameChanged(Variant *pDataObject)
@@ -49,6 +60,7 @@ void OverlayRenderComponent::OnFileNameChanged(Variant *pDataObject)
 	{
 		*m_pSize2d = CL_Vec2f((float)m_pTex->GetFrameWidth()* m_pScale2d->x, (float)m_pTex->GetFrameHeight()* m_pScale2d->y);
 	}
+	UpdateFrameSizeVar();
 }
 
 void OverlayRenderComponent::OnScaleChanged(Variant *pDataObject)
@@ -72,7 +84,6 @@ void OverlayRenderComponent::OnAdd(Entity *pEnt)
 	m_pColor = &GetParent()->GetVarWithDefault("color", Variant(MAKE_RGBA(255,255,255,255)))->GetUINT32();
 	m_pColorMod = &GetParent()->GetVarWithDefault("colorMod", Variant(MAKE_RGBA(255,255,255,255)))->GetUINT32();
 	m_pAlpha = &GetParent()->GetVarWithDefault("alpha", Variant(1.0f))->GetFloat();
-	m_pAlignment = &GetParent()->GetVar("alignment")->GetUINT32();
 	m_pVisible = &GetParent()->GetVarWithDefault("visible", uint32(1))->GetUINT32();
 	
 	m_pFrameX = &GetVar("frameX")->GetUINT32(); //applicable if SetupAnim was used
@@ -83,6 +94,8 @@ void OverlayRenderComponent::OnAdd(Entity *pEnt)
 
 	m_pFileName = &GetVar("fileName")->GetString(); //local to us
 	
+	GetVarWithDefault("frameSize2d", Variant(0.0f, 0.0f));
+
 	//any post var data you want to send, must send it before the Init
 	GetFunction("SetupAnim")->sig_function.connect(1, boost::bind(&OverlayRenderComponent::SetupAnim, this, _1));
 
@@ -110,6 +123,7 @@ void OverlayRenderComponent::SetupAnim(VariantList *pVList)
 	
 	m_pTex->SetupAnim(pVList->m_variant[0].GetUINT32(), pVList->m_variant[1].GetUINT32());
 	*m_pSize2d = CL_Vec2f((float)m_pTex->GetFrameWidth()* m_pScale2d->x, (float)m_pTex->GetFrameHeight()* m_pScale2d->y);
+	UpdateFrameSizeVar();
 }
 
 void OverlayRenderComponent::OnRemove()
@@ -136,7 +150,6 @@ void OverlayRenderComponent::OnRender(VariantList *pVList)
 		vRotationPt.x += (m_pTex->GetFrameSize().x* (m_pScale2d->x)) /2;
 		vRotationPt.y += (m_pTex->GetFrameSize().y* (m_pScale2d->y)) /2;
 		
-	
 		
 		if (m_pScale2d->x != 1 || m_pScale2d->y != 1 || *m_pFlipX != 0 || *m_pFlipY != 0)
 		{
