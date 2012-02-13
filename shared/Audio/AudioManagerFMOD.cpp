@@ -427,10 +427,7 @@ void AudioManagerFMOD::SetMusicEnabled( bool bNew )
 void AudioManagerFMOD::StopMusic()
 {
 	DeleteSoundObjectByFileName(m_lastMusicFileName);
-
-	
 	Stop(GetMusicChannel());
-
 }
 
 int AudioManagerFMOD::GetMemoryUsed()

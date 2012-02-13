@@ -186,27 +186,6 @@ void AudioManagerBBX::Preload( string fName, bool bLooping /*= false*/, bool bIs
 
 		alGenSources(1, &pObject->source);
 		alSourcei(pObject->source, AL_BUFFER, pObject->buffer);
-
-		if (bForceStreaming)
-		{
-		//	pObject->m_pSound  = OpenSound(m_pDevice, (basePath+fName).c_str(), true);
-		}else
-		{
-		//	pObject->m_pSound  = OpenSound(m_pDevice, (basePath+fName).c_str());
-		}
-
-		/*
-		if (!pObject->m_pSound)
-		{
-			LogMsg("Unable to find audio file %s",(basePath+fName).c_str() );
-			SAFE_DELETE(pObject);
-			return;
-		}
-		if(bLooping)
-		{
-			pObject->m_pSound->setRepeat(true);
-		}
-		*/
 																		    
 		pObject->m_bIsLooping = bLooping;
 		pObject->m_bIsMusic   = bIsMusic;
@@ -232,6 +211,11 @@ AudioHandle AudioManagerBBX::Play( string fName, bool bLooping /*= false*/, bool
 		m_bLastMusicLooping = bLooping;
 		m_lastMusicFileName = fName;
 		return 0;
+	}
+
+	if (bIsMusic && m_lastMusicFileName == fName && m_bLastMusicLooping && m_lastMusicID == MUSIC_HANDLE)
+	{
+		return (AudioHandle) m_lastMusicID;
 	}
 
 	if(bIsMusic)
@@ -317,6 +301,7 @@ AudioHandle AudioManagerBBX::Play( string fName, bool bLooping /*= false*/, bool
 		}
 
 		SetMusicVol(m_musicVol);
+		m_lastMusicID = MUSIC_HANDLE;
 		return MUSIC_HANDLE;
 	}
 
@@ -361,6 +346,13 @@ void AudioManagerBBX::Update()
 
 void AudioManagerBBX::Stop( AudioHandle soundID )
 {
+
+	if (soundID == MUSIC_HANDLE)
+	{
+		StopMusic();
+		return;
+	}
+
 	SoundObject *pObject = GetSoundObjectByPointer((void*)soundID);
 
 	if (pObject && pObject->source)
@@ -378,6 +370,17 @@ AudioHandle AudioManagerBBX::GetMusicChannel()
 
 bool AudioManagerBBX::IsPlaying( AudioHandle soundID )
 {
+
+	if ( m_lastMusicID != AUDIO_HANDLE_BLANK && soundID == m_lastMusicID)
+	{
+		if (m_bLastMusicLooping && m_bMusicEnabled)
+		{
+			return true; //well, it must be playing, it's looping, right?
+		}
+		//this is wrong, we don't know if the music is playing.. fix me?
+		return false;
+	}
+
 	SoundObject *pObject = GetSoundObjectByPointer((void*)soundID);
 
 		if (pObject && pObject->source)
@@ -390,11 +393,12 @@ bool AudioManagerBBX::IsPlaying( AudioHandle soundID )
 		return false;
 }
 
-
 void AudioManagerBBX::SetMusicEnabled( bool bNew )
 {
-	if (bNew != m_bMusicEnabled){
+	if (bNew != m_bMusicEnabled)
+	{
 		AudioManager::SetMusicEnabled(bNew);
+	
 		if (bNew)
 		{
 			if (!m_lastMusicFileName.empty())
@@ -433,9 +437,9 @@ void AudioManagerBBX::StopMusic()
 				s_mmrContext = 0;
 
 			}
-
 	}
 
+	m_lastMusicID = AUDIO_HANDLE_BLANK;
 }
 
 int AudioManagerBBX::GetMemoryUsed()
