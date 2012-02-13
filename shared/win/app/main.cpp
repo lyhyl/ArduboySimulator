@@ -232,6 +232,10 @@ int VKeyToWMCharKey(int vKey)
 		if (GetKeyboardState(keystate) == FALSE) return 0;
 		result = ToAsciiEx(vKey,vKey,keystate,&val,0,_gkey_layout);
 
+		if (result == 0)
+		{
+			val = vKey; //VK_1 etc don't get handled by the above thing.. or need to be
+		}
 		//LogMsg("Got val: %c", val);
 		vKey = val;
 	} else 
@@ -496,7 +500,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				{
 					GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_PASTE, Variant(text), 0);  //lParam holds a lot of random data about the press, look it up if
 				}
-				
 			}
 		break;
 		}
@@ -518,7 +521,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				int wmCharKey = VKeyToWMCharKey(wParam);
 				if (wmCharKey != 0)
 				{
-					GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, (float)wmCharKey, 1.0f);  
+					GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, (float)ConvertWindowsKeycodeToProtonVirtualKey(wmCharKey), 1.0f);  
 				}
 
 			#endif
@@ -530,7 +533,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				int wmCharKey = VKeyToWMCharKey(wParam);
 				if (wmCharKey != 0)
 				{
-					LogMsg("Sending repeat key..");
+					//LogMsg("Sending repeat key..");
 					GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, (float)wmCharKey, 1.0f);  
 				}
 

@@ -5,6 +5,7 @@
 
 VariantDB::VariantDB()
 {
+	ResetNext();
 }
 
 VariantDB::~VariantDB()
@@ -31,6 +32,32 @@ void VariantDB::DeleteAll()
 	}
 	}
 	m_functionData.clear();
+}
+
+
+int VariantDB::DeleteVar(string &keyName)
+{
+	int deleted = 0;
+
+	dataList::iterator itor = m_data.begin();
+
+	while (itor != m_data.end())
+	{
+		if (itor->first == keyName)
+		{
+			//match!
+			delete (itor->second);
+			dataList::iterator itorTemp = itor;
+			itor++;
+
+			m_data.erase(itorTemp);
+			deleted++;
+			continue;
+		}
+		itor++;
+	}
+
+	return deleted;
 }
 
 Variant * VariantDB::GetVarIfExists(const string &keyName)
@@ -347,4 +374,26 @@ std::string VariantDB::DumpAsString()
 
 	log += "\r\n";
 	return log;
+}
+
+void VariantDB::ResetNext()
+{
+	m_nextItor = m_data.begin();
+}
+
+Variant * VariantDB::GetNext(string &keyOut)
+{
+	Variant *pReturn = NULL;
+
+	if (m_nextItor == m_data.end())
+	{
+		//all done
+		ResetNext();
+		return NULL;
+	}
+
+	keyOut = m_nextItor->first;
+	pReturn = m_nextItor->second;
+	m_nextItor++;
+	return pReturn;
 }

@@ -224,7 +224,11 @@ bool Variant::Save( FILE *fp, const string &varName )
 		dataSizeBytes = GetSizeOfData(GetType());
 	}
 	
-	if (dataSizeBytes == 0) return true; //can't save this type, but not an error
+	if (dataSizeBytes == 0)
+	{
+		LogMsg("Warning: Not going to save variant %s because it was never actually set a value", varName.c_str());
+		return true; //can't save this type, but not an error
+	}
 
 	uint32 varType = GetType();
 	int bytesRead = (int)fwrite(&varType, 1, sizeof(uint32), fp);

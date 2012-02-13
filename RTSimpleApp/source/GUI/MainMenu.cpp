@@ -66,10 +66,12 @@ void MainMenuOnSelect(VariantList *pVList) //0=vec2 point of click, 1=entity sen
 
 Entity * MainMenuCreate(Entity *pParentEnt)
 {
-	
+	/*
+	//Example of loading a jpg and saving out a bmp
 	SoftSurface s;
 	s.LoadFile("interface/cosmo.jpg", SoftSurface::COLOR_KEY_NONE);
 	s.WriteBMPOut("cosmo.bmp");
+	*/
 	
 	//Entity *pBG = CreateOverlayEntity(pParentEnt, "MainMenu", "interface/summary_bg.rttex", 0,0);
 	Entity *pBG = pParentEnt->AddEntity(new Entity);

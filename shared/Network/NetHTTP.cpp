@@ -174,7 +174,7 @@ bool NetHTTP::Start()
 }
 
 
-bool CheckCharVectorForString(vector<char> &v, string marker, int *pIndexOfMarkerEndPosOut=NULL)
+bool CheckCharVectorForString(vector<char> &v, string marker, int *pIndexOfMarkerEndPosOut)
 {
 	int correctCount = 0;
 	assert(marker.size() > 0);
@@ -373,8 +373,8 @@ void NetHTTP::FinishDownload()
 	} else
 	{
 		m_downloadData.insert(m_downloadData.begin(), s.begin()+m_downloadHeader.length(), s.end());
-
 	}
+
 	m_downloadData.push_back(0); //useful if used like a string
 	m_state = STATE_FINISHED;
 }
