@@ -553,6 +553,10 @@ EntityComponent * ZoomToPositionEntityMulti(Entity *pEnt, CL_Vec2f vPos, unsigne
 	return pComp;
 }
 
+EntityComponent * ZoomToScaleEntity(Entity *pEnt, CL_Vec2f vScale, unsigned int speedMS, eInterpolateType interpolateType, int delayBeforeActionMS)
+{
+	return MorphToVec2Entity(pEnt, "scale2d", vScale, speedMS, interpolateType, delayBeforeActionMS);
+}
 
 void MorphToColorEntity(Entity *pEnt, bool bRecursive, int timeMS, unsigned int color, int delayBeforeActionMS, bool bAllowMultipleAtOnce)
 {
