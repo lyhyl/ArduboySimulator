@@ -104,7 +104,9 @@ public:
 	Variant * GetVar(const string &keyName);  //created it needed, this is usually what you want
 	Variant * GetVarIfExists(const string &keyName);  //returns null if not created yet
 	Variant * GetVarWithDefault(const string &keyName, const Variant &vDefault);
-	int DeleteVarsStartingWith(string deleteStr);
+	int DeleteVarsStartingWith(string deleteStr); //returns how many were deleted
+	int DeleteVar(string &keyName); //returns how many were deleted (0 or 1..)
+
 	//you can load and save the variables in the DB on the fly.  (Does nothing with the functions)
 	bool Save(const string &fileName, bool bAddBasePath = true);
 	bool Load(const string &fileName, bool *pFileExistedOut = NULL, bool bAddBasePath = true);
@@ -112,6 +114,11 @@ public:
 	string DumpAsString();
 	void Print(); //same as above, but sends to LogMsg()
 	void DeleteAll();
+
+	//to get each var in our db manually, do this:
+	void ResetNext(); //call before starting a search
+	Variant * GetNext(string &keyOut); //call this in a loop until it returns NULL to signal the finish
+
 
 VariantDB & operator= (const VariantDB &rhs)
 	{
@@ -135,9 +142,9 @@ VariantDB(const VariantDB & ref)
 
 private:
 
-
 	dataList m_data;
 	functionList m_functionData;
+	dataList::iterator m_nextItor;
 };
 
 #endif // Variant_h__

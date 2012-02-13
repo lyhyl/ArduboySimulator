@@ -111,4 +111,5 @@ private:
 	string m_fileName;
 };
 
+bool CheckCharVectorForString(vector<char> &v, string marker, int *pIndexOfMarkerEndPosOut=NULL);
 #endif // NetHTTP_h__
