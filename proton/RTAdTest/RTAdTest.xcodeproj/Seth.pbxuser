@@ -1,0 +1,1236 @@
+// !$*UTF8*$!
+{
+	1D6058900D05DD3D006BFB54 /* RTAdTest */ = {
+		activeExec = 0;
+		executables = (
+			5D3ED0490E93840C007F1B07 /* RTAdTest */,
+		);
+	};
+	29B97313FDCFA39411CA2CEA /* Project object */ = {
+		activeArchitecturePreference = armv7;
+		activeBuildConfigurationName = Debug;
+		activeExecutable = 5D3ED0490E93840C007F1B07 /* RTAdTest */;
+		activeSDKPreference = iphoneos4.2;
+		activeTarget = 1D6058900D05DD3D006BFB54 /* RTAdTest */;
+		addToTargets = (
+			1D6058900D05DD3D006BFB54 /* RTAdTest */,
+		);
+		breakpoints = (
+			5DC6927B0E9483CC00E5AC44 /* RenderUtils.cpp:15 */,
+			5DC692B80E94863A00E5AC44 /* main.mm:16 */,
+			5DD9552A0E961069004E403D /* EAGLView.mm:68 */,
+			5DA557260E9B415900D16247 /* CGraphicGL.cpp:232 */,
+			5DA557C50E9B4BD700D16247 /* EAGLView.mm:167 */,
+			5DA557C70E9B4BDB00D16247 /* EAGLView.mm:160 */,
+			5DA557C90E9B4BE100D16247 /* EAGLView.mm:155 */,
+			5DA557CB0E9B4BE200D16247 /* EAGLView.mm:150 */,
+			5DA557D80E9B4C9600D16247 /* GameTimer.cpp:17 */,
+			5DA558050E9B523700D16247 /* GameTimer.cpp:46 */,
+			5DA558070E9B523D00D16247 /* GameTimer.cpp:44 */,
+			5DA558480E9B59AA00D16247 /* MakUtils.mm:91 */,
+			5DA5584A0E9B59AF00D16247 /* GameTimer.cpp:45 */,
+			5DA558530E9B5ACC00D16247 /* MakUtils.mm:91 */,
+			5DC229B40E9E166A0051CACE /* EAGLView.mm:189 */,
+			5DC26AE00E9ED41900BB2E4B /* MakUtils.mm:22 */,
+			5DADFCEB0EA2E5F2007ADD60 /* EAGLView.mm:45 */,
+			5DADFE000EA2EAAD007ADD60 /* BaseApp.cpp:80 */,
+			5DADFE020EA2EAB0007ADD60 /* BaseApp.cpp:81 */,
+			5DADFE0F0EA2EAC2007ADD60 /* CGraphicGL.cpp:446 */,
+			5DAD011D0EA30C73007ADD60 /* EAGLView.mm:109 */,
+			5DC6D7840EA4B446001482E0 /* RPXMesh.cpp:505 */,
+			5DE066650EA83C3000137A27 /* GameLogic.cpp:183 */,
+			5DE066730EA83CD200137A27 /* ResourceUtils.cpp:20 */,
+			5D6119520EEE796F00C2C0D9 /* CTriggerManager.cpp:157 */,
+			5DA1FD510F024FFA001E9C1B /* MiscUtils.cpp:394 */,
+			5DA1FD530F024FFC001E9C1B /* MiscUtils.cpp:399 */,
+			5DCBA5B90F11EF7400C6511E /* EAGLView.mm:189 */,
+			5DCBA5BB0F11EF7700C6511E /* EAGLView.mm:202 */,
+			5DCBA5BD0F11EF7900C6511E /* EAGLView.mm:215 */,
+			5D80B0890F175DFC0054EC98 /* DeathWalkManager.cpp:18 */,
+		);
+		codeSenseManager = 5D3ED0590E93842B007F1B07 /* Code sense */;
+		executables = (
+			5D3ED0490E93840C007F1B07 /* RTAdTest */,
+		);
+		perUserDictionary = {
+			"PBXConfiguration.PBXBreakpointsDataSource.v1:1CA1AED706398EBD00589147" = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXBreakpointsDataSource_BreakpointID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					20,
+					198,
+					20,
+					99,
+					99,
+					29,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXBreakpointsDataSource_ActionID,
+					PBXBreakpointsDataSource_TypeID,
+					PBXBreakpointsDataSource_BreakpointID,
+					PBXBreakpointsDataSource_UseID,
+					PBXBreakpointsDataSource_LocationID,
+					PBXBreakpointsDataSource_ConditionID,
+					PBXBreakpointsDataSource_IgnoreCountID,
+					PBXBreakpointsDataSource_ContinueID,
+				);
+			};
+			"PBXConfiguration.PBXBreakpointsDataSource.v1:1CA23EDF0692099D00951B8B" = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXBreakpointsDataSource_BreakpointID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					20,
+					371,
+					20,
+					271,
+					271,
+					199,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXBreakpointsDataSource_ActionID,
+					PBXBreakpointsDataSource_TypeID,
+					PBXBreakpointsDataSource_BreakpointID,
+					PBXBreakpointsDataSource_UseID,
+					PBXBreakpointsDataSource_LocationID,
+					PBXBreakpointsDataSource_ConditionID,
+					PBXBreakpointsDataSource_IgnoreCountID,
+					PBXBreakpointsDataSource_ContinueID,
+				);
+			};
+			PBXConfiguration.PBXFileTableDataSource3.PBXErrorsWarningsDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXErrorsWarningsDataSource_LocationID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					300,
+					561.20849609375,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXErrorsWarningsDataSource_TypeID,
+					PBXErrorsWarningsDataSource_MessageID,
+					PBXErrorsWarningsDataSource_LocationID,
+				);
+			};
+			PBXConfiguration.PBXFileTableDataSource3.PBXExecutablesDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXExecutablesDataSource_NameID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					22,
+					300,
+					590.58349609375,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXExecutablesDataSource_ActiveFlagID,
+					PBXExecutablesDataSource_NameID,
+					PBXExecutablesDataSource_CommentsID,
+				);
+			};
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					744,
+					20,
+					48,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXConfiguration.PBXFileTableDataSource3.PBXFindDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFindDataSource_LocationID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					200,
+					319,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFindDataSource_MessageID,
+					PBXFindDataSource_LocationID,
+				);
+			};
+			PBXConfiguration.PBXTargetDataSource.PBXTargetDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					704,
+					60,
+					20,
+					48,
+					43,
+					43,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXTargetDataSource_PrimaryAttribute,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 331688058;
+			PBXWorkspaceStateSaveDate = 331688058;
+		};
+		perUserProjectItems = {
+			5D165B8E125AA77E00F1E8E3 /* PBXTextBookmark */ = 5D165B8E125AA77E00F1E8E3 /* PBXTextBookmark */;
+			5D18865912B5BD0C00E0528B /* PBXTextBookmark */ = 5D18865912B5BD0C00E0528B /* PBXTextBookmark */;
+			5D18896F12B5DC6300E0528B /* PBXTextBookmark */ = 5D18896F12B5DC6300E0528B /* PBXTextBookmark */;
+			5D70B60412B5FE9300A1AB17 /* PBXTextBookmark */ = 5D70B60412B5FE9300A1AB17 /* PBXTextBookmark */;
+			5D99B38413C5CDF60089F477 /* PBXTextBookmark */ = 5D99B38413C5CDF60089F477 /* PBXTextBookmark */;
+			5D99B38513C5CDF60089F477 /* PBXTextBookmark */ = 5D99B38513C5CDF60089F477 /* PBXTextBookmark */;
+			5D99B38613C5CDF60089F477 /* PBXTextBookmark */ = 5D99B38613C5CDF60089F477 /* PBXTextBookmark */;
+		};
+		sourceControlManager = 5D3ED0580E93842B007F1B07 /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	32CA4F630368D1EE00C91783 /* RTAdTest_Prefix.pch */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {934, 99}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 82}";
+			sepNavWindowFrame = "{{15, 323}, {956, 550}}";
+		};
+	};
+	5D0B2B5A0E9A4434005646AD /* CGraphicGL.cpp */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = CGraphicGL.cpp;
+		path = /Volumes/projects/Client/MWNW/mwnwsvn/iphone/shared/CGraphicGL.cpp;
+		sourceTree = "<absolute>";
+	};
+	5D0CC9360F79E0D1004D9AE9 /* GameTimer.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {934, 1092}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 364}";
+		};
+	};
+	5D0CC9380F79E0D1004D9AE9 /* MessageManager.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1199, 2534}}";
+			sepNavSelRange = "{3917, 120}";
+			sepNavVisRange = "{3820, 405}";
+		};
+	};
+	5D0CC9390F79E0D1004D9AE9 /* MessageManager.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {881, 1624}}";
+			sepNavSelRange = "{565, 0}";
+			sepNavVisRange = "{0, 850}";
+			sepNavWindowFrame = "{{15, 323}, {956, 550}}";
+		};
+	};
+	5D0CC94C0F79E181004D9AE9 /* Surface.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1629, 10660}}";
+			sepNavSelRange = "{5353, 0}";
+			sepNavVisRange = "{5199, 890}";
+		};
+	};
+	5D0CC94D0F79E181004D9AE9 /* Surface.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {483, 532}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 578}";
+		};
+	};
+	5D165B0F125AA22400F1E8E3 /* iOSUtils.mm */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {934, 6435}}";
+			sepNavSelRange = "{12200, 0}";
+			sepNavVisRange = "{12003, 28}";
+			sepNavWindowFrame = "{{61, 14}, {1576, 886}}";
+		};
+	};
+	5D165B10125AA22400F1E8E3 /* iOSUtils.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1529, 814}}";
+			sepNavSelRange = "{269, 0}";
+			sepNavVisRange = "{0, 272}";
+			sepNavWindowFrame = "{{1100, -114}, {1576, 886}}";
+		};
+	};
+	5D165B13125AA23B00F1E8E3 /* MyViewController.mm */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1529, 1300}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{893, 1880}";
+			sepNavWindowFrame = "{{344, 157}, {1576, 886}}";
+		};
+	};
+	5D165B14125AA23B00F1E8E3 /* MyViewController.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1529, 814}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 462}";
+			sepNavWindowFrame = "{{191, 4}, {1576, 886}}";
+		};
+	};
+	5D165B15125AA23B00F1E8E3 /* MyAppDelegate.mm */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1529, 4927}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{8447, 1249}";
+			sepNavWindowFrame = "{{121, 4}, {1576, 886}}";
+		};
+	};
+	5D165B16125AA23B00F1E8E3 /* MyAppDelegate.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1529, 814}}";
+			sepNavSelRange = "{266, 69}";
+			sepNavVisRange = "{0, 1150}";
+			sepNavWindowFrame = "{{121, 4}, {1576, 886}}";
+		};
+	};
+	5D165B17125AA23B00F1E8E3 /* main.mm */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {934, 273}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 164}";
+			sepNavWindowFrame = "{{61, 239}, {1279, 772}}";
+		};
+	};
+	5D165B18125AA23B00F1E8E3 /* EAGLView.mm */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1232, 3666}}";
+			sepNavSelRange = "{938, 18}";
+			sepNavVisRange = "{339, 1245}";
+			sepNavWindowFrame = "{{521, 133}, {1279, 772}}";
+		};
+	};
+	5D165B19125AA23B00F1E8E3 /* EAGLView.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1232, 700}}";
+			sepNavSelRange = "{169, 0}";
+			sepNavVisRange = "{0, 1284}";
+			sepNavWindowFrame = "{{397, -478}, {1279, 772}}";
+		};
+	};
+	5D165B22125AA26D00F1E8E3 /* StreamingInstance.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1192, 1092}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 435}";
+		};
+	};
+	5D165B24125AA26D00F1E8E3 /* FileSystem.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1192, 248}}";
+			sepNavSelRange = "{55, 0}";
+			sepNavVisRange = "{0, 124}";
+		};
+	};
+	5D165B81125AA67E00F1E8E3 /* CustomInputComponent.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1192, 390}}";
+			sepNavSelRange = "{472, 0}";
+			sepNavVisRange = "{0, 625}";
+		};
+	};
+	5D165B87125AA70800F1E8E3 /* FocusInputComponent.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {934, 663}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 162}";
+		};
+	};
+	5D165B8E125AA77E00F1E8E3 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5D165B22125AA26D00F1E8E3 /* StreamingInstance.cpp */;
+		name = "StreamingInstance.cpp: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 435;
+		vrLoc = 0;
+	};
+	5D18865912B5BD0C00E0528B /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 32CA4F630368D1EE00C91783 /* RTAdTest_Prefix.pch */;
+		name = "RTAdTest_Prefix.pch: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 82;
+		vrLoc = 0;
+	};
+	5D18896F12B5DC6300E0528B /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5D165B18125AA23B00F1E8E3 /* EAGLView.mm */;
+		name = "EAGLView.mm: 47";
+		rLen = 0;
+		rLoc = 941;
+		rType = 0;
+		vrLen = 187;
+		vrLoc = 848;
+	};
+	5D3063600FD890CB009DE600 /* AudioManager.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1141, 645}}";
+			sepNavSelRange = "{411, 0}";
+			sepNavVisRange = "{0, 411}";
+			sepNavWindowFrame = "{{226, 46}, {1200, 717}}";
+		};
+	};
+	5D3ED0490E93840C007F1B07 /* RTAdTest */ = {
+		isa = PBXExecutable;
+		activeArgIndices = (
+		);
+		argumentStrings = (
+		);
+		autoAttachOnCrash = 1;
+		breakpointsEnabled = 1;
+		configStateDict = {
+		};
+		customDataFormattersEnabled = 1;
+		dataTipCustomDataFormattersEnabled = 1;
+		dataTipShowTypeColumn = 1;
+		dataTipSortType = 0;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		dylibVariantSuffix = "";
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		libgmallocEnabled = 0;
+		name = RTAdTest;
+		savedGlobals = {
+		};
+		showTypeColumn = 0;
+		sourceDirectories = (
+		);
+		variableFormatDictionary = {
+			$cpsr = 1;
+			$ip = 1;
+			$lr = 1;
+			$pc = 1;
+			$r0 = 1;
+			$r1 = 1;
+			$r2 = 1;
+			$r3 = 1;
+			$r4 = 1;
+			$r5 = 1;
+			$r6 = 1;
+			$r7 = 1;
+			$r8 = 1;
+			$r9 = 1;
+			$sl = 1;
+			$sp = 1;
+		};
+	};
+	5D3ED0580E93842B007F1B07 /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+			repositoryNamesForRoots = {
+				"" = "";
+			};
+		};
+	};
+	5D3ED0590E93842B007F1B07 /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+	5D6119520EEE796F00C2C0D9 /* CTriggerManager.cpp:157 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 5DF33DE40EAC7E330024A667 /* CTriggerManager.cpp */;
+		functionName = "CTrigger::CheckExit()";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 157;
+		modificationTime = 313910032.871312;
+		originalNumberOfMultipleMatches = 1;
+		state = 1;
+	};
+	5D70B60412B5FE9300A1AB17 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5D165B17125AA23B00F1E8E3 /* main.mm */;
+		name = "main.mm: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 164;
+		vrLoc = 0;
+	};
+	5D7B4CF510CCEE030073DDA8 /* SoftSurface.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1192, 12363}}";
+			sepNavSelRange = "{244, 0}";
+			sepNavVisRange = "{0, 440}";
+		};
+	};
+	5D7C765F118FF94D007F9604 /* PlatformPrecomp.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1034, 814}}";
+			sepNavSelRange = "{86, 28}";
+			sepNavVisRange = "{0, 251}";
+			sepNavWindowFrame = "{{15, 167}, {1081, 886}}";
+		};
+	};
+	5D7C7660118FF94D007F9604 /* PlatformPrecomp.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {560, 426}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 28}";
+		};
+	};
+	5D80B0660F1721BD0054EC98 /* DeathWalkManager.cpp */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = DeathWalkManager.cpp;
+		path = /Volumes/projects/Client/MWNW/mwnwsvn/iphone/RTAdTest/source/DeathWalkManager.cpp;
+		sourceTree = "<absolute>";
+	};
+	5D80B0890F175DFC0054EC98 /* DeathWalkManager.cpp:18 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 5D80B0660F1721BD0054EC98 /* DeathWalkManager.cpp */;
+		functionName = "DeathWalkManager::OneTimeInit(Fixed scaleX, Fixed scaleY,Fixed scaleZ, TextureMapArray *tex)";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 18;
+		modificationTime = 313910032.871528;
+		originalNumberOfMultipleMatches = 1;
+		state = 1;
+	};
+	5D8272900FA9DEE00097DE6A /* Entitlements.plist */ = {
+		uiCtxt = {
+			sepNavWindowFrame = "{{15, 323}, {956, 550}}";
+		};
+	};
+	5D8486D50F92409B007338A2 /* connection.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {538, 2170}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 615}";
+		};
+	};
+	5D9831F00F7BD64B00D94D9B /* RTFont.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {981, 8021}}";
+			sepNavSelRange = "{1251, 0}";
+			sepNavVisRange = "{996, 711}";
+			sepNavWindowFrame = "{{15, 323}, {956, 550}}";
+		};
+	};
+	5D9831F10F7BD64B00D94D9B /* RTFont.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {897, 532}}";
+			sepNavSelRange = "{506, 0}";
+			sepNavVisRange = "{0, 819}";
+			sepNavWindowFrame = "{{38, 302}, {956, 550}}";
+		};
+	};
+	5D99B38413C5CDF60089F477 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 5D165B0F125AA22400F1E8E3 /* iOSUtils.mm */;
+		name = "iOSUtils.mm: 492";
+		rLen = 0;
+		rLoc = 12200;
+		rType = 0;
+		vrLen = 28;
+		vrLoc = 12003;
+	};
+	5D99B38513C5CDF60089F477 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8D1107310486CEB800E47090 /* Info.plist */;
+		rLen = 0;
+		rLoc = 9223372036854775807;
+		rType = 0;
+	};
+	5D99B38613C5CDF60089F477 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 8D1107310486CEB800E47090 /* Info.plist */;
+		name = "Info.plist: 36";
+		rLen = 64;
+		rLoc = 1154;
+		rType = 0;
+		vrLen = 1066;
+		vrLoc = 209;
+	};
+	5DA1FD510F024FFA001E9C1B /* MiscUtils.cpp:394 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 5DFE10550F60EB790065956E /* MiscUtils.cpp */;
+		functionName = "BREWRandom(unsigned int ui_max)";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 394;
+		location = RTAdTest;
+		modificationTime = 313909845.330255;
+		originalNumberOfMultipleMatches = 0;
+		state = 2;
+	};
+	5DA1FD530F024FFC001E9C1B /* MiscUtils.cpp:399 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 5DFE10550F60EB790065956E /* MiscUtils.cpp */;
+		functionName = "Random(unsigned int ui_max)";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 399;
+		location = RTAdTest;
+		modificationTime = 313909845.330442;
+		originalNumberOfMultipleMatches = 0;
+		state = 2;
+	};
+	5DA557260E9B415900D16247 /* CGraphicGL.cpp:232 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 5D0B2B5A0E9A4434005646AD /* CGraphicGL.cpp */;
+		functionName = "CGraphicGL::LoadFromResource(string fileName, bool b_decompress)";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 232;
+		location = RTAdTest;
+		modificationTime = 313909845.32563;
+		originalNumberOfMultipleMatches = 0;
+		state = 2;
+	};
+	5DA557C50E9B4BD700D16247 /* EAGLView.mm:167 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 5D165B18125AA23B00F1E8E3 /* EAGLView.mm */;
+		functionName = "-setAnimationInterval:";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 167;
+		location = RTAdTest;
+		modificationTime = 313909845.3258451;
+		originalNumberOfMultipleMatches = 0;
+		state = 2;
+	};
+	5DA557C70E9B4BDB00D16247 /* EAGLView.mm:160 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 5D165B18125AA23B00F1E8E3 /* EAGLView.mm */;
+		functionName = "-setAnimationTimer:";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 160;
+		location = RTAdTest;
+		modificationTime = 313909845.326064;
+		originalNumberOfMultipleMatches = 0;
+		state = 2;
+	};
+	5DA557C90E9B4BE100D16247 /* EAGLView.mm:155 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 5D165B18125AA23B00F1E8E3 /* EAGLView.mm */;
+		functionName = "-stopAnimation";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 155;
+		location = RTAdTest;
+		modificationTime = 313909845.32629;
+		originalNumberOfMultipleMatches = 0;
+		state = 2;
+	};
+	5DA557CB0E9B4BE200D16247 /* EAGLView.mm:150 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 5D165B18125AA23B00F1E8E3 /* EAGLView.mm */;
+		functionName = "-startAnimation";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 150;
+		location = RTAdTest;
+		modificationTime = 313909845.326519;
+		originalNumberOfMultipleMatches = 0;
+		state = 2;
+	};
+	5DA557D80E9B4C9600D16247 /* GameTimer.cpp:17 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 5D0CC9360F79E0D1004D9AE9 /* GameTimer.cpp */;
+		functionName = "GameTimer::Update()";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 17;
+		location = RTAdTest;
+		modificationTime = 313909845.326754;
+		originalNumberOfMultipleMatches = 0;
+		state = 2;
+	};
+	5DA558050E9B523700D16247 /* GameTimer.cpp:46 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 5D0CC9360F79E0D1004D9AE9 /* GameTimer.cpp */;
+		functionName = "GameTimer::Update()";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 46;
+		location = RTAdTest;
+		modificationTime = 313909845.326937;
+		originalNumberOfMultipleMatches = 0;
+		state = 2;
+	};
+	5DA558070E9B523D00D16247 /* GameTimer.cpp:44 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 5D0CC9360F79E0D1004D9AE9 /* GameTimer.cpp */;
+		functionName = "GameTimer::Update()";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 44;
+		location = RTAdTest;
+		modificationTime = 313909845.327138;
+		originalNumberOfMultipleMatches = 0;
+		state = 2;
+	};
+	5DA558480E9B59AA00D16247 /* MakUtils.mm:91 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 5DD955B60E961DBA004E403D /* MakUtils.mm */;
+		functionName = "GetSystemTimeTick()";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 91;
+		location = RTAdTest;
+		modificationTime = 313909845.327356;
+		originalNumberOfMultipleMatches = 0;
+		state = 2;
+	};
+	5DA5584A0E9B59AF00D16247 /* GameTimer.cpp:45 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 5D0CC9360F79E0D1004D9AE9 /* GameTimer.cpp */;
+		functionName = "GameTimer::Update()";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 45;
+		location = RTAdTest;
+		modificationTime = 313909845.327577;
+		originalNumberOfMultipleMatches = 0;
+		state = 2;
+	};
+	5DA558530E9B5ACC00D16247 /* MakUtils.mm:91 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 5DD955B60E961DBA004E403D /* MakUtils.mm */;
+		functionName = "GetSystemTimeTick()";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 91;
+		location = RTAdTest;
+		modificationTime = 313909845.327841;
+		originalNumberOfMultipleMatches = 0;
+		state = 2;
+	};
+	5DAD011D0EA30C73007ADD60 /* EAGLView.mm:109 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 5D165B18125AA23B00F1E8E3 /* EAGLView.mm */;
+		functionName = "-createFramebuffer";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 109;
+		location = RTAdTest;
+		modificationTime = 313909845.329192;
+		originalNumberOfMultipleMatches = 0;
+		state = 2;
+	};
+	5DADFCEB0EA2E5F2007ADD60 /* EAGLView.mm:45 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 5D165B18125AA23B00F1E8E3 /* EAGLView.mm */;
+		functionName = "-initWithCoder:";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 45;
+		location = RTAdTest;
+		modificationTime = 313909845.328379;
+		originalNumberOfMultipleMatches = 0;
+		state = 2;
+	};
+	5DADFE000EA2EAAD007ADD60 /* BaseApp.cpp:80 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 5DFE10600F60EBB80065956E /* BaseApp.cpp */;
+		functionName = "BaseApp::Draw()";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 80;
+		modificationTime = 313909845.328612;
+		originalNumberOfMultipleMatches = 0;
+		state = 2;
+	};
+	5DADFE020EA2EAB0007ADD60 /* BaseApp.cpp:81 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 5DFE10600F60EBB80065956E /* BaseApp.cpp */;
+		functionName = "BaseApp::Draw()";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 81;
+		modificationTime = 313909845.328809;
+		originalNumberOfMultipleMatches = 0;
+		state = 2;
+	};
+	5DADFE0F0EA2EAC2007ADD60 /* CGraphicGL.cpp:446 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 5DC26B260E9F308E00BB2E4B /* CGraphicGL.cpp */;
+		functionName = "CGraphicGL::Blit(int i_x, int i_y, int i_frame_x, int i_frame_y, const uint8 uc_centering)";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 446;
+		location = RTAdTest;
+		modificationTime = 313909845.3290011;
+		originalNumberOfMultipleMatches = 0;
+		state = 2;
+	};
+	5DB488D910B1313300B84589 /* RenderBatcher.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {785, 2254}}";
+			sepNavSelRange = "{4842, 0}";
+			sepNavVisRange = "{1581, 995}";
+		};
+	};
+	5DC229B40E9E166A0051CACE /* EAGLView.mm:189 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 5D165B18125AA23B00F1E8E3 /* EAGLView.mm */;
+		functionName = "-touchesBegan:withEvent:";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 189;
+		location = RTAdTest;
+		modificationTime = 313909845.328024;
+		originalNumberOfMultipleMatches = 0;
+		state = 2;
+	};
+	5DC26AE00E9ED41900BB2E4B /* MakUtils.mm:22 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 5DD955B60E961DBA004E403D /* MakUtils.mm */;
+		functionName = "LogMsg(const char *lpFormat, ...)";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 22;
+		location = RTAdTest;
+		modificationTime = 313909845.328198;
+		originalNumberOfMultipleMatches = 0;
+		state = 2;
+	};
+	5DC26B260E9F308E00BB2E4B /* CGraphicGL.cpp */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = CGraphicGL.cpp;
+		path = /Volumes/projects/iphone/shared/legacy/CGraphicGL.cpp;
+		sourceTree = "<absolute>";
+	};
+	5DC26B4B0E9F30A300BB2E4B /* RPXMesh.cpp */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = RPXMesh.cpp;
+		path = /Volumes/projects/Client/MWNW/mwnwsvn/iphone/shared/Ripp/RPXMesh.cpp;
+		sourceTree = "<absolute>";
+	};
+	5DC6927B0E9483CC00E5AC44 /* RenderUtils.cpp:15 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 5DFE10570F60EB790065956E /* RenderUtils.cpp */;
+		functionName = "RenderGLTriangle()";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 15;
+		location = RTAdTest;
+		modificationTime = 313909845.323272;
+		originalNumberOfMultipleMatches = 0;
+		state = 2;
+	};
+	5DC692B00E94852F00E5AC44 /* App.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {918, 583}}";
+			sepNavSelRange = "{679, 0}";
+			sepNavVisRange = "{0, 712}";
+			sepNavWindowFrame = "{{628, 135}, {965, 655}}";
+		};
+	};
+	5DC692B10E94852F00E5AC44 /* App.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {981, 4108}}";
+			sepNavSelRange = "{1028, 0}";
+			sepNavVisRange = "{1208, 879}";
+			sepNavWindowFrame = "{{926, 248}, {965, 655}}";
+		};
+	};
+	5DC692B80E94863A00E5AC44 /* main.mm:16 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 5D165B17125AA23B00F1E8E3 /* main.mm */;
+		functionName = "main(int argc, char *argv[])";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 16;
+		location = RTAdTest;
+		modificationTime = 313909845.324838;
+		originalNumberOfMultipleMatches = 0;
+		state = 2;
+	};
+	5DC6D7370EA4AA6C001482E0 /* GameLogic.cpp */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = GameLogic.cpp;
+		path = /Volumes/projects/Client/MWNW/mwnwsvn/iphone/RTAdTest/source/GameLogic.cpp;
+		sourceTree = "<absolute>";
+	};
+	5DC6D7840EA4B446001482E0 /* RPXMesh.cpp:505 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 5DC26B4B0E9F30A300BB2E4B /* RPXMesh.cpp */;
+		functionName = "RPXMesh::LoadRPX( string fName )";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 505;
+		location = RTAdTest;
+		modificationTime = 313909845.329434;
+		originalNumberOfMultipleMatches = 0;
+		state = 2;
+	};
+	5DCBA5B90F11EF7400C6511E /* EAGLView.mm:189 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 5D165B18125AA23B00F1E8E3 /* EAGLView.mm */;
+		functionName = "-touchesBegan:withEvent:";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 189;
+		location = RTAdTest;
+		modificationTime = 313909845.33062;
+		originalNumberOfMultipleMatches = 0;
+		state = 2;
+	};
+	5DCBA5BB0F11EF7700C6511E /* EAGLView.mm:202 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 5D165B18125AA23B00F1E8E3 /* EAGLView.mm */;
+		functionName = "-touchesEnded:withEvent:";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 202;
+		location = RTAdTest;
+		modificationTime = 313909845.330802;
+		originalNumberOfMultipleMatches = 0;
+		state = 2;
+	};
+	5DCBA5BD0F11EF7900C6511E /* EAGLView.mm:215 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 5D165B18125AA23B00F1E8E3 /* EAGLView.mm */;
+		functionName = "-touchesMoved:withEvent:";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 215;
+		location = RTAdTest;
+		modificationTime = 313909845.33098;
+		originalNumberOfMultipleMatches = 0;
+		state = 2;
+	};
+	5DD9544D0E960962004E403D /* PlatformSetup.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1339, 1027}}";
+			sepNavSelRange = "{1810, 0}";
+			sepNavVisRange = "{0, 1177}";
+			sepNavWindowFrame = "{{80, 23}, {1386, 782}}";
+		};
+	};
+	5DD9552A0E961069004E403D /* EAGLView.mm:68 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 5D165B18125AA23B00F1E8E3 /* EAGLView.mm */;
+		functionName = "-initWithCoder:";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 68;
+		location = RTAdTest;
+		modificationTime = 313909845.325359;
+		originalNumberOfMultipleMatches = 0;
+		state = 2;
+	};
+	5DD955B60E961DBA004E403D /* MakUtils.mm */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.cpp.objcpp;
+		name = MakUtils.mm;
+		path = /Volumes/projects/iphone/shared/mac/MakUtils.mm;
+		sourceTree = "<absolute>";
+	};
+	5DE066650EA83C3000137A27 /* GameLogic.cpp:183 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 5DC6D7370EA4AA6C001482E0 /* GameLogic.cpp */;
+		functionName = "GameLogic::LoadLevel(int levelNum)";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 183;
+		location = RTAdTest;
+		modificationTime = 313909845.3296081;
+		originalNumberOfMultipleMatches = 0;
+		state = 2;
+	};
+	5DE066730EA83CD200137A27 /* ResourceUtils.cpp:20 */ = {
+		isa = PBXFileBreakpoint;
+		actions = (
+		);
+		breakpointStyle = 0;
+		continueAfterActions = 0;
+		countType = 0;
+		delayBeforeContinue = 0;
+		fileReference = 5D0CC9400F79E0E1004D9AE9 /* ResourceUtils.cpp */;
+		functionName = "LoadFileIntoMemory(string fileName, unsigned int *length)";
+		hitCount = 0;
+		ignoreCount = 0;
+		lineNumber = 20;
+		location = RTAdTest;
+		modificationTime = 313909845.329809;
+		originalNumberOfMultipleMatches = 0;
+		state = 2;
+	};
+	5DE84C060FB9469A00DDAE64 /* angle.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {881, 2212}}";
+			sepNavSelRange = "{449, 0}";
+			sepNavVisRange = "{0, 1125}";
+		};
+	};
+	5DF33DE40EAC7E330024A667 /* CTriggerManager.cpp */ = {
+		isa = PBXFileReference;
+		fileEncoding = 4;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = CTriggerManager.cpp;
+		path = /Volumes/projects/Client/MWNW/mwnwsvn/iphone/RTAdTest/source/CTriggerManager.cpp;
+		sourceTree = "<absolute>";
+	};
+	5DFE10550F60EB790065956E /* MiscUtils.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {881, 3164}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 574}";
+		};
+	};
+	5DFE10560F60EB790065956E /* MiscUtils.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1199, 266}}";
+			sepNavSelRange = "{522, 18}";
+			sepNavVisRange = "{113, 427}";
+		};
+	};
+	5DFE10570F60EB790065956E /* RenderUtils.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1174, 7592}}";
+			sepNavSelRange = "{5070, 0}";
+			sepNavVisRange = "{4688, 708}";
+			sepNavWindowFrame = "{{38, 302}, {956, 550}}";
+		};
+	};
+	5DFE10580F60EB790065956E /* RenderUtils.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {961, 658}}";
+			sepNavSelRange = "{1314, 0}";
+			sepNavVisRange = "{741, 573}";
+			sepNavWindowFrame = "{{61, 281}, {956, 550}}";
+		};
+	};
+	5DFE10600F60EBB80065956E /* BaseApp.cpp */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {778, 3991}}";
+			sepNavSelRange = "{124, 0}";
+			sepNavVisRange = "{0, 226}";
+		};
+	};
+	5DFE10610F60EBB80065956E /* BaseApp.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1192, 2951}}";
+			sepNavSelRange = "{842, 0}";
+			sepNavVisRange = "{434, 504}";
+			sepNavWindowFrame = "{{176, 20}, {1576, 886}}";
+		};
+	};
+	8D1107310486CEB800E47090 /* Info.plist */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {942, 588}}";
+			sepNavSelRange = "{1154, 64}";
+			sepNavVisRect = "{{0, 74}, {942, 500}}";
+			sepNavWindowFrame = "{{416, 20}, {965, 655}}";
+		};
+	};
+}

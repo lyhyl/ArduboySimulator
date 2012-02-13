@@ -7,6 +7,7 @@
 //#include <curses.h>
 #include <assert.h>
 #include <screen/screen.h>
+#include <bps/accelerometer.h>
 #include <bps/navigator.h>
 #include <bps/screen.h>
 #include <bps/bps.h>
@@ -39,6 +40,8 @@ static screen_context_t screen_cxt;
  int GetPrimaryGLY() {return g_primaryGLY;}
 
  bool g_leftMouseButtonDown = false;
+
+ bool g_bUsingAccelerometer = false;
 
 void handleScreenEvent(bps_event_t *event)
 {
@@ -167,8 +170,6 @@ void ProcessEvents()
 	            screen_get_event_property_iv(screenEvent, SCREEN_PROPERTY_TYPE, &screenEventType);
 	            screen_get_event_property_iv(screenEvent, SCREEN_PROPERTY_SOURCE_POSITION, screenEventPosition);
 
-	            // screen_get_event_property_iv(screenEvent, SCREEN_PROPERTY_TOUCH_ID,  &screenTouchID);
-
 	         //  LogMsg("Input type: %d, (touchid %d)", screenEventType, screenTouchID);
 
 	           switch (screenEventType)
@@ -191,7 +192,6 @@ void ProcessEvents()
 	            }
 	        	break;
 
-	            	//    m_handler->onLeftPress(static_cast<float>(screenEventPosition[0]), static_cast<float>(screenEventPosition[1]));
 	           case SCREEN_EVENT_MTOUCH_RELEASE:
 	            {
 	            	  screen_get_event_property_iv(screenEvent, SCREEN_PROPERTY_TOUCH_ID,  &screenTouchID);
@@ -428,6 +428,17 @@ int main(int argc, char *argv[])
 
 	    if (!GetBaseApp()->IsInBackground())
 	    {
+			if (g_bUsingAccelerometer)
+			{
+				//poll, and send messages
+				double x,y,z;
+				if (accelerometer_read_forces(&x, &y, &z) == BPS_SUCCESS)
+				{
+					CL_Vec3f v = CL_Vec3f(x,y,z);
+					GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_ACCELEROMETER, Variant(v));
+				}
+			}
+
 			GetBaseApp()->Update();
 			GetBaseApp()->Draw();
 			bbutil_swap();
@@ -464,8 +475,21 @@ int main(int argc, char *argv[])
 
     			case OSMessage::MESSAGE_SET_ACCELEROMETER_UPDATE_HZ:
 
-    				//well, it's hardcoded at 30 by the pdk I guess, but we can still enable/disable it
-    				LogMsg("TODO: Accel setup");
+					if (!accelerometer_is_supported())
+					{
+						LogMsg("Ignoring acceleremeter command, device doesn't have one");
+					} else
+					{
+						if (m.m_x != 0)
+						{
+							g_bUsingAccelerometer = true;
+							//turn it on at 40hz.  The API wants enums, not custom settings (?), so I guess I'll just do this.
+							accelerometer_set_update_frequency(FREQ_40_HZ);
+						} else
+						{
+							g_bUsingAccelerometer = false;
+						}
+					}
     				break;
     			}
     		}

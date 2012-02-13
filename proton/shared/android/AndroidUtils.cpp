@@ -902,7 +902,7 @@ void AppOnKey( JNIEnv*  env, jobject jobj, jint type, jint keycode, jint c)
 
 
 	case 4:
-		//actually this will never get hit, the java side will send VIRTUAL_DPAD_BUTTON_B directly, because it
+		//actually this will never get hit, the java side will send VIRTUAL_DPAD_BUTTON_RIGHT directly, because it
 		//shares stuff with the back button and has to detect which one it is on that side
 		keycode = VIRTUAL_DPAD_BUTTON_RIGHT;
 		break;

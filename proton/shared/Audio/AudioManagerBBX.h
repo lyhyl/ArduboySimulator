@@ -2,8 +2,7 @@
 //  AudioManagerBBX - Creation date: 11/7/2010
 //  -------------------------------------------------------------
 //  Robinson Technologies Copyright (C) 2011 - All Rights Reserved
-//
-//  Roughly based on code from CocosDenshion from CocosX
+
 
 #ifndef AudioManagerBBX_h__
 #define AudioManagerBBX_h__
@@ -25,13 +24,11 @@ public:
 
 	SoundObject()
 	{
-		//m_pSound		= NULL;
 		m_bIsLooping	= false;
 		m_bIsMusic		= false;
 		buffer = NULL;
 		source = NULL;
 		m_volume = 1.0f;
-
 	}
 
 	~SoundObject()
@@ -48,18 +45,8 @@ public:
 			alDeleteSources(1, &source);
 			source = NULL;
 		}
-
-	/*
-		if (m_pSound)
-		{
-			m_pSound = 0;
-		}
-		*/
 	}
 
-
-	//OutputStreamPtr m_pSound;
-	//FMOD::Sound *m_pSound;
 	string m_fileName;
 	bool   m_bIsLooping;
 	bool   m_bIsMusic;
@@ -67,7 +54,6 @@ public:
 	ALuint buffer;
 	ALuint source;
 	float m_volume;
-	//FMOD::Channel *m_pLastChannelToUse;
 };
 
 class AudioManagerBBX: public AudioManager
@@ -96,7 +82,7 @@ public:
 	bool DeleteSoundObjectByFileName(string fName);
 	virtual void SetFrequency(AudioHandle soundID, int freq);
 	virtual void SetPan(AudioHandle soundID, float pan); //0 is normal stereo, -1 is all left, +1 is all right
-	virtual void SetVol(AudioHandle soundID, float vol);
+	virtual void SetVol(AudioHandle soundID, float vol); //send -1 as the soundID to adjust the global volume
 	virtual void SetPriority(AudioHandle soundID, int priority);
 	virtual uint32 GetPos( AudioHandle soundID );
 	virtual void SetPos( AudioHandle soundID, uint32 posMS );
@@ -117,7 +103,6 @@ private:
 		PAUSED,
 	} playStatus;
 
-
 	void *	   m_pDevice;
 
 	list<SoundObject*>	m_soundList;
@@ -130,10 +115,6 @@ private:
 	strm_dict_t *s_repeatDictionary;
 	strm_dict_t *s_volumeDictionary;
 
-protected:
-
-
-private:
 };
 
 

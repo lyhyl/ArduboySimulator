@@ -56,11 +56,11 @@ public:
 	virtual void SetFrequency(AudioHandle soundID, int freq) {};
 	virtual void SetPan(AudioHandle soundID, float pan) {}; //0 is normal stereo, -1 is all left, +1 is all right
 	virtual bool IsPlaying(AudioHandle soundID) {return false;}
-	virtual void SetVol(AudioHandle soundID, float vol) {};
+	virtual void SetVol(AudioHandle soundID, float vol) {}; //using audio handle -1 adjusts global vol on some systems
 	virtual void SetPriority(AudioHandle soundID, int priority) {};
 	virtual uint32 GetPos( AudioHandle soundID ){return 0;};
 	virtual void SetPos( AudioHandle soundID, uint32 posMS ){};
-	virtual void SetDLS(string fName); //example, "dink/midi/TimGM6mbTiny.dls" - if not set, FMOD will try to use whatever the system has.
+	virtual void SetDLS(string fName); //(fmod only) example, "dink/midi/TimGM6mbTiny.dls" - if not set, FMOD will try to use whatever the system has.
 	virtual void SetMusicVol(float vol){};
 	bool GetSoundEnabled() {return m_bSoundEnabled;}
 	virtual void SetSoundEnabled(bool bNew) {m_bSoundEnabled = bNew;}

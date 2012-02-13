@@ -100,9 +100,6 @@ void AdManager::CacheTapjoyFeaturedApp()
 
 void AdManager::OnMessage( Message &m )
 {
-
-
-	
 	if (m_returnState == RETURN_STATE_WAITING)
 	{
 		switch (m.GetType())
@@ -126,7 +123,9 @@ void AdManager::OnMessage( Message &m )
 	
 	case MESSAGE_TYPE_TAPJOY_EARNED_TAP_POINTS:
 		{
+#ifdef _DEBUG
 			LogMsg("We just got %d tappoints!", (int)m.GetParm1());
+#endif
 			VariantList vList((int32)m.GetParm1());
 
 			m_sig_tappoints_awarded(&vList); //called when awarded tap points
@@ -245,7 +244,7 @@ void AdManager::GetTapPointsFromServer()
 void AdManager::Init()
 {
 	
-//	GetTapPointsFromServer();
+	//GetTapPointsFromServer();
 	//CacheTapjoyFeaturedApp();
 
 }
@@ -277,8 +276,6 @@ string AdManager::GetLastErrorString()
 void AdManager::ClearError()
 {
 	m_lastError.clear();
-
-
 }
 
 AdManager::eReturnState AdManager::GetReturnState()
@@ -317,7 +314,9 @@ void AdManager::OnRender()
 #ifdef WIN32
 	if (m_bShowingAd)
 	{
-		
+		//draw a fake rectangle the same size as the real ad will be, this is just for testing, so you get an idea
+		//of how big the ad when developing on Windows, and when it will pop up
+
 		CL_Vec2f vRatio = CL_Vec2f(1,1);
 		if (GetFakePrimaryScreenSizeX() != 0)
 		{
@@ -332,8 +331,7 @@ void AdManager::OnRender()
 		//center
 		r.AdjustPosition( (GetScreenSizeXf()-r.GetWidth())/2, 0 );
 		
-		DrawRect(r, MAKE_RGBA(255,255,255,255));
-		
+		DrawFilledRect(r, MAKE_RGBA(40,255,40,200));
 	}
 #endif
 
