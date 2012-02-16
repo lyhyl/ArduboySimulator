@@ -1,4 +1,9 @@
 call app_info_setup.bat
+
+::Update/write our local.properties file with our ANDROID NDK dir
+call android update project -p ./
+@echo on
+
 :Get the emulator ready if it isn't, because it takes a freakin' long time to load
 :start emulator %EMULATOR_AVD%
 

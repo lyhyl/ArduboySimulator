@@ -1005,6 +1005,11 @@ float AppGetLastOSMessageX(JNIEnv* env)
 	return g_lastOSMessage.m_x;
 }
 
+float AppGetLastOSMessageY(JNIEnv* env)
+{
+	return g_lastOSMessage.m_y;
+}
+
 float AppGetLastOSMessageParm1(JNIEnv* env)
 {
 	return g_lastOSMessage.m_parm1;

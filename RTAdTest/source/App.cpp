@@ -305,8 +305,8 @@ void App::OnMessage( Message &m )
 	m_IAPManager.OnMessage(m);
 	m_adManager.OnMessage(m);
 	BaseApp::OnMessage(m);
-
 }
+
 const char * GetAppName() {return "AdTest";}
 
 //the stuff below is for android/webos builds.  Your app needs to be named like this.

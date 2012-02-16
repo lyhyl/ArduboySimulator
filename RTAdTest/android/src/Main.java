@@ -52,19 +52,22 @@ public class Main extends SharedActivity
 		System.loadLibrary(dllname);
 	
 	//#if defined(RT_TAPJOY_SUPPORT)
-		TapjoyLog.enableLogging(false);
+		  TapjoyLog.enableLogging(false);
 	
-		// Connect with the Tapjoy server.  Call this when the application first starts.
-		TapjoyConnect.requestTapjoyConnect(getApplicationContext(), "tapjoy gives this to you");
+		  //Connect with the Tapjoy server.  Call this when the application first starts.
+		  TapjoyConnect.requestTapjoyConnect(getApplicationContext(), "replace with tapjoy app id", "replace with tapjoy app secret key");
 		
-		// For PAID APPS ONLY.  Replace your Paid App Pay-Per-Action ID as the parameter.
-		//TapjoyConnect.getTapjoyConnectInstance().enablePaidAppWithActionID("<replace this part>");
+		  // For PAID APPS ONLY.  Replace your Paid App Pay-Per-Action ID as the parameter.
+		  //TapjoyConnect.getTapjoyConnectInstance().enablePaidAppWithActionID("<replace this part>");
    
    		//if we have tapjoy  managed currency, we need this
    		TapjoyConnect.getTapjoyConnectInstance().setEarnedPointsNotifier(this);
 	
 	    // Init video.
 	    TapjoyConnect.getTapjoyConnectInstance().initVideoAd(this);
+
+	    String tapBannerSize = TapjoyDisplayAdSize.TJC_AD_BANNERSIZE_640X100;
+	    
 	//#endif
 		
 		super.onCreate(savedInstanceState);

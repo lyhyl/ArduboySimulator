@@ -530,153 +530,136 @@ struct Verts
 void Surface::BlitEx(rtRectf dst, rtRectf src, unsigned int rgba, float rotation, CL_Vec2f vRotatePt)
 {
 
-	/*
-	if (rotation != 0)
-	{
-		dst.AdjustPosition(-vRotatePt.x, -vRotatePt.y);
-		PushRotationMatrix(rotation, vRotatePt);
-	}
-
-	g_globalBatcher.BlitEx(this, dst, src, rgba);
-	g_globalBatcher.Flush();
-	if (rotation != 0)
-	{
-		PopRotationMatrix();
-	}
-*/
-
 	if (dst.bottom < 0) return;
 	if (dst.top > GetOrthoRenderSizeYf()) return;
-	
+
 	if ( GET_ALPHA(rgba) == 0)
 	{
 		return;	
 	}
 
-	
 	SetupOrtho(); //upside down, makes this easier to do
 	g_globalBatcher.Flush();
 	Bind();
 	if (!IsLoaded()) return;
 
-	
 	//LogMsg("Rendering tex %d at %s at %d", m_glTextureID, PrintRect(dst).c_str(), GetTick(TIMER_GAME));
-	
+
 	if (rotation != 0)
 	{
 		dst.AdjustPosition(-vRotatePt.x, -vRotatePt.y);
 		PushRotationMatrix(rotation, vRotatePt);
 	}
 
-//	0 1
-//	3 2
+	//	0 1
+	//	3 2
 
 	static GLfloat	vertices[3*4];
 
-// 	GLfloat	vertices[] = {
-// 		dst.left,		dst.top,		0.0,
-// 		dst.right,		dst.top,		0.0,
-// 		dst.right,		dst.bottom,		0.0,
-// 		dst.left,		dst.bottom,		0.0 };
-// 		
+	// 	GLfloat	vertices[] = {
+	// 		dst.left,		dst.top,		0.0,
+	// 		dst.right,		dst.top,		0.0,
+	// 		dst.right,		dst.bottom,		0.0,
+	// 		dst.left,		dst.bottom,		0.0 };
+	// 		
 
-vertices[0*3+0] = dst.left; vertices[0*3+1] = dst.top;
-vertices[1*3+0] = dst.right; vertices[1*3+1] = dst.top;
-vertices[2*3+0] = dst.right; vertices[2*3+1] = dst.bottom;
-vertices[3*3+0] = dst.left; vertices[3*3+1] = dst.bottom;
+	vertices[0*3+0] = dst.left; vertices[0*3+1] = dst.top;
+	vertices[1*3+0] = dst.right; vertices[1*3+1] = dst.top;
+	vertices[2*3+0] = dst.right; vertices[2*3+1] = dst.bottom;
+	vertices[3*3+0] = dst.left; vertices[3*3+1] = dst.bottom;
 
-//set the Z
-vertices[0*3+2] = 0;
-vertices[1*3+2] = 0;
-vertices[2*3+2] = 0;
-vertices[3*3+2] = 0;
+	//set the Z
+	vertices[0*3+2] = 0;
+	vertices[1*3+2] = 0;
+	vertices[2*3+2] = 0;
+	vertices[3*3+2] = 0;
 
 
-		static GLfloat vTexCoords[8];
-		//another step to convert the coordinates into ratios
-		static float texW;
-		texW = float(m_originalWidth)/float(m_texWidth);
-		static float texH;
-		texH = float(m_originalHeight)/float(m_texHeight);
-		static TexCoords *pTex;
+	static GLfloat vTexCoords[8];
+	//another step to convert the coordinates into ratios
+	static float texW;
+	texW = float(m_originalWidth)/float(m_texWidth);
+	static float texH;
+	texH = float(m_originalHeight)/float(m_texHeight);
+	static TexCoords *pTex;
 
-		pTex = (TexCoords*)vTexCoords;
-		
-		//vert 0
-		pTex->x = src.left/float(m_originalWidth) * texW;
-		pTex->y =  (1-texH) + texH*( (m_originalHeight-src.top) /float(m_originalHeight));
-		pTex++;
+	pTex = (TexCoords*)vTexCoords;
 
-		//vert 1
-		pTex->x = src.right/float(m_originalWidth) * texW;
-		pTex->y = (1-texH) + texH*( (m_originalHeight-src.top) /float(m_originalHeight));
-		pTex++;
-		
-		//vert 2
-		pTex->x = src.right/float(m_originalWidth) * texW;
-		pTex->y = 1-(texH*(src.bottom /(float(m_originalHeight))));
-		pTex++;
+	//vert 0
+	pTex->x = src.left/float(m_originalWidth) * texW;
+	pTex->y =  (1-texH) + texH*( (m_originalHeight-src.top) /float(m_originalHeight));
+	pTex++;
 
-		//vert 3
-		pTex->x = src.left/float(m_originalWidth) * texW;
-		pTex->y = 1-(texH*(src.bottom /(float(m_originalHeight))));
-		pTex++;
+	//vert 1
+	pTex->x = src.right/float(m_originalWidth) * texW;
+	pTex->y = (1-texH) + texH*( (m_originalHeight-src.top) /float(m_originalHeight));
+	pTex++;
 
-		glVertexPointer(3, GL_FLOAT, 0, vertices);
-		glTexCoordPointer(2, GL_FLOAT,  0, vTexCoords);
-		CHECK_GL_ERROR();
+	//vert 2
+	pTex->x = src.right/float(m_originalWidth) * texW;
+	pTex->y = 1-(texH*(src.bottom /(float(m_originalHeight))));
+	pTex++;
 
-		if (UsesAlpha() || rgba != MAKE_RGBA(255,255,255,255) || m_blendingMode == BLENDING_PREMULTIPLIED_ALPHA)
+	//vert 3
+	pTex->x = src.left/float(m_originalWidth) * texW;
+	pTex->y = 1-(texH*(src.bottom /(float(m_originalHeight))));
+	pTex++;
+
+	glVertexPointer(3, GL_FLOAT, 0, vertices);
+	glTexCoordPointer(2, GL_FLOAT,  0, vTexCoords);
+	CHECK_GL_ERROR();
+
+	if (UsesAlpha() || rgba != MAKE_RGBA(255,255,255,255) || m_blendingMode == BLENDING_PREMULTIPLIED_ALPHA)
+	{
+		glEnable( GL_BLEND );
+
+		switch (m_blendingMode)
 		{
-			glEnable( GL_BLEND );
-			
-			switch (m_blendingMode)
-			{
-				case BLENDING_NORMAL:
-				glColor4x( (rgba >>8 & 0xFF)*256,  (rgba>>16& 0xFF)*256, (rgba>>24& 0xFF)*256, (rgba&0xFF)*256);
-				break;
+		case BLENDING_NORMAL:
+			glColor4x( (rgba >>8 & 0xFF)*256,  (rgba>>16& 0xFF)*256, (rgba>>24& 0xFF)*256, (rgba&0xFF)*256);
+			break;
 
 
-		
-			case BLENDING_ADDITIVE:
-				glBlendFunc( GL_SRC_ALPHA, GL_ONE);
-				glColor4x( (rgba >>8 & 0xFF)*256,  (rgba>>16& 0xFF)*256, (rgba>>24& 0xFF)*256, (rgba&0xFF)*256);
 
-				break;
-			
-			case BLENDING_PREMULTIPLIED_ALPHA:
-				glBlendFunc( GL_ONE, GL_ONE_MINUS_SRC_ALPHA );
-				int alpha = (rgba&0xFF);
-				glColor4x( (rgba >>8 & 0xFF)*alpha ,  (rgba>>16& 0xFF)*alpha, (rgba>>24& 0xFF)*alpha, alpha*256);
-				break;
+		case BLENDING_ADDITIVE:
+			glBlendFunc( GL_SRC_ALPHA, GL_ONE);
+			glColor4x( (rgba >>8 & 0xFF)*256,  (rgba>>16& 0xFF)*256, (rgba>>24& 0xFF)*256, (rgba&0xFF)*256);
 
-			}
+			break;
 
-		} else
-		{
-			//glDisable(GL_BLEND);
-			//LogMsg("No alpha");
+		case BLENDING_PREMULTIPLIED_ALPHA:
+			glBlendFunc( GL_ONE, GL_ONE_MINUS_SRC_ALPHA );
+			int alpha = (rgba&0xFF);
+			glColor4x( (rgba >>8 & 0xFF)*alpha ,  (rgba>>16& 0xFF)*alpha, (rgba>>24& 0xFF)*alpha, alpha*256);
+			break;
+
 		}
 
-		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-		CHECK_GL_ERROR();
+	} else
+	{
+		//glDisable(GL_BLEND);
+		//LogMsg("No alpha");
+	}
 
-		if (UsesAlpha() || rgba != MAKE_RGBA(255,255,255,255)|| m_blendingMode == BLENDING_PREMULTIPLIED_ALPHA)
-		{
-			glColor4x(1 << 16, 1 << 16, 1 << 16, 1 << 16);
-			glDisable( GL_BLEND );
-	
-			if (m_blendingMode != BLENDING_NORMAL)
-			{
-				//put it back to how it was
-				glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-			}
-		}
+	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+	CHECK_GL_ERROR();
 
-		if (rotation != 0)
+	if (UsesAlpha() || rgba != MAKE_RGBA(255,255,255,255)|| m_blendingMode == BLENDING_PREMULTIPLIED_ALPHA)
+	{
+		glColor4x(1 << 16, 1 << 16, 1 << 16, 1 << 16);
+		glDisable( GL_BLEND );
+
+		if (m_blendingMode != BLENDING_NORMAL)
 		{
-			PopRotationMatrix();
+			//put it back to how it was
+			glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 		}
+	}
+
+	if (rotation != 0)
+	{
+		PopRotationMatrix();
+	}
 }
 
 void Surface::BlitScaled( float x, float y, CL_Vec2f vScale, eAlignment alignment, unsigned int rgba, float rotation)
@@ -791,9 +774,6 @@ void Surface::Blit( float x, float y, unsigned int rgba, float rotationDegrees, 
 		{
 			PopRotationMatrix();
 		}
-
-	
-
 }
 
 void Surface::SetTextureType( eTextureType type )

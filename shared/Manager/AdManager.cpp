@@ -15,6 +15,9 @@ AdManager::AdManager()
 	m_returnState = RETURN_STATE_NONE;
 	m_bShowTapjoyAdASAP = false;
 	m_bShowingAd = false;
+	m_vBannerSize = CL_Vec2f(640, 100);
+	m_desiredBannerAlignment = ALIGNMENT_DOWN_CENTER;
+	
 }
 
 AdManager::~AdManager()
@@ -243,10 +246,8 @@ void AdManager::GetTapPointsFromServer()
 
 void AdManager::Init()
 {
-	
 	//GetTapPointsFromServer();
 	//CacheTapjoyFeaturedApp();
-
 }
 
 std::string AdManager::GetPointsString()
@@ -323,7 +324,7 @@ void AdManager::OnRender()
 			vRatio.x = (GetScreenSizeXf()/float(GetOriginalScreenSizeX()));
 			vRatio.y =(GetScreenSizeYf()/float(GetOriginalScreenSizeY()));
 		}
-		rtRect r(0,0,480*vRatio.x,80*vRatio.y);
+		rtRect r(0,0,m_vBannerSize.x*vRatio.x,m_vBannerSize.y*vRatio.y);
 		
 		//move to bottom
 		r.AdjustPosition(0, GetScreenSizeYf()-r.GetHeight());
@@ -335,4 +336,19 @@ void AdManager::OnRender()
 	}
 #endif
 
+}
+
+void AdManager::SetupBanner(CL_Vec2f vBannerSize, eAlignment alignment /*= ALIGNMENT_DOWN_CENTER*/ )
+{
+	m_desiredBannerAlignment = alignment;
+	m_vBannerSize = vBannerSize;
+	
+	OSMessage o;
+	o.m_type = OSMessage::MESSAGE_REQUEST_AD_SIZE;
+	o.m_x = m_vBannerSize.x;
+	o.m_y = m_vBannerSize.y;
+	o.m_parm1 = m_desiredBannerAlignment; //not actually respected yet
+
+	GetBaseApp()->AddOSMessage(o);
+	
 }

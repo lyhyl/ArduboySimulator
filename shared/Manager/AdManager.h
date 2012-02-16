@@ -21,6 +21,14 @@ But here is how it would be used:
 3.  Add m_adManager.Init(); so it gets called once at startup somewhere
 4.  Add m_adManager.Update(); to your App::Update() function
 5.  Add m_adManager.OnRender(); the the BOTTOM of your App::Draw() function, this is to show fake ads when testing from Windows
+6.  Override BaseApp::OnMessage in your App class and add m_adManager.OnMessage(m);
+	Be sure to also call the base version, example:
+	void App::OnMessage( Message &m )
+	{
+		m_adManager.OnMessage(m);
+		BaseApp::OnMessage(m);
+	}
+
 */
 
 #ifndef AdManager_h__
@@ -66,6 +74,8 @@ public:
 	void SetUsingTapPoints(bool bNew);
 	void ModifyTapPoints(int mod);
 	void GetTapPointsFromServer();
+	void SetupBanner(CL_Vec2f vBannerSize, eAlignment alignment = ALIGNMENT_DOWN_CENTER); //alignment is ignored from now, always bottom centered
+	
 	boost::signal<void (VariantList*)> m_sig_tappoints_awarded; //called when awarded tap points
 
 protected:
@@ -87,6 +97,8 @@ protected:
 	string m_tapCurrency;
 	string m_lastError;
 	bool m_bShowingAd;
+	eAlignment m_desiredBannerAlignment;
+	CL_Vec2f m_vBannerSize;
 
 private:
 };

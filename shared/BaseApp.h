@@ -80,8 +80,9 @@ struct OSMessage
 		MESSAGE_TAPJOY_SHOW_OFFERS,
 
 		MESSAGE_HOOKED_SHOW_RATE_DIALOG,
-
         MESSAGE_ALLOW_SCREEN_DIMMING, //send 1 for yes, 0 to no (supported by iOS only right now)
+		
+		MESSAGE_REQUEST_AD_SIZE, //send x and y, applicable to Tapjoy only on Android right now
 		MESSAGE_USER = 1000
 	};
 

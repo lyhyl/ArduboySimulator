@@ -663,13 +663,21 @@ void DisableAllButtonsEntity(Entity *pEnt, bool bRecursive)
 	}
 }
 
-void EnableAllButtonsEntity(Entity *pEnt, bool bRecursive)
+void EnableAllButtonsEntity(Entity *pEnt, bool bRecursive, int delayBeforeActionMS, eTimingSystem timing)
 {
 	EntityComponent * pComp = pEnt->GetComponentByName("Button2D");
 
 	if (pComp)
 	{
-		pComp->GetVar("disabled")->Set(uint32(0));
+		if (delayBeforeActionMS == 0)
+		{
+			//do it now
+			pComp->GetVar("disabled")->Set(uint32(0));
+		} else
+		{
+			//schedule it instead
+			GetMessageManager()->SetComponentVariable(pComp, delayBeforeActionMS,"disabled",uint32(0), timing);
+		}
 	}
 
 	if (!bRecursive) return;
@@ -680,7 +688,7 @@ void EnableAllButtonsEntity(Entity *pEnt, bool bRecursive)
 	EntityList::iterator itor = pChildren->begin();
 	while (itor != pChildren->end())
 	{
-		EnableAllButtonsEntity( *itor, bRecursive);
+		EnableAllButtonsEntity( *itor, bRecursive, delayBeforeActionMS, timing);
 		itor++;
 	}
 }
@@ -1874,4 +1882,12 @@ Entity * SetLabelTextByEntityName(const string &entityName, string text, Entity 
 
 	pTextComp->GetVar("text")->Set(text);
 	return pEnt; //changed it
+}
+
+
+bool EntityIsOnScreen(Entity *pEnt)
+{
+	CL_Rectf r = GetScreenRect();
+	CL_Rectf er(pEnt->GetVar("pos2d")->GetVector2(), pEnt->GetVar("size2d")->GetVector2());
+	return r.is_overlapped(er);
 }

@@ -11,7 +11,7 @@
 
 
 #ifdef _IRR_STATIC_LIB_
-#include "Irrlicht/source/Irrlicht/gles-ext.h"
+#include <Irrlicht/source/Irrlicht/gles-ext.h>
 #endif
 
 typedef GLfloat GLdouble;

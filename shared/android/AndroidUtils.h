@@ -26,6 +26,7 @@ void AppOnTouch( JNIEnv* env, jobject jobj,jint action, jfloat x, jfloat y, jint
 void AppOnKey( JNIEnv* env, jobject jobj, jint type, jint keycode, jint c);
 int AppOSMessageGet(JNIEnv* env);
 float AppGetLastOSMessageX(JNIEnv* env);
+float AppGetLastOSMessageY(JNIEnv* env);
 void AppOnAccelerometerUpdate(JNIEnv* env, jobject jobj, jfloat x, jfloat y, jfloat z);
 void AppOnTrackball(JNIEnv* env, jobject jobj, jfloat x, jfloat y);
 void AppOnSendGUIEx(JNIEnv*  env, jobject thiz,jint messageType, jint parm1, jint parm2, jint finger );
