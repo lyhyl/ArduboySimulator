@@ -111,7 +111,6 @@ int GetPrimaryGLY();
 #define C_PIRATED_YES 0
 #define C_PIRATED_NO 18263
 int GetSystemData(); //returns C_PIRATED_YES or C_PIRATED_NO, only on systems where we can tell. (iOS only at this time)
-void CreateDirectoryRecursively(std::string basePath, std::string path);
 eNetworkType IsNetReachable(std::string url);
 void InitDeviceScreenInfo();
 eDeviceMemoryClass GetDeviceMemoryClass();

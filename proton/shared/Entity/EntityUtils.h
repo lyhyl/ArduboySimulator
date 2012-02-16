@@ -65,7 +65,7 @@ Entity * CreateInputTextEntity(Entity *pParentEnt, string name, float x, float y
 Entity * CreateCheckbox(Entity *pBG, string name, string text, float x, float y, bool bChecked, eFont fontID = FONT_SMALL, float fontScale = 1.0f);
 
 void DisableAllButtonsEntity(Entity *pEnt, bool bRecursive = true);
-void EnableAllButtonsEntity(Entity *pEnt, bool bRecursive = true);
+void EnableAllButtonsEntity(Entity *pEnt, bool bRecursive = true, int delayBeforeActionMS = 0, eTimingSystem timing = GetTiming());
 void SlideScreen(Entity *pEnt, bool bIn, int speedMS = 500, int delayToStartMS = 0);
 void SlideScreenVertical(Entity *pEnt, bool bIn, int speedMS = 500, int delayToStartMS = 0);
 void BobEntity(Entity *pEnt, float bobAmount = 3);
@@ -220,4 +220,5 @@ void FakeClickAnEntity(Entity *pEnt); //good for pretending to click a Button2D 
 
 //will locate (by name) and modify text on an entity created with CreateTextLabelEntity() (or any entity with a TextRenderer component in it)
 Entity * SetLabelTextByEntityName(const string &entityName, string text, Entity *pRootEntity = GetEntityRoot());
+bool EntityIsOnScreen(Entity *pEnt); //returns true if any part of an entity overlaps the visible screen.  (reads pos2d and size2d to test)
 #endif // EntityUtils_h__

@@ -195,6 +195,13 @@ void COGLES1ExtensionHandler::initExtensions(COGLES1Driver* driver,
 		GL_BGRA=GL_RGBA;
 #endif
 
+	//make some corrects - Seth
+	if (GetEmulatedPlatformID() == PLATFORM_ID_ANDROID)
+	{
+		FeatureAvailable[IRR_EXT_texture_filter_anisotropic] = false; //xperia reports it has this, but it gives gl errrs
+		//if we try to use it.. 1280, invalid enum
+	}
+
 	GLint val=0;
 	glGetIntegerv(GL_MAX_TEXTURE_UNITS, &val);
 	MaxTextureUnits = core::min_(MATERIAL_MAX_TEXTURES, static_cast<u32>(val));

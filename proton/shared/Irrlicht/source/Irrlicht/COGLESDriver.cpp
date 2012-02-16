@@ -8,6 +8,9 @@ void RotateGLIfNeeded();
 // needed here also because of the create methods' parameters
 #include "CNullDriver.h"
 
+//only really needed for the CHECK_GL_ERROR macro
+#include "util/RenderUtils.h"
+
 #ifdef _IRR_COMPILE_WITH_OGLES1_
 
 #ifndef GL_BGRA
@@ -1598,46 +1601,58 @@ bool COGLES1Driver::testEGLError()
 //! sets the needed renderstates
 void COGLES1Driver::setRenderStates3DMode()
 {
+	CHECK_GL_ERROR();
 	if (CurrentRenderMode != ERM_3D)
 	{
 		// Reset Texture Stages
 		glDisable(GL_BLEND);
 		glDisable(GL_ALPHA_TEST);
+		CHECK_GL_ERROR();
+	
 		glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_COLOR);
+		CHECK_GL_ERROR();
 
 		// switch back the matrices
 		glMatrixMode(GL_MODELVIEW);
 		glLoadMatrixf((Matrices[ETS_VIEW] * Matrices[ETS_WORLD]).pointer());
+		CHECK_GL_ERROR();
 
 		GLfloat glmat[16];
 		createGLMatrix(glmat, Matrices[ETS_PROJECTION]);
 		glmat[12] *= -1.0f;
 		glMatrixMode(GL_PROJECTION);
 		glLoadMatrixf(glmat);
-
+		CHECK_GL_ERROR();
 	}
-	
+	CHECK_GL_ERROR();
+
 	if ( ResetRenderStates || LastMaterial != Material)
 	{
 		// unset old material
+		CHECK_GL_ERROR();
 
 		if (LastMaterial.MaterialType != Material.MaterialType &&
 				static_cast<u32>(LastMaterial.MaterialType) < MaterialRenderers.size())
 			MaterialRenderers[LastMaterial.MaterialType].Renderer->OnUnsetMaterial();
+		CHECK_GL_ERROR();
 
 		// set new material.
 		if (static_cast<u32>(Material.MaterialType) < MaterialRenderers.size())
-			MaterialRenderers[Material.MaterialType].Renderer->OnSetMaterial(
-				Material, LastMaterial, ResetRenderStates, this);
+			MaterialRenderers[Material.MaterialType].Renderer->OnSetMaterial(Material, LastMaterial, ResetRenderStates, this);
+		CHECK_GL_ERROR();
 
 		LastMaterial = Material;
 		ResetRenderStates = false;
 	}
+	CHECK_GL_ERROR();
+
 
 	if (static_cast<u32>(Material.MaterialType) < MaterialRenderers.size())
 		MaterialRenderers[Material.MaterialType].Renderer->OnRender(this, video::EVT_STANDARD);
 
 	CurrentRenderMode = ERM_3D;
+	CHECK_GL_ERROR();
+
 }
 
 
@@ -1723,7 +1738,7 @@ void COGLES1Driver::setBasicRenderStates(const SMaterial& material, const SMater
 		else
 			glDisable(GL_COLOR_MATERIAL);
 	}
-
+CHECK_GL_ERROR();
 	if (resetAllRenderStates ||
 		lastmaterial.AmbientColor != material.AmbientColor ||
 		lastmaterial.DiffuseColor != material.DiffuseColor ||
@@ -1743,7 +1758,7 @@ void COGLES1Driver::setBasicRenderStates(const SMaterial& material, const SMater
 			color[3] = material.AmbientColor.getAlpha() * inv;
 			glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, color);
 		}
-
+CHECK_GL_ERROR();
 		if ((material.ColorMaterial != video::ECM_DIFFUSE) &&
 			(material.ColorMaterial != video::ECM_DIFFUSE_AND_AMBIENT))
 		{
@@ -1753,7 +1768,7 @@ void COGLES1Driver::setBasicRenderStates(const SMaterial& material, const SMater
 			color[3] = material.DiffuseColor.getAlpha() * inv;
 			glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, color);
 		}
-
+CHECK_GL_ERROR();
 		if (material.ColorMaterial != video::ECM_EMISSIVE)
 		{
 			color[0] = material.EmissiveColor.getRed() * inv;
@@ -1762,6 +1777,7 @@ void COGLES1Driver::setBasicRenderStates(const SMaterial& material, const SMater
 			color[3] = material.EmissiveColor.getAlpha() * inv;
 			glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, color);
 		}
+	CHECK_GL_ERROR();
 	}
 
 	if (resetAllRenderStates ||
@@ -1785,6 +1801,7 @@ void COGLES1Driver::setBasicRenderStates(const SMaterial& material, const SMater
 			color[2] = material.SpecularColor.getBlue() * inv;
 			color[3] = material.SpecularColor.getAlpha() * inv;
 			glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, color);
+		CHECK_GL_ERROR();
 		}
 #ifdef GL_EXT_separate_specular_color
 		else
@@ -1799,10 +1816,13 @@ void COGLES1Driver::setBasicRenderStates(const SMaterial& material, const SMater
 	for (u32 i=0; i<MaxTextureUnits; ++i)
 	{
 		if (MultiTextureExtension)
+		{
 			extGlActiveTexture(GL_TEXTURE0 + i);
+			CHECK_GL_ERROR();
+		}
 		else if (i>0)
 			break;
-
+CHECK_GL_ERROR();
 #ifdef GL_EXT_texture_lod_bias
 		if (FeatureAvailable[IRR_EXT_texture_lod_bias])
 		{
@@ -1815,7 +1835,7 @@ void COGLES1Driver::setBasicRenderStates(const SMaterial& material, const SMater
 				glTexEnvf(GL_TEXTURE_FILTER_CONTROL_EXT, GL_TEXTURE_LOD_BIAS_EXT, 0.f);
 		}
 #endif
-
+CHECK_GL_ERROR();
         char *pName = NULL;
         if (CurrentTexture[i])
         {
@@ -1855,11 +1875,14 @@ void COGLES1Driver::setBasicRenderStates(const SMaterial& material, const SMater
 
 #ifdef GL_EXT_texture_filter_anisotropic
 		if (FeatureAvailable[IRR_EXT_texture_filter_anisotropic])
+		{
+
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT,
 				static_cast<GLfloat>(material.TextureLayer[i].AnisotropicFilter>1 ? core::min_(MaxAnisotropy, material.TextureLayer[i].AnisotropicFilter) : 1));
+		}
 #endif
 	}
-
+CHECK_GL_ERROR();
 // TODO ogl-es
 	// fillmode
 //	if (resetAllRenderStates || (lastmaterial.Wireframe != material.Wireframe) || (lastmaterial.PointCloud != material.PointCloud))
@@ -1882,7 +1905,7 @@ void COGLES1Driver::setBasicRenderStates(const SMaterial& material, const SMater
 		else
 			glDisable(GL_LIGHTING);
 	}
-
+CHECK_GL_ERROR();
 	// zbuffer
 	if (resetAllRenderStates || lastmaterial.ZBuffer != material.ZBuffer)
 	{
@@ -1921,7 +1944,7 @@ void COGLES1Driver::setBasicRenderStates(const SMaterial& material, const SMater
 				break;
 		}
 	}
-
+CHECK_GL_ERROR();
 	// zwrite
 //	if (resetAllRenderStates || lastmaterial.ZWriteEnable != material.ZWriteEnable)
 	{
@@ -1956,7 +1979,7 @@ void COGLES1Driver::setBasicRenderStates(const SMaterial& material, const SMater
 		else
 			glDisable(GL_CULL_FACE);
 	}
-
+CHECK_GL_ERROR();
 	// fog
 	if (resetAllRenderStates || lastmaterial.FogEnable != material.FogEnable)
 	{
@@ -1984,7 +2007,7 @@ void COGLES1Driver::setBasicRenderStates(const SMaterial& material, const SMater
 			(material.ColorMask & ECP_BLUE)?GL_TRUE:GL_FALSE,
 			(material.ColorMask & ECP_ALPHA)?GL_TRUE:GL_FALSE);
 	}
- 
+ CHECK_GL_ERROR();
 	// thickness
 	if (resetAllRenderStates || lastmaterial.Thickness != material.Thickness)
 	{
@@ -2033,7 +2056,7 @@ void COGLES1Driver::setBasicRenderStates(const SMaterial& material, const SMater
 				glDisable(GL_POINT_SMOOTH);
 		}
 	}
-
+CHECK_GL_ERROR();
 	setWrapMode(material);
 
 	// be sure to leave in texture stage 0

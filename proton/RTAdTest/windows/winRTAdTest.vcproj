@@ -499,6 +499,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\android\ant.properties"
+					>
+				</File>
+				<File
 					RelativePath="..\android\app_info_setup.bat"
 					>
 				</File>
@@ -519,7 +523,35 @@
 					>
 				</File>
 				<File
-					RelativePath="..\android\readme.txt"
+					RelativePath="..\android\build_prepare.bat"
+					>
+				</File>
+				<File
+					RelativePath="..\android\buildRelease.bat"
+					>
+				</File>
+				<File
+					RelativePath="..\android\Clean.bat"
+					>
+				</File>
+				<File
+					RelativePath="..\android\default.properties"
+					>
+				</File>
+				<File
+					RelativePath="..\android\InstallOnDefaultPhone.bat"
+					>
+				</File>
+				<File
+					RelativePath="..\android\InstallOnDefaultPhoneRelease.bat"
+					>
+				</File>
+				<File
+					RelativePath="..\android\project.properties"
+					>
+				</File>
+				<File
+					RelativePath="..\android\ViewLogDefaultPhone.bat"
 					>
 				</File>
 				<Filter

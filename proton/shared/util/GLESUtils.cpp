@@ -316,7 +316,7 @@ void  DrawLine( GLuint rgba,   float ax, float ay, float bx, float by, float lin
 		glDisable( GL_BLEND );
 		glEnable( GL_TEXTURE_2D );
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);	
-		
+		CHECK_GL_ERROR();
 }
 
 void  GenerateFillRect( GLuint rgba, float x, float y, float w, float h )
@@ -401,7 +401,7 @@ void SetOrthoRenderSize(float x, float y, int screenOffsetX, int screenOffsetY)
 	//glTranslatef(0.5f, 0.5f, 0); //fixes a gl glitch where pixels don't know which side to be on
 
 	glMatrixMode(GL_MODELVIEW);
-
+	CHECK_GL_ERROR();
 }
 
 
@@ -424,6 +424,7 @@ void RemoveOrthoRenderSize()
 		float offset = 0.0f;
 		glOrthof( offset,  g_renderOrthoRenderSizeX+offset, g_renderOrthoRenderSizeY+offset, offset,  -1, 1 );		
 		glMatrixMode(GL_MODELVIEW);
+		CHECK_GL_ERROR();
 	}
 
 }
@@ -504,6 +505,7 @@ void PrepareForGL()
 	CHECK_GL_ERROR();
 	glCullFace(GL_BACK);
 	glLoadIdentity();
+	CHECK_GL_ERROR();
 	ResetOrthoFlag();
 }
 

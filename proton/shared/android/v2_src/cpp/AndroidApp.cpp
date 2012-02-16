@@ -50,12 +50,16 @@ extern "C"
 		return AppGetLastOSMessageX(env); 
 	}
 
+	JNIEXPORT float Java_${PACKAGE_NAME_WITH_UNDERSCORES}_AppRenderer_nativeGetLastOSMessageY(JNIEnv*  env)
+	{
+		return AppGetLastOSMessageY(env); 
+	}
+
+
 	JNIEXPORT int Java_${PACKAGE_NAME_WITH_UNDERSCORES}_AppRenderer_nativeGetLastOSMessageParm1(JNIEnv*  env)
 	{
 		return AppGetLastOSMessageParm1(env); 
 	}
-
-
 
 	JNIEXPORT jstring Java_${PACKAGE_NAME_WITH_UNDERSCORES}_AppRenderer_nativeGetLastOSMessageString(JNIEnv*  env)
 	{

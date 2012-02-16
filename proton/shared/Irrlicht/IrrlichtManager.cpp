@@ -186,6 +186,7 @@ void IrrlichtManager::Render()
 			m_pWorld->debugDrawWorld(true);
 		}
 #endif
+		CHECK_GL_ERROR();
 	}
 }
 
@@ -197,21 +198,21 @@ void IrrlichtManager::EndScene()
 		{
 			m_pDevice->getGUIEnvironment()->drawAll();
 		}
-		
 		m_pDriver->endScene();
 	
 		const video::SMaterial m;
 		m_pDriver->setMaterial(m); 
-		
+	
 		m_pDriver->setRenderStates3DMode(); //let irrlicht turn off its last material
-		
+		CHECK_GL_ERROR();
+
 		glDisable(GL_ALPHA_TEST);
 		glDisable( GL_BLEND );
 		glDisable( GL_LIGHTING );
-		
+	
 		glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 		glEnable(GL_TEXTURE_2D);
-		
+		CHECK_GL_ERROR();
 		g_lastBound = NO_TEXTURE_LOADED;
 	}
 

@@ -121,6 +121,11 @@ import android.view.View.OnClickListener;
 	public static boolean securityEnabled = false; //if false, it won't try to use the online license stuff
 	public static boolean bIsShuttingDown = false;
 	public static boolean IAPEnabled = false; //if false, IAB won't be initted.  I call it IAP because I'm used it from iOS land
+	
+	public static String tapBannerSize = ""; //tapjoy banner size text, set in Main.cpp, or by AdManager calls
+	public static int adBannerWidth = 0;
+	public static int adBannerHeight = 0;
+	
 	public static boolean HookedEnabled = false;
 	//************************************************************************
 
@@ -423,19 +428,18 @@ import android.view.View.OnClickListener;
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
 		if (securityEnabled) this.license_init();
 		
-			//Create dummy tapjoy view overlay we'll show ads on
-		adLinearLayout = new RelativeLayout(this);
-		
-		 RelativeLayout.LayoutParams l = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-        //l.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-       	Log.d(PackageName, "Setting up adview");
 	
-		addContentView(adLinearLayout, l);
+		//#if defined(RT_TAPJOY_SUPPORT)
+			
+			 //Create dummy tapjoy view overlay we'll show ads on
+			adLinearLayout = new RelativeLayout(this);
+			 RelativeLayout.LayoutParams l = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+			//l.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+       		Log.d(PackageName, "Tapjoy enabled - setting up adview overlay");
+			addContentView(adLinearLayout, l);
+		//#endif
 		
 		
-		//final Dialog d = new Dialog(this);
-
-	
 		update_display_ad = false;
 		run_hooked = false;
 		tapjoy_ad_show = 0;
@@ -905,10 +909,15 @@ return m_szDevIDShort;
 	{
 		app.adView = view;
 
-		int ad_width = app.adView.getLayoutParams().width;
-		int ad_height = app.adView.getLayoutParams().height;
-		//Log.v(app.PackageName,  "adView dimensions: " + ad_width + "x" + ad_height);
-		// Using screen width, but substitute for the any width.
+		int ad_width = app.adBannerWidth;
+		int ad_height = app.adBannerHeight;
+
+		if (ad_width == 0) ad_width = app.adView.getLayoutParams().width;
+		if (ad_height == 0) ad_height = app.adView.getLayoutParams().height;
+		
+		Log.v(app.PackageName,  "adView dimensions: " + ad_width + "x" + ad_height);
+		
+		
 		int desired_width = app.mGLView.getMeasuredWidth();
 		Log.v(app.PackageName,  "mGLView width is " + desired_width);
 				
@@ -1374,7 +1383,9 @@ class AppRenderer implements GLSurfaceView.Renderer
 	final static int MESSAGE_TAPJOY_AWARD_TAP_POINTS = 18;
 	final static int MESSAGE_TAPJOY_SHOW_OFFERS = 19;
 	final static int MESSAGE_HOOKED_SHOW_RATE_DIALOG = 20;
-	
+	final static int MESSAGE_ALLOW_SCREEN_DIMMING = 21;
+	final static int MESSAGE_REQUEST_AD_SIZE = 22;
+
 	static long m_gameTimer = 0;
 	static int m_timerLoopMS = 0; //every this MS, the loop runs.  0 for no fps limit
 
@@ -1442,11 +1453,11 @@ class AppRenderer implements GLSurfaceView.Renderer
 				break;
 
 		case MESSAGE_TAPJOY_GET_AD: 
-					//Log.v(app.PackageName, "Getting tapjoy ad");
 					//#if defined(RT_TAPJOY_SUPPORT)
-					TapjoyConnect.getTapjoyConnectInstance().enableBannerAdAutoRefresh(true);
-					TapjoyConnect.getTapjoyConnectInstance().setBannerAdSize(TapjoyDisplayAdSize.TJC_AD_BANNERSIZE_640X100);
-					TapjoyConnect.getTapjoyConnectInstance().getDisplayAd(app);
+						Log.v(app.PackageName, "Getting tapjoy ad");
+						TapjoyConnect.getTapjoyConnectInstance().enableBannerAdAutoRefresh(true);
+						TapjoyConnect.getTapjoyConnectInstance().setBannerAdSize(app.tapBannerSize);
+						TapjoyConnect.getTapjoyConnectInstance().getDisplayAd(app);
 					//#else
 						Log.v(app.PackageName, "ERROR: RT_TAPJOY_ENABLED isn't defined in Java project, you can't use it!");
 					//#endif
@@ -1466,7 +1477,7 @@ class AppRenderer implements GLSurfaceView.Renderer
 		
 			
 			case MESSAGE_TAPJOY_GET_TAP_POINTS:
-				//Log.v(app.PackageName, "Getting tapjoy ad");
+				Log.v(app.PackageName, "Getting tapjoy points");
 				TapjoyConnect.getTapjoyConnectInstance().getTapPoints(app);
 			break;
 		
@@ -1499,6 +1510,17 @@ class AppRenderer implements GLSurfaceView.Renderer
 
 					break;
 	
+	case MESSAGE_REQUEST_AD_SIZE:
+	app.adBannerWidth = (int)nativeGetLastOSMessageX();
+	app.adBannerHeight = (int)nativeGetLastOSMessageY();
+	
+	app.adBannerWidth = 480;
+	app.adBannerHeight = 72;
+	
+	app.tapBannerSize = app.adBannerWidth+"x"+app.adBannerHeight;		
+		Log.v(app.PackageName, "Setting tapjoy banner size to " + app.tapBannerSize);
+
+	break;
 	
 		//#endif
 			
@@ -1547,6 +1569,7 @@ class AppRenderer implements GLSurfaceView.Renderer
 	private static native int nativeOSMessageGet();
 	private static native int nativeGetLastOSMessageParm1();
 	private static native float nativeGetLastOSMessageX();
+	private static native float nativeGetLastOSMessageY();
 	private static native String nativeGetLastOSMessageString();
 	public SharedActivity app;
 }

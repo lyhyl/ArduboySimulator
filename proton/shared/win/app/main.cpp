@@ -16,7 +16,8 @@
 //My system, or the PVR GLES emulator or something often has issues with WM_CHAR missing messages.  So I work around it with this:
 #define C_DONT_USE_WM_CHAR
 
-//If this is uncommented, the app won't suspend/resume when losing focus in windows, but always runs
+//If this is uncommented, the app won't suspend/resume when losing focus in windows, but always runs.
+//(You should probably add it up as a preprocessor compiler define if you need it, instead of uncommenting it here)
 //#define RT_RUNS_IN_BACKGROUND
 
 bool g_winAllowFullscreenToggle = true;
@@ -81,6 +82,7 @@ void InitVideoSize()
 	AddVideoMode("Xoom", 800,1280, PLATFORM_ID_ANDROID);
 	AddVideoMode("Galaxy Tab 7.7 Landscape", 1024,600, PLATFORM_ID_ANDROID);
 	AddVideoMode("Galaxy Tab 10.1 Landscape", 1280,800, PLATFORM_ID_ANDROID);
+	AddVideoMode("Xperia Play Landscape", 854, 480, PLATFORM_ID_ANDROID);
 
 	//RIM Playbook OS/BBX/BB10/Whatever they name it to next week
 	AddVideoMode("Playbook", 600,1024, PLATFORM_ID_BBX);

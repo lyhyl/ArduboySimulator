@@ -377,6 +377,8 @@ void BaseApp::OnMessage(Message &m)
 
 void BaseApp::AddOSMessage( OSMessage &m )
 {
+	assert(IsBaseAppInitted() && "Base app should be initted before calling AddOSMessage");
+
 	m_OSMessages.push_back(m);
 }
 

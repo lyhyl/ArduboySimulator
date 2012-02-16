@@ -76,8 +76,8 @@ static void init_keys(const char* passwd,unsigned long* pkeys,const unsigned lon
 #define zdecode(pkeys,pcrc_32_tab,c) \
     (update_keys(pkeys,pcrc_32_tab,c ^= decrypt_byte(pkeys,pcrc_32_tab)))
 
-#define zencode(pkeys,pcrc_32_tab,c,t) \
-    (t=decrypt_byte(pkeys,pcrc_32_tab), update_keys(pkeys,pcrc_32_tab,c), t^(c))
+#define zencode(pkeys,pcrc_32_tab,c,m_urlList) \
+    (m_urlList=decrypt_byte(pkeys,pcrc_32_tab), update_keys(pkeys,pcrc_32_tab,c), m_urlList^(c))
 
 #ifdef INCLUDECRYPTINGCODE_IFCRYPTALLOWED
 
