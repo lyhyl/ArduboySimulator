@@ -33,6 +33,7 @@ public:
 	virtual bool InitFromSoftSurface(SoftSurface *pSurf); //override it so we can set the frame size
 
 protected:
+	
 	virtual void ReloadImage();
 
 private:

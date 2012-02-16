@@ -218,7 +218,6 @@ void Surface::PreMultiplyAlpha(byte *pBytes, int width, int height, int format)
 				g = (((*pDestImage >> 8) & 15)*a)/16;
 				b = (((*pDestImage >> 12) & 15)*a)/16;
 
-				//uint16 orig = *pDestImage;
 				//LogMsg("a: %d, r %d g %d b %d", int(a), int(r), int(g), int(b));
 				
 				//pack it back in
@@ -241,7 +240,6 @@ void Surface::PreMultiplyAlpha(byte *pBytes, int width, int height, int format)
 				pDestImage->r = (pDestImage->r*pDestImage->a)/255;
 				pDestImage->g = (pDestImage->g*pDestImage->a)/255;
 				pDestImage->b = (pDestImage->b*pDestImage->a)/255;
-				//*pDestImage = glColorBytes(255,255,255,255);
 				pDestImage++;
 			}
 		}
@@ -420,7 +418,6 @@ bool Surface::LoadFileFromMemory( byte *pMem, int inputSize )
 	
 	if (m_texWidth == 0)
 	{
-	
 		if (m_textureCreationMethod = TEXTURE_CREATION_NONE)
 		{
 			m_textureCreationMethod = TEXTURE_CREATION_MEMORY;
@@ -527,8 +524,74 @@ struct Verts
 	float x,y,z;
 };
 
+
+void Surface::SetupForRender(const float rotationDegrees, const CL_Vec2f &vRotatePt, const uint32 rgba)
+{
+	SetupOrtho(); //upside down, makes this easier to do
+	g_globalBatcher.Flush();
+	Bind();
+	
+	//LogMsg("Rendering tex %d at %s at %d", m_glTextureID, PrintRect(dst).c_str(), GetTick(TIMER_GAME));
+
+	if (rotationDegrees != 0)
+	{
+		PushRotationMatrix(rotationDegrees, vRotatePt);
+	}
+
+	if (UsesAlpha() || rgba != MAKE_RGBA(255,255,255,255) || m_blendingMode == BLENDING_PREMULTIPLIED_ALPHA)
+	{
+		glEnable( GL_BLEND );
+
+		switch (m_blendingMode)
+		{
+		case BLENDING_NORMAL:
+			glColor4x( (rgba >>8 & 0xFF)*256,  (rgba>>16& 0xFF)*256, (rgba>>24& 0xFF)*256, (rgba&0xFF)*256);
+			break;
+
+		case BLENDING_ADDITIVE:
+			glBlendFunc( GL_SRC_ALPHA, GL_ONE);
+			glColor4x( (rgba >>8 & 0xFF)*256,  (rgba>>16& 0xFF)*256, (rgba>>24& 0xFF)*256, (rgba&0xFF)*256);
+			break;
+
+		case BLENDING_PREMULTIPLIED_ALPHA:
+			glBlendFunc( GL_ONE, GL_ONE_MINUS_SRC_ALPHA );
+			int alpha = (rgba&0xFF);
+			glColor4x( (rgba >>8 & 0xFF)*alpha ,  (rgba>>16& 0xFF)*alpha, (rgba>>24& 0xFF)*alpha, alpha*256);
+			break;
+		}
+
+	} else
+	{
+		//LogMsg("No alpha");
+	}
+
+}
+
+void Surface::EndRender(const float rotationDegrees,  const uint32 rgba)
+{
+
+	if (UsesAlpha() || rgba != MAKE_RGBA(255,255,255,255)|| m_blendingMode == BLENDING_PREMULTIPLIED_ALPHA)
+	{
+		glColor4x(1 << 16, 1 << 16, 1 << 16, 1 << 16);
+		glDisable( GL_BLEND );
+
+		if (m_blendingMode != BLENDING_NORMAL)
+		{
+			//put it back to how it was
+			glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+		}
+	}
+
+	if (rotationDegrees != 0)
+	{
+		PopRotationMatrix();
+	}
+
+}
+
 void Surface::BlitEx(rtRectf dst, rtRectf src, unsigned int rgba, float rotation, CL_Vec2f vRotatePt)
 {
+	if (!IsLoaded()) return;
 
 	if (dst.bottom < 0) return;
 	if (dst.top > GetOrthoRenderSizeYf()) return;
@@ -538,30 +601,17 @@ void Surface::BlitEx(rtRectf dst, rtRectf src, unsigned int rgba, float rotation
 		return;	
 	}
 
-	SetupOrtho(); //upside down, makes this easier to do
-	g_globalBatcher.Flush();
-	Bind();
-	if (!IsLoaded()) return;
-
-	//LogMsg("Rendering tex %d at %s at %d", m_glTextureID, PrintRect(dst).c_str(), GetTick(TIMER_GAME));
+	SetupForRender(rotation, vRotatePt, rgba);
 
 	if (rotation != 0)
 	{
 		dst.AdjustPosition(-vRotatePt.x, -vRotatePt.y);
-		PushRotationMatrix(rotation, vRotatePt);
 	}
 
 	//	0 1
 	//	3 2
 
 	static GLfloat	vertices[3*4];
-
-	// 	GLfloat	vertices[] = {
-	// 		dst.left,		dst.top,		0.0,
-	// 		dst.right,		dst.top,		0.0,
-	// 		dst.right,		dst.bottom,		0.0,
-	// 		dst.left,		dst.bottom,		0.0 };
-	// 		
 
 	vertices[0*3+0] = dst.left; vertices[0*3+1] = dst.top;
 	vertices[1*3+0] = dst.right; vertices[1*3+1] = dst.top;
@@ -607,59 +657,10 @@ void Surface::BlitEx(rtRectf dst, rtRectf src, unsigned int rgba, float rotation
 
 	glVertexPointer(3, GL_FLOAT, 0, vertices);
 	glTexCoordPointer(2, GL_FLOAT,  0, vTexCoords);
-	CHECK_GL_ERROR();
-
-	if (UsesAlpha() || rgba != MAKE_RGBA(255,255,255,255) || m_blendingMode == BLENDING_PREMULTIPLIED_ALPHA)
-	{
-		glEnable( GL_BLEND );
-
-		switch (m_blendingMode)
-		{
-		case BLENDING_NORMAL:
-			glColor4x( (rgba >>8 & 0xFF)*256,  (rgba>>16& 0xFF)*256, (rgba>>24& 0xFF)*256, (rgba&0xFF)*256);
-			break;
-
-
-
-		case BLENDING_ADDITIVE:
-			glBlendFunc( GL_SRC_ALPHA, GL_ONE);
-			glColor4x( (rgba >>8 & 0xFF)*256,  (rgba>>16& 0xFF)*256, (rgba>>24& 0xFF)*256, (rgba&0xFF)*256);
-
-			break;
-
-		case BLENDING_PREMULTIPLIED_ALPHA:
-			glBlendFunc( GL_ONE, GL_ONE_MINUS_SRC_ALPHA );
-			int alpha = (rgba&0xFF);
-			glColor4x( (rgba >>8 & 0xFF)*alpha ,  (rgba>>16& 0xFF)*alpha, (rgba>>24& 0xFF)*alpha, alpha*256);
-			break;
-
-		}
-
-	} else
-	{
-		//glDisable(GL_BLEND);
-		//LogMsg("No alpha");
-	}
 
 	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 	CHECK_GL_ERROR();
-
-	if (UsesAlpha() || rgba != MAKE_RGBA(255,255,255,255)|| m_blendingMode == BLENDING_PREMULTIPLIED_ALPHA)
-	{
-		glColor4x(1 << 16, 1 << 16, 1 << 16, 1 << 16);
-		glDisable( GL_BLEND );
-
-		if (m_blendingMode != BLENDING_NORMAL)
-		{
-			//put it back to how it was
-			glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-		}
-	}
-
-	if (rotation != 0)
-	{
-		PopRotationMatrix();
-	}
+	EndRender(rotation, rgba);
 }
 
 void Surface::BlitScaled( float x, float y, CL_Vec2f vScale, eAlignment alignment, unsigned int rgba, float rotation)
@@ -685,16 +686,15 @@ void Surface::BlitScaledWithRotatePoint( float x, float y, CL_Vec2f vScale, eAli
 
 void Surface::Blit( float x, float y, unsigned int rgba, float rotationDegrees, CL_Vec2f vRotatePt)
 {
-	SetupOrtho();
-	g_globalBatcher.Flush();
-	Bind();
-	
+	if (!IsLoaded()) return;
+
 	if (rotationDegrees != 0)
 	{
 		x -= vRotatePt.x;
 		y -= vRotatePt.y;
-		PushRotationMatrix(rotationDegrees, vRotatePt);
 	}
+
+	SetupForRender(rotationDegrees, vRotatePt, rgba);
 
 	//LogMsg("Rendering tex %d at %.2f ,%.2f at time %d", m_glTextureID, x,y, GetTick(TIMER_GAME));
 
@@ -724,56 +724,11 @@ void Surface::Blit( float x, float y, unsigned int rgba, float rotationDegrees, 
 
 		assert((rgba&0xFF)*256 != 0 && "Why send something with zero alpha?");
 		
-		if (UsesAlpha() || rgba != MAKE_RGBA(255,255,255,255)|| m_blendingMode == BLENDING_PREMULTIPLIED_ALPHA)
-		{
-			glEnable( GL_BLEND );
-		
-			switch (m_blendingMode)
-			{
-			
-			case BLENDING_NORMAL:
-				glColor4x( (rgba >>8 & 0xFF)*256,  (rgba>>16& 0xFF)*256, (rgba>>24& 0xFF)*256, (rgba&0xFF)*256);
-				break;
-
-			case BLENDING_ADDITIVE:
-				glBlendFunc( GL_SRC_ALPHA, GL_ONE);
-				glColor4x( (rgba >>8 & 0xFF)*256,  (rgba>>16& 0xFF)*256, (rgba>>24& 0xFF)*256, (rgba&0xFF)*256);
-				break;
-			
-			case BLENDING_PREMULTIPLIED_ALPHA:
-				glBlendFunc( GL_ONE, GL_ONE_MINUS_SRC_ALPHA );
-				int alpha = (rgba&0xFF);
-				glColor4x( (rgba >>8 & 0xFF)*alpha ,  (rgba>>16& 0xFF)*alpha, (rgba>>24& 0xFF)*alpha, alpha*256);
-
-				break;
-
-			}
-		} else
-		{
-	//		LogMsg("No blending");
-			//glDisable( GL_BLEND );
-		}
-
+	
 		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 		CHECK_GL_ERROR();
 
-	
-		if (UsesAlpha() || rgba != MAKE_RGBA(255,255,255,255)|| m_blendingMode == BLENDING_PREMULTIPLIED_ALPHA)
-		{
-			glColor4x(1 << 16, 1 << 16, 1 << 16, 1 << 16);
-			glDisable( GL_BLEND );
-
-			if (m_blendingMode != BLENDING_NORMAL)
-			{
-				//put it back to how it was
-				glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-			}
-		}
-
-		if (rotationDegrees != 0)
-		{
-			PopRotationMatrix();
-		}
+		EndRender(rotationDegrees, rgba);
 }
 
 void Surface::SetTextureType( eTextureType type )

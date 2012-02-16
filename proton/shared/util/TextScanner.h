@@ -58,6 +58,7 @@ public:
 	bool LoadFile(const string &fName, bool bAddBasePath = true);
 	string GetParmString(string label, int index, string token = "|");
 	string GetParmStringFromLine(int lineNum, int index, string token = "|");
+	int GetParmIntFromLine( int lineNum, int index, string token = "|" );
 	string GetMultipleLineStrings(string label, string token = "|");
 	string GetLine(int lineNum); //0 based, returns "" if out of range
 	vector<string> m_lines;
