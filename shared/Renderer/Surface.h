@@ -53,7 +53,6 @@ public:
 	Surface (string fName); //load in an image right away
 	Surface (string fName, eTextureType type); //load in an image right away
 	virtual ~Surface();
-
 	
 	bool LoadFile(string fName); //will autodetect what kind of file it is
 	virtual bool LoadFileFromMemory( byte *pMem, int inputSize=0 ); //will autodetect what kind of file it is
@@ -70,10 +69,13 @@ public:
 
 	void SetTextureType(eTextureType type);
 
-	void Blit(  float x, float y, unsigned int rgba = MAKE_RGBA(255,255,255,255), float rotation = 0, CL_Vec2f vRotatePt = CL_Vec2f(0,0));
+	virtual void Blit(  float x, float y, unsigned int rgba = MAKE_RGBA(255,255,255,255), float rotationDegrees = 0, CL_Vec2f vRotatePt = CL_Vec2f(0,0));
+	virtual void BlitEx(rtRectf dst, rtRectf src, unsigned int rgba = MAKE_RGBA(255,255,255,255), float rotationDegrees = 0, CL_Vec2f vRotatePt = CL_Vec2f(0,0)); //more advanced version, can do scaling and sub-texture blits
+
+	//these actually just call the above ones
 	void BlitScaled( float x, float y, CL_Vec2f vScale, eAlignment alignment = ALIGNMENT_CENTER, unsigned int rgba  = MAKE_RGBA(255,255,255,255), float rotation=0);
 	void BlitScaledWithRotatePoint( float x, float y, CL_Vec2f vScale, eAlignment alignment, unsigned int rgba, float rotation, CL_Vec2f vRotationPt);
-	void BlitEx(rtRectf dst, rtRectf src, unsigned int rgba = MAKE_RGBA(255,255,255,255), float rotation = 0, CL_Vec2f vRotatePt = CL_Vec2f(0,0)); //more advanced version, can do scaling and sub-texture blits
+
 	rtRectf GetRectf() {return rtRectf(0,0, float(m_originalWidth), float(m_originalWidth));}
 	void SetSmoothing( bool bSmoothing);
 	void SetBlendingMode(eBlendingMode mode) {m_blendingMode = mode;}
@@ -90,8 +92,15 @@ public:
 	void OnLoadSurfaces();
 	void OnUnloadSurfaces();
 
+	//if you wanted to just use the surface to load and setup states, then do your own manual blits but don't feel like
+	//subclasses, you can use these:
+
+	void SetupForRender(const float rotationDegrees = 0, const CL_Vec2f &vRotatePt = CL_Vec2f(0,0), const uint32 rgba = MAKE_RGBA(255,255,255,255)); //setup texture states, rotation if needed
+	void EndRender(const float rotationDegrees = 0, const uint32 rgba = MAKE_RGBA(255,255,255,255)); //put stuff back to how it was
+
 protected:
 
+	
 	virtual void ReloadImage();
 
 	enum eTextureCreationMethod //helps me to know how to restore it when losing surfaces

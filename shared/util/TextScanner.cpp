@@ -140,6 +140,13 @@ std::string TextScanner::GetParmStringFromLine( int lineNum, int index, string t
 	return SeparateStringSTL(m_lines[lineNum], index, token[0]);
 }
 
+int TextScanner::GetParmIntFromLine( int lineNum, int index, string token /*= "|"*/ )
+{
+	assert(lineNum >= 0 && (uint32)lineNum < m_lines.size());
+	assert(token.size() == 1 && "We don't actually support a non char delim yet");
+	return atoi(SeparateStringSTL(m_lines[lineNum], index, token[0]).c_str());
+}
+
 void TextScanner::Replace( const string &thisStr, const string &thatStr )
 {
 	for (unsigned int i=0; i < m_lines.size(); i++)
