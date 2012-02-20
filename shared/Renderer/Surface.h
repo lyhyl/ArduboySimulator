@@ -10,9 +10,7 @@
 #ifndef Surface_h__
 #define Surface_h__
 
-#include "util/RTFileFormat.h"
 #include "util/RenderUtils.h"
-#include "util/MiscUtils.h"
 
 #include "util/boost/boost/signal.hpp"
 
@@ -32,13 +30,19 @@ class SoftSurface;
 class Surface: public boost::signals::trackable
 {
 public:
-
+	/**
+	 * Type for the texture that the \c Surface class uses.
+	 */
 	enum eTextureType
 	{
-		TYPE_DEFAULT, //normal, enables wrapping, mips
-		TYPE_GUI, //no texture wrapping (uses clamp), disables mip creation/loading
-		TYPE_NOT_OWNER, //do some work for irrlicht, don't actually bind/unbind things
-		TYPE_NO_SMOOTHING //no linear smoothing filters are applied
+		/// Linear filtering, wrap mode is repeat, uses mipmaps.
+		TYPE_DEFAULT,
+		/// Linear filtering, wrap mode is clamp to edge, no mipmaps.
+		TYPE_GUI,
+		/// The texture is owned by somebody else and is responsible for setting the appropriate parameters.
+		TYPE_NOT_OWNER,
+		/// Nearest pixel filtering, wrap mode is clamp to edge, no mipmaps.
+		TYPE_NO_SMOOTHING
 	};
 
 	enum eBlendingMode
@@ -67,6 +71,13 @@ public:
 	int GetRawTextureWidth() {return m_texWidth;}
 	int GetRawTextureHeight() {return m_texHeight;}
 
+	/**
+	 * Sets the texture type for this \c Surface.
+	 *
+	 * The default type is \link Surface::TYPE_DEFAULT \c TYPE_DEFAULT \endlink.
+	 *
+	 * \note You can only call this method before loading the texture.
+	 */
 	void SetTextureType(eTextureType type);
 
 	virtual void Blit(  float x, float y, unsigned int rgba = MAKE_RGBA(255,255,255,255), float rotationDegrees = 0, CL_Vec2f vRotatePt = CL_Vec2f(0,0));

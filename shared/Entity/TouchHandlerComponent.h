@@ -29,17 +29,21 @@
  *   (left: 20, top: 5, right: 20, bottom: 15).
  * - <b>"ignoreTouchesOutsideRect" (uint32):</b> defines if move events should be ignored
  *   when the touch position has moved outside the touch area. 0 (the default) means that
- *   move events outside the touch area are not ignored (i.e. they are reported). Any
- *   other value means that they are ignored.
+ *   move events outside the touch area are not ignored (i.e. they are handled). Any
+ *   other value means that they are ignored. If this feature is enabled it basically
+ *   means that the "OnOverEnd" function doesn't get called. As a side effect the "touchOver"
+ *   variant also gets out of sync so the usability of this feature is questionable.
  * - <b>"touchOver" (uint32):</b> this value keeps track if the touch position is currently
  *   inside the area or not. You can read this value but don't write it!
  *
  * When events happen the following functions of the parent \c Entity get called:
- * - OnTouchStart
- * - OnOverStart
- * - OnOverMove
- * - OnOverEnd
- * - OnTouchEnd
+ * - OnTouchStart - a pointer was pressed inside the area.
+ * - OnOverStart - a pressed pointer has entered the area. This can occur when a pointer is
+ *   pressed down inside the area (i.e. right after "OnTouchStart") or when an already
+ *   pressed pointer is moved inside the area.
+ * - OnOverMove - a pressed pointer moves within the area.
+ * - OnOverEnd - a pressed pointer is moved outside the area or the pointer is released.
+ * - OnTouchEnd - a pointer was released inside the area.
  *
  * When these functions get called they get a \c VariantList that contains three members:
  * - 0: the touch point of type \c CL_Vec2f
