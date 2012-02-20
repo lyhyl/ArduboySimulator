@@ -24,39 +24,9 @@ Resource * ResourceManager::FindDataByKey(const string &keyName)
 	return NULL; //fail
 }
 
-SurfaceAnim * ResourceManager::GetSurfaceAnim( string fileName )
+SurfaceAnim * ResourceManager::GetSurfaceAnim(const string &fileName)
 {
-	if (fileName.empty()) return NULL;
-
-	Resource *pData = FindDataByKey(fileName);
-	if (!pData)
-	{
-		SurfaceAnim *pSurf = new SurfaceAnim;
-		
-		pSurf->SetTextureType(Surface::TYPE_GUI);
-
-		if (!pSurf->LoadFile(fileName))
-		{
-			delete pSurf;
-			
-			LogMsg("ResourceManager::GetSurfaceAnim: Unable to load %s", fileName.c_str());
-			return NULL;
-		}
-
-		pData = new Resource;
-		if (!pData)
-		{
-			delete pSurf;
-			return NULL;
-		}
-
-		pData->m_type = Resource::TYPE_SURFACE_ANIM;
-		pData->m_pResource = pSurf;
-		m_data[fileName] = pData;
-
-	}
-
-	return (SurfaceAnim*)pData->m_pResource;
+	return GetSurfaceResource<SurfaceAnim>(fileName, Surface::TYPE_GUI);
 }
 
 void ResourceManager::KillAllResources()
@@ -107,11 +77,11 @@ Resource::~Resource()
 	switch (m_type)
 	{
 
-	case TYPE_SURFACE_ANIM:
-		delete (SurfaceAnim*) m_pResource;
+	case TYPE_SURFACE:
+		delete m_pResource;
 		break;
 
-	default:;
+	default:
 		LogMsg("Wat is type %d", m_type);
 		assert(!"Huh?");
 	}

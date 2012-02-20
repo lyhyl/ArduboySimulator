@@ -52,6 +52,12 @@ public:
 	string GetName() {return m_name;}
 
 	Entity * AddEntity(Entity *pEntity);
+	/**
+	 * Searches for an \c Entity with the given \a name.
+	 * If the name of this \c Entity is \a name then returns the object itself. Otherwise the
+	 * search decends recursively to the children \c Entities. If no \c Entity with the given
+	 * \a name is found then \c NULL is returned.
+	 */
 	Entity * GetEntityByName(const string &name);
 	bool RemoveEntityByName(const string &name, bool bRecursive = false); //if recursive flag, multiple entities might be deleted...
 	bool RemoveEntityByAddress(Entity *pEntToDelete, bool DeleteAlso = true);
@@ -60,6 +66,18 @@ public:
 	void RemoveAllEntities();
 
 	EntityComponent * AddComponent(EntityComponent *pComp);
+	/**
+	 * Searches for an \c EntityComponent with the given \a name and returns it.
+	 *
+	 * The \c EntityComponent is searched from this \c Entity's components.
+	 *
+	 * If \a bAlsoCheckParents is \c true and the named \c EntityComponent is not found
+	 * from this \c Entity then the parent \c Entity is searched also. The search continues
+	 * up the \c Entity tree until the named \c EntityComponent is found or the top of the
+	 * tree is reached.
+	 *
+	 * If no such \c EntityComponent is found \c NULL is returned.
+	 */
 	EntityComponent * GetComponentByName(string const &name, bool bAlsoCheckParents = false);
 	bool RemoveComponentByAddress( EntityComponent *pCompToDelete, bool bDeleteAlso = true);
 	bool RemoveComponentByName( const string &name);
