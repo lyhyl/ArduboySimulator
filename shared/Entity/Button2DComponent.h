@@ -97,6 +97,8 @@ private:
 	string *m_pOverFileName;
 	uint32 *m_pTouchOver;
 	float *m_pAlpha;
+	uint32 *m_pVisible;
+	
 };
 
 

@@ -45,6 +45,7 @@ void TextRenderComponent::OnAdd(Entity *pEnt)
 	m_pColor = &GetParent()->GetVarWithDefault("color", Variant(MAKE_RGBA(255,255,255,255)))->GetUINT32();
 	m_pColorMod = &GetParent()->GetVarWithDefault("colorMod", Variant(MAKE_RGBA(255,255,255,255)))->GetUINT32();
 	m_pAlpha = &GetParent()->GetVarWithDefault("alpha", Variant(1.0f))->GetFloat();
+	m_pVisible = &GetParent()->GetVarWithDefault("visible", uint32(1))->GetUINT32();
 
 	//our own stuff
 
@@ -98,7 +99,7 @@ void TextRenderComponent::RenderAsWave(CL_Vec2f vPos)
 
 void TextRenderComponent::OnRender(VariantList *pVList)
 {
-	if (*m_pAlpha <= 0) return;
+	if (*m_pAlpha <= 0 || *m_pVisible == 0) return;
 
 	CL_Vec2f vFinalPos = pVList->m_variant[0].GetVector2()+*m_pPos2d;
 	CL_Vec2f vRotationPt = vFinalPos;

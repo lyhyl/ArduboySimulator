@@ -96,7 +96,10 @@ void TyperComponent::OnUpdate(VariantList *pVList)
 		}
 
 		string text = pTextRender->GetVar("text")->GetString();
-		text += m_pText->at(m_curPos);
+		if (!m_pText->empty())
+		{
+			text += m_pText->at(m_curPos);
+		}
 		pTextRender->GetVar("text")->Set(text);
 
 		m_curPos++;

@@ -273,13 +273,6 @@ void AnimateEntity(Entity *pEnt, int startFrame, int endFrame, int animSpeedMS, 
 
 	uint32 totalTimeMS = animSpeedMS* (endFrame-startFrame);
 	
-	/*
-	if (type == InterpolateComponent::ON_FINISH_BOUNCE)
-	{
-		totalTimeMS *= 2; //need twice as much
-	}
-	*/
-
 	if (delayToStartMS == 0)
 	{
 		//set it all now
@@ -301,8 +294,34 @@ void AnimateEntity(Entity *pEnt, int startFrame, int endFrame, int animSpeedMS, 
 		GetMessageManager()->SetComponentVariable(pComp, delayToStartMS, "on_finish", Variant(uint32(type)));
 		GetMessageManager()->SetComponentVariable(pComp, delayToStartMS, "duration_ms", Variant(uint32(totalTimeMS)));
 	}
-	
 }
+
+EntityComponent * SetOverlayImageEntity(Entity *pEntWithOverlayComponent, string imageFileName, uint32 delayBeforeActionMS)
+{
+	if (!pEntWithOverlayComponent)
+	{
+		assert(!"SetOverlayImageEntity sent null entity");
+		return NULL;
+	}
+	EntityComponent *pComp = pEntWithOverlayComponent->GetComponentByName("OverlayRender");
+	if (!pComp)
+	{
+		assert(!"Only send entities with OverlayRenderComponents to this!  Ie, stuff created with CreateOverlayRenderEntity or such.");
+		return NULL;
+	}
+
+	if (delayBeforeActionMS == 0)
+	{
+		//change it now
+		pComp->GetVar("fileName")->Set(imageFileName);
+	} else
+	{
+		//schedule it to happen later
+		GetMessageManager()->SetComponentVariable(pComp, delayBeforeActionMS, "fileName", imageFileName);
+	}
+	return pComp;
+}
+
 
 void FadeInEntity(Entity *pEnt, bool bRecursive, int timeMS, int delayBeforeFadingMS)
 {
@@ -993,6 +1012,11 @@ void RemoveFocusIfNeeded(Entity *pEnt)
 	pEnt->RemoveComponentByName("FocusUpdate");
 }
 
+void RemoveInputFocusIfNeeded(Entity *pEnt)
+{
+	pEnt->RemoveComponentByName("FocusInput");
+}
+
 void AddFocusIfNeeded(Entity *pEnt, bool bAlsoLinkMoveMessages, int delayInputMS, int updateAndRenderDelay)
 {
 	if (!pEnt->GetComponentByName("FocusUpdate", true))
@@ -1129,7 +1153,6 @@ CL_Rectf MeasureEntityAndChildren(Entity *pEnt, CL_Vec2f *pVStartingPos,  bool b
 	{
 		vPos -= GetAlignmentOffset(vSize, align);
 	}
-
 	
 	CL_Rectf r = CL_Rectf(0,0,vSize.x, vSize.y);
 	if (!bFirst)
@@ -1216,6 +1239,24 @@ void SetupTextEntity(Entity *pEnt, eFont fontID, float scale)
 	pComp->GetVar("font")->Set(uint32(fontID));
 }
 
+
+//if you have a giant font that you are afraid is going to be too big on some phone
+//sizes, this is a way to auto-scale it so it works out
+//Example: float fontScale = EnforceMinimumFontLineToScreenRatio(FONT_LARGE, 1.0f, 6.6f);
+
+float EnforceMinimumFontLineToScreenRatio(eFont fontID, float fontScale, float minLineToScreenRatio)
+{
+	float fontSizeRating = GetScreenSizeYf() / GetBaseApp()->GetFont(fontID)->GetLineHeight(fontScale);
+
+	if (fontSizeRating < minLineToScreenRatio)
+	{
+		//font is too big.
+		fontScale =fontSizeRating/minLineToScreenRatio;
+	}
+
+	return fontScale;
+}
+
 void SetAlignmentEntity(Entity *pEnt, eAlignment align)
 {
 	pEnt->GetVar("alignment")->Set(uint32(align));
@@ -1235,6 +1276,29 @@ Entity * CreateTextBoxEntity(Entity *pParent, string entName, CL_Vec2f vPos, CL_
 	pTextComp->GetVar("text")->Set(msg);
 	pText->GetVar("pos2d")->Set(vPos);
 	return pText;
+}
+
+EntityComponent * SetTextEntity(Entity *pEntWithTextComponent, const string &text)
+{
+	if (!pEntWithTextComponent)
+	{
+		assert(!"SetTextEntity sent a null pointer");
+		return NULL;
+	}
+	EntityComponent *pComp = pEntWithTextComponent->GetComponentByName("TextRender");
+
+	if (!pComp)
+	{
+		pComp = pEntWithTextComponent->GetComponentByName("TextBoxRender");
+	}
+	if (!pComp)
+	{
+		assert(!"SetTextEntity failed - Send an entity with a TextBoxRender or TextRender component for crissake!");
+		return NULL;
+	}
+
+	pComp->GetVar("text")->Set(text);
+	return pComp;
 }
 
 void RemovePaddingEntity(Entity *pEnt)
@@ -1573,13 +1637,12 @@ void DestroyUnusedTextures()
 #ifdef _DEBUG
 	LogMsg("Destroying unused textures");
 #endif
+
 	/*
-	
 	for (int i=0; i < usedTextures.size(); i++)
 	{
-	LogMsg("%d - %s", i, usedTextures[i].c_str());
+		LogMsg("%d - %s", i, usedTextures[i].c_str());
 	}
-	
 	*/
 
 	GetBaseApp()->GetResourceManager()->RemoveTexturesNotInExclusionList(usedTextures);
@@ -1891,3 +1954,26 @@ bool EntityIsOnScreen(Entity *pEnt)
 	CL_Rectf er(pEnt->GetVar("pos2d")->GetVector2(), pEnt->GetVar("size2d")->GetVector2());
 	return r.is_overlapped(er);
 }
+
+CL_Vec2f GetSize2DEntity(Entity *pEnt) {return pEnt->GetVar("size2d")->GetVector2();}
+void SetSize2DEntity(Entity *pEnt, const CL_Vec2f &vSize) { pEnt->GetVar("size2d")->Set(vSize);}
+CL_Vec2f GetPos2DEntity(Entity *pEnt) {return pEnt->GetVar("pos2d")->GetVector2();}
+void SetPos2DEntity(Entity *pEnt, const CL_Vec2f &vSize) { pEnt->GetVar("pos2d")->Set(vSize);}
+
+void SetProgressBarPercent(Entity *pEnt, float progressPercent)
+{
+	EntityComponent *pComp = pEnt->GetComponentByName("ProgressBar");
+	if (!pComp)
+	{
+		assert(!"Only send this an entity with a ProgressBarComponent component!");
+		return;
+	}
+
+	pComp->GetVar("progress")->Set(progressPercent);
+}
+
+void SetVisibleEntity(Entity *pEnt, bool bVisible)
+{
+	pEnt->GetVar("visible")->Set(uint32(bVisible));
+}
+
