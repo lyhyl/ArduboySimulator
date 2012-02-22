@@ -74,6 +74,7 @@ private:
 	Variant * m_progressVar; //we write this out
 	int m_activeFinger;
 	uint32 *m_pEnforceFingerTracking;
+	bool m_bIsAMove;
 };
 
 #endif // ScrollComponent_h__

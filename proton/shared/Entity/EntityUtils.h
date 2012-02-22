@@ -101,6 +101,8 @@ void AddInputMovementFocusIfNeeded(Entity *pEnt);
  */
 void EnableRawMessageFocusInput(Entity *pEnt);
 void RemoveFocusIfNeeded(Entity *pEnt); //remove input, think, and render focuses from an entity
+void RemoveInputFocusIfNeeded(Entity *pEnt); //just removes input
+
 void FadeOutEntity(Entity *pEnt, bool bRecursive=true, int timeMS=300, int delayBeforeFadingMS = 0);
 void FadeOutAndKillEntity(Entity *pEnt, bool bRecursive = true, int timeMS=300, int delayBeforeFadingMS = 0);
 void FadeOutAndKillChildrenEntities(Entity *pEnt, int timeMS=300, int delayBeforeFadingMS = 0);
@@ -157,6 +159,8 @@ EntityComponent * MorphToFloatComponent(EntityComponent *pTargetComp, string tar
 void FlashStartEntity(Entity *pEnt, int flashSpeedMS = 250);
 void FlashStopEntity(Entity *pEnt);
 void FlashOnceEntity(Entity *pEnt, int flashSpeedMS);
+
+EntityComponent * SetOverlayImageEntity(Entity *pEntWithOverlayComponent, string imageFileName, uint32 delayBeforeActionMS = 0);
 
 EntityComponent * SetupAnimEntity(Entity *pEnt, uint32 frameCountX, uint32 frameCountY = 1, int curFrameX = -1, int curFrameY = -1); //-1 means don't set it
 void AnimateEntity(Entity *pEnt, int startFrame, int endFrame, int animSpeedMS, InterpolateComponent::eOnFinish type, int delayToStartMS);
@@ -221,4 +225,16 @@ void FakeClickAnEntity(Entity *pEnt); //good for pretending to click a Button2D 
 //will locate (by name) and modify text on an entity created with CreateTextLabelEntity() (or any entity with a TextRenderer component in it)
 Entity * SetLabelTextByEntityName(const string &entityName, string text, Entity *pRootEntity = GetEntityRoot());
 bool EntityIsOnScreen(Entity *pEnt); //returns true if any part of an entity overlaps the visible screen.  (reads pos2d and size2d to test)
+EntityComponent * SetTextEntity(Entity *pEntWithTextComponent, const string &text);
+
+
+//helpers for the lazy.. the reason I don't return a const pointer to the value is I tend to want to operate on the return vars right away.. -Seth
+CL_Vec2f GetSize2DEntity(Entity *pEnt);
+void SetSize2DEntity(Entity *pEnt, const CL_Vec2f &vSize);
+CL_Vec2f GetPos2DEntity(Entity *pEnt);
+void SetPos2DEntity(Entity *pEnt, const CL_Vec2f &vSize);
+void SetVisibleEntity(Entity *pEnt, bool bVisible);
+
+void SetProgressBarPercent(Entity *pEnt, float progressPercent);
+float EnforceMinimumFontLineToScreenRatio(eFont fontID, float fontScale, float minLineToScreenRatio);
 #endif // EntityUtils_h__

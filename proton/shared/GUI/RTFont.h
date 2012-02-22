@@ -27,6 +27,7 @@ public:
 
 	void MeasureText( rtRectf *pRectOut, const string &text, float scale = 1.0f);
 	void MeasureText( rtRectf *pRectOut, const char *pText, int len, float scale /*= 1.0f*/ );
+	CL_Vec2f MeasureText( const string &text, float scale = 1.0f);
 	void MeasureTextAndAddByLinesIntoDeque(const CL_Vec2f &textBounds, const string &text, deque<string> *pLines, float scale, CL_Vec2f &vEnclosingSizeOut);
 
 	void DrawScaled( float x, float y, const string &text, float scale = 1.0f, unsigned int color=MAKE_RGBA(255,255,255,255),  FontStateStack *pState = NULL, RenderBatcher *pBatcher = NULL);
@@ -52,7 +53,6 @@ private:
 	void OnUnloadSurfaces();
 	void OnLoadSurfaces();
 	void InitDefaults();
-
 	rtfont_header m_header;
 	vector<FontChar> m_chars;
 	Surface m_surf;

@@ -7,6 +7,8 @@ ScrollComponent::ScrollComponent()
 {
 	SetName("Scroll");
 	m_activeFinger = -1;
+
+	m_bIsAMove = false;
 }
 
 ScrollComponent::~ScrollComponent()
@@ -73,6 +75,9 @@ void ScrollComponent::OnRemove()
 
 void ScrollComponent::OnOverStart(VariantList *pVList)
 {
+
+	m_bIsAMove = false;
+
 	if (*m_pEnforceFingerTracking)
 	{
 		uint32 fingerID = pVList->Get(2).GetUINT32();
@@ -87,7 +92,7 @@ void ScrollComponent::OnOverStart(VariantList *pVList)
 
 void ScrollComponent::OnOverEnd(VariantList *pVList)
 {
-	if (*m_pEnforceFingerTracking)
+	//if (*m_pEnforceFingerTracking)
 	{
 
 		uint32 fingerID = 0;
@@ -102,6 +107,8 @@ void ScrollComponent::OnOverEnd(VariantList *pVList)
 			
 		}
 	}
+
+	m_bIsAMove = false;
 }
 
 void ScrollComponent::OnOverMove(VariantList *pVList)
@@ -116,9 +123,10 @@ void ScrollComponent::OnOverMove(VariantList *pVList)
 		}
 
 		if (fingerID != m_activeFinger) return;
-
 	}
+
 	//LogMsg("moved %s", PrintVector2(vDisplacement).c_str());
+
 
 	if (*m_pScrollStyle == STYLE_EXACT)
 	{

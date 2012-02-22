@@ -50,7 +50,7 @@ private:
 	uint32 *m_pStyle;
 	float *m_pEffectPower;
 	float *m_pRotation; //in degrees
-
+	uint32 *m_pVisible;
 };
 
 #endif // TextRenderComponent_h__

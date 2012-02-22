@@ -46,6 +46,7 @@ private:
 	uint32 *m_pColor;
 	uint32 *m_pColorMod;
 	uint32 *m_pBorderColor;
+	uint32 *m_pBackgroundColor;
 	float *m_pAlpha;
 	uint32 *m_pAlignment;
 	float *m_pProgress;

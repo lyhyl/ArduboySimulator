@@ -77,6 +77,7 @@ void ProgressBarComponent::OnAdd(Entity *pEnt)
 	m_pInterpolationTimeMS = &GetVarWithDefault("interpolationTimeMS", Variant(uint32(1000)))->GetUINT32();
 	m_pInterpolateType = &GetVarWithDefault("interpolation", Variant(uint32(INTERPOLATE_SMOOTHSTEP)))->GetUINT32();
 	m_pBorderColor = &GetVarWithDefault("borderColor", Variant(MAKE_RGBA(255,255,255,0)))->GetUINT32();
+	m_pBackgroundColor = &GetVarWithDefault("backgroundColor", Variant(MAKE_RGBA(255,255,255,0)))->GetUINT32();
 	m_pProgress = &GetVarWithDefault("progress", Variant(0.0f))->GetFloat();
 	m_pVisualProgress = &GetVarWithDefault("visualProgress", Variant(0.0f))->GetFloat();
 	m_pProgressOfLastSet = &GetVarWithDefault("progressOfLastSet", Variant(0.0f))->GetFloat(); //don't really want this shared, but too lazy to convert it back
@@ -125,6 +126,7 @@ void ProgressBarComponent::OnRender(VariantList *pVList)
 		*m_pVisualProgress = progress; //save it so outsiders can check and see what we're displaying
 		uint32 color = ColorCombine(*m_pColor, *m_pColorMod, *m_pAlpha);
 		uint32 borderColor = ColorCombine(*m_pBorderColor, *m_pColorMod, *m_pAlpha);
+		uint32 backgroundColor = ColorCombine(*m_pBackgroundColor, *m_pColorMod, *m_pAlpha);
 
 		//here, we assume the progress bar is horizontal and going left to right.. later, add a var to control this if needed and do a switch statement here
 
@@ -153,9 +155,29 @@ void ProgressBarComponent::OnRender(VariantList *pVList)
 			} else
 			{
 				//manual rectangle version of a progress bar
-				CL_Rectf r = CL_Rectf(vFinalPos.x, vFinalPos.y, vFinalPos.x+ (m_pSize2d->x*progressX), vFinalPos.y+m_pSize2d->y*progressY); 
+				CL_Rectf r = CL_Rectf(vFinalPos.x, vFinalPos.y, vFinalPos.x+ (m_pSize2d->x), vFinalPos.y+m_pSize2d->y); 
 
 				//flip y?  //default is yes, which is bottom up
+
+				if (GET_ALPHA(backgroundColor) > 0)
+				{
+					DrawFilledRect(r, backgroundColor);
+					if (GET_ALPHA(borderColor) > 0)
+					{
+						DrawRect(r, borderColor, 1);
+					}
+				}
+				r = CL_Rectf(vFinalPos.x, vFinalPos.y, vFinalPos.x+ (m_pSize2d->x*progressX), vFinalPos.y+m_pSize2d->y*progressY); 
+
+				if (*m_pType == TYPE_VERTICAL && *m_pFlipY == 0)
+				{
+					r.bottom = vFinalPos.y + m_pSize2d->y;
+					r.top = r.bottom - m_pSize2d->y*progressY;
+				} else 	if (*m_pType == TYPE_HORIZONTAL && *m_pFlipX == 1)
+				{
+					r.right = vFinalPos.x + m_pSize2d->x;
+					r.left = r.right - m_pSize2d->x*progressX;
+				}
 			
 				if (*m_pType == TYPE_VERTICAL && *m_pFlipY == 0)
 				{

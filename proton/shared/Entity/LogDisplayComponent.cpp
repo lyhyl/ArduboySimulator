@@ -204,6 +204,7 @@ void LogDisplayComponent::UpdateScrollBar()
 	vTotalBounds.bottom = vTotalBounds.top;
 	vTotalBounds.top = vTotalBounds.bottom - fontHeight*m_pActiveConsole->GetTotalLines();
 
+	vTotalBounds.right =0; //not allowing horizontal scrolling at all
 	float percent = (m_curLine-linePerScreen) / ((float) (m_pActiveConsole->GetTotalLines()-linePerScreen));
 
 //	LogMsg("Percent is %.2f", percent);

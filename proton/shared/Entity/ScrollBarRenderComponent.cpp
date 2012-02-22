@@ -95,13 +95,8 @@ void ScrollBarRenderComponent::OnRender(VariantList *pVList)
 		return; //not ready
 	}
 
-	float contentAreaRatio = (m_pBoundsRect->get_height()+m_pSize2d->y)/m_pSize2d->y;
-	if (contentAreaRatio <= 1)
-	{
-		//don't need a scroll bar
-		return;
-	}
-
+	float contentAreaRatio;
+	
 	GLboolean bScissorEnabled = false;
 	glGetBooleanv(GL_SCISSOR_TEST, &bScissorEnabled);
 
@@ -111,35 +106,85 @@ void ScrollBarRenderComponent::OnRender(VariantList *pVList)
 		//disable it temporarily
 		glDisable(GL_SCISSOR_TEST);
 	}
+	float barHeight;
+	float barWidth;
+	CL_Vec2f vFinalPos;
+	uint32 color = ColorCombine(*m_pColor, *m_pColorMod, *m_pAlpha);
 
-	float barHeight = m_pSize2d->y/contentAreaRatio;
 	if (!m_pSurf) return; //can't do anything without the graphics loaded
 	
-	if (barHeight < m_pSurf->GetFrameHeight()*2) barHeight = m_pSurf->GetFrameHeight()*2;
-	float barWidth = m_pSurf->GetFrameWidth();
-	uint32 color = ColorCombine(*m_pColor, *m_pColorMod, *m_pAlpha);
-	//LogMsg("percent scrolled is %.2f, contentAreaRation is %.2f", m_pProgress2d->y, contentAreaRatio);
-
-	CL_Vec2f vFinalPos = pVList->m_variant[0].GetVector2()+ *m_pPos2d + CL_Vec2f(m_pSize2d->x, 0);
-
-	if (vFinalPos.x >= GetScreenSizeXf())
+	
+	contentAreaRatio = (m_pBoundsRect->get_height()+m_pSize2d->y)/m_pSize2d->y;
+	if (contentAreaRatio > 1)
 	{
-		//position on the inside, not the outside
-		vFinalPos.x -= ( barWidth+(iPadMapX(8) )); //adjust the spacer with the screensize
-	}
-	//slide it down to the right position:
-	vFinalPos.y += (m_pSize2d->y - barHeight)* m_pProgress2d->y;
+		//render vertical scroll bar
+		m_pSurf->SetupAnim(1,2);
 
-	//draw the top of the capsule
-	m_pSurf->BlitAnim(vFinalPos.x, vFinalPos.y,0,0, color);
-	vFinalPos.y += m_pSurf->GetFrameHeight(); 
-	barHeight -=  m_pSurf->GetFrameHeight()*2;
-	//draw the bottom end cap
-	m_pSurf->BlitAnim(vFinalPos.x, vFinalPos.y+barHeight,0,1, color);
-	//first draw the first end cap
-	CL_Rectf r = CL_Rectf(0, 0, barWidth, barHeight);
-	ApplyOffset(&r, vFinalPos);
-	DrawFilledRect(r, color);
+		barHeight = m_pSize2d->y/contentAreaRatio;
+		
+		if (barHeight < m_pSurf->GetFrameHeight()*2) barHeight = m_pSurf->GetFrameHeight()*2;
+		
+		barWidth = m_pSurf->GetFrameWidth();
+		//LogMsg("percent scrolled is %.2f, contentAreaRation is %.2f", m_pProgress2d->y, contentAreaRatio);
+
+		vFinalPos = pVList->m_variant[0].GetVector2()+ *m_pPos2d + CL_Vec2f(m_pSize2d->x, 0);
+
+		if (vFinalPos.x >= GetScreenSizeXf())
+		{
+			//position on the inside, not the outside
+			vFinalPos.x -= ( barWidth+(iPadMapX(8) )); //adjust the spacer with the screensize
+		}
+		//slide it down to the right position:
+		vFinalPos.y += (m_pSize2d->y - barHeight)* m_pProgress2d->y;
+
+		//draw the top of the capsule
+		m_pSurf->BlitAnim(vFinalPos.x, vFinalPos.y,0,0, color);
+		vFinalPos.y += m_pSurf->GetFrameHeight(); 
+		barHeight -=  m_pSurf->GetFrameHeight()*2;
+		//draw the bottom end cap
+		m_pSurf->BlitAnim(vFinalPos.x, vFinalPos.y+barHeight,0,1, color);
+		//first draw the first end cap
+		CL_Rectf r = CL_Rectf(0, 0, barWidth, barHeight);
+		ApplyOffset(&r, vFinalPos);
+		DrawFilledRect(r, color);
+	}
+	
+	contentAreaRatio = (m_pBoundsRect->get_width()+m_pSize2d->x)/m_pSize2d->x;
+	if (contentAreaRatio > 1)
+	{
+		//render horizontal scroll bar
+		m_pSurf->SetupAnim(2,1); //repurpose the graphics for horizontal...
+
+		barWidth = m_pSize2d->x/contentAreaRatio;
+
+		if (barWidth < m_pSurf->GetFrameWidth()*2) barWidth = m_pSurf->GetFrameWidth()*2;
+
+		barHeight= m_pSurf->GetFrameHeight();
+		//LogMsg("percent scrolled is %.2f, contentAreaRation is %.2f", m_pProgress2d->x, contentAreaRatio);
+
+		vFinalPos = pVList->m_variant[0].GetVector2()+ *m_pPos2d + CL_Vec2f(0, m_pSize2d->y);
+
+		if (vFinalPos.y >= GetScreenSizeYf())
+		{
+			//position on the inside, not the outside
+			vFinalPos.y -= ( barHeight+(iPadMapY(6) )); //adjust the spacer with the screensize
+		}
+		//slide it down to the right position:
+		vFinalPos.x += (m_pSize2d->x - barWidth)* m_pProgress2d->x;
+
+		//draw the top of the capsule
+		m_pSurf->BlitAnim(vFinalPos.x, vFinalPos.y,0,0, color);
+		vFinalPos.x += m_pSurf->GetFrameWidth(); 
+		barWidth -=  m_pSurf->GetFrameWidth()*2;
+		//draw the bottom end cap
+		m_pSurf->BlitAnim(vFinalPos.x+barWidth, vFinalPos.y,1,0, color);
+		//first draw the first end cap
+		CL_Rectf r = CL_Rectf(0, 0, barWidth, barHeight);
+		ApplyOffset(&r, vFinalPos);
+		DrawFilledRect(r, color);
+	}
+	
+	
 	if (bScissorEnabled)
 	{
 		g_globalBatcher.Flush();

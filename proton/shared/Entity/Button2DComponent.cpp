@@ -29,8 +29,6 @@ Button2DComponent::~Button2DComponent()
 void Button2DComponent::OnAdd(Entity *pEnt)
 {
 	EntityComponent::OnAdd(pEnt);
-
-
 	//when area is clicked, OnButtonSelected is called on the parent entity
 
 	m_pOnClickAudioFile = &GetVarWithDefault("onClickAudioFile", Variant(g_defaultButtonClickSound))->GetString();
@@ -42,6 +40,7 @@ void Button2DComponent::OnAdd(Entity *pEnt)
 	m_pOverFileName = &GetVar("overFileName")->GetString();
 	m_pTouchOver = &GetParent()->GetVar("touchOver")->GetUINT32();
 	m_pAlpha = &GetParent()->GetVarWithDefault("alpha", Variant(1.0f))->GetFloat();
+	m_pVisible = &GetParent()->GetVarWithDefault("visible", uint32(1))->GetUINT32();
 
 	m_repeatTimer = 0;
 
@@ -102,7 +101,7 @@ void Button2DComponent::OnOverStart(VariantList *pVList)
 	switch (*m_pVisualStyle)
 	{
 	case STYLE_FADE_ALPHA_ON_HOVER:
-		if (*m_pDisabled == 0 && m_repeatTimer < GetBaseApp()->GetTick())
+		if (*m_pDisabled == 0 && *m_pVisible != 0 && m_repeatTimer < GetBaseApp()->GetTick())
 		{	
 			GetParent()->GetVar("alpha")->Set(m_alphaSave*0.5f);
 		}
@@ -166,7 +165,7 @@ void Button2DComponent::PerformClick(VariantList *pVList)
 			break;
 	}
 
-	if (*m_pDisabled == 0 && m_repeatTimer < GetBaseApp()->GetTick())
+	if (*m_pDisabled == 0 &&  *m_pVisible != 0 && m_repeatTimer < GetBaseApp()->GetTick())
 	{
 		m_repeatTimer = GetBaseApp()->GetTick() + (*m_pRepeatDelayMS);
 		if (!m_pOnClickAudioFile->empty())
@@ -183,7 +182,7 @@ void Button2DComponent::PerformClick(VariantList *pVList)
 	} else
 	{
 #ifdef _DEBUG
-		LogMsg("Ignoring click to %s, button is disabled",GetParent()->GetName().c_str());
+		LogMsg("Ignoring click to %s, button is disabled or not visible",GetParent()->GetName().c_str());
 #endif
 	}
 }

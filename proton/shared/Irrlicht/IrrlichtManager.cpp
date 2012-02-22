@@ -148,7 +148,15 @@ void IrrlichtManager::BeginScene()
 {
 	if (m_pDriver)
 	{
-		m_pDriver->beginScene(false, false, SColor(255,100,101,140));
+		PrepareForGL();
+
+		if (m_bLightingEnabled)
+		{
+			glEnable( GL_LIGHTING );
+		}
+
+		//this really isn't needed as Proton clears the zbuffer/etc
+		//m_pDriver->beginScene(false, false, SColor(255,100,101,140));
 	
 #ifdef RT_IRRBULLET
 		
