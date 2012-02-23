@@ -56,9 +56,9 @@ bool SaveToFile(float num, FILE *fp)
 	return true;
 }
 
-bool LoadFromFile(int &num, FILE *fp)
+bool LoadFromFile(int32 &num, FILE *fp)
 {
-	fread(&num, sizeof(int), 1, fp);
+	fread(&num, sizeof(int32), 1, fp);
 	return true;
 }
 bool LoadFromFile(float &num, FILE *fp)

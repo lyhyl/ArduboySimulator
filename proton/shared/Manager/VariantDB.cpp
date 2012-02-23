@@ -257,6 +257,14 @@ bool VariantDB::Load( const string &fileName, bool *pFileExistedOut, bool bAddBa
 				break;
 			}
 
+		case Variant::TYPE_INT32:
+			{
+				int32 v;
+				LoadFromFile(v, fp);
+				GetVar(s)->Set(v);
+				break;
+			}
+
 		case Variant::TYPE_UINT32:
 			{
 				uint32 v;
