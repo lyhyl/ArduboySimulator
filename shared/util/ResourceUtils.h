@@ -28,7 +28,7 @@ byte * zLibInflateToMemory(byte *pInput, unsigned int compressedSize, unsigned i
 //some helpers with file handling
 bool LoadFromFile(std::string &str, FILE *fp);
 bool LoadFromFile(float &num, FILE *fp);
-bool LoadFromFile(int &num, FILE *fp);
+bool LoadFromFile(int32 &num, FILE *fp);
 bool LoadFromFile(uint32 &num, FILE *fp);
 bool LoadFromFile(bool &num, FILE *fp);
 bool SaveToFile(float num, FILE *fp);

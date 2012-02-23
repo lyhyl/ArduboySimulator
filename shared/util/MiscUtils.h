@@ -1,5 +1,9 @@
-#pragma once
+#ifndef PlatformSetup_h__
+#define PlatformSetup_h__
+
 #include <string>
+
+#include "PlatformSetup.h"
 
 unsigned int HashString(const char *str);
 bool IsEven(int number);
@@ -57,3 +61,5 @@ void RotationToXYMod(float rotation, float *pXMod ,float *pYMod); //given a rota
 void SetFloatWithTarget(float *p_out_dest, float r_target, float r_amount);
 std::string FilterToValidAscii(const std::string &input, bool bStrict);
 bool isOrdinaryChar(char c, bool bStrict);
+
+#endif
