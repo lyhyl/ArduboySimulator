@@ -1,5 +1,5 @@
-#ifndef PlatformSetup_h__
-#define PlatformSetup_h__
+#ifndef MiscUtils_h__
+#define MiscUtils_h__
 
 #include <string>
 
