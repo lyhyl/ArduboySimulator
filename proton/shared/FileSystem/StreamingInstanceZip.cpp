@@ -65,8 +65,6 @@ bool StreamingInstanceZip::Open( string fName)
 {
 	
 	Close();
-
-	int err = UNZ_OK;
 	
 	if (unzLocateFile(m_uf,(m_rootDir+fName).c_str(),CASESENSITIVITY)!=UNZ_OK)
 	{
@@ -184,13 +182,9 @@ void StreamingInstanceZip::SeekFromStart( int byteCount )
 	//since we moved, a readcache won't make sense anymore if it existed
 
 #ifdef _DEBUG
-	char charCrypt=' ';
 	char filename_inzip[512];
 	unz_file_info file_info;
-	uLong ratio=0;
-
-	int err = unzGetCurrentFileInfo(m_uf,&file_info,filename_inzip,sizeof(filename_inzip),NULL,0,NULL,0);
-
+	unzGetCurrentFileInfo(m_uf,&file_info,filename_inzip,sizeof(filename_inzip),NULL,0,NULL,0);
 	assert (file_info.compression_method == 0 && "Can't seek in a compressed file, I mean, it'd be slow");
 #endif
 

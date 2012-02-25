@@ -475,6 +475,7 @@ void SetupOrtho()
 		swap(tempX, tempY);
 	}
 	*/
+    CHECK_GL_ERROR();
 
 	glOrthof( 0,  tempX, tempY, 0,  -1, 1 );		
 	

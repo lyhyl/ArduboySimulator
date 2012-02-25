@@ -257,14 +257,6 @@ bool VariantDB::Load( const string &fileName, bool *pFileExistedOut, bool bAddBa
 				break;
 			}
 
-		case Variant::TYPE_INT32:
-			{
-				int32 v;
-				LoadFromFile(v, fp);
-				GetVar(s)->Set(v);
-				break;
-			}
-
 		case Variant::TYPE_UINT32:
 			{
 				uint32 v;
@@ -273,6 +265,14 @@ bool VariantDB::Load( const string &fileName, bool *pFileExistedOut, bool bAddBa
 				break;
 			}
 	
+		case Variant::TYPE_INT32:
+			{
+				int32 v;
+				LoadFromFile(v, fp);
+				GetVar(s)->Set(v);
+				break;
+			}
+
 		case Variant::TYPE_FLOAT:
 			{
 				float v;
@@ -404,4 +404,25 @@ Variant * VariantDB::GetNext(string &keyOut)
 	pReturn = m_nextItor->second;
 	m_nextItor++;
 	return pReturn;
+}
+
+int VariantDB::AddVarPointersToVector( vector<pair<const string*, Variant*> > *varListOut, const string keyMustStartWithThisText/*=""*/ )
+{
+	int count = 0;
+	dataList::iterator itor = m_data.begin();
+
+	while (itor != m_data.end())
+	{
+		//Variant *pV = itor->second;
+		
+		if (keyMustStartWithThisText.empty() || StringFromStartMatches(itor->first,keyMustStartWithThisText))
+		{
+			varListOut->push_back(make_pair(&itor->first, itor->second));
+			count++;
+		}
+
+		itor++;
+	}
+
+	return count;
 }

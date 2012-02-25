@@ -463,5 +463,5 @@ void VariantList::GetVariantListStartingAt(VariantList *pOut, int startIndex)
 	{
 		pOut->m_variant[cur++] = m_variant[i];
 	}
-	
 }
+

@@ -66,7 +66,6 @@ void Surface::Kill()
 
 bool Surface::LoadBMPTexture(byte *pMem)
 {
-	BMPFileHeader *pBmpHeader = (BMPFileHeader*)&pMem[0];
 	BMPImageHeader *pBmpImageInfo = (BMPImageHeader*)&pMem[14];
 
 	unsigned short offsetToImageData;
@@ -416,6 +415,11 @@ bool Surface::LoadFileFromMemory( byte *pMem, int inputSize )
 {
 	Kill();
 	
+	if (!pMem)
+	{
+		assert(!"LoadFileFromMemory sent a null pointer?  AW HELL NAW");
+		return false;
+	}
 	if (m_texWidth == 0)
 	{
 		if (m_textureCreationMethod = TEXTURE_CREATION_NONE)

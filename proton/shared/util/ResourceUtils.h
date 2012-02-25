@@ -31,6 +31,7 @@ bool LoadFromFile(float &num, FILE *fp);
 bool LoadFromFile(int32 &num, FILE *fp);
 bool LoadFromFile(uint32 &num, FILE *fp);
 bool LoadFromFile(bool &num, FILE *fp);
+bool LoadFromFile(int32 &num, FILE *fp);
 bool SaveToFile(float num, FILE *fp);
 bool SaveToFile(int num, FILE *fp);
 bool SaveToFile(uint32 num, FILE *fp);

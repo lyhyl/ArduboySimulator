@@ -276,7 +276,8 @@ void InitDeviceScreenInfo()
 		}
 	}
 	
-	SetupScreenInfoIPhone(GetOrientation());
+	InitBaseScreenSizeFromPrimary();
+    SetupScreenInfoIPhone(GetOrientation());
 	
 
 }
