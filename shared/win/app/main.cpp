@@ -1205,8 +1205,6 @@ void AddText(const char *tex ,char *filename)
 	}
 }
 
-extern bool g_isLoggerInitted;
-
 void LogMsg ( const char* traceStr, ... )
 {
 	va_list argsVA;
@@ -1222,7 +1220,7 @@ void LogMsg ( const char* traceStr, ... )
 	OutputDebugString(buffer);
 	OutputDebugString("\n");
 
-	if (g_isLoggerInitted)
+	if (IsBaseAppInitted())
 	{
 		GetBaseApp()->GetConsole()->AddLine(buffer);
 	

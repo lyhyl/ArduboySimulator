@@ -342,7 +342,6 @@ ResourceManager * GetResourceManager();
 unsigned int GetTick(eTimingSystem timingSystem = GetBaseApp()->GetActiveTimingSystem()); //faster to write
 eTimingSystem GetTiming();
 extern RenderBatcher g_globalBatcher; //can be used by anyone
-extern bool g_isLoggerInitted;
 
 
 #endif // BaseApp_h__
