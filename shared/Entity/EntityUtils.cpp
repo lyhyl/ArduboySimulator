@@ -158,8 +158,6 @@ void OneTimeBobEntity(Entity *pEnt, float bobAmount, int delayBeforeBob, int dur
 
 void AnimateStopEntity(Entity *pEnt, int delayToStartMS)
 {
-	EntityComponent *overlayComp = pEnt->GetComponentByName("OverlayRender");
-
 	EntityComponent *pComp = pEnt->GetComponentByName("ic_anim");
 	if (pComp)
 	{
@@ -175,8 +173,6 @@ void AnimateStopEntity(Entity *pEnt, int delayToStartMS)
 
 void AnimateStopEntityAndSetFrame(Entity *pEnt, int delayToStartMS, int frameX, int frameY)
 {
-	EntityComponent *overlayComp = pEnt->GetComponentByName("OverlayRender");
-
 	EntityComponent *pComp = pEnt->GetComponentByName("ic_anim");
 	if (pComp)
 	{

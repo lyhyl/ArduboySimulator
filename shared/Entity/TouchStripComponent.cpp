@@ -133,7 +133,7 @@ void TouchStripComponent::OnInput(VariantList *pVList)
 				if (m_activeFinger == -1)			
 				{
 
-				TouchTrackInfo *pTouch = GetBaseApp()->GetTouch(fingerID);
+				//TouchTrackInfo *pTouch = GetBaseApp()->GetTouch(fingerID);
 				//if (pTouch->WasHandled()) return;
 
 					//well, nobody has claimed it yet.  Tell you what, if they are over us, let's let it count as a first touch
@@ -156,6 +156,7 @@ void TouchStripComponent::OnInput(VariantList *pVList)
 		}	
 		break;	
 	
+        default: ;
 	}	
 }
 

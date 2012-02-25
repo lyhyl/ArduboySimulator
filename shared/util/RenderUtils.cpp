@@ -26,6 +26,13 @@ bool g_lockedLandscape = false;
 eOrientationMode GetForcedOrientation() {return g_forcedOrientation;}
 void SetForcedOrientation(eOrientationMode orientation) {g_forcedOrientation = orientation;}
 
+void InitBaseScreenSizeFromPrimary()
+{
+    //to be called after GetPrimaryGLY() is valid (Only needed on iOS?)
+    g_screenSizeY = GetPrimaryGLY();
+    g_screenSizeX = GetPrimaryGLX();
+}
+
 void RenderGLTriangle()
 {
 	//let's draw a simple triangle 
@@ -539,7 +546,6 @@ float SinToZeroToOneRange(float sinIn)
 //just makes a random brightish color
 uint32 GetBrightColor()
 {
-	float power = 255;
 	int color[3];
 
 	int num = Random(2);

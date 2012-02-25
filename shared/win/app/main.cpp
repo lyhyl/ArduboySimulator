@@ -1054,7 +1054,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 			if (GetAsyncKeyState(VK_RETURN) && GetAsyncKeyState(VK_MENU))
 			{
 				LogMsg("Toggle fullscreen");
-
 				GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_TOGGLE_FULLSCREEN, 0, 0);  //lParam holds a lot of random data about the press, look it up if
 				//return true;
 			}
@@ -1184,7 +1183,7 @@ cleanup:
 }
 
 
-void AddText(char *tex ,char *filename)
+void AddText(const char *tex ,char *filename)
 {
 	FILE *          fp;
 	if (strlen(tex) < 1) return;
@@ -1194,14 +1193,14 @@ void AddText(char *tex ,char *filename)
 
 		fp = fopen( (GetBaseAppPath()+filename).c_str(), "wb");
 		if (!fp) return;
-		fwrite( tex, strlen(tex), 1, fp);       /* current player */
+		fwrite( tex, strlen(tex), 1, fp);      
 		fclose(fp);
 		return;
 	} else
 	{
 		fp = fopen( (GetBaseAppPath()+filename).c_str(), "ab");
 		if (!fp) return;
-		fwrite( tex, strlen(tex), 1, fp);       /* current player */
+		fwrite( tex, strlen(tex), 1, fp);      
 		fclose(fp);
 	}
 }

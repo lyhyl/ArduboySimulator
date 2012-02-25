@@ -114,6 +114,7 @@ float iPhoneMapX2X( float x );
 float iPhoneMapY2X( float y );
 CL_Vec2f iPhoneMap2X( CL_Vec2f vPos );
 CL_Vec2f iPhoneMap2X( float x, float y );
+void InitBaseScreenSizeFromPrimary(); //to be called after GetPrimaryGLY() is valid (Only needed on iOS?)
 
 void SetupFakePrimaryScreenSize(int x, int y);
 int GetFakePrimaryScreenSizeX();

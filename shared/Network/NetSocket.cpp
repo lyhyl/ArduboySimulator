@@ -119,10 +119,14 @@ bool NetSocket::Init( string url, int port )
 #endif
 	
 	int ret = connect(m_socket,(struct sockaddr *)&sa,sizeof sa);
-#ifdef _DEBUG
-	//LogMsg("Setup socket (%d)", ret);
-#endif
 
+    if (ret == -1)
+    {
+        
+        LogError("Couldn't open socket.");
+        return false;
+    }
+    
 
 	return true;
 }

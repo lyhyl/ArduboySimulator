@@ -482,11 +482,7 @@ bool SoftSurface::LoadRTTexture(byte *pMem)
 			colorType = GL_RGB;
 		}
 		//			LogMsg("Loading surface: miplevel %d, internal color type:0x%02lX  colortype 0x%02lX, x%d y%d, format type: 0x%02lX", nMipLevel, colorTypeSource, colorType, pMipSection->width, pMipSection->height, pTexHeader->format );
-		int internalColorFormat = colorType;
-#ifdef C_GL_MODE
-		if (internalColorFormat == GL_RGBA) internalColorFormat = GL_RGBA8;
-		if (internalColorFormat == GL_RGB) internalColorFormat = GL_RGB8;
-#endif
+
 		assert( (colorType == GL_RGBA || colorType == GL_RGB) && "We don't support anything other than RGB or RGBA at 8 bits per channel in SoftSurface rttex loading");
 
 		m_bUsesAlpha = bUsesAlpha != 0;

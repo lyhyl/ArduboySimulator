@@ -33,6 +33,7 @@
 		5D30635F0FD890B0009DE600 /* MathUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D30635D0FD890B0009DE600 /* MathUtils.cpp */; };
 		5D3063660FD890CB009DE600 /* AudioManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3063600FD890CB009DE600 /* AudioManager.cpp */; };
 		5D3063AB0FD8B00A009DE600 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D3063AA0FD8B00A009DE600 /* OpenAL.framework */; };
+		5D3EC7FD14F85FB9001A2C8E /* ArcadeInputComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3EC7FB14F85FB9001A2C8E /* ArcadeInputComponent.cpp */; };
 		5D5C0F3A1275638500A4E4E3 /* NetUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D5C0F391275638500A4E4E3 /* NetUtils.cpp */; };
 		5D7B10E40F245B88003A3396 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D7B10E30F245B88003A3396 /* libz.dylib */; };
 		5D7B4CF710CCEE030073DDA8 /* SoftSurface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7B4CF510CCEE030073DDA8 /* SoftSurface.cpp */; };
@@ -147,6 +148,8 @@
 		5D3063600FD890CB009DE600 /* AudioManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AudioManager.cpp; path = Audio/AudioManager.cpp; sourceTree = "<group>"; };
 		5D3063610FD890CB009DE600 /* AudioManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AudioManager.h; path = Audio/AudioManager.h; sourceTree = "<group>"; };
 		5D3063AA0FD8B00A009DE600 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
+		5D3EC7FB14F85FB9001A2C8E /* ArcadeInputComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ArcadeInputComponent.cpp; path = Entity/ArcadeInputComponent.cpp; sourceTree = "<group>"; };
+		5D3EC7FC14F85FB9001A2C8E /* ArcadeInputComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ArcadeInputComponent.h; path = Entity/ArcadeInputComponent.h; sourceTree = "<group>"; };
 		5D5C0F381275638500A4E4E3 /* NetUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NetUtils.h; path = Network/NetUtils.h; sourceTree = "<group>"; };
 		5D5C0F391275638500A4E4E3 /* NetUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NetUtils.cpp; path = Network/NetUtils.cpp; sourceTree = "<group>"; };
 		5D7B10E30F245B88003A3396 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
@@ -377,6 +380,8 @@
 		5D82C88E0FF4BB660082EBE7 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				5D3EC7FB14F85FB9001A2C8E /* ArcadeInputComponent.cpp */,
+				5D3EC7FC14F85FB9001A2C8E /* ArcadeInputComponent.h */,
 				5D165B86125AA70800F1E8E3 /* FocusInputComponent.h */,
 				5D165B87125AA70800F1E8E3 /* FocusInputComponent.cpp */,
 				5D165B81125AA67E00F1E8E3 /* CustomInputComponent.h */,
@@ -649,6 +654,7 @@
 				5D165B88125AA70800F1E8E3 /* FocusInputComponent.cpp in Sources */,
 				5D165BA1125AAA3800F1E8E3 /* FileManager.cpp in Sources */,
 				5D5C0F3A1275638500A4E4E3 /* NetUtils.cpp in Sources */,
+				5D3EC7FD14F85FB9001A2C8E /* ArcadeInputComponent.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
