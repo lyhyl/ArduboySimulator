@@ -18,7 +18,6 @@
 
 using namespace std;
 
-extern bool g_isLoggerInitted;
 void LogMsg(const char *lpFormat, ...)
 {
 	std::va_list argPtr ;
@@ -30,7 +29,7 @@ void LogMsg(const char *lpFormat, ...)
 	memset ( (void*)buffer, 0, logSize );
 	vsnprintf( buffer, logSize,  lpFormat, argPtr );
 	
-	if (g_isLoggerInitted)
+	if (IsBaseAppInitted())
 	GetBaseApp()->GetConsole()->AddLine(buffer);
 	
 	va_end(argPtr) ;

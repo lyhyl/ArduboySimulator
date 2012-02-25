@@ -104,7 +104,7 @@ void LogMsg ( const char* traceStr, ... )
 	
 	__android_log_write(ANDROID_LOG_INFO,GetAppName(), buffer);
 
-	if (g_isLoggerInitted)
+	if (IsBaseAppInitted())
 	{
 		GetBaseApp()->GetConsole()->AddLine(buffer);
 	}

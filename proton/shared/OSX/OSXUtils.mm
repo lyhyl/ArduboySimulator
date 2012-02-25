@@ -20,7 +20,6 @@ const char * GetAppName();
 
 using namespace std;
 
-extern bool g_isLoggerInitted;
 void LogMsg(const char *lpFormat, ...)
 {
 	
@@ -33,7 +32,7 @@ void LogMsg(const char *lpFormat, ...)
 	memset ( (void*)buffer, 0, logSize );
 	vsnprintf( buffer, logSize,  lpFormat, argPtr );
 
-	if (g_isLoggerInitted)
+	if (IsBaseAppInitted())
 	GetBaseApp()->GetConsole()->AddLine(buffer);
 	va_end(argPtr) ;
 		

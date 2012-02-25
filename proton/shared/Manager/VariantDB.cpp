@@ -200,8 +200,6 @@ bool VariantDB::Load( const string &fileName, bool *pFileExistedOut, bool bAddBa
 		f = fileName;
 	}
 
-	assert(m_data.size() == 0 && "Don't have junk in here when loading.");
-
 	FILE *fp = fopen( f.c_str(), "rb");
 
 	if (!fp)
@@ -245,6 +243,12 @@ bool VariantDB::Load( const string &fileName, bool *pFileExistedOut, bool bAddBa
 		//get the var name
 		LoadFromFile(s, fp);
 		
+#ifdef _DEBUG
+		if (GetVarIfExists(s) != NULL) {
+			LogMsg("VariantDB: variable %s already exists in database while loading from file %s. The previous value gets overwritten!", s.c_str(), fileName.c_str());
+		}
+#endif
+
 		//get the actual data too
 		switch(varType)
 		{
