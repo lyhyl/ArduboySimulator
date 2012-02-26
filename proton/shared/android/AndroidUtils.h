@@ -1,5 +1,5 @@
 //  ***************************************************************
-//  WinUtils - Creation date: 09/12/2010
+//  AndroidUtils - Creation date: 09/12/2010
 //  -------------------------------------------------------------
 //  Robinson Technologies - Check license.txt for license info.
 //
@@ -7,10 +7,12 @@
 //  Programmer(s):  Seth A. Robinson (seth@rtsoft.com)
 //  ***************************************************************
 
-#ifndef WebOSUtils_h__
-#define WebOSUtils_h__
-#include "../PlatformEnums.h"
+#ifndef AndroidUtils_h__
+#define AndroidUtils_h__
+
 #include <jni.h>
+#include <string>
+
 std::string GetAPKFile();
 
 JNIEnv * GetJavaEnv();
@@ -33,4 +35,4 @@ void AppOnSendGUIEx(JNIEnv*  env, jobject thiz,jint messageType, jint parm1, jin
 jstring AppGetLastOSMessageString(JNIEnv* env);
 void AppOnSendGUIStringEx(JNIEnv* env, jobject thiz,jint messageType, jint parm1, jint parm2, jint finger, jstring s );
 float AppGetLastOSMessageParm1(JNIEnv* env);
-#endif // WebOSUtils_h__
+#endif // AndroidUtils_h__

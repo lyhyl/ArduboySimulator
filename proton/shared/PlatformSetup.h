@@ -1,3 +1,7 @@
+#ifndef PlatformSetup_h__
+#define PlatformSetup_h__
+
+#include "PlatformEnums.h"
 
 #ifdef WIN32
 #include "win/PlatformSetupWin.h"
@@ -106,3 +110,5 @@ bool IsLargeScreen();
 std::string PlatformIDAsString(ePlatformID platformID); //will never change
 std::string PlatformIDAsStringDisplay(ePlatformID platformID);  //may change..
 #endif
+
+#endif // PlatformSetup_h__

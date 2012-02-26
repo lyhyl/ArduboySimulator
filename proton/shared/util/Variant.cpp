@@ -156,6 +156,26 @@ void Variant::Interpolate(Variant *pA,Variant *pB, float curPos, eInterpolateTyp
 	case INTERPOLATE_EASE_FROM:
 		curPos = EASE_FROM(curPos);
 		break;
+
+	case INTERPOLATE_EASE_TO_QUARTIC:
+		curPos = 1 - (curPos = 1 - curPos) * curPos * curPos * curPos;
+		break;
+	case INTERPOLATE_EASE_FROM_QUARTIC:
+		curPos = curPos * curPos * curPos * curPos;
+		break;
+
+	case INTERPOLATE_BOUNCE_TO:
+		if (curPos < 0.36363636f) {
+			curPos = 7.5625f * curPos * curPos;
+		} else if (curPos < 0.72727273f) {
+			curPos = 7.5625f * (curPos -= 0.54545455f) * curPos + 0.75f;
+		} else if (curPos < 0.90909091f) {
+			curPos = 7.5625f * (curPos -= 0.81818182f) * curPos + 0.9375f;
+		} else {
+			curPos = 7.5625f * (curPos -= 0.95454545f) * curPos + 0.984375f;
+		}
+		break;
+
 	case INTERPOLATE_LINEAR:
 		break; //as is
 
