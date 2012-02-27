@@ -192,6 +192,12 @@ void LightBarOnChange(VariantList *pVList);
 void SetupLightBarSelect(Entity *pBG, string entNamePrefix, int defaultOption, uint32 color);
 void ResizeScrollBounds(VariantList *pVList);
 void DisableHorizontalScrolling(Entity *pEnt);
+/**
+ * Sets the progress (position) of a \c ScrollComponent.
+ * The component needs to be found from \a pEnt.
+ * \see ScrollComponent for details.
+ */
+void SetScrollProgressEntity(Entity *pEnt, const CL_Vec2f &progress);
 
 EntityComponent * DisableComponentByName(Entity *pEnt, const string &compName, int delayBeforeActionMS=0); //applicable to components that check a var named "disabled", like Button2D or InputTextRender
 EntityComponent * EnableComponentByName(Entity *pEnt, const string &compName, int delayBeforeActionMS=0); //applicable to components that check a var named "disabled", like Button2D or InputTextRender

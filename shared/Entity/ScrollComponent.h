@@ -32,6 +32,33 @@
   Example of its use is in RTSimpleApp example.
 */
 
+/**
+ * A component that adds scrolling behaviour to an \c Entity.
+ *
+ * The name of the component is initially set to "Scroll".
+ *
+ * This component monitors the touch events for it's parent \c Entity and
+ * makes the children entities of the parent move according to the events' positions.
+ * This causes a "pannable area" effect to the contents of the parent \c Entity.
+ *
+ * In order to get the touch events correctly there should be a \c TouchHandlerComponent
+ * in the parent \c Entity.
+ *
+ * The following named variants are used inside the component itself:
+ * - <b>"progress2d" (Vector2):</b> the current relative position of the scroll area.
+ *   The x coordinate of the returned value tells the horizontal and y coordinate
+ *   tells the vertical position of the scroll area. The values are between 0 and 1.
+ *   0 means that the scroll area is at its most left/top and 1 means that the scroll
+ *   area is at its most right/bottom. This is a read-only variant, setting it has no
+ *   effect. Use the "SetProgress" function object for setting this.
+ *
+ * There is one function object that this component offers:
+ * - <b>"SetProgress"</b>: sets the relative position of the scroll area. It requires
+ *   a Vector2 as an argument (first member of the VariantList) whose coordinate values tell the
+ *   relative positions in the horizontal and vertical directions. The values must be
+ *   from 0 to 1. Setting the value to (0, 0) sets the scroll area to the top left
+ *   position. Setting the value to (1, 1) sets the scroll area to the bottom right position.
+ */
 class ScrollComponent: public EntityComponent
 {
 public:
@@ -66,7 +93,6 @@ private:
 	uint32 *m_pAlignment;
 	CL_Vec2f m_lastTouchPos;
 	CL_Rectf *m_pBoundsRect;
-	Variant *m_pvPos;
 	uint32 *m_pScrollStyle;
 	CL_Vec2f m_vecDisplacement;
 	float * m_pFriction, *m_pMaxScrollSpeed, *m_pPowerMod;
@@ -74,7 +100,6 @@ private:
 	Variant * m_progressVar; //we write this out
 	int m_activeFinger;
 	uint32 *m_pEnforceFingerTracking;
-	bool m_bIsAMove;
 };
 
 #endif // ScrollComponent_h__
