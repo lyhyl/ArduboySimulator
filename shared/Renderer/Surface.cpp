@@ -542,39 +542,39 @@ void Surface::SetupForRender(const float rotationDegrees, const CL_Vec2f &vRotat
 		PushRotationMatrix(rotationDegrees, vRotatePt);
 	}
 
-	if (UsesAlpha() || rgba != MAKE_RGBA(255,255,255,255) || m_blendingMode == BLENDING_PREMULTIPLIED_ALPHA)
+	if (UsesAlpha() || rgba != PURE_WHITE || m_blendingMode != BLENDING_NORMAL)
 	{
 		glEnable( GL_BLEND );
 
 		switch (m_blendingMode)
 		{
 		case BLENDING_NORMAL:
-			glColor4x( (rgba >>8 & 0xFF)*256,  (rgba>>16& 0xFF)*256, (rgba>>24& 0xFF)*256, (rgba&0xFF)*256);
+			glColor4x(GET_RED(rgba) << 8, GET_GREEN(rgba) << 8, GET_BLUE(rgba) << 8, GET_ALPHA(rgba) << 8);
 			break;
 
 		case BLENDING_ADDITIVE:
 			glBlendFunc( GL_SRC_ALPHA, GL_ONE);
-			glColor4x( (rgba >>8 & 0xFF)*256,  (rgba>>16& 0xFF)*256, (rgba>>24& 0xFF)*256, (rgba&0xFF)*256);
+			glColor4x(GET_RED(rgba) << 8, GET_GREEN(rgba) << 8, GET_BLUE(rgba) << 8, GET_ALPHA(rgba) << 8);
 			break;
 
-		case BLENDING_PREMULTIPLIED_ALPHA:
+		case BLENDING_PREMULTIPLIED_ALPHA: {
 			glBlendFunc( GL_ONE, GL_ONE_MINUS_SRC_ALPHA );
-			int alpha = (rgba&0xFF);
-			glColor4x( (rgba >>8 & 0xFF)*alpha ,  (rgba>>16& 0xFF)*alpha, (rgba>>24& 0xFF)*alpha, alpha*256);
+			const int alpha = GET_ALPHA(rgba);
+			glColor4x( GET_RED(rgba) * alpha, GET_GREEN(rgba) * alpha, GET_BLUE(rgba) * alpha, alpha << 8);
+		}
+		break;
+
+		case BLENDING_MULTIPLY:
+			glBlendFunc(GL_DST_COLOR, GL_ZERO);
 			break;
 		}
-
-	} else
-	{
-		//LogMsg("No alpha");
 	}
-
 }
 
 void Surface::EndRender(const float rotationDegrees,  const uint32 rgba)
 {
 
-	if (UsesAlpha() || rgba != MAKE_RGBA(255,255,255,255)|| m_blendingMode == BLENDING_PREMULTIPLIED_ALPHA)
+	if (UsesAlpha() || rgba != PURE_WHITE || m_blendingMode != BLENDING_NORMAL)
 	{
 		glColor4x(1 << 16, 1 << 16, 1 << 16, 1 << 16);
 		glDisable( GL_BLEND );
