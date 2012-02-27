@@ -45,12 +45,12 @@
  * - OnOverEnd - a pressed pointer is moved outside the area or the pointer is released.
  * - OnTouchEnd - a pointer was released inside the area.
  *
- * When these functions get called they get a \c VariantList that contains three members:
+ * When these functions get called they get a \c VariantList that contains four members:
  * - 0: the touch point of type \c CL_Vec2f
  * - 1: a pointer to the \c Entity that was touched
- * - 2: the id of the finger, type is uint32 (this is <b>not</b> passed with OnOverMove)
- *
- * \bug Should the finger id be passed with OnOverMove too?
+ * - 2: the id of the finger, type is uint32
+ * - 3: a uint32 telling if the touch point (passed in member 0) is within the touch area.
+ *      1 means it's inside the area, 0 means it's outside.
  */
 class TouchHandlerComponent: public EntityComponent
 {
@@ -65,7 +65,6 @@ public:
 	void OnUpdate(VariantList *pVList);
 
 private:
-
 	void HandleClickStart(CL_Vec2f &pt, uint32 fingerID);
 	void HandleClickMove(CL_Vec2f &pt, uint32 fingerID);
 	void HandleClickEnd(CL_Vec2f &pt, uint32 fingerID);
@@ -75,6 +74,9 @@ private:
 	CL_Rectf *m_pTouchPadding;
 	uint32 *m_pAlignment;
 	uint32 *m_pIgnoreTouchesOutsideRect; //if this is set to 1, we will ignore "Touch end" messages that don't happen in our rect+padding
+
+	void UpdateTouchArea(Variant *v);
+	CL_Rectf m_touchArea;
 
 };
 
