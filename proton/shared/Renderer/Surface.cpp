@@ -566,6 +566,7 @@ void Surface::SetupForRender(const float rotationDegrees, const CL_Vec2f &vRotat
 
 		case BLENDING_MULTIPLY:
 			glBlendFunc(GL_DST_COLOR, GL_ZERO);
+			glColor4x(GET_RED(rgba) << 8, GET_GREEN(rgba) << 8, GET_BLUE(rgba) << 8, GET_ALPHA(rgba) << 8);
 			break;
 		}
 	}
