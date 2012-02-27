@@ -7,8 +7,6 @@ ScrollComponent::ScrollComponent()
 {
 	SetName("Scroll");
 	m_activeFinger = -1;
-
-	m_bIsAMove = false;
 }
 
 ScrollComponent::~ScrollComponent()
@@ -34,7 +32,6 @@ void ScrollComponent::OnAdd(Entity *pEnt)
 	m_vecDisplacement = m_vecChildPos = CL_Vec2f(0,0);
 	m_pPos2d = &GetParent()->GetVar("pos2d")->GetVector2();
 	m_pSize2d = &GetParent()->GetVar("size2d")->GetVector2();
-	m_pvPos = GetParent()->GetVar("pos2d"); //let's keep track of the whole variant
 	//vars in our component namespace
 	m_pBoundsRect = &GetVarWithDefault("boundsRect", CL_Rectf(0, 0, 0,0))->GetRect();
 	m_pScrollStyle = &GetVarWithDefault("scrollStyle", uint32(STYLE_MOMENTUM))->GetUINT32();
@@ -75,9 +72,6 @@ void ScrollComponent::OnRemove()
 
 void ScrollComponent::OnOverStart(VariantList *pVList)
 {
-
-	m_bIsAMove = false;
-
 	if (*m_pEnforceFingerTracking)
 	{
 		uint32 fingerID = pVList->Get(2).GetUINT32();
@@ -107,8 +101,6 @@ void ScrollComponent::OnOverEnd(VariantList *pVList)
 			
 		}
 	}
-
-	m_bIsAMove = false;
 }
 
 void ScrollComponent::OnOverMove(VariantList *pVList)

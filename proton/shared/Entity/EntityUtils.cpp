@@ -1524,6 +1524,19 @@ void DisableHorizontalScrolling(Entity *pEnt)
 
 }
 
+void SetScrollProgressEntity(Entity *pEnt, const CL_Vec2f &progress)
+{
+	EntityComponent *pComp = pEnt->GetComponentByName("Scroll");
+	if (!pComp)
+	{
+		assert(!"This only works for an entity holding a ScrollComponent!");
+		return;
+	}
+
+	VariantList scrollProgress(progress);
+	pComp->GetFunction("SetProgress")->sig_function(&scrollProgress);
+}
+
 
 EntityComponent * DisableComponentByName(Entity *pEnt, const string &compName, int delayBeforeActionMS)
 {
