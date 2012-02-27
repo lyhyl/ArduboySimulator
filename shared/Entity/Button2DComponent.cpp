@@ -17,7 +17,8 @@ void SetDefaultAudioClickSound(string fileName)
 {
 	g_defaultButtonClickSound = fileName;
 }
-Button2DComponent::Button2DComponent()
+Button2DComponent::Button2DComponent() :
+    m_pressed(false)
 {
 	SetName("Button2D");
 }
@@ -95,7 +96,11 @@ void Button2DComponent::OnOverStart(VariantList *pVList)
 		m_alphaSave = *m_pAlpha;
 		break;
 	}
-	
+
+	if (*m_pButtonStyle == BUTTON_STYLE_CLICK_ON_TOUCH_PRESS_RELEASE && !m_pressed) {
+		return;
+	}
+
 	UpdateButtonVisuals(NULL);
 
 	switch (*m_pVisualStyle)
@@ -112,6 +117,11 @@ void Button2DComponent::OnOverStart(VariantList *pVList)
 void Button2DComponent::OnOverEnd(VariantList *pVList)
 {
 	//LogMsg("Now off button");
+
+	if (pVList->Get(3).GetUINT32() == 0) {
+		// The touch point moved outside the button so it's not pressed anymore
+		m_pressed = false;
+	}
 	
 	UpdateButtonVisuals(NULL);
 
@@ -128,6 +138,7 @@ void Button2DComponent::OnTouchStart(VariantList *pVList)
 	TouchTrackInfo *pTouch = GetBaseApp()->GetTouch(pVList->Get(2).GetUINT32());
 	if (pTouch->WasHandled()) return;
 	pTouch->SetWasHandled(true);
+	m_pressed = true;
 	
 	if (*m_pButtonStyle == BUTTON_STYLE_CLICK_ON_TOUCH || *m_pButtonStyle == BUTTON_STYLE_CLICK_ON_TOUCH_IGNORE_DRAGGING)
 	{
@@ -189,9 +200,20 @@ void Button2DComponent::PerformClick(VariantList *pVList)
 void Button2DComponent::OnTouchEnd(VariantList *pVList)
 {
 	//LogMsg("Released button while highlighted");
-	if (*m_pButtonStyle != BUTTON_STYLE_CLICK_ON_TOUCH && *m_pButtonStyle != BUTTON_STYLE_CLICK_ON_TOUCH_IGNORE_DRAGGING)
-	{
+	switch (*m_pButtonStyle) {
+	case BUTTON_STYLE_CLICK_ON_TOUCH_RELEASE:
 		PerformClick(pVList);
-		return;
+		break;
+
+	case BUTTON_STYLE_CLICK_ON_TOUCH_PRESS_RELEASE:
+		if (m_pressed) {
+			PerformClick(pVList);
+		}
+		break;
+
+	default:
+		break;
 	}
+
+	m_pressed = false;
 }

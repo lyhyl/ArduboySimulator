@@ -27,6 +27,12 @@ void TouchHandlerComponent::OnAdd(Entity *pEnt)
 	GetParent()->GetFunction("OnInput")->sig_function.connect(1, boost::bind(&TouchHandlerComponent::OnInput, this, _1));
 	//GetFunction("EndClick")->sig_function.connect(1, boost::bind(&TouchHandlerComponent::EndClick, this, _1));
 
+	GetParent()->GetVar("pos2d")->GetSigOnChanged()->connect(boost::bind(&TouchHandlerComponent::UpdateTouchArea, this, _1));
+	GetParent()->GetVar("size2d")->GetSigOnChanged()->connect(boost::bind(&TouchHandlerComponent::UpdateTouchArea, this, _1));
+	GetParent()->GetVar("touchPadding")->GetSigOnChanged()->connect(boost::bind(&TouchHandlerComponent::UpdateTouchArea, this, _1));
+
+	UpdateTouchArea(NULL);
+
 	EntityComponent::OnAdd(pEnt);
 }
 
@@ -37,7 +43,6 @@ void TouchHandlerComponent::OnRemove()
 
 void TouchHandlerComponent::HandleClickStart(CL_Vec2f &pt, uint32 fingerID)
 {
-	
 	if (m_pTouchOver->GetUINT32())
 	{
 		//LogMsg("Ignoring click start because we're already 'down'")	;
@@ -45,13 +50,10 @@ void TouchHandlerComponent::HandleClickStart(CL_Vec2f &pt, uint32 fingerID)
 	}
 
 	//first, determine if the click is on our area
-	CL_Rectf r(*m_pPos2d, CL_Sizef(m_pSize2d->x, m_pSize2d->y));
-	ApplyPadding(&r, *m_pTouchPadding);
-
-	if (r.contains(pt))
+	if (m_touchArea.contains(pt))
 	{
 		m_pTouchOver->Set(uint32(1));
-        VariantList vList(pt, GetParent(), fingerID);
+		VariantList vList(pt, GetParent(), fingerID, uint32(true));
         
 		GetParent()->GetFunction("OnTouchStart")->sig_function(&vList);
 		GetParent()->GetFunction("OnOverStart")->sig_function(&vList);
@@ -60,13 +62,9 @@ void TouchHandlerComponent::HandleClickStart(CL_Vec2f &pt, uint32 fingerID)
 
 void TouchHandlerComponent::HandleClickMove( CL_Vec2f &pt, uint32 fingerID )
 {
-	//first, determine if the click is on our area
-	CL_Rectf r(*m_pPos2d, CL_Sizef(m_pSize2d->x, m_pSize2d->y));
-	ApplyPadding(&r, *m_pTouchPadding);
-
 	if (*m_pIgnoreTouchesOutsideRect != 0)
 	{
-		if (!r.contains(pt))
+		if (!m_touchArea.contains(pt))
 		{
 			//ignore this
 			return;
@@ -76,7 +74,7 @@ void TouchHandlerComponent::HandleClickMove( CL_Vec2f &pt, uint32 fingerID )
 	if (m_pTouchOver->GetUINT32())
 	{
 		//currently over, did we move off?
-		if (r.contains(pt))
+		if (m_touchArea.contains(pt))
 		{
 			//still over, do nothing?
 			FunctionObject *pFunc = GetParent()->GetShared()->GetFunctionIfExists("OnOverMove");
@@ -84,27 +82,25 @@ void TouchHandlerComponent::HandleClickMove( CL_Vec2f &pt, uint32 fingerID )
 			if (pFunc)
 			{
 				// I guess someone cares about knowing if it moves as well
-				VariantList vList(pt, GetParent());
+				VariantList vList(pt, GetParent(), fingerID, uint32(true));
                 pFunc->sig_function(&vList);
 			}
 
 		} else
 		{
 			m_pTouchOver->Set(uint32(0));
-            VariantList vList(pt, GetParent(), fingerID);
+            VariantList vList(pt, GetParent(), fingerID, uint32(false));
 			GetParent()->GetFunction("OnOverEnd")->sig_function(&vList);
 		}
 	} else
 	{
 		//currently not over, but did we move onto it?
-
-		if (r.contains(pt))
+		if (m_touchArea.contains(pt))
 		{
 			m_pTouchOver->Set(uint32(1));
-            VariantList vList(pt, GetParent(), fingerID);
+            VariantList vList(pt, GetParent(), fingerID, uint32(true));
             
 			GetParent()->GetFunction("OnOverStart")->sig_function(&vList);
-		
 		} else
 		{
 			//not on it, do nothing
@@ -117,13 +113,9 @@ void TouchHandlerComponent::HandleClickEnd( CL_Vec2f &pt, uint32 fingerID )
 {
 	if (!m_pTouchOver->GetUINT32()) return;
 
-	//first, determine if the click is on our area
-	CL_Rectf r(*m_pPos2d, CL_Sizef(m_pSize2d->x, m_pSize2d->y));
-	ApplyPadding(&r, *m_pTouchPadding);
-
 	if (*m_pIgnoreTouchesOutsideRect != 0)
 	{
-		if (!r.contains(pt))
+		if (!m_touchArea.contains(pt))
 		{
 			//they lifted a finger, but not in our rect so ignore it
 			return;
@@ -131,13 +123,13 @@ void TouchHandlerComponent::HandleClickEnd( CL_Vec2f &pt, uint32 fingerID )
 	}
 
 	m_pTouchOver->Set(uint32(0));
-    VariantList vList(pt, GetParent(), fingerID);
-    
+    VariantList vList(pt, GetParent(), fingerID, uint32(m_touchArea.contains(pt)));
+
 	GetParent()->GetFunction("OnOverEnd")->sig_function(&vList);
 
-	if (r.contains(pt))
+	if (m_touchArea.contains(pt))
 	{
-			GetParent()->GetFunction("OnTouchEnd")->sig_function(&vList);
+		GetParent()->GetFunction("OnTouchEnd")->sig_function(&vList);
 	}
 }
 
@@ -166,4 +158,11 @@ void TouchHandlerComponent::OnInput( VariantList *pVList )
 			break;
 	}	
 	
+}
+
+void TouchHandlerComponent::UpdateTouchArea(Variant *v)
+{
+	m_touchArea.set_top_left(*m_pPos2d);
+	m_touchArea.set_size(CL_Sizef(m_pSize2d->x, m_pSize2d->y));
+	ApplyPadding(&m_touchArea, *m_pTouchPadding);
 }

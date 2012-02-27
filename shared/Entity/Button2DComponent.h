@@ -68,11 +68,16 @@ public:
 	 */
 	enum eButtonStyle
 	{
-		/// The button is clicked after it has been pressed and subsequently released.
+		/// The button is clicked when it's released.
 		BUTTON_STYLE_CLICK_ON_TOUCH_RELEASE,
 		/// The button is clicked immeditely when it's pressed.
 		BUTTON_STYLE_CLICK_ON_TOUCH,
-		/// No idea what this is. Seems to be exactly what BUTTON_STYLE_CLICK_ON_TOUCH is too.
+		/// The button is clicked after it has been pressed and subsequently released.
+		BUTTON_STYLE_CLICK_ON_TOUCH_PRESS_RELEASE,
+		/**
+		 * No idea what this is. Seems to be exactly what BUTTON_STYLE_CLICK_ON_TOUCH is too.
+		 * \deprecated This is badly named and almost the same as BUTTON_STYLE_CLICK_ON_TOUCH so use that instead.
+		 */
 		BUTTON_STYLE_CLICK_ON_TOUCH_IGNORE_DRAGGING
 	};
 
@@ -98,6 +103,7 @@ private:
 	uint32 *m_pTouchOver;
 	float *m_pAlpha;
 	uint32 *m_pVisible;
+	bool m_pressed;
 	
 };
 
