@@ -214,7 +214,7 @@ bool VariantDB::Load( const string &fileName, bool *pFileExistedOut, bool bAddBa
 	//get the version
 	uint32 version;
 	if (pFileExistedOut) *pFileExistedOut = true;
-	int bytesRead = fread(&version, 1, sizeof(uint32), fp);
+	size_t bytesRead = fread(&version, 1, sizeof(uint32), fp);
 
 	if (bytesRead == 0 || version != 1)
 	{
