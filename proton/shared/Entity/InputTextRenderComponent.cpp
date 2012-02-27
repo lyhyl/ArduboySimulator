@@ -44,17 +44,6 @@ void InputTextRenderComponent::OnTextChanged(Variant *pDataObject)
 	{
 		SetLastStringInput(*m_pText);
 	}
-
-	//float fontHeight = GetBaseApp()->GetFont(eFont(*m_pFontID))->GetLineHeight(m_pScale2d->x);
-//	float sizeX = 0;
-	//float sizeY = 0;
-//	if (sizeX == 0) sizeX = fontHeight*10;
-//	float recommendedSizeY = fontHeight+6;
-//	float sizeY = m_pSize2d->y;
-//	if (sizeY < recommendedSizeY) sizeY = fontHeight+6;
-
-//	*m_pSize2d = CL_Vec2f(m_pSize2d->x, sizeY);
-
 }
 
 
@@ -409,13 +398,19 @@ void InputTextRenderComponent::OnInput( VariantList *pVList )
 	
 	case MESSAGE_TYPE_GUI_CHAR:
 #ifdef _DEBUG		
-		LogMsg("Got key %c", (char)pVList->Get(2).GetUINT32());
+		//LogMsg("InputTextRender: Got key %u (%c)", pVList->Get(2).GetUINT32(), (char)pVList->Get(2).GetUINT32());
 #endif
+		if (pVList->Get(2).GetUINT32() > 255)
+		{
+			//a proton virtual key, like f1 or something. Ignore
+			break;
+		}
 
 		char c = (char)pVList->Get(2).GetUINT32();
 		
 		string input = GetLastStringInput();
 
+		
 		if (c == 13)
 		{
 			//enter

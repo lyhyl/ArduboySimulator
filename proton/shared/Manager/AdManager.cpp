@@ -324,13 +324,13 @@ void AdManager::OnRender()
 			vRatio.x = (GetScreenSizeXf()/float(GetOriginalScreenSizeX()));
 			vRatio.y =(GetScreenSizeYf()/float(GetOriginalScreenSizeY()));
 		}
-		rtRect r(0,0,m_vBannerSize.x*vRatio.x,m_vBannerSize.y*vRatio.y);
+		rtRect r(0,0, (int)(m_vBannerSize.x*vRatio.x),(int)(m_vBannerSize.y*vRatio.y));
 		
 		//move to bottom
-		r.AdjustPosition(0, GetScreenSizeYf()-r.GetHeight());
+		r.AdjustPosition(0, GetScreenSizeY()-r.GetHeight());
 
 		//center
-		r.AdjustPosition( (GetScreenSizeXf()-r.GetWidth())/2, 0 );
+		r.AdjustPosition( (GetScreenSizeX()-r.GetWidth())/2, 0 );
 		
 		DrawFilledRect(r, MAKE_RGBA(40,255,40,200));
 	}

@@ -234,11 +234,14 @@ int VKeyToWMCharKey(int vKey)
 		if (GetKeyboardState(keystate) == FALSE) return 0;
 		result = ToAsciiEx(vKey,vKey,keystate,&val,0,_gkey_layout);
 
+		
 		if (result == 0)
 		{
 			val = vKey; //VK_1 etc don't get handled by the above thing.. or need to be
 		}
-		//LogMsg("Got val: %c", val);
+#ifdef _DEBUG
+		//LogMsg("Changing %d (%c) to %d (%c)", vKey, (char)vKey, val, (char)val);
+#endif
 		vKey = val;
 	} else 
 	{
@@ -519,11 +522,31 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 			#ifdef C_DONT_USE_WM_CHAR
 
-			//also send as a normal key press.
+			//also send as a normal key press.  Yes this convoluted.. it's done this way so Fkeys also go out as WM proton virtual keys to help with
+		    //hotkeys and such.   -Seth
+
 				int wmCharKey = VKeyToWMCharKey(wParam);
 				if (wmCharKey != 0)
 				{
-					GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, (float)ConvertWindowsKeycodeToProtonVirtualKey(wmCharKey), 1.0f);  
+					if (wmCharKey == wParam && wParam != 13 && wParam != 8)
+					{
+						//no conversion was done, it may need additional vkey processing
+						if (wmCharKey >= VK_F1 &&wmCharKey <= VK_F24)
+						{
+							GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, ConvertWindowsKeycodeToProtonVirtualKey(wmCharKey), 1.0f);  
+						} else
+						{
+							if (wmCharKey <= 90)
+							{
+								GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, wmCharKey, 1.0f);  
+							}
+						}
+
+					} else
+					{
+						//normal
+						GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, wmCharKey, 1.0f);  
+					}
 				}
 
 			#endif
@@ -548,7 +571,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	case WM_KEYUP:
 		{
-	//		LogMsg("Got key up %d", (int)wParam);
+#ifdef _DEBUG
+		//	LogMsg("Got key up %d (%c)", (int)wParam, (char)wParam);
+#endif
 			uint32 key = ConvertWindowsKeycodeToProtonVirtualKey(wParam);
 
 			if (key == VIRTUAL_KEY_BACK)
