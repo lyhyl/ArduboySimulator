@@ -74,7 +74,7 @@ using namespace std;
 
 #define MAKE_RGB(r, g, b)      ( ((uint32)(r) << 8) + ((uint32)(g) << 16) + ((uint32)(b) << 24) )
 #define MAKE_RGBA(r, g, b, a) ( ((uint32)(r) << 8) + ((uint32)(g) << 16) + ((uint32)(b) << 24) + ((uint32)(a)))
-
+const uint32 PURE_WHITE = MAKE_RGBA(255, 255, 255, 255);
 
 #define GET_BLUE(p)        ( (p)               >> 24)
 #define GET_GREEN(p)          (((p) & 0x00FF0000) >> 16)
