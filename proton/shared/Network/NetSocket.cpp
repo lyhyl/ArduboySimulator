@@ -122,17 +122,12 @@ bool NetSocket::Init( string url, int port )
 
     if (ret == -1)
     {
-        
 	  //um, it returns -1 when it works properly on Windows.  Docs wrong?!  Huh?!
       //  LogError("Couldn't open socket.");
       //  return false;
     }
-    
-
 	return true;
 }
-
-
 
 bool NetSocket::InitHost( int port, int connections )
 {

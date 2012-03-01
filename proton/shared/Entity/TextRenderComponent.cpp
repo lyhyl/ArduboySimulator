@@ -16,7 +16,7 @@ void TextRenderComponent::OnTextChanged(Variant *pDataObject)
 {
 	rtRectf rt;
 	GetBaseApp()->GetFont(eFont(*m_pFontID))->MeasureText(&rt, *m_pText, m_pScale2d->x);
-	*m_pSize2d = CL_Vec2f(rt.GetWidth(), rt.GetHeight());
+	GetParent()->GetVar("size2d")->Set(CL_Vec2f(rt.GetWidth(), rt.GetHeight()));
 }
 
 void TextRenderComponent::OnScaleChanged(Variant *pDataObject)

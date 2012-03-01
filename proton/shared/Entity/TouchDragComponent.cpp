@@ -29,9 +29,7 @@ void TouchDragComponent::OnAdd(Entity *pEnt)
 	//GetParent()->GetVarWithDefault(string("touchPadding"), Variant(CL_Rectf(0.0f, 0.0f, 0.0f, 0.0f)))->GetRect();
 
 	//register to get updated every frame
-
 	GetParent()->GetFunction("OnInput")->sig_function.connect(1, boost::bind(&TouchDragComponent::OnInput, this, _1));
-
 }
 
 void TouchDragComponent::OnRemove()

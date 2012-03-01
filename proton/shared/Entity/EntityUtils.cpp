@@ -1205,7 +1205,6 @@ void SetupTextEntity(Entity *pEnt, eFont fontID, float scale)
 		{
 			pComp->GetVar("fontScale")->Set(scale);
 		}
-
 	} 
 
 	if (!pComp && ( (pComp = pEnt->GetComponentByName("LogDisplay")) != 0))
@@ -1215,7 +1214,6 @@ void SetupTextEntity(Entity *pEnt, eFont fontID, float scale)
 		{
 			pComp->GetVar("fontScale")->Set(scale);
 		}
-
 	} 
 
 	if (!pComp && ( (pComp = pEnt->GetComponentByName("InputTextRender")) != 0))
@@ -1224,8 +1222,8 @@ void SetupTextEntity(Entity *pEnt, eFont fontID, float scale)
 		{
 			pEnt->GetVar("scale2d")->Set(CL_Vec2f(scale, scale));
 		}
-
 	} 
+
 	if (!pComp)
 	{
 		assert(!"Huh?");
@@ -1261,11 +1259,7 @@ void SetAlignmentEntity(Entity *pEnt, eAlignment align)
 Entity * CreateTextBoxEntity(Entity *pParent, string entName, CL_Vec2f vPos, CL_Vec2f vTextAreaSize, string msg, float scale)
 {
 	Entity *pText = pParent->AddEntity(new Entity(entName));
-	/*
-	EntityComponent *pClip = pText->AddComponent(new RenderClipComponent);
-	pClip->GetVar("clipMode")->Set(uint32(RenderClipComponent::CLIP_MODE_BOTTOM));
-	*/
-
+	
 	EntityComponent *pTextComp = pText->AddComponent(new TextBoxRenderComponent);
 	pText->GetVar("size2d")->Set(vTextAreaSize);
 	pTextComp->GetVar("fontScale")->Set(scale);

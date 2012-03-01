@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="winRTLooneyLadders"
-	ProjectGUID="{04D58809-BAE3-4CF4-AD22-15CBF470A0A5}"
+	ProjectGUID="{EDF3C631-F9BD-4E50-BD8F-804734B7ECAF}"
 	RootNamespace="winRTLooneyLadders"
 	Keyword="Win32Proj"
 	>
@@ -2137,34 +2137,6 @@
 					>
 					<FileConfiguration
 						Name="Common Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Common Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug GL|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release GL|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug WebOS|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"

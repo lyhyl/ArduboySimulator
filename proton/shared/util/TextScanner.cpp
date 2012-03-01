@@ -151,7 +151,7 @@ float TextScanner::GetParmFloatFromLine( int lineNum, int index, string token /*
 {
 	assert(lineNum >= 0 && (uint32)lineNum < m_lines.size());
 	assert(token.size() == 1 && "We don't actually support a non char delim yet");
-	return atof(SeparateStringSTL(m_lines[lineNum], index, token[0]).c_str());
+	return (float)atof(SeparateStringSTL(m_lines[lineNum], index, token[0]).c_str());
 }
 
 
@@ -162,4 +162,14 @@ void TextScanner::Replace( const string &thisStr, const string &thatStr )
 		StringReplace(thisStr, thatStr, m_lines[i]);
 	}
 
+}
+
+void TextScanner::DumpToLog()
+{
+	for (int i=0; i < GetLineCount(); i++)
+	{
+		string tmp = m_lines[i].c_str();
+	    StringReplace("%", "%%", tmp);
+		LogMsg(tmp.c_str());
+	}
 }

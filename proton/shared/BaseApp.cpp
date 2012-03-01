@@ -619,3 +619,18 @@ TouchTrackInfo * BaseApp::GetTouch( int index )
 
 	return &m_touchTracker[index];
 }
+
+int BaseApp::GetTotalActiveTouches()
+{
+	int count = 0;
+	
+	for (int i=0; i < C_MAX_TOUCHES_AT_ONCE; i++)
+	{
+		if (m_touchTracker[i].IsDown())	
+		{
+			count++;
+		}
+	}
+	
+	return count;
+}

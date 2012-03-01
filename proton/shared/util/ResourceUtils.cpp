@@ -381,12 +381,16 @@ byte * LoadFileIntoMemory(string fileName, unsigned int *p_ui_size, bool bUseSav
 string SeparateStringSTL(string input, int index, char delimiter)
 {
 	//yes, this is pretty crap
+	assert(input.size() < 4048 && "Fix this function..");
 	char stInput[4048];
 	if (SeparateString(input.c_str(), index, delimiter, stInput))
 	{
 		return stInput;
 	} 
-	LogError("SeparateStringSTL unable to find delimiter");
+
+#ifdef _DEBUG
+	LogMsg("Debug warning: SeparateStringSTL unable to find delimiter");
+#endif
 	return "";
 }
 
