@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="RTPhysics"
-	ProjectGUID="{452D9693-C03F-46F6-8ABD-BCF5D7A1C5A7}"
+	ProjectGUID="{94794FB0-F150-4DCF-8DEC-F674D5DC55F8}"
 	RootNamespace="winRTPhysics"
 	Keyword="Win32Proj"
 	>

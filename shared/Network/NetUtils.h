@@ -22,5 +22,7 @@ private:
 };
 void BreakDownURLIntoPieces(string url, string &domainOut, string &requestOut, int &port);
 string GetDomainFromURL(string url);
+char *Base64Encode(const char *data, size_t input_length,size_t *output_length); //up to you to free what it gives ya
+
 
 #endif // NetUtils_h__

@@ -2,11 +2,13 @@
 
 #include "ScrollComponent.h"
 #include "BaseApp.h"
+#include "Entity/FilterInputComponent.h"
 
 ScrollComponent::ScrollComponent()
 {
 	SetName("Scroll");
 	m_activeFinger = -1;
+	m_bIsScrolling = false;
 }
 
 ScrollComponent::~ScrollComponent()
@@ -42,7 +44,8 @@ void ScrollComponent::OnAdd(Entity *pEnt)
 	m_pPowerMod = &GetVarWithDefault("powerMod", float(0.15))->GetFloat();
 	m_progressVar = GetVar("progress2d");
 	m_pEnforceFingerTracking = &GetVarWithDefault("fingerTracking", uint32(0))->GetUINT32();
-	
+	m_swipeDetectDistance = &GetVarWithDefault("swipeDetectDistance", 7.0f)->GetFloat();
+
 	GetParent()->GetFunction("OnOverStart")->sig_function.connect(1, boost::bind(&ScrollComponent::OnOverStart, this, _1));
 	GetParent()->GetFunction("OnOverEnd")->sig_function.connect(1, boost::bind(&ScrollComponent::OnOverEnd, this, _1));
 	GetParent()->GetFunction("OnOverMove")->sig_function.connect(1, boost::bind(&ScrollComponent::OnOverMove, this, _1));
@@ -50,6 +53,9 @@ void ScrollComponent::OnAdd(Entity *pEnt)
 
 	GetFunction("SetProgress")->sig_function.connect(1, boost::bind(&ScrollComponent::SetProgress, this, _1));
 
+	m_pFilterComp = GetParent()->AddComponent(new FilterInputComponent);
+
+	m_pFilterComp->GetVar("mode")->Set(uint32(FilterInputComponent::MODE_IDLE)); //if we change to MODE_DISABLE_INPUT_CHILDREN later, no clicks will trickle down to the kids
 }
 
 
@@ -70,8 +76,28 @@ void ScrollComponent::OnRemove()
 	EntityComponent::OnRemove();
 }
 
+void ScrollComponent::SetIsScrolling(bool bScrolling)
+{
+	if (bScrolling == m_bIsScrolling) return; //no change
+
+	m_bIsScrolling = bScrolling;
+
+	if (m_bIsScrolling)
+	{
+		//we've detected that the user is scrolling the window around.  Disable clicks to children
+		m_pFilterComp->GetVar("mode")->Set(uint32(FilterInputComponent::MODE_DISABLE_INPUT_CHILDREN)); 
+	} else
+	{
+		//user may be trying to click our content, you shall pass
+		m_pFilterComp->GetVar("mode")->Set(uint32(FilterInputComponent::MODE_IDLE)); //slight speed boost not needing to send input messages
+		m_vTotalDisplacementOnCurrentSwipe = CL_Vec2f(0,0);
+	}
+}
+
 void ScrollComponent::OnOverStart(VariantList *pVList)
 {
+	SetIsScrolling(false); 
+
 	if (*m_pEnforceFingerTracking)
 	{
 		uint32 fingerID = pVList->Get(2).GetUINT32();
@@ -86,6 +112,9 @@ void ScrollComponent::OnOverStart(VariantList *pVList)
 
 void ScrollComponent::OnOverEnd(VariantList *pVList)
 {
+	
+	SetIsScrolling(false); 
+
 	//if (*m_pEnforceFingerTracking)
 	{
 
@@ -107,7 +136,6 @@ void ScrollComponent::OnOverMove(VariantList *pVList)
 {
 	if (*m_pEnforceFingerTracking)
 	{
-
 		uint32 fingerID = 0;
 		if (pVList->Get(2).GetType() == Variant::TYPE_UINT32)
 		{
@@ -119,27 +147,40 @@ void ScrollComponent::OnOverMove(VariantList *pVList)
 
 	//LogMsg("moved %s", PrintVector2(vDisplacement).c_str());
 
-
 	if (*m_pScrollStyle == STYLE_EXACT)
 	{
+		
 		m_vecDisplacement += pVList->m_variant[0].GetVector2()-m_lastTouchPos;
-		SetPosition(m_vecDisplacement, false);
-		m_vecDisplacement = CL_Vec2f(0,0);
+		m_vTotalDisplacementOnCurrentSwipe += pVList->m_variant[0].GetVector2()-m_lastTouchPos;
+		if (m_bIsScrolling)
+		{
+			SetPosition(m_vecDisplacement, false);
+			m_vecDisplacement = CL_Vec2f(0,0);
+		}
 	} else
 	{
 		m_vecDisplacement += (pVList->m_variant[0].GetVector2()-m_lastTouchPos)* *m_pPowerMod;
+		m_vTotalDisplacementOnCurrentSwipe +=  pVList->m_variant[0].GetVector2()-m_lastTouchPos;
 	}
 
 	m_lastTouchPos = pVList->m_variant[0].GetVector2();
+
+	//was it a big enough swipe to switch to scroll mode?  (scroll mode means they can't accidently hit any buttons/etc inside us)
+	//using iPadMapX will roughly allow move movement on larger screens.. not going to be perfect unless we knew the pixels per cm of
+	//the screen though.. hrm, not easy to get that.
+
+	if (*m_swipeDetectDistance != 0 && m_vecDisplacement.length() > *m_swipeDetectDistance) 
+	{
+		//TODO:  Should we check pos/size and if we don't require scrolling (everything fits on screen), not do the next call?
+		SetIsScrolling(true);
+	}
 }
 
 void ScrollComponent::SetPosition(CL_Vec2f vDisplacement, bool bForceUpdate)
 {
 	if (vDisplacement == CL_Vec2f(0,0) && !bForceUpdate) return;
 	
-	
 	/*
-	
 	//this works, but it still totally feels wrong, really I would need to turn "momentum" off as well, and perfectly tune the
 	//sensitivity so it feels like you're dragging the scroll bar
 
@@ -147,9 +188,7 @@ void ScrollComponent::SetPosition(CL_Vec2f vDisplacement, bool bForceUpdate)
 	{
 		vDisplacement.y *= -1; //on desktops where you use a mouse, it makes more sense to drag the scroll bar down, rather than "drag the screen up"
 	}
-
 	*/
-
 
 	m_vecChildPos += vDisplacement;
 
@@ -164,8 +203,7 @@ void ScrollComponent::SetPosition(CL_Vec2f vDisplacement, bool bForceUpdate)
 	if (m_pBoundsRect->get_height() != 0) percent2d.y = m_vecChildPos.y/ (-m_pBoundsRect->get_height());
 
 	m_progressVar->Set(percent2d);
-	//apply it to our children
-
+	
 	//also run this on all children
 	EntityList *pChildren = GetParent()->GetChildren();
 
@@ -183,7 +221,10 @@ void ScrollComponent::OnUpdate(VariantList *pVList)
 {
 	if (*m_pScrollStyle == STYLE_MOMENTUM)
 	{
-		SetPosition(m_vecDisplacement*GetBaseApp()->GetDelta(), false);
-		m_vecDisplacement *= (1- (*m_pFriction*GetBaseApp()->GetDelta()));
+		if (m_bIsScrolling || GetBaseApp()->GetTotalActiveTouches() == 0 )
+		{
+			SetPosition(m_vecDisplacement*GetBaseApp()->GetDelta(), false);
+			m_vecDisplacement *= (1- (*m_pFriction*GetBaseApp()->GetDelta()));
+		}
 	}
 }

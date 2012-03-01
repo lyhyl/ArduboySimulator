@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="winRT3DApp"
-	ProjectGUID="{452D9693-C03F-46F6-8ABD-BCF5D7A1C5A7}"
+	ProjectGUID="{CFCB24DA-5AE2-453A-930B-50E0AF6E2822}"
 	RootNamespace="winRT3DApp"
 	Keyword="Win32Proj"
 	>

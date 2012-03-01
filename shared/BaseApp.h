@@ -305,6 +305,7 @@ public:
 	void KillOSMessagesByType(OSMessage::eMessageType type);
 	void SetFPSLimit(float fps);
 	TouchTrackInfo * GetTouch(int index);
+	int GetTotalActiveTouches(); //will return the total number of fingers currently touching the screen.
 
 protected:
 	

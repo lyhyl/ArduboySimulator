@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="winRTAdTest"
-	ProjectGUID="{04D58809-BAE3-4CF4-AD22-15CBF470A0A5}"
+	ProjectGUID="{C3B7BFD2-5B1C-48A1-B861-7B5D338CEDF7}"
 	RootNamespace="winRTAdTest"
 	Keyword="Win32Proj"
 	>

@@ -52,6 +52,13 @@
  *   area is at its most right/bottom. This is a read-only variant, setting it has no
  *   effect. Use the "SetProgress" function object for setting this.
  *
+ * - <b>"swipeDetectDistance" (float):</b> How many pixels the user has to move to go
+ *   into "scroll only" mode, which stops input from being passed down to the children
+ *   content.  (Defaults to a value chosen for that screen size/device)
+ *   Set to 0 to disable swipe detection, so children will always get input events.
+ *
+ * - Other changeable variant parms:  "friction", "maxScrollSpeed", "powerMod", "fingerTracking"
+ *
  * There is one function object that this component offers:
  * - <b>"SetProgress"</b>: sets the relative position of the scroll area. It requires
  *   a Vector2 as an argument (first member of the VariantList) whose coordinate values tell the
@@ -84,6 +91,8 @@ private:
 	void SetPosition(CL_Vec2f vDisplacement, bool bForceUpdate);
 	void OnBoundsChanged(Variant *pVariant);
 	void SetProgress(VariantList *pVList);
+	void SetIsScrolling(bool bScrolling);
+
 	CL_Vec2f *m_pPos2d;
 	CL_Vec2f *m_pSize2d;
 	uint32 *m_pColor;
@@ -100,6 +109,10 @@ private:
 	Variant * m_progressVar; //we write this out
 	int m_activeFinger;
 	uint32 *m_pEnforceFingerTracking;
+	EntityComponent *m_pFilterComp; //we use this to allow/disallow clicks to our children
+	bool m_bIsScrolling; //true if we've detected the user is currently scrolling, so we should ignore clicks to children
+	CL_Vec2f m_vTotalDisplacementOnCurrentSwipe; //helps us detect a scroll from a normal tap
+	float *m_swipeDetectDistance; //how far we have to move to detect a swipe, 0 to disable
 };
 
 #endif // ScrollComponent_h__

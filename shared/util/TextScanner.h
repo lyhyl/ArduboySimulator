@@ -70,6 +70,7 @@ public:
 	void StripLeadingSpaces();
 	string GetAll();
 	int GetLineCount() {return (int)m_lines.size();}
+	void DumpToLog(); //sends the entire contents to the log via LogMsg(), helpful when debugging
 
 private:
 

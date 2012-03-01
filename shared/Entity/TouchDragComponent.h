@@ -7,8 +7,17 @@
 //  Programmer(s):  Seth A. Robinson (seth@rtsoft.com)
 //  ***************************************************************
 
-//makes a strip or rectangle and returns an xy vector from 0 to 1 on each axis
-//NOTE: Requires a TouchHandlerComponent to work
+/*
+Creates an invisible area that responds to dragging a touch and sends the exact pixel offet dragged.
+Connect to its function "OnTouchDragUpdate".  It passes a VariantList with <Component*> itself, and a CL_Vec2d (offset dragged)
+
+You can also connect to the "OnOverStart" and "OnOverEnd" of its parent entity if you need that info.
+
+Why use this?  It's a way I enabled "drag around the screen" to look/rotate in 3d games.
+
+- It ignores touches marked as "handled".  (so if a user clicks a button and drags off it, it will ignore that)
+- It marks touches it responds to as handled, so buttons and other components will ignore that touch.
+*/
 
 #ifndef TouchDragComponent_h__
 #define TouchDragComponent_h__
