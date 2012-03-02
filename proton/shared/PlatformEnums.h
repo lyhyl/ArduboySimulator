@@ -76,8 +76,17 @@ enum eOrientationMode
 
 //stuff available to platform specific code:
 
+/**
+ * Gets the platform id of the real running environment. The emulated platform
+ * can be different from this one.
+ */
 ePlatformID GetPlatformID();
-ePlatformID GetEmulatedPlatformID(); //defaults to GetPlatformID if not set
+/**
+ * Gets the emulated platform id. Can be different from the real platform id.
+ * Can be set with \c SetEmulatedPlatformID().
+ * By default this is the same as the real platform id.
+ */
+ePlatformID GetEmulatedPlatformID();
 
 //platform include must support these functions:
 void NotifyOSOfOrientationPreference(eOrientationMode orientation);
@@ -116,6 +125,9 @@ void InitDeviceScreenInfo();
 eDeviceMemoryClass GetDeviceMemoryClass();
 bool IsIPodTouchThirdGen();
 std::string GetClipboardText();
+/**
+ * Checks if the currently emulated platform is a desktop platform.
+ */
 bool IsDesktop();
 bool HasVibration();
 std::string GetDeviceID(); //returns a string that is probably unique to the device

@@ -214,7 +214,7 @@ public:
 	 *   - For \link eMessageType::MESSAGE_TYPE_GUI_CHAR MESSAGE_TYPE_GUI_CHAR\endlink this
 	 *     parameter contains the keycode of the pressed key as a uint32.
 	 *   - For \link eMessageType::MESSAGE_TYPE_GUI_PASTE MESSAGE_TYPE_GUI_PASTE\endlink this
-	 *     parameter contains the contents of the clipboard as a \c Variant.
+	 *     parameter contains the contents of the clipboard as a \c string.
 	 */
 	boost::signal<void (VariantList*)> m_sig_input;
 	/**

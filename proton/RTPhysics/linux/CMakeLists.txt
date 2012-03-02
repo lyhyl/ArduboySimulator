@@ -35,7 +35,7 @@ add_executable(rtphysics "${APP}/App.cpp" "${APP}/GUI/DebugMenu.cpp" "${APP}/GUI
 "${SHARED}/Manager/Console.cpp" "${SHARED}/Manager/GameTimer.cpp" "${SHARED}/Manager/MessageManager.cpp" "${SHARED}/Manager/ResourceManager.cpp" "${SHARED}/Manager/VariantDB.cpp"
 "${SHARED}/Math/rtPlane.cpp" "${SHARED}/Math/rtRect.cpp"
 "${SHARED}/Renderer/RenderBatcher.cpp" "${SHARED}/Renderer/SoftSurface.cpp" "${SHARED}/Renderer/Surface.cpp" "${SHARED}/Renderer/SurfaceAnim.cpp"
-"${SHARED}/util/VideoModeSelector.cpp" "${SHARED}/util/CRandom.cpp" "${SHARED}/util/GLESUtils.cpp" "${SHARED}/util/MathUtils.cpp" "${SHARED}/util/MiscUtils.cpp" "${SHARED}/util/RenderUtils.cpp" "${SHARED}/util/ResourceUtils.cpp" "${SHARED}/util/Variant.cpp" "${SHARED}/util/TextScanner.cpp"
+"${SHARED}/util/VideoModeSelector.cpp" "${SHARED}/util/PassThroughPointerEventHandler.cpp" "${SHARED}/util/TouchDeviceEmulatorPointerEventHandler.cpp" "${SHARED}/util/CRandom.cpp" "${SHARED}/util/GLESUtils.cpp" "${SHARED}/util/MathUtils.cpp" "${SHARED}/util/MiscUtils.cpp" "${SHARED}/util/RenderUtils.cpp" "${SHARED}/util/ResourceUtils.cpp" "${SHARED}/util/Variant.cpp" "${SHARED}/util/TextScanner.cpp"
 "${SHARED}/util/unzip/unzip.c" "${SHARED}/util/unzip/ioapi.c"
 "${SHARED}/Network/NetHTTP.cpp" "${SHARED}/Network/NetSocket.cpp" "${SHARED}/Network/NetUtils.cpp"
 "${SHARED}/FileSystem/StreamingInstance.cpp" "${SHARED}/FileSystem/StreamingInstanceZip.cpp" "${SHARED}/FileSystem/StreamingInstanceFile.cpp" "${SHARED}/FileSystem/FileSystem.cpp" "${SHARED}/FileSystem/FileSystemZip.cpp" "${SHARED}/FileSystem/FileManager.cpp"

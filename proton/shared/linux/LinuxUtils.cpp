@@ -12,9 +12,6 @@
 
 using namespace std;
 
-const char * GetBundlePrefix();
-const char * GetBundleName();
-
 bool g_preferSDCardForUserStorage = false;
 
 uint32 g_callAppResumeASAPTimer = 0;
@@ -103,12 +100,16 @@ bool IsIPhone3GS()
 
 bool IsDesktop()
 {
-	if (GetEmulatedPlatformID() == PLATFORM_ID_WINDOWS ||
-	    GetEmulatedPlatformID() == PLATFORM_ID_OSX ||
-	    GetEmulatedPlatformID() == PLATFORM_ID_LINUX) {
+	switch (GetEmulatedPlatformID())
+	{
+	case PLATFORM_ID_WINDOWS:
+	case PLATFORM_ID_OSX:
+	case PLATFORM_ID_LINUX:
 		return true;
+
+	default:
+		return false;
 	}
-	return false;
 }
 
 ePlatformID GetPlatformID()
