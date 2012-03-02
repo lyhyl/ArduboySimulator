@@ -12,7 +12,7 @@
 #ifndef BaseApp_h__
 #define BaseApp_h__
 
-#define C_MAX_TOUCHES_AT_ONCE 11
+#define C_MAX_TOUCHES_AT_ONCE 12
 
 
 using namespace std;

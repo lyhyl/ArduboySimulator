@@ -99,6 +99,8 @@ int g_winVideoScreenX = 0;
 int g_winVideoScreenY = 0;
 bool g_bIsFullScreen = false;
 int g_fpsLimit = 0; //0 for no fps limit (default)  Use MESSAGE_SET_FPS_LIMIT to set
+bool g_bIsMinimized = false;
+
 
 void AddVideoMode(string name, int x, int y, ePlatformID platformID, eOrientationMode forceOrientation)
 {
@@ -597,9 +599,28 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			break;
 		}
 	case WM_SYSCOMMAND:
-		// Do not allow screensaver to start.
-		if (wParam == SC_SCREENSAVE) return true;
+		// Do not allow screensaver to start. - wait, why would I want to disable the screensaver?!
+		//if (wParam == SC_SCREENSAVE) return true;
+		if ((wParam & 0xFFF0) == SC_MINIMIZE)
+		{
+			// shrink the application to the notification area
+			// ...
+			LogMsg("App minimized.");
+			g_bIsMinimized = true;
+			
+		}
+
+		if ((wParam & 0xFFF0) == SC_RESTORE)
+		{
+			// shrink the application to the notification area
+			// ...
+			LogMsg("App maximized");
+			g_bIsMinimized = false;
+		
+		}
 		break;
+
+	
 
 	case WM_LBUTTONUP:
 		{
@@ -1090,7 +1111,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 		if (g_bHasFocus)
 		{
 			GetBaseApp()->Update();
-			GetBaseApp()->Draw();
+			if (!g_bIsMinimized)
+				GetBaseApp()->Draw();
 		} else
 		{
 			//LogMsg("Sleeping");
@@ -1163,16 +1185,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 			}
 		}
 	
-
-#ifdef C_GL_MODE
-		SwapBuffers(g_hDC);
-#else
-		eglSwapBuffers(g_eglDisplay, g_eglSurface);
-		if (!TestEGLError(g_hWnd, "eglSwapBuffers"))
+		if (g_bHasFocus && !g_bIsMinimized)
 		{
-			goto cleanup;
+	#ifdef C_GL_MODE
+			SwapBuffers(g_hDC);
+	#else
+			eglSwapBuffers(g_eglDisplay, g_eglSurface);
+			if (!TestEGLError(g_hWnd, "eglSwapBuffers"))
+			{
+				goto cleanup;
+			}
+	#endif
 		}
-#endif
 
 skipRender:
 		// Managing the window messages

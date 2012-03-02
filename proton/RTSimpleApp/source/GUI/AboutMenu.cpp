@@ -114,8 +114,7 @@ Entity * AboutMenuCreate( Entity *pParentEnt)
 
 	pScrollComp->GetVar("fingerTracking")->Set(uint32(1)); 
 
-	//note: If you don't want to see a scroll bar progress indicator, comment out the next line.  Also note that it only draws
-	//a vertical progress bar if needed but doesn't draw a horizontal if needed (I just haven't needed a horizontal scroll bar yet)
+	//note: If you don't want to see a scroll bar progress indicator, comment out the next line.
 	EntityComponent *pScrollBarComp = pScroll->AddComponent(new ScrollBarRenderComponent); 	//add a visual way to see the scroller position
 	
 	//if we wanted to change the scroll bar color we could do it this way:
