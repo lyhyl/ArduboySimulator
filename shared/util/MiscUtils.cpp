@@ -262,6 +262,29 @@ string PostfixLeading(const string input, unsigned int leadingCount, string lead
 	return s + insertAfterPrefix;
 }
 
+string PopFirstParmString(string *lineInOut, const string delimiter)
+{
+	vector<string> pieces = StringTokenize(*lineInOut, delimiter);
+
+	*lineInOut = "";
+
+	if (pieces.size() == 0)
+		return "";
+
+
+	for (int i=1; i < pieces.size(); i++)
+	{
+		if ( !lineInOut->empty())
+		{
+			*lineInOut += delimiter;
+		}
+		*lineInOut += pieces[i];
+	}
+
+	return pieces[0];
+}
+
+
 vector<string> StringTokenize (const  string  & theString,  const  string  & theDelimiter )
 {
 	vector<string> theStringVector;

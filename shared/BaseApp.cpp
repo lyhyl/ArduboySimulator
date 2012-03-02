@@ -23,9 +23,11 @@ Entity * GetEntityRoot()
 
 RenderBatcher g_globalBatcher;
 bool g_isLoggerInitted = false;
+bool g_isBaseAppInitted = false;
+
 bool IsBaseAppInitted()
 {
-	return g_isLoggerInitted;
+	return g_isBaseAppInitted;
 }
 
 BaseApp::BaseApp()
@@ -42,6 +44,7 @@ BaseApp::BaseApp()
 		
 		m_touchTracker.resize(C_MAX_TOUCHES_AT_ONCE);
 		ClearError();
+		g_isBaseAppInitted = true;
 }
 
 BaseApp::~BaseApp()
@@ -54,6 +57,7 @@ BaseApp::~BaseApp()
 
 void BaseApp::Kill()
 {
+	g_isBaseAppInitted = false;
 	delete this;
 }
 
@@ -624,13 +628,16 @@ int BaseApp::GetTotalActiveTouches()
 {
 	int count = 0;
 	
-	for (int i=0; i < C_MAX_TOUCHES_AT_ONCE; i++)
+	//why am I doing C_MAX_TOUCHES_AT_ONCE-1 instead of C_MAX_TOUCHES_AT_ONCE? Well, it's because SendFakeInputMessageToEntity()
+	//uses the last touch to send fake mouse presses and should always be ignored. - Seth
+
+	for (int i=0; i < C_MAX_TOUCHES_AT_ONCE-1; i++)
 	{
 		if (m_touchTracker[i].IsDown())	
 		{
 			count++;
 		}
 	}
-	
+
 	return count;
 }

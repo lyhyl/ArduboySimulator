@@ -41,7 +41,7 @@ void OverlayRenderComponent::SetSurface( SurfaceAnim *pSurf, bool bDeleteSurface
 
 	if (m_pTex)
 	{
-		*m_pSize2d = CL_Vec2f((float)m_pTex->GetFrameWidth()* m_pScale2d->x, (float)m_pTex->GetFrameHeight()* m_pScale2d->y);
+		GetParent()->GetVar("size2d")->Set(CL_Vec2f((float)m_pTex->GetFrameWidth()* m_pScale2d->x, (float)m_pTex->GetFrameHeight()* m_pScale2d->y));
 	}
 	UpdateFrameSizeVar();
 }

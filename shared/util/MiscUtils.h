@@ -23,13 +23,12 @@ std::string RemoveLastPartOfDir(std::string path);
 std::string BoolToEnabled(bool bEnabled);
 char *float_to_money( double num, char *buf, int dec); //for legacy code..
 std::string FloatToMoney(float f, int decimalsOfCents = 0);
-std::vector<std::string> StringTokenize(const std::string& str,const std::string& delimiters);
 
-//what is this below?  I don't see the implentation anywhere...
-std::vector<std::string> StringTokenize(const std::string& str,const std::string& theDelimiter, const std::string & secondOptionalDelimiter);
+std::vector<std::string> StringTokenize(const std::string& str,const std::string& delimiters);
+string PopFirstParmString(string *lineInOut, const string delimiter = "|"); //removes the first parm from the string sent in, and returns it
+
 //helper to turn anything into a string, like ints/floats
 void ForceRange(float &a, const float min, const float max);
-
 
 #define rt_min(a,b)    (((a) < (b)) ? (a) : (b))
 #define rt_max(a,b)            (((a) > (b)) ? (a) : (b))
@@ -61,5 +60,4 @@ void RotationToXYMod(float rotation, float *pXMod ,float *pYMod); //given a rota
 void SetFloatWithTarget(float *p_out_dest, float r_target, float r_amount);
 std::string FilterToValidAscii(const std::string &input, bool bStrict);
 bool isOrdinaryChar(char c, bool bStrict);
-
 #endif
