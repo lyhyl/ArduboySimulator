@@ -19,8 +19,8 @@ include_directories("${SHARED}/util/boost")
 
 add_executable(rtsimpleapp "${APP}/App.cpp" "${APP}/Component/ParticleTestComponent.cpp" "${APP}/GUI/DebugMenu.cpp" "${APP}/GUI/EnterNameMenu.cpp" "${APP}/GUI/MainMenu.cpp" "${APP}/GUI/ParticleTestMenu.cpp" "${APP}/GUI/AboutMenu.cpp" "${APP}/GUI/TouchTestMenu.cpp" "${APP}/Component/TouchTestComponent.cpp"
 	"${SHARED}/BaseApp.cpp" "${SHARED}/PlatformSetup.cpp"
-	"${SHARED}/linux/LinuxUtils.cpp" "${SHARED}/linux/LinuxMain.cpp" 
-	"${SHARED}/util/VideoModeSelector.cpp" "${SHARED}/util/MathUtils.cpp" "${SHARED}/util/MiscUtils.cpp" "${SHARED}/util/ResourceUtils.cpp" "${SHARED}/util/RenderUtils.cpp" "${SHARED}/util/GLESUtils.cpp" "${SHARED}/util/Variant.cpp"
+	"${SHARED}/linux/LinuxUtils.cpp" "${SHARED}/linux/LinuxMain.cpp"
+	"${SHARED}/util/VideoModeSelector.cpp" "${SHARED}/util/PassThroughPointerEventHandler.cpp" "${SHARED}/util/TouchDeviceEmulatorPointerEventHandler.cpp" "${SHARED}/util/MathUtils.cpp" "${SHARED}/util/MiscUtils.cpp" "${SHARED}/util/ResourceUtils.cpp" "${SHARED}/util/RenderUtils.cpp" "${SHARED}/util/GLESUtils.cpp" "${SHARED}/util/Variant.cpp"
 	"${SHARED}/FileSystem/FileManager.cpp" "${SHARED}/FileSystem/StreamingInstance.cpp" "${SHARED}/FileSystem/StreamingInstanceFile.cpp"
 	"${SHARED}/GUI/RTFont.cpp"
 	"${SHARED}/Audio/AudioManager.cpp" "${SHARED}/Audio/AudioManagerSDL.cpp"

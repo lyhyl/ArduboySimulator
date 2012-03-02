@@ -25,7 +25,7 @@ char *float_to_money( double num, char *buf, int dec); //for legacy code..
 std::string FloatToMoney(float f, int decimalsOfCents = 0);
 
 std::vector<std::string> StringTokenize(const std::string& str,const std::string& delimiters);
-string PopFirstParmString(string *lineInOut, const string delimiter = "|"); //removes the first parm from the string sent in, and returns it
+std::string PopFirstParmString(std::string *lineInOut, const std::string delimiter = "|"); //removes the first parm from the string sent in, and returns it
 
 //helper to turn anything into a string, like ints/floats
 void ForceRange(float &a, const float min, const float max);

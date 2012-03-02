@@ -1,6 +1,8 @@
 #include "BaseApp.h"
-#include "util/VideoModeSelector.h"
 #include "LinuxUtils.h"
+#include "util/VideoModeSelector.h"
+#include "util/PassThroughPointerEventHandler.h"
+#include "util/TouchDeviceEmulatorPointerEventHandler.h"
 #include <SDL.h>
 
 using namespace std;
@@ -15,6 +17,8 @@ bool g_isInForeground = true;
 
 int g_winVideoScreenX = 0;
 int g_winVideoScreenY = 0;
+
+PointerEventHandler* gPointerEventHandler = NULL;
 
 int GetPrimaryGLX() 
 {
@@ -123,7 +127,17 @@ int ConvertSDLKeycodeToProtonVirtualKey(SDLKey sdlkey)
 	return keycode;
 }
 
-bool g_leftMouseButtonDown = false; //to help emulate how an iphone works
+int SDLMouseButtonToPointerId(Uint8 sdlButton)
+{
+	switch (sdlButton) {
+	case SDL_BUTTON_RIGHT:
+		return 1;
+	case SDL_BUTTON_MIDDLE:
+		return 2;
+	default:
+		return sdlButton - SDL_BUTTON_LEFT;
+	}
+}
 
 void SDLEventLoop()
 {
@@ -190,45 +204,33 @@ void SDLEventLoop()
 			break;
 		
 		case SDL_MOUSEBUTTONDOWN:
-			{
-				//ev.motion.which should hold which finger id
-
-				g_leftMouseButtonDown = true;
-				float xPos = ev.motion.x;
-				float yPos = ev.motion.y;
-				ConvertCoordinatesIfRequired(xPos, yPos);
-				
-				GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_START, xPos, yPos, ev.motion.which);
-			}
+		{
+			float xPos = ev.button.x;
+			float yPos = ev.button.y;
+			ConvertCoordinatesIfRequired(xPos, yPos);
+			gPointerEventHandler->handlePointerDownEvent(xPos, yPos, SDLMouseButtonToPointerId(ev.button.button));
 			break;
+		}
 		
 		case SDL_MOUSEBUTTONUP:
-			{
-				//ev.motion.which should hold which finger id
-				g_leftMouseButtonDown = false;
-				float xPos = ev.motion.x;
-				float yPos = ev.motion.y;
-				ConvertCoordinatesIfRequired(xPos, yPos);
-				GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_END, xPos, yPos, ev.motion.which);
-			}
+		{
+			float xPos = ev.button.x;
+			float yPos = ev.button.y;
+			ConvertCoordinatesIfRequired(xPos, yPos);
+			gPointerEventHandler->handlePointerUpEvent(xPos, yPos, SDLMouseButtonToPointerId(ev.button.button));
 			break;
+		}
 	
-		case SDL_MOUSEMOTION:     
-			{
-				float xPos = ev.motion.x;
-				float yPos = ev.motion.y;
-				
-				//ev.motion.which should hold which finger id
-				ConvertCoordinatesIfRequired(xPos, yPos);
+		case SDL_MOUSEMOTION:
+		{
+			float xPos = ev.motion.x;
+			float yPos = ev.motion.y;
+			ConvertCoordinatesIfRequired(xPos, yPos);
 
-				if (g_leftMouseButtonDown || GetPlatformID() == PLATFORM_ID_WEBOS)
-				{
-					GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_MOVE, xPos, yPos, ev.motion.which);
-					break;
-				}
-			}
-
+			// Always pass the same pointer id here since it's not possible to track multiple pointing devices with SDL_MOUSEMOTION
+			gPointerEventHandler->handlePointerMoveEvent(xPos, yPos, SDLMouseButtonToPointerId(SDL_BUTTON_LEFT));
 			break;
+		}
 
 		case SDL_KEYDOWN:
 			{
@@ -347,6 +349,12 @@ int main(int argc, char *argv[])
 	static unsigned int fpsTimerLoopMS = 0;
 	GetBaseApp()->OnScreenSizeChange();
 
+	if (IsDesktop()) {
+		gPointerEventHandler = new PassThroughPointerEventHandler;
+	} else {
+		gPointerEventHandler = new TouchDeviceEmulatorPointerEventHandler;
+	}
+
 	while(1)
 	{
 		if (g_bAppFinished) break;
@@ -433,6 +441,8 @@ cleanup:
 		SDL_JoystickClose(g_pSDLJoystick);
 		g_pSDLJoystick = NULL;
 	}
+
+	delete gPointerEventHandler;
 
 	SDL_Quit();
 
