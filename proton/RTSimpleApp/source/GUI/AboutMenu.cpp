@@ -114,6 +114,12 @@ Entity * AboutMenuCreate( Entity *pParentEnt)
 
 	pScrollComp->GetVar("fingerTracking")->Set(uint32(1)); 
 
+	//if you don't want the scrolling to start until the person has moved X number of pixe,s
+	//set this: (this is good for when the entire scroll area is buttons.. once it goes into
+	//scroll mode, it will make sure no buttons/children get input events when this option is on)
+	pScrollComp->GetVar("swipeDetectDistance")->Set(7.0f); 
+
+
 	//note: If you don't want to see a scroll bar progress indicator, comment out the next line.
 	EntityComponent *pScrollBarComp = pScroll->AddComponent(new ScrollBarRenderComponent); 	//add a visual way to see the scroller position
 	

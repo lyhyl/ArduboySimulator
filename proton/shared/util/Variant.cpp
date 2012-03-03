@@ -74,6 +74,8 @@ void Variant::Set( Variant &v )
 
 		assert(!"Add support for this var type?");
 	}
+
+	if (m_pSig_onChanged) (*m_pSig_onChanged)(this);
 }
 
 std::string Variant::Print()

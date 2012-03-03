@@ -22,7 +22,6 @@ ScrollComponent::~ScrollComponent()
 		{
 			pTouch->SetWasHandled(false);
 		}
-
 	}
 }
 
@@ -44,7 +43,7 @@ void ScrollComponent::OnAdd(Entity *pEnt)
 	m_pPowerMod = &GetVarWithDefault("powerMod", float(0.15))->GetFloat();
 	m_progressVar = GetVar("progress2d");
 	m_pEnforceFingerTracking = &GetVarWithDefault("fingerTracking", uint32(0))->GetUINT32();
-	m_swipeDetectDistance = &GetVarWithDefault("swipeDetectDistance", 7.0f)->GetFloat();
+	m_swipeDetectDistance = &GetVarWithDefault("swipeDetectDistance", 0.0f)->GetFloat();
 
 	GetParent()->GetFunction("OnOverStart")->sig_function.connect(1, boost::bind(&ScrollComponent::OnOverStart, this, _1));
 	GetParent()->GetFunction("OnOverEnd")->sig_function.connect(1, boost::bind(&ScrollComponent::OnOverEnd, this, _1));
@@ -98,14 +97,6 @@ void ScrollComponent::OnOverStart(VariantList *pVList)
 {
 	SetIsScrolling(false); 
 
-	if (*m_pEnforceFingerTracking)
-	{
-		uint32 fingerID = pVList->Get(2).GetUINT32();
-		TouchTrackInfo *pTouch = GetBaseApp()->GetTouch(fingerID);
-		if (pTouch->WasHandled()) return;
-		pTouch->SetWasHandled(true);
-		m_activeFinger = fingerID;
-	}
 
 	m_lastTouchPos = pVList->m_variant[0].GetVector2();
 }
@@ -127,24 +118,32 @@ void ScrollComponent::OnOverEnd(VariantList *pVList)
 		if (fingerID == m_activeFinger)
 		{
 			m_activeFinger = -1;
-			
 		}
 	}
 }
 
 void ScrollComponent::OnOverMove(VariantList *pVList)
 {
-	if (*m_pEnforceFingerTracking)
+	if (*m_pEnforceFingerTracking && m_activeFinger == -1)
 	{
 		uint32 fingerID = 0;
 		if (pVList->Get(2).GetType() == Variant::TYPE_UINT32)
 		{
 			fingerID = pVList->Get(2).GetUINT32();
+			TouchTrackInfo *pTouch = GetBaseApp()->GetTouch(fingerID);
+		
+		if (fingerID != m_activeFinger && pTouch->WasHandled()) return;
+
+		//take ownership of this
+		if (pTouch->WasHandled()) return;
+		pTouch->SetWasHandled(true);
+		m_activeFinger = fingerID;	
 		}
 
-		if (fingerID != m_activeFinger) return;
 	}
 
+	
+	
 	//LogMsg("moved %s", PrintVector2(vDisplacement).c_str());
 
 	if (*m_pScrollStyle == STYLE_EXACT)
@@ -221,7 +220,7 @@ void ScrollComponent::OnUpdate(VariantList *pVList)
 {
 	if (*m_pScrollStyle == STYLE_MOMENTUM)
 	{
-		if (m_bIsScrolling || GetBaseApp()->GetTotalActiveTouches() == 0 )
+		if (m_bIsScrolling || GetBaseApp()->GetTotalActiveTouches() == 0 || *m_swipeDetectDistance == 0 )
 		{
 			SetPosition(m_vecDisplacement*GetBaseApp()->GetDelta(), false);
 			m_vecDisplacement *= (1- (*m_pFriction*GetBaseApp()->GetDelta()));

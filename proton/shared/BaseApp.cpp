@@ -641,3 +641,9 @@ int BaseApp::GetTotalActiveTouches()
 
 	return count;
 }
+
+void TouchTrackInfo::SetWasHandled( bool bNew, Entity *pEntity )
+{
+	m_pEntityThatHandledIt = pEntity;
+	m_bHandled = bNew;
+}

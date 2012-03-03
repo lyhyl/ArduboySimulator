@@ -51,7 +51,7 @@ private:
 	CL_Vec2f *m_pMult; //multiplied against the final result, so you can make it go backwards or whatever
 	uint32 *m_pSwapXAndY, *m_pReverseX, *m_pReverseY;
 	CL_Vec2f m_lastPos;
-	int m_lastFingerID;
+	int m_activeFingerID;
 	FunctionObject *m_pOnTouchDragUpdate;
 };
 

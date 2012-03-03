@@ -137,7 +137,7 @@ void Button2DComponent::OnTouchStart(VariantList *pVList)
 {
 	TouchTrackInfo *pTouch = GetBaseApp()->GetTouch(pVList->Get(2).GetUINT32());
 	if (pTouch->WasHandled()) return;
-	pTouch->SetWasHandled(true);
+	pTouch->SetWasHandled(true, GetParent());
 	m_pressed = true;
 	
 	if (*m_pButtonStyle == BUTTON_STYLE_CLICK_ON_TOUCH || *m_pButtonStyle == BUTTON_STYLE_CLICK_ON_TOUCH_IGNORE_DRAGGING)

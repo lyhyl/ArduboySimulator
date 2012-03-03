@@ -4,12 +4,22 @@
 
 TouchDragComponent::TouchDragComponent()
 {
-	m_lastFingerID = -1;
+	m_activeFingerID = -1;
 	SetName("TouchDrag");
 }
 
 TouchDragComponent::~TouchDragComponent()
 {
+	if (m_activeFingerID != -1)
+	{
+		//mark the touch we were using as unhandled now, so if we're recreated right at the same place controls don't
+		//go dead until they release and touch again
+		TouchTrackInfo *pTouch = GetBaseApp()->GetTouch(m_activeFingerID);
+		if (pTouch)
+		{
+			pTouch->SetWasHandled(false);
+		}
+	}
 }
 
 void TouchDragComponent::OnAdd(Entity *pEnt)
@@ -86,7 +96,7 @@ void TouchDragComponent::OnInput( VariantList *pVList )
 			if (r.contains(pt))
 			{
 						
-				if (m_lastFingerID != -1)
+				if (m_activeFingerID != -1)
 				{
 					//LogMsg("Ignoring new finger..");
 					return;
@@ -100,25 +110,25 @@ void TouchDragComponent::OnInput( VariantList *pVList )
 				GetParent()->GetFunction("OnOverStart")->sig_function(&vList);
 
 				m_lastPos = pt;
-				m_lastFingerID = fingerID;
+				m_activeFingerID = fingerID;
 			}
 		}
 		break;
 
 	case MESSAGE_TYPE_GUI_CLICK_END:
 		
-		if (m_lastFingerID == fingerID)
+		if (m_activeFingerID == fingerID)
 		{
             VariantList vList(pt, GetParent(), uint32(fingerID));
 			GetParent()->GetFunction("OnOverEnd")->sig_function(&vList);
-			m_lastFingerID = -1;
+			m_activeFingerID = -1;
 		}
 	
 		break;
 	
 	case MESSAGE_TYPE_GUI_CLICK_MOVE:
 		
-		if (m_lastFingerID == fingerID)
+		if (m_activeFingerID == fingerID)
 		{
 			SetPosition(pt);
 		}

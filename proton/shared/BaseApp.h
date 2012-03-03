@@ -120,6 +120,7 @@ public:
 		m_bHandled = false;
 		m_bIsDown = false;
 		m_vPos = m_vLastPos = CL_Vec2f(-1,-1);
+		m_pEntityThatHandledIt = NULL;
 	}
 	
 	bool WasHandled() {return m_bHandled;}
@@ -127,7 +128,7 @@ public:
 	CL_Vec2f GetLastPos() {return m_vLastPos;}  //normally you wouldn't care, but this helps if you need to emulate the way iOS gives touch data
 
 	bool IsDown() {return m_bIsDown;}
-
+	Entity *GetEntityThatHandledIt() {return m_pEntityThatHandledIt;} //NULL if we don't know, or the click wasn't claimed as "handled"
 	void SetIsDown(bool bNew)  { if (!bNew) m_vPos = m_vLastPos = CL_Vec2f(-1,-1);  m_bIsDown = bNew;}
 	void SetPos(const CL_Vec2f &vPos)
 	{
@@ -135,12 +136,13 @@ public:
 		m_vPos = vPos;
 		//LogMsg("pos: %.2f, last pos: %.2f", m_vPos, m_vLastPos);
 	}
-	void SetWasHandled(bool bNew) {m_bHandled = bNew;}
+	void SetWasHandled(bool bNew, Entity *pEntity = NULL); //pEntity should be null if not applicable
 
 private:
 	bool m_bHandled;
 	bool m_bIsDown;
 	CL_Vec2f m_vPos, m_vLastPos;
+	Entity *m_pEntityThatHandledIt;
 };
 
 
