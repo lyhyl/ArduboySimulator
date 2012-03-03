@@ -19,6 +19,14 @@ OverlayRenderComponent::~OverlayRenderComponent()
 
 }
 
+void OverlayRenderComponent::UpdateSizeVar()
+{
+	if (m_pTex && m_pTex->IsLoaded())
+	{
+		GetParent()->GetVar("size2d")->Set(CL_Vec2f((float)m_pTex->GetFrameWidth()* m_pScale2d->x, (float)m_pTex->GetFrameHeight()* m_pScale2d->y));
+	}
+}
+
 void OverlayRenderComponent::UpdateFrameSizeVar()
 {
 	if (m_pTex && m_pTex->IsLoaded())
@@ -39,10 +47,7 @@ void OverlayRenderComponent::SetSurface( SurfaceAnim *pSurf, bool bDeleteSurface
 	m_pTex = pSurf;
 	m_bDeleteSurface = bDeleteSurface;
 
-	if (m_pTex)
-	{
-		GetParent()->GetVar("size2d")->Set(CL_Vec2f((float)m_pTex->GetFrameWidth()* m_pScale2d->x, (float)m_pTex->GetFrameHeight()* m_pScale2d->y));
-	}
+	UpdateSizeVar();
 	UpdateFrameSizeVar();
 }
 
@@ -56,19 +61,13 @@ void OverlayRenderComponent::OnFileNameChanged(Variant *pDataObject)
 	
 	m_pTex = GetResourceManager()->GetSurfaceAnim(pDataObject->GetString());
 	
-	if (m_pTex)
-	{
-		*m_pSize2d = CL_Vec2f((float)m_pTex->GetFrameWidth()* m_pScale2d->x, (float)m_pTex->GetFrameHeight()* m_pScale2d->y);
-	}
+	UpdateSizeVar();
 	UpdateFrameSizeVar();
 }
 
 void OverlayRenderComponent::OnScaleChanged(Variant *pDataObject)
 {
-	if (m_pTex && m_pTex->IsLoaded())
-	{
-		*m_pSize2d = CL_Vec2f((float)m_pTex->GetFrameWidth()* m_pScale2d->x, (float)m_pTex->GetFrameHeight()* m_pScale2d->y);
-	}
+	UpdateSizeVar();
 }
 
 void OverlayRenderComponent::OnAdd(Entity *pEnt)
@@ -122,7 +121,8 @@ void OverlayRenderComponent::SetupAnim(VariantList *pVList)
 	GetVar("totalFramesY")->Set(pVList->m_variant[1].GetUINT32());
 	
 	m_pTex->SetupAnim(pVList->m_variant[0].GetUINT32(), pVList->m_variant[1].GetUINT32());
-	*m_pSize2d = CL_Vec2f((float)m_pTex->GetFrameWidth()* m_pScale2d->x, (float)m_pTex->GetFrameHeight()* m_pScale2d->y);
+
+	UpdateSizeVar();
 	UpdateFrameSizeVar();
 }
 
@@ -166,4 +166,3 @@ void OverlayRenderComponent::OnRender(VariantList *pVList)
 	}
 
 }
-

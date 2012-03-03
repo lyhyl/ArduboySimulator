@@ -53,9 +53,11 @@
  *   effect. Use the "SetProgress" function object for setting this.
  *
  * - <b>"swipeDetectDistance" (float):</b> How many pixels the user has to move to go
- *   into "scroll only" mode, which stops input from being passed down to the children
- *   content.  (Defaults to a value chosen for that screen size/device)
- *   Set to 0 to disable swipe detection, so children will always get input events.
+ *   into "scroll" mode (start scrolling) and stops input from being passed down to the children
+ *   content.  (Defaults to 0, which means disabled, will always scroll)
+ *   If you have say, a scrolling menu of ALL buttons and nowhere to click to drag the screen around, you probably
+ *   want to enable this by setting it to 7 pixels or so, so if a large movement is detected it will scroll, otherwise the
+ *   button is clicked.  (uh... rewrite later, confusing -Seth )
  *
  * - Other changeable variant parms:  "friction", "maxScrollSpeed", "powerMod", "fingerTracking"
  *

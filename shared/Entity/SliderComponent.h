@@ -12,7 +12,6 @@
 
 #include "Entity/Component.h"
 #include "Entity/Entity.h"
-//#include "Renderer/SurfaceAnim.h"
 
 class SliderComponent: public EntityComponent
 {
@@ -35,15 +34,9 @@ private:
 	void OnInput( VariantList *pVList );
 	void UpdatePositionByTouch(CL_Vec2f pt);
 	void OnOverEnd(VariantList *pVList);
-	CL_Vec2f *m_pPos2d;
 
-	
+	CL_Vec2f *m_pPos2d;
 	CL_Vec2f *m_pSize2d;
-	/*CL_Vec2f *m_pScale2d;
-	uint32 *m_pAlignment;
-	float *m_pRotation; //in degrees
-	*/
-	
 	float *m_pAlpha;
 	uint32 *m_pColor;
 	uint32 *m_pColorMod;
@@ -52,7 +45,7 @@ private:
 	Entity * m_pSliderButton;
 	CL_Vec2f m_pClickStartPos;
 	bool	m_sliderButtonSelected;
-
+	
 };
 
 #endif // SliderComponent_h__

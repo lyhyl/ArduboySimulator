@@ -7,11 +7,12 @@
 SliderComponent::SliderComponent()
 {
 	SetName("Slider");
+	
 }
 
 SliderComponent::~SliderComponent()
 {
-
+	
 }
 
 void SliderComponent::OnAdd(Entity *pEnt)
@@ -77,7 +78,6 @@ void SliderComponent::OnSliderButtonChanged(Variant *pDataObject)
 	m_pSliderButton = pDataObject->GetEntity();
 	SetSliderPosition();
 
-
 	//map to slider button
 	m_pSliderButton->GetFunction("OnTouchEnd")->sig_function.connect(1, boost::bind(&SliderComponent::OnTouchEnd, this, _1));
 	m_pSliderButton->GetFunction("OnTouchStart")->sig_function.connect(1, boost::bind(&SliderComponent::OnTouchStart, this, _1));
@@ -88,40 +88,50 @@ void SliderComponent::OnSliderButtonChanged(Variant *pDataObject)
 
 void SliderComponent::OnTouchStart(VariantList *pVList)
 {
+
+	//because we also have a Button2DComponent in the m_pSliderButton entity, we can count on it marking the click as handled for us and marketing
+	//our entity as the one doing it.  By checking that we can see if we should operate on the controls or not.
+
+	int fingerID = pVList->Get(2).GetUINT32();
+	TouchTrackInfo *pTouch = GetBaseApp()->GetTouch(fingerID);
+	
+	if (pTouch->GetEntityThatHandledIt() != m_pSliderButton) 
+	{
+		return;
+	}
+
 	m_sliderButtonSelected = true;
-	//LogMsg("slider but down");
-//	m_pClickStartPos = m_pSliderButton->GetVar("pos2d")->GetVector2();
 }
 
 
 void SliderComponent::OnTouchEnd(VariantList *pVList)
 {
-	//LogMsg("Released button while highlighted");
-	//LogMsg("slider but up");
-	//m_sliderButtonSelected = false;
-	
-//	m_pClickStartPos = CL_Vec2f(0,0);
+	int fingerID = pVList->Get(2).GetUINT32();
+	TouchTrackInfo *pTouch = GetBaseApp()->GetTouch(fingerID);
+
+	if (pTouch->GetEntityThatHandledIt() != m_pSliderButton) 
+	{
+		return;
+	}
+
+	m_sliderButtonSelected = false;
 }
 
 void SliderComponent::OnOverEnd(VariantList *pVList)
 {
-	//LogMsg("Released button while highlighted");
-	//LogMsg("slider over end");
-	m_sliderButtonSelected = false;
-
-	//	m_pClickStartPos = CL_Vec2f(0,0);
+	
 }
+
 void SliderComponent::UpdatePositionByTouch(CL_Vec2f pt)
 {
-	if (!m_sliderButtonSelected) return;
 
-	CL_Vec2f vPos = m_pSliderButton->GetVar("pos2d")->GetVector2();
-	vPos.x += (pt-m_pClickStartPos).x;
-	ForceRange(vPos.x, 0, m_pSize2d->x);
-	m_pSliderButton->GetVar("pos2d")->Set(vPos);
-	m_pClickStartPos = pt;
+		CL_Vec2f vPos = m_pSliderButton->GetVar("pos2d")->GetVector2();
+		vPos.x += (pt-m_pClickStartPos).x;
+		ForceRange(vPos.x, 0, m_pSize2d->x);
+		m_pSliderButton->GetVar("pos2d")->Set(vPos);
+		m_pClickStartPos = pt;
 
-	GetVar("progress")->Set(vPos.x / m_pSize2d->x);
+		GetVar("progress")->Set(vPos.x / m_pSize2d->x);
 }
 
 
@@ -129,20 +139,37 @@ void SliderComponent::OnInput( VariantList *pVList )
 {
 	//0 = message type, 1 = parent coordinate offset
 	CL_Vec2f pt = pVList->Get(1).GetVector2();
-	//pt += GetAlignmentOffset(*m_pSize2d, eAlignment(*m_pAlignment));
 
 	switch (eMessageType( int(pVList->Get(0).GetFloat())))
 	{
 	case MESSAGE_TYPE_GUI_CLICK_START:
 		m_pClickStartPos = pt;
 		break;
+
 	case MESSAGE_TYPE_GUI_CLICK_END:
-	UpdatePositionByTouch(pt);
-	break;
-	
+		{
+			if (!m_sliderButtonSelected) return;
+
+			int fingerID = pVList->Get(2).GetUINT32();
+			TouchTrackInfo *pTouch = GetBaseApp()->GetTouch(fingerID);
+
+			if (pTouch->GetEntityThatHandledIt() == m_pSliderButton) 
+			{
+				UpdatePositionByTouch(pt);
+			}
+		}
+
+		break;
+
 	case MESSAGE_TYPE_GUI_CLICK_MOVE:
 		//LogMsg("Got move message: %s", PrintVector2(pt).c_str());
-		UpdatePositionByTouch(pt);
+		int fingerID = pVList->Get(2).GetUINT32();
+		TouchTrackInfo *pTouch = GetBaseApp()->GetTouch(fingerID);
+
+		if (pTouch->GetEntityThatHandledIt() == m_pSliderButton) 
+		{
+			UpdatePositionByTouch(pt);
+		}
 		break;
 	}	
 }

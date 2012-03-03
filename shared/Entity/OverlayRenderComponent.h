@@ -56,7 +56,10 @@ public:
 	void SetSurface(SurfaceAnim *pSurf, bool bDeleteSurface);
 
 private:
+
 	void UpdateFrameSizeVar();
+	void UpdateSizeVar();
+	
 	void OnRender(VariantList *pVList);
 	void OnFileNameChanged(Variant *pDataObject);
 	void OnScaleChanged(Variant *pDataObject);

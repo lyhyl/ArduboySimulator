@@ -247,7 +247,14 @@ public:
 		m_pVoid = rhs.m_pVoid;
 		memcpy(m_var, rhs.m_var, C_VAR_SPACE_BYTES);
 		m_string = rhs.m_string;
-		m_pSig_onChanged = NULL;
+		
+		if (m_pSig_onChanged)
+		{
+			//if anyone was connected to us, let them know the valid change.  Up to them to figure out that
+			//the type might have as well!
+
+			if (m_pSig_onChanged) (*m_pSig_onChanged)(this);
+		}
 		return *this; 
 	}
 
