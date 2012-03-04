@@ -127,18 +127,6 @@ int ConvertSDLKeycodeToProtonVirtualKey(SDLKey sdlkey)
 	return keycode;
 }
 
-int SDLMouseButtonToPointerId(Uint8 sdlButton)
-{
-	switch (sdlButton) {
-	case SDL_BUTTON_RIGHT:
-		return 1;
-	case SDL_BUTTON_MIDDLE:
-		return 2;
-	default:
-		return sdlButton - SDL_BUTTON_LEFT;
-	}
-}
-
 void SDLEventLoop()
 {
 	// we'll be using this for event polling
@@ -208,7 +196,7 @@ void SDLEventLoop()
 			float xPos = ev.button.x;
 			float yPos = ev.button.y;
 			ConvertCoordinatesIfRequired(xPos, yPos);
-			gPointerEventHandler->handlePointerDownEvent(xPos, yPos, SDLMouseButtonToPointerId(ev.button.button));
+			gPointerEventHandler->handlePointerDownEvent(xPos, yPos, ev.button.button);
 			break;
 		}
 		
@@ -217,7 +205,7 @@ void SDLEventLoop()
 			float xPos = ev.button.x;
 			float yPos = ev.button.y;
 			ConvertCoordinatesIfRequired(xPos, yPos);
-			gPointerEventHandler->handlePointerUpEvent(xPos, yPos, SDLMouseButtonToPointerId(ev.button.button));
+			gPointerEventHandler->handlePointerUpEvent(xPos, yPos, ev.button.button);
 			break;
 		}
 	
@@ -228,7 +216,7 @@ void SDLEventLoop()
 			ConvertCoordinatesIfRequired(xPos, yPos);
 
 			// Always pass the same pointer id here since it's not possible to track multiple pointing devices with SDL_MOUSEMOTION
-			gPointerEventHandler->handlePointerMoveEvent(xPos, yPos, SDLMouseButtonToPointerId(SDL_BUTTON_LEFT));
+			gPointerEventHandler->handlePointerMoveEvent(xPos, yPos, SDL_BUTTON_LEFT);
 			break;
 		}
 
@@ -352,7 +340,7 @@ int main(int argc, char *argv[])
 	if (IsDesktop()) {
 		gPointerEventHandler = new PassThroughPointerEventHandler;
 	} else {
-		gPointerEventHandler = new TouchDeviceEmulatorPointerEventHandler;
+		gPointerEventHandler = new TouchDeviceEmulatorPointerEventHandler(SDL_BUTTON_LEFT, SDL_BUTTON_RIGHT);
 	}
 
 	while(1)

@@ -236,6 +236,7 @@ public:
 
 	Variant(const Variant &v)
 	{
+		SetDefaults();
 		//our special copy won't include the sig crap, that stuff can't be copied
 		*this = v;
 	}
