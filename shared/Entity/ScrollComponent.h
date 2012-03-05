@@ -54,10 +54,11 @@
  *
  * - <b>"swipeDetectDistance" (float):</b> How many pixels the user has to move to go
  *   into "scroll" mode (start scrolling) and stops input from being passed down to the children
- *   content.  (Defaults to 0, which means disabled, will always scroll)
- *   If you have say, a scrolling menu of ALL buttons and nowhere to click to drag the screen around, you probably
- *   want to enable this by setting it to 7 pixels or so, so if a large movement is detected it will scroll, otherwise the
- *   button is clicked.  (uh... rewrite later, confusing -Seth )
+ *   content. 
+ *
+ * - <b>"dontScrollUntilSwipeDetected" (uint32):</b> How many pixels the user has to move to go
+ *   into "scroll" mode (start scrolling) and stops input from being passed down to the children
+ *   content. 
  *
  * - Other changeable variant parms:  "friction", "maxScrollSpeed", "powerMod", "fingerTracking"
  *
@@ -114,7 +115,8 @@ private:
 	EntityComponent *m_pFilterComp; //we use this to allow/disallow clicks to our children
 	bool m_bIsScrolling; //true if we've detected the user is currently scrolling, so we should ignore clicks to children
 	CL_Vec2f m_vTotalDisplacementOnCurrentSwipe; //helps us detect a scroll from a normal tap
-	float *m_swipeDetectDistance; //how far we have to move to detect a swipe, 0 to disable
+	float *m_pSwipeDetectDistance; //how far we have to move to detect a swipe, 0 to disable
+	uint32 *m_pDontScrollUntilSwipeDetected; //1 if we don't scroll until they move enough to qualify for a swipe, 0 to always scroll
 };
 
 #endif // ScrollComponent_h__
