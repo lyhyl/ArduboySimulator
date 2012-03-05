@@ -31,7 +31,6 @@ public:
 	bool DoesTableExist(string tableName, bool bShowErrors);
 	int GetLastAutoIncrementInsertID();
 	int AddSelectResults(vector<VariantDB> &vdb); //adds to existing vector, returns how many items it added
-	int GetArrayCountOfLastQuery();
 	void Update(); //call every frame, it avoids disconnection by pinging its sql connection every once in a while
 	bool DoResultsExist();
 	bool LostServerConnection() {return m_bLostServerConnection;}
