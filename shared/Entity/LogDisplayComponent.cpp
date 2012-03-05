@@ -85,7 +85,6 @@ void LogDisplayComponent::AddLine(VariantList *pVList)
 
 void LogDisplayComponent::OnTextAdded()
 {
-	LogMsg("Updating..");
 	if (!m_bIsDraggingLook)
 	{
 		m_curLine = (float)m_pActiveConsole->GetTotalLines(); //move to last line.  Cur means the last line that we can see.

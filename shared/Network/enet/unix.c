@@ -316,6 +316,7 @@ enet_socket_receive (ENetSocket socket,
 {
     struct msghdr msgHdr;
     struct sockaddr_in sin;
+	sin.sin_zero[0] = 0;
     int recvLength;
 
     memset (& msgHdr, 0, sizeof (struct msghdr));
