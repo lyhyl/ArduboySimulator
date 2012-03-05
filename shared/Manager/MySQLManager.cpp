@@ -64,6 +64,7 @@ bool MySQLManager::DoResultsExist()
 	}
 	int rows = (int)mysql_num_rows(result);
 
+	mysql_free_result(result);
 	return rows != 0;
 }
 
@@ -183,15 +184,6 @@ bool MySQLManager::Query( string query, bool bShowError )
 	return true;
 }
 
-int MySQLManager::GetArrayCountOfLastQuery()
-{
-	MYSQL_RES *result = NULL;
-	result = mysql_store_result(m_conn);
-
-	//MYSQL_ROW row = mysql_fetch_a
-	return 0;
-
-}
 
 int MySQLManager::GetLastAutoIncrementInsertID()
 {
