@@ -1,7 +1,6 @@
 #include "PlatformPrecomp.h"
 #include "ScrollComponent.h"
 #include "BaseApp.h"
-#include "Entity/FilterInputComponent.h"
 
 ScrollComponent::ScrollComponent()
 {
@@ -50,9 +49,6 @@ void ScrollComponent::OnAdd(Entity *pEnt)
 	GetParent()->GetFunction("OnOverMove")->sig_function.connect(1, boost::bind(&ScrollComponent::OnOverMove, this, _1));
 	GetParent()->GetFunction("OnUpdate")->sig_function.connect(1, boost::bind(&ScrollComponent::OnUpdate, this, _1));
 	GetFunction("SetProgress")->sig_function.connect(1, boost::bind(&ScrollComponent::SetProgress, this, _1));
-
-	m_pFilterComp = GetParent()->AddComponent(new FilterInputComponent);
-	m_pFilterComp->GetVar("mode")->Set(uint32(FilterInputComponent::MODE_IDLE)); //if we change to MODE_DISABLE_INPUT_CHILDREN later, no clicks will trickle down to the kids
 }
 
 
@@ -73,76 +69,65 @@ void ScrollComponent::OnRemove()
 	EntityComponent::OnRemove();
 }
 
+bool ScrollComponent::isInterestingFinger(uint32 fingerID) const
+{
+	if (*m_pEnforceFingerTracking && m_activeFinger != -1 && fingerID != m_activeFinger)
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
 void ScrollComponent::SetIsScrolling(bool bScrolling)
 {
 	if (bScrolling == m_bIsScrolling) return; //no change
 
 	m_bIsScrolling = bScrolling;
 
-	if (m_bIsScrolling)
+	if (!m_bIsScrolling)
 	{
-		//we've detected that the user is scrolling the window around.  Disable clicks to children
-		m_pFilterComp->GetVar("mode")->Set(uint32(FilterInputComponent::MODE_DISABLE_INPUT_CHILDREN)); 
-	} else
-	{
-		//user may be trying to click our content, you shall pass
-		m_pFilterComp->GetVar("mode")->Set(uint32(FilterInputComponent::MODE_IDLE)); //slight speed boost not needing to send input messages
 		m_vTotalDisplacementOnCurrentSwipe = CL_Vec2f(0,0);
 	}
 }
 
 void ScrollComponent::OnOverStart(VariantList *pVList)
 {
+	uint32 fingerID = pVList->Get(2).GetUINT32();
+	if (!isInterestingFinger(fingerID)) return;
+
 	SetIsScrolling(false); 
 	m_lastTouchPos = pVList->m_variant[0].GetVector2();
 }
 
 void ScrollComponent::OnOverEnd(VariantList *pVList)
 {
-	
+	uint32 fingerID = pVList->Get(2).GetUINT32();
+	if (!isInterestingFinger(fingerID)) return;
+
 	SetIsScrolling(false); 
-
-	//if (*m_pEnforceFingerTracking)
-	{
-
-		uint32 fingerID = 0;
-		if (pVList->Get(2).GetType() == Variant::TYPE_UINT32)
-		{
-			fingerID = pVList->Get(2).GetUINT32();
-		}
-
-		if (fingerID == m_activeFinger)
-		{
-			m_activeFinger = -1;
-		}
-	}
+	m_activeFinger = -1;
 }
 
 void ScrollComponent::OnOverMove(VariantList *pVList)
 {
+	uint32 fingerID = 0;
+	fingerID = pVList->Get(2).GetUINT32();
 	if (*m_pEnforceFingerTracking && m_activeFinger == -1)
 	{
-		uint32 fingerID = 0;
-		if (pVList->Get(2).GetType() == Variant::TYPE_UINT32)
-		{
-			fingerID = pVList->Get(2).GetUINT32();
-			TouchTrackInfo *pTouch = GetBaseApp()->GetTouch(fingerID);
-		
-		if (fingerID != m_activeFinger && pTouch->WasHandled()) return;
-
-		//take ownership of this
+		TouchTrackInfo *pTouch = GetBaseApp()->GetTouch(fingerID);
 		if (pTouch->WasHandled()) return;
-		pTouch->SetWasHandled(true);
-		m_activeFinger = fingerID;	
-		}
-
+		m_activeFinger = fingerID;
 	}
+
+	if (!isInterestingFinger(fingerID)) return;
 		
 	//LogMsg("moved %s", PrintVector2(vDisplacement).c_str());
 
 	if (*m_pScrollStyle == STYLE_EXACT)
 	{
-		
 		m_vecDisplacement += pVList->m_variant[0].GetVector2()-m_lastTouchPos;
 		m_vTotalDisplacementOnCurrentSwipe += pVList->m_variant[0].GetVector2()-m_lastTouchPos;
 		if (m_bIsScrolling || *m_pSwipeDetectDistance != 0 || *m_pDontScrollUntilSwipeDetected == 0)
@@ -162,10 +147,13 @@ void ScrollComponent::OnOverMove(VariantList *pVList)
 	//using iPadMapX will roughly allow move movement on larger screens.. not going to be perfect unless we knew the pixels per cm of
 	//the screen though.. hrm, not easy to get that.
 
-	if (*m_pSwipeDetectDistance != 0 && m_vecDisplacement.length() > *m_pSwipeDetectDistance) 
+	if (*m_pSwipeDetectDistance != 0 && m_vTotalDisplacementOnCurrentSwipe.length() > *m_pSwipeDetectDistance)
 	{
 		//TODO:  Should we check pos/size and if we don't require scrolling (everything fits on screen), not do the next call?
 		SetIsScrolling(true);
+
+		TouchTrackInfo *pTouch = GetBaseApp()->GetTouch(fingerID);
+		pTouch->SetWasHandled(true, GetParent());
 	}
 }
 

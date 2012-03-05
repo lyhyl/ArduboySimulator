@@ -84,12 +84,15 @@ public:
 private:
 
 	void OnOverStart(VariantList *pVList);
+	void OnOverMove(VariantList *pVList);
 	void OnOverEnd(VariantList *pVList);
 	void OnTouchStart(VariantList *pVList);
 	void OnTouchEnd(VariantList *pVList);
 	void UpdateButtonVisuals(Variant *pVariant);
 	void PerformClick(VariantList *pVList);
 	void OnVisualStyleChanged(Variant *pVariant);
+
+	void buttonNoLongerPressed();
 
 	float m_alphaSave;
 	string *m_pOnClickAudioFile;
