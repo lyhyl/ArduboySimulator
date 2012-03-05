@@ -1,5 +1,4 @@
 #include "PlatformPrecomp.h"
-
 #include "ScrollComponent.h"
 #include "BaseApp.h"
 #include "Entity/FilterInputComponent.h"
@@ -43,17 +42,16 @@ void ScrollComponent::OnAdd(Entity *pEnt)
 	m_pPowerMod = &GetVarWithDefault("powerMod", float(0.15))->GetFloat();
 	m_progressVar = GetVar("progress2d");
 	m_pEnforceFingerTracking = &GetVarWithDefault("fingerTracking", uint32(0))->GetUINT32();
-	m_swipeDetectDistance = &GetVarWithDefault("swipeDetectDistance", 0.0f)->GetFloat();
+	m_pSwipeDetectDistance = &GetVarWithDefault("swipeDetectDistance", 7.0f)->GetFloat();
+	m_pDontScrollUntilSwipeDetected = &GetVarWithDefault("dontScrollUntilSwipeDetected", uint32(0))->GetUINT32();
 
 	GetParent()->GetFunction("OnOverStart")->sig_function.connect(1, boost::bind(&ScrollComponent::OnOverStart, this, _1));
 	GetParent()->GetFunction("OnOverEnd")->sig_function.connect(1, boost::bind(&ScrollComponent::OnOverEnd, this, _1));
 	GetParent()->GetFunction("OnOverMove")->sig_function.connect(1, boost::bind(&ScrollComponent::OnOverMove, this, _1));
 	GetParent()->GetFunction("OnUpdate")->sig_function.connect(1, boost::bind(&ScrollComponent::OnUpdate, this, _1));
-
 	GetFunction("SetProgress")->sig_function.connect(1, boost::bind(&ScrollComponent::SetProgress, this, _1));
 
 	m_pFilterComp = GetParent()->AddComponent(new FilterInputComponent);
-
 	m_pFilterComp->GetVar("mode")->Set(uint32(FilterInputComponent::MODE_IDLE)); //if we change to MODE_DISABLE_INPUT_CHILDREN later, no clicks will trickle down to the kids
 }
 
@@ -96,8 +94,6 @@ void ScrollComponent::SetIsScrolling(bool bScrolling)
 void ScrollComponent::OnOverStart(VariantList *pVList)
 {
 	SetIsScrolling(false); 
-
-
 	m_lastTouchPos = pVList->m_variant[0].GetVector2();
 }
 
@@ -141,9 +137,7 @@ void ScrollComponent::OnOverMove(VariantList *pVList)
 		}
 
 	}
-
-	
-	
+		
 	//LogMsg("moved %s", PrintVector2(vDisplacement).c_str());
 
 	if (*m_pScrollStyle == STYLE_EXACT)
@@ -151,7 +145,7 @@ void ScrollComponent::OnOverMove(VariantList *pVList)
 		
 		m_vecDisplacement += pVList->m_variant[0].GetVector2()-m_lastTouchPos;
 		m_vTotalDisplacementOnCurrentSwipe += pVList->m_variant[0].GetVector2()-m_lastTouchPos;
-		if (m_bIsScrolling)
+		if (m_bIsScrolling || *m_pSwipeDetectDistance != 0 || *m_pDontScrollUntilSwipeDetected == 0)
 		{
 			SetPosition(m_vecDisplacement, false);
 			m_vecDisplacement = CL_Vec2f(0,0);
@@ -168,7 +162,7 @@ void ScrollComponent::OnOverMove(VariantList *pVList)
 	//using iPadMapX will roughly allow move movement on larger screens.. not going to be perfect unless we knew the pixels per cm of
 	//the screen though.. hrm, not easy to get that.
 
-	if (*m_swipeDetectDistance != 0 && m_vecDisplacement.length() > *m_swipeDetectDistance) 
+	if (*m_pSwipeDetectDistance != 0 && m_vecDisplacement.length() > *m_pSwipeDetectDistance) 
 	{
 		//TODO:  Should we check pos/size and if we don't require scrolling (everything fits on screen), not do the next call?
 		SetIsScrolling(true);
@@ -220,7 +214,7 @@ void ScrollComponent::OnUpdate(VariantList *pVList)
 {
 	if (*m_pScrollStyle == STYLE_MOMENTUM)
 	{
-		if (m_bIsScrolling || GetBaseApp()->GetTotalActiveTouches() == 0 || *m_swipeDetectDistance == 0 )
+		if (m_bIsScrolling || GetBaseApp()->GetTotalActiveTouches() == 0 || *m_pSwipeDetectDistance == 0 || *m_pDontScrollUntilSwipeDetected == 0)
 		{
 			SetPosition(m_vecDisplacement*GetBaseApp()->GetDelta(), false);
 			m_vecDisplacement *= (1- (*m_pFriction*GetBaseApp()->GetDelta()));
