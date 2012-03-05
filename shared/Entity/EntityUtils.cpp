@@ -1817,6 +1817,8 @@ EntityComponent * CreateSlider(Entity *pBG, float x, float y, float sizeX, strin
 		vButtonScale = CL_Vec2f(1, 1);
 	}
 	
+	SetButtonStyleEntity(pSliderButton, Button2DComponent::BUTTON_STYLE_CLICK_ON_TOUCH);
+
 	pSliderButton->GetVar("scale2d")->Set(vButtonScale);
 	pSliderButton->GetComponentByName("Button2D")->GetVar("onClickAudioFile")->Set("");
 
