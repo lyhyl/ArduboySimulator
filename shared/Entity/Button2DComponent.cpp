@@ -49,6 +49,7 @@ void Button2DComponent::OnAdd(Entity *pEnt)
 	GetParent()->GetFunction("PerformClick")->sig_function.connect(1, boost::bind(&Button2DComponent::PerformClick, this, _1));
 
 	GetParent()->GetFunction("OnOverStart")->sig_function.connect(1, boost::bind(&Button2DComponent::OnOverStart, this, _1));
+	GetParent()->GetFunction("OnOverMove")->sig_function.connect(1, boost::bind(&Button2DComponent::OnOverMove, this, _1));
 	GetParent()->GetFunction("OnOverEnd")->sig_function.connect(1, boost::bind(&Button2DComponent::OnOverEnd, this, _1));
 	GetParent()->GetFunction("OnTouchEnd")->sig_function.connect(1, boost::bind(&Button2DComponent::OnTouchEnd, this, _1));
 	GetParent()->GetFunction("OnTouchStart")->sig_function.connect(1, boost::bind(&Button2DComponent::OnTouchStart, this, _1));
@@ -114,6 +115,17 @@ void Button2DComponent::OnOverStart(VariantList *pVList)
 	}
 }
 
+void Button2DComponent::OnOverMove(VariantList *pVList)
+{
+	TouchTrackInfo *pTouch = GetBaseApp()->GetTouch(pVList->Get(2).GetUINT32());
+	if (pTouch->WasHandled() && pTouch->GetEntityThatHandledIt() != GetParent())
+	{
+		m_pressed = false;
+
+		buttonNoLongerPressed();
+	}
+}
+
 void Button2DComponent::OnOverEnd(VariantList *pVList)
 {
 	//LogMsg("Now off button");
@@ -123,14 +135,7 @@ void Button2DComponent::OnOverEnd(VariantList *pVList)
 		m_pressed = false;
 	}
 	
-	UpdateButtonVisuals(NULL);
-
-	switch (*m_pVisualStyle)
-	{
-	case STYLE_FADE_ALPHA_ON_HOVER:
-		GetParent()->GetVar("alpha")->Set(m_alphaSave);
-		break;
-	}
+	buttonNoLongerPressed();
 }
 
 void Button2DComponent::OnTouchStart(VariantList *pVList)
@@ -149,11 +154,7 @@ void Button2DComponent::OnTouchStart(VariantList *pVList)
 		}
 
 		PerformClick(pVList);
-		//tell the original touch handler that we're not over it anymore, because we may want to load a menu now, then return, and the unclick will be missed.
-		return;
 	}
-
-	//LogMsg("Clicked button");
 }
 
 void Button2DComponent::PerformClick(VariantList *pVList)
@@ -203,8 +204,14 @@ void Button2DComponent::OnTouchEnd(VariantList *pVList)
 	//LogMsg("Released button while highlighted");
 	switch (*m_pButtonStyle) {
 	case BUTTON_STYLE_CLICK_ON_TOUCH_RELEASE:
-		PerformClick(pVList);
+	{
+		TouchTrackInfo *pTouch = GetBaseApp()->GetTouch(pVList->Get(2).GetUINT32());
+		if (!pTouch->WasHandled() || pTouch->GetEntityThatHandledIt() == NULL || pTouch->GetEntityThatHandledIt() == GetParent())
+		{
+			PerformClick(pVList);
+		}
 		break;
+	}
 
 	case BUTTON_STYLE_CLICK_ON_TOUCH_PRESS_RELEASE:
 		if (m_pressed) {
@@ -217,4 +224,16 @@ void Button2DComponent::OnTouchEnd(VariantList *pVList)
 	}
 
 	m_pressed = false;
+}
+
+void Button2DComponent::buttonNoLongerPressed()
+{
+	UpdateButtonVisuals(NULL);
+
+	switch (*m_pVisualStyle)
+	{
+	case STYLE_FADE_ALPHA_ON_HOVER:
+		GetParent()->GetVar("alpha")->Set(m_alphaSave);
+		break;
+	}
 }
