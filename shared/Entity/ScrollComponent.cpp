@@ -41,7 +41,7 @@ void ScrollComponent::OnAdd(Entity *pEnt)
 	m_pPowerMod = &GetVarWithDefault("powerMod", float(0.15))->GetFloat();
 	m_progressVar = GetVar("progress2d");
 	m_pEnforceFingerTracking = &GetVarWithDefault("fingerTracking", uint32(0))->GetUINT32();
-	m_pSwipeDetectDistance = &GetVarWithDefault("swipeDetectDistance", 7.0f)->GetFloat();
+	m_pSwipeDetectDistance = &GetVarWithDefault("swipeDetectDistance", 25.0f)->GetFloat();
 	m_pDontScrollUntilSwipeDetected = &GetVarWithDefault("dontScrollUntilSwipeDetected", uint32(0))->GetUINT32();
 
 	GetParent()->GetFunction("OnOverStart")->sig_function.connect(1, boost::bind(&ScrollComponent::OnOverStart, this, _1));

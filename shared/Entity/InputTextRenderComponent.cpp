@@ -30,7 +30,6 @@ void InputTextRenderComponent::OnVisibilityChanged(Variant *pDataObject)
 		//we're no longer visible.  If we have focus and the keyboard is up, we should really put it down
 		CloseKeyboard(NULL);
 	}
-	
 }
 
 
@@ -40,7 +39,7 @@ void InputTextRenderComponent::OnTextChanged(Variant *pDataObject)
 	GetBaseApp()->GetFont(eFont(*m_pFontID))->MeasureText(&rt, *m_pText, m_pScale2d->x);
 	*m_pTextSize2d = CL_Vec2f(rt.GetWidth(), rt.GetHeight());
 
-	if (m_bEditActive)
+	if (*m_pHasFocus)
 	{
 		SetLastStringInput(*m_pText);
 	}
@@ -110,7 +109,7 @@ void InputTextRenderComponent::ActivateKeyboard(VariantList *pVList)
 	}
 
 	GetBaseApp()->AddOSMessage(o);
-	m_bEditActive = true;
+	GetVar("hasFocus")->Set(uint32(1));
 	SetIsUsingNativeUI(true);
 	SetEntityWithNativeUIFocus(GetParent());
 
@@ -161,10 +160,12 @@ void InputTextRenderComponent::CloseKeyboard( VariantList *pVList )
 		SetEntityWithNativeUIFocus(NULL);
 	}
 
-	if (!m_bEditActive) return;
+	if (!*m_pHasFocus) return;
 
 	LogMsg("Attempting to close onscreen keyboard");
-	m_bEditActive = false;
+
+	GetVar("hasFocus")->Set(uint32(0));
+
 	OSMessage o;
 	o.m_type = OSMessage::MESSAGE_CLOSE_TEXT_BOX;
 	GetBaseApp()->AddOSMessage(o);
@@ -175,7 +176,6 @@ void InputTextRenderComponent::OnAdd(Entity *pEnt)
 	EntityComponent::OnAdd(pEnt);
 
 	//shared with the rest of the entity
-	m_bEditActive = false;
 	m_pPos2d = &GetParent()->GetVar("pos2d")->GetVector2();
 	m_pSize2d = &GetParent()->GetVar("size2d")->GetVector2();
 	m_pScale2d = &GetParent()->GetVarWithDefault("scale2d", Variant(1.0f, 1.0f))->GetVector2();
@@ -191,6 +191,7 @@ void InputTextRenderComponent::OnAdd(Entity *pEnt)
 	m_pVisible = &GetParent()->GetVarWithDefault("visible", uint32(1))->GetUINT32();
 	m_pGetFocusOnEnter = &GetVarWithDefault("getFocusOnEnter", uint32(0))->GetUINT32();
 	GetParent()->GetVar("visible")->GetSigOnChanged()->connect(1, boost::bind(&InputTextRenderComponent::OnVisibilityChanged, this, _1));
+	m_pHasFocus = &GetVar("hasFocus")->GetUINT32();
 
 	//our own stuff
 	m_pDisabled = &GetVarWithDefault("disabled", uint32(0))->GetUINT32();
@@ -250,7 +251,7 @@ void InputTextRenderComponent::OnRemove()
 void InputTextRenderComponent::OnUpdate(VariantList *pVList)
 {
 
-	if (m_bEditActive)
+	if (*m_pHasFocus)
 	{
 		string curString = FilterToValidAscii(GetLastStringInput(), *m_pFiltering == FILTERING_STRICT);
 				
@@ -277,7 +278,7 @@ void InputTextRenderComponent::OnUpdate(VariantList *pVList)
 		if (!GetIsUsingNativeUI())
 		{
 			//the keyboard is closed, we're done
-			m_bEditActive = false;
+			GetVar("hasFocus")->Set(uint32(0));
 			GetFunction("CloseKeyboard")->sig_function(NULL);
 		}
 	}
@@ -309,7 +310,7 @@ void InputTextRenderComponent::OnRender(VariantList *pVList)
 
 	string *pTextToDraw = m_pText;
 
-	if (!m_bEditActive && !m_pPlaceHolderText->empty())
+	if (!*m_pHasFocus && !m_pPlaceHolderText->empty())
 	{
 		pTextToDraw = m_pPlaceHolderText;
 	}
@@ -328,7 +329,7 @@ void InputTextRenderComponent::OnRender(VariantList *pVList)
 		DrawRect(vFinalPos, *m_pSize2d, borderCol);
 	}
 
-	if (m_bEditActive)
+	if (*m_pHasFocus)
 	{
 		//draw the blinking cursor too
 		float height = GetBaseApp()->GetFont(eFont(*m_pFontID))->GetLineHeight(m_pScale2d->x);
@@ -351,7 +352,7 @@ void InputTextRenderComponent::OnInput( VariantList *pVList )
 
 	eMessageType messageType = eMessageType( int(pVList->Get(0).GetFloat()));
 
-	if (!m_bEditActive)
+	if (!m_pHasFocus)
 	{
 		//well, there is one exception to a keypress we'll process, if nobody else focus, and it's an enter, and we're
 		//instructed to give ourselves focus if enter is hit, then ok.
@@ -386,7 +387,7 @@ void InputTextRenderComponent::OnInput( VariantList *pVList )
 			//but is it too long for our input box?
 			TruncateString(input, *m_pInputLengthMax);
 			input = FilterToValidAscii(input, *m_pFiltering == FILTERING_STRICT);
-			if (m_bEditActive)
+			if (*m_pHasFocus)
 			{
 				SetLastStringInput( input);
 			} else
