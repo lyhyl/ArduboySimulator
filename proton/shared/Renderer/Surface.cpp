@@ -466,20 +466,20 @@ bool Surface::LoadFileFromMemory( byte *pMem, int inputSize )
 
 void Surface::Bind()
 {
+	CHECK_GL_ERROR();
 	if (m_texType == TYPE_NOT_OWNER) return;
 
 	if (m_glTextureID == NO_TEXTURE_LOADED && !m_textureLoaded.empty())
 	{
 		ReloadImage();
 	}
-	
+
 	if (g_lastBound == m_glTextureID)
 	{
 		//believe it or not, I saved 2 FPS on the iphone by doing my own checks
 		return;
 	}
 
-	CHECK_GL_ERROR();
 	glBindTexture( GL_TEXTURE_2D, m_glTextureID);
 	g_lastBound = m_glTextureID;
 	CHECK_GL_ERROR();

@@ -88,7 +88,7 @@ void ScrollBarRenderComponent::OnUpdate(VariantList *pVList)
 void ScrollBarRenderComponent::OnRender(VariantList *pVList)
 {
 	//NOTE: We don't support drawing a horizontal scroll bar yet!
-	
+	CHECK_GL_ERROR();
 	//LogMsg("Drawing progress bar: %.2f", progress);
 	if (*m_pAlpha <= 0.07)
 	{
@@ -113,8 +113,13 @@ void ScrollBarRenderComponent::OnRender(VariantList *pVList)
 
 	if (!m_pSurf) return; //can't do anything without the graphics loaded
 	
-	
 	contentAreaRatio = (m_pBoundsRect->get_height()+m_pSize2d->y)/m_pSize2d->y;
+
+	if (m_pBoundsRect->get_height() < (m_pSize2d->y+1)) //I don't really know why I need that +1..but it works..
+	{
+		contentAreaRatio = 0; //definitely don't need to scroll here
+	}
+
 	if (contentAreaRatio > 1)
 	{
 		//render vertical scroll bar
@@ -148,8 +153,14 @@ void ScrollBarRenderComponent::OnRender(VariantList *pVList)
 		ApplyOffset(&r, vFinalPos);
 		DrawFilledRect(r, color);
 	}
-	
+
 	contentAreaRatio = (m_pBoundsRect->get_width()+m_pSize2d->x)/m_pSize2d->x;
+
+	if (m_pBoundsRect->get_width() < (m_pSize2d->x+1)) //I don't really know why I need that +1..but it works..
+	{
+		contentAreaRatio = 0; //definitely don't need to scroll here
+	}
+	
 	if (contentAreaRatio > 1)
 	{
 		//render horizontal scroll bar
@@ -182,6 +193,8 @@ void ScrollBarRenderComponent::OnRender(VariantList *pVList)
 		CL_Rectf r = CL_Rectf(0, 0, barWidth, barHeight);
 		ApplyOffset(&r, vFinalPos);
 		DrawFilledRect(r, color);
+		CHECK_GL_ERROR();
+
 	}
 	
 	
@@ -190,5 +203,6 @@ void ScrollBarRenderComponent::OnRender(VariantList *pVList)
 		g_globalBatcher.Flush();
 		glEnable(GL_SCISSOR_TEST);
 	}
-	
+	CHECK_GL_ERROR();
+
 }

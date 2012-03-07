@@ -85,12 +85,21 @@ CL_Rectf RotateRect(CL_Rect r, float angleDegrees, CL_Vec2f srcScreenSize)
 
 void RenderScissorComponent::FilterOnRender(VariantList *pVList)
 {
+
+	CHECK_GL_ERROR()
 	g_globalBatcher.Flush();
 
 	GLboolean b = false;
-	glGetBooleanv(GL_SCISSOR_TEST, &b);
-	m_bOldScissorEnabled = b != 0;
 	
+	//Note: This fails when using the webOS emulation libs on Windows.. but works on the real device
+	glGetBooleanv(GL_SCISSOR_TEST, &b);
+	
+#if defined(WIN32) && defined(RT_WEBOS) && defined(_DEBUG)
+	//clear the error out so it doesn't flood our log
+	glGetError();
+#endif
+	m_bOldScissorEnabled = b != 0;
+	CHECK_GL_ERROR()
 	if (m_bOldScissorEnabled)
 	{
 		//warning: Untested code...
@@ -98,6 +107,7 @@ void RenderScissorComponent::FilterOnRender(VariantList *pVList)
 		glGetIntegerv(GL_SCISSOR_BOX, &nums[0]);
 		m_oldScissorPos = CL_Vec2f((float)nums[0],(float) nums[1]);
 		m_oldScissorSize = CL_Vec2f((float)nums[2],(float) nums[3]);
+		CHECK_GL_ERROR()
 	}
 
 	CL_Vec2f vFinalPos = pVList->m_variant[0].GetVector2()+*m_pPos2d;
@@ -135,7 +145,6 @@ void RenderScissorComponent::FilterOnRender(VariantList *pVList)
 
 	//remember, glScissors x/y is the LOWER LEFT of the rect, not upper left. (and lower left is 0,0)
 	glScissor((GLint)clipRect.left, (GLint)GetPrimaryGLY()-((GLint)clipRect.top+(GLint)clipRect.get_height()), (GLint)clipRect.get_width(),(GLint) clipRect.get_height());
-
 	glEnable(GL_SCISSOR_TEST);
 
 }
@@ -151,5 +160,7 @@ void RenderScissorComponent::PostOnRender(VariantList *pVList)
 	{
 		glDisable(GL_SCISSOR_TEST);
 	}
+
+
 }
 

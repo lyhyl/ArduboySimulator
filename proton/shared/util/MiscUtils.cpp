@@ -272,7 +272,7 @@ string PopFirstParmString(string *lineInOut, const string delimiter)
 		return "";
 
 
-	for (int i=1; i < pieces.size(); i++)
+	for (uint32 i=1; i < pieces.size(); i++)
 	{
 		if ( !lineInOut->empty())
 		{

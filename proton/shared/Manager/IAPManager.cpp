@@ -1,7 +1,9 @@
 #include "PlatformPrecomp.h"
 #include "IAPManager.h"
 
-//#define SHOW_DEBUG_IAP_MESSAGES
+#ifdef _DEBUG
+	#define SHOW_DEBUG_IAP_MESSAGES
+#endif
 
 IAPManager::IAPManager()
 {
@@ -33,14 +35,27 @@ void IAPManager::OnMessage( Message &m )
 	if (m.GetType() == MESSAGE_TYPE_IAP_RESULT)
 	{
 #ifdef SHOW_DEBUG_IAP_MESSAGES
-		LogMsg("Got IAP response: %d", m.GetParm1());
+		LogMsg("Got IAP response: %d", (int)m.GetParm1());
 #endif
 
-		if (m.GetParm1() != RESULT_OK)
+		if ((int)m.GetParm1() != RESULT_OK)
 		{
 			m_state = STATE_NONE;
 			m_returnState = RETURN_STATE_FAILED;
 			m_itemToBuy.clear();
+		} else
+		{
+
+			if (GetEmulatedPlatformID() != PLATFORM_ID_ANDROID)
+			{
+				//Android sends a MESSAGE_TYPE_IAP_ITEM_STATE instead, I can't remember why.. but for
+				//other platforms we just do this:
+				//we successfully bought it
+
+				m_state = STATE_NONE;
+				m_returnState = RETURN_STATE_PURCHASED;
+				m_itemToBuy.clear();
+			}
 		}
 	}
 
@@ -50,7 +65,7 @@ void IAPManager::OnMessage( Message &m )
 		LogMsg("Got Item State response: %d", m.GetParm1());
 	#endif
 		
-		if (m.GetParm1() == END_OF_LIST)
+		if ((int)m.GetParm1() == END_OF_LIST)
 		{
 			if (!m_itemToBuy.empty())
 			{
@@ -81,7 +96,7 @@ void IAPManager::OnMessage( Message &m )
 
 			return;
 		}
-		if (m.GetParm1() == PURCHASED)
+		if ((int)m.GetParm1() == PURCHASED)
 		{
 		#ifdef SHOW_DEBUG_IAP_MESSAGES
 			LogMsg("Has purchased %s", m.GetStringParm().c_str());
@@ -130,7 +145,7 @@ bool IAPManager::Init()
 void IAPManager::Update()
 {
 
-	if (GetPlatformID() != PLATFORM_ID_ANDROID)
+	if (GetPlatformID() != PLATFORM_ID_ANDROID && GetEmulatedPlatformID() != PLATFORM_ID_WEBOS)
 	{
 		//don't support billing on this platform, fake it after 3 seconds.
 		if (m_timer+3000 < GetTick(TIMER_SYSTEM))
@@ -145,9 +160,8 @@ void IAPManager::Update()
 
 void IAPManager::BuyItem( string itemName )
 {
-	m_state = STATE_WAITING;
-	m_returnState = RETURN_STATE_NONE;
-	
+	Reset();
+
 	#ifdef SHOW_DEBUG_IAP_MESSAGES
 		LogMsg("Planning to buy %s", itemName.c_str());
 	#endif
@@ -170,18 +184,12 @@ void IAPManager::BuyItem( string itemName )
 		m_timer = GetTick(TIMER_SYSTEM);
 		*/
 
-		
-
 		m_items.clear();
 		m_itemToBuy = itemName;
-
 
 		OSMessage o;
 		o.m_type = OSMessage::MESSAGE_IAP_GET_PURCHASED_LIST;
 		GetBaseApp()->AddOSMessage(o);
-
-
-
 	} else
 	{
 		//skip that, we're testing
@@ -196,3 +204,8 @@ void IAPManager::BuyItem( string itemName )
 	
 }
 
+void IAPManager::Reset()
+{
+	m_state = STATE_WAITING;
+	m_returnState = RETURN_STATE_NONE;
+}
