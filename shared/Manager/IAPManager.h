@@ -33,18 +33,11 @@ public:
 
 	void BuyItem(string itemName);
 	bool IsItemPurchased( const string item);
+	void Reset(); //call this after a purchase to reset things
 
-protected:
-	
-	enum eState
-	{
-		STATE_NONE,
-		STATE_WAITING,
-	};
-
-	//from google billing...
 	enum ResponseCode
 	{
+		//Don't change the order, will screw up Android stuff
 		RESULT_OK,
 		RESULT_USER_CANCELED,
 		RESULT_SERVICE_UNAVAILABLE,
@@ -55,11 +48,18 @@ protected:
 
 	};
 
+protected:
+	
+	enum eState
+	{
+		STATE_NONE,
+		STATE_WAITING,
+	};
 
-	//from google billing...
 	enum ItemStateCode
 	{
-		END_OF_LIST = -1, //SETH added this..
+		//Don't change the order, will screw up Android stuff
+		END_OF_LIST = -1,
 		PURCHASED,
 		CANCELED,
 		REFUNDED

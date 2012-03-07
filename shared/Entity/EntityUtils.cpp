@@ -1962,8 +1962,12 @@ bool EntityIsOnScreen(Entity *pEnt)
 
 CL_Vec2f GetSize2DEntity(Entity *pEnt) {return pEnt->GetVar("size2d")->GetVector2();}
 void SetSize2DEntity(Entity *pEnt, const CL_Vec2f &vSize) { pEnt->GetVar("size2d")->Set(vSize);}
+
 CL_Vec2f GetPos2DEntity(Entity *pEnt) {return pEnt->GetVar("pos2d")->GetVector2();}
-void SetPos2DEntity(Entity *pEnt, const CL_Vec2f &vSize) { pEnt->GetVar("pos2d")->Set(vSize);}
+void SetPos2DEntity(Entity *pEnt, const CL_Vec2f &vPos) { pEnt->GetVar("pos2d")->Set(vPos);}
+
+CL_Vec2f GetScale2DEntity(Entity *pEnt) {return pEnt->GetVar("scale2d")->GetVector2();}
+void SetScale2DEntity(Entity *pEnt, const CL_Vec2f &vScale) { pEnt->GetVar("scale2d")->Set(vScale);}
 
 void SetProgressBarPercent(Entity *pEnt, float progressPercent)
 {

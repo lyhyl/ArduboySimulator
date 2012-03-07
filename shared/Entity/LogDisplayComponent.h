@@ -27,8 +27,11 @@ An easy way to turn use this to show the system log is to use the helper functio
 
 Just do:
 
-SetConsole(true); and it will create it as an overlay.
+SetConsole(true, (optional, true to enable scrolling)); and it will create it as an overlay.
 
+If the "enableScrolling" var is set to 1, vertical scroll bars will be enabled.
+(Note, if you do this, ScrollComponent will try to load interface/scroll_bar_caps.rttex for the image to use, you
+can steal it from RTSimpleApp if needed)
 */
 
 class LogDisplayComponent: public EntityComponent
@@ -85,5 +88,5 @@ private:
 };
 
 void ToggleConsole();
-void SetConsole(bool bOn);
+void SetConsole(bool bOn, bool bEnableScrollbars = false);
 #endif // LogDisplayComponent_h__

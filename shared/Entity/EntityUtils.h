@@ -238,7 +238,10 @@ EntityComponent * SetTextEntity(Entity *pEntWithTextComponent, const string &tex
 CL_Vec2f GetSize2DEntity(Entity *pEnt);
 void SetSize2DEntity(Entity *pEnt, const CL_Vec2f &vSize);
 CL_Vec2f GetPos2DEntity(Entity *pEnt);
-void SetPos2DEntity(Entity *pEnt, const CL_Vec2f &vSize);
+void SetPos2DEntity(Entity *pEnt, const CL_Vec2f &vPos);
+CL_Vec2f GetScale2DEntity(Entity *pEnt);
+void SetScale2DEntity(Entity *pEnt, const CL_Vec2f &vScale);
+
 void SetVisibleEntity(Entity *pEnt, bool bVisible);
 
 void SetProgressBarPercent(Entity *pEnt, float progressPercent);

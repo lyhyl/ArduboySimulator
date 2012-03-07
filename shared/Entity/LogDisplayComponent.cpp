@@ -48,14 +48,27 @@ void LogDisplayComponent::OnAdd(Entity *pEnt)
 	m_pMaxScrollSpeed = &GetVarWithDefault("maxScrollSpeed", float(7))->GetFloat();
 	m_pPowerMod = &GetVarWithDefault("powerMod", float(0.15))->GetFloat();
 
-	m_pEnableScrolling = &GetParent()->GetVar("enableScrolling")->GetUINT32();
+	m_pEnableScrolling = &GetVar("enableScrolling")->GetUINT32();
 	GetVar("enableScrolling")->GetSigOnChanged()->connect(boost::bind(&LogDisplayComponent::OnEnableScrollingChanged, this, _1));
 
-	if (!m_pActiveConsole) m_pActiveConsole = GetBaseApp()->GetConsole();
+	if (!m_pActiveConsole) 
+	{
+		m_pActiveConsole = GetBaseApp()->GetConsole();
+		m_pActiveConsole->m_sig_on_text_added.connect(boost::bind(&LogDisplayComponent::OnTextAdded, this));
+
+	}
 	//register ourselves to render if the parent does
 	GetParent()->GetFunction("OnRender")->sig_function.connect(1, boost::bind(&LogDisplayComponent::OnRender, this, _1));
 	GetFunction("AddLine")->sig_function.connect(1, boost::bind(&LogDisplayComponent::AddLine, this, _1));
 	GetParent()->GetFunction("OnUpdate")->sig_function.connect(1, boost::bind(&LogDisplayComponent::OnUpdate, this, _1));
+
+	if (*m_pEnableScrolling)
+	{
+		//turn this on now
+		OnEnableScrollingChanged(GetVar("enableScrolling"));
+	}
+
+	OnTextAdded();
 }
 
 void LogDisplayComponent::OnRemove()
@@ -213,6 +226,7 @@ void LogDisplayComponent::UpdateScrollBar()
 
 void LogDisplayComponent::OnRender(VariantList *pVList)
 {
+	CHECK_GL_ERROR();	
 	CL_Vec2f vFinalPos = pVList->m_variant[0].GetVector2()+*m_pPos2d;
 	int lines = m_pActiveConsole->GetTotalLines();
 	if (*m_pAlpha == 0) return;
@@ -257,7 +271,7 @@ void LogDisplayComponent::OnRender(VariantList *pVList)
 		linesToDraw++;
 	}
 	//that was fun practice, now let's draw the real thing
-	
+	CHECK_GL_ERROR();	
 	for (int i=0; i < linesToDraw; i++)
 	{
 		curLine++;
@@ -274,6 +288,7 @@ void LogDisplayComponent::SetConsole( Console *pConsole )
 	if (m_pActiveConsole)
 	{
 		//remove any old signals we had
+		m_pActiveConsole->m_sig_on_text_added.disconnect(this);
 	}
 	SAFE_DELETE(m_pInternalConsole);
 	m_pActiveConsole = pConsole;
@@ -286,10 +301,9 @@ void LogDisplayComponent::SetConsole( Console *pConsole )
 	}
 	m_pActiveConsole->m_sig_on_text_added.connect(boost::bind(&LogDisplayComponent::OnTextAdded, this));
 
-	
 }
 
-void SetConsole(bool bOn)
+void SetConsole(bool bOn, bool bEnableScrollbars)
 {
 	Entity *pConsole = GetEntityRoot()->GetEntityByName("ConsoleEnt");
 
@@ -307,6 +321,11 @@ void SetConsole(bool bOn)
 		pConsole->GetVar("size2d")->Set(CL_Vec2f(GetScreenSizeXf()/2, GetScreenSizeYf()/2));
 
 		EntityComponent *pComp = new LogDisplayComponent;
+		if (bEnableScrollbars)
+		{
+			pComp->GetVar("enableScrolling")->Set(uint32(1));
+		}
+		
 		pConsole->AddComponent(pComp);
 		AddFocusIfNeeded(pConsole);
 	}

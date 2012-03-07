@@ -4,6 +4,9 @@
 #include "PDL.h"
 #include "../win/app/main.h"
 #include "BaseApp.h"
+#include "../util/cJSON.h" //used for IAP
+#include "../Manager/IAPManager.h"
+#include "../util/cJSON.c" //Because I don't want to update all the projects with this file..., yes, Bad Seth
 
 SDL_Surface *g_screen = NULL;
 SDL_Joystick *g_pSDLJoystick = NULL;
@@ -32,6 +35,10 @@ void LogMsg ( const char* traceStr, ... )
 	vsnprintf( buffer, logSize, traceStr, argsVA );
 	va_end( argsVA );
 	syslog(LOG_ERR, buffer, 0, LOG_USER);
+	if (IsBaseAppInitted())
+	{
+		GetBaseApp()->GetConsole()->AddLine(buffer);
+	}
 }
 
 #endif
@@ -52,10 +59,60 @@ void LogMsg ( const char* traceStr, ... )
 	va_end( argsVA );
 	OutputDebugString(buffer);
 	OutputDebugString("\n");
+	if (IsBaseAppInitted())
+	{
+		GetBaseApp()->GetConsole()->AddLine(buffer);
+	}
 }
 #endif
 
+
 bool parseNullsepList(const char *nullsepList, int listBufferSize, char **arrayToFill, int numElements);
+
+void IAPBuyItem(string m_item)
+{
+#ifdef _DEBUG
+	LogMsg("Want to buy %s",m_item.c_str());
+#endif
+	PDL_ItemReceipt *itemReceipt = PDL_PurchaseItem(m_item.c_str(), 1, m_item.c_str());
+
+	const char *itemReceiptJSON = NULL;
+	if (itemReceipt)
+	{
+		itemReceiptJSON = PDL_GetItemReceiptJSON(itemReceipt);
+	}
+
+	if (!itemReceipt || !itemReceiptJSON)
+	{
+		LogMsg(("itemReceipt was null"));
+		GetMessageManager()->SendGUI(MESSAGE_TYPE_IAP_RESULT,(float)IAPManager::RESULT_DEVELOPER_ERROR,0.0f);
+		return;
+	}
+
+	//after a long wait, control comes back here, and we examine our results
+#ifdef _DEBUG
+	LogMsg("IAP packet returned:");
+	LogMsg(itemReceiptJSON);
+#endif
+	cJSON *cJSONReceipt = cJSON_Parse(itemReceiptJSON);
+	char *receiptStatus = cJSON_GetObjectItem(cJSONReceipt, "receiptStatus")->valuestring;
+#ifdef _DEBUG
+	LogMsg(("Receipt status: %s", receiptStatus));
+#endif
+	//CStrChar receipt(receiptStatus);
+	if (CaseInsensitiveCompare(receiptStatus, "Charged"))
+	{
+		//OK	
+		GetMessageManager()->SendGUI(MESSAGE_TYPE_IAP_RESULT,(float)IAPManager::RESULT_OK,0.0f);
+	} else
+	{
+		GetMessageManager()->SendGUI(MESSAGE_TYPE_IAP_RESULT,(float)IAPManager::RESULT_USER_CANCELED,0.0f);
+	}
+
+	//either way, clean up
+	cJSON_Delete(cJSONReceipt);
+}
+
 
 // When running under windows, it is necessary to make additional OGL
 // setup calls. We forward declare them here. Note that in the palm version
@@ -527,6 +584,10 @@ int main(int argc, char *argv[])
 				}
 				break;
 			
+			case OSMessage::MESSAGE_IAP_PURCHASE:
+
+				IAPBuyItem(m.m_string);
+				break;
 			case OSMessage::MESSAGE_CLOSE_TEXT_BOX:
 				if (PDL_GetPDKVersion() >= 300)
 				{
