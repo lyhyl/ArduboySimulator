@@ -116,9 +116,11 @@ bool App::Init()
 	//SetDefaultAudioClickSound("audio/enter.wav");
 	SetDefaultButtonStyle(Button2DComponent::BUTTON_STYLE_CLICK_ON_TOUCH_RELEASE);
 	SetManualRotationMode(true);
-	int scaleToX = 480;
-	int scaleToY = 320;
 
+    bool bScaleScreenActive = true; //if true, we'll stretch every screen to the coords below
+    int scaleToX = 480;
+	int scaleToY = 320;
+    
 	switch (GetEmulatedPlatformID())
 	{
 		//special handling for certain platforms to tweak the video settings
@@ -130,18 +132,21 @@ bool App::Init()
 			//doesn't need rotation
 			SetLockedLandscape(false);  //because it's set in the app manifest, we don't have to rotate ourselves
 			SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(), ORIENTATION_PORTRAIT);
-			SetupFakePrimaryScreenSize(scaleToX,scaleToY); //game will think it's this size, and will be scaled up
+            if (bScaleScreenActive)
+                SetupFakePrimaryScreenSize(scaleToX,scaleToY); //game will think it's this size, and will be scaled up
 		} else
 		{
 			//but the phones do
 			SetLockedLandscape(true); //we don't allow portrait mode for this game
-			SetupFakePrimaryScreenSize(scaleToY,scaleToX); //game will think it's this size, and will be scaled up
+            if (bScaleScreenActive)
+                SetupFakePrimaryScreenSize(scaleToY,scaleToX); //game will think it's this size, and will be scaled up
 		}
 		break;
 
 		case PLATFORM_ID_IOS:
 			SetLockedLandscape(true); //we stay in portrait but manually rotate, gives better fps on older devices
-			SetupFakePrimaryScreenSize(scaleToX,scaleToY); //game will think it's this size, and will be scaled up
+            if (bScaleScreenActive)
+                SetupFakePrimaryScreenSize(scaleToX,scaleToY); //game will think it's this size, and will be scaled up
 			break;
 			
 	default:
@@ -150,7 +155,8 @@ bool App::Init()
 
 		SetLockedLandscape(false); //we don't allow portrait mode for this game
 		SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(), ORIENTATION_PORTRAIT);
-		SetupFakePrimaryScreenSize(scaleToX,scaleToY); //game will think it's this size, and will be scaled up
+            if (bScaleScreenActive)
+                SetupFakePrimaryScreenSize(scaleToX,scaleToY); //game will think it's this size, and will be scaled up
 	}
 
 	L_ParticleSystem::init(2000);

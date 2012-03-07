@@ -105,7 +105,10 @@ void RenderScissorComponent::FilterOnRender(VariantList *pVList)
 
 	CL_Rectf clipRect(vFinalPos.x, vFinalPos.y, vFinalPos.x+m_pSize2d->x, vFinalPos.y+m_pSize2d->y);
 		
-	if (NeedToUseFakeScreenSize())
+	//well, turns out we need to always do this on iOS, as this accounts for the screen being rotated as well, not just
+	//the scaling issue
+
+//	if (NeedToUseFakeScreenSize())
 	{
 		//Oh shit-sticks. We're stretching our content and using a fake screensize.  We'll need to convert
 		//our glScissor rect to match the real gl surface size.

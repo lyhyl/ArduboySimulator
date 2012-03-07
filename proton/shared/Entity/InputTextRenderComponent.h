@@ -14,6 +14,15 @@
 #include "Entity.h"
 #include "Renderer/Surface.h"
 
+/*
+
+Single line input and render component.
+
+Example of usage in RTSimpleApp
+
+Can listen to its "hasFocus" variant to know when it gets/loses focus.
+
+*/
 class InputTextRenderComponent: public EntityComponent
 {
 public:
@@ -71,7 +80,7 @@ private:
 	uint32 *m_pFontID;
 	uint32 *m_pStyle;
 	uint32 *m_pCursorColor;
-	bool m_bEditActive;
+	uint32 *m_pHasFocus;
 	uint32 *m_pInputLengthMax;
 	uint32 *m_pBorderColor;
 	uint32 *m_pDisabled;
