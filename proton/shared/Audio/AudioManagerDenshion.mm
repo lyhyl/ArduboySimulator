@@ -3,7 +3,7 @@
 #include <AudioToolbox/AudioToolbox.h>
 #include "CocosDenshion/SimpleAudioEngine.h"
 
-#import "CDAudioManager.h"
+#import "CocosDenshion/CDAudioManager.h"
 #if TARGET_OS_IPHONE == 1
 #include <AVFoundation/AVFoundation.h>
 #endif

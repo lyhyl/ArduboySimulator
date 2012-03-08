@@ -7,7 +7,7 @@
 
 #pragma once
 
-#ifdef __cplusplus || defined __OBJC__
+#if defined __cplusplus || defined __OBJC__
 
 #include "../PlatformEnums.h"
 

@@ -59,6 +59,7 @@
 		5DDE02A512B4F526000C5CC0 /* App.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DDE02A412B4F526000C5CC0 /* App.cpp */; };
 		5DDE05AA12B58EBD000C5CC0 /* interface in Resources */ = {isa = PBXBuildFile; fileRef = 5DDE05A912B58EBD000C5CC0 /* interface */; };
 		5DFB865512BB287200337543 /* app.icns in Resources */ = {isa = PBXBuildFile; fileRef = 5DFB865412BB287200337543 /* app.icns */; };
+		6424B73F1508A0AC00B545A2 /* ArcadeInputComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6424B73D1508A0AC00B545A2 /* ArcadeInputComponent.cpp */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		AF9DBBC6113C611C00D05754 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF9DBBC5113C611C00D05754 /* QuartzCore.framework */; };
@@ -163,6 +164,8 @@
 		5DDE02A412B4F526000C5CC0 /* App.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = App.cpp; path = ../source/App.cpp; sourceTree = SOURCE_ROOT; };
 		5DDE05A912B58EBD000C5CC0 /* interface */ = {isa = PBXFileReference; lastKnownFileType = folder; name = interface; path = ../bin/interface; sourceTree = SOURCE_ROOT; };
 		5DFB865412BB287200337543 /* app.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = app.icns; sourceTree = "<group>"; };
+		6424B73D1508A0AC00B545A2 /* ArcadeInputComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ArcadeInputComponent.cpp; path = ../../shared/Entity/ArcadeInputComponent.cpp; sourceTree = "<group>"; };
+		6424B73E1508A0AC00B545A2 /* ArcadeInputComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ArcadeInputComponent.h; path = ../../shared/Entity/ArcadeInputComponent.h; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* RTBareBones-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "RTBareBones-Info.plist"; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* RTBareBones.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RTBareBones.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF9DBBC5113C611C00D05754 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -401,6 +404,8 @@
 		5DDE014C12B4D4F2000C5CC0 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				6424B73D1508A0AC00B545A2 /* ArcadeInputComponent.cpp */,
+				6424B73E1508A0AC00B545A2 /* ArcadeInputComponent.h */,
 				5DDE014D12B4D4F2000C5CC0 /* FocusInputComponent.h */,
 				5DDE014E12B4D4F2000C5CC0 /* FocusInputComponent.cpp */,
 				5DDE014F12B4D4F2000C5CC0 /* CustomInputComponent.h */,
@@ -600,6 +605,7 @@
 				5D70B62712B5FED300A1AB17 /* MainController.mm in Sources */,
 				5D70B62912B5FED300A1AB17 /* MyOpenGLView.mm in Sources */,
 				5D70C47912B757F500A1AB17 /* MyApplication.mm in Sources */,
+				6424B73F1508A0AC00B545A2 /* ArcadeInputComponent.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
