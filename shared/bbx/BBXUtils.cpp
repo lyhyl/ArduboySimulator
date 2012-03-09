@@ -86,6 +86,12 @@ string GetClipboardText()
 	return "";
 }
 
+float GetDeviceOSVersion()
+{
+	//TODO
+	return 0.0f;
+}
+
 bool IsIPhone3GS()
 {
 	return false;

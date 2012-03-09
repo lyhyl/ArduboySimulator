@@ -9,6 +9,7 @@ ScrollBarRenderComponent::ScrollBarRenderComponent()
 {
 	m_pSurf = NULL;
 	SetName("ScrollBarRender");
+	m_bUsingScrollComponent = false;
 }
 
 ScrollBarRenderComponent::~ScrollBarRenderComponent()
@@ -46,6 +47,8 @@ void ScrollBarRenderComponent::OnAdd(Entity *pEnt)
 
 	} else
 	{
+		m_bUsingScrollComponent = true; //I keep track of this becuse it looks like the bounds is calculated a little
+		//differently with scroll components.. ??
 		m_pBoundsRect = &pScrollComp->GetVar("boundsRect")->GetRect();
 		m_pProgress2d = &pScrollComp->GetVar("progress2d")->GetVector2();
 	}
@@ -115,7 +118,7 @@ void ScrollBarRenderComponent::OnRender(VariantList *pVList)
 	
 	contentAreaRatio = (m_pBoundsRect->get_height()+m_pSize2d->y)/m_pSize2d->y;
 
-	if (m_pBoundsRect->get_height() < (m_pSize2d->y+1)) //I don't really know why I need that +1..but it works..
+	if (!m_bUsingScrollComponent && m_pBoundsRect->get_height() < (m_pSize2d->y+1)) //I don't really know why I need that +1..but it works..
 	{
 		contentAreaRatio = 0; //definitely don't need to scroll here
 	}
@@ -156,7 +159,7 @@ void ScrollBarRenderComponent::OnRender(VariantList *pVList)
 
 	contentAreaRatio = (m_pBoundsRect->get_width()+m_pSize2d->x)/m_pSize2d->x;
 
-	if (m_pBoundsRect->get_width() < (m_pSize2d->x+1)) //I don't really know why I need that +1..but it works..
+	if (!m_bUsingScrollComponent && m_pBoundsRect->get_width() < (m_pSize2d->x+1)) //I don't really know why I need that +1..but it works..
 	{
 		contentAreaRatio = 0; //definitely don't need to scroll here
 	}

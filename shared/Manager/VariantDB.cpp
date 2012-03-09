@@ -35,7 +35,7 @@ void VariantDB::DeleteAll()
 }
 
 
-int VariantDB::DeleteVar(string &keyName)
+int VariantDB::DeleteVar(string keyName)
 {
 	int deleted = 0;
 

@@ -63,6 +63,7 @@ private:
 	CL_Vec2f *m_pProgress2d;
 	SurfaceAnim *m_pSurf;
 	string *m_pFileName;
+	bool m_bUsingScrollComponent;
 	
 };
 

@@ -105,7 +105,7 @@ public:
 	Variant * GetVarIfExists(const string &keyName);  //returns null if not created yet
 	Variant * GetVarWithDefault(const string &keyName, const Variant &vDefault);
 	int DeleteVarsStartingWith(string deleteStr); //returns how many were deleted
-	int DeleteVar(string &keyName); //returns how many were deleted (0 or 1..)
+	int DeleteVar(string keyName); //returns how many were deleted (0 or 1..)
 
 	//you can load and save the variables in the DB on the fly.  (Does nothing with the functions)
 	bool Save(const string &fileName, bool bAddBasePath = true);

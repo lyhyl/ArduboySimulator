@@ -134,13 +134,15 @@ bool App::Init()
 			SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(), ORIENTATION_PORTRAIT);
             if (bScaleScreenActive)
                 SetupFakePrimaryScreenSize(scaleToX,scaleToY); //game will think it's this size, and will be scaled up
-		} else
+		} 
+else
 		{
 			//but the phones do
 			SetLockedLandscape(true); //we don't allow portrait mode for this game
             if (bScaleScreenActive)
-                SetupFakePrimaryScreenSize(scaleToY,scaleToX); //game will think it's this size, and will be scaled up
+                SetupFakePrimaryScreenSize(scaleToX,scaleToY); //game will think it's this size, and will be scaled up
 		}
+		
 		break;
 
 		case PLATFORM_ID_IOS:

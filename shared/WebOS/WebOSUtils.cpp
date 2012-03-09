@@ -685,4 +685,9 @@ void CreateAppCacheDirIfNeeded()
 }
 
 
+float GetDeviceOSVersion()
+{
+	return ((float)PDL_GetPDKVersion())/100.0f;
+}
+
 #endif
