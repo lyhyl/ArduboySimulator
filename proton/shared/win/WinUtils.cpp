@@ -93,6 +93,17 @@ void LaunchURL(string url)
 
 }
 
+float GetDeviceOSVersion()
+{
+	//TODO
+	if (GetEmulatedPlatformID() == PLATFORM_ID_WEBOS)
+	{
+		//pretend we're a touchpad
+		return 3.05f;
+	}
+	return 0.0f;
+}
+
 string GetClipboardText()
 {
 	string text;

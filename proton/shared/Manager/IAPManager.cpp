@@ -157,6 +157,7 @@ bool IAPManager::Init()
 void IAPManager::Update()
 {
 
+#if !defined RT_WEBOS
 	if (m_bWaitingForReply && GetPlatformID() != PLATFORM_ID_ANDROID && GetPlatformID() != PLATFORM_ID_WEBOS)
 	{
 		//don't support billing on this platform, fake it after 3 seconds.
@@ -186,6 +187,8 @@ void IAPManager::Update()
 			
 		}
 	}
+
+#endif
 }
 
 void IAPManager::BuyItem( string itemName )

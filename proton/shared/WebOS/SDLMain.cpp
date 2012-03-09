@@ -74,6 +74,13 @@ void IAPBuyItem(string m_item)
 #ifdef _DEBUG
 	LogMsg("Want to buy %s",m_item.c_str());
 #endif
+
+	if (GetDeviceOSVersion() < 3.0f)
+	{
+		//avoid a crash on older devices
+		GetMessageManager()->SendGUI(MESSAGE_TYPE_IAP_RESULT,(float)IAPManager::RESULT_SERVICE_UNAVAILABLE,0.0f);
+		return;
+	}
 	PDL_ItemReceipt *itemReceipt = PDL_PurchaseItem(m_item.c_str(), 1, m_item.c_str());
 
 	const char *itemReceiptJSON = NULL;
@@ -94,12 +101,13 @@ void IAPBuyItem(string m_item)
 	LogMsg("IAP packet returned:");
 	LogMsg(itemReceiptJSON);
 #endif
+
 	char *receiptStatus = NULL;
 	cJSON *cJSONReceipt = cJSON_Parse(itemReceiptJSON);
 	
 	if (cJSONReceipt)
 	{
-		cJSON_GetObjectItem(cJSONReceipt, "receiptStatus")->valuestring;
+		receiptStatus = cJSON_GetObjectItem(cJSONReceipt, "receiptStatus")->valuestring;
 	}
 
 	if (!receiptStatus || !cJSONReceipt)
@@ -110,11 +118,6 @@ void IAPBuyItem(string m_item)
 		cJSON_Delete(cJSONReceipt);
 		return;
 	}
-
-	int orderNum =0;
-	orderNum = cJSON_GetObjectItem(cJSONReceipt, "orderNo")->valueint;
-	
-	string extra = toString(orderNum);
 	
 #ifdef _DEBUG
 	LogMsg("Receipt status: %s", receiptStatus);
@@ -122,7 +125,14 @@ void IAPBuyItem(string m_item)
 	//CStrChar receipt(receiptStatus);
 	if (CaseInsensitiveCompare(receiptStatus, "Charged"))
 	{
-		//OK	
+		int orderNum =0;
+		cJSON *pOrderNum = cJSON_GetObjectItem(cJSONReceipt, "orderNo");
+		if (pOrderNum) 
+		{
+			orderNum = pOrderNum->valueint;
+		}
+
+		string extra = toString(orderNum);
 		GetMessageManager()->SendGUIStringEx(MESSAGE_TYPE_IAP_RESULT,(float)IAPManager::RESULT_OK,0.0f,0, extra);
 	} else
 	{

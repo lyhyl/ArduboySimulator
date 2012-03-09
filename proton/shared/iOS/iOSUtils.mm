@@ -464,6 +464,12 @@ bool IsIphoneOriPad()
 	return true;
 }
 
+float GetDeviceOSVersion()
+{
+	//TODO
+	return 0.0f;
+}
+
 string GetClipboardText()
 {
 	string text;
