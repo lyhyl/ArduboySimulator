@@ -10,6 +10,7 @@ IAPManager::IAPManager()
 	m_state = STATE_NONE;
 	m_returnState = RETURN_STATE_NONE;
 	m_timer = 0;
+	m_bWaitingForReply = false;
 }
 
 IAPManager::~IAPManager()
@@ -34,15 +35,18 @@ void IAPManager::OnMessage( Message &m )
 
 	if (m.GetType() == MESSAGE_TYPE_IAP_RESULT)
 	{
-#ifdef SHOW_DEBUG_IAP_MESSAGES
-		LogMsg("Got IAP response: %d", (int)m.GetParm1());
-#endif
+		m_extraData = m.GetStringParm();
 
+#ifdef SHOW_DEBUG_IAP_MESSAGES
+		LogMsg("Got IAP response: %d - Extra: %s", (int)m.GetParm1(), m_extraData.c_str());
+#endif
 		if ((int)m.GetParm1() != RESULT_OK)
 		{
 			m_state = STATE_NONE;
 			m_returnState = RETURN_STATE_FAILED;
 			m_itemToBuy.clear();
+			VariantList vList(uint32(m_returnState), m_extraData);
+			m_sig_item_purchase_result(&vList);
 		} else
 		{
 
@@ -55,6 +59,8 @@ void IAPManager::OnMessage( Message &m )
 				m_state = STATE_NONE;
 				m_returnState = RETURN_STATE_PURCHASED;
 				m_itemToBuy.clear();
+				VariantList vList(uint32(m_returnState), m_extraData);
+				m_sig_item_purchase_result(&vList);
 			}
 		}
 	}
@@ -64,7 +70,7 @@ void IAPManager::OnMessage( Message &m )
 	#ifdef SHOW_DEBUG_IAP_MESSAGES
 		LogMsg("Got Item State response: %d", m.GetParm1());
 	#endif
-		
+	
 		if ((int)m.GetParm1() == END_OF_LIST)
 		{
 			if (!m_itemToBuy.empty())
@@ -78,6 +84,8 @@ void IAPManager::OnMessage( Message &m )
 						m_state = STATE_NONE;
 						m_returnState = RETURN_STATE_ALREADY_PURCHASED;
 						m_itemToBuy.clear();
+						VariantList vList(uint32(m_returnState), m_extraData);
+						m_sig_item_purchase_result(&vList);
 						return;
 					}
 	
@@ -123,6 +131,8 @@ void IAPManager::OnMessage( Message &m )
 				//done buying a real item
 				m_state = STATE_NONE;
 				m_returnState = RETURN_STATE_PURCHASED;
+				VariantList vList(uint32(m_returnState), m_extraData);
+				m_sig_item_purchase_result(&vList);
 			} else
 			{
 				//we're actually just scanning purchased items, not finished
@@ -133,6 +143,8 @@ void IAPManager::OnMessage( Message &m )
 		{
 			m_state = STATE_NONE;
 			m_returnState = RETURN_STATE_FAILED;
+			VariantList vList(uint32(m_returnState), m_extraData);
+			m_sig_item_purchase_result(&vList);
 		}
 	}
 }
@@ -145,15 +157,33 @@ bool IAPManager::Init()
 void IAPManager::Update()
 {
 
-	if (GetPlatformID() != PLATFORM_ID_ANDROID && GetEmulatedPlatformID() != PLATFORM_ID_WEBOS)
+	if (m_bWaitingForReply && GetPlatformID() != PLATFORM_ID_ANDROID && GetPlatformID() != PLATFORM_ID_WEBOS)
 	{
 		//don't support billing on this platform, fake it after 3 seconds.
 		if (m_timer+3000 < GetTick(TIMER_SYSTEM))
 		{
-			//fake a sale
-			Message m(MESSAGE_CLASS_GUI, TIMER_SYSTEM, MESSAGE_TYPE_IAP_ITEM_STATE);
-			m.SetParm1(PURCHASED);
-			OnMessage(m);
+			//fake a successful sale message back to us, so we'll process the order even while emulating on win/whatever
+			m_bWaitingForReply = false;
+			
+			if (GetEmulatedPlatformID() == PLATFORM_ID_ANDROID)
+			{
+				//I'm not sure why Android sends this message instead of just MESSAGE_TYPE_IAP_RESULT.. but some client games
+				//rely on this behavior so I don't want to mess with it
+				Message m(MESSAGE_CLASS_GUI, TIMER_SYSTEM, MESSAGE_TYPE_IAP_ITEM_STATE);
+				m.SetParm1(PURCHASED);
+				OnMessage(m);
+			} else
+			{
+				//WebOS (and presumable any new IAP systems will send this reply:
+
+				GetMessageManager()->SendGUIStringEx(MESSAGE_TYPE_IAP_RESULT,(float)IAPManager::RESULT_OK,0.0f,0, "Faked order!");
+
+				//or, for a failed transaction:
+			//	GetMessageManager()->SendGUIStringEx(MESSAGE_TYPE_IAP_RESULT,(float)IAPManager::RESULT_USER_CANCELED,0.0f,0, "Faked order!");
+
+			}
+
+			
 		}
 	}
 }
@@ -168,21 +198,11 @@ void IAPManager::BuyItem( string itemName )
 
 	if (GetPlatformID() == PLATFORM_ID_ANDROID)
 	{
+		//The Android in-app-billing way
+
 		//we'll query all purchased items first, because if we try to buy something already purchased, it will give an
 		//annoying error to the user and not send us any response.
-
 		//We should probably modify this to only scan once in a while but it seems very quick, so  meh.
-
-		//two ways to do it.. let's just try to buy directly:
-	
-		/*
-		OSMessage o;
-		o.m_type = OSMessage::MESSAGE_IAP_PURCHASE;
-		o.m_string = itemName;
-		m_itemToBuy.clear();
-		GetBaseApp()->AddOSMessage(o);
-		m_timer = GetTick(TIMER_SYSTEM);
-		*/
 
 		m_items.clear();
 		m_itemToBuy = itemName;
@@ -192,7 +212,7 @@ void IAPManager::BuyItem( string itemName )
 		GetBaseApp()->AddOSMessage(o);
 	} else
 	{
-		//skip that, we're testing
+		//issue buy command the normal way, it's not like Android where you need to get a list of stuff first
 		
 		OSMessage o;
 		o.m_type = OSMessage::MESSAGE_IAP_PURCHASE;
@@ -200,12 +220,15 @@ void IAPManager::BuyItem( string itemName )
 		m_itemToBuy.clear();
 		GetBaseApp()->AddOSMessage(o);
 		m_timer = GetTick(TIMER_SYSTEM);
+		m_bWaitingForReply = true;
+		m_state = STATE_WAITING;
 	}
-	
 }
 
 void IAPManager::Reset()
 {
-	m_state = STATE_WAITING;
+	m_state = STATE_NONE;
 	m_returnState = RETURN_STATE_NONE;
+	m_extraData.clear();
+	m_timer = 0;
 }

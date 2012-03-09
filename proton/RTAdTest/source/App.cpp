@@ -9,7 +9,6 @@
 
 #include "Entity/CustomInputComponent.h" //used for the back button (android)
 #include "Entity/FocusInputComponent.h" //needed to let the input component see input messages
-#include "Entity/ArcadeInputComponent.h" 
 #include "Entity/LogDisplayComponent.h"
 #include "MenuStore.h"
 #include "MenuMain.h"
@@ -128,92 +127,6 @@ void App::OnExitApp(VariantList *pVarList)
 	GetBaseApp()->AddOSMessage(o);
 }
 
-#define kFilteringFactor 0.1f
-#define C_DELAY_BETWEEN_SHAKES_MS 500
-
-//testing accelerometer readings. To enable the test, search below for "ACCELTEST"
-//Note: You'll need to look at the  debug log to see the output. (For android, run PhoneLog.bat from RTAdTest/android)
-void App::OnAccel(VariantList *pVList)
-{
-	
-	if ( int(pVList->m_variant[0].GetFloat()) != MESSAGE_TYPE_GUI_ACCELEROMETER) return;
-
-	CL_Vec3f v = pVList->m_variant[1].GetVector3();
-
-	LogMsg("Accel: %s", PrintVector3(v).c_str());
-
-	v.x = v.x * kFilteringFactor + v.x * (1.0f - kFilteringFactor);
-	v.y = v.y * kFilteringFactor + v.y * (1.0f - kFilteringFactor);
-	v.z = v.z * kFilteringFactor + v.z * (1.0f - kFilteringFactor);
-
-	// Compute values for the three axes of the acceleromater
-	float x = v.x - v.x;
-	float y = v.y - v.x;
-	float z = v.z - v.x;
-
-	//Compute the intensity of the current acceleration 
-	if (sqrt(x * x + y * y + z * z) > 2.0f)
-	{
-		Entity *pEnt = GetEntityRoot()->GetEntityByName("jumble");
-		if (pEnt)
-		{
-			//GetAudioManager()->Play("audio/click.wav");
-			pEnt->GetFunction("OnButtonSelected")->sig_function(&VariantList(CL_Vec2f(), pEnt));
-		}
-		LogMsg("Shake!");
-	}
-}
-
-//test for arcade keys.  To enable this test, search for TRACKBALL/ARCADETEST: below and uncomment the stuff under it.
-//Note: You'll need to look at the debug log to see the output.  (For android, run PhoneLog.bat from RTAdTest/android)
-void App::OnArcadeInput(VariantList *pVList)
-{
-
-	int vKey = pVList->Get(0).GetUINT32();
-	eVirtualKeyInfo keyInfo = (eVirtualKeyInfo) pVList->Get(1).GetUINT32();
-	
-	string pressed;
-
-	switch (keyInfo)
-	{
-		case VIRTUAL_KEY_PRESS:
-			pressed = "pressed";
-			break;
-
-		case VIRTUAL_KEY_RELEASE:
-			pressed = "released";
-			break;
-
-		default:
-			LogMsg("OnArcadeInput> Bad value of %d", keyInfo);
-	}
-	
-
-	string keyName = "unknown";
-
-	switch (vKey)
-	{
-		case VIRTUAL_KEY_DIR_LEFT:
-			keyName = "Left";
-			break;
-
-		case VIRTUAL_KEY_DIR_RIGHT:
-			keyName = "Right";
-			break;
-
-		case VIRTUAL_KEY_DIR_UP:
-			keyName = "Up";
-			break;
-
-		case VIRTUAL_KEY_DIR_DOWN:
-			keyName = "Down";
-			break;
-
-	}
-	
-	LogMsg("Arcade input: Hit %d (%s) (%s)", vKey, keyName.c_str(), pressed.c_str());
-}
-
 void OnGotTapPoints(VariantList *pVList)
 {
 	LogMsg("Our OnGotTapPoints callback sees %d points were awarded.", pVList->Get(0).GetINT32());
@@ -230,6 +143,7 @@ void App::Update()
 
 	m_IAPManager.Update();
 	m_adManager.Update();
+	
 	if (!m_bDidPostInit)
 	{
 		//stuff I want loaded during the first "Update"
@@ -242,30 +156,21 @@ void App::Update()
 		pComp->GetVar("keycode")->Set(uint32(VIRTUAL_KEY_BACK));
 		//attach our function so it is called when the back key is hit
 		pComp->GetFunction("OnActivated")->sig_function.connect(1, boost::bind(&App::OnExitApp, this, _1));
-
 		//nothing will happen unless we give it input focus
 		pEnt->AddComponent(new FocusInputComponent);
 
-		//ACCELTEST:  To test the accelerometer uncomment below: (will print values to the debug output)
-		//SetAccelerometerUpdateHz(25); //default is 0, disabled
-		//GetBaseApp()->m_sig_accel.connect(1, boost::bind(&App::OnAccel, this, _1));
-
-		//TRACKBALL/ARCADETEST: Uncomment below to see log messages on trackball/key movement input
-		//pEnt->AddComponent(new ArcadeInputComponent);
-		//GetBaseApp()->m_sig_arcade_input.connect(1, boost::bind(&App::OnArcadeInput, this, _1));
-		SetConsole(true);
+		SetConsole(true, true);
 		//adjust the console so it's full screen
 		Entity *pConsole = GetEntityRoot()->GetEntityByName("ConsoleEnt");
 		
-		pConsole->GetVar("pos2d")->Set(CL_Vec2f(0,0));
-		pConsole->GetVar("size2d")->Set(CL_Vec2f(GetScreenSizeXf(), GetScreenSizeYf()));
-		pConsole->GetComponentByName("LogDisplay")->GetVar("fontScale")->Set(0.6f);
+		pConsole->GetVar("pos2d")->Set(CL_Vec2f(0,GetScreenSizeYf()*.7f));
+		pConsole->GetVar("size2d")->Set(CL_Vec2f(GetScreenSizeXf(), GetScreenSizeYf()- (GetScreenSizeYf()*.7f)));
+		//pConsole->GetComponentByName("LogDisplay")->GetVar("fontScale")->Set(0.6f);
 		MenuMainCreate(GetEntityRoot());
 
 		//let's get notified whenever they get tap points awarded from tapjoy
 		m_adManager.m_sig_tappoints_awarded.connect(&OnGotTapPoints);
 	}
-
 
 	//game is thinking.  
 }

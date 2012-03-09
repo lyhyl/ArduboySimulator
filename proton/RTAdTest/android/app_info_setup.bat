@@ -7,6 +7,8 @@ set PACKAGE_NAME=com.%COMPANY_PACKAGE_NAME%.%SMALL_PACKAGE_NAME%
 set PATH_TO_PROJECT_DIR_FROM_CYGWIN=/cygdrive/d/projects/proton/RTAdTest
 set EMULATOR_AVD=@AVD_16
 
+::Update/write our local.properties file with our ANDROID NDK dir
+call android update project -p ./
 
 :CYGWIN_DIR should already be set to your cygwin directory as a windows environmental var.
 

@@ -34,6 +34,7 @@ public:
 	void BuyItem(string itemName);
 	bool IsItemPurchased( const string item);
 	void Reset(); //call this after a purchase to reset things
+	string GetExtraData() {return m_extraData;} //the order# if webos, after a successful purchase
 
 	enum ResponseCode
 	{
@@ -47,6 +48,8 @@ public:
 		RESULT_ERROR
 
 	};
+
+	boost::signal<void (VariantList*)> m_sig_item_purchase_result; //to avoid polling, you can use this.  parm 1 is the return code (uint)
 
 protected:
 	
@@ -70,6 +73,8 @@ protected:
 
 	vector<string> m_items;
 	string m_itemToBuy;
+	string m_extraData;
+	bool m_bWaitingForReply;
 };
 
 #endif // IAPManager_h__
