@@ -1,8 +1,3 @@
-:You don't have to make media for this example, otherwise it will delete your bin/interface directory, but I want this on svn so it's easy to build this most simple example, even for
-:people who don't have windows to make the font.
-
-pause
-
 REM Make fonts
 
 set PACK_EXE=..\..\.\shared\win\utils\RTPack.exe
@@ -15,12 +10,11 @@ cd ..
 for /r %%f in (font*.txt) do %PACK_EXE% -make_font %%f
 
 REM Process our images and textures and copy them into the bin directory
-
 REM -pvrtc4 for compressed, -pvrt4444 or -pvrt8888 (32 bit)  for uncompressed
 
-cd game
-for /r %%f in (*.bmp *.png) do ..\%PACK_EXE%  -pvrt8888 %%f
-cd ..
+:cd game
+:for /r %%f in (*.bmp *.png) do ..\%PACK_EXE%  -pvrt8888 %%f
+:cd ..
 
 cd interface
 for /r %%f in (*.bmp *.png) do ..\%PACK_EXE%  -pvrt8888 %%f

@@ -3,5 +3,5 @@
 
 #include "App.h"
 
-Entity * MenuPurchaseCreate(Entity *pParentEnt);
+Entity * MenuPurchaseCreate(Entity *pParentEnt, string item="");
 #endif // MenuPurchase_h__

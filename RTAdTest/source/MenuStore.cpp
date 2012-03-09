@@ -45,6 +45,7 @@ void MenuStoreOnSelect(VariantList *pVList) //0=vec2 point of click, 1=entity se
 	{
 		KillEntity(pMenu);
 		MenuMainCreate(GetEntityRoot());
+		return;
 	}
 
 	DisableAllButtonsEntity(pEntClicked->GetParent());
@@ -55,14 +56,12 @@ void MenuStoreOnSelect(VariantList *pVList) //0=vec2 point of click, 1=entity se
 
 Entity * MenuStoreCreate(Entity *pParentEnt)
 {
-	
 	Entity *pBG = pParentEnt->AddEntity(new Entity);
 	AddFocusIfNeeded(pBG);
 	Entity * pButtonEntity;
 
-	float y = 70;
-	float ySpacer = 70;
-
+	float y = 20;
+	float ySpacer = 55;
 
 	pButtonEntity = CreateTextButtonEntity(pBG, "BuyTestPurchased", 10, y+=ySpacer, "Buy android.test.purchased"); 
 	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MenuStoreOnSelect);

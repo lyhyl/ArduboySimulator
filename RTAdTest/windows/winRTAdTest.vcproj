@@ -642,6 +642,14 @@
 					RelativePath="..\source\MenuTapjoy.h"
 					>
 				</File>
+				<File
+					RelativePath="..\source\MenuWebOSStore.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\source\MenuWebOSStore.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter
@@ -1317,14 +1325,6 @@
 				<Filter
 					Name="Component"
 					>
-					<File
-						RelativePath="..\..\shared\Entity\ArcadeInputComponent.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\shared\Entity\ArcadeInputComponent.h"
-						>
-					</File>
 					<File
 						RelativePath="..\..\shared\Entity\Button2DComponent.cpp"
 						>

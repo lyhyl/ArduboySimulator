@@ -56,6 +56,7 @@ void MenuTapjoyOnSelect(VariantList *pVList) //0=vec2 point of click, 1=entity s
 	{
 		KillEntity(pMenu);
 		MenuMainCreate(GetEntityRoot());
+		return;
 	}
 
 GetApp()->m_adManager.m_tapPointVariant.ClearConnections();
@@ -81,12 +82,12 @@ Entity * MenuTapjoyCreate(Entity *pParentEnt)
 	AddFocusIfNeeded(pBG);
 	Entity * pButtonEntity;
 
-	CreateTextLabelEntity(pBG, "points", 10, 25, "Tap Points: "+GetApp()->m_adManager.GetPointsString());
+	CreateTextLabelEntity(pBG, "points", 5, 15, "Tap Points: "+GetApp()->m_adManager.GetPointsString());
 	
 	GetApp()->m_adManager.m_tapPointVariant.GetSigOnChanged()->connect(&OnTapPointsChanged);
 	
-	float y = 70;
-	float ySpacer = 70;
+	float y = 35;
+	float ySpacer = 55;
 
 	pButtonEntity = CreateTextButtonEntity(pBG, "banner on", 10, y+=ySpacer, "Banner on"); 
 	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MenuTapjoyOnSelect);
@@ -106,7 +107,7 @@ Entity * MenuTapjoyCreate(Entity *pParentEnt)
 	pButtonEntity = CreateTextButtonEntity(pBG, "get", 10, y+=ySpacer, "Get current tap points"); 
 	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MenuTapjoyOnSelect);
 
-	pButtonEntity = CreateTextButtonEntity(pBG, "watchad", 10, y+=ySpacer, "Watch ad"); 
+	pButtonEntity = CreateTextButtonEntity(pBG, "watch ad", 10, y+=ySpacer, "Watch ad"); 
 	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MenuTapjoyOnSelect);
 
 	pButtonEntity = CreateTextButtonEntity(pBG, "back", 10, y+=ySpacer, "Back"); 

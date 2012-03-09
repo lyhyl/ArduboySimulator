@@ -8,7 +8,7 @@ REM @echo off
 @rem Use Pixi to allow running on either device
 set PRE=0
 set PIXI=1
-set DEBUG=0
+REM set DEBUG=0 \\set in app_info_setup.bat, set to 1 for a debug build that isn't stripped during packging
 
 set SHARED=..\..\shared
 set APP=..\source
@@ -30,41 +30,44 @@ set SRC= %SHARED%\PlatformSetup.cpp  %SHARED%\WebOS\SDLMain.cpp %SHARED%\win\app
 %SHARED%\util\CRandom.cpp %SHARED%\util\GLESUtils.cpp %SHARED%\util\MathUtils.cpp %SHARED%\util\MiscUtils.cpp %SHARED%\util\RenderUtils.cpp %SHARED%\util\ResourceUtils.cpp ^
 %SHARED%\util\Variant.cpp %SHARED%\util\boost\libs\signals\src\connection.cpp %SHARED%\util\boost\libs\signals\src\named_slot_map.cpp %SHARED%\util\boost\libs\signals\src\signal_base.cpp ^
 %SHARED%\util\boost\libs\signals\src\slot.cpp %SHARED%\util\boost\libs\signals\src\trackable.cpp %SHARED%\FileSystem\StreamingInstance.cpp %SHARED%\FileSystem\StreamingInstanceZip.cpp ^
-%SHARED%\FileSystem\StreamingInstanceFile.cpp %SHARED%\BaseApp.cpp %SHARED%\util\unzip\unzip.c %SHARED%\util\unzip\ioapi.c
+%SHARED%\FileSystem\StreamingInstanceFile.cpp %SHARED%\BaseApp.cpp %SHARED%\util\unzip\unzip.c %SHARED%\util\unzip\ioapi.c %SHARED%\Manager\AdManager.cpp %SHARED%\Manager\IAPManager.cpp
 
 REM **************************************** ENGINE COMPONENT SOURCE CODE FILES
-set COMPONENT_SRC=%COMPPATH%\CustomInputComponent.cpp %COMPPATH%\FocusInputComponent.cpp %COMPPATH%\FocusUpdateComponent.cpp %COMPPATH%\ArcadeInputComponent.cpp
-
+set COMPONENT_SRC=%COMPPATH%\FocusInputComponent.cpp %COMPPATH%\FocusUpdateComponent.cpp %COMPPATH%\CustomInputComponent.cpp %COMPPATH%\ArcadeInputComponent.cpp ^
+%COMPPATH%\Button2DComponent.cpp %COMPPATH%\FilterComponent.cpp %COMPPATH%\FocusRenderComponent.cpp %COMPPATH%\FilterInputComponent.cpp %COMPPATH%\EntityUtils.cpp ^
+%COMPPATH%\InputTextRenderComponent.cpp %COMPPATH%\InterpolateComponent.cpp %COMPPATH%\LogDisplayComponent.cpp %COMPPATH%\RectRenderComponent.cpp ^
+%COMPPATH%\SelectButtonWithCustomInputComponent.cpp %COMPPATH%\SliderComponent.cpp %COMPPATH%\TextBoxRenderComponent.cpp %COMPPATH%\TextRenderComponent.cpp ^
+%COMPPATH%\EmitVirtualKeyComponent.cpp %COMPPATH%\OverlayRenderComponent.cpp %COMPPATH%\TouchHandlerComponent.cpp %COMPPATH%\TyperComponent.cpp ^
+%COMPPATH%\UnderlineRenderComponent.cpp %COMPPATH%\TouchDragComponent.cpp ^
+%COMPPATH%\RenderScissorComponent.cpp %COMPPATH%\ScrollBarRenderComponent.cpp
 
 REM **************************************** ZLIB SOURCE CODE FILES
 set ZLIB_SRC=%ZLIBPATH%/deflate.c %ZLIBPATH%/gzio.c %ZLIBPATH%/infback.c %ZLIBPATH%/inffast.c %ZLIBPATH%/inflate.c %ZLIBPATH%/inftrees.c %ZLIBPATH%/trees.c %ZLIBPATH%/uncompr.c %ZLIBPATH%/zutil.c %ZLIBPATH%/adler32.c %ZLIBPATH%/compress.c %ZLIBPATH%/crc32.c
 
 REM **************************************** APP SOURCE CODE FILES
-set APP_SRC=%APP%\App.cpp
+set APP_SRC=%APP%\App.cpp %APP%\MenuStore.cpp %APP%\MenuWebOSStore.cpp %APP%\MenuPurchase.cpp %APP%\MenuTapjoy.cpp %APP%\MenuMain.cpp %APP%\MenuAdWait.cpp
 REM **************************************** END SOURCE
-
-set DEFINES=-D RT_WEBOS -D BOOST_ALL_NO_LIB  -D RT_WEBOS_ARM -D NDEBUG
-
-set FLAGS=-O2
-
-@rem List the libraries needed
-set LIBS=-lSDL -lSDL_net -lSDL_image -lSDL_mixer -lpdl -lGLES_CM
 
 @rem Name your output executable
 set OUTFILE=%APPNAME%
 
 set INCLUDE_DIRS=-I..\..\shared\util\boost -I%SHARED% -I%APP% "-I%PALMPDK%\include" "-I%PALMPDK%\include\SDL" -I..\..\shared\ClanLib-2.0\Sources -I%ZLIBPATH%
-
 set LIB_DIRS="-L%PALMPDK%\device\lib"
 
-
+set LIBS=-lSDL -lSDL_net -lSDL_image -lSDL_mixer -lpdl -lGLES_CM
+set DEFINES=-D RT_WEBOS -D BOOST_ALL_NO_LIB  -D RT_WEBOS_ARM -D NDEBUG
+set FLAGS=-O2
 
 if %PRE% equ 0 if %PIXI% equ 0 goto :END
 
 if %DEBUG% equ 1 (
    set DEVICEOPTS=-g
+   set FLAGS=-O
+   set DEFINES=%DEFINES% -D _DEBUG
 ) else (
    set DEVICEOPTS=
+   set DEFINES=%DEFINES% -D NDEBUG
+
 )
 
 if %PRE% equ 1 (
@@ -76,6 +79,7 @@ if %PIXI% equ 1 (
 )
 
 echo %DEVICEOPTS%
+
 
 arm-none-linux-gnueabi-gcc  %DEFINES% %DEVICEOPTS% %INCLUDE_DIRS% %LIB_DIRS% -o %OUTFILE% %SRC% %APP_SRC% %COMPONENT_SRC% %ZLIB_SRC% -Wl,--allow-shlib-undefined %LIBS% -Wno-deprecated %FLAGS%
 if not exist %APPNAME% %RT_UTILS%\beeper.exe /p

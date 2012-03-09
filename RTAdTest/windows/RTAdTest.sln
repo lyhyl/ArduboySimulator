@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "winRTAdTest", "winRTAdTest.vcproj", "{04D58809-BAE3-4CF4-AD22-15CBF470A0A5}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "winRTAdTest", "winRTAdTest.vcproj", "{C3B7BFD2-5B1C-48A1-B861-7B5D338CEDF7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,16 +12,16 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{04D58809-BAE3-4CF4-AD22-15CBF470A0A5}.Common Debug|Win32.ActiveCfg = Common Debug|Win32
-		{04D58809-BAE3-4CF4-AD22-15CBF470A0A5}.Common Debug|Win32.Build.0 = Common Debug|Win32
-		{04D58809-BAE3-4CF4-AD22-15CBF470A0A5}.Debug GL|Win32.ActiveCfg = Debug GL|Win32
-		{04D58809-BAE3-4CF4-AD22-15CBF470A0A5}.Debug GL|Win32.Build.0 = Debug GL|Win32
-		{04D58809-BAE3-4CF4-AD22-15CBF470A0A5}.Debug WebOS|Win32.ActiveCfg = Debug WebOS|Win32
-		{04D58809-BAE3-4CF4-AD22-15CBF470A0A5}.Debug WebOS|Win32.Build.0 = Debug WebOS|Win32
-		{04D58809-BAE3-4CF4-AD22-15CBF470A0A5}.Release GL|Win32.ActiveCfg = Release GL|Win32
-		{04D58809-BAE3-4CF4-AD22-15CBF470A0A5}.Release GL|Win32.Build.0 = Release GL|Win32
-		{04D58809-BAE3-4CF4-AD22-15CBF470A0A5}.Release|Win32.ActiveCfg = Common Release|Win32
-		{04D58809-BAE3-4CF4-AD22-15CBF470A0A5}.Release|Win32.Build.0 = Common Release|Win32
+		{C3B7BFD2-5B1C-48A1-B861-7B5D338CEDF7}.Common Debug|Win32.ActiveCfg = Common Debug|Win32
+		{C3B7BFD2-5B1C-48A1-B861-7B5D338CEDF7}.Common Debug|Win32.Build.0 = Common Debug|Win32
+		{C3B7BFD2-5B1C-48A1-B861-7B5D338CEDF7}.Debug GL|Win32.ActiveCfg = Debug GL|Win32
+		{C3B7BFD2-5B1C-48A1-B861-7B5D338CEDF7}.Debug GL|Win32.Build.0 = Debug GL|Win32
+		{C3B7BFD2-5B1C-48A1-B861-7B5D338CEDF7}.Debug WebOS|Win32.ActiveCfg = Debug WebOS|Win32
+		{C3B7BFD2-5B1C-48A1-B861-7B5D338CEDF7}.Debug WebOS|Win32.Build.0 = Debug WebOS|Win32
+		{C3B7BFD2-5B1C-48A1-B861-7B5D338CEDF7}.Release GL|Win32.ActiveCfg = Release GL|Win32
+		{C3B7BFD2-5B1C-48A1-B861-7B5D338CEDF7}.Release GL|Win32.Build.0 = Release GL|Win32
+		{C3B7BFD2-5B1C-48A1-B861-7B5D338CEDF7}.Release|Win32.ActiveCfg = Common Release|Win32
+		{C3B7BFD2-5B1C-48A1-B861-7B5D338CEDF7}.Release|Win32.Build.0 = Common Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

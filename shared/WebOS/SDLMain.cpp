@@ -94,16 +94,36 @@ void IAPBuyItem(string m_item)
 	LogMsg("IAP packet returned:");
 	LogMsg(itemReceiptJSON);
 #endif
+	char *receiptStatus = NULL;
 	cJSON *cJSONReceipt = cJSON_Parse(itemReceiptJSON);
-	char *receiptStatus = cJSON_GetObjectItem(cJSONReceipt, "receiptStatus")->valuestring;
+	
+	if (cJSONReceipt)
+	{
+		cJSON_GetObjectItem(cJSONReceipt, "receiptStatus")->valuestring;
+	}
+
+	if (!receiptStatus || !cJSONReceipt)
+	{
+		//Service not available?
+		GetMessageManager()->SendGUI(MESSAGE_TYPE_IAP_RESULT,(float)IAPManager::RESULT_SERVICE_UNAVAILABLE,0.0f);
+		//clean up if needed
+		cJSON_Delete(cJSONReceipt);
+		return;
+	}
+
+	int orderNum =0;
+	orderNum = cJSON_GetObjectItem(cJSONReceipt, "orderNo")->valueint;
+	
+	string extra = toString(orderNum);
+	
 #ifdef _DEBUG
-	LogMsg(("Receipt status: %s", receiptStatus));
+	LogMsg("Receipt status: %s", receiptStatus);
 #endif
 	//CStrChar receipt(receiptStatus);
 	if (CaseInsensitiveCompare(receiptStatus, "Charged"))
 	{
 		//OK	
-		GetMessageManager()->SendGUI(MESSAGE_TYPE_IAP_RESULT,(float)IAPManager::RESULT_OK,0.0f);
+		GetMessageManager()->SendGUIStringEx(MESSAGE_TYPE_IAP_RESULT,(float)IAPManager::RESULT_OK,0.0f,0, extra);
 	} else
 	{
 		GetMessageManager()->SendGUI(MESSAGE_TYPE_IAP_RESULT,(float)IAPManager::RESULT_USER_CANCELED,0.0f);
