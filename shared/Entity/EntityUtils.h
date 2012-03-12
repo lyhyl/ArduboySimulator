@@ -228,10 +228,11 @@ bool IsDisabledEntity(Entity *pEnt);
 void RemovePaddingEntity(Entity *pEnt);
 void FakeClickAnEntity(Entity *pEnt); //good for pretending to click a Button2D programically or something
 
-//will locate (by name) and modify text on an entity created with CreateTextLabelEntity() (or any entity with a TextRenderer component in it)
-Entity * SetLabelTextByEntityName(const string &entityName, string text, Entity *pRootEntity = GetEntityRoot());
 bool EntityIsOnScreen(Entity *pEnt); //returns true if any part of an entity overlaps the visible screen.  (reads pos2d and size2d to test)
+
 EntityComponent * SetTextEntity(Entity *pEntWithTextComponent, const string &text);
+//will locate (by name) and modify text on an entity created with CreateTextLabelEntity() (or any entity with a TextRenderer component in it)
+Entity * SetTextEntityByName(const string &entityName, string text, Entity *pRootEntity = GetEntityRoot());
 
 
 //helpers for the lazy.. the reason I don't return a const pointer to the value is I tend to want to operate on the return vars right away.. -Seth

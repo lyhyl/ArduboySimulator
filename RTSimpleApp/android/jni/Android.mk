@@ -15,6 +15,9 @@ PNGSRC :=  $(SHARED)/Irrlicht/source/Irrlicht/libpng
 JPGSRC :=  $(SHARED)/Irrlicht/source/Irrlicht/jpeglib
 LZMASRC :=  $(SHARED)/Irrlicht/source/Irrlicht/lzma
 
+#LOCAL_CPP_FEATURES += exceptions
+LOCAL_CPP_FEATURES += rtti
+
 #release flags
 SHARED_FLAGS := -DANDROID_NDK -DBUILD_ANDROID -DNDEBUG -DRT_JPG_SUPPORT
 

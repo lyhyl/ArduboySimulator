@@ -19,6 +19,9 @@ JPGSRC :=  $(SHARED)/Irrlicht/source/Irrlicht/jpeglib
 LZMASRC :=  $(SHARED)/Irrlicht/source/Irrlicht/lzma
 PPATH := ../../../shared/Renderer/linearparticle/sources
 
+#LOCAL_CPP_FEATURES += exceptions
+LOCAL_CPP_FEATURES += rtti
+
 #release flags
 LOCAL_CFLAGS := -DANDROID_NDK -DBUILD_ANDROID -DGC_BUILD_ANDROID -DNDEBUG -D_IRR_STATIC_LIB_
 LOCAL_CPPFLAGS := -DGC_BUILD_C -DANDROID_NDK -DBUILD_ANDROID -DNDEBUG -D_IRR_STATIC_LIB_

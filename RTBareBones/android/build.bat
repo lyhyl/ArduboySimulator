@@ -2,8 +2,9 @@ call app_info_setup.bat
 :Get the emulator ready if it isn't, because it takes a freakin' long time to load
 REM start emulator %EMULATOR_AVD%
 
-:build the C/C++ parts
-%CYGWIN_DIR%\bin\bash --login -i -c '%PATH_TO_PROJECT_DIR_FROM_CYGWIN%/android/build.sh'
+:build the C/C++ parts (Note:  not using cygwin anymore, yay!)
+call ndk-build
+
 if not exist libs/armeabi/lib%SMALL_PACKAGE_NAME%.so ..\..\shared\win\utils\beeper.exe /p
 
 :Copy refresh resources, assuming the windows version had them built with update_media recently...
@@ -14,11 +15,13 @@ mkdir assets
 mkdir assets\interface
 xcopy ..\bin\interface assets\interface /E /F /Y
 
-mkdir assets\game
-xcopy ..\bin\game assets\game /E /F /Y
+:Well, we don't need game/audio dirs for this project.  But if we did...
 
-mkdir assets\audio
-xcopy ..\bin\audio assets\audio /E /F /Y
+:mkdir assets\game
+:xcopy ..\bin\game assets\game /E /F /Y
+
+:mkdir assets\audio
+:xcopy ..\bin\audio assets\audio /E /F /Y
 
 :Kill old files handing around to avoid confusion
 rmdir bin /S /Q
