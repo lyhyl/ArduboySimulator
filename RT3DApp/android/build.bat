@@ -26,12 +26,6 @@ rmdir gen /S /Q
 :Next package it with the java part
 call ant debug
 
-:and finally, load it into the emulator
-
-REM Waiting for device to get ready...
-adb wait-for-device -s emulator-5554
-REM Installing...
-REM adb -s emulator-5554 install -r bin\%APP_NAME%-debug.apk
-call InstallOnPhone.bat
+call InstallOnDefaultPhone.bat
 :adb logcat
 pause
