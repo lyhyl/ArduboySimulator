@@ -15,7 +15,7 @@ PNGSRC :=  $(SHARED)/Irrlicht/source/Irrlicht/libpng
 JPGSRC :=  $(SHARED)/Irrlicht/source/Irrlicht/jpeglib
 LZMASRC :=  $(SHARED)/Irrlicht/source/Irrlicht/lzma
 
-#LOCAL_CPP_FEATURES += exceptions
+LOCAL_CPP_FEATURES += exceptions
 LOCAL_CPP_FEATURES += rtti
 
 #release flags
