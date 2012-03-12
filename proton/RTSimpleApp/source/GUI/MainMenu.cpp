@@ -73,6 +73,19 @@ Entity * MainMenuCreate(Entity *pParentEnt)
 	s.WriteBMPOut("cosmo.bmp");
 	*/
 	
+	/*
+	//Test of how measure text works
+	rtRectf twolines;
+	GetBaseApp()->GetFont(FONT_SMALL)->MeasureText( &twolines,"the top line is longer\nshorter" , 1);
+
+	rtRectf singleline;
+	GetBaseApp()->GetFont(FONT_SMALL)->MeasureText( &singleline, "the top line is longer", 1);
+
+	LogMsg( string("Two lines rect: "+PrintRect(twolines)).c_str());
+	LogMsg( string("Single line rect: "+PrintRect(singleline)).c_str());
+	*/
+
+
 	//Entity *pBG = CreateOverlayEntity(pParentEnt, "MainMenu", "interface/summary_bg.rttex", 0,0);
 	Entity *pBG = pParentEnt->AddEntity(new Entity);
 	

@@ -1936,7 +1936,7 @@ Entity * CreateCheckbox(Entity *pBG, string name, string text, float x, float y,
 }
 
 
-Entity * SetLabelTextByEntityName(const string &entityName, string text, Entity *pRootEntity)
+Entity * SetTextEntityByName(const string &entityName, string text, Entity *pRootEntity)
 {
 	Entity *pEnt = pRootEntity->GetEntityByName(entityName);
 	if (!pEnt) return NULL; //couldn't find it

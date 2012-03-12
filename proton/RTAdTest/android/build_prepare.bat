@@ -60,5 +60,5 @@ call ant preprocess_cpp
 call ant preprocess
 
 :build the C/C++ parts
-%CYGWIN_DIR%\bin\bash --login -i -c '%PATH_TO_PROJECT_DIR_FROM_CYGWIN%/android/build.sh'
+call ndk-build
 if not exist libs/armeabi/lib%SMALL_PACKAGE_NAME%.so ..\..\shared\win\utils\beeper.exe /p

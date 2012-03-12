@@ -14,6 +14,9 @@ CLANMATH := $(SHARED)/ClanLib-2.0/Sources/Core/Math
 ZLIBPATH := $(SHARED)/util/zlib
 PPATH := ../../../shared/Renderer/linearparticle/sources
 
+#LOCAL_CPP_FEATURES += exceptions
+LOCAL_CPP_FEATURES += rtti
+
 #release flags
 #LOCAL_CFLAGS := -DANDROID_NDK -DBUILD_ANDROID -DGC_BUILD_ANDROID -DNDEBUG
 #LOCAL_CPPFLAGS := -DGC_BUILD_C -DANDROID_NDK -DBUILD_ANDROID -DNDEBUG

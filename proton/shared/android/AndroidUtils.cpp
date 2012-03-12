@@ -336,6 +336,12 @@ bool IsIPAD()
 	return false;
 }
 
+float GetDeviceOSVersion()
+{
+	//TODO
+	return 0.0f;
+}
+
 eDeviceMemoryClass GetDeviceMemoryClass()
 {
 	return C_DEVICE_MEMORY_CLASS_2;
