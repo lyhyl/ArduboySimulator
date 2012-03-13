@@ -81,17 +81,30 @@ void TouchTestComponent::OnUpdate(VariantList *pVList)
 void TouchTestComponent::OnInput( VariantList *pVList )
 {
 	//0 = message type, 1 = parent coordinate offset
+
+	eMessageType type = eMessageType( (int) pVList->Get(0).GetFloat());
+
 	CL_Vec2f pt = pVList->Get(1).GetVector2();
 
-	uint32 finger = pVList->Get(2).GetUINT32();
-
-	if (finger >= MAX_TOUCHES_AT_ONCE)
+	
+	uint32 finger = 0;
+	
+	switch (type)
 	{
-		assert(!"impossible!");
-		return;
+		case MESSAGE_TYPE_GUI_CLICK_START:
+		case MESSAGE_TYPE_GUI_CLICK_END:
+		case MESSAGE_TYPE_GUI_CLICK_MOVE:
+
+		//it's a touch message, extract the fingerID now
+		finger = pVList->Get(2).GetUINT32();
+		if (finger >= MAX_TOUCHES_AT_ONCE)
+		{
+			assert(!"impossible!");
+			return;
+		}
 	}
 
-	switch (eMessageType( int(pVList->Get(0).GetFloat())))
+	switch (type)
 	{
 	case MESSAGE_TYPE_GUI_CLICK_START:
 		m_touch[finger].m_bActive = true;		

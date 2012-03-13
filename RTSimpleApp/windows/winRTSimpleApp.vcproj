@@ -552,10 +552,6 @@
 				Name="android"
 				>
 				<File
-					RelativePath="..\android\jni\Android.mk"
-					>
-				</File>
-				<File
 					RelativePath="..\android\AndroidManifest.xml"
 					>
 				</File>
@@ -565,10 +561,6 @@
 				</File>
 				<File
 					RelativePath="..\android\build.bat"
-					>
-				</File>
-				<File
-					RelativePath="..\android\build.sh"
 					>
 				</File>
 				<File
@@ -584,6 +576,18 @@
 					>
 					<File
 						RelativePath="..\android\proguard\config.txt"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="jni"
+					>
+					<File
+						RelativePath="..\android\jni\Android.mk"
+						>
+					</File>
+					<File
+						RelativePath="..\android\jni\Application.mk"
 						>
 					</File>
 				</Filter>
