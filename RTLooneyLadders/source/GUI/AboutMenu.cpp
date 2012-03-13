@@ -49,7 +49,7 @@ void AboutMenuAddScrollContent(Entity *pParent)
 		"Looney Laddders V1.00 - A 48 hour game by Seth A. Robinson for LD19\n"\
 		"\nFor more questionable/odd games visit `wrtsoft.com``.\n" \
 	"This game was built with the Proton SDK - www.protonsdk.com\n" \
-		"\n�2010 Seth A. Robinson\n"\
+		"\n(c) 2010 Seth A. Robinson\n"\
 		"\nPress ENTER to continue";
 
 		//actually create the text box with the above text
