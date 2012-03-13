@@ -85,14 +85,14 @@ enum eVirtualKeys
 	
 	//Controller buttons - laid out like an xbox controller
 
-	//Note:  For xperia play, you must use VIRTUAL_KEY_DIR_CENTER instead of VIRTUAL_DPAD_BUTTON_A, they
-	//use the same keycode when hit..., so I can't have it send VIRTUAL_DPAD_BUTTON_A unless I want
+	//Note:  For xperia play, you must use VIRTUAL_KEY_DIR_CENTER instead of VIRTUAL_DPAD_BUTTON_DOWN, they
+	//use the same keycode when hit..., so I can't have it send VIRTUAL_DPAD_BUTTON_DOWN unless I want
 	//to detect HW and that seems like a hassle.
 
 	VIRTUAL_DPAD_BUTTON_LEFT, 
 	VIRTUAL_DPAD_BUTTON_UP, 
 	VIRTUAL_DPAD_BUTTON_RIGHT, //generally considered a select button
-	VIRTUAL_DPAD_BUTTON_DOWN, //generally considered a back button
+	VIRTUAL_DPAD_BUTTON_DOWN, //generally considered a back button - map to VIRTUAL_KEY_DIR_CENTER instead for xperia play
 	VIRTUAL_DPAD_SELECT,
 	VIRTUAL_DPAD_START,
 	VIRTUAL_DPAD_LBUTTON,

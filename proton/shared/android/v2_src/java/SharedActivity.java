@@ -709,10 +709,10 @@ return m_szDevIDShort;
 	final static int VIRTUAL_KEY_VOLUME_DOWN = 500010;
 	final static int VIRTUAL_KEY_SHIFT = 500011;
 	final static int VIRTUAL_KEY_TRACKBALL_DOWN = 500035;
-	final static int VIRTUAL_DPAD_BUTTON_X = 500036; //square on xperia
-	final static int VIRTUAL_DPAD_BUTTON_Y = 500037; //triangle on xperia
-	final static int VIRTUAL_DPAD_BUTTON_A = 500038; //O
-	final static int VIRTUAL_DPAD_BUTTON_B = 500039; //X
+	final static int VIRTUAL_DPAD_BUTTON_LEFT = 500036; //square on xperia
+	final static int VIRTUAL_DPAD_BUTTON_UP = 500037; //triangle on xperia
+	final static int VIRTUAL_DPAD_BUTTON_RIGHT = 500038; //O
+	final static int VIRTUAL_DPAD_BUTTON_DOWN = 500039; //X
 	final static int VIRTUAL_DPAD_SELECT = 500040;
 	final static int VIRTUAL_DPAD_START = 500041;
 	final static int VIRTUAL_DPAD_LBUTTON = 500042;
@@ -839,8 +839,8 @@ return m_szDevIDShort;
 		{
 			//XPeria's O button, not the back button!
 			//Log.v("onKeyDown","Sending xperia back key");
-			nativeOnKey(1, VIRTUAL_DPAD_BUTTON_B, e.getUnicodeChar()); 
-		
+			nativeOnKey(1, VIRTUAL_DPAD_BUTTON_RIGHT, e.getUnicodeChar()); 
+	
 			return true; //signal that we handled it
 		}
         switch (keycode)
@@ -866,7 +866,7 @@ return m_szDevIDShort;
 		{
 			//XPeria's O button, not the back button!
 			//Log.v("onKeyDown","Sending xperia back key");
-			nativeOnKey(0, VIRTUAL_DPAD_BUTTON_B, e.getUnicodeChar()); 
+			nativeOnKey(0, VIRTUAL_DPAD_BUTTON_DOWN, e.getUnicodeChar()); 
 		
 			return true; //signal that we handled it
 		}

@@ -843,7 +843,8 @@ void AppOnTouch( JNIEnv*  env, jobject jobj,jint action, jfloat x, jfloat y, jin
 		break;
 
 	default:
-#ifndef NDEBUG
+
+#ifndef _DEBUG
 		LogMsg("Unhandled input message %d at %.2f:%.2f", action, x, y);
 #endif
 		break;
