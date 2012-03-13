@@ -3,7 +3,8 @@ call app_info_setup.bat
 :start emulator %EMULATOR_AVD%
 
 :build the C/C++ parts
-call ndk-build
+:change -j<number> to how many cpu's you have for faster compiles
+call ndk-build -j2
 if not exist libs/armeabi/lib%SMALL_PACKAGE_NAME%.so ..\..\shared\win\utils\beeper.exe /p
 
 :Copy refresh resources, assuming the windows version had them built with update_media recently...

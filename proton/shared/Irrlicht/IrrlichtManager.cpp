@@ -55,7 +55,6 @@ void IrrlichtManager::Kill()
 		m_pDriver = NULL;
 		m_pScene = NULL;
 	}
-
 }
 
 
@@ -70,7 +69,7 @@ bool IrrlichtManager::Init(irr::IEventReceiver *pEventReceiver)
 	driverType = video::EDT_OPENGL;
 	bStencilBuffer = true;
 #endif
-
+	
 	m_pDevice = createDevice( driverType, dimension2d<u32>(GetPrimaryGLX(), GetPrimaryGLY()), 16, false, bStencilBuffer, false, pEventReceiver);
   
 	if (!m_pDevice)
@@ -79,6 +78,7 @@ bool IrrlichtManager::Init(irr::IEventReceiver *pEventReceiver)
 		return false;
 	}
 
+	
 	m_pDriver = m_pDevice->getVideoDriver();
 	m_pScene = m_pDevice->getSceneManager();
 
@@ -86,7 +86,7 @@ bool IrrlichtManager::Init(irr::IEventReceiver *pEventReceiver)
 	{
 		LogMsg("Unable to mount Proton filesystem");
 	}
-
+	
 	GetBaseApp()->m_sig_unloadSurfaces.connect(1, boost::bind(&IrrlichtManager::OnUnloadSurfaces, this));
 	GetBaseApp()->m_sig_loadSurfaces.connect(1, boost::bind(&IrrlichtManager::OnLoadSurfaces, this));
 	LogMsg("Irrlicht initted");
@@ -156,7 +156,7 @@ void IrrlichtManager::BeginScene()
 		}
 
 		//this really isn't needed as Proton clears the zbuffer/etc
-		//m_pDriver->beginScene(false, false, SColor(255,100,101,140));
+		m_pDriver->beginScene(false, false, SColor(255,100,101,140));
 	
 #ifdef RT_IRRBULLET
 		
