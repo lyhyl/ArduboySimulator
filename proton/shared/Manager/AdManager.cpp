@@ -117,6 +117,8 @@ void AdManager::OnMessage( Message &m )
 			m_lastError = m.GetStringParm();
 
 			break;
+                
+            default: ;
 		}
 	}
 
@@ -210,6 +212,7 @@ void AdManager::OnMessage( Message &m )
 
 		}
 		break;
+        default: ;
 	}
 }
 

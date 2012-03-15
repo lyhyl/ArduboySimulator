@@ -50,7 +50,7 @@ $(COMPPATH)/UnderlineRenderComponent.cpp $(SHARED)/Manager/IAPManager.cpp $(SHAR
 $(COMPPATH)/RenderScissorComponent.cpp $(COMPPATH)/ScrollBarRenderComponent.cpp \
 \
 \
-$(APP)/App.cpp ../temp_final_cpp_src/AndroidApp.cpp $(APP)/MenuStore.cpp $(APP)/MenuWebOSStore.cpp $(APP)/MenuPurchase.cpp $(APP)/MenuTapjoy.cpp \
+$(APP)/App.cpp ../temp_final_cpp_src/AndroidApp.cpp $(APP)/MenuStore.cpp $(APP)/MenuPurchase.cpp $(APP)/MenuTapjoy.cpp \
 $(APP)/MenuMain.cpp $(APP)/MenuAdWait.cpp
 
 

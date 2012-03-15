@@ -1862,6 +1862,18 @@ void ManuallySetAlignmentEntity(Entity *pEnt, eAlignment alignment)
 	pEnt->GetVar("pos2d")->Set(pt);
 }
 
+bool FakeClickAnEntityByName(Entity *pEntitySearchRoot, const string name)
+{
+	Entity *pEnt = pEntitySearchRoot->GetEntityByName(name);
+	if (pEnt)
+	{
+		FakeClickAnEntity(pEnt);
+		return true;
+	}
+
+	return false; //couldn't find it
+}
+
 void FakeClickAnEntity(Entity *pEnt)
 {
 	CL_Vec2f vClickPos = pEnt->GetVar("pos2d")->GetVector2();

@@ -10,6 +10,11 @@
 #include <stdarg.h>
 
 
+#ifndef PLATFORM_ANDROID
+#define PLATFORM_ANDROID
+#endif
+
+
 #ifdef _IRR_STATIC_LIB_
 #include <Irrlicht/source/Irrlicht/gles-ext.h>
 #endif

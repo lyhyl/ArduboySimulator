@@ -48,9 +48,16 @@ Entity::~Entity()
 void Entity::RemoveAllEntities()
 {
 	EntityListItor itor = m_children.begin();
-	for (;itor != m_children.end(); itor++)
+	for (;itor != m_children.end(); )
 	{
-		delete (*itor);
+
+		//done this way so entities that want to do searches through entity trees because some OnDelete sig
+		//was run won't crash
+
+		Entity *pTemp = (*itor);
+		itor = m_children.erase(itor);
+		delete pTemp;
+
 	}
 
 	m_children.clear();
@@ -297,7 +304,9 @@ void Entity::CallFunctionRecursivelyWithUpdatedVar( const string funcName, Varia
 		case  Variant::TYPE_VECTOR2:
 			pVList->m_variant[varIndex].Set(vOriginal);
 			break;
-		}
+
+            default:;
+        }
 	}
 
 	if (m_recursiveFilterReferences > 0)
@@ -337,8 +346,9 @@ bool Entity::RemoveEntityByName(const string &name, bool bRecursive)
 	{
 		if ((*itor)->GetName() == name)
 		{
-			delete (*itor);
+			Entity *pTemp = (*itor);
 			itor = m_children.erase(itor);
+			delete (pTemp);
 			bRemoved = true;
 			continue;
 		} else
@@ -375,11 +385,12 @@ bool Entity::RemoveEntityByAddress(Entity *pEntToDelete, bool bDeleteAlso)
 	{
 		if ((*itor) == pEntToDelete)
 		{
+			Entity *pTemp = (*itor);
+			itor = m_children.erase(itor);
 			if (bDeleteAlso)
 			{
-				delete (*itor);
+				delete (pTemp);
 			}
-			itor = m_children.erase(itor);
 			return true;
 		}
 		itor++;

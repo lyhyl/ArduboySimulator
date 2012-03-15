@@ -8,6 +8,7 @@
 #import <UIKit/UIKit.h>
 #import "CFNetwork/CFSocketStream.h"
 
+@class InAppPurchaseManager;
 @class EAGLView;
 
 @interface MyAppDelegate : NSObject <UIApplicationDelegate, UITextFieldDelegate, UIAccelerometerDelegate>
@@ -24,6 +25,7 @@
 	CFStreamClientContext context;
 	UIKeyboardType m_requestedKeyboardType; //what we'll use on the iOS side
     int m_keyboardType; //what proton actually requested, so we know what items to filter
+    InAppPurchaseManager *m_IOSIAPManager;
 
 }
 

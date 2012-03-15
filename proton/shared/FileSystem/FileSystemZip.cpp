@@ -149,7 +149,7 @@ byte * FileSystemZip::Get( string fileName, int *pSizeOut )
 	if (err!=UNZ_OK)
 	{
 		LogError("error %d with zipfile in unzGoToFilePos",err);
-		return false;
+		return NULL;
 	}
 
 	/*
@@ -170,7 +170,7 @@ byte * FileSystemZip::Get( string fileName, int *pSizeOut )
 	if (err!=UNZ_OK)
 	{
 		LogError("error %d with zipfile in unzGetCurrentFileInfo",err);
-		return false;
+		return NULL;
 	}
 	
 
@@ -195,14 +195,14 @@ byte * FileSystemZip::Get( string fileName, int *pSizeOut )
 	if (err!=UNZ_OK)
 	{
 		LogError("error %d with zipfile in unzOpenCurrentFile",err);
-		return false;
+		return NULL;
 	}
 
 	err = unzReadCurrentFile(m_uf,pBytes,file_info.uncompressed_size);
 	if (err<0)	
 	{
 		LogError("error %d with zipfile in unzReadCurrentFile",err);
-		return false;
+		return NULL;
 
 	}
 
@@ -210,7 +210,7 @@ byte * FileSystemZip::Get( string fileName, int *pSizeOut )
 	if (err!=UNZ_OK)
 	{
 		LogError("error %d with zipfile in unzCloseCurrentFile",err);
-		return false;
+		return NULL;
 	}
 
 	return pBytes;

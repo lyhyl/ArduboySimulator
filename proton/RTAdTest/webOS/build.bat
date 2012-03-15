@@ -45,7 +45,7 @@ REM **************************************** ZLIB SOURCE CODE FILES
 set ZLIB_SRC=%ZLIBPATH%/deflate.c %ZLIBPATH%/gzio.c %ZLIBPATH%/infback.c %ZLIBPATH%/inffast.c %ZLIBPATH%/inflate.c %ZLIBPATH%/inftrees.c %ZLIBPATH%/trees.c %ZLIBPATH%/uncompr.c %ZLIBPATH%/zutil.c %ZLIBPATH%/adler32.c %ZLIBPATH%/compress.c %ZLIBPATH%/crc32.c
 
 REM **************************************** APP SOURCE CODE FILES
-set APP_SRC=%APP%\App.cpp %APP%\MenuStore.cpp %APP%\MenuWebOSStore.cpp %APP%\MenuPurchase.cpp %APP%\MenuTapjoy.cpp %APP%\MenuMain.cpp %APP%\MenuAdWait.cpp
+set APP_SRC=%APP%\App.cpp %APP%\MenuStore.cpp %APP%\MenuPurchase.cpp %APP%\MenuTapjoy.cpp %APP%\MenuMain.cpp %APP%\MenuAdWait.cpp
 REM **************************************** END SOURCE
 
 @rem Name your output executable

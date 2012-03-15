@@ -111,6 +111,7 @@ void SelectButtonWithCustomInputComponent::OnInput( VariantList *pVList )
 		}
 		break;
 
+        default:;
 		//LogMsg("Got msg %d", int(pVList->Get(0).GetFloat()));
 
 	}	

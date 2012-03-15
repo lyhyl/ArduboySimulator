@@ -321,8 +321,8 @@ void COGLES1Driver::createMaterialRenderers()
 	addAndDropMaterialRenderer(new COGLES1MaterialRenderer_TRANSPARENT_REFLECTION_2_LAYER(this));
 
 	// add normal map renderers
-	s32 tmp = 0;
-	video::IMaterialRenderer* renderer = 0;
+	//s32 tmp = 0;
+	//video::IMaterialRenderer* renderer = 0;
 // TODO ogl-es
 	addAndDropMaterialRenderer(new COGLES1MaterialRenderer_SOLID(this));
 //	renderer = new COGLES1NormalMapRenderer(this, tmp, MaterialRenderers[EMT_SOLID].Renderer);

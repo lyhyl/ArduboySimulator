@@ -92,6 +92,8 @@ bool GamepadWindows::Init()
 
 	m_buttons[4].m_virtualKey = VIRTUAL_DPAD_LBUTTON;
 	m_buttons[5].m_virtualKey = VIRTUAL_DPAD_RBUTTON;
+	m_buttons[6].m_virtualKey = VIRTUAL_DPAD_SELECT;
+	m_buttons[7].m_virtualKey = VIRTUAL_DPAD_START;
 
 
 	//hack for the xbox right stick.  Add real profiles later?

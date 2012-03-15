@@ -21,10 +21,12 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>0.1</string>
+	<string>1.00</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.00</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-		<key>UISupportedInterfaceOrientations</key>
+	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>

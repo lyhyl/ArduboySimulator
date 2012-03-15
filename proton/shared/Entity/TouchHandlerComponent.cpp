@@ -156,6 +156,7 @@ void TouchHandlerComponent::OnInput( VariantList *pVList )
 		case MESSAGE_TYPE_GUI_CLICK_MOVE:
 			HandleClickMove(pt, fingerID);
 			break;
+        default:;
 	}	
 	
 }

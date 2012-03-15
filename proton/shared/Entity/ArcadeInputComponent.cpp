@@ -343,6 +343,15 @@ bool ArcadeInputComponent::GetDirectionKeysAsVector( CL_Vec2f *pVecOut )
 		m_buttons[MOVE_BUTTON_DIR_DOWN].m_bIsDown, pVecOut);
 }
 
+bool ArcadeInputComponent::GetDirectionKeys( bool &bLeftOut, bool &bRightOut, bool &bUpOut, bool &bDownOut )
+{
+	bLeftOut = m_buttons[MOVE_BUTTON_DIR_LEFT].m_bIsDown;
+	bRightOut = m_buttons[MOVE_BUTTON_DIR_RIGHT].m_bIsDown;
+	bUpOut = m_buttons[MOVE_BUTTON_DIR_UP].m_bIsDown;
+	bDownOut = m_buttons[MOVE_BUTTON_DIR_DOWN].m_bIsDown;
+
+	return (bLeftOut || bRightOut || bUpOut || bDownOut);
+}
 void AddKeyBinding(EntityComponent *pComp, string name, uint32 inputcode, uint32 outputcode)
 {
     VariantList vList(name, inputcode, outputcode);
