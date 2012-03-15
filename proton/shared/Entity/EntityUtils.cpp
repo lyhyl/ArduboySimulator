@@ -1057,10 +1057,11 @@ EntityComponent * SetButtonStyleEntity(Entity *pEnt, Button2DComponent::eButtonS
 	return pComp;
 }
 
-EntityComponent * TypeTextLabelEntity( Entity *pEnt, int delayBeforeActionMS, uint32 textTypeSpeedMS, TyperComponent::eMode mode)
+EntityComponent * TypeTextLabelEntity( Entity *pEnt, int delayBeforeActionMS, uint32 textTypeSpeedMS,
+									  TyperComponent::eMode mode, string textToAddByTyping)
 {
 	EntityComponent *pText = pEnt->GetComponentByName("TextRender");
-	
+
 	if (!pText)
 	{
 		pText = pEnt->GetComponentByName("TextBoxRender");
@@ -1074,17 +1075,23 @@ EntityComponent * TypeTextLabelEntity( Entity *pEnt, int delayBeforeActionMS, ui
 
 	EntityComponent *pTextTyper = pEnt->GetComponentByName("Typer");
 	if (pTextTyper) pEnt->RemoveComponentByAddress(pTextTyper); //kill any existing ones
- 
+
 	pTextTyper = pEnt->AddComponent(new TyperComponent);
 	pTextTyper->GetVar("mode")->Set(uint32(mode));
 	pTextTyper->GetVar("speedMS")->Set(textTypeSpeedMS);
-
-
 	string msg = pText->GetVar("text")->GetString();
-	pText->GetVar("text")->Set(""); //clear what was there, it will be added by the text typer
-	
-	pTextTyper->GetVar("text")->Set(msg);
-	
+
+	if (textToAddByTyping.empty())
+	{
+		//type the whole existing label, don't add anything to it
+		pText->GetVar("text")->Set(""); //clear what was there, it will be added by the text typer
+		pTextTyper->GetVar("text")->Set(msg);
+	} else
+	{
+		//only type the new part
+		pTextTyper->GetVar("text")->Set(textToAddByTyping);
+	}
+
 	if (delayBeforeActionMS != 0)
 	{
 		pTextTyper->GetVar("paused")->Set(uint32(1));
@@ -1093,6 +1100,7 @@ EntityComponent * TypeTextLabelEntity( Entity *pEnt, int delayBeforeActionMS, ui
 	return pTextTyper; //just in case they want to make more tweaks
 
 }
+
 
 void SetAlphaEntity( Entity *pEnt, float alpha )
 {

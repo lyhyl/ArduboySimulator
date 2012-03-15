@@ -2,18 +2,19 @@ RTAdTest
 
 This example is designed to test the AdManager and IAPManager.
 
-Created for iPad screen rez or higher.
-
 It currently supports:
 
 * Using tapjoy on Android (including using managed points, full screen and banner ads, offer wall)
-* Using In App Billing in Android Market
+* Using In App Billing in iOS, Android Market, webOS
 
 Tested to build with:
 
 * Windows GLES
 * Android
 * WebOS
+* iOS
+
+App build for a tablet-sized screensize.
 
 -- About webos IAP --
 
