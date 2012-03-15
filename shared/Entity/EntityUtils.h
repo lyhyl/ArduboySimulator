@@ -227,7 +227,7 @@ void ManuallySetAlignmentEntity(Entity *pEnt, eAlignment alignment); //takes int
 bool IsDisabledEntity(Entity *pEnt);
 void RemovePaddingEntity(Entity *pEnt);
 void FakeClickAnEntity(Entity *pEnt); //good for pretending to click a Button2D programically or something
-
+bool FakeClickAnEntityByName(Entity *pEntitySearchRoot, const string name);
 bool EntityIsOnScreen(Entity *pEnt); //returns true if any part of an entity overlaps the visible screen.  (reads pos2d and size2d to test)
 
 EntityComponent * SetTextEntity(Entity *pEntWithTextComponent, const string &text);

@@ -264,12 +264,13 @@ bool Surface::LoadRTTexture(byte *pMem)
 	byte *pCurPos = pMem + sizeof(rttex_header);
 
 	int memUsed = 0;
-	
+#ifdef _DEBUG
 	int rttexHeaderSize = sizeof(rttex_header);
 	int rttexMipSectionSize = sizeof(rttex_mip_header);
 
 	assert (rttexHeaderSize%4 == 0 && "Can't be right, structure packing changed?");
 	assert (rttexMipSectionSize%4 == 0 && "Can't be right, structure packing changed?");
+#endif
 	int format = GetIntFromMem(&pTexHeader->format);
 
 	if (m_bCreateMipMapsIfNeeded)
@@ -422,7 +423,7 @@ bool Surface::LoadFileFromMemory( byte *pMem, int inputSize )
 	}
 	if (m_texWidth == 0)
 	{
-		if (m_textureCreationMethod = TEXTURE_CREATION_NONE)
+		if (m_textureCreationMethod == TEXTURE_CREATION_NONE)
 		{
 			m_textureCreationMethod = TEXTURE_CREATION_MEMORY;
 		} else
@@ -902,6 +903,8 @@ void Surface::SetTextureStates()
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		break;
+            
+        default: ;
 
 	}
 }
@@ -1006,6 +1009,8 @@ void Surface::OnLoadSurfaces()
 #endif
 			InitBlankSurface(m_originalWidth, m_originalHeight);
 			break;
+                
+            default: ;
 		}
 }
 

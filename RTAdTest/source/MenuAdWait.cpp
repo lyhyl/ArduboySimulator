@@ -34,6 +34,8 @@ void MenuAdWaitUpdate(VariantList *pVList)
 		case AdManager::RETURN_STATE_SUCCESS:
 			LogMsg("Successfully finished transaction.");
 			break;
+                
+            default:;
 		}
 	}
 }

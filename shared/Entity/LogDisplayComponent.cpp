@@ -228,7 +228,7 @@ void LogDisplayComponent::OnRender(VariantList *pVList)
 {
 	CHECK_GL_ERROR();	
 	CL_Vec2f vFinalPos = pVList->m_variant[0].GetVector2()+*m_pPos2d;
-	int lines = m_pActiveConsole->GetTotalLines();
+
 	if (*m_pAlpha == 0) return;
 
 	uint32 color = ColorCombine(*m_pColor, *m_pColorMod, *m_pAlpha);

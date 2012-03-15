@@ -134,6 +134,7 @@ void TouchDragComponent::OnInput( VariantList *pVList )
 		}
 	
 		break;
+        default: ;
 	}	
 
 }

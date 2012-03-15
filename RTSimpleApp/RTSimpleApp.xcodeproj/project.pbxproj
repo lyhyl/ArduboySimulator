@@ -50,6 +50,7 @@
 		5D5C10311275794D00A4E4E3 /* EAGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D5C102C1275794D00A4E4E3 /* EAGLView.mm */; };
 		5D5C10B212779D4400A4E4E3 /* SliderComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D5C10AF12779D4400A4E4E3 /* SliderComponent.cpp */; };
 		5D5C10B312779D4400A4E4E3 /* SelectButtonWithCustomInputComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D5C10B112779D4400A4E4E3 /* SelectButtonWithCustomInputComponent.cpp */; };
+		5D6BA9021511CE47002DC898 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D6BA9011511CE47002DC898 /* Icon-72.png */; };
 		5D7B10E40F245B88003A3396 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D7B10E30F245B88003A3396 /* libz.dylib */; };
 		5D7B4CF710CCEE030073DDA8 /* SoftSurface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7B4CF510CCEE030073DDA8 /* SoftSurface.cpp */; };
 		5D7BBCF210144FAE0015A90E /* RectRenderComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7BBCEA10144FAE0015A90E /* RectRenderComponent.cpp */; };
@@ -290,6 +291,7 @@
 		5D5C10AF12779D4400A4E4E3 /* SliderComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SliderComponent.cpp; path = Entity/SliderComponent.cpp; sourceTree = "<group>"; };
 		5D5C10B012779D4400A4E4E3 /* SelectButtonWithCustomInputComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SelectButtonWithCustomInputComponent.h; path = Entity/SelectButtonWithCustomInputComponent.h; sourceTree = "<group>"; };
 		5D5C10B112779D4400A4E4E3 /* SelectButtonWithCustomInputComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SelectButtonWithCustomInputComponent.cpp; path = Entity/SelectButtonWithCustomInputComponent.cpp; sourceTree = "<group>"; };
+		5D6BA9011511CE47002DC898 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-72.png"; path = "media/Icon-72.png"; sourceTree = "<group>"; };
 		5D7B10E30F245B88003A3396 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		5D7B4CF510CCEE030073DDA8 /* SoftSurface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SoftSurface.cpp; path = ../shared/Renderer/SoftSurface.cpp; sourceTree = SOURCE_ROOT; };
 		5D7B4CF610CCEE030073DDA8 /* SoftSurface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SoftSurface.h; path = ../shared/Renderer/SoftSurface.h; sourceTree = SOURCE_ROOT; };
@@ -546,6 +548,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				5D6BA9011511CE47002DC898 /* Icon-72.png */,
 				5D7C329E10BBB755009C5324 /* game */,
 				5D82C8C20FF4C1500082EBE7 /* audio */,
 				5DC6D77B0EA4B397001482E0 /* Default.png */,
@@ -1090,6 +1093,7 @@
 				5D82C8C50FF4C1500082EBE7 /* audio in Resources */,
 				5D7C32B910BBB755009C5324 /* game in Resources */,
 				5D7C711E118FF795007F9604 /* MainWindow-iPad.xib in Resources */,
+				5D6BA9021511CE47002DC898 /* Icon-72.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1264,6 +1268,10 @@
 		1D6058940D05DD3E006BFB54 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					armv7,
+					armv6,
+				);
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer:";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1318,6 +1326,11 @@
 		5D8733750FA9A0BC001DB559 /* AdHoc */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					armv7,
+					armv6,
+				);
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				COPY_PHASE_STRIP = YES;
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -1325,6 +1338,7 @@
 				GCC_THUMB_SUPPORT = NO;
 				INFOPLIST_FILE = Info.plist;
 				PRODUCT_NAME = RTSimpleApp;
+				PROVISIONING_PROFILE = "";
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
 			};
 			name = AdHoc;

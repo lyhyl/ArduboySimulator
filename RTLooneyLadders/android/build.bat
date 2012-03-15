@@ -3,7 +3,7 @@ call app_info_setup.bat
 :start emulator %EMULATOR_AVD%
 
 :build the C/C++ parts
-call ndk-build
+call ndk-build -j7
 if not exist libs/armeabi/lib%SMALL_PACKAGE_NAME%.so beeper.exe /p
 
 :Copy refresh resources, assuming the windows version had them built with update_media recently...

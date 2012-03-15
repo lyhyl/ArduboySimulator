@@ -7,7 +7,7 @@
 
 #import "MyAppDelegate.h"
 #import "EAGLView.h"
-
+#import "InAppPurchaseManager.h"
 
 @implementation MyAppDelegate
 
@@ -56,7 +56,11 @@
 	m_HostRef = NULL;
 	m_ReadRef = NULL;
 	m_WriteRef = NULL;
-	
+    
+#ifdef RT_IAP_SUPPORT
+    m_IOSIAPManager = [[InAppPurchaseManager alloc] init];
+    [m_IOSIAPManager InitIAP];
+#endif
 }
 
 - (void)accelerometer:(UIAccelerometer*)accelerometer didAccelerate:(UIAcceleration*)acceleration
@@ -228,8 +232,21 @@
                 myApp.idleTimerDisabled = YES;
             }
         }
+            
             break;
             
+            
+		case OSMessage::MESSAGE_IAP_PURCHASE:
+            
+			LogMsg("iOS> BUYING %s", pMsg->m_string.c_str());
+#ifdef RT_IAP_SUPPORT
+
+            [m_IOSIAPManager BuyItemByID:pMsg->m_string];
+#else
+            LogMsg("ERROR: RT_IAP_SUPPORT must be defined in xcode settings, and InAppPurchaseManager.mm added to the project if it's not!");
+            assert(!"ERROR: RT_IAP_SUPPORT must be defined in xcode settings, and InAppPurchaseManager.mm added to the project if it's not!");
+#endif
+			break;
 		default:
 			LogMsg("Error, unknown message type: %d", pMsg->m_type);
 	}

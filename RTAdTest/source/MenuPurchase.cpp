@@ -30,6 +30,9 @@ void MenuPurchaseUpdate(VariantList *pVList)
 			case IAPManager::RETURN_STATE_FINISHED:
 			LogMsg("** FAILED TO BUY ITEM");
 			break;
+                
+            default:
+                LogMsg("HUH?! Unknown IAP return state");
 		}
 
 		GetApp()->m_IAPManager.Reset();

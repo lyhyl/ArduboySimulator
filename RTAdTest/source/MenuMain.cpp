@@ -3,7 +3,6 @@
 #include "Entity/EntityUtils.h"
 #include "MenuStore.h"
 #include "MenuTapjoy.h"
-#include "MenuWebOSStore.h"
 
 void MenuMainOnSelect(VariantList *pVList) //0=vec2 point of click, 1=entity sent from
 {
@@ -16,12 +15,6 @@ void MenuMainOnSelect(VariantList *pVList) //0=vec2 point of click, 1=entity sen
 	if (pEntClicked->GetName() == "store")
 	{
 		MenuStoreCreate(pMenu->GetParent());
-		KillEntity(pMenu);
-	}
-
-	if (pEntClicked->GetName() == "webOSstore")
-	{
-		MenuWebOSStoreCreate(pMenu->GetParent());
 		KillEntity(pMenu);
 	}
 
@@ -43,13 +36,10 @@ Entity * MenuMainCreate(Entity *pParentEnt)
 	AddFocusIfNeeded(pBG);
 	Entity * pButtonEntity;
 
-	pButtonEntity = CreateTextButtonEntity(pBG, "store", 10, 30, "Test android market in app billing (android)"); 
+	pButtonEntity = CreateTextButtonEntity(pBG, "store", 10, 30, "Test IAP (android, iOS, webOS)"); 
 	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MenuMainOnSelect);
 
-	pButtonEntity = CreateTextButtonEntity(pBG, "webOSstore", 10, 100, "Test TouchPad in app purchase (webOS)"); 
-	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MenuMainOnSelect);
-
-	pButtonEntity = CreateTextButtonEntity(pBG, "tapjoy", 10, 170, "Test Tapjoy integration stuff (android)"); 
+	pButtonEntity = CreateTextButtonEntity(pBG, "tapjoy", 10, 170, "Test Tapjoy ads (android)"); 
 	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MenuMainOnSelect);
 
 

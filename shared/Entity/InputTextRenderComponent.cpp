@@ -350,6 +350,7 @@ void InputTextRenderComponent::OnInput( VariantList *pVList )
 {
 	if (*m_pVisible == 0) return;
 
+
 	eMessageType messageType = eMessageType( int(pVList->Get(0).GetFloat()));
 
 	if (!m_pHasFocus)
@@ -435,6 +436,11 @@ void InputTextRenderComponent::OnInput( VariantList *pVList )
 
 		SetLastStringInput( FilterToValidAscii(input, *m_pFiltering == FILTERING_STRICT));
 		break;
+    
 	}	
 
+
+    
+    
+    
 }

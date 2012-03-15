@@ -59,6 +59,8 @@ bool SoftSurface::Init( int sizex, int sizey, eSurfaceType type )
 	case SURFACE_RGB:
 		m_bytesPerPixel = 3;
 		break;
+
+        default:;
 }
 	
 	int dataSize = sizex*sizey*m_bytesPerPixel;
@@ -165,6 +167,8 @@ glColorBytes SoftSurface::GetColorKeyColor()
 
 	case COLOR_KEY_MAGENTA:
 		return glColorBytes(255,0,255,0);
+
+        default:;
 	}
 
 	return glColorBytes(0,0,0,255);

@@ -121,8 +121,8 @@ public:
 	virtual void OnAdd(Entity *pEnt);
 	virtual void OnRemove();
 
-
 	bool GetDirectionKeysAsVector(CL_Vec2f *pVecOut);
+	bool GetDirectionKeys(bool &bLeftOut, bool &bRightOut, bool &bUpOut, bool &bDownOut);
 
 	enum TrackballMode
 	{

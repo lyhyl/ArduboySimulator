@@ -411,7 +411,9 @@ bool RemoveDirectoryRecursively(string path)
 vector<string> GetDirectoriesAtPath(string path)
 {
 	
-	LogMsg("Scanning dir %s", path.c_str());
+#ifdef _DEBUG
+    LogMsg("Scanning dir %s", path.c_str());
+#endif
 	vector<string> v;
 	
 	NSString *str =  [NSString stringWithCString: path.c_str() encoding: [NSString defaultCStringEncoding]];
@@ -428,7 +430,9 @@ vector<string> GetDirectoriesAtPath(string path)
 			//we're assuming that any name without a . in it is a dir.  Probably dumb, but works since we're controlling what gets written...
 			v.push_back(dir);
 		}
-		NSLog (@"%d: <%@>", i, [origContents objectAtIndex:i]);
+#ifdef _DEBUG
+        NSLog (@"%d: <%@>", i, [origContents objectAtIndex:i]);
+#endif
 	}
 	
 	return v;

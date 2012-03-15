@@ -33,7 +33,39 @@
 		5D30635F0FD890B0009DE600 /* MathUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D30635D0FD890B0009DE600 /* MathUtils.cpp */; };
 		5D3063660FD890CB009DE600 /* AudioManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3063600FD890CB009DE600 /* AudioManager.cpp */; };
 		5D3063AB0FD8B00A009DE600 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D3063AA0FD8B00A009DE600 /* OpenAL.framework */; };
+		5D4595AE1510CCD90088A44D /* AdManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D4595AA1510CCD90088A44D /* AdManager.cpp */; };
+		5D4595AF1510CCD90088A44D /* IAPManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D4595AC1510CCD90088A44D /* IAPManager.cpp */; };
+		5D4595BC1510CCF60088A44D /* MenuAdWait.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D4595B01510CCF60088A44D /* MenuAdWait.cpp */; };
+		5D4595BD1510CCF60088A44D /* MenuMain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D4595B21510CCF60088A44D /* MenuMain.cpp */; };
+		5D4595BE1510CCF60088A44D /* MenuPurchase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D4595B41510CCF60088A44D /* MenuPurchase.cpp */; };
+		5D4595BF1510CCF60088A44D /* MenuStore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D4595B61510CCF60088A44D /* MenuStore.cpp */; };
+		5D4595C01510CCF60088A44D /* MenuTapjoy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D4595B81510CCF60088A44D /* MenuTapjoy.cpp */; };
+		5D4595DF1510CD870088A44D /* EmitVirtualKeyComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D4595C21510CD870088A44D /* EmitVirtualKeyComponent.cpp */; };
+		5D4595E01510CD870088A44D /* EntityUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D4595C41510CD870088A44D /* EntityUtils.cpp */; };
+		5D4595E11510CD870088A44D /* FilterInputComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D4595C61510CD870088A44D /* FilterInputComponent.cpp */; };
+		5D4595E21510CD870088A44D /* FocusRenderComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D4595C81510CD870088A44D /* FocusRenderComponent.cpp */; };
+		5D4595E31510CD870088A44D /* FocusUpdateComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D4595CA1510CD870088A44D /* FocusUpdateComponent.cpp */; };
+		5D4595E41510CD870088A44D /* InputTextRenderComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D4595CB1510CD870088A44D /* InputTextRenderComponent.cpp */; };
+		5D4595E51510CD870088A44D /* InterpolateComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D4595CD1510CD870088A44D /* InterpolateComponent.cpp */; };
+		5D4595E61510CD870088A44D /* OverlayRenderComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D4595CF1510CD870088A44D /* OverlayRenderComponent.cpp */; };
+		5D4595E71510CD870088A44D /* RectRenderComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D4595D11510CD870088A44D /* RectRenderComponent.cpp */; };
+		5D4595E81510CD870088A44D /* SelectButtonWithCustomInputComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D4595D31510CD870088A44D /* SelectButtonWithCustomInputComponent.cpp */; };
+		5D4595E91510CD870088A44D /* SliderComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D4595D51510CD870088A44D /* SliderComponent.cpp */; };
+		5D4595EA1510CD870088A44D /* TextBoxRenderComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D4595D71510CD870088A44D /* TextBoxRenderComponent.cpp */; };
+		5D4595EB1510CD870088A44D /* TextRenderComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D4595D91510CD870088A44D /* TextRenderComponent.cpp */; };
+		5D4595EC1510CD870088A44D /* TouchHandlerComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D4595DB1510CD870088A44D /* TouchHandlerComponent.cpp */; };
+		5D4595ED1510CD870088A44D /* TyperComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D4595DD1510CD870088A44D /* TyperComponent.cpp */; };
+		5D4595F41510CDB20088A44D /* Button2DComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D4595EE1510CDB20088A44D /* Button2DComponent.cpp */; };
+		5D4595F51510CDB20088A44D /* LogDisplayComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D4595F01510CDB20088A44D /* LogDisplayComponent.cpp */; };
+		5D4595F61510CDB20088A44D /* UnderlineRenderComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D4595F21510CDB20088A44D /* UnderlineRenderComponent.cpp */; };
+		5D4595FF1510CE0B0088A44D /* RenderScissorComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D4595F71510CE0B0088A44D /* RenderScissorComponent.cpp */; };
+		5D4596001510CE0B0088A44D /* ScrollBarRenderComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D4595F91510CE0B0088A44D /* ScrollBarRenderComponent.cpp */; };
+		5D4596011510CE0B0088A44D /* ScrollComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D4595FB1510CE0B0088A44D /* ScrollComponent.cpp */; };
+		5D4596021510CE0B0088A44D /* TouchDragComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D4595FD1510CE0B0088A44D /* TouchDragComponent.cpp */; };
 		5D5C0F3A1275638500A4E4E3 /* NetUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D5C0F391275638500A4E4E3 /* NetUtils.cpp */; };
+		5D6BA8E11510D801002DC898 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D6BA8E01510D801002DC898 /* Icon-72.png */; };
+		5D6BA8E315118A4A002DC898 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D6BA8E215118A4A002DC898 /* StoreKit.framework */; };
+		5D6BA8E615118ADE002DC898 /* InAppPurchaseManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D6BA8E515118ADE002DC898 /* InAppPurchaseManager.mm */; };
 		5D7B10E40F245B88003A3396 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D7B10E30F245B88003A3396 /* libz.dylib */; };
 		5D7B4CF710CCEE030073DDA8 /* SoftSurface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7B4CF510CCEE030073DDA8 /* SoftSurface.cpp */; };
 		5D7BBCFC10144FDC0015A90E /* CRandom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7BBCF610144FDC0015A90E /* CRandom.cpp */; };
@@ -147,8 +179,69 @@
 		5D3063600FD890CB009DE600 /* AudioManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AudioManager.cpp; path = Audio/AudioManager.cpp; sourceTree = "<group>"; };
 		5D3063610FD890CB009DE600 /* AudioManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AudioManager.h; path = Audio/AudioManager.h; sourceTree = "<group>"; };
 		5D3063AA0FD8B00A009DE600 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
+		5D4595AA1510CCD90088A44D /* AdManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AdManager.cpp; path = Manager/AdManager.cpp; sourceTree = "<group>"; };
+		5D4595AB1510CCD90088A44D /* AdManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdManager.h; path = Manager/AdManager.h; sourceTree = "<group>"; };
+		5D4595AC1510CCD90088A44D /* IAPManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = IAPManager.cpp; path = Manager/IAPManager.cpp; sourceTree = "<group>"; };
+		5D4595AD1510CCD90088A44D /* IAPManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IAPManager.h; path = Manager/IAPManager.h; sourceTree = "<group>"; };
+		5D4595B01510CCF60088A44D /* MenuAdWait.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MenuAdWait.cpp; path = source/MenuAdWait.cpp; sourceTree = "<group>"; };
+		5D4595B11510CCF60088A44D /* MenuAdWait.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MenuAdWait.h; path = source/MenuAdWait.h; sourceTree = "<group>"; };
+		5D4595B21510CCF60088A44D /* MenuMain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MenuMain.cpp; path = source/MenuMain.cpp; sourceTree = "<group>"; };
+		5D4595B31510CCF60088A44D /* MenuMain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MenuMain.h; path = source/MenuMain.h; sourceTree = "<group>"; };
+		5D4595B41510CCF60088A44D /* MenuPurchase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MenuPurchase.cpp; path = source/MenuPurchase.cpp; sourceTree = "<group>"; };
+		5D4595B51510CCF60088A44D /* MenuPurchase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MenuPurchase.h; path = source/MenuPurchase.h; sourceTree = "<group>"; };
+		5D4595B61510CCF60088A44D /* MenuStore.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MenuStore.cpp; path = source/MenuStore.cpp; sourceTree = "<group>"; };
+		5D4595B71510CCF60088A44D /* MenuStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MenuStore.h; path = source/MenuStore.h; sourceTree = "<group>"; };
+		5D4595B81510CCF60088A44D /* MenuTapjoy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MenuTapjoy.cpp; path = source/MenuTapjoy.cpp; sourceTree = "<group>"; };
+		5D4595B91510CCF60088A44D /* MenuTapjoy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MenuTapjoy.h; path = source/MenuTapjoy.h; sourceTree = "<group>"; };
+		5D4595C21510CD870088A44D /* EmitVirtualKeyComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EmitVirtualKeyComponent.cpp; path = Entity/EmitVirtualKeyComponent.cpp; sourceTree = "<group>"; };
+		5D4595C31510CD870088A44D /* EmitVirtualKeyComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EmitVirtualKeyComponent.h; path = Entity/EmitVirtualKeyComponent.h; sourceTree = "<group>"; };
+		5D4595C41510CD870088A44D /* EntityUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EntityUtils.cpp; path = Entity/EntityUtils.cpp; sourceTree = "<group>"; };
+		5D4595C51510CD870088A44D /* EntityUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EntityUtils.h; path = Entity/EntityUtils.h; sourceTree = "<group>"; };
+		5D4595C61510CD870088A44D /* FilterInputComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FilterInputComponent.cpp; path = Entity/FilterInputComponent.cpp; sourceTree = "<group>"; };
+		5D4595C71510CD870088A44D /* FilterInputComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FilterInputComponent.h; path = Entity/FilterInputComponent.h; sourceTree = "<group>"; };
+		5D4595C81510CD870088A44D /* FocusRenderComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FocusRenderComponent.cpp; path = Entity/FocusRenderComponent.cpp; sourceTree = "<group>"; };
+		5D4595C91510CD870088A44D /* FocusRenderComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FocusRenderComponent.h; path = Entity/FocusRenderComponent.h; sourceTree = "<group>"; };
+		5D4595CA1510CD870088A44D /* FocusUpdateComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FocusUpdateComponent.cpp; path = Entity/FocusUpdateComponent.cpp; sourceTree = "<group>"; };
+		5D4595CB1510CD870088A44D /* InputTextRenderComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = InputTextRenderComponent.cpp; path = Entity/InputTextRenderComponent.cpp; sourceTree = "<group>"; };
+		5D4595CC1510CD870088A44D /* InputTextRenderComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InputTextRenderComponent.h; path = Entity/InputTextRenderComponent.h; sourceTree = "<group>"; };
+		5D4595CD1510CD870088A44D /* InterpolateComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = InterpolateComponent.cpp; path = Entity/InterpolateComponent.cpp; sourceTree = "<group>"; };
+		5D4595CE1510CD870088A44D /* InterpolateComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InterpolateComponent.h; path = Entity/InterpolateComponent.h; sourceTree = "<group>"; };
+		5D4595CF1510CD870088A44D /* OverlayRenderComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OverlayRenderComponent.cpp; path = Entity/OverlayRenderComponent.cpp; sourceTree = "<group>"; };
+		5D4595D01510CD870088A44D /* OverlayRenderComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OverlayRenderComponent.h; path = Entity/OverlayRenderComponent.h; sourceTree = "<group>"; };
+		5D4595D11510CD870088A44D /* RectRenderComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RectRenderComponent.cpp; path = Entity/RectRenderComponent.cpp; sourceTree = "<group>"; };
+		5D4595D21510CD870088A44D /* RectRenderComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RectRenderComponent.h; path = Entity/RectRenderComponent.h; sourceTree = "<group>"; };
+		5D4595D31510CD870088A44D /* SelectButtonWithCustomInputComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SelectButtonWithCustomInputComponent.cpp; path = Entity/SelectButtonWithCustomInputComponent.cpp; sourceTree = "<group>"; };
+		5D4595D41510CD870088A44D /* SelectButtonWithCustomInputComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SelectButtonWithCustomInputComponent.h; path = Entity/SelectButtonWithCustomInputComponent.h; sourceTree = "<group>"; };
+		5D4595D51510CD870088A44D /* SliderComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SliderComponent.cpp; path = Entity/SliderComponent.cpp; sourceTree = "<group>"; };
+		5D4595D61510CD870088A44D /* SliderComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SliderComponent.h; path = Entity/SliderComponent.h; sourceTree = "<group>"; };
+		5D4595D71510CD870088A44D /* TextBoxRenderComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TextBoxRenderComponent.cpp; path = Entity/TextBoxRenderComponent.cpp; sourceTree = "<group>"; };
+		5D4595D81510CD870088A44D /* TextBoxRenderComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextBoxRenderComponent.h; path = Entity/TextBoxRenderComponent.h; sourceTree = "<group>"; };
+		5D4595D91510CD870088A44D /* TextRenderComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TextRenderComponent.cpp; path = Entity/TextRenderComponent.cpp; sourceTree = "<group>"; };
+		5D4595DA1510CD870088A44D /* TextRenderComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextRenderComponent.h; path = Entity/TextRenderComponent.h; sourceTree = "<group>"; };
+		5D4595DB1510CD870088A44D /* TouchHandlerComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TouchHandlerComponent.cpp; path = Entity/TouchHandlerComponent.cpp; sourceTree = "<group>"; };
+		5D4595DC1510CD870088A44D /* TouchHandlerComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TouchHandlerComponent.h; path = Entity/TouchHandlerComponent.h; sourceTree = "<group>"; };
+		5D4595DD1510CD870088A44D /* TyperComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TyperComponent.cpp; path = Entity/TyperComponent.cpp; sourceTree = "<group>"; };
+		5D4595DE1510CD870088A44D /* TyperComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TyperComponent.h; path = Entity/TyperComponent.h; sourceTree = "<group>"; };
+		5D4595EE1510CDB20088A44D /* Button2DComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Button2DComponent.cpp; path = Entity/Button2DComponent.cpp; sourceTree = "<group>"; };
+		5D4595EF1510CDB20088A44D /* Button2DComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Button2DComponent.h; path = Entity/Button2DComponent.h; sourceTree = "<group>"; };
+		5D4595F01510CDB20088A44D /* LogDisplayComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LogDisplayComponent.cpp; path = Entity/LogDisplayComponent.cpp; sourceTree = "<group>"; };
+		5D4595F11510CDB20088A44D /* LogDisplayComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LogDisplayComponent.h; path = Entity/LogDisplayComponent.h; sourceTree = "<group>"; };
+		5D4595F21510CDB20088A44D /* UnderlineRenderComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UnderlineRenderComponent.cpp; path = Entity/UnderlineRenderComponent.cpp; sourceTree = "<group>"; };
+		5D4595F31510CDB20088A44D /* UnderlineRenderComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UnderlineRenderComponent.h; path = Entity/UnderlineRenderComponent.h; sourceTree = "<group>"; };
+		5D4595F71510CE0B0088A44D /* RenderScissorComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RenderScissorComponent.cpp; path = Entity/RenderScissorComponent.cpp; sourceTree = "<group>"; };
+		5D4595F81510CE0B0088A44D /* RenderScissorComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RenderScissorComponent.h; path = Entity/RenderScissorComponent.h; sourceTree = "<group>"; };
+		5D4595F91510CE0B0088A44D /* ScrollBarRenderComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ScrollBarRenderComponent.cpp; path = Entity/ScrollBarRenderComponent.cpp; sourceTree = "<group>"; };
+		5D4595FA1510CE0B0088A44D /* ScrollBarRenderComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ScrollBarRenderComponent.h; path = Entity/ScrollBarRenderComponent.h; sourceTree = "<group>"; };
+		5D4595FB1510CE0B0088A44D /* ScrollComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ScrollComponent.cpp; path = Entity/ScrollComponent.cpp; sourceTree = "<group>"; };
+		5D4595FC1510CE0B0088A44D /* ScrollComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ScrollComponent.h; path = Entity/ScrollComponent.h; sourceTree = "<group>"; };
+		5D4595FD1510CE0B0088A44D /* TouchDragComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TouchDragComponent.cpp; path = Entity/TouchDragComponent.cpp; sourceTree = "<group>"; };
+		5D4595FE1510CE0B0088A44D /* TouchDragComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TouchDragComponent.h; path = Entity/TouchDragComponent.h; sourceTree = "<group>"; };
 		5D5C0F381275638500A4E4E3 /* NetUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NetUtils.h; path = Network/NetUtils.h; sourceTree = "<group>"; };
 		5D5C0F391275638500A4E4E3 /* NetUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NetUtils.cpp; path = Network/NetUtils.cpp; sourceTree = "<group>"; };
+		5D6BA8E01510D801002DC898 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-72.png"; path = "media/Icon-72.png"; sourceTree = "<group>"; };
+		5D6BA8E215118A4A002DC898 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		5D6BA8E415118ADE002DC898 /* InAppPurchaseManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InAppPurchaseManager.h; path = iOS/app/InAppPurchaseManager.h; sourceTree = "<group>"; };
+		5D6BA8E515118ADE002DC898 /* InAppPurchaseManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = InAppPurchaseManager.mm; path = iOS/app/InAppPurchaseManager.mm; sourceTree = "<group>"; };
 		5D7B10E30F245B88003A3396 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		5D7B4CF510CCEE030073DDA8 /* SoftSurface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SoftSurface.cpp; path = ../shared/Renderer/SoftSurface.cpp; sourceTree = SOURCE_ROOT; };
 		5D7B4CF610CCEE030073DDA8 /* SoftSurface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SoftSurface.h; path = ../shared/Renderer/SoftSurface.h; sourceTree = SOURCE_ROOT; };
@@ -212,6 +305,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5D6BA8E315118A4A002DC898 /* StoreKit.framework in Frameworks */,
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
 				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
 				28FD15000DC6FC520079059D /* OpenGLES.framework in Frameworks */,
@@ -255,6 +349,16 @@
 		29B97315FDCFA39411CA2CEA /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				5D4595B01510CCF60088A44D /* MenuAdWait.cpp */,
+				5D4595B11510CCF60088A44D /* MenuAdWait.h */,
+				5D4595B21510CCF60088A44D /* MenuMain.cpp */,
+				5D4595B31510CCF60088A44D /* MenuMain.h */,
+				5D4595B41510CCF60088A44D /* MenuPurchase.cpp */,
+				5D4595B51510CCF60088A44D /* MenuPurchase.h */,
+				5D4595B61510CCF60088A44D /* MenuStore.cpp */,
+				5D4595B71510CCF60088A44D /* MenuStore.h */,
+				5D4595B81510CCF60088A44D /* MenuTapjoy.cpp */,
+				5D4595B91510CCF60088A44D /* MenuTapjoy.h */,
 				5DC692B10E94852F00E5AC44 /* App.cpp */,
 				5DC692B00E94852F00E5AC44 /* App.h */,
 				32CA4F630368D1EE00C91783 /* RTAdTest_Prefix.pch */,
@@ -265,6 +369,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				5D6BA8E01510D801002DC898 /* Icon-72.png */,
 				5DC6D77B0EA4B397001482E0 /* Default.png */,
 				5DC6D77C0EA4B397001482E0 /* icon.png */,
 				5DC6D63B0EA47C0E001482E0 /* interface */,
@@ -277,6 +382,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				5D6BA8E215118A4A002DC898 /* StoreKit.framework */,
 				5D82C8B40FF4C0BF0082EBE7 /* AVFoundation.framework */,
 				5D82C8AF0FF4C02B0082EBE7 /* CFNetwork.framework */,
 				5D3063AA0FD8B00A009DE600 /* OpenAL.framework */,
@@ -329,6 +435,8 @@
 				5D165B17125AA23B00F1E8E3 /* main.mm */,
 				5D165B18125AA23B00F1E8E3 /* EAGLView.mm */,
 				5D165B19125AA23B00F1E8E3 /* EAGLView.h */,
+				5D6BA8E415118ADE002DC898 /* InAppPurchaseManager.h */,
+				5D6BA8E515118ADE002DC898 /* InAppPurchaseManager.mm */,
 			);
 			name = app;
 			sourceTree = "<group>";
@@ -388,6 +496,49 @@
 		5D8483DC0F923D40007338A2 /* Entity */ = {
 			isa = PBXGroup;
 			children = (
+				5D4595F71510CE0B0088A44D /* RenderScissorComponent.cpp */,
+				5D4595F81510CE0B0088A44D /* RenderScissorComponent.h */,
+				5D4595F91510CE0B0088A44D /* ScrollBarRenderComponent.cpp */,
+				5D4595FA1510CE0B0088A44D /* ScrollBarRenderComponent.h */,
+				5D4595FB1510CE0B0088A44D /* ScrollComponent.cpp */,
+				5D4595FC1510CE0B0088A44D /* ScrollComponent.h */,
+				5D4595FD1510CE0B0088A44D /* TouchDragComponent.cpp */,
+				5D4595FE1510CE0B0088A44D /* TouchDragComponent.h */,
+				5D4595EE1510CDB20088A44D /* Button2DComponent.cpp */,
+				5D4595EF1510CDB20088A44D /* Button2DComponent.h */,
+				5D4595F01510CDB20088A44D /* LogDisplayComponent.cpp */,
+				5D4595F11510CDB20088A44D /* LogDisplayComponent.h */,
+				5D4595F21510CDB20088A44D /* UnderlineRenderComponent.cpp */,
+				5D4595F31510CDB20088A44D /* UnderlineRenderComponent.h */,
+				5D4595C21510CD870088A44D /* EmitVirtualKeyComponent.cpp */,
+				5D4595C31510CD870088A44D /* EmitVirtualKeyComponent.h */,
+				5D4595C41510CD870088A44D /* EntityUtils.cpp */,
+				5D4595C51510CD870088A44D /* EntityUtils.h */,
+				5D4595C61510CD870088A44D /* FilterInputComponent.cpp */,
+				5D4595C71510CD870088A44D /* FilterInputComponent.h */,
+				5D4595C81510CD870088A44D /* FocusRenderComponent.cpp */,
+				5D4595C91510CD870088A44D /* FocusRenderComponent.h */,
+				5D4595CA1510CD870088A44D /* FocusUpdateComponent.cpp */,
+				5D4595CB1510CD870088A44D /* InputTextRenderComponent.cpp */,
+				5D4595CC1510CD870088A44D /* InputTextRenderComponent.h */,
+				5D4595CD1510CD870088A44D /* InterpolateComponent.cpp */,
+				5D4595CE1510CD870088A44D /* InterpolateComponent.h */,
+				5D4595CF1510CD870088A44D /* OverlayRenderComponent.cpp */,
+				5D4595D01510CD870088A44D /* OverlayRenderComponent.h */,
+				5D4595D11510CD870088A44D /* RectRenderComponent.cpp */,
+				5D4595D21510CD870088A44D /* RectRenderComponent.h */,
+				5D4595D31510CD870088A44D /* SelectButtonWithCustomInputComponent.cpp */,
+				5D4595D41510CD870088A44D /* SelectButtonWithCustomInputComponent.h */,
+				5D4595D51510CD870088A44D /* SliderComponent.cpp */,
+				5D4595D61510CD870088A44D /* SliderComponent.h */,
+				5D4595D71510CD870088A44D /* TextBoxRenderComponent.cpp */,
+				5D4595D81510CD870088A44D /* TextBoxRenderComponent.h */,
+				5D4595D91510CD870088A44D /* TextRenderComponent.cpp */,
+				5D4595DA1510CD870088A44D /* TextRenderComponent.h */,
+				5D4595DB1510CD870088A44D /* TouchHandlerComponent.cpp */,
+				5D4595DC1510CD870088A44D /* TouchHandlerComponent.h */,
+				5D4595DD1510CD870088A44D /* TyperComponent.cpp */,
+				5D4595DE1510CD870088A44D /* TyperComponent.h */,
 				5D82C88E0FF4BB660082EBE7 /* Components */,
 				5D8483DD0F923D51007338A2 /* Component.cpp */,
 				5D8483DE0F923D51007338A2 /* Component.h */,
@@ -438,6 +589,10 @@
 		5DA556E90E9B3D3F00D16247 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				5D4595AA1510CCD90088A44D /* AdManager.cpp */,
+				5D4595AB1510CCD90088A44D /* AdManager.h */,
+				5D4595AC1510CCD90088A44D /* IAPManager.cpp */,
+				5D4595AD1510CCD90088A44D /* IAPManager.h */,
 				5D7BBCFF10144FF50015A90E /* ResourceManager.cpp */,
 				5D7BBD0010144FF50015A90E /* ResourceManager.h */,
 				5D3063590FD89049009DE600 /* VariantDB.cpp */,
@@ -557,6 +712,9 @@
 /* Begin PBXProject section */
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				ORGANIZATIONNAME = "Robinson Technologies";
+			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "RTAdTest" */;
 			compatibilityVersion = "Xcode 3.1";
 			developmentRegion = English;
@@ -587,6 +745,7 @@
 				5DC6D77E0EA4B397001482E0 /* icon.png in Resources */,
 				5D8272910FA9DEE00097DE6A /* Entitlements.plist in Resources */,
 				5D7C711E118FF795007F9604 /* MainWindow-iPad.xib in Resources */,
+				5D6BA8E11510D801002DC898 /* Icon-72.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -646,6 +805,36 @@
 				5D165B88125AA70800F1E8E3 /* FocusInputComponent.cpp in Sources */,
 				5D165BA1125AAA3800F1E8E3 /* FileManager.cpp in Sources */,
 				5D5C0F3A1275638500A4E4E3 /* NetUtils.cpp in Sources */,
+				5D4595AE1510CCD90088A44D /* AdManager.cpp in Sources */,
+				5D4595AF1510CCD90088A44D /* IAPManager.cpp in Sources */,
+				5D4595BC1510CCF60088A44D /* MenuAdWait.cpp in Sources */,
+				5D4595BD1510CCF60088A44D /* MenuMain.cpp in Sources */,
+				5D4595BE1510CCF60088A44D /* MenuPurchase.cpp in Sources */,
+				5D4595BF1510CCF60088A44D /* MenuStore.cpp in Sources */,
+				5D4595C01510CCF60088A44D /* MenuTapjoy.cpp in Sources */,
+				5D4595DF1510CD870088A44D /* EmitVirtualKeyComponent.cpp in Sources */,
+				5D4595E01510CD870088A44D /* EntityUtils.cpp in Sources */,
+				5D4595E11510CD870088A44D /* FilterInputComponent.cpp in Sources */,
+				5D4595E21510CD870088A44D /* FocusRenderComponent.cpp in Sources */,
+				5D4595E31510CD870088A44D /* FocusUpdateComponent.cpp in Sources */,
+				5D4595E41510CD870088A44D /* InputTextRenderComponent.cpp in Sources */,
+				5D4595E51510CD870088A44D /* InterpolateComponent.cpp in Sources */,
+				5D4595E61510CD870088A44D /* OverlayRenderComponent.cpp in Sources */,
+				5D4595E71510CD870088A44D /* RectRenderComponent.cpp in Sources */,
+				5D4595E81510CD870088A44D /* SelectButtonWithCustomInputComponent.cpp in Sources */,
+				5D4595E91510CD870088A44D /* SliderComponent.cpp in Sources */,
+				5D4595EA1510CD870088A44D /* TextBoxRenderComponent.cpp in Sources */,
+				5D4595EB1510CD870088A44D /* TextRenderComponent.cpp in Sources */,
+				5D4595EC1510CD870088A44D /* TouchHandlerComponent.cpp in Sources */,
+				5D4595ED1510CD870088A44D /* TyperComponent.cpp in Sources */,
+				5D4595F41510CDB20088A44D /* Button2DComponent.cpp in Sources */,
+				5D4595F51510CDB20088A44D /* LogDisplayComponent.cpp in Sources */,
+				5D4595F61510CDB20088A44D /* UnderlineRenderComponent.cpp in Sources */,
+				5D4595FF1510CE0B0088A44D /* RenderScissorComponent.cpp in Sources */,
+				5D4596001510CE0B0088A44D /* ScrollBarRenderComponent.cpp in Sources */,
+				5D4596011510CE0B0088A44D /* ScrollComponent.cpp in Sources */,
+				5D4596021510CE0B0088A44D /* TouchDragComponent.cpp in Sources */,
+				5D6BA8E615118ADE002DC898 /* InAppPurchaseManager.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -655,12 +844,18 @@
 		1D6058940D05DD3E006BFB54 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					armv7,
+					armv6,
+				);
+				CODE_SIGN_IDENTITY = "iPhone Developer: Seth Robinson (638X6EAY9H)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer:";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = Info.plist;
 				PRODUCT_NAME = RTAdTest;
+				PROVISIONING_PROFILE = "F3BDD592-F7A6-429A-8E9F-81EBF238EBED";
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
 			};
 			name = Debug;
@@ -678,6 +873,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ../shared/PlatformPrecomp.h;
 				GCC_PREPROCESSOR_DEFINITIONS = (
+					RT_IAP_SUPPORT,
 					BOOST_ALL_NO_LIB,
 					NDEBUG,
 				);
@@ -707,6 +903,11 @@
 		5D8733750FA9A0BC001DB559 /* AdHoc */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					armv7,
+					armv6,
+				);
+				CODE_SIGN_IDENTITY = "iPhone Developer: Seth Robinson (638X6EAY9H)";
 				COPY_PHASE_STRIP = YES;
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -714,6 +915,7 @@
 				GCC_THUMB_SUPPORT = NO;
 				INFOPLIST_FILE = Info.plist;
 				PRODUCT_NAME = RTAdTest;
+				PROVISIONING_PROFILE = "F3BDD592-F7A6-429A-8E9F-81EBF238EBED";
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
 			};
 			name = AdHoc;
@@ -727,6 +929,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ../shared/PlatformPrecomp.h;
 				GCC_PREPROCESSOR_DEFINITIONS = (
+					RT_IAP_SUPPORT,
 					BOOST_ALL_NO_LIB,
 					_DEBUG,
 				);

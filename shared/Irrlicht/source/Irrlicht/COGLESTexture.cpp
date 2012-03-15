@@ -363,7 +363,7 @@ namespace irr
 		void* COGLES1Texture::lock(bool readOnly, u32 mipmapLevel)
 		{
 			// store info about which image is locked
-			IImage* image = (mipmapLevel==0)?Image:MipImage;
+			//IImage* image = (mipmapLevel==0)?Image:MipImage;
 
 			ReadOnlyLock |= readOnly;
 			MipLevelStored = mipmapLevel;

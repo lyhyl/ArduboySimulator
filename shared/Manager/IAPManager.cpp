@@ -40,11 +40,14 @@ void IAPManager::OnMessage( Message &m )
 #ifdef SHOW_DEBUG_IAP_MESSAGES
 		LogMsg("Got IAP response: %d - Extra: %s", (int)m.GetParm1(), m_extraData.c_str());
 #endif
-		if ((int)m.GetParm1() != RESULT_OK)
+        int result = (int)m.GetParm1();
+        
+		if (result != RESULT_OK && result != RESULT_OK_ALREADY_PURCHASED)
 		{
 			m_state = STATE_NONE;
 			m_returnState = RETURN_STATE_FAILED;
-			m_itemToBuy.clear();
+
+            m_itemToBuy.clear();
 			VariantList vList(uint32(m_returnState), m_extraData);
 			m_sig_item_purchase_result(&vList);
 		} else
@@ -58,7 +61,14 @@ void IAPManager::OnMessage( Message &m )
 
 				m_state = STATE_NONE;
 				m_returnState = RETURN_STATE_PURCHASED;
-				m_itemToBuy.clear();
+				
+                if (result == RESULT_OK_ALREADY_PURCHASED)
+                {
+                    //more accurate
+                    m_returnState = RETURN_STATE_ALREADY_PURCHASED;
+                }
+                
+                m_itemToBuy.clear();
 				VariantList vList(uint32(m_returnState), m_extraData);
 				m_sig_item_purchase_result(&vList);
 			}
@@ -157,7 +167,7 @@ bool IAPManager::Init()
 void IAPManager::Update()
 {
 
-#if !defined RT_WEBOS
+#if !defined RT_WEBOS && !defined PLATFORM_IOS
 	if (m_bWaitingForReply && GetPlatformID() != PLATFORM_ID_ANDROID && GetPlatformID() != PLATFORM_ID_WEBOS)
 	{
 		//don't support billing on this platform, fake it after 3 seconds.

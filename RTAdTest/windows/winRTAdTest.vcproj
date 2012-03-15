@@ -642,14 +642,6 @@
 					RelativePath="..\source\MenuTapjoy.h"
 					>
 				</File>
-				<File
-					RelativePath="..\source\MenuWebOSStore.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\source\MenuWebOSStore.h"
-					>
-				</File>
 			</Filter>
 		</Filter>
 		<Filter
