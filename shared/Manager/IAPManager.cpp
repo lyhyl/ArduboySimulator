@@ -170,7 +170,8 @@ void IAPManager::Update()
 #if !defined RT_WEBOS && !defined PLATFORM_IOS
 	if (m_bWaitingForReply && GetPlatformID() != PLATFORM_ID_ANDROID && GetPlatformID() != PLATFORM_ID_WEBOS)
 	{
-		//don't support billing on this platform, fake it after 3 seconds.
+		//don't support billing on this platform, fake it after 3 seconds for testing purposes
+
 		if (m_timer+3000 < GetTick(TIMER_SYSTEM))
 		{
 			//fake a successful sale message back to us, so we'll process the order even while emulating on win/whatever
@@ -179,18 +180,19 @@ void IAPManager::Update()
 			if (GetEmulatedPlatformID() == PLATFORM_ID_ANDROID)
 			{
 				//I'm not sure why Android sends this message instead of just MESSAGE_TYPE_IAP_RESULT.. but some client games
-				//rely on this behavior so I don't want to mess with it
+				//rely on this behavior so I don't want to mess with it.. something to do with how Android actually checks the
+				//status of all IAP when you try to buy something, to see if it's already been bought...
 				Message m(MESSAGE_CLASS_GUI, TIMER_SYSTEM, MESSAGE_TYPE_IAP_ITEM_STATE);
 				m.SetParm1(PURCHASED);
 				OnMessage(m);
 			} else
 			{
-				//WebOS (and presumable any new IAP systems will send this reply:
+				//WebOS & iOS
 
-				GetMessageManager()->SendGUIStringEx(MESSAGE_TYPE_IAP_RESULT,(float)IAPManager::RESULT_OK,0.0f,0, "Faked order!");
+				//GetMessageManager()->SendGUIStringEx(MESSAGE_TYPE_IAP_RESULT,(float)IAPManager::RESULT_OK,0.0f,0, "Faked order!");
 
-				//or, for a failed transaction:
-			//	GetMessageManager()->SendGUIStringEx(MESSAGE_TYPE_IAP_RESULT,(float)IAPManager::RESULT_USER_CANCELED,0.0f,0, "Faked order!");
+				//or, to test for a failed transaction
+				GetMessageManager()->SendGUIStringEx(MESSAGE_TYPE_IAP_RESULT,(float)IAPManager::RESULT_USER_CANCELED,0.0f,0, "Faked order!");
 
 			}
 

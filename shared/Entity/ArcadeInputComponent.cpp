@@ -233,7 +233,7 @@ void ArcadeInputComponent::OnRawKeyboard(VariantList *pVList)
 	bool bDown = pVList->Get(1).GetUINT32() == 1;
 
 #ifdef _DEBUG
-	LogMsg("ArcadeInputComponent> Got key %d, %d", keyCode, int(bDown));
+//	LogMsg("ArcadeInputComponent> Got key %d, %d", keyCode, int(bDown));
 #endif
 
 	ArcadeBindList::iterator itor = m_bindings.begin();
