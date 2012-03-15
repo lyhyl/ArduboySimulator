@@ -35,11 +35,43 @@ Entity * CreateOverlayButtonEntity(Entity *pParentEnt, string name, string fileN
 	return pButtonEnt;
 }
 
+EntityComponent* SetupInterpolateComponent(Entity *pEnt, const string& componentName, const string& varName, const Variant& targetValue, int durationMS, int delayBeforeStartMS, eInterpolateType interpolationType = INTERPOLATE_SMOOTHSTEP, InterpolateComponent::eOnFinish onFinish = InterpolateComponent::ON_FINISH_DIE)
+{
+	EntityComponent *pComp = NULL;
+
+	if (!componentName.empty())
+	{
+		pComp = pEnt->GetComponentByName(componentName);
+	}
+
+	if (!pComp)
+	{
+		//doesn't exist, create one
+		pComp = pEnt->AddComponent(new InterpolateComponent);
+		pComp->SetName(componentName);
+	}
+
+	pComp->GetVar("var_name")->Set(varName);
+	pComp->GetVar("target")->Set(const_cast<Variant&>(targetValue));
+	pComp->GetVar("interpolation")->Set(uint32(interpolationType));
+	pComp->GetVar("on_finish")->Set(uint32(onFinish));
+
+	if (delayBeforeStartMS == 0)
+	{
+		pComp->GetVar("duration_ms")->Set(uint32(durationMS));
+	} else
+	{
+		//trigger it to start later
+		GetMessageManager()->SetComponentVariable(pComp, delayBeforeStartMS, "duration_ms", Variant(uint32(durationMS)));
+	}
+
+	return pComp;
+}
+
 void SlideScreen(Entity *pEnt, bool bIn, int speedMS, int delayToStartMS)
 {
 	
 	CL_Vec2f vEndPos;
-	eInterpolateType interpolateType;
 	CL_Vec2f vOrigPos = pEnt->GetVar("pos2d")->GetVector2();
 
 	if (bIn)
@@ -47,36 +79,17 @@ void SlideScreen(Entity *pEnt, bool bIn, int speedMS, int delayToStartMS)
 		//move it off screen to start
 		pEnt->GetVar("pos2d")->Set(CL_Vec2f( float(-GetScreenSizeX()+vOrigPos.x), vOrigPos.y));
 		vEndPos = CL_Vec2f(vOrigPos.x,vOrigPos.y);
-		interpolateType = INTERPOLATE_SMOOTHSTEP;
 	} else
 	{
-		pEnt->GetShared()->GetVarWithDefault("pos2d", CL_Vec2f(0,vOrigPos.y));
-
 		vEndPos = CL_Vec2f(GetScreenSizeXf(),vOrigPos.y);
-		interpolateType = INTERPOLATE_SMOOTHSTEP;
 	}
 
-	EntityComponent * pComp = pEnt->AddComponent( new InterpolateComponent);
-	pComp->GetVar("var_name")->Set("pos2d");
-	pComp->GetVar("target")->Set(vEndPos);
-	pComp->GetVar("interpolation")->Set(uint32(interpolateType));
-	pComp->GetVar("on_finish")->Set(uint32(InterpolateComponent::ON_FINISH_DIE));
-
-	if (delayToStartMS == 0)
-	{
-		pComp->GetVar("duration_ms")->Set(uint32(speedMS));
-	} else
-	{
-		//trigger it to start later
-		GetMessageManager()->SetComponentVariable(pComp, delayToStartMS, "duration_ms", Variant(uint32(speedMS)));
-	}
+	SetupInterpolateComponent(pEnt, "", "pos2d", vEndPos, speedMS, delayToStartMS);
 }
 
 void SlideScreenVertical(Entity *pEnt, bool bIn, int speedMS, int delayToStartMS)
 {
-
 	CL_Vec2f vEndPos;
-	eInterpolateType interpolateType;
 	CL_Vec2f vOrigPos = pEnt->GetVar("pos2d")->GetVector2();
 
 	if (bIn)
@@ -84,29 +97,12 @@ void SlideScreenVertical(Entity *pEnt, bool bIn, int speedMS, int delayToStartMS
 		//move it off screen to start
 		pEnt->GetVar("pos2d")->Set(CL_Vec2f( vOrigPos.x, -GetScreenSizeYf()));
 		vEndPos = CL_Vec2f(vOrigPos.x,0);
-		interpolateType = INTERPOLATE_SMOOTHSTEP;
 	} else
 	{
-		pEnt->GetShared()->GetVarWithDefault("pos2d", CL_Vec2f(vOrigPos.x,0));
-
 		vEndPos = CL_Vec2f(vOrigPos.x, GetScreenSizeYf());
-		interpolateType = INTERPOLATE_SMOOTHSTEP;
 	}
 
-	EntityComponent * pComp = pEnt->AddComponent( new InterpolateComponent);
-	pComp->GetVar("var_name")->Set("pos2d");
-	pComp->GetVar("target")->Set(vEndPos);
-	pComp->GetVar("interpolation")->Set(uint32(interpolateType));
-	pComp->GetVar("on_finish")->Set(uint32(InterpolateComponent::ON_FINISH_DIE));
-
-	if (delayToStartMS == 0)
-	{
-		pComp->GetVar("duration_ms")->Set(uint32(speedMS));
-	} else
-	{
-		//trigger it to start later
-		GetMessageManager()->SetComponentVariable(pComp, delayToStartMS, "duration_ms", Variant(uint32(speedMS)));
-	}
+	SetupInterpolateComponent(pEnt, "", "pos2d", vEndPos, speedMS, delayToStartMS);
 }
 
 //bounces for ever
@@ -115,12 +111,8 @@ void BobEntity(Entity *pEnt, float bobAmount)
 	CL_Vec2f vEndPos = pEnt->GetVar("pos2d")->GetVector2();
 
 	vEndPos.y += bobAmount;
-	EntityComponent * pComp = pEnt->AddComponent( new InterpolateComponent);
-	pComp->GetVar("var_name")->Set("pos2d");
-	pComp->GetVar("target")->Set(vEndPos);
-	pComp->GetVar("duration_ms")->Set(uint32(1000));
-	pComp->GetVar("interpolation")->Set(uint32(INTERPOLATE_SMOOTHSTEP));
-	pComp->GetVar("on_finish")->Set(uint32(InterpolateComponent::ON_FINISH_BOUNCE));
+
+	SetupInterpolateComponent(pEnt, "", "pos2d", vEndPos, 1000, 0, INTERPOLATE_SMOOTHSTEP, InterpolateComponent::ON_FINISH_BOUNCE);
 }
 
 void OneTimeBobEntity(Entity *pEnt, float bobAmount, int delayBeforeBob, int durationMS)
@@ -128,31 +120,13 @@ void OneTimeBobEntity(Entity *pEnt, float bobAmount, int delayBeforeBob, int dur
 	if (pEnt->GetComponentByName("ic_pos"))
 	{
 		//well, we already have one of these active, don't trigger it again yet until it's dead
-
 	} else
 	{
-
-		EntityComponent *pComp;
 		CL_Vec2f vEndPos = pEnt->GetVar("pos2d")->GetVector2();
 		vEndPos.y += bobAmount;
 
-		pComp = pEnt->AddComponent(new InterpolateComponent);
-		pComp->SetName("ic_pos"); //so we can easily find this later, don't change this, apps rely on this
-		pComp->GetVar("var_name")->Set("pos2d");
-		pComp->GetVar("target")->Set(vEndPos);
-		pComp->GetVar("interpolation")->Set(uint32(INTERPOLATE_SMOOTHSTEP));
-		pComp->GetVar("on_finish")->Set(uint32(InterpolateComponent::ON_FINISH_BOUNCE));
+		EntityComponent *pComp = SetupInterpolateComponent(pEnt, "ic_pos", "pos2d", vEndPos, durationMS, delayBeforeBob, INTERPOLATE_SMOOTHSTEP, InterpolateComponent::ON_FINISH_BOUNCE);
 		pComp->GetVar("deleteAfterPlayCount")->Set(uint32(2));
-	
-		if (delayBeforeBob == 0)
-		{
-			//do it now
-			pComp->GetVar("duration_ms")->Set(uint32(durationMS));
-		} else
-		{
-			//trigger it to start later
-			GetMessageManager()->SetComponentVariable(pComp, delayBeforeBob, "duration_ms", Variant(uint32(durationMS)));
-		}
 	}
 }
 
@@ -323,21 +297,7 @@ void FadeInEntity(Entity *pEnt, bool bRecursive, int timeMS, int delayBeforeFadi
 {
 	pEnt->GetVar("alpha")->Set(0.0f); //so we can fade in
 
-	EntityComponent * pComp = pEnt->AddComponent( new InterpolateComponent);
-	pComp->GetVar("var_name")->Set("alpha");
-	pComp->GetVar("target")->Set(1.0f);
-	pComp->GetVar("interpolation")->Set(uint32(INTERPOLATE_SMOOTHSTEP));
-	pComp->GetVar("on_finish")->Set(uint32(InterpolateComponent::ON_FINISH_DIE));
-
-	if (delayBeforeFadingMS == 0)
-	{
-		//do it now
-		pComp->GetVar("duration_ms")->Set(uint32(timeMS));
-	} else
-	{
-		//trigger it to start later
-		GetMessageManager()->SetComponentVariable(pComp, delayBeforeFadingMS, "duration_ms", Variant(uint32(timeMS)), GetBaseApp()->GetActiveTimingSystem());
-	}
+	SetupInterpolateComponent(pEnt, "", "alpha", 1.0f, timeMS, delayBeforeFadingMS);
 
 	if (!bRecursive) return;
 
@@ -350,7 +310,6 @@ void FadeInEntity(Entity *pEnt, bool bRecursive, int timeMS, int delayBeforeFadi
 		FadeInEntity( *itor, bRecursive, timeMS, delayBeforeFadingMS);
 		itor++;
 	}
-
 }
 
 EntityComponent * ZoomToPositionFromThisOffsetEntity(Entity *pEnt, CL_Vec2f vPos, unsigned int speedMS, eInterpolateType interpolateType,  int delayBeforeActionMS)
@@ -359,108 +318,27 @@ EntityComponent * ZoomToPositionFromThisOffsetEntity(Entity *pEnt, CL_Vec2f vPos
 	
 	vEndPos = pEnt->GetVar("pos2d")->GetVector2();
 	pEnt->GetVar("pos2d")->Set(vEndPos+vPos);
-	EntityComponent * pComp = pEnt->GetComponentByName("ic_pos");
 
-	if (!pComp)
-	{
-		pComp = pEnt->AddComponent( new InterpolateComponent);
-		pComp->SetName("ic_pos");
-	}
-	pComp->GetVar("var_name")->Set("pos2d");
-	pComp->GetVar("target")->Set(vEndPos);
-	pComp->GetVar("interpolation")->Set(uint32(interpolateType));
-	pComp->GetVar("on_finish")->Set(uint32(InterpolateComponent::ON_FINISH_DIE));
-
-	if (delayBeforeActionMS == 0)
-	{
-		//do it now
-		pComp->GetVar("duration_ms")->Set(uint32(speedMS));
-	} else
-	{
-		//trigger it to start later
-		GetMessageManager()->SetComponentVariable(pComp, delayBeforeActionMS, "duration_ms", Variant(uint32(speedMS)), GetBaseApp()->GetActiveTimingSystem());
-	}
-
-
-	return pComp;
+	return SetupInterpolateComponent(pEnt, "ic_pos", "pos2d", vEndPos, speedMS, delayBeforeActionMS, interpolateType);
 }
 
 EntityComponent * MorphToVec2Entity(Entity *pEnt, string targetVar, CL_Vec2f vTargetSize, unsigned int speedMS, eInterpolateType interpolateType,  int delayBeforeActionMS)
 {
-	EntityComponent * pComp = pEnt->GetComponentByName("ic_"+targetVar);
-
-	if (!pComp)
-	{
-		pComp = pEnt->AddComponent( new InterpolateComponent);
-		pComp->SetName("ic_"+targetVar);
-	}
-	pComp->GetVar("var_name")->Set(targetVar);
-	pComp->GetVar("target")->Set(vTargetSize);
-	pComp->GetVar("interpolation")->Set(uint32(interpolateType));
-	pComp->GetVar("on_finish")->Set(uint32(InterpolateComponent::ON_FINISH_DIE));
-
-	if (delayBeforeActionMS == 0)
-	{
-		//do it now
-		pComp->GetVar("duration_ms")->Set(uint32(speedMS));
-	} else
-	{
-		//trigger it to start later
-		GetMessageManager()->SetComponentVariable(pComp, delayBeforeActionMS, "duration_ms", Variant(uint32(speedMS)), GetBaseApp()->GetActiveTimingSystem());
-	}
-
-	return pComp;
+	return SetupInterpolateComponent(pEnt, "ic_" + targetVar, targetVar, vTargetSize, speedMS, delayBeforeActionMS, interpolateType);
 }
 
 
 EntityComponent * MorphToVec2EntityMulti(Entity *pEnt, string targetVar, CL_Vec2f vTargetSize, unsigned int speedMS, eInterpolateType interpolateType,  int delayBeforeActionMS)
 {
-	EntityComponent * pComp = pEnt->AddComponent( new InterpolateComponent);
+	EntityComponent* pComp = SetupInterpolateComponent(pEnt, "", targetVar, vTargetSize, speedMS, delayBeforeActionMS, interpolateType);
 	pComp->SetName("ic_"+targetVar+"_multi");
-
-	pComp->GetVar("var_name")->Set(targetVar);
-	pComp->GetVar("target")->Set(vTargetSize);
-	pComp->GetVar("interpolation")->Set(uint32(interpolateType));
-	pComp->GetVar("on_finish")->Set(uint32(InterpolateComponent::ON_FINISH_DIE));
-
-	if (delayBeforeActionMS == 0)
-	{
-		//do it now
-		pComp->GetVar("duration_ms")->Set(uint32(speedMS));
-	} else
-	{
-		//trigger it to start later
-		GetMessageManager()->SetComponentVariable(pComp, delayBeforeActionMS, "duration_ms", Variant(uint32(speedMS)), GetBaseApp()->GetActiveTimingSystem());
-	}
 
 	return pComp;
 }
 
 EntityComponent * MorphToFloatEntity(Entity *pEnt, string targetVar, float target, unsigned int speedMS, eInterpolateType interpolateType,  int delayBeforeActionMS)
 {
-	EntityComponent * pComp = pEnt->GetComponentByName("ic_"+targetVar);
-
-	if (!pComp)
-	{
-		pComp = pEnt->AddComponent( new InterpolateComponent);
-		pComp->SetName("ic_"+targetVar);
-	}
-	pComp->GetVar("var_name")->Set(targetVar);
-	pComp->GetVar("target")->Set(target);
-	pComp->GetVar("interpolation")->Set(uint32(interpolateType));
-	pComp->GetVar("on_finish")->Set(uint32(InterpolateComponent::ON_FINISH_DIE));
-
-	if (delayBeforeActionMS == 0)
-	{
-		//do it now
-		pComp->GetVar("duration_ms")->Set(uint32(speedMS));
-	} else
-	{
-		//trigger it to start later
-		GetMessageManager()->SetComponentVariable(pComp, delayBeforeActionMS, "duration_ms", Variant(uint32(speedMS)), GetBaseApp()->GetActiveTimingSystem());
-	}
-
-	return pComp;
+	return SetupInterpolateComponent(pEnt, "ic_" + targetVar, targetVar, target, speedMS, delayBeforeActionMS, interpolateType);
 }
 
 EntityComponent * MorphToSizeEntity(Entity *pEnt, CL_Vec2f vTargetSize, unsigned int speedMS, eInterpolateType interpolateType,  int delayBeforeActionMS)
@@ -471,63 +349,17 @@ EntityComponent * MorphToSizeEntity(Entity *pEnt, CL_Vec2f vTargetSize, unsigned
 
 EntityComponent * MorphToFloatComponent(EntityComponent *pTargetComp, string targetVar, float target, unsigned int speedMS, eInterpolateType interpolateType,  int delayBeforeActionMS)
 {
-	EntityComponent * pComp = pTargetComp->GetParent()->GetComponentByName("ic_"+targetVar);
-
-	if (!pComp)
-	{
-		pComp = pTargetComp->GetParent()->AddComponent( new InterpolateComponent);
-		assert(!pTargetComp->GetName().empty() && "You should name the component to avoid confusion");
-
-		pComp->GetVar("component_name")->Set(pTargetComp->GetName());
-		pComp->SetName("ic_"+targetVar);
-	}
-	pComp->GetVar("var_name")->Set(targetVar);
-	pComp->GetVar("target")->Set(target);
-	pComp->GetVar("interpolation")->Set(uint32(interpolateType));
-	pComp->GetVar("on_finish")->Set(uint32(InterpolateComponent::ON_FINISH_DIE));
-
-	if (delayBeforeActionMS == 0)
-	{
-		//do it now
-		pComp->GetVar("duration_ms")->Set(uint32(speedMS));
-	} else
-	{
-		//trigger it to start later
-		GetMessageManager()->SetComponentVariable(pComp, delayBeforeActionMS, "duration_ms", Variant(uint32(speedMS)), GetBaseApp()->GetActiveTimingSystem());
-	}
-
+	EntityComponent* pComp = MorphToFloatEntity(pTargetComp->GetParent(), targetVar, target, speedMS, interpolateType, delayBeforeActionMS);
+	pComp->GetVar("component_name")->Set(pTargetComp->GetName());
 	return pComp;
 }
 
 EntityComponent * ZoomFromPositionEntity(Entity *pEnt, CL_Vec2f vPos, unsigned int speedMS, eInterpolateType interpolateType,  int delayBeforeActionMS)
 {
-	CL_Vec2f vEndPos;
-
-	vEndPos = pEnt->GetVar("pos2d")->GetVector2();
+	CL_Vec2f vEndPos = pEnt->GetVar("pos2d")->GetVector2();
 	pEnt->GetVar("pos2d")->Set(vPos);
 	
-	EntityComponent * pComp = pEnt->GetComponentByName("ic_pos");
-
-	if (!pComp)
-	{
-		pComp = pEnt->AddComponent( new InterpolateComponent);
-		pComp->SetName("ic_pos");
-	}
-	pComp->GetVar("var_name")->Set("pos2d");
-	pComp->GetVar("target")->Set(vEndPos);
-		pComp->GetVar("interpolation")->Set(uint32(interpolateType));
-	pComp->GetVar("on_finish")->Set(uint32(InterpolateComponent::ON_FINISH_DIE));
-	
-	if (delayBeforeActionMS == 0)
-	{
-		//do it now
-		pComp->GetVar("duration_ms")->Set(uint32(speedMS));
-	} else
-	{
-		//trigger it to start later
-		GetMessageManager()->SetComponentVariable(pComp, delayBeforeActionMS, "duration_ms", Variant(uint32(speedMS)), GetBaseApp()->GetActiveTimingSystem());
-	}
-	return pComp;
+	return SetupInterpolateComponent(pEnt, "ic_pos", "pos2d", vEndPos, speedMS, delayBeforeActionMS, interpolateType);
 }
 
 EntityComponent * ZoomToPositionEntity(Entity *pEnt, CL_Vec2f vPos, unsigned int speedMS, eInterpolateType interpolateType, int delayBeforeActionMS)
@@ -547,24 +379,8 @@ EntityComponent * ZoomToPositionOffsetEntityMulti(Entity *pEnt, CL_Vec2f vPos, u
 
 EntityComponent * ZoomToPositionEntityMulti(Entity *pEnt, CL_Vec2f vPos, unsigned int speedMS, eInterpolateType interpolateType, int delayBeforeActionMS)
 {
-	EntityComponent * pComp = pEnt->AddComponent( new InterpolateComponent);
+	EntityComponent* pComp = SetupInterpolateComponent(pEnt, "", "pos2d", vPos, speedMS, delayBeforeActionMS, interpolateType);
 	pComp->SetName("ic_pos_multi");
-
-	pComp->GetVar("var_name")->Set("pos2d");
-	pComp->GetVar("target")->Set(vPos);
-	pComp->GetVar("interpolation")->Set(uint32(interpolateType));
-	pComp->GetVar("on_finish")->Set(uint32(InterpolateComponent::ON_FINISH_DIE));
-
-	if (delayBeforeActionMS == 0)
-	{
-		//do it now
-		pComp->GetVar("duration_ms")->Set(uint32(speedMS));
-	} else
-	{
-		//trigger it to start later
-		GetMessageManager()->SetComponentVariable(pComp, delayBeforeActionMS, "duration_ms", Variant(uint32(speedMS)), GetBaseApp()->GetActiveTimingSystem());
-	}
-
 	return pComp;
 }
 
@@ -575,34 +391,8 @@ EntityComponent * ZoomToScaleEntity(Entity *pEnt, CL_Vec2f vScale, unsigned int 
 
 void MorphToColorEntity(Entity *pEnt, bool bRecursive, int timeMS, unsigned int color, int delayBeforeActionMS, bool bAllowMultipleAtOnce)
 {
-	
-	EntityComponent * pComp = NULL;
-	
-	if (!bAllowMultipleAtOnce)
-	{
-		pEnt->GetComponentByName("ic_color");
-	}
-
-	if (!pComp)
-	{
-		pComp = pEnt->AddComponent( new InterpolateComponent);
-		pComp->SetName("ic_color");
-		pComp->GetVar("var_name")->Set("color");
-	}
-
-	pComp->GetVar("target")->Set(uint32(color));
-	pComp->GetVar("interpolation")->Set(uint32(INTERPOLATE_SMOOTHSTEP_AS_COLOR));
-	pComp->GetVar("on_finish")->Set(uint32(InterpolateComponent::ON_FINISH_DIE));
-
-	if (delayBeforeActionMS == 0)
-	{
-		//do it now
-		pComp->GetVar("duration_ms")->Set(uint32(timeMS));
-	} else
-	{
-		//trigger it to start later
-		GetMessageManager()->SetComponentVariable(pComp, delayBeforeActionMS, "duration_ms", Variant(uint32(timeMS)), GetBaseApp()->GetActiveTimingSystem());
-	}
+	EntityComponent* pComp = SetupInterpolateComponent(pEnt, bAllowMultipleAtOnce ? "" : "ic_color", "color", uint32(color), timeMS, delayBeforeActionMS, INTERPOLATE_SMOOTHSTEP_AS_COLOR);
+	pComp->SetName("ic_color");
 
 	if (!bRecursive) return;
 
@@ -615,18 +405,12 @@ void MorphToColorEntity(Entity *pEnt, bool bRecursive, int timeMS, unsigned int 
 		MorphToColorEntity( *itor, bRecursive, timeMS, color, delayBeforeActionMS);
 		itor++;
 	}
-
 }
 
 
 EntityComponent * PulsateColorEntity(Entity *pEnt, bool bRecursive, unsigned int color, unsigned int pulsateSpeedMS)
 {
-	EntityComponent * pComp = pEnt->AddComponent( new InterpolateComponent);
-	pComp->GetVar("var_name")->Set("colorMod");
-	pComp->GetVar("target")->Set(uint32(color));
-	pComp->GetVar("interpolation")->Set(uint32(INTERPOLATE_SMOOTHSTEP_AS_COLOR));
-	pComp->GetVar("on_finish")->Set(uint32(InterpolateComponent::ON_FINISH_BOUNCE));
-	pComp->GetVar("duration_ms")->Set(uint32(pulsateSpeedMS));
+	EntityComponent* pComp = SetupInterpolateComponent(pEnt, "", "colorMod", uint32(color), pulsateSpeedMS, 0, INTERPOLATE_SMOOTHSTEP_AS_COLOR, InterpolateComponent::ON_FINISH_BOUNCE);
 
 	if (!bRecursive) return pComp;
 
@@ -641,7 +425,6 @@ EntityComponent * PulsateColorEntity(Entity *pEnt, bool bRecursive, unsigned int
 	}
 
 	return pComp;
-
 }
 
 bool IsDisabledEntity(Entity *pEnt)
@@ -717,29 +500,18 @@ void FlashStopEntity(Entity *pEnt)
 void FlashStartEntity(Entity *pEnt, int flashSpeedMS)
 {
 	FlashStopEntity(pEnt);
-	EntityComponent * pComp = pEnt->AddComponent( new InterpolateComponent);
-	pComp->SetName("ic_flash");
+
+	EntityComponent* pComp = SetupInterpolateComponent(pEnt, "ic_flash", "alpha", 1.0f, flashSpeedMS / 2, 0, INTERPOLATE_SMOOTHSTEP, InterpolateComponent::ON_FINISH_BOUNCE);
 	pComp->GetVar("set_value_on_finish")->Set(pEnt->GetVar("alpha")->GetFloat()); //grab a copy of the current alpha, to restore it later
-	pComp->GetVar("var_name")->Set("alpha"); //the var we will be interpolating
-	//pEnt->GetVar("alpha")->Set(0.5f); //set the current alpha
-	pComp->GetVar("target")->Set(float(1)); //how maximum position of the flashing
-	pComp->GetVar("interpolation")->Set(uint32(INTERPOLATE_SMOOTHSTEP));
-	pComp->GetVar("on_finish")->Set(uint32(InterpolateComponent::ON_FINISH_BOUNCE));
-	pComp->GetVar("duration_ms")->Set(uint32(flashSpeedMS/2));
 }
 
 void FlashOnceEntity(Entity *pEnt, int flashSpeedMS)
 {
 	pEnt->RemoveComponentByName("ic_flash");
-	EntityComponent * pComp = pEnt->AddComponent( new InterpolateComponent);
-	pComp->SetName("ic_flash");
+
+	EntityComponent* pComp = SetupInterpolateComponent(pEnt, "ic_flash", "alpha", 1.0f, flashSpeedMS / 2, 0, INTERPOLATE_SMOOTHSTEP, InterpolateComponent::ON_FINISH_BOUNCE);
 	pComp->GetVar("set_value_on_finish")->Set(pEnt->GetVar("alpha")->GetFloat()); //grab a copy of the current alpha, to restore it later
-	pComp->GetVar("var_name")->Set("alpha"); //the var we will be interpolating
-	pComp->GetVar("target")->Set(float(1)); //how maximum position of the flashing
-	pComp->GetVar("interpolation")->Set(uint32(INTERPOLATE_SMOOTHSTEP));
 	pComp->GetVar("deleteAfterPlayCount")->Set(uint32(2));
-	pComp->GetVar("on_finish")->Set(uint32(InterpolateComponent::ON_FINISH_BOUNCE));
-	pComp->GetVar("duration_ms")->Set(uint32(flashSpeedMS/2));
 }
 
 void FadeEntity(Entity *pEnt, bool bRecursive, float alpha, int timeMS, int delayBeforeFadingMS,  bool bAllowMultipleFadesActiveAtOnce)
@@ -747,24 +519,10 @@ void FadeEntity(Entity *pEnt, bool bRecursive, float alpha, int timeMS, int dela
 	if (!bAllowMultipleFadesActiveAtOnce)
 	{
 		while (pEnt->RemoveComponentByName("ic_fade"));
-
 	}
-	EntityComponent * pComp = pEnt->AddComponent( new InterpolateComponent);
+
+	EntityComponent* pComp = SetupInterpolateComponent(pEnt, "", "alpha", alpha, timeMS, delayBeforeFadingMS);
 	pComp->SetName("ic_fade");
-	pComp->GetVar("var_name")->Set("alpha");
-	pComp->GetVar("target")->Set(alpha);
-	pComp->GetVar("interpolation")->Set(uint32(INTERPOLATE_SMOOTHSTEP));
-	pComp->GetVar("on_finish")->Set(uint32(InterpolateComponent::ON_FINISH_DIE));
-
-	if (delayBeforeFadingMS == 0)
-	{
-		//do it now
-		pComp->GetVar("duration_ms")->Set(uint32(timeMS));
-	} else
-	{
-		//trigger it to start later
-		GetMessageManager()->SetComponentVariable(pComp, delayBeforeFadingMS, "duration_ms", Variant(uint32(timeMS)));
-	}
 
 	if (!bRecursive) return;
 
@@ -781,22 +539,7 @@ void FadeEntity(Entity *pEnt, bool bRecursive, float alpha, int timeMS, int dela
 
 void FadeOutEntity(Entity *pEnt, bool bRecursive, int timeMS, int delayBeforeFadingMS)
 {
-
-	EntityComponent * pComp = pEnt->AddComponent( new InterpolateComponent);
-	pComp->GetVar("var_name")->Set("alpha");
-	pComp->GetVar("target")->Set(0.0f);
-	pComp->GetVar("interpolation")->Set(uint32(INTERPOLATE_SMOOTHSTEP));
-	pComp->GetVar("on_finish")->Set(uint32(InterpolateComponent::ON_FINISH_DIE));
-
-	if (delayBeforeFadingMS == 0)
-	{
-		//do it now
-		pComp->GetVar("duration_ms")->Set(uint32(timeMS));
-	} else
-	{
-		//trigger it to start later
-		GetMessageManager()->SetComponentVariable(pComp, delayBeforeFadingMS, "duration_ms", Variant(uint32(timeMS)));
-	}
+	SetupInterpolateComponent(pEnt, "", "alpha", 0.0f, timeMS, delayBeforeFadingMS);
 
 	if (!bRecursive) return;
 
@@ -836,27 +579,13 @@ void ScaleEntity(Entity *pEnt, float scaleStart, float scaleEnd, int timeMS, int
 {
 	pEnt->RemoveComponentByName("ic_scale");
 
-	EntityComponent * pComp = pEnt->AddComponent( new InterpolateComponent);
+	EntityComponent * pComp = SetupInterpolateComponent(pEnt, "", "scale2d", CL_Vec2f(scaleEnd, scaleEnd), timeMS, delayBeforeStartingMS);
 	pComp->SetName("ic_scale");
-	pComp->GetVar("var_name")->Set("scale2d");
+
 	if (scaleStart != -1)
 	{
 		pEnt->GetVar("scale2d")->Set(CL_Vec2f(scaleStart, scaleStart));
 	}
-	pComp->GetVar("target")->Set(CL_Vec2f(scaleEnd, scaleEnd));
-	pComp->GetVar("interpolation")->Set(uint32(INTERPOLATE_SMOOTHSTEP));
-	pComp->GetVar("on_finish")->Set(uint32(InterpolateComponent::ON_FINISH_DIE));
-
-	if (delayBeforeStartingMS == 0)
-	{
-		//do it now
-		pComp->GetVar("duration_ms")->Set(uint32(timeMS));
-	} else
-	{
-		//trigger it to start later
-		GetMessageManager()->SetComponentVariable(pComp, delayBeforeStartingMS, "duration_ms", Variant(uint32(timeMS)));
-	}
-
 }
 
 void KillEntity(Entity *pEnt, int timeMS, eTimingSystem timingSystem)
@@ -940,12 +669,12 @@ Entity * CreateOverlayRectEntity(Entity *pParent, CL_Rectf posAndBoundsRect, uin
 		pComp->GetVar("visualStyle")->Set(uint32(style));
 	}
 	return pEnt;
-};
+}
 
 Entity * CreateOverlayRectEntity(Entity *pParent, CL_Vec2f vPos, CL_Vec2f vBounds, uint32 color, RectRenderComponent::eVisualStyle style)
 {
 	return CreateOverlayRectEntity(pParent, CL_Rectf(vPos, *((CL_Sizef*)&vBounds) ), color, style);
-};
+}
 
 
 Entity * CreateButtonHotspot(Entity *pParentEnt, string name, CL_Vec2f vPos, CL_Vec2f vBounds, Button2DComponent::eButtonStyle buttonStyle)
@@ -1830,7 +1559,7 @@ EntityComponent * CreateSlider(Entity *pBG, float x, float y, float sizeX, strin
 	SetAlignmentEntity(pSliderButton, ALIGNMENT_CENTER);
 	pSliderComp->GetVar("sliderButton")->Set(pSliderButton);
 	return pSliderComp;
-};
+}
 
 
 void AdjustGUIElementForWindowView(Entity *pEnt, CL_Rectf r, float rotation)

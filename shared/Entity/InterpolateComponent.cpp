@@ -76,7 +76,6 @@ void InterpolateComponent::OnAdd(Entity *pEnt)
 	m_pTimingSystem = &GetVarWithDefault("timingSystem", Variant(uint32(GetBaseApp()->GetActiveTimingSystem())))->GetUINT32();
 	m_pVarName = &GetVar("var_name")->GetString(); //local to us
 	m_pDuration = &GetVar("duration_ms")->GetUINT32();
-	m_pVarName = &GetVar("var_name")->GetString();
 	m_pDeleteAfterPlayCount = &GetVar("deleteAfterPlayCount")->GetUINT32();
 	m_pPlayCount = &GetVar("playCount")->GetUINT32();
 	m_pOnFinish = &GetVarWithDefault("on_finish", Variant( uint32(ON_FINISH_DIE)))->GetUINT32();
