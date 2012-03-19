@@ -23,4 +23,5 @@
 
 - (void) BuyItemByID:(string)itemID;
 - (void) InitIAP; //call once after initting
+- (void) GetProductData: (string)itemID; //Not finished, don't use
 @end

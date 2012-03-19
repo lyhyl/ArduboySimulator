@@ -77,6 +77,8 @@ public:
 	virtual void Suspend(); //stop all audio, app when into background or something
 	virtual void Resume(); //restore audio that was stopped
 
+	FMOD::System * GetSystem() {return system;}
+
 private:
 	
 	FMOD::System     *system;
@@ -89,6 +91,7 @@ protected:
 private:
 };
 
+void FMOD_ERROR_CHECK(FMOD_RESULT result);
 
 #endif // AudioManagerFMOD_h__
 #endif

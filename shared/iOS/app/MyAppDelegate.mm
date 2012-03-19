@@ -241,6 +241,9 @@
 			LogMsg("iOS> BUYING %s", pMsg->m_string.c_str());
 #ifdef RT_IAP_SUPPORT
 
+#ifdef _DEBUG
+            [m_IOSIAPManager GetProductData:pMsg->m_string]; //prints debug into to the xcode log, only for debugging
+#endif
             [m_IOSIAPManager BuyItemByID:pMsg->m_string];
 #else
             LogMsg("ERROR: RT_IAP_SUPPORT must be defined in xcode settings, and InAppPurchaseManager.mm added to the project if it's not!");

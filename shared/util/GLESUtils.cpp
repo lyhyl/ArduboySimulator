@@ -213,6 +213,11 @@ void DrawFilledRect(float x, float y, float sizeX, float sizeY, uint32 color)
 	GenerateFillRect(color, x, y, sizeX, sizeY);
 }
 
+void DrawFilledRect(CL_Vec2f vPos, CL_Vec2f vSize, uint32 color)
+{
+	GenerateFillRect(color, vPos.x, vPos.y, vSize.x, vSize.y);
+}
+
 void DrawRect(const CL_Rectf &r, uint32 color, float lineWidth)
 {
 	DrawRect(r.left, r.top, r.get_width(), r.get_height(), color, lineWidth);

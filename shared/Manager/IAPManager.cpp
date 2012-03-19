@@ -30,7 +30,12 @@ bool IAPManager::IsItemPurchased( const string item)
 void IAPManager::OnMessage( Message &m )
 {
 
-	if (m_state == STATE_NONE) return;
+	if (m_state == STATE_NONE) 
+	{
+#ifdef SHOW_DEBUG_IAP_MESSAGES
+		LogMsg("Ignoring IAP response, wrong state: %d - Extra: %s", (int)m.GetParm1(), m_extraData.c_str());
+#endif		return;
+	}
 
 
 	if (m.GetType() == MESSAGE_TYPE_IAP_RESULT)
@@ -189,10 +194,10 @@ void IAPManager::Update()
 			{
 				//WebOS & iOS
 
-				//GetMessageManager()->SendGUIStringEx(MESSAGE_TYPE_IAP_RESULT,(float)IAPManager::RESULT_OK,0.0f,0, "Faked order!");
+				GetMessageManager()->SendGUIStringEx(MESSAGE_TYPE_IAP_RESULT,(float)IAPManager::RESULT_OK,0.0f,0, "Faked order!");
 
 				//or, to test for a failed transaction
-				GetMessageManager()->SendGUIStringEx(MESSAGE_TYPE_IAP_RESULT,(float)IAPManager::RESULT_USER_CANCELED,0.0f,0, "Faked order!");
+				//GetMessageManager()->SendGUIStringEx(MESSAGE_TYPE_IAP_RESULT,(float)IAPManager::RESULT_USER_CANCELED,0.0f,0, "Faked order!");
 
 			}
 

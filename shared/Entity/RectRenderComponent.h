@@ -27,8 +27,9 @@ public:
 
 	enum eVisualStyle
 	{
-		STYLE_NORMAL,
-			STYLE_3D
+		STYLE_NORMAL, //filled rect
+			STYLE_3D, //filled with crappy 3d effect
+			STYLE_BORDER_ONLY
 	};
 
 private:
