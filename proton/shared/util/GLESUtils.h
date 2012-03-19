@@ -15,6 +15,7 @@ void DrawRect(const rtRectf &r, uint32 color  = MAKE_RGBA(255,255,255,255), floa
 void DrawFilledRect(const CL_Rectf &r, uint32 color);
 void DrawFilledRect(rtRectf &r, uint32 color);
 void DrawFilledRect(rtRect &r, uint32 color);;
+void DrawFilledRect(CL_Vec2f vPos, CL_Vec2f vSize, uint32 color);
 void DrawLine( GLuint rgba, float ax, float ay, float bx, float by, float lineWidth = 2.0f);
 void DrawSurface2D( Surface* pSurf, GLint *pDestCoords, GLint *pSrcRect, unsigned int color);
 void SetupOrtho();

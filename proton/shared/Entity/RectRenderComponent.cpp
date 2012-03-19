@@ -63,7 +63,10 @@ void RectRenderComponent::OnRender(VariantList *pVList)
 			//manual rectangle version of a progress bar
 			//vFinalPos -= GetAlignmentOffset(*m_pSize2d, eAlignment(*m_pAlignment));	
 			CL_Rectf r = CL_Rectf(vFinalPos.x, vFinalPos.y, vFinalPos.x+ m_pSize2d->x, vFinalPos.y+m_pSize2d->y); 
-			DrawFilledRect(r, color);
+			if (*m_pVisualStyle != STYLE_BORDER_ONLY)
+			{
+				DrawFilledRect(r, color);
+			}
 			
 			if (GET_ALPHA(*m_pBorderColor) > 0)
 			{
@@ -79,8 +82,8 @@ void RectRenderComponent::OnRender(VariantList *pVList)
 				shadedColor = ColorCombineMix(color, MAKE_RGBA(255,255,255 ,255), 0.4f);
 				DrawLine(shadedColor, vFinalPos.x, vFinalPos.y, vFinalPos.x,vFinalPos.y+m_pSize2d->y, 1);
 				DrawLine(shadedColor, vFinalPos.x, vFinalPos.y, vFinalPos.x+m_pSize2d->x,vFinalPos.y, 1);
-		
 			}
+
 			if (*m_pRotation != 0)
 			{
 				PopRotationMatrix();

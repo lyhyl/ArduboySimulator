@@ -1735,3 +1735,17 @@ void SetVisibleEntity(Entity *pEnt, bool bVisible)
 	pEnt->GetVar("visible")->Set(uint32(bVisible));
 }
 
+void CopyPropertiesToEntity(Entity *pToEnt, Entity *pFromEnt, const string varName1, const string varName2, const string varName3)
+{
+	pToEnt->GetVar(varName1)->Set(*pFromEnt->GetVar(varName1));
+
+	if (!varName2.empty())
+	{
+		pToEnt->GetVar(varName2)->Set(*pFromEnt->GetVar(varName2));
+	}
+
+	if (!varName3.empty())
+	{
+		pToEnt->GetVar(varName3)->Set(*pFromEnt->GetVar(varName3));
+	}
+}

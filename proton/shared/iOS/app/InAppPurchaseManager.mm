@@ -11,20 +11,22 @@
 
 @implementation InAppPurchaseManager
 
-/*
+
  
  //we'd only need this stuff to scan the store and get names and prices... Not implemented yet! 
-- (void)requestProUpgradeProductData
+- (void)GetProductData: (string)itemID
 {
-    LogMsg("Requesting product data");
-    NSSet *productIdentifiers = [NSSet setWithObject:@"com.rtsoft.rtadtest.points" ];
+    NSString *str =  [NSString stringWithCString: itemID.c_str() encoding: [NSString defaultCStringEncoding]];
+
+    LogMsg("Requesting product data for %s", itemID.c_str());
+    NSSet *productIdentifiers = [NSSet setWithObject:str ];
     productsRequest = [[SKProductsRequest alloc] initWithProductIdentifiers:productIdentifiers];
     productsRequest.delegate = self;
     [productsRequest start];
     
     // we will release the request object in the delegate callback
 }
-*/
+
 
 
 - (void)request:(SKRequest *)request didFailWithError:(NSError *)error

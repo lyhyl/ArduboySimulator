@@ -353,7 +353,7 @@ void InputTextRenderComponent::OnInput( VariantList *pVList )
 
 	eMessageType messageType = eMessageType( int(pVList->Get(0).GetFloat()));
 
-	if (!m_pHasFocus)
+	if (!*m_pHasFocus)
 	{
 		//well, there is one exception to a keypress we'll process, if nobody else focus, and it's an enter, and we're
 		//instructed to give ourselves focus if enter is hit, then ok.
@@ -407,6 +407,7 @@ void InputTextRenderComponent::OnInput( VariantList *pVList )
 			//a proton virtual key, like f1 or something. Ignore
 			break;
 		}
+
 
 		char c = (char)pVList->Get(2).GetUINT32();
 		

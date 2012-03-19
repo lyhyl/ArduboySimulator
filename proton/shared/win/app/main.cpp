@@ -453,10 +453,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		switch (wParam)
 		{
 	
-		case VK_ESCAPE:
+		//case VK_ESCAPE:
 
 			//g_escapeMessageSent = true;
-			break;
+		//	break;
 
 		case VK_RETURN:
 			{
@@ -530,24 +530,28 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				int wmCharKey = VKeyToWMCharKey(wParam);
 				if (wmCharKey != 0)
 				{
+					if (wmCharKey == 27)
+					{
+						wmCharKey = VIRTUAL_KEY_BACK; //we use this instead of escape for consistency across platforms
+					}
 					if (wmCharKey == wParam && wParam != 13 && wParam != 8)
 					{
 						//no conversion was done, it may need additional vkey processing
 						if (wmCharKey >= VK_F1 &&wmCharKey <= VK_F24)
 						{
-							GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, ConvertWindowsKeycodeToProtonVirtualKey(wmCharKey), 1.0f);  
+							GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, (float)ConvertWindowsKeycodeToProtonVirtualKey(wmCharKey), 1.0f);  
 						} else
 						{
 							if (wmCharKey <= 90)
 							{
-								GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, wmCharKey, 1.0f);  
+								GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, (float)wmCharKey, 1.0f);  
 							}
 						}
 
 					} else
 					{
 						//normal
-						GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, wmCharKey, 1.0f);  
+						GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, (float)wmCharKey, 1.0f);  
 					}
 				}
 
@@ -578,6 +582,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 #endif
 			uint32 key = ConvertWindowsKeycodeToProtonVirtualKey(wParam);
 
+			/*
 			if (key == VIRTUAL_KEY_BACK)
 			{
 				if (!g_escapeMessageSent)
@@ -590,6 +595,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 				g_escapeMessageSent = false;
 			}
+			*/
+
 			GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW, float(key) , float(0));  
 		}
 	break;
@@ -700,7 +707,6 @@ void CenterWindow(HWND hWnd)
 
 bool InitVideo(int width, int height, bool bFullscreen, float aspectRatio)
 {
-
 	LogMsg("Setting native video mode to %d, %d - Fullscreen: %d  Aspect Ratio: %.2f", width, height, int(bFullscreen), aspectRatio);
 	g_winVideoScreenY = height;
 	g_winVideoScreenX = width;
@@ -760,7 +766,6 @@ bool InitVideo(int width, int height, bool bFullscreen, float aspectRatio)
 	{
 		//actually, do it this way:
 		style = WS_POPUP;
-
 	}
 
 	g_bIsFullScreen = bFullscreen;
@@ -820,7 +825,6 @@ assert(!g_hDC);
 		MessageBox(0, _T("Failed to create the device context"), _T("Error"), MB_OK|MB_ICONEXCLAMATION);
 		return false;
 	}
-
 
 #ifndef C_GL_MODE
 	g_eglDisplay = eglGetDisplay((NativeDisplayType) g_hDC);
@@ -1272,9 +1276,8 @@ void LogMsg ( const char* traceStr, ... )
 	if (IsBaseAppInitted())
 	{
 		GetBaseApp()->GetConsole()->AddLine(buffer);
-	
-	strcat(buffer, "\r\n");
-	AddText(buffer, "log.txt");
+		strcat(buffer, "\r\n");
+		AddText(buffer, "log.txt");
 	}
 
 }

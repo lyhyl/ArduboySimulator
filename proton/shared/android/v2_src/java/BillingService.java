@@ -406,7 +406,7 @@ public class BillingService extends Service implements ServiceConnection {
         } else if (Consts.ACTION_RESPONSE_CODE.equals(action))
          {
          
-                     Log.i("BillingService", "Got ACTION_RESPONSE_COD: " + action);
+                     Log.i("BillingService", "Got ACTION_RESPONSE_CODE: " + action);
      
             long requestId = intent.getLongExtra(Consts.INAPP_REQUEST_ID, -1);
             int responseCodeIndex = intent.getIntExtra(Consts.INAPP_RESPONSE_CODE,
@@ -576,7 +576,7 @@ public class BillingService extends Service implements ServiceConnection {
        
        if (responseCode != ResponseCode.RESULT_OK)
        {
-          Log.d(TAG, "Sending result error");
+          Log.d(TAG, "Sending result error...");
            SharedActivity.nativeSendGUIEx(SharedActivity.app.MESSAGE_TYPE_IAP_RESULT, responseCode.ordinal(),0,0);
        }
       

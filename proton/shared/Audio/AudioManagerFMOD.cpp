@@ -5,7 +5,7 @@
 #include "AudioManagerFMOD.h"
 #include "util/MiscUtils.h"
 
-void ERRCHECK(FMOD_RESULT result)
+void FMOD_ERROR_CHECK(FMOD_RESULT result)
 {
 	if (result != FMOD_OK)
 	{
@@ -37,9 +37,9 @@ bool AudioManagerFMOD::Init()
 
 
 	result = FMOD::System_Create(&system);
-	ERRCHECK(result);
+	FMOD_ERROR_CHECK(result);
 	result = system->getVersion(&version);
-	ERRCHECK(result);
+	FMOD_ERROR_CHECK(result);
 
 	if (version < FMOD_VERSION)
 	{
@@ -48,12 +48,12 @@ bool AudioManagerFMOD::Init()
 		return 0;
 	}
 	result = system->getNumDrivers(&numdrivers);
-	ERRCHECK(result);
+	FMOD_ERROR_CHECK(result);
 
 	if (numdrivers == 0)
 	{
 		result = system->setOutput(FMOD_OUTPUTTYPE_NOSOUND);
-		ERRCHECK(result);
+		FMOD_ERROR_CHECK(result);
 	}
 	else
 	{
@@ -62,24 +62,24 @@ bool AudioManagerFMOD::Init()
         //if you get an error about incorrect number of args, go download the latest fmod version! -Seth
         result = system->getDriverCaps(0, &caps, 0, &speakermode);
 
-		ERRCHECK(result);
+		FMOD_ERROR_CHECK(result);
 
 		result = system->setSpeakerMode(speakermode);       /* Set the user selected speaker mode. */
-		ERRCHECK(result);
+		FMOD_ERROR_CHECK(result);
 
 		if (caps & FMOD_CAPS_HARDWARE_EMULATED)             /* The user has the 'Acceleration' slider set to off!  This is really bad for latency!. */
 		{                                                   /* You might want to warn the user about this. */
 			result = system->setDSPBufferSize(1024, 10);
-			ERRCHECK(result);
+			FMOD_ERROR_CHECK(result);
 		}
 
 		result = system->getDriverInfo(0, name, 256, 0);
-		ERRCHECK(result);
+		FMOD_ERROR_CHECK(result);
 
 		if (strstr(name, "SigmaTel"))   /* Sigmatel sound devices crackle for some reason if the format is PCM 16bit.  PCM floating point output seems to solve it. */
 		{
 			result = system->setSoftwareFormat(48000, FMOD_SOUND_FORMAT_PCMFLOAT, 0,0, FMOD_DSP_RESAMPLER_LINEAR);
-			ERRCHECK(result);
+			FMOD_ERROR_CHECK(result);
 		}
 	}
 
@@ -87,10 +87,10 @@ bool AudioManagerFMOD::Init()
 	if (result == FMOD_ERR_OUTPUT_CREATEBUFFER)         /* Ok, the speaker mode selected isn't supported by this soundcard.  Switch it back to stereo... */
 	{
 		result = system->setSpeakerMode(FMOD_SPEAKERMODE_STEREO);
-		ERRCHECK(result);
+		FMOD_ERROR_CHECK(result);
 
 		result = system->init(32, FMOD_INIT_NORMAL, 0);/* ... and re-init. */
-		ERRCHECK(result);
+		FMOD_ERROR_CHECK(result);
 	}
 
 	return true;
@@ -150,9 +150,9 @@ void AudioManagerFMOD::Kill()
 		KillCachedSounds(true, true, 0, 100, true);
 		FMOD_RESULT  result;
 		result = system->close();
-		ERRCHECK(result);
+		FMOD_ERROR_CHECK(result);
 		result = system->release();
-		ERRCHECK(result);
+		FMOD_ERROR_CHECK(result);
 		system = NULL;
 	}
 }
@@ -258,7 +258,7 @@ void AudioManagerFMOD::Preload( string fName, bool bLooping /*= false*/, bool bI
 
 			pObject->m_bIsLooping = bLooping;
 
-		ERRCHECK(result);
+		FMOD_ERROR_CHECK(result);
 		m_soundList.push_back(pObject);
 	}
 }
@@ -308,7 +308,7 @@ AudioHandle AudioManagerFMOD::Play( string fName, bool bLooping /*= false*/, boo
 	{
 
 		result = system->playSound(FMOD_CHANNEL_REUSE, pObject->m_pSound, false, &m_pMusicChannel);
-		ERRCHECK(result);
+		FMOD_ERROR_CHECK(result);
 		if (m_pMusicChannel && bLooping)
 		{
 			m_pMusicChannel->setLoopCount(-1);
@@ -328,7 +328,7 @@ AudioHandle AudioManagerFMOD::Play( string fName, bool bLooping /*= false*/, boo
 	} else
 	{
 		result = system->playSound(FMOD_CHANNEL_FREE, pObject->m_pSound, false, &pChannel);
-		ERRCHECK(result);
+		FMOD_ERROR_CHECK(result);
 		if (pChannel && bLooping)
 		{
 			pChannel->setLoopCount(-1);

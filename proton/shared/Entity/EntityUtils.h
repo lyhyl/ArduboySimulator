@@ -251,4 +251,7 @@ void SetVisibleEntity(Entity *pEnt, bool bVisible);
 
 void SetProgressBarPercent(Entity *pEnt, float progressPercent);
 float EnforceMinimumFontLineToScreenRatio(eFont fontID, float fontScale, float minLineToScreenRatio);
+
+//Copies one or more properties by name from one entity to another
+void CopyPropertiesToEntity(Entity *pToEnt, Entity *pFromEnt, const string varName1, const string varName2="", const string varName3="");
 #endif // EntityUtils_h__
