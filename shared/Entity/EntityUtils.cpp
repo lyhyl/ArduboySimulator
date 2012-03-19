@@ -35,6 +35,14 @@ Entity * CreateOverlayButtonEntity(Entity *pParentEnt, string name, string fileN
 	return pButtonEnt;
 }
 
+/**
+ * Sets up an \c InterpolateComponent in an \c Entity.
+ *
+ * \param componentName if not empty tries to find a pre-existing \c InterpolateComponent
+ * with the given name from the \c Entity. If no such component is found, a new \c InterpolateComponent
+ * is created to the \c Entity and its name is set to this value. If this argument is an empty
+ * string it is ignored.
+ */
 EntityComponent* SetupInterpolateComponent(Entity *pEnt, const string& componentName, const string& varName, const Variant& targetValue, int durationMS, int delayBeforeStartMS, eInterpolateType interpolationType = INTERPOLATE_SMOOTHSTEP, InterpolateComponent::eOnFinish onFinish = InterpolateComponent::ON_FINISH_DIE)
 {
 	EntityComponent *pComp = NULL;
@@ -48,7 +56,9 @@ EntityComponent* SetupInterpolateComponent(Entity *pEnt, const string& component
 	{
 		//doesn't exist, create one
 		pComp = pEnt->AddComponent(new InterpolateComponent);
-		pComp->SetName(componentName);
+		if (!componentName.empty()) {
+			pComp->SetName(componentName);
+		}
 	}
 
 	pComp->GetVar("var_name")->Set(varName);
