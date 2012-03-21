@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="winRTLooneyLadders"
+	Name="RTLooneyLadders"
 	ProjectGUID="{EDF3C631-F9BD-4E50-BD8F-804734B7ECAF}"
-	RootNamespace="winRTLooneyLadders"
+	RootNamespace="RTLooneyLadders"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
