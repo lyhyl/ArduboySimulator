@@ -288,7 +288,7 @@ void LogDisplayComponent::SetConsole( Console *pConsole )
 	if (m_pActiveConsole)
 	{
 		//remove any old signals we had
-		m_pActiveConsole->m_sig_on_text_added.disconnect(this);
+		m_pActiveConsole->m_sig_on_text_added.disconnect(boost::bind(&LogDisplayComponent::OnTextAdded, this));
 	}
 	SAFE_DELETE(m_pInternalConsole);
 	m_pActiveConsole = pConsole;

@@ -1,5 +1,6 @@
 #include "PlatformPrecomp.h"
 #include "MathUtils.h"
+#include "MiscUtils.h"
 
 void ApplyOffset(CL_Rectf *pR, const CL_Vec2f &vOffset)
 {
@@ -240,25 +241,24 @@ float ModNearestInt(float a, float b)
 	return  (float)(a - b * sethround(a / b));
 }
 
-/*
+
 //let's you know how close two angles are to eachother.  Handles wrapping and such
 bool AnglesAreClose(float a, float b, float angleTolerance)
 {
 
-	a = fmod(a, PI2);
-	b = fmod(b, PI2);
+	a = fmod(a, M_PI*2);
+	b = fmod(b, M_PI*2);
 
-	float mi = MIN(a, b);
-	float mx = MAX(a, b);
+	float mi = rt_min(a, b);
+	float mx = rt_max(a, b);
 
 	if (  !(( mx - mi) < angleTolerance) &&
-		( !(  (mi + PI2) - mx < angleTolerance))) return false;
+		( !(  (mi + M_PI*2) - mx < angleTolerance))) return false;
 
 	return true;
 }
 
 
-*/
 
 float GetAngleBetweenTwoAnglesRadians(float a, float b)
 {
