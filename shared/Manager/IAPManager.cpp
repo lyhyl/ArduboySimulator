@@ -33,7 +33,11 @@ void IAPManager::OnMessage( Message &m )
 	if (m_state == STATE_NONE) 
 	{
 #ifdef SHOW_DEBUG_IAP_MESSAGES
-		LogMsg("Ignoring IAP response, wrong state: %d - Extra: %s", (int)m.GetParm1(), m_extraData.c_str());
+	
+		if (m.GetType() == MESSAGE_TYPE_IAP_RESULT || m.GetType() == MESSAGE_TYPE_IAP_ITEM_STATE)
+		{
+			LogMsg("Ignoring IAP response, wrong state: %d - Extra: %s", (int)m.GetParm1(), m_extraData.c_str());
+		}
 #endif		return;
 	}
 
