@@ -91,12 +91,13 @@ string GetBaseAppPath()
 	CFBundleRef mainBundle = CFBundleGetMainBundle();
     CFURLRef resourcesURL = CFBundleCopyBundleURL(mainBundle);
     char path[PATH_MAX];
-    if (!CFURLGetFileSystemRepresentation(resourcesURL, TRUE, (UInt8 *)path, PATH_MAX))
+	Boolean const success = CFURLGetFileSystemRepresentation(resourcesURL, TRUE, (UInt8 *)path, PATH_MAX);
+    CFRelease(resourcesURL);	
+    if (!success)
     {
         LogMsg("Can't change to Resources directory; something's seriously wrong\n");
 		return "";
     }
-    CFRelease(resourcesURL);
 
 	return string(path)+"/";
 	

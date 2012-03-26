@@ -354,6 +354,19 @@ string GetClipboardText()
 	return text;
 }
 
+//donated by PhilHassey - uncomment when needed and when can verify it compiles ok
+
+/*
+void SetClipboardText(std::string v)
+{
+     NSPasteboard *pb = [NSPasteboard generalPasteboard];
+     NSString *data = [[NSString alloc] initWithUTF8String: v.c_str()];
+     [pb clearContents];
+     [pb setString:data forType: NSStringPboardType];
+     [data release];
+}
+*/
+
 bool IsDesktop()
 {
 	if (GetEmulatedPlatformID() == PLATFORM_ID_WINDOWS || GetEmulatedPlatformID() == PLATFORM_ID_OSX
