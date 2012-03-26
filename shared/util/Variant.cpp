@@ -463,6 +463,7 @@ bool VariantList::SerializeFromMem(byte *pSrc, int bufferSize )
 				memcpy(&v, pSrc, sizeof(CL_Rectf));
 				pSrc += sizeof(CL_Rectf);
 				m_variant[index].Set(v);
+				break;
 			}
 
 		default:

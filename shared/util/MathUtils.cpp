@@ -243,7 +243,7 @@ float ModNearestInt(float a, float b)
 
 
 
-//Note - don't use this, fmod isn't found in iOS... possibly other platforms
+//Note - don't use this, fmod isn't found in iOS... possibly other platforms.. or did I just need to include #include <stdlib.h> ?  -Seth
 //let's you know how close two angles are to eachother.  Handles wrapping and such
 /*
 bool AnglesAreClose(float a, float b, float angleTolerance)
