@@ -164,7 +164,33 @@ void FlashStartEntity(Entity *pEnt, int flashSpeedMS = 250);
 void FlashStopEntity(Entity *pEnt);
 void FlashOnceEntity(Entity *pEnt, int flashSpeedMS);
 
+/**
+ * Sets the filename of an \c OverlayRenderComponent found from \a pEntWithOverlayComponent.
+ *
+ * The entity must contain an \c OverlayRenderComponent named "OverlayRender" (which is
+ * the default name for that component). Otherwise an assert occurs.
+ *
+ * The "fileName" attribute of the \c OverlayRenderComponent is set to \a imageFileName.
+ *
+ * If \a delayBeforeActionMS is greater than 0 then the "fileName" attribute is set only after
+ * a delay of \a delayBeforeActionMS milliseconds.
+ *
+ * \return the \c OverlayRenderComponent that got modified.
+ */
 EntityComponent * SetOverlayImageEntity(Entity *pEntWithOverlayComponent, string imageFileName, uint32 delayBeforeActionMS = 0);
+/**
+ * Gets the filename of an \c OverlayRenderComponent found from \a pEntWithOverlayComponent.
+ *
+ * The entity should contain an \c OverlayRenderComponent named "OverlayRender" (which is
+ * the default name for that component). The returned value is the current value of the
+ * "fileName" attribute in that component.
+ *
+ * Returns an empty string if:
+ * - no component named "OverlayRender" is found in the entity, or
+ * - the found component has no attribute named "fileName", or
+ * - the attribute really is an empty string
+ */
+std::string GetOverlayImageEntity(Entity *pEntWithOverlayComponent);
 
 EntityComponent * SetupAnimEntity(Entity *pEnt, uint32 frameCountX, uint32 frameCountY = 1, int curFrameX = -1, int curFrameY = -1); //-1 means don't set it
 void AnimateEntity(Entity *pEnt, int startFrame, int endFrame, int animSpeedMS, InterpolateComponent::eOnFinish type, int delayToStartMS);

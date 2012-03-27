@@ -36,7 +36,7 @@ void Variant::SetVariant( Variant *pVar ) //needed this because boost was confus
 	Set(*pVar);
 }
 
-void Variant::Set( Variant &v )
+void Variant::Set(const Variant &v )
 {
 	
 	//update our data from another variant object
@@ -76,6 +76,55 @@ void Variant::Set( Variant &v )
 	}
 
 	if (m_pSig_onChanged) (*m_pSig_onChanged)(this);
+}
+
+bool Variant::operator==(const Variant& rhs) const
+{
+	if (GetType() != rhs.GetType()) {
+		return false;
+	}
+
+	switch (GetType())
+	{
+	case TYPE_UNUSED:
+		return true;
+
+	case TYPE_FLOAT:
+		return GetFloat() == rhs.GetFloat();
+
+	case TYPE_STRING:
+		return GetString() == rhs.GetString();
+
+	case TYPE_VECTOR2:
+		return GetVector2() == rhs.GetVector2();
+
+	case TYPE_VECTOR3:
+		return GetVector3() == rhs.GetVector3();
+
+	case TYPE_UINT32:
+		return GetUINT32() == rhs.GetUINT32();
+
+	case TYPE_ENTITY:
+		return GetEntity() == rhs.GetEntity();
+
+	case TYPE_COMPONENT:
+		return GetComponent() == rhs.GetComponent();
+
+	case TYPE_RECT:
+		return GetRect() == rhs.GetRect();
+
+	case TYPE_INT32:
+		return GetINT32() == rhs.GetINT32();
+
+	default:
+		assert(!"No equals operator for this type yet implemented");
+		return false;
+	}
+}
+
+bool Variant::operator!=(const Variant& rhs) const
+{
+	return !operator==(rhs);
 }
 
 std::string Variant::Print()

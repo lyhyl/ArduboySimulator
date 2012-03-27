@@ -91,7 +91,7 @@ public:
 
 	boost::signal<void (Variant*)> * GetSigOnChanged();
 	
-	void Set(Variant &v);
+	void Set(const Variant &v);
 	void SetVariant( Variant *pVar ) /*needed this because boost was confused... */;
 
 	void Set(float var) 
@@ -107,11 +107,16 @@ public:
 		assert(m_type == TYPE_FLOAT);
 		return  *((float*)m_var);
 	}
+	const float & GetFloat() const
+	{
+		assert(m_type == TYPE_FLOAT);
+		return  *((float*)m_var);
+	}
 	
-	void Set(Entity *pEnt)
+	void Set(const Entity *pEnt)
 	{
 		assert(m_type == TYPE_UNUSED || m_type == TYPE_ENTITY);
-		m_type = TYPE_ENTITY;   m_pVoid =  pEnt;
+		m_type = TYPE_ENTITY;   m_pVoid = (void*)pEnt;
 		if (m_pSig_onChanged) (*m_pSig_onChanged)(this);
 	}
 	
@@ -121,17 +126,27 @@ public:
 		assert(m_type == TYPE_ENTITY);
 		return  ((Entity*)m_pVoid);
 	}
+	const Entity * GetEntity() const
+	{
+		assert(m_type == TYPE_ENTITY);
+		return  ((Entity*)m_pVoid);
+	}
 
-	void Set(EntityComponent *pEnt)
+	void Set(const EntityComponent *pEnt)
 	{
 		assert(m_type == TYPE_UNUSED || m_type == TYPE_COMPONENT);
-		m_type = TYPE_COMPONENT;   m_pVoid =  pEnt;
+		m_type = TYPE_COMPONENT;   m_pVoid = (void*)pEnt;
 		if (m_pSig_onChanged) (*m_pSig_onChanged)(this);
 	}
 
 	EntityComponent * GetComponent()
 	{
 		if (m_type == TYPE_UNUSED) Set((Entity*)NULL);
+		assert(m_type == TYPE_COMPONENT);
+		return  ((EntityComponent*)m_pVoid);
+	}
+	const EntityComponent * GetComponent() const
+	{
 		assert(m_type == TYPE_COMPONENT);
 		return  ((EntityComponent*)m_pVoid);
 	}
@@ -149,6 +164,11 @@ public:
 		assert(m_type == TYPE_UINT32);
 		return  *((uint32*)m_var);
 	}
+	const uint32 & GetUINT32() const
+	{
+		assert(m_type == TYPE_UINT32);
+		return  *((uint32*)m_var);
+	}
 
 	void Set(int32 var) 
 	{
@@ -163,9 +183,18 @@ public:
 		assert(m_type == TYPE_INT32);
 		return  *((int32*)m_var);
 	}
+	const int32 & GetINT32() const
+	{
+		assert(m_type == TYPE_INT32);
+		return  *((int32*)m_var);
+	}
 
 	void Set(string const &var);
-	string & GetString() 
+	string & GetString()
+	{
+		return m_string;
+	}
+	const string & GetString() const
 	{
 		return m_string;
 	}
@@ -183,6 +212,11 @@ public:
 			//set a default
 			Set(CL_Vec2f(0,0));
 		}
+		return  *((CL_Vec2f*)m_var);
+	}
+	const CL_Vec2f & GetVector2() const
+	{
+		assert(m_type == TYPE_VECTOR2);
 		return  *((CL_Vec2f*)m_var);
 	}
 
@@ -206,6 +240,11 @@ public:
 		}
 		return  *((CL_Vec3f*)m_var);
 	}
+	const CL_Vec3f & GetVector3() const
+	{
+		assert(m_type == TYPE_VECTOR3);
+		return  *((CL_Vec3f*)m_var);
+	}
 
 	void Set(CL_Rectf const &var) 
 	{
@@ -220,6 +259,11 @@ public:
 			//set a default
 			Set(CL_Rectf(0,0,0,0));
 		}
+		return  *((CL_Rectf*)m_var);
+	}
+	const CL_Rectf & GetRect() const
+	{
+		assert(m_type == TYPE_RECT);
 		return  *((CL_Rectf*)m_var);
 	}
 
@@ -259,7 +303,28 @@ public:
 		return *this; 
 	}
 
+	/**
+	 * Equality operator.
+	 *
+	 * \c Variants are considered equal when their types and values are equal.
+	 *
+	 * If the type is \c TYPE_UNUSED then it doesn't matter what the values
+	 * are, the \c Variants are considered equal.
+	 *
+	 * The values are compared for equality using the values' classes' own \c operator==().
+	 * For example if the type is \c TYPE_VECTOR2 then \c CL_Vec2f::operator==() is used for
+	 * comparing the values.
+	 */
+	bool operator==(const Variant& rhs) const;
 
+	/**
+	 * Inequality operator.
+	 *
+	 * The opposite of operator==().
+	 *
+	 * \see operator==() for a thorough explanation.
+	 */
+	bool operator!=(const Variant& rhs) const;
 
 	void Interpolate(Variant *pA,Variant *pB, float curPos, eInterpolateType type);
 
