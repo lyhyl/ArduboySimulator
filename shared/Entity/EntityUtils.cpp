@@ -302,6 +302,19 @@ EntityComponent * SetOverlayImageEntity(Entity *pEntWithOverlayComponent, string
 	return pComp;
 }
 
+std::string GetOverlayImageEntity(Entity *pEntWithOverlayComponent)
+{
+	EntityComponent *pComp = pEntWithOverlayComponent->GetComponentByName("OverlayRender");
+	if (!pComp)
+	{
+		return "";
+	}
+	Variant *var = pComp->GetVar("fileName");
+	if (!var) {
+		return "";
+	}
+	return var->GetString();
+}
 
 void FadeInEntity(Entity *pEnt, bool bRecursive, int timeMS, int delayBeforeFadingMS)
 {
