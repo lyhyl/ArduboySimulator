@@ -4,8 +4,8 @@ project(rtbarebones)
 
 include(../../shared/linux/Proton.cmake)
 
-proton_include_components(FocusInputComponent FocusRenderComponent)
-proton_include_components(CustomInputComponent ArcadeInputComponent RectRenderComponent)
+proton_include_components(FocusInputComponent)
+proton_include_components(CustomInputComponent ArcadeInputComponent)
 
 set(APP "../source")
 proton_set_sources("${APP}/App.cpp")
