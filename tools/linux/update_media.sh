@@ -33,9 +33,6 @@ done
 
 echo Make fonts
 
-echo Delete all existing packed textures from directory interface
-find interface -depth -name '*.rttex' -delete
-
 find . -depth -name 'font*.txt' -exec ${PACK_EXE} -make_font '{}' ';'
 
 echo Process our images and textures and copy them into the bin directory
@@ -60,16 +57,12 @@ find . -depth -name '*.rttex' -exec ${PACK_EXE} '{}' ';'
 echo Delete things we do not want copied
 rm -f interface/font_*.rttex
 
-rm -rf ../bin/interface
-rm -rf ../bin/audio
-rm -rf ../bin/game
-
 echo Copy the stuff we care about
 
 copy_media_to_bin() {
 	if [[ -d "$1" ]];
 	then
-		sed -e 's/^\..*$/*&/g' "$2" | rsync -v --recursive --exclude-from=- "$1" ../bin
+		sed -e 's/^\..*$/*&/g' "$2" | rsync -v --delete --delete-excluded --recursive --exclude-from=- "$1" ../bin
 	fi
 }
 
