@@ -8,4 +8,4 @@ set(APP "../source")
 include_directories("${APP}")
 
 proton_include_all_components()
-proton_set_sources("${APP}/App.cpp" "${APP}/GUI/MainMenu.cpp" "${APP}/GUI/BasicSpriteFramesScreen.cpp")
+proton_set_sources("${APP}/App.cpp" "${APP}/GUI/GUICommon.cpp" "${APP}/GUI/MainMenu.cpp" "${APP}/GUI/BasicSpriteFramesScreen.cpp" "${APP}/GUI/BasicSpriteAnimationScreen.cpp")

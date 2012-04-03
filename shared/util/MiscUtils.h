@@ -24,7 +24,22 @@ std::string BoolToEnabled(bool bEnabled);
 char *float_to_money( double num, char *buf, int dec); //for legacy code..
 std::string FloatToMoney(float f, int decimalsOfCents = 0);
 
-std::vector<std::string> StringTokenize(const std::string& str,const std::string& delimiters);
+/**
+ * Splits \a str into multiple parts delimited by \a delimiter.
+ *
+ * Examples:
+ *
+ * \code
+ * string str("foo_bar_baz");
+ * StringTokenize(str, "_"); // Returned parts are "foo", "bar" and "baz"
+ * \endcode
+ *
+ * \code
+ * string str("foo***bar****baz");
+ * StringTokenize(str, "**"); // Returned parts are "foo", "*bar", "" (an empty string) and "baz"
+ * \endcode
+ */
+std::vector<std::string> StringTokenize(const std::string& str, const std::string& delimiter);
 std::string PopFirstParmString(std::string *lineInOut, const std::string delimiter = "|"); //removes the first parm from the string sent in, and returns it
 
 //helper to turn anything into a string, like ints/floats

@@ -1,5 +1,6 @@
 #include "MainMenu.h"
 #include "BasicSpriteFramesScreen.h"
+#include "BasicSpriteAnimationScreen.h"
 
 #include "App.h"
 
@@ -10,13 +11,17 @@ void MainMenuOnSelect(VariantList *pVList)
 {
 	Entity *pEntClicked = pVList->m_variant[1].GetEntity();
 
+	Entity *pEntClickedParent = pVList->m_variant[1].GetEntity()->GetParent();
+	pEntClickedParent->RemoveComponentByName("FocusInput");
+	SlideScreen(pEntClickedParent, false);
+	GetMessageManager()->CallEntityFunction(pEntClickedParent, 500, "OnDelete", NULL);
+
 	if (pEntClicked->GetName() == "BasicSpriteFrames")
 	{
-		Entity *pEntClickedParent = pVList->m_variant[1].GetEntity()->GetParent();
-		pEntClickedParent->RemoveComponentByName("FocusInput");
-		SlideScreen(pEntClickedParent, false);
-		GetMessageManager()->CallEntityFunction(pEntClickedParent, 500, "OnDelete", NULL);
 		BasicSpriteFramesScreenCreate(pEntClickedParent->GetParent());
+	} else if (pEntClicked->GetName() == "BasicSpriteAnimation")
+	{
+		BasicSpriteAnimationScreenCreate(pEntClickedParent->GetParent());
 	}
 }
 
@@ -35,8 +40,13 @@ Entity * MainMenuCreate(Entity *pParentEnt)
 	Entity *pButtonEntity;
 	float x = 50;
 	float y = 40;
+	float yDistance = 30;
 
 	pButtonEntity = CreateTextButtonEntity(pBG, "BasicSpriteFrames", x, y, "Basic sprite frames");
+	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MainMenuOnSelect);
+	y += yDistance;
+
+	pButtonEntity = CreateTextButtonEntity(pBG, "BasicSpriteAnimation", x, y, "Basic sprite animation");
 	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MainMenuOnSelect);
 
 	SlideScreen(pBG, true);
