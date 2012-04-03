@@ -18,14 +18,6 @@ InterpolateComponent::~InterpolateComponent()
 
 void InterpolateComponent::OnVarNameChanged(Variant *pDataObject)
 {
-	/*
-	if (m_pVar)
-	{
-		LogError("InterpolateComponent: You can only set the var_name once.  Delete this component and add a new one, instead");
-		return;
-	}
-	*/
-	
 	if (m_pComponentName->length())
 	{
 		EntityComponent * pComp = GetParent()->GetComponentByName(*m_pComponentName);
@@ -39,6 +31,8 @@ void InterpolateComponent::OnVarNameChanged(Variant *pDataObject)
 
 		m_pVar = pComp->GetVar(pDataObject->GetString());
 
+		// If the target component gets deleted we mustn't access its variants anymore
+		pComp->GetFunction("OnDelete")->sig_function.connect(1, boost::bind(&InterpolateComponent::NullifyVarPointer, this, _1));
 	} else
 	{
 		m_pVar = GetParent()->GetVar(pDataObject->GetString());
@@ -93,17 +87,25 @@ void InterpolateComponent::OnAdd(Entity *pEnt)
 
 void InterpolateComponent::OnRemove()
 {
-	
+	SetEndValue();
+	EntityComponent::OnRemove();
+}
+
+void InterpolateComponent::NullifyVarPointer(VariantList *pVList)
+{
+	m_pVar = NULL;
+}
+
+void InterpolateComponent::SetEndValue()
+{
 	if (m_pVar)
 	{
 		Variant *pV = GetShared()->GetVarIfExists("set_value_on_finish");
 		if (pV)
 		{
-			//they want us to set the value we've been changing to this as we exit
 			m_pVar->Set(*pV);
 		}
 	}
-	EntityComponent::OnRemove();
 }
 
 void InterpolateComponent::OnUpdate(VariantList *pVList)
@@ -138,6 +140,7 @@ void InterpolateComponent::OnUpdate(VariantList *pVList)
 				
 				case ON_FINISH_STOP:
 					m_bActive = false;
+					SetEndValue();
 					return;
 					break;
 
