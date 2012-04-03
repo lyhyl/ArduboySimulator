@@ -1,19 +1,9 @@
 #include "BasicSpriteFramesScreen.h"
-
-#include "MainMenu.h"
+#include "GUICommon.h"
 
 #include "Renderer/SpriteSheetSurface.h"
 #include "Entity/SpriteSheetRenderComponent.h"
 #include "Entity/EntityUtils.h"
-
-void GoBack(VariantList *pVList)
-{
-	Entity *pEntClickedParent = pVList->m_variant[1].GetEntity()->GetParent();
-	pEntClickedParent->RemoveComponentByName("FocusInput");
-	SlideScreen(pEntClickedParent, false);
-	GetMessageManager()->CallEntityFunction(pEntClickedParent, 500, "OnDelete", NULL);
-	MainMenuCreate(pEntClickedParent->GetParent());
-}
 
 Entity* CreateSpriteEntity(Entity* pParentEnt, float x, float y, const std::string& frameName)
 {
