@@ -97,7 +97,7 @@ float GetDeviceOSVersion()
 	return 0.0f;
 }
 
-string GetMacAddress()()
+string GetMacAddress()
 {
 	//TODO
 	return ""; //unimplemented

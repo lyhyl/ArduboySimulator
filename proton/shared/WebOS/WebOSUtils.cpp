@@ -690,13 +690,13 @@ float GetDeviceOSVersion()
 	return ((float)PDL_GetPDKVersion())/100.0f;
 }
 
-string GetMacAddress()()
+string GetMacAddress()
 {
 	//TODO
 	return ""; //unimplemented
 }
 
-string GetMacAddress()()
+string GetMacAddress()
 {
 	//TODO
 	return ""; //unimplemented
