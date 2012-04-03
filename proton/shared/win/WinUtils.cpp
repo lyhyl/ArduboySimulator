@@ -104,6 +104,15 @@ float GetDeviceOSVersion()
 	return 0.0f;
 }
 
+std::string GetMacAddress()
+{
+	//TODO
+#ifdef _DEBUG
+	return "DJHASD782323";
+#endif
+	return ""; //unimplemented
+}
+
 string GetClipboardText()
 {
 	string text;

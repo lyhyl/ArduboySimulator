@@ -46,6 +46,7 @@ void TextRenderComponent::OnAdd(Entity *pEnt)
 	m_pColorMod = &GetParent()->GetVarWithDefault("colorMod", Variant(MAKE_RGBA(255,255,255,255)))->GetUINT32();
 	m_pAlpha = &GetParent()->GetVarWithDefault("alpha", Variant(1.0f))->GetFloat();
 	m_pVisible = &GetParent()->GetVarWithDefault("visible", uint32(1))->GetUINT32();
+	m_pDisabled = &GetVarWithDefault("disabled", uint32(0))->GetUINT32();
 
 	//our own stuff
 
@@ -70,7 +71,7 @@ void TextRenderComponent::OnRemove()
 	EntityComponent::OnRemove();
 }
 
-void TextRenderComponent::RenderAsWave(CL_Vec2f vPos)
+void TextRenderComponent::RenderAsWave(CL_Vec2f vPos, uint32 color)
 {
 	float offsetY = 0;
 
@@ -89,7 +90,7 @@ void TextRenderComponent::RenderAsWave(CL_Vec2f vPos)
 			continue;
 		}
 		offsetY = sin( vPos.x/dividePowerForSin)* (*m_pEffectPower);
-		GetBaseApp()->GetFont(eFont(*m_pFontID))->DrawScaled(vPos.x, vPos.y+offsetY, letter, m_pScale2d->x, ColorCombine(*m_pColor, *m_pColorMod, *m_pAlpha));
+		GetBaseApp()->GetFont(eFont(*m_pFontID))->DrawScaled(vPos.x, vPos.y+offsetY, letter, m_pScale2d->x, color);
 	
 		vPos.x += rSize.GetWidth();
 		if (vPos.x > GetScreenSizeX()) return;
@@ -118,14 +119,26 @@ void TextRenderComponent::OnRender(VariantList *pVList)
 		vFinalPos -= vRotationPt;
 	}
 
+	float alpha;
+
+	if (*m_pDisabled)
+	{
+		alpha = rt_min(*m_pAlpha, 0.5f);
+	} else
+	{
+		alpha = *m_pAlpha;
+	}
+
+	uint32 color = ColorCombine(*m_pColor, *m_pColorMod, alpha);
+
 	switch(*m_pStyle)
 	{
 	case STYLE_NORMAL:
-		GetBaseApp()->GetFont(eFont(*m_pFontID))->DrawScaled(vFinalPos.x, vFinalPos.y, *m_pText, m_pScale2d->x, ColorCombine(*m_pColor, *m_pColorMod, *m_pAlpha));
+		GetBaseApp()->GetFont(eFont(*m_pFontID))->DrawScaled(vFinalPos.x, vFinalPos.y, *m_pText, m_pScale2d->x, color);
 		break;
 	
 	case STYLE_EFFECT_SIN_WAVE:
-		RenderAsWave(vFinalPos);
+		RenderAsWave(vFinalPos, color);
 		break;
 	}
 

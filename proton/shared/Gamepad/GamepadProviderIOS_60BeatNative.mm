@@ -57,11 +57,11 @@ bool PadButtonStates::WasReleased()
 
     //update member vars so we can send events of only things that changed at the correct input update time
     
-    left = joystick.leftJoystickVector;
+    m_left = joystick.leftJoystickVector;
     //LogMsg("LeftJoy: %.2f, %.2f", left.x, left.y);
 
 
-    right = joystick.rightJoystickVector;
+    m_right = joystick.rightJoystickVector;
     //LogMsg("LeftJoy: %.2f, %.2f", right.x, right.y);
 
     //Huh, it returns 16 when pressed.  Noted.
@@ -96,7 +96,7 @@ bool PadButtonStates::WasReleased()
     {
         if (m_buttons[i].WasPressed())
         {
-            LogMsg("Was pressed for reals, sending");
+           // LogMsg("Was pressed for reals, sending");
             pPad->OnButton(true, i);
             continue;
         }
@@ -130,10 +130,10 @@ bool PadButtonStates::WasReleased()
 
 - (CGPoint) GetLeftStickPos
 {
-    return left;
+    return m_left;
 }
 - (CGPoint) GetRightStickPos
 {
-    return right;
+    return m_right;
 }
 @end

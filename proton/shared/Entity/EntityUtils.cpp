@@ -1291,6 +1291,30 @@ void SetScrollProgressEntity(Entity *pEnt, const CL_Vec2f &progress)
 	pComp->GetFunction("SetProgress")->sig_function(&scrollProgress);
 }
 
+void SetDisabledOnAllComponentsRecursively(Entity *pEnt, bool bDisabled)
+{
+
+	//disable all components in us
+	ComponentList *pComponents = pEnt->GetComponents();
+
+	ComponentList::iterator compItor = pComponents->begin();
+	while (compItor != pComponents->end())
+	{
+		(*compItor)->GetVar("disabled")->Set((uint32)bDisabled);
+		compItor++;
+	}
+
+	//also run this on all children
+	EntityList *pChildren = pEnt->GetChildren();
+
+	EntityList::iterator itor = pChildren->begin();
+	while (itor != pChildren->end())
+	{
+		SetDisabledOnAllComponentsRecursively(*itor, bDisabled);
+		itor++;
+	}
+
+}
 
 EntityComponent * DisableComponentByName(Entity *pEnt, const string &compName, int delayBeforeActionMS)
 {

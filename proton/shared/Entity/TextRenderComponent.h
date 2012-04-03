@@ -36,7 +36,7 @@ private:
 	void OnScaleChanged(Variant *pDataObject);
 	void OnFontChanged(Variant *pDataObject);
 
-	void RenderAsWave(CL_Vec2f vPos);
+	void RenderAsWave(CL_Vec2f vPos, uint32 color);
 
 	CL_Vec2f *m_pPos2d;
 	CL_Vec2f *m_pSize2d;
@@ -51,6 +51,7 @@ private:
 	float *m_pEffectPower;
 	float *m_pRotation; //in degrees
 	uint32 *m_pVisible;
+	uint32 *m_pDisabled;
 };
 
 #endif // TextRenderComponent_h__
