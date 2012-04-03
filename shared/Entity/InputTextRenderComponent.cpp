@@ -33,10 +33,34 @@ void InputTextRenderComponent::OnVisibilityChanged(Variant *pDataObject)
 }
 
 
+void InputTextRenderComponent::OnDisabledChanged(Variant *pDataObject)
+{
+	if (pDataObject->GetUINT32() == 1)
+	{
+		//we should lose focus if we had it, otherwise it will look weird with the blinking carrot on a dimmed out control
+		CloseKeyboard(NULL);
+	}
+}
+
+
 void InputTextRenderComponent::OnTextChanged(Variant *pDataObject)
 {
 	rtRectf rt;
-	GetBaseApp()->GetFont(eFont(*m_pFontID))->MeasureText(&rt, *m_pText, m_pScale2d->x);
+
+	switch(*m_pVisualStyle)
+	{
+	case STYLE_NORMAL:
+		m_displayText = *m_pText;
+		break;
+
+	case STYLE_PASSWORD:
+		m_displayText.clear();
+		m_displayText.resize(m_pText->size(), '*');
+		break;
+	}
+
+	GetBaseApp()->GetFont(eFont(*m_pFontID))->MeasureText(&rt, m_displayText, m_pScale2d->x);
+	
 	*m_pTextSize2d = CL_Vec2f(rt.GetWidth(), rt.GetHeight());
 
 	if (*m_pHasFocus)
@@ -45,20 +69,21 @@ void InputTextRenderComponent::OnTextChanged(Variant *pDataObject)
 	}
 }
 
-
 void InputTextRenderComponent::OnScaleChanged(Variant *pDataObject)
 {
-	//OPTIMIZE: this is lame, recomputing everything, but whatever
+	OnTextChanged(NULL);
+}
+
+void InputTextRenderComponent::OnVisualStyleChanged(Variant *pDataObject)
+{
 	OnTextChanged(NULL);
 }
 
 
 void InputTextRenderComponent::OnFontChanged(Variant *pDataObject)
 {
-	//OPTIMIZE: this is lame, recomputing everything, but whatever
 	OnTextChanged(NULL);
 }
-
 
 void InputTextRenderComponent::ActivateKeyboard(VariantList *pVList)
 {
@@ -195,7 +220,11 @@ void InputTextRenderComponent::OnAdd(Entity *pEnt)
 
 	//our own stuff
 	m_pDisabled = &GetVarWithDefault("disabled", uint32(0))->GetUINT32();
-	m_pStyle = &GetVarWithDefault("style", Variant(uint32(STYLE_NORMAL)))->GetUINT32();
+	GetVar("disabled")->GetSigOnChanged()->connect(1, boost::bind(&InputTextRenderComponent::OnDisabledChanged, this, _1));
+	m_pVisualStyle = &GetVarWithDefault("visualStyle", Variant(uint32(STYLE_NORMAL)))->GetUINT32();
+	GetVar("visualStyle")->GetSigOnChanged()->connect(1, boost::bind(&InputTextRenderComponent::OnVisualStyleChanged, this, _1));
+
+	
 	m_pTextSize2d = &GetVar("textSize2d")->GetVector2();
 	m_pTextOffsetPos2d = &GetVarWithDefault("textOffsetPos2d", Variant(3,3))->GetVector2();
 	m_pCursorColor = &GetVarWithDefault("cursorColor", Variant(MAKE_RGBA(209,181,137,255)))->GetUINT32();
@@ -314,14 +343,9 @@ void InputTextRenderComponent::OnRender(VariantList *pVList)
 	{
 		pTextToDraw = m_pPlaceHolderText;
 	}
-	switch(*m_pStyle)
-	{
-	case STYLE_NORMAL:
-		
-		
-		GetBaseApp()->GetFont(eFont(*m_pFontID))->DrawScaled(vFinalPos.x+m_pTextOffsetPos2d->x* m_pScale2d->x, vFinalPos.y+m_pTextOffsetPos2d->y* m_pScale2d->y, *pTextToDraw, m_pScale2d->x, color);
-		break;
-	}
+
+	GetBaseApp()->GetFont(eFont(*m_pFontID))->DrawScaled(vFinalPos.x+m_pTextOffsetPos2d->x* m_pScale2d->x, vFinalPos.y+m_pTextOffsetPos2d->y* m_pScale2d->y, m_displayText, m_pScale2d->x, color);
+	
 
 	uint32 borderCol = ColorCombine(*m_pBorderColor, MAKE_RGBA(255,255,255,255), alpha);
 	if (GET_ALPHA(borderCol) > 0)
@@ -429,7 +453,7 @@ void InputTextRenderComponent::OnInput( VariantList *pVList )
 			}
 		} else
 		{
-			if (input.size() <= *m_pInputLengthMax)
+			if (input.size() < *m_pInputLengthMax)
 			{
 				input += c;
 			} 

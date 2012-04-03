@@ -64,7 +64,7 @@ private:
     unsigned int m_updateCount;
     PadButtonStates m_buttons[SBEAT_BUTTON_COUNT];
     
-    CGPoint left, right;  //for polling the stick data
+    CGPoint m_left, m_right;  //for polling the stick data
 
 }
 

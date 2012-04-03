@@ -22,7 +22,15 @@ Example of usage in RTSimpleApp
 
 Can listen to its "hasFocus" variant to know when it gets/loses focus.
 
+Examples of some parms you can change:
+
+//control how many characters the user can enter
+pButtonEntity->GetComponentByName("InputTextRender")->GetVar("inputLengthMax")->Set(uint32(18));
+
+//show *'s, password mode
+pButtonEntity->GetComponentByName("InputTextRender")->GetVar("visualStyle")->Set((uint32)InputTextRenderComponent::STYLE_PASSWORD);
 */
+
 class InputTextRenderComponent: public EntityComponent
 {
 public:
@@ -35,6 +43,7 @@ public:
 	enum eVisualStyle
 	{
 		STYLE_NORMAL,
+		STYLE_PASSWORD //shows *'s instead of the real text
 	};
 
 	enum eInputType
@@ -66,6 +75,8 @@ private:
 	void OnEnterForeground(VariantList *pVList);
 	void OnEnterBackground(VariantList *pVList);
 	void OnVisibilityChanged(Variant *pDataObject);
+	void OnVisualStyleChanged(Variant *pDataObject);
+	void OnDisabledChanged(Variant *pDataObject);
 	CL_Vec2f *m_pPos2d;
 	CL_Vec2f *m_pTextOffsetPos2d;
 	CL_Vec2f *m_pSize2d;
@@ -78,7 +89,7 @@ private:
 	CL_Vec2f *m_pScale2d;
 	uint32 *m_pAlignment;
 	uint32 *m_pFontID;
-	uint32 *m_pStyle;
+	uint32 *m_pVisualStyle;
 	uint32 *m_pCursorColor;
 	uint32 *m_pHasFocus;
 	uint32 *m_pInputLengthMax;
@@ -88,7 +99,7 @@ private:
 	uint32 *m_pFiltering;
 	uint32 *m_pVisible;
 	uint32 *m_pGetFocusOnEnter; //if true, hitting enter (while no keyboard is on the screen and nothing else has focus) will automatically  give this focus
-
+	string m_displayText;
 };
 
 #endif // InputTextRenderComponent_h__

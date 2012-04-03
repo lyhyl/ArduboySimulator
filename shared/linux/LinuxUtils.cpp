@@ -97,6 +97,12 @@ float GetDeviceOSVersion()
 	return 0.0f;
 }
 
+string GetMacAddress()()
+{
+	//TODO
+	return ""; //unimplemented
+}
+
 bool IsIPhone3GS()
 {
 	return false;

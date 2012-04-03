@@ -126,7 +126,7 @@ eDeviceMemoryClass GetDeviceMemoryClass();
 bool IsIPodTouchThirdGen();
 std::string GetClipboardText();
 float GetDeviceOSVersion(); //0 if unknown/unimplemented.  Should return 1.00 for version 1, etc.  (webos returns 3.05 for instance, instead of 305)
-
+std::string GetMacAddress(); //blank ("") if not implemented.  Only works on iOS for now
 /**
  * Checks if the currently emulated platform is a desktop platform.
  */

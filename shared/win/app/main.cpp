@@ -25,7 +25,6 @@ bool g_winAllowWindowResize = true;
 
 vector<VideoModeEntry> g_videoModes;
 void AddVideoMode(string name, int x, int y, ePlatformID platformID, eOrientationMode forceOrientation = ORIENTATION_DONT_CARE);
-
 void SetVideoModeByName(string name);
 
 void InitVideoSize()
@@ -88,6 +87,7 @@ void InitVideoSize()
 	AddVideoMode("Playbook", 600,1024, PLATFORM_ID_BBX);
 	AddVideoMode("Playbook Landscape", 1024,600, PLATFORM_ID_BBX);
 
+	//WORK: Change device emulation here
 	string desiredVideoMode = "iPhone Landscape"; //name needs to match one of the ones defined above
  	SetVideoModeByName(desiredVideoMode);
 	GetBaseApp()->OnPreInitVideo(); //gives the app level code a chance to override any of these parms if it wants to

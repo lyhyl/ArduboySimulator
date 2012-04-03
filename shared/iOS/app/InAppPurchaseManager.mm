@@ -100,8 +100,15 @@
 - (void)completeTransaction:(SKPaymentTransaction *)transaction
 {
     LogMsg("Transaction complete");
+    
+    //get the receipt..
+    NSString *receiptStr = [[NSString alloc] initWithData:transaction.transactionReceipt encoding:NSUTF8StringEncoding];     
+
+    string receipt = string([receiptStr cStringUsingEncoding:NSUTF8StringEncoding]);
+    
     [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
-       GetMessageManager()->SendGUIStringEx(MESSAGE_TYPE_IAP_RESULT,(float)IAPManager::RESULT_OK,0.0f,0, "Complete");
+    
+    GetMessageManager()->SendGUIStringEx(MESSAGE_TYPE_IAP_RESULT,(float)IAPManager::RESULT_OK,0.0f,0, receipt);
 }
 
 //

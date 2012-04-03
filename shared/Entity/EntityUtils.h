@@ -229,6 +229,7 @@ void DisableHorizontalScrolling(Entity *pEnt);
  */
 void SetScrollProgressEntity(Entity *pEnt, const CL_Vec2f &progress);
 
+void SetDisabledOnAllComponentsRecursively(Entity *pEnt, bool bDisabled);
 EntityComponent * DisableComponentByName(Entity *pEnt, const string &compName, int delayBeforeActionMS=0); //applicable to components that check a var named "disabled", like Button2D or InputTextRender
 EntityComponent * EnableComponentByName(Entity *pEnt, const string &compName, int delayBeforeActionMS=0); //applicable to components that check a var named "disabled", like Button2D or InputTextRender
 CL_Vec2f ConvertEntityClickToScreenCoords(CL_Vec2f pt, Entity *pEnt);
