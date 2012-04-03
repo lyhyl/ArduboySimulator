@@ -1,6 +1,7 @@
 #include "StringChooserComponent.h"
-#include "Renderer/SpriteSheetSurface.h"
-#include "BaseApp.h"
+
+#include "util/MiscUtils.h"
+#include "Entity.h"
 
 StringChooserComponent::StringChooserComponent() :
 	m_pComponentName(NULL),

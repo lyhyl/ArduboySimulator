@@ -190,7 +190,7 @@ EntityComponent * SetupAnimEntity(Entity *pEnt, uint32 frameCountX, uint32 frame
 {
 	EntityComponent *pComp = pEnt->GetComponentByName("OverlayRender");
 	
-	if (pEnt)
+	if (pComp)
 	{
         VariantList vList(frameCountX, frameCountY);
 		pComp->GetFunction("SetupAnim")->sig_function(&vList);
@@ -251,7 +251,7 @@ void AnimateEntity(Entity *pEnt, int startFrame, int endFrame, int animSpeedMS, 
 		pComp->SetName("ic_anim");
 	}
 
-	uint32 totalTimeMS = animSpeedMS* (endFrame-startFrame);
+	uint32 totalTimeMS = animSpeedMS * (endFrame - startFrame + 1);
 	
 	if (delayToStartMS == 0)
 	{
@@ -259,7 +259,8 @@ void AnimateEntity(Entity *pEnt, int startFrame, int endFrame, int animSpeedMS, 
 		pComp->GetVar("component_name")->Set("OverlayRender");
 		pComp->GetVar("var_name")->Set(frameName);
 		overlayComp->GetVar(frameName)->Set(uint32(startFrame));
-		pComp->GetVar("target")->Set(uint32(endFrame+1));
+		pComp->GetVar("target")->Set(uint32(endFrame + 1));
+		pComp->GetVar("set_value_on_finish")->Set(uint32(endFrame));
 		pComp->GetVar("interpolation")->Set(uint32(INTERPOLATE_LINEAR));
 		pComp->GetVar("on_finish")->Set(uint32(type));
 		pComp->GetVar("duration_ms")->Set(uint32(totalTimeMS));
@@ -269,7 +270,8 @@ void AnimateEntity(Entity *pEnt, int startFrame, int endFrame, int animSpeedMS, 
 		GetMessageManager()->SetComponentVariable(pComp, delayToStartMS, "component_name", Variant("OverlayRender"));
 		GetMessageManager()->SetComponentVariable(pComp, delayToStartMS, "var_name", Variant(frameName));
 		GetMessageManager()->SetComponentVariable(overlayComp, delayToStartMS, frameName, Variant(uint32(startFrame)));
-		GetMessageManager()->SetComponentVariable(pComp, delayToStartMS, "target", Variant(uint32(endFrame)+1));
+		GetMessageManager()->SetComponentVariable(pComp, delayToStartMS, "target", Variant(uint32(endFrame + 1)));
+		GetMessageManager()->SetComponentVariable(pComp, delayToStartMS, "set_value_on_finish", Variant(uint32(endFrame)));
 		GetMessageManager()->SetComponentVariable(pComp, delayToStartMS, "interpolation", Variant(uint32(INTERPOLATE_LINEAR)));
 		GetMessageManager()->SetComponentVariable(pComp, delayToStartMS, "on_finish", Variant(uint32(type)));
 		GetMessageManager()->SetComponentVariable(pComp, delayToStartMS, "duration_ms", Variant(uint32(totalTimeMS)));

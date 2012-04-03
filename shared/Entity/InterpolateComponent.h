@@ -38,6 +38,9 @@ public:
 	};
 
 private:
+	void NullifyVarPointer(VariantList *pVList);
+	void SetEndValue();
+
 	Variant *m_pVar, *m_pVarTarget;
 	Variant m_pVarStartPoint;
 	string * m_pVarName;
