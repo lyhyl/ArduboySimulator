@@ -135,12 +135,13 @@ byte * FileManager::Get( string fileName, int *pSizeOut, bool bAddBasePath )
 				LogError("Out of memory opening %s?", fileName.c_str());
 				return 0;
 			}
+			//we add an extra null at the end to be nice, when loading text files this can be useful
 			pData[*pSizeOut] = 0; 
 			fread(pData, *pSizeOut, 1, fp);
 			fclose(fp);
 		}
-	
 
+		//also detect and perform any decompression here by checking the header..
 		if (IsAPackedFile(pData))
 		{
 			//let's decompress it to memory before passing it back
@@ -151,8 +152,7 @@ byte * FileManager::Get( string fileName, int *pSizeOut, bool bAddBasePath )
 			return pDecompressedData;
 			
 		}
-		//also detect and perform any decompression here by checking the header..
-		//we add an extra null at the end to be nice, when loading text files this can be useful
+
 		return pData;
 }
 
