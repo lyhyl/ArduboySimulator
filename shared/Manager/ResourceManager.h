@@ -12,36 +12,47 @@
 
 #include "Renderer/Surface.h"
 class SurfaceAnim;
+class SpriteAnimationSet;
 
-//this class caches out resources by detecting similar filenames through a hashed map.
-
-class Resource
-{
-public:
-
-	enum eResourceType
-	{
-		TYPE_UNKNOWN,
-		TYPE_SURFACE
-	};
-	Resource(){m_pResource = NULL; m_type = TYPE_UNKNOWN;}
-	~Resource();
-
-	Surface *m_pResource;
-
-	eResourceType m_type;
-};
-
-typedef std::map<string, Resource*> ResourceMap;
-
-
+/**
+ * A manager for resources.
+ *
+ * A resource is something that can be loaded from a file, such as an image.
+ *
+ * The \c ResourceManager is useful in preventing the reading of the same file over
+ * and over again. The file reading only needs to happen once and thereafter the data
+ * is accessible through this class.
+ *
+ * The resources are identified by their filenames from which they are loaded.
+ */
 class ResourceManager
 {
 public:
 	ResourceManager();
 	virtual ~ResourceManager();
+
+	/**
+	 * Gets a \c SurfaceAnim resource.
+	 *
+	 * This is identical to calling:
+	 * \code
+	 * GetSurfaceResource<SurfaceAnim>(fileName, Surface::TYPE_GUI);
+	 * \endcode
+	 *
+	 * \see GetSurfaceResource()
+	 */
 	SurfaceAnim * GetSurfaceAnim(const string &fileName);
 
+	/**
+	 * Gets a resource of any class that is or is inherited from \c Surface.
+	 *
+	 * Returns \c NULL if the resource is not found or it has been previously loaded
+	 * into a different type of \c Surface (that can't be dynamically cast to the
+	 * requested type).
+	 *
+	 * The \a textureType argument sets the texture type for the \c Surface. This
+	 * argument however only has effect if the \c Surface has not been previously loaded.
+	 */
 	template<class T>
 	T * GetSurfaceResource(const string &fileName, Surface::eTextureType textureType = Surface::TYPE_DEFAULT) {
 		if (fileName.empty()) return NULL;
@@ -57,7 +68,7 @@ public:
 			{
 				delete pSurf;
 
-				LogMsg("ResourceManager::GetResource: Unable to load %s", fileName.c_str());
+				LogMsg("ResourceManager::GetSurfaceResource: Unable to load %s", fileName.c_str());
 				return NULL;
 			}
 
@@ -69,21 +80,52 @@ public:
 			}
 
 			pData->m_type = Resource::TYPE_SURFACE;
-			pData->m_pResource = pSurf;
+			pData->m_pSurface = pSurf;
 			m_data[fileName] = pData;
-
 		}
 
-		return dynamic_cast<T*>(pData->m_pResource);
+		if (pData->m_type == Resource::TYPE_SURFACE)
+		{
+			return dynamic_cast<T*>(pData->m_pSurface);
+		} else
+		{
+			return NULL;
+		}
 	}
 
+	SpriteAnimationSet * GetSpriteAnimationSet(const string &fileName);
+
+	/**
+	 * Removes and destroys all the resources currently in this resource manager.
+	 */
 	void KillAllResources();
 	void RemoveTexturesNotInExclusionList(const vector<string> &exclusionList);
 
 private:
+	class Resource
+	{
+	public:
+		enum eResourceType
+		{
+			TYPE_UNKNOWN,
+			TYPE_SURFACE,
+			TYPE_SPRITE_ANIMATION_SET
+		};
+
+		Resource() { m_pSurface = NULL; m_type = TYPE_UNKNOWN; }
+		~Resource();
+
+		union {
+			Surface *m_pSurface;
+			SpriteAnimationSet *m_pSpriteAnimationSet;
+		};
+
+		eResourceType m_type;
+	};
 
 	Resource * FindDataByKey(const string &keyName);
 
+	typedef std::map<string, Resource*> ResourceMap;
 	ResourceMap m_data;
 };
 

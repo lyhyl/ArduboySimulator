@@ -9,5 +9,3 @@
 .jpg
 .png
 .tga
-.sprites
-

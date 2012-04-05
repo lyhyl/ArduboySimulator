@@ -1,6 +1,7 @@
 #include "PlatformPrecomp.h"
 #include "ResourceManager.h"
 #include "Renderer/SurfaceAnim.h"
+#include "Renderer/SpriteAnimation.h"
 
 ResourceManager::ResourceManager()
 {
@@ -12,7 +13,7 @@ ResourceManager::~ResourceManager()
 	KillAllResources();
 }
 
-Resource * ResourceManager::FindDataByKey(const string &keyName)
+ResourceManager::Resource * ResourceManager::FindDataByKey(const string &keyName)
 {
 	ResourceMap::iterator itor = m_data.find(keyName);
 
@@ -27,6 +28,44 @@ Resource * ResourceManager::FindDataByKey(const string &keyName)
 SurfaceAnim * ResourceManager::GetSurfaceAnim(const string &fileName)
 {
 	return GetSurfaceResource<SurfaceAnim>(fileName, Surface::TYPE_GUI);
+}
+
+SpriteAnimationSet * ResourceManager::GetSpriteAnimationSet(const string &fileName)
+{
+	if (fileName.empty()) return NULL;
+
+	Resource *pData = FindDataByKey(fileName);
+	if (!pData)
+	{
+		SpriteAnimationSet *pSpriteAnimationSet = new SpriteAnimationSet;
+
+		if (!pSpriteAnimationSet->LoadFile(fileName))
+		{
+			delete pSpriteAnimationSet;
+
+			LogMsg("ResourceManager::GetSpriteAnimationSet: Unable to load %s", fileName.c_str());
+			return NULL;
+		}
+
+		pData = new Resource;
+		if (!pData)
+		{
+			delete pSpriteAnimationSet;
+			return NULL;
+		}
+
+		pData->m_type = Resource::TYPE_SPRITE_ANIMATION_SET;
+		pData->m_pSpriteAnimationSet = pSpriteAnimationSet;
+		m_data[fileName] = pData;
+	}
+
+	if (pData->m_type == Resource::TYPE_SPRITE_ANIMATION_SET)
+	{
+		return pData->m_pSpriteAnimationSet;
+	} else
+	{
+		return NULL;
+	}
 }
 
 void ResourceManager::KillAllResources()
@@ -46,6 +85,12 @@ void ResourceManager::RemoveTexturesNotInExclusionList( const vector<string> &ex
 	ResourceMap::iterator itor = m_data.begin();
 	while (itor != m_data.end())
 	{
+		if (itor->second->m_type != Resource::TYPE_SURFACE)
+		{
+			itor++;
+			continue;
+		}
+
 		bool bIgnore = false;
 
 		for (unsigned int i=0; i < exclusionList.size(); i++)
@@ -67,18 +112,19 @@ void ResourceManager::RemoveTexturesNotInExclusionList( const vector<string> &ex
 
 		delete itorTemp->second;
 		m_data.erase(itorTemp);
-		
 	}
-
 }
 
-Resource::~Resource()
+ResourceManager::Resource::~Resource()
 {
 	switch (m_type)
 	{
-
 	case TYPE_SURFACE:
-		delete m_pResource;
+		delete m_pSurface;
+		break;
+
+	case TYPE_SPRITE_ANIMATION_SET:
+		delete m_pSpriteAnimationSet;
 		break;
 
 	default:
