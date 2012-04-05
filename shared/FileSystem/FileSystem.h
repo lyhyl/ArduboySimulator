@@ -10,6 +10,8 @@
 #ifndef FileSystem_h__
 #define FileSystem_h__
 
+#include "PlatformSetup.h"
+
 class StreamingInstance;
 
 class FileSystem

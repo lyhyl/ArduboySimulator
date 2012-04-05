@@ -138,11 +138,6 @@ void App::SetPixelType( pvrtexlib::PixelType ptype )
 	}
 }
 
-#ifdef _WIN32
-#define EXE .exe
-#else
-#define EXE
-#endif
 void ShowHelp()
 {
 	LogMsg("Help and examples\n");

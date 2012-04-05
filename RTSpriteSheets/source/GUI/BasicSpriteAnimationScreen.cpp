@@ -14,7 +14,7 @@ EntityComponent* CreateSpriteSheetAnimation(Entity* pParent, float x, float y)
 	spriteSheetComp->GetVar("fileName")->Set("game/eateat_bird.rttex");
 
 	EntityComponent *stringChanger = ent->AddComponent(new StringChooserComponent);
-	stringChanger->GetVar("strings")->Set("Bird/Walk/0:Bird/Walk/1:Bird/Walk/2:Bird/Walk/3:Bird/Walk/4:Bird/Walk/5:Bird/Walk/6:Bird/Walk/7:Bird/Walk/8");
+	stringChanger->GetVar("strings")->Set("BirdWalk/0:BirdWalk/1:BirdWalk/2:BirdWalk/3:BirdWalk/4:BirdWalk/5:BirdWalk/6:BirdWalk/7:BirdWalk/8");
 	stringChanger->GetVar("component_name")->Set("SpriteSheetRender");
 	stringChanger->GetVar("var_name")->Set("frameName");
 
@@ -37,15 +37,15 @@ Entity* BasicSpriteAnimationScreenCreate(Entity *pParentEnt)
 		return NULL;
 	}
 
-	spriteSheet->AddFrame("Bird/Walk/0", CL_Rect(0, 98, 0+58, 98+98));
-	spriteSheet->AddFrame("Bird/Walk/1", CL_Rect(196, 0, 196+59, 0+98));
-	spriteSheet->AddFrame("Bird/Walk/2", CL_Rect(0, 196, 0+58, 196+98));
-	spriteSheet->AddFrame("Bird/Walk/3", CL_Rect(0, 294, 0+58, 294+98));
-	spriteSheet->AddFrame("Bird/Walk/4", CL_Rect(0, 392, 0+58, 392+98));
-	spriteSheet->AddFrame("Bird/Walk/5", CL_Rect(255, 0, 255+59, 0+98));
-	spriteSheet->AddFrame("Bird/Walk/6", CL_Rect(314, 0, 314+58, 0+98));
-	spriteSheet->AddFrame("Bird/Walk/7", CL_Rect(372, 0, 372+58, 0+98));
-	spriteSheet->AddFrame("Bird/Walk/8", CL_Rect(58, 294, 58+57, 294+98));
+	spriteSheet->AddFrame("BirdWalk/0", CL_Rect(0, 98, 0+58, 98+98));
+	spriteSheet->AddFrame("BirdWalk/1", CL_Rect(196, 0, 196+59, 0+98));
+	spriteSheet->AddFrame("BirdWalk/2", CL_Rect(0, 196, 0+58, 196+98));
+	spriteSheet->AddFrame("BirdWalk/3", CL_Rect(0, 294, 0+58, 294+98));
+	spriteSheet->AddFrame("BirdWalk/4", CL_Rect(0, 392, 0+58, 392+98));
+	spriteSheet->AddFrame("BirdWalk/5", CL_Rect(255, 0, 255+59, 0+98));
+	spriteSheet->AddFrame("BirdWalk/6", CL_Rect(314, 0, 314+58, 0+98));
+	spriteSheet->AddFrame("BirdWalk/7", CL_Rect(372, 0, 372+58, 0+98));
+	spriteSheet->AddFrame("BirdWalk/8", CL_Rect(58, 294, 58+57, 294+98));
 
 	Entity *pBG = CreateOverlayEntity(pParentEnt, "background", "interface/menu_bg.rttex", 0, 0);
 	AddFocusIfNeeded(pBG);
