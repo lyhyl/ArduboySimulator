@@ -5,4 +5,6 @@ class Entity;
 
 Entity* SpriteAnimationScreenCreate(Entity *pParentEnt);
 
+Entity* MoreSpriteAnimationsScreenCreate(Entity *pParentEnt);
+
 #endif  // SpriteAnimationScreen_h__

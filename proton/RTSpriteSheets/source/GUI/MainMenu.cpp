@@ -22,6 +22,9 @@ void MainMenuOnSelect(VariantList *pVList)
 	} else if (pEntClicked->GetName() == "SpriteAnimation")
 	{
 		SpriteAnimationScreenCreate(pEntClickedParent->GetParent());
+	} else if (pEntClicked->GetName() == "MoreSpriteAnimations")
+	{
+		MoreSpriteAnimationsScreenCreate(pEntClickedParent->GetParent());
 	}
 }
 
@@ -40,13 +43,17 @@ Entity * MainMenuCreate(Entity *pParentEnt)
 	Entity *pButtonEntity;
 	float x = 50;
 	float y = 40;
-	float yDistance = 30;
+	float yDistance = 60;
 
 	pButtonEntity = CreateTextButtonEntity(pBG, "BasicSpriteFrames", x, y, "Single sprite frames");
 	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MainMenuOnSelect);
-	y += yDistance;
 
-	pButtonEntity = CreateTextButtonEntity(pBG, "SpriteAnimation", x, y, "Sprite animation");
+	y += yDistance;
+	pButtonEntity = CreateTextButtonEntity(pBG, "SpriteAnimation", x, y, "Simple sprite animation");
+	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MainMenuOnSelect);
+
+	y += yDistance;
+	pButtonEntity = CreateTextButtonEntity(pBG, "MoreSpriteAnimations", x, y, "Multi-part sprite animation");
 	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MainMenuOnSelect);
 
 	SlideScreen(pBG, true);

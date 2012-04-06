@@ -8,9 +8,10 @@
 using namespace std;
 using namespace rapidxml;
 
-SpriteCell::SpriteCell(const std::string &spriteName, float x, float y, float w, float h) :
+SpriteCell::SpriteCell(const std::string &spriteName, float x, float y, float w, float h, int z) :
 	m_spriteName(spriteName),
-    m_boundingBox(x, y, x + w, y + h)
+	m_boundingBox(x, y, x + w, y + h),
+	m_z(z)
 {
 }
 
@@ -24,11 +25,27 @@ const CL_Rectf& SpriteCell::GetBoundingBox() const
 	return m_boundingBox;
 }
 
+int SpriteCell::GetZLayer() const
+{
+	return m_z;
+}
+
 
 
 void SpriteFrame::AddCell(const SpriteCell& spriteCell)
 {
-	m_cells.push_back(spriteCell);
+	CellList::iterator it(m_cells.begin());
+
+	while (it != m_cells.end())
+	{
+		if ((*it).GetZLayer() > spriteCell.GetZLayer())
+		{
+			break;
+		}
+		it++;
+	}
+
+	m_cells.insert(it, spriteCell);
 
 	if (m_cells.size() == 1)
 	{
@@ -169,7 +186,7 @@ public:
 				float w = atof(childNode->first_attribute("w")->value());
 				float h = atof(childNode->first_attribute("h")->value());
 
-				m_spriteSheet->AddFrame(m_dirNames.value() + "/" + childNode->first_attribute("name")->value(), CL_Rect(x, y, x + w, y + h));
+				m_spriteSheet->AddFrame(m_dirNames.value() + childNode->first_attribute("name")->value(), CL_Rect(x, y, x + w, y + h));
 			}
 		}
 
@@ -228,11 +245,15 @@ public:
 				{
 					float x = atof(spriteNode->first_attribute("x")->value());
 					float y = atof(spriteNode->first_attribute("y")->value());
+					// darkFunction editor has an inverted style of interpreting the z-values.
+					// Taking the negated value of the z puts them in the correct order.
+					int z = -atoi(spriteNode->first_attribute("z")->value());
 
 					string frameName(spriteNode->first_attribute("name")->value());
+					StringReplace(string("/"), string(""), frameName);
 					CL_Vec2f frameSize(m_spriteSheet->GetFrameSize(frameName));
 
-					frame.AddCell(SpriteCell(frameName, x - frameSize.x / 2, y - frameSize.y / 2, frameSize.x, frameSize.y));
+					frame.AddCell(SpriteCell(frameName, x - frameSize.x / 2, y - frameSize.y / 2, frameSize.x, frameSize.y, z));
 				}
 
 				animation.AddFrame(frame);
