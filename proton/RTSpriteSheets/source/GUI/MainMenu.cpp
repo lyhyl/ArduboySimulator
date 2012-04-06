@@ -1,6 +1,5 @@
 #include "MainMenu.h"
 #include "BasicSpriteFramesScreen.h"
-#include "BasicSpriteAnimationScreen.h"
 #include "SpriteAnimationScreen.h"
 
 #include "App.h"
@@ -20,9 +19,6 @@ void MainMenuOnSelect(VariantList *pVList)
 	if (pEntClicked->GetName() == "BasicSpriteFrames")
 	{
 		BasicSpriteFramesScreenCreate(pEntClickedParent->GetParent());
-	} else if (pEntClicked->GetName() == "BasicSpriteAnimation")
-	{
-		BasicSpriteAnimationScreenCreate(pEntClickedParent->GetParent());
 	} else if (pEntClicked->GetName() == "SpriteAnimation")
 	{
 		SpriteAnimationScreenCreate(pEntClickedParent->GetParent());
@@ -46,15 +42,11 @@ Entity * MainMenuCreate(Entity *pParentEnt)
 	float y = 40;
 	float yDistance = 30;
 
-	pButtonEntity = CreateTextButtonEntity(pBG, "BasicSpriteFrames", x, y, "Basic sprite frames");
+	pButtonEntity = CreateTextButtonEntity(pBG, "BasicSpriteFrames", x, y, "Single sprite frames");
 	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MainMenuOnSelect);
 	y += yDistance;
 
-	pButtonEntity = CreateTextButtonEntity(pBG, "BasicSpriteAnimation", x, y, "Basic sprite animation");
-	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MainMenuOnSelect);
-	y += yDistance;
-
-	pButtonEntity = CreateTextButtonEntity(pBG, "SpriteAnimation", x, y, "Advanced sprite animation");
+	pButtonEntity = CreateTextButtonEntity(pBG, "SpriteAnimation", x, y, "Sprite animation");
 	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MainMenuOnSelect);
 
 	SlideScreen(pBG, true);

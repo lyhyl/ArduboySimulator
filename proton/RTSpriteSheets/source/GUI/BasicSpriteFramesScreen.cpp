@@ -1,9 +1,8 @@
 #include "BasicSpriteFramesScreen.h"
 #include "GUICommon.h"
 
-#include "Renderer/SpriteSheetSurface.h"
-#include "Entity/SpriteSheetRenderComponent.h"
 #include "Entity/EntityUtils.h"
+#include "Entity/SpriteAnimationUtils.h"
 
 Entity* CreateSpriteEntity(Entity* pParentEnt, float x, float y, const std::string& frameName)
 {
@@ -14,25 +13,12 @@ Entity* CreateSpriteEntity(Entity* pParentEnt, float x, float y, const std::stri
 
 	Entity *ent = pParentEnt->AddEntity(new Entity);
 	SetPos2DEntity(ent, CL_Vec2f(OriginLeft + x * HorizontalDistance, OriginTop + y * VerticalDistance));
-	EntityComponent *comp = ent->AddComponent(new SpriteSheetRenderComponent);
-	comp->GetVar("fileName")->Set("game/eateat_bird.rttex");
-	comp->GetVar("frameName")->Set(frameName);
+	SpriteAnimationUtils::SetupAnimationEntity(ent, "game/eateat_bird.anim", "Jump");
 	return ent;
 }
 
 Entity* BasicSpriteFramesScreenCreate(Entity *pParentEnt)
 {
-	SpriteSheetSurface *spriteSheet = GetResourceManager()->GetSurfaceResource<SpriteSheetSurface>("game/eateat_bird.rttex");
-	if (spriteSheet == NULL) {
-		LogError("Resource manager didn't return a sprite sheet surface.");
-		return NULL;
-	}
-
-	spriteSheet->AddFrame("0", CL_Rect(58, 99, 58+58, 99+98));
-	spriteSheet->AddFrame("1", CL_Rect(58, 197, 58+58, 197+97));
-	spriteSheet->AddFrame("2", CL_Rect(116, 99, 116+64, 99+96));
-	spriteSheet->AddFrame("3", CL_Rect(180, 99, 180+70, 99+93));
-
 	Entity *pBG = CreateOverlayEntity(pParentEnt, "background", "interface/menu_bg.rttex", 0, 0);
 	AddFocusIfNeeded(pBG);
 
@@ -57,15 +43,15 @@ Entity* BasicSpriteFramesScreenCreate(Entity *pParentEnt)
 	sprite->GetVar("alpha")->Set(0.75f);
 
 	sprite = CreateSpriteEntity(pBG, 2, 0, "0");
-	EntityComponent* comp = sprite->GetComponentByName("SpriteSheetRender");
+	EntityComponent* comp = sprite->GetComponentByName("SpriteAnimationRender");
 	comp->GetVar("flipX")->Set(uint32(1));
 
 	sprite = CreateSpriteEntity(pBG, 3, 0, "0");
-	comp = sprite->GetComponentByName("SpriteSheetRender");
+	comp = sprite->GetComponentByName("SpriteAnimationRender");
 	comp->GetVar("flipY")->Set(uint32(1));
 
 	sprite = CreateSpriteEntity(pBG, 2, 1, "2");
-	comp = sprite->GetComponentByName("SpriteSheetRender");
+	comp = sprite->GetComponentByName("SpriteAnimationRender");
 	comp->GetVar("flipX")->Set(uint32(1));
 	comp->GetVar("flipY")->Set(uint32(1));
 
