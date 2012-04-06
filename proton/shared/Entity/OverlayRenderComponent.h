@@ -35,7 +35,7 @@
  * 
  * The following named variants are used inside the component itself:
  * - <b>"frameX" (uint32), "frameY" (uint32):</b> sets the drawn frame for the \c SurfaceAnim.
- * - <b>"flipX" (uint32), "flipY" (uint32):</b> sets if the drawn frame should be fipped horizontally
+ * - <b>"flipX" (uint32), "flipY" (uint32):</b> sets if the drawn frame should be flipped horizontally
  *   or vertically. 0 means no flipping, all other values enable the flipping. The defaults are 0.
  * - <b>"fileName" (string):</b> specifies the name of the image to be loaded into the \c SurfaceAnim.
  * - <b>"frameSize2d" (Vector2):</b> a read only variant that contains the frame size of the

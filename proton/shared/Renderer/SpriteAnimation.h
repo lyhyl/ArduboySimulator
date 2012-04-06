@@ -41,8 +41,8 @@ private:
 };
 
 /**
- * A sprite presentation. Consists of 0 or more \c SpriteCells that
- * form the complete picture.
+ * A sprite presentation. Consists of 0 or more \link SpriteCell \c SpriteCells \endlink
+ * that form the complete picture.
  */
 class SpriteFrame
 {
@@ -53,7 +53,7 @@ public:
 	void AddCell(const SpriteCell& spriteCell);
 
 	/**
-	 * Gets the number of \c SpriteCells in this frame.
+	 * Gets the number of \link SpriteCell \c SpriteCells \endlink in this frame.
 	 */
 	unsigned int GetCellCount() const;
 
@@ -75,20 +75,18 @@ private:
 };
 
 /**
- * A sequence of \c SpriteFrames, forming an animation when shown one after another.
+ * A sequence of \link SpriteFrame \c SpriteFrames \endlink forming an animation when shown one after another.
  */
 class SpriteAnimation
 {
 public:
-	SpriteAnimation();
-
 	/**
 	 * Adds a new frame to the end of the list of frames in this animation.
 	 */
 	void AddFrame(const SpriteFrame& spriteFrame);
 
 	/**
-	 * Gets the number of \c SpriteFrames in this animation.
+	 * Gets the number of \link SpriteFrame \c SpriteFrames \endlink in this animation.
 	 */
 	unsigned int GetFrameCount() const;
 
@@ -107,19 +105,20 @@ private:
 	typedef std::vector<SpriteFrame> FrameList;
 	FrameList m_frames;
 
-	mutable bool m_boundingBoxDirty;
-	mutable CL_Rectf m_boundingBox;
+	CL_Rectf m_boundingBox;
 };
 
 /**
- * A collection of \c SpriteAnimations that use the same sprite sheet.
+ * A collection of \link SpriteAnimation \c SpriteAnimations \endlink that use the same sprite sheet.
  * \see SpriteSheetSurface
  */
 class SpriteAnimationSet
 {
 public:
-    SpriteAnimationSet();
-
+	/**
+	 * Loads a set of sprite animations from file named \a fileName.
+	 * \return \c true if the loading succeeded, \c false if anything failed.
+	 */
 	bool LoadFile(const std::string &fileName);
 
 	/**
@@ -150,44 +149,6 @@ private:
 
 	typedef std::map<std::string, SpriteAnimation> AnimationMap;
 	AnimationMap m_animations;
-
-	class DarkFunctionParser
-	{
-	public:
-		DarkFunctionParser(SpriteAnimationSet& animationSet, const std::string& resourceDir);
-
-		// Template methods so that it's not necessary to specify the type of the document in this file.
-		// It would just needlessly pollute this namespace.
-		template<typename T>
-		void ParseSpriteSheetDirNode(const T& dirNode);
-
-		template<typename T>
-		bool ParseSpriteSheetFile(const T& doc);
-
-		template<typename T>
-		bool ParseAnimFile(const T& doc);
-
-		std::string m_spriteSheetImagePath;
-
-	private:
-		class StringStack
-		{
-		public:
-			void push(const std::string &val);
-			void pop();
-			const std::string& value() const;
-
-		private:
-			std::vector<size_t> m_framesizes;
-			std::string m_value;
-		};
-
-		SpriteAnimationSet &m_animationSet;
-		std::string m_resourceDir;
-		SpriteSheetSurface *m_spriteSheet;
-		StringStack m_dirNames;
-
-	};
 
 };
 
