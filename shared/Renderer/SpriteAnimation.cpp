@@ -61,15 +61,17 @@ const CL_Rectf& SpriteFrame::GetBoundingBox() const
 
 
 
-SpriteAnimation::SpriteAnimation() :
-	m_boundingBoxDirty(false)
-{
-}
-
 void SpriteAnimation::AddFrame(const SpriteFrame& spriteFrame)
 {
-	m_boundingBoxDirty = true;
 	m_frames.push_back(spriteFrame);
+
+	if (m_frames.size() == 1)
+	{
+		m_boundingBox = spriteFrame.GetBoundingBox();
+	} else
+	{
+		m_boundingBox.bounding_rect(spriteFrame.GetBoundingBox());
+	}
 }
 
 unsigned int SpriteAnimation::GetFrameCount() const
@@ -89,34 +91,10 @@ const SpriteFrame* SpriteAnimation::GetFrame(unsigned int frameIndex) const
 
 const CL_Rectf& SpriteAnimation::GetBoundingBox() const
 {
-	if (m_boundingBoxDirty)
-	{
-		m_boundingBox.left = m_boundingBox.top = m_boundingBox.right = m_boundingBox.bottom = 0.0f;
-
-		FrameList::const_iterator it = m_frames.begin();
-
-		if (it != m_frames.end())
-		{
-			m_boundingBox = (*it).GetBoundingBox();
-			it++;
-		}
-
-		for (; it != m_frames.end(); it++)
-		{
-			m_boundingBox.bounding_rect((*it).GetBoundingBox());
-		}
-
-		m_boundingBoxDirty = false;
-	}
-
 	return m_boundingBox;
 }
 
 
-
-SpriteAnimationSet::SpriteAnimationSet()
-{
-}
 
 bool SpriteAnimationSet::LoadFile(const string &fileName)
 {
@@ -164,126 +142,146 @@ const SpriteAnimation* SpriteAnimationSet::GetAnimation(const string &animationN
 }
 
 
-SpriteAnimationSet::DarkFunctionParser::DarkFunctionParser(SpriteAnimationSet& animationSet, const std::string &resourceDir) :
-	m_animationSet(animationSet),
-	m_resourceDir(resourceDir),
-	m_spriteSheet(NULL)
-{
-}
 
-template<>
-void SpriteAnimationSet::DarkFunctionParser::ParseSpriteSheetDirNode(const xml_node<>& dirNode)
+class DarkFunctionParser
 {
-	m_dirNames.push(dirNode.first_attribute("name")->value());
-
-	for (xml_node<> *childNode = dirNode.first_node(); childNode; childNode = childNode->next_sibling())
+public:
+	DarkFunctionParser(SpriteAnimationSet& animationSet, const std::string &resourceDir) :
+		m_animationSet(animationSet),
+		m_resourceDir(resourceDir),
+		m_spriteSheet(NULL)
 	{
-		if (string("dir") == childNode->name())
+	}
+
+	void ParseSpriteSheetDirNode(const xml_node<>& dirNode)
+	{
+		m_dirNames.push(dirNode.first_attribute("name")->value());
+
+		for (xml_node<> *childNode = dirNode.first_node(); childNode; childNode = childNode->next_sibling())
 		{
-			ParseSpriteSheetDirNode(*childNode);
-		} else if (string("spr") == childNode->name())
-		{
-			float x = atof(childNode->first_attribute("x")->value());
-			float y = atof(childNode->first_attribute("y")->value());
-			float w = atof(childNode->first_attribute("w")->value());
-			float h = atof(childNode->first_attribute("h")->value());
-
-			m_spriteSheet->AddFrame(m_dirNames.value() + "/" + childNode->first_attribute("name")->value(), CL_Rect(x, y, x + w, y + h));
-		}
-	}
-
-	m_dirNames.pop();
-}
-
-template<>
-bool SpriteAnimationSet::DarkFunctionParser::ParseSpriteSheetFile(const xml_document<>& doc)
-{
-	xml_node<> *imgNode = doc.first_node("img");
-	char *imageName = imgNode->first_attribute("name")->value();
-
-	m_spriteSheetImagePath = m_resourceDir + imageName;
-
-	m_spriteSheet = GetResourceManager()->GetSurfaceResource<SpriteSheetSurface>(m_spriteSheetImagePath);
-	if (m_spriteSheet == NULL) {
-		LogError("Resource manager didn't return a sprite sheet surface with name %s.", m_spriteSheetImagePath.c_str());
-		return false;
-	}
-
-	xml_node<> *dirNode = imgNode->first_node("definitions")->first_node("dir");
-	ParseSpriteSheetDirNode(*dirNode);
-
-	return true;
-}
-
-template<>
-bool SpriteAnimationSet::DarkFunctionParser::ParseAnimFile(const xml_document<>& doc)
-{
-	xml_node<> *animationsNode = doc.first_node("animations");
-	char *spriteSheetName = animationsNode->first_attribute("spriteSheet")->value();
-	string completeSpriteSheetPath = m_resourceDir + spriteSheetName;
-
-	FileInstance file(completeSpriteSheetPath);
-	if (!file.IsLoaded())
-	{
-		LogError("Can't find the sprite sheet file %s", completeSpriteSheetPath.c_str());
-		return false;
-	}
-
-	xml_document<> spriteDoc;
-	spriteDoc.parse<0>(file.GetAsChars());
-	if (!ParseSpriteSheetFile(spriteDoc))
-	{
-		return false;
-	}
-
-	for (xml_node<> *animNode = animationsNode->first_node("anim"); animNode; animNode = animNode->next_sibling("anim"))
-	{
-		string animationName(animNode->first_attribute("name")->value());
-		SpriteAnimation animation;
-
-		for (xml_node<> *cellNode = animNode->first_node("cell"); cellNode; cellNode = cellNode->next_sibling("cell"))
-		{
-			SpriteFrame frame;
-
-			for (xml_node<> *spriteNode = cellNode->first_node("spr"); spriteNode; spriteNode = spriteNode->next_sibling("spr"))
+			if (string("dir") == childNode->name())
 			{
-				float x = atof(spriteNode->first_attribute("x")->value());
-				float y = atof(spriteNode->first_attribute("y")->value());
+				ParseSpriteSheetDirNode(*childNode);
+			} else if (string("spr") == childNode->name())
+			{
+				float x = atof(childNode->first_attribute("x")->value());
+				float y = atof(childNode->first_attribute("y")->value());
+				float w = atof(childNode->first_attribute("w")->value());
+				float h = atof(childNode->first_attribute("h")->value());
 
-				string frameName(spriteNode->first_attribute("name")->value());
-				CL_Vec2f frameSize(m_spriteSheet->GetFrameSize(frameName));
+				m_spriteSheet->AddFrame(m_dirNames.value() + "/" + childNode->first_attribute("name")->value(), CL_Rect(x, y, x + w, y + h));
+			}
+		}
 
-				frame.AddCell(SpriteCell(frameName, x - frameSize.x / 2, y - frameSize.y / 2, frameSize.x, frameSize.y));
+		m_dirNames.pop();
+	}
+
+	bool ParseSpriteSheetFile(const xml_document<>& doc)
+	{
+		xml_node<> *imgNode = doc.first_node("img");
+		char *imageName = imgNode->first_attribute("name")->value();
+
+		m_spriteSheetImagePath = m_resourceDir + imageName;
+
+		m_spriteSheet = GetResourceManager()->GetSurfaceResource<SpriteSheetSurface>(m_spriteSheetImagePath);
+		if (m_spriteSheet == NULL) {
+			LogError("Resource manager didn't return a sprite sheet surface with name %s.", m_spriteSheetImagePath.c_str());
+			return false;
+		}
+
+		xml_node<> *dirNode = imgNode->first_node("definitions")->first_node("dir");
+		ParseSpriteSheetDirNode(*dirNode);
+
+		return true;
+	}
+
+	bool ParseAnimFile(const xml_document<>& doc)
+	{
+		xml_node<> *animationsNode = doc.first_node("animations");
+		char *spriteSheetName = animationsNode->first_attribute("spriteSheet")->value();
+		string completeSpriteSheetPath = m_resourceDir + spriteSheetName;
+
+		FileInstance file(completeSpriteSheetPath);
+		if (!file.IsLoaded())
+		{
+			LogError("Can't find the sprite sheet file %s", completeSpriteSheetPath.c_str());
+			return false;
+		}
+
+		xml_document<> spriteDoc;
+		spriteDoc.parse<0>(file.GetAsChars());
+		if (!ParseSpriteSheetFile(spriteDoc))
+		{
+			return false;
+		}
+
+		for (xml_node<> *animNode = animationsNode->first_node("anim"); animNode; animNode = animNode->next_sibling("anim"))
+		{
+			string animationName(animNode->first_attribute("name")->value());
+			SpriteAnimation animation;
+
+			for (xml_node<> *cellNode = animNode->first_node("cell"); cellNode; cellNode = cellNode->next_sibling("cell"))
+			{
+				SpriteFrame frame;
+
+				for (xml_node<> *spriteNode = cellNode->first_node("spr"); spriteNode; spriteNode = spriteNode->next_sibling("spr"))
+				{
+					float x = atof(spriteNode->first_attribute("x")->value());
+					float y = atof(spriteNode->first_attribute("y")->value());
+
+					string frameName(spriteNode->first_attribute("name")->value());
+					CL_Vec2f frameSize(m_spriteSheet->GetFrameSize(frameName));
+
+					frame.AddCell(SpriteCell(frameName, x - frameSize.x / 2, y - frameSize.y / 2, frameSize.x, frameSize.y));
+				}
+
+				animation.AddFrame(frame);
 			}
 
-			animation.AddFrame(frame);
+			m_animationSet.AddAnimation(animationName, animation);
 		}
 
-		m_animationSet.AddAnimation(animationName, animation);
+		return true;
 	}
 
-	return true;
-}
+	std::string m_spriteSheetImagePath;
 
-void SpriteAnimationSet::DarkFunctionParser::StringStack::push(const std::string &val)
-{
-	m_framesizes.push_back(val.size());
-	m_value += val;
-}
-
-void SpriteAnimationSet::DarkFunctionParser::StringStack::pop()
-{
-	if (!m_framesizes.empty())
+private:
+	class StringStack
 	{
-		m_value.erase(m_value.size() - m_framesizes.back());
-		m_framesizes.pop_back();
-	}
-}
+	public:
+		void push(const std::string &val)
+		{
+			m_framesizes.push_back(val.size());
+			m_value += val;
+		}
 
-const std::string& SpriteAnimationSet::DarkFunctionParser::StringStack::value() const
-{
-	return m_value;
-}
+		void pop()
+		{
+			if (!m_framesizes.empty())
+			{
+				m_value.erase(m_value.size() - m_framesizes.back());
+				m_framesizes.pop_back();
+			}
+		}
+
+		const std::string& value() const
+		{
+			return m_value;
+		}
+
+	private:
+		std::vector<size_t> m_framesizes;
+		std::string m_value;
+	};
+
+	SpriteAnimationSet &m_animationSet;
+	std::string m_resourceDir;
+	SpriteSheetSurface *m_spriteSheet;
+	StringStack m_dirNames;
+
+};
+
 
 bool SpriteAnimationSet::ParseFile(char *data)
 {

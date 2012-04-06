@@ -93,6 +93,11 @@ public:
 		}
 	}
 
+	/**
+	 * Gets a \c SpriteAnimationSet resource loaded from file \a fileName.
+	 *
+	 * Returns \c NULL if the resource is not found or can't be loaded for any reason.
+	 */
 	SpriteAnimationSet * GetSpriteAnimationSet(const string &fileName);
 
 	/**

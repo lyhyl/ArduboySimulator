@@ -64,6 +64,7 @@ SpriteAnimationSet * ResourceManager::GetSpriteAnimationSet(const string &fileNa
 		return pData->m_pSpriteAnimationSet;
 	} else
 	{
+		LogMsg("ResourceManager::GetSpriteAnimationSet: Requested resource %s is not of type 'animation set'.", fileName.c_str());
 		return NULL;
 	}
 }
