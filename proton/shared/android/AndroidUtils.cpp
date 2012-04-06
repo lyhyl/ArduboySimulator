@@ -331,6 +331,12 @@ string GetDeviceID()
 	return string(s);
 }
 
+string GetMacAddress()
+{
+	//todo
+	return "";
+}
+
 bool IsIPAD()
 {
 	return false;

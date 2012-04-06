@@ -1,3 +1,4 @@
+#include "PlatformPrecomp.h"
 #include "SpriteSheetSurface.h"
 
 SpriteSheetSurface::SpriteSheetSurface()
