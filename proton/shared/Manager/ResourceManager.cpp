@@ -1,11 +1,13 @@
 #include "PlatformPrecomp.h"
 #include "ResourceManager.h"
 #include "Renderer/SurfaceAnim.h"
+
+#ifdef RT_SPRITEANIMATION
 #include "Renderer/SpriteAnimation.h"
+#endif
 
 ResourceManager::ResourceManager()
 {
-
 }
 
 ResourceManager::~ResourceManager()
@@ -30,6 +32,7 @@ SurfaceAnim * ResourceManager::GetSurfaceAnim(const string &fileName)
 	return GetSurfaceResource<SurfaceAnim>(fileName, Surface::TYPE_GUI);
 }
 
+#ifdef RT_SPRITEANIMATION
 SpriteAnimationSet * ResourceManager::GetSpriteAnimationSet(const string &fileName)
 {
 	if (fileName.empty()) return NULL;
@@ -68,6 +71,7 @@ SpriteAnimationSet * ResourceManager::GetSpriteAnimationSet(const string &fileNa
 		return NULL;
 	}
 }
+#endif
 
 void ResourceManager::KillAllResources()
 {
@@ -124,13 +128,14 @@ ResourceManager::Resource::~Resource()
 		delete m_pSurface;
 		break;
 
+#ifdef RT_SPRITEANIMATION
 	case TYPE_SPRITE_ANIMATION_SET:
 		delete m_pSpriteAnimationSet;
 		break;
+#endif
 
 	default:
 		LogMsg("Wat is type %d", m_type);
 		assert(!"Huh?");
 	}
 }
-

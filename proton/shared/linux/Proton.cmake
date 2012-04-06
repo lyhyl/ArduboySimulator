@@ -42,7 +42,7 @@ set(PROTON_SOURCES "${PROTON_SHARED}/BaseApp.cpp" "${PROTON_SHARED}/PlatformSetu
 	"${PROTON_GUI}/RTFont.cpp"
 	"${PROTON_MANAGER}/Console.cpp" "${PROTON_MANAGER}/GameTimer.cpp" "${PROTON_MANAGER}/MessageManager.cpp" "${PROTON_MANAGER}/ResourceManager.cpp"
 	"${PROTON_MATH}/rtRect.cpp" 
-	"${PROTON_RENDERER}/Surface.cpp" "${PROTON_RENDERER}/SoftSurface.cpp" "${PROTON_RENDERER}/SurfaceAnim.cpp" "${PROTON_RENDERER}/SpriteSheetSurface.cpp" "${PROTON_RENDERER}/SpriteAnimation.cpp" "${PROTON_RENDERER}/RenderBatcher.cpp"
+	"${PROTON_RENDERER}/Surface.cpp" "${PROTON_RENDERER}/SoftSurface.cpp" "${PROTON_RENDERER}/SurfaceAnim.cpp" "${PROTON_RENDERER}/RenderBatcher.cpp"
 	"${PROTON_UTIL}/MathUtils.cpp" "${PROTON_UTIL}/CRandom.cpp" "${PROTON_UTIL}/MiscUtils.cpp" "${PROTON_UTIL}/ResourceUtils.cpp" "${PROTON_UTIL}/RenderUtils.cpp" "${PROTON_UTIL}/GLESUtils.cpp"
 	"${PROTON_ENTITY}/Entity.cpp" "${PROTON_ENTITY}/Component.cpp"
 	"${PROTON_BOOSTSIGNALS}/connection.cpp" "${PROTON_BOOSTSIGNALS}/named_slot_map.cpp" "${PROTON_BOOSTSIGNALS}/signal_base.cpp" "${PROTON_BOOSTSIGNALS}/slot.cpp" "${PROTON_BOOSTSIGNALS}/trackable.cpp"
@@ -55,10 +55,18 @@ proton_include_components(RectRenderComponent FocusRenderComponent)
 # Additionally includes the EntityUtils helpers.
 # Brings in all the dependencies as well.
 macro(proton_include_all_components)
-	proton_include_components(ArcadeInputComponent Button2DComponent Component CustomInputComponent DPadComponent EmitVirtualKeyComponent FilterComponent FilterInputComponent FocusInputComponent FocusRenderComponent FocusUpdateComponent HTTPComponent InputTextRenderComponent InterpolateComponent LogDisplayComponent OverlayRenderComponent ProgressBarComponent RectRenderComponent RenderClipComponent RenderScissorComponent ScrollBarRenderComponent ScrollComponent SelectButtonWithCustomInputComponent SliderComponent SplashComponent SpriteAnimationRenderComponent TapSequenceDetectComponent TextBoxRenderComponent TextRenderComponent TouchDragComponent TouchHandlerComponent TouchStripComponent TrailRenderComponent TyperComponent UnderlineRenderComponent)
+	proton_include_components(ArcadeInputComponent Button2DComponent Component CustomInputComponent DPadComponent EmitVirtualKeyComponent FilterComponent FilterInputComponent FocusInputComponent FocusRenderComponent FocusUpdateComponent HTTPComponent InputTextRenderComponent InterpolateComponent LogDisplayComponent OverlayRenderComponent ProgressBarComponent RectRenderComponent RenderClipComponent RenderScissorComponent ScrollBarRenderComponent ScrollComponent SelectButtonWithCustomInputComponent SliderComponent SplashComponent TapSequenceDetectComponent TextBoxRenderComponent TextRenderComponent TouchDragComponent TouchHandlerComponent TouchStripComponent TrailRenderComponent TyperComponent UnderlineRenderComponent)
 	list(APPEND PROTON_SOURCES "${PROTON_NETWORK}/NetHTTP.cpp" "${PROTON_NETWORK}/NetSocket.cpp" "${PROTON_NETWORK}/NetUtils.cpp" "${PROTON_UTIL}/TextScanner.cpp")
-	list(APPEND PROTON_SOURCES "${PROTON_ENTITY}/EntityUtils.cpp" "${PROTON_ENTITY}/SpriteAnimationUtils.cpp")
+	list(APPEND PROTON_SOURCES "${PROTON_ENTITY}/EntityUtils.cpp")
 endmacro(proton_include_all_components)
+
+# Makes the project to include the sprite animation support classes
+# and sets the appropriate preprocessor defines.
+macro(proton_use_spriteanimation)
+	add_definitions(-DRT_SPRITEANIMATION)
+	proton_include_components(SpriteAnimationRenderComponent)
+	list(APPEND PROTON_SOURCES "${PROTON_RENDERER}/SpriteSheetSurface.cpp" "${PROTON_RENDERER}/SpriteAnimation.cpp" "${PROTON_ENTITY}/SpriteAnimationUtils.cpp")
+endmacro(proton_use_spriteanimation)
 
 macro(_proton_include_jpeg_sources)
 	set(PROTON_JPG "${PROTON_SHARED}/Irrlicht/source/Irrlicht/jpeglib")

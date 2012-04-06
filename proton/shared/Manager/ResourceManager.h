@@ -12,7 +12,10 @@
 
 #include "Renderer/Surface.h"
 class SurfaceAnim;
+
+#ifdef RT_SPRITEANIMATION
 class SpriteAnimationSet;
+#endif
 
 /**
  * A manager for resources.
@@ -93,12 +96,14 @@ public:
 		}
 	}
 
+#ifdef RT_SPRITEANIMATION
 	/**
 	 * Gets a \c SpriteAnimationSet resource loaded from file \a fileName.
 	 *
 	 * Returns \c NULL if the resource is not found or can't be loaded for any reason.
 	 */
 	SpriteAnimationSet * GetSpriteAnimationSet(const string &fileName);
+#endif
 
 	/**
 	 * Removes and destroys all the resources currently in this resource manager.
@@ -113,8 +118,10 @@ private:
 		enum eResourceType
 		{
 			TYPE_UNKNOWN,
-			TYPE_SURFACE,
-			TYPE_SPRITE_ANIMATION_SET
+			TYPE_SURFACE
+#ifdef RT_SPRITEANIMATION
+			, TYPE_SPRITE_ANIMATION_SET
+#endif
 		};
 
 		Resource() { m_pSurface = NULL; m_type = TYPE_UNKNOWN; }
@@ -122,7 +129,9 @@ private:
 
 		union {
 			Surface *m_pSurface;
+#ifdef RT_SPRITEANIMATION
 			SpriteAnimationSet *m_pSpriteAnimationSet;
+#endif
 		};
 
 		eResourceType m_type;
