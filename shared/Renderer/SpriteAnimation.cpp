@@ -309,17 +309,17 @@ bool SpriteAnimationSet::ParseFile(char *data)
 	xml_document<> doc;
 	doc.parse<0>(data);
 
+	bool parseResult = false;
+
 	if (string("animations") == doc.first_node()->name())
 	{
 		DarkFunctionParser parser(*this, GetPathFromString(m_currentSourceFile));
-		bool parseResult = parser.ParseAnimFile(doc);
+		parseResult = parser.ParseAnimFile(doc);
 		if (parseResult)
 		{
 			m_spriteSheetImageName = parser.m_spriteSheetImagePath;
 		}
-
-		return parseResult;
 	}
 
-	return false;
+	return parseResult;
 }
