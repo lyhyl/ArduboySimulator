@@ -21,8 +21,11 @@ public:
 	 * \param y the coordinate of the cell's top edge.
 	 * \param w the width of the cell.
 	 * \param h the height of the cell.
+	 * \param z determines the layer on which this cell is. Layers with
+	 * higher z-value are drawn on top of layers with smaller z-values.
+	 * Cells within the same z-layer are drawn in an undetermined order.
 	 */
-	SpriteCell(const std::string& spriteName, float x, float y, float w, float h);
+	SpriteCell(const std::string& spriteName, float x, float y, float w, float h, int z = 0);
 
 	/**
 	 * Gets the name of the sprite this cell should draw.
@@ -34,10 +37,15 @@ public:
 	 */
 	const CL_Rectf& GetBoundingBox() const;
 
+	/**
+	 * Gets the z-layer value of this cell.
+	 */
+	int GetZLayer() const;
 
 private:
 	std::string m_spriteName;
 	CL_Rectf m_boundingBox;
+	int m_z;
 };
 
 /**
@@ -60,6 +68,10 @@ public:
 	/**
 	 * Gets the requested \c SpriteCell of this frame. If \a cellIndex
 	 * is out of bounds then returns \c NULL.
+	 *
+	 * The cells are ordered according to their z-layer values.
+	 * All cells on layers &lt;n have smaller indices than cells
+	 * on layer n for any z-layer value n.
 	 */
 	const SpriteCell* GetCell(unsigned int cellIndex) const;
 
@@ -69,7 +81,8 @@ public:
 	const CL_Rectf& GetBoundingBox() const;
 
 private:
-	std::vector<SpriteCell> m_cells;
+	typedef std::vector<SpriteCell> CellList;
+	CellList m_cells;
 
 	CL_Rectf m_boundingBox;
 };
