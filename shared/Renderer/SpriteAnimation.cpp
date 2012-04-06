@@ -1,6 +1,6 @@
-#include "SpriteAnimation.h"
+#include "PlatformPrecomp.h"
 
-#include "BaseApp.h"
+#include "SpriteAnimation.h"
 #include "Renderer/SpriteSheetSurface.h"
 
 #include "util/rapidxml/rapidxml.hpp"
@@ -320,4 +320,6 @@ bool SpriteAnimationSet::ParseFile(char *data)
 
 		return parseResult;
 	}
+
+	return false;
 }
