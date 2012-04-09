@@ -108,6 +108,7 @@ int MySQLManager::AddSelectResults(vector<VariantDB> &vdb)
 				}
 		//		printf("\n");
 			}
+		
 		//	printf("%s  ", row[i] ? row[i] : "NULL");
 			switch(fieldType[i])
 			{
@@ -120,6 +121,51 @@ int MySQLManager::AddSelectResults(vector<VariantDB> &vdb)
 			case FIELD_TYPE_SHORT:
 			case FIELD_TYPE_LONG:
 				db.GetVar(fieldNames[i])->Set((int32)atoi(row[i]));
+				break;
+
+			case FIELD_TYPE_DATETIME:
+				{
+						uint	y, m, d, h, mn, s;
+						uint nbScanned = sscanf(row[i], "%u-%u-%u %u:%u:%u", &y, &m, &d, &h, &mn, &s);
+						assert(nbScanned == 6);
+						tm	myTm;
+						myTm.tm_year = y-1900;
+						myTm.tm_mon = m-1;
+						myTm.tm_mday = d;
+						myTm.tm_hour = h;
+						myTm.tm_min = mn;
+						myTm.tm_sec = s;
+				
+						myTm.tm_isdst = -1; // let the C runtime determine daylight adjustment
+						myTm.tm_wday = -1;
+						myTm.tm_yday = -1;
+						assert( sizeof(time_t) == 4 && "Uh oh.. define _USE_32BIT_TIME_T somewhere for MSVC");
+						uint32 t = mktime(&myTm);
+						db.GetVar(fieldNames[i])->Set(t);
+					}
+				break;
+
+			case FIELD_TYPE_DATE:
+				{
+					//convert the sql style date ('YYYY-MM-DD') into a unix style date with string processing
+					uint	y, m, d;
+					uint nbScanned = sscanf(row[i], "%u-%u-%u", &y, &m, &d);
+					assert(nbScanned == 3);
+					tm	myTm;
+					myTm.tm_year = y-1900;
+					myTm.tm_mon = m-1;
+					myTm.tm_mday = d;
+					myTm.tm_hour = 0;
+					myTm.tm_min = 0;
+					myTm.tm_sec = 0;
+					
+					myTm.tm_isdst = -1; 
+					myTm.tm_wday = -1;
+					myTm.tm_yday = -1;
+					assert( sizeof(time_t) == 4 && "Uh oh.. define _USE_32BIT_TIME_T somewhere for MSVC");
+					uint32 t = mktime(&myTm);
+					db.GetVar(fieldNames[i])->Set(t);
+				}
 				break;
 
 			default: //assume string
