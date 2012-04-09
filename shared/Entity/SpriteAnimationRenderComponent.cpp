@@ -121,8 +121,7 @@ void SpriteAnimationRenderComponent::OnRender(VariantList *pVList)
 		CL_Vec2f vRotationPt(vFinalPos);
 		vRotationPt += *m_pSize2d / 2;
 
-		unsigned int currentFrameIndex = (*m_pPhase) * 0.999f * m_pCurrentAnimation->GetFrameCount();
-		const SpriteFrame* frame = m_pCurrentAnimation->GetFrame(currentFrameIndex);
+		const SpriteFrame* frame = m_pCurrentAnimation->GetFrameAtPhase(*m_pPhase);
 		for (int i = 0; i < frame->GetCellCount(); ++i)
 		{
 			const SpriteCell* cell = frame->GetCell(i);

@@ -76,7 +76,7 @@
     </cell>
   </anim>
   <anim name="MouthWinkle" loops="0">
-    <cell index="0" delay="1">
+    <cell index="0" delay="5">
       <spr name="FaceEye/Pupil/large" x="31" y="-16" z="-2"/>
       <spr name="FaceEye/Pupil/large" x="-26" y="-16" z="-2"/>
       <spr name="FaceEye/small" x="-26" y="-26" z="-1"/>
@@ -84,7 +84,7 @@
       <spr name="FaceMouth/sad" x="1" y="35" z="-1"/>
       <spr name="Face1" x="0" y="0" z="0"/>
     </cell>
-    <cell index="1" delay="1">
+    <cell index="1" delay="5">
       <spr name="FaceEye/Pupil/large" x="-26" y="-16" z="-2"/>
       <spr name="FaceEye/Pupil/large" x="31" y="-16" z="-2"/>
       <spr name="FaceEye/small" x="30" y="-27" z="-1"/>
@@ -92,7 +92,7 @@
       <spr name="FaceMouth/neutral" x="2" y="32" z="0"/>
       <spr name="Face1" x="0" y="0" z="0"/>
     </cell>
-    <cell index="2" delay="1">
+    <cell index="2" delay="5">
       <spr name="FaceEye/Pupil/large" x="-26" y="-16" z="-2"/>
       <spr name="FaceEye/Pupil/large" x="31" y="-16" z="-2"/>
       <spr name="FaceEye/small" x="-26" y="-26" z="-1"/>
@@ -100,7 +100,7 @@
       <spr name="FaceMouth/wink" x="1" y="38" z="-1"/>
       <spr name="Face1" x="0" y="0" z="0"/>
     </cell>
-    <cell index="3" delay="1">
+    <cell index="3" delay="30">
       <spr name="FaceEye/Pupil/large" x="-26" y="-16" z="-2"/>
       <spr name="FaceEye/Pupil/large" x="31" y="-16" z="-2"/>
       <spr name="FaceEye/large" x="31" y="-25" z="-1"/>
@@ -108,7 +108,7 @@
       <spr name="FaceMouth/wink" x="1" y="38" z="-1"/>
       <spr name="Face1" x="0" y="0" z="0"/>
     </cell>
-    <cell index="4" delay="1">
+    <cell index="4" delay="10">
       <spr name="FaceEye/Pupil/large" x="-26" y="-16" z="-2"/>
       <spr name="FaceEye/Pupil/large" x="31" y="-16" z="-2"/>
       <spr name="FaceMouth/smile" x="1" y="36" z="-1"/>
@@ -116,7 +116,7 @@
       <spr name="FaceEye/large" x="31" y="-25" z="-1"/>
       <spr name="Face1" x="0" y="0" z="0"/>
     </cell>
-    <cell index="5" delay="1">
+    <cell index="5" delay="5">
       <spr name="FaceEye/Pupil/large" x="-26" y="-16" z="-2"/>
       <spr name="FaceEye/Pupil/large" x="31" y="-16" z="-2"/>
       <spr name="FaceEye/small" x="-25" y="-25" z="-1"/>
@@ -124,7 +124,7 @@
       <spr name="FaceMouth/smile" x="1" y="36" z="-1"/>
       <spr name="Face1" x="0" y="0" z="0"/>
     </cell>
-    <cell index="6" delay="1">
+    <cell index="6" delay="5">
       <spr name="FaceEye/Pupil/large" x="-26" y="-16" z="-2"/>
       <spr name="FaceEye/Pupil/large" x="31" y="-16" z="-2"/>
       <spr name="FaceMouth/neutral" x="2" y="35" z="-1"/>

@@ -56,6 +56,17 @@ class SpriteFrame
 {
 public:
 	/**
+	 * Constructs a new \c SpriteFrame.
+	 * \param duration specifies the duration of this frame.
+	 */
+	SpriteFrame(unsigned int duration);
+
+	/**
+	 * Returns the duration of this \c SpriteFrame.
+	 */
+	unsigned int GetDuration() const;
+
+	/**
 	 * Adds a new cell to the end of the list of cells in this frame.
 	 */
 	void AddCell(const SpriteCell& spriteCell);
@@ -81,6 +92,8 @@ public:
 	const CL_Rectf& GetBoundingBox() const;
 
 private:
+	unsigned int m_duration;
+
 	typedef std::vector<SpriteCell> CellList;
 	CellList m_cells;
 
@@ -93,6 +106,8 @@ private:
 class SpriteAnimation
 {
 public:
+	SpriteAnimation();
+
 	/**
 	 * Adds a new frame to the end of the list of frames in this animation.
 	 */
@@ -110,6 +125,17 @@ public:
 	const SpriteFrame* GetFrame(unsigned int frameIndex) const;
 
 	/**
+	 * Gets the \c SpriteFrame in this animation at position \a phase.
+	 *
+	 * The argument \a phase must be on the interval [0,1]. The \a phase determines
+	 * a relative position on the animation. 0 signifies the beginning of the
+	 * animation and 1 signifies the end.
+	 *
+	 * Returns \c NULL if \a phase is invalid or this animation has no frames.
+	 */
+	const SpriteFrame* GetFrameAtPhase(float phase) const;
+
+	/**
 	 * Gets the bounding box inside which this animation fits.
 	 */
 	const CL_Rectf& GetBoundingBox() const;
@@ -117,6 +143,8 @@ public:
 private:
 	typedef std::vector<SpriteFrame> FrameList;
 	FrameList m_frames;
+
+	unsigned int m_totalDuration;
 
 	CL_Rectf m_boundingBox;
 };
