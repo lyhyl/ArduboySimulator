@@ -173,3 +173,37 @@ void TextScanner::DumpToLog()
 		LogMsg(tmp.c_str());
 	}
 }
+
+bool TextScanner::SaveFile( const string &fName, bool bAddBasePath /*= true*/ )
+{
+	string f;
+
+	if (bAddBasePath)
+	{
+		f = GetSavePath()+fName;
+	} else
+	{
+		f = fName;
+	}
+	FILE *fp = fopen( f.c_str(), "wb");
+
+	if (!fp)
+	{
+		LogError("Unable to save data");
+		return false;
+	}
+
+	for (uint32 i=0; i < m_lines.size(); i++)
+	{
+		fwrite(m_lines[i].c_str(), m_lines[i].size(), 1, fp);
+	}
+	
+	fclose(fp);
+	return true;
+}
+
+void TextScanner::DeleteLine( int lineNum )
+{
+	if (m_lastLine && m_lastLine >= lineNum) m_lastLine--;
+	m_lines.erase(m_lines.begin()+lineNum);
+}

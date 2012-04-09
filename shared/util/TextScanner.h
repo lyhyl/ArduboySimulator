@@ -56,6 +56,7 @@ public:
 	void Kill();
 
 	bool LoadFile(const string &fName, bool bAddBasePath = true);
+	bool SaveFile(const string &fName, bool bAddBasePath = true);
 	string GetParmString(string label, int index, string token = "|");
 	string GetParmStringFromLine(int lineNum, int index, string token = "|");
 	int GetParmIntFromLine( int lineNum, int index, string token = "|" );
@@ -66,7 +67,7 @@ public:
 	void Replace( const string &thisStr, const string &thatStr );
 	bool IsLoaded() {return !m_lines.empty();}
 	bool SetupFromMemoryAddress(const char *pCharArray);
-
+	void DeleteLine(int lineNum);
 	void StripLeadingSpaces();
 	string GetAll();
 	int GetLineCount() {return (int)m_lines.size();}
