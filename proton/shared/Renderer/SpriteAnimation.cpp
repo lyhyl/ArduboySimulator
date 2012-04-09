@@ -32,6 +32,16 @@ int SpriteCell::GetZLayer() const
 
 
 
+SpriteFrame::SpriteFrame(unsigned int duration) :
+	m_duration(duration)
+{
+}
+
+unsigned int SpriteFrame::GetDuration() const
+{
+	return m_duration;
+}
+
 void SpriteFrame::AddCell(const SpriteCell& spriteCell)
 {
 	CellList::iterator it(m_cells.begin());
@@ -78,9 +88,15 @@ const CL_Rectf& SpriteFrame::GetBoundingBox() const
 
 
 
+SpriteAnimation::SpriteAnimation() :
+	m_totalDuration(0)
+{
+}
+
 void SpriteAnimation::AddFrame(const SpriteFrame& spriteFrame)
 {
 	m_frames.push_back(spriteFrame);
+	m_totalDuration += spriteFrame.GetDuration();
 
 	if (m_frames.size() == 1)
 	{
@@ -101,6 +117,29 @@ const SpriteFrame* SpriteAnimation::GetFrame(unsigned int frameIndex) const
 	if (frameIndex < m_frames.size())
 	{
 		return &m_frames.at(frameIndex);
+	}
+
+	return NULL;
+}
+
+const SpriteFrame* SpriteAnimation::GetFrameAtPhase(float phase) const
+{
+	if (phase < 0.0f || phase > 1.0f)
+	{
+		return NULL;
+	}
+
+	const unsigned int phaseInTotalDuration = phase * m_totalDuration;
+	unsigned int cumulativeDuration = 0;
+
+	for (FrameList::const_iterator it(m_frames.begin()); it != m_frames.end(); it++)
+	{
+		cumulativeDuration += (*it).GetDuration();
+
+		if (cumulativeDuration >= phaseInTotalDuration)
+		{
+			return &(*it);
+		}
 	}
 
 	return NULL;
@@ -243,7 +282,7 @@ public:
 
 			for (xml_node<> *cellNode = animNode->first_node("cell"); cellNode; cellNode = cellNode->next_sibling("cell"))
 			{
-				SpriteFrame frame;
+				SpriteFrame frame(atoi(cellNode->first_attribute("delay")->value()));
 
 				for (xml_node<> *spriteNode = cellNode->first_node("spr"); spriteNode; spriteNode = spriteNode->next_sibling("spr"))
 				{
