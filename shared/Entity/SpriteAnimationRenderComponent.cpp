@@ -127,7 +127,7 @@ void SpriteAnimationRenderComponent::OnRender(VariantList *pVList)
 		{
 			const SpriteCell* cell = frame->GetCell(i);
 			const CL_Rectf& cellBB(cell->GetBoundingBox());
-			m_pSpriteSheet->BlitFrame(vFinalPos.x + (cellBB.left - m_pCurrentAnimBB.left), vFinalPos.y + (cellBB.top - m_pCurrentAnimBB.top), cell->GetSpriteName(), *m_pScale2d, finalColor, *m_pRotation, vRotationPt, *m_pFlipX != 0, *m_pFlipY != 0);
+			m_pSpriteSheet->BlitFrame(vFinalPos.x + (cellBB.left - m_pCurrentAnimBB.left) * m_pScale2d->x, vFinalPos.y + (cellBB.top - m_pCurrentAnimBB.top) * m_pScale2d->y, cell->GetSpriteName(), *m_pScale2d, finalColor, *m_pRotation, vRotationPt, *m_pFlipX != 0, *m_pFlipY != 0);
 		}
 	}
 }

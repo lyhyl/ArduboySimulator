@@ -90,6 +90,7 @@ Entity* MoreSpriteAnimationsScreenCreate(Entity *pParentEnt)
 
 	Entity *ent = pBG->AddEntity(new Entity("Face"));
 	SetPos2DEntity(ent, CL_Vec2f(OriginLeft, OriginTop));
+	SetScale2DEntity(ent, CL_Vec2f(0.8f, 0.8f));
 	SetAlignmentEntity(ent, ALIGNMENT_CENTER);
 	SpriteAnimationUtils::SetupAnimationEntity(ent, "game/face.anim", "RollEyes");
 

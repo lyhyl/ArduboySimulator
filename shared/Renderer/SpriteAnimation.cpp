@@ -172,7 +172,9 @@ public:
 
 	void ParseSpriteSheetDirNode(const xml_node<>& dirNode)
 	{
-		m_dirNames.push(dirNode.first_attribute("name")->value());
+		string dirName(dirNode.first_attribute("name")->value());
+		StringReplace(string("/"), string(""), dirName);
+		m_dirNames.push(dirName);
 
 		for (xml_node<> *childNode = dirNode.first_node(); childNode; childNode = childNode->next_sibling())
 		{
@@ -186,7 +188,9 @@ public:
 				float w = atof(childNode->first_attribute("w")->value());
 				float h = atof(childNode->first_attribute("h")->value());
 
-				m_spriteSheet->AddFrame(m_dirNames.value() + childNode->first_attribute("name")->value(), CL_Rect(x, y, x + w, y + h));
+				string sprName(childNode->first_attribute("name")->value());
+				StringReplace(string("/"), string(""), sprName);
+				m_spriteSheet->AddFrame(m_dirNames.value() + sprName, CL_Rect(x, y, x + w, y + h));
 			}
 		}
 
