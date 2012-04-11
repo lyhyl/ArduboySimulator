@@ -15,14 +15,35 @@ void SpriteAnimationUtils::SetupAnimationEntity(Entity* pEntity, const std::stri
 	}
 }
 
+void SpriteAnimationUtils::SetAnimationName(Entity* pEntity, const std::string& animationName)
+{
+	if (!animationName.empty())
+	{
+		EntityComponent* spriteAnimComp = pEntity->GetComponentByName("SpriteAnimationRender");
+
+#ifdef _DEBUG
+		if (!spriteAnimComp)
+		{
+			LogError("No sprite animation component found from '%s'. Can't set animation name.", pEntity->GetName().c_str());
+			assert(spriteAnimComp);
+		}
+#endif
+
+		spriteAnimComp->GetVar("animationName")->Set(animationName);
+	}
+}
+
 void SpriteAnimationUtils::StartAnimationEntity(Entity *pEntity, const std::string& animationName, unsigned int animationDuration, unsigned int delayToStartMS, InterpolateComponent::eOnFinish finishType)
 {
 	EntityComponent* spriteAnimComp = pEntity->GetComponentByName("SpriteAnimationRender");
+
+#ifdef _DEBUG
 	if (!spriteAnimComp)
 	{
 		LogError("No sprite animation component found from '%s'. Can't start animation", pEntity->GetName().c_str());
-		return;
+		assert(spriteAnimComp);
 	}
+#endif
 
 	EntityComponent *animator = pEntity->GetComponentByName("ic_sprite_animation");
 	if (!animator)

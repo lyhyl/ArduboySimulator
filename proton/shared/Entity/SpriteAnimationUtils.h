@@ -19,6 +19,13 @@ public:
 	static void SetupAnimationEntity(Entity* pEntity, const std::string& fileName, const std::string& animationName = std::string());
 
 	/**
+	 * Sets a sprite animation name to \a animationName.
+	 * The argument \a pEntity must already contain a \c SpriteAnimationRenderComponent.
+	 * This method does not create one.
+	 */
+	static void SetAnimationName(Entity* pEntity, const std::string& animationName);
+
+	/**
 	 * Starts a sprite animation called \a animationName on \a pEntity.
 	 * The duration of the animation is set by \a animationDuration in milliseconds.
 	 * It's expected that \a pEntity has been prepared with \c SetupSpriteAnimationEntity()
