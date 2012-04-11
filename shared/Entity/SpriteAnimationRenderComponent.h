@@ -84,6 +84,7 @@ private:
 
 	const SpriteAnimation *m_pCurrentAnimation;
 	CL_Rectf m_pCurrentAnimBB;
+	CL_Vec2f m_pCurrentAnimBBCenter;
 };
 
 #endif // SpriteAnimationRenderComponent_h__

@@ -35,9 +35,15 @@ void SpriteAnimationRenderComponent::UpdateSizeVars()
 	{
 		CL_Sizef s = m_pCurrentAnimation->GetBoundingBox().get_size();
 		GetVar("frameSize2d")->Set(s.width, s.height);
+
+		m_pCurrentAnimBBCenter.x = m_pCurrentAnimBB.left + m_pCurrentAnimBB.right;
+		m_pCurrentAnimBBCenter.y = m_pCurrentAnimBB.top + m_pCurrentAnimBB.bottom;
+		m_pCurrentAnimBBCenter *= (*m_pScale2d) * 0.5f;
 	} else
 	{
 		GetVar("frameSize2d")->Set(0.0f, 0.0f);
+
+		m_pCurrentAnimBBCenter.x = m_pCurrentAnimBBCenter.y = 0.0f;
 	}
 
 	GetParent()->GetVar("size2d")->Set((*m_pFrameSize) * (*m_pScale2d));
@@ -110,6 +116,9 @@ void SpriteAnimationRenderComponent::OnRender(VariantList *pVList)
 		if (m_pScale2d->x == 0 || m_pScale2d->y == 0) return;
 
 		CL_Vec2f vFinalPos = pVList->m_variant[0].GetVector2() + *m_pPos2d;
+
+		vFinalPos += m_pCurrentAnimBBCenter;
+
 		if (*m_pRotation == 0) // if rotation is enabled, we don't do this early exit check as it could be incorrect
 		{
 			if (vFinalPos.y < -m_pSize2d->y || vFinalPos.y > GetOrthoRenderSizeYf()) return;
