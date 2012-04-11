@@ -304,6 +304,44 @@ public:
 	}
 
 	/**
+	 * Add-and-assign operator.
+	 *
+	 * Adds the value of \a rhs to the value of this \c Variant and assigns the new value to this.
+	 * The type of this must match the type of \a rhs.
+	 *
+	 * The \c Variant type's specific addition operator is used. For example the
+	 * \c CL_Vec2f::operator+() is used when adding two vectors together.
+	 *
+	 * This operator has effect only for \c Variant types where adding two values makes sense
+	 * and is supported, such as the float and integer types. Adding for example two pointers
+	 * together makes no sense so this operator has no effect for the \c TYPE_ENTITY nor
+	 * \c TYPE_COMPONENT types among others.
+	 *
+	 * \note this operator is also supported for TYPE_STRING: it performs string
+	 * catenation as expected.
+	 * \return a reference to \c this.
+	 */
+	Variant& operator+=(const Variant& rhs);
+
+	/**
+	 * Subtract-and-assign operator.
+	 *
+	 * Subtracts the value of \a rhs from the value of this \c Variant and assigns the new value to this.
+	 * The type of this must match the type of \a rhs.
+	 *
+	 * The \c Variant type's specific subtraction operator is used. For example the
+	 * \c CL_Vec2f::operator-() is used when subtracting two vectors.
+	 *
+	 * This operator has effect only for \c Variant types where subtracting two values makes sense
+	 * and is supported, such as the float and integer types. Subtracting for example two pointers
+	 * from each other makes no sense so this operator has no effect for the \c TYPE_ENTITY nor
+	 * \c TYPE_COMPONENT types among others.
+	 *
+	 * \return a reference to \c this.
+	 */
+	Variant& operator-=(const Variant& rhs);
+
+	/**
 	 * Equality operator.
 	 *
 	 * \c Variants are considered equal when their types and values are equal.
@@ -357,6 +395,22 @@ private:
 	boost::signal<void (Variant*)> *m_pSig_onChanged; //not initialized unless used
 
 };
+
+/**
+ * \relates Variant
+ * Adds two \link Variant \c Variants \endlink together. Returns a new
+ * \c Variant that contains the result of the operation.
+ * \see Variant::operator+=()
+ */
+inline Variant operator+(Variant lhs, const Variant& rhs);
+
+/**
+ * \relates Variant
+ * Subtracts \a rhs from \a lhs. Returns a new \c Variant that contains
+ * the result of the operation.
+ * \see Variant::operator-=()
+ */
+inline Variant operator-(Variant lhs, const Variant& rhs);
 
 //a VariantList holds a group of variants, we pass these when we don't know in advance how many variants we want to use
 

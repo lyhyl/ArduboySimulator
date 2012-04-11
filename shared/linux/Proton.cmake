@@ -68,6 +68,14 @@ macro(proton_use_spriteanimation)
 	list(APPEND PROTON_SOURCES "${PROTON_RENDERER}/SpriteSheetSurface.cpp" "${PROTON_RENDERER}/SpriteAnimation.cpp" "${PROTON_ENTITY}/SpriteAnimationUtils.cpp")
 endmacro(proton_use_spriteanimation)
 
+# Adds any Proton source files to the project. The paths must be
+# relative to the "shared" directory in the Proton source tree.
+macro(proton_add_proton_sources)
+	foreach(src ${ARGV})
+		list(APPEND PROTON_SOURCES "${PROTON_SHARED}/${src}")
+	endforeach(src)
+endmacro(proton_add_proton_sources)
+
 macro(_proton_include_jpeg_sources)
 	set(PROTON_JPG "${PROTON_SHARED}/Irrlicht/source/Irrlicht/jpeglib")
 	list(APPEND PROTON_SOURCES "${PROTON_JPG}/jcapimin.c" "${PROTON_JPG}/jcapistd.c" "${PROTON_JPG}/jccoefct.c" "${PROTON_JPG}/jccolor.c" "${PROTON_JPG}/jcdctmgr.c" "${PROTON_JPG}/jchuff.c" "${PROTON_JPG}/jcinit.c" "${PROTON_JPG}/jcmainct.c" "${PROTON_JPG}/jcmarker.c" "${PROTON_JPG}/jcmaster.c" "${PROTON_JPG}/jcomapi.c" "${PROTON_JPG}/jcparam.c" "${PROTON_JPG}/jcphuff.c" "${PROTON_JPG}/jcprepct.c" "${PROTON_JPG}/jcsample.c" "${PROTON_JPG}/jctrans.c" "${PROTON_JPG}/jdapimin.c" "${PROTON_JPG}/jdapistd.c" "${PROTON_JPG}/jdatadst.c" "${PROTON_JPG}/jdatasrc.c" "${PROTON_JPG}/jdcoefct.c" "${PROTON_JPG}/jdcolor.c" "${PROTON_JPG}/jddctmgr.c" "${PROTON_JPG}/jdhuff.c" "${PROTON_JPG}/jdinput.c" "${PROTON_JPG}/jdmainct.c" "${PROTON_JPG}/jdmarker.c" "${PROTON_JPG}/jdmaster.c" "${PROTON_JPG}/jdmerge.c" "${PROTON_JPG}/jdphuff.c" "${PROTON_JPG}/jdpostct.c" "${PROTON_JPG}/jdsample.c" "${PROTON_JPG}/jdtrans.c" "${PROTON_JPG}/jerror.c" "${PROTON_JPG}/jfdctflt.c" "${PROTON_JPG}/jfdctfst.c" "${PROTON_JPG}/jfdctint.c" "${PROTON_JPG}/jidctflt.c" "${PROTON_JPG}/jidctfst.c" "${PROTON_JPG}/jidctint.c" "${PROTON_JPG}/jidctred.c" "${PROTON_JPG}/jmemmgr.c" "${PROTON_JPG}/jmemnobs.c" "${PROTON_JPG}/jquant1.c" "${PROTON_JPG}/jquant2.c" "${PROTON_JPG}/jutils.c")
