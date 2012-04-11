@@ -15,7 +15,7 @@
 class Entity;
 
 /**
- * A component that reacts to keyboard input and passes the events to a tree of \link Entity \c Entities.\endlink
+ * A component that reacts to keyboard input and passes the events to a tree of \link Entity <tt>Entities</tt>\endlink.
  *
  * The name of the component is initially set to "FocusInput".
  *
@@ -55,7 +55,7 @@ public:
 	 * Starts listening to the \c BaseApp::m_sig_input_move signal.
 	 *
 	 * Only connects the signal if the input mode is \link
-	 * FocusInputComponent::INPUT_MODE_SEPARATE_MOVE_TOUCHES \c INPUT_MODE_SEPARATE_MOVE_TOUCHES.\endlink
+	 * FocusInputComponent::INPUT_MODE_SEPARATE_MOVE_TOUCHES <tt>INPUT_MODE_SEPARATE_MOVE_TOUCHES</tt>\endlink.
 	 *
 	 * This method is also available through a function object called "LinkMoveMessages".
 	 *

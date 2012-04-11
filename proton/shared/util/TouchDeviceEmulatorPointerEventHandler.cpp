@@ -5,7 +5,7 @@
 #include "Entity/FocusRenderComponent.h"
 
 TouchDeviceEmulatorPointerEventHandler::TouchDeviceEmulatorPointerEventHandler(unsigned int primaryPointerId, unsigned int secondaryPointerId) :
-    mPrimaryPointerId(primaryPointerId),
+	mPrimaryPointerId(primaryPointerId),
 	mSecondaryPointerId(secondaryPointerId),
 	mMode(NONE),
 	mSecondaryButtonDown(false)

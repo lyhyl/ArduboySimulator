@@ -62,7 +62,6 @@ public:
 	virtual void OnRemove();
 
 	void OnInput(VariantList *pVList);
-	void OnUpdate(VariantList *pVList);
 
 private:
 	void HandleClickStart(CL_Vec2f &pt, uint32 fingerID);

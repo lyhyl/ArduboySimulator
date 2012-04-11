@@ -94,7 +94,7 @@ void AddInputMovementFocusIfNeeded(Entity *pEnt);
  * Commands a \c FocusInputComponent in \a pEnt to also recognize the raw keyboard input messages.
  *
  * The \c FocusInputComponent is searched for in \a pEnt and its parent \link Entity
- * \c Entities.\endlink If no \c FocusInputComponent is found then this method has
+ * <tt>Entities</tt>\endlink. If no \c FocusInputComponent is found then this method has
  * no effect.
  *
  * \see FocusInputComponent

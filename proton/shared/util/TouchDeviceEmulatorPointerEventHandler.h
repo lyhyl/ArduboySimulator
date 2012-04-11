@@ -21,10 +21,10 @@ class TouchDeviceEmulatorPointerEventHandler : public PointerEventHandler
 {
 public:
 	/**
-	 * \param primaryPoniterId sets a value that is used for the primary pointer.
-	 * \param secondaryPoniterId sets a value that is used for the secondary pointer.
+	 * \param primaryPointerId sets a value that is used for the primary pointer.
+	 * \param secondaryPointerId sets a value that is used for the secondary pointer.
 	 */
-    TouchDeviceEmulatorPointerEventHandler(unsigned int primaryPointerId, unsigned int secondaryPointerId);
+	TouchDeviceEmulatorPointerEventHandler(unsigned int primaryPointerId, unsigned int secondaryPointerId);
 	virtual ~TouchDeviceEmulatorPointerEventHandler();
 
 	virtual void handlePointerDownEvent(float x, float y, unsigned int pointerId);
