@@ -42,6 +42,10 @@
 
 #endif  // #ifndef _CONSOLE
 
+#ifndef PLATFORM_LINUX
+#define PLATFORM_LINUX
+#endif
+
 #ifndef M_PI
 #define M_PI 3.141592f
 #endif

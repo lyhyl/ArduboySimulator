@@ -78,6 +78,78 @@ void Variant::Set(const Variant &v )
 	if (m_pSig_onChanged) (*m_pSig_onChanged)(this);
 }
 
+Variant& Variant::operator+=(const Variant& rhs)
+{
+	if (GetType() == rhs.GetType())
+	{
+		switch (GetType())
+		{
+		case TYPE_FLOAT:
+			Set(GetFloat() + rhs.GetFloat());
+			break;
+
+		case TYPE_STRING:
+			Set(GetString() + rhs.GetString());
+			break;
+
+		case TYPE_VECTOR2:
+			Set(GetVector2() + rhs.GetVector2());
+			break;
+
+		case TYPE_VECTOR3:
+			Set(GetVector3() + rhs.GetVector3());
+			break;
+
+		case TYPE_UINT32:
+			Set(GetUINT32() + rhs.GetUINT32());
+			break;
+
+		case TYPE_INT32:
+			Set(GetINT32() + rhs.GetINT32());
+			break;
+
+		default:
+			break;
+		}
+	}
+
+	return *this;
+}
+
+Variant& Variant::operator-=(const Variant& rhs)
+{
+	if (GetType() == rhs.GetType())
+	{
+		switch (GetType())
+		{
+		case TYPE_FLOAT:
+			Set(GetFloat() - rhs.GetFloat());
+			break;
+
+		case TYPE_VECTOR2:
+			Set(GetVector2() - rhs.GetVector2());
+			break;
+
+		case TYPE_VECTOR3:
+			Set(GetVector3() - rhs.GetVector3());
+			break;
+
+		case TYPE_UINT32:
+			Set(GetUINT32() - rhs.GetUINT32());
+			break;
+
+		case TYPE_INT32:
+			Set(GetINT32() - rhs.GetINT32());
+			break;
+
+		default:
+			break;
+		}
+	}
+
+	return *this;
+}
+
 bool Variant::operator==(const Variant& rhs) const
 {
 	if (GetType() != rhs.GetType()) {
@@ -318,6 +390,18 @@ bool Variant::Save( FILE *fp, const string &varName )
 
 	
 	return true;
+}
+
+inline Variant operator+(Variant lhs, const Variant& rhs)
+{
+	lhs += rhs;
+	return lhs;
+}
+
+inline Variant operator-(Variant lhs, const Variant& rhs)
+{
+	lhs -= rhs;
+	return lhs;
 }
 
 int GetSizeOfData(Variant::eType type)
