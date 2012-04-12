@@ -42,17 +42,25 @@ process_directory_images() {
 	then
 		cd "$1"
 		TEXTURE_CONVERSION_OPTS=$(cat texture_conversion_flags.txt)
-		find . -depth \( -name '*.jpg' -o -name '*.bmp' -o -name '*.png' \) -exec ${PACK_EXE} ${TEXTURE_CONVERSION_OPTS} '{}' ';'
-		cd -
+		if [[ -z "$TEXTURE_CONVERSION_OPTS" ]]; then
+			echo "Texture conversion flags are empty."
+			echo "Check that the file texture_conversion_flags.txt exists in directory '$1' and contains the correct parameters for RTPack."
+			exit 1
+		fi
+		
+		for IMG in `find . -depth \( -name '*.jpg' -o -name '*.bmp' -o -name '*.png' \) -print`; do
+			RTTEX=`echo $IMG | sed -e 's/\.\(jpg\|bmp\|png\)$/.rttex/'`
+			if [[ "$IMG" -nt "$RTTEX" ]]; then
+				$PACK_EXE $TEXTURE_CONVERSION_OPTS "$IMG"
+				$PACK_EXE "$RTTEX"
+			fi
+		done
+		cd - > /dev/null
 	fi
 }
 
 process_directory_images game
 process_directory_images interface
-
-echo Final compression
-
-find . -depth -name '*.rttex' -exec ${PACK_EXE} '{}' ';'
 
 echo Delete things we do not want copied
 rm -f interface/font_*.rttex
@@ -62,7 +70,7 @@ echo Copy the stuff we care about
 copy_media_to_bin() {
 	if [[ -d "$1" ]];
 	then
-		sed -e 's/^\..*$/*&/g' "$2" | rsync -v --delete --delete-excluded --recursive --exclude-from=- "$1" ../bin
+		sed -e 's/^\..*$/*&/g' "$2" | rsync -v --update --delete --delete-excluded --recursive --exclude-from=- "$1" ../bin
 	fi
 }
 
