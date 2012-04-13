@@ -2,8 +2,10 @@
 #include "FileSystem/FileManager.h"
 #include "ClanLib/core.h"
 #include "TexturePacker.h"
+#include "util/rapidxml/rapidxml.hpp"
 
 using namespace std;
+using namespace rapidxml;
 
 FontPacker::FontPacker()
 {
@@ -54,7 +56,6 @@ bool FontPacker::WriteHeaderBitMapFontGenerator(FILE *fp, string fntFile, rtfont
 		
 		int index = CL_String::to_int(parms[1]);
 		
-
 		if (index == header.firstChar+i)
 		{
 			//actually use this
@@ -70,7 +71,6 @@ bool FontPacker::WriteHeaderBitMapFontGenerator(FILE *fp, string fntFile, rtfont
 			charData.charBmpPosU2 = 0;
 			charData.charBmpPosV2 = 0;
 			charData.xadvance = CL_String::to_int(parms[8]);
-
 		} else
 		{
 			//filler padding, we don't support this char
@@ -111,6 +111,128 @@ bool FontPacker::WriteHeaderBitMapFontGenerator(FILE *fp, string fntFile, rtfont
 	return true;
 }
 
+bool FontPacker::WriteHeaderBitMapFontGeneratorXML(FILE *fp, string fntFile, rtfont_header &header)
+{
+	unsigned int size;
+	char* pData = (char*)LoadFileIntoMemory(fntFile, &size);
+	if (!pData)
+	{
+		return false;
+	}
+
+	xml_document<> fontDoc;
+	fontDoc.parse<0>(pData);
+
+	memcpy(header.rtFileHeader.fileTypeID, C_RTFILE_FONT_HEADER, 6);
+
+	xml_node<> *fontNode = fontDoc.first_node("font");
+
+	xml_node<> *commonNode = fontNode->first_node("common");
+	int lineHeight = CL_String::to_int(commonNode->first_attribute("lineHeight")->value());
+
+	header.charSpacing = 0;
+	header.lineHeight = lineHeight;
+	header.lineSpacing = lineHeight;
+	header.shadowXOffset = 0;
+	header.shadowYOffset = 0;
+
+	xml_node<> *kerningsNode = fontNode->first_node("kernings");
+	int kerningCount = CL_String::to_int(kerningsNode->first_attribute("count")->value());
+	header.kerningPairCount = kerningCount;
+
+	xml_node<> *charsNode = fontNode->first_node("chars");
+
+	list<BMFGChar> charList;
+
+	for (xml_node<> *charNode = charsNode->first_node("char"); charNode; charNode = charNode->next_sibling("char"))
+	{
+		BMFGChar c;
+		c.id = CL_String::to_int(charNode->first_attribute("id")->value());
+		c.x = CL_String::to_int(charNode->first_attribute("x")->value());
+		c.y = CL_String::to_int(charNode->first_attribute("y")->value());
+		c.width = CL_String::to_int(charNode->first_attribute("width")->value());
+		c.height = CL_String::to_int(charNode->first_attribute("height")->value());
+		c.xoffset = CL_String::to_int(charNode->first_attribute("xoffset")->value());
+		c.yoffset = CL_String::to_int(charNode->first_attribute("yoffset")->value());
+		c.xadvance = CL_String::to_int(charNode->first_attribute("xadvance")->value());
+
+		// Put the chars in the list in ascending order according to their id
+		list<BMFGChar>::iterator insIt(charList.begin());
+		while (insIt != charList.end())
+		{
+			if (insIt->id > c.id)
+			{
+				break;
+			}
+			++insIt;
+		}
+		charList.insert(insIt, c);
+	}
+
+	header.firstChar = charList.front().id;
+	header.lastChar = charList.back().id + 1;
+
+	fwrite(&header, 1, sizeof(rtfont_header), fp);
+	//add the character data
+	rtfont_charData charData;
+
+	list<BMFGChar>::iterator charIt(charList.begin());
+	for (short i = header.firstChar; i < header.lastChar; ++i)
+	{
+		if (i == charIt->id)
+		{
+			//actually use this
+			charData.bmpPosX = charIt->x;
+			charData.bmpPosY = charIt->y;
+			charData.charSizeX = charIt->width;
+			charData.charSizeY = charIt->height;
+			charData.charBmpOffsetX = charIt->xoffset;
+			charData.charBmpOffsetY = charIt->yoffset;
+
+			charData.charBmpPosU = 0;
+			charData.charBmpPosV = 0;
+			charData.charBmpPosU2 = 0;
+			charData.charBmpPosV2 = 0;
+			charData.xadvance = charIt->xadvance;
+
+			++charIt;
+		} else
+		{
+			//filler padding, we don't support this char
+
+			charData.bmpPosX =0;
+			charData.bmpPosY = 0;
+			charData.charSizeX = 0;
+			charData.charSizeY = 0;
+			charData.charBmpOffsetX = 0;
+			charData.charBmpOffsetY = 0;
+
+			charData.charBmpPosU = 0;
+			charData.charBmpPosV = 0;
+			charData.charBmpPosU2 = 0;
+			charData.charBmpPosV2 = 0;
+			charData.xadvance = 0;
+		}
+
+		fwrite(&charData, 1, sizeof(rtfont_charData), fp);
+	}
+
+	KerningPair k;
+
+	//also add kerning data, if applicable
+	for (xml_node<> *kerningNode = kerningsNode->first_node("kerning"); kerningNode; kerningNode = kerningNode->next_sibling("kerning"))
+	{
+		k.first = CL_String::to_int(kerningNode->first_attribute("first")->value());
+		k.second = CL_String::to_int(kerningNode->first_attribute("second")->value());
+		k.amount = CL_String::to_int(kerningNode->first_attribute("amount")->value());
+
+		fwrite(&k, 1, sizeof(KerningPair), fp);
+	}
+
+	SAFE_DELETE_ARRAY(pData);
+
+	return true;
+}
 
 bool FontPacker::WriteHeader(FILE *fp, string fntFile, rtfont_header &header)
 {
@@ -120,6 +242,10 @@ bool FontPacker::WriteHeader(FILE *fp, string fntFile, rtfont_header &header)
 	{
 		//"info" at the front means its a BitMap Font Generator fnt file
 		return WriteHeaderBitMapFontGenerator(fp, fntFile, header);
+	} else if (t.m_lines[0].find("<font") != string::npos)
+	{
+		// BitMap Font Generator XML file
+		return WriteHeaderBitMapFontGeneratorXML(fp, fntFile, header);
 	}
 
 	//assume it's a Well Oiled Font file

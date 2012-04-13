@@ -25,7 +25,20 @@ private:
 	bool WriteHeader(FILE *fp, std::string fntFile, rtfont_header &header);
 	bool WriteFontStates(FILE *fp, TextScanner &t);
 	bool WriteHeaderBitMapFontGenerator(FILE *fp, std::string fntFile, rtfont_header &header);
+	bool WriteHeaderBitMapFontGeneratorXML(FILE *fp, std::string fntFile, rtfont_header &header);
 	std::vector<FontState> m_fontStates;
+
+	struct BMFGChar
+	{
+		short id;
+		short x;
+		short y;
+		short width;
+		short height;
+		short xoffset;
+		short yoffset;
+		short xadvance;
+	};
 
 };
 
