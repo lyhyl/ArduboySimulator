@@ -18,18 +18,10 @@ set(PROTON_UTIL "${PROTON_SHARED}/util")
 set(PROTON_BOOSTSIGNALS "${PROTON_UTIL}/boost/libs/signals/src")
 set(PROTON_CLANMATH "${PROTON_SHARED}/ClanLib-2.0/Sources/Core/Math")
 
-
-# Includes a specific list of Components to the project. The names of
-# the Components are the base names of the files without the .cpp extension.
-#
-# Example:
-# proton_include_components(CustomInputComponent ArcadeInputComponent)
-macro(proton_include_components)
-	foreach(comp ${ARGV})
-		list(APPEND PROTON_SOURCES "${PROTON_ENTITY}/${comp}.cpp")
-	endforeach(comp)
-endmacro(proton_include_components)
-
+# Adds the _DEBUG preprocessor definition to debug builds
+get_directory_property(Defs COMPILE_DEFINITIONS_DEBUG)
+list(APPEND Defs _DEBUG)
+set_directory_properties(PROPERTIES COMPILE_DEFINITIONS_DEBUG ${Defs})
 
 include_directories("${PROTON_SHARED}")
 include_directories("${PROTON_UTIL}/boost")
@@ -48,6 +40,19 @@ set(PROTON_SOURCES "${PROTON_SHARED}/BaseApp.cpp" "${PROTON_SHARED}/PlatformSetu
 	"${PROTON_BOOSTSIGNALS}/connection.cpp" "${PROTON_BOOSTSIGNALS}/named_slot_map.cpp" "${PROTON_BOOSTSIGNALS}/signal_base.cpp" "${PROTON_BOOSTSIGNALS}/slot.cpp" "${PROTON_BOOSTSIGNALS}/trackable.cpp"
 	"${PROTON_CLANMATH}/angle.cpp" "${PROTON_CLANMATH}/mat3.cpp" "${PROTON_CLANMATH}/mat4.cpp" "${PROTON_CLANMATH}/rect.cpp" "${PROTON_CLANMATH}/vec2.cpp" "${PROTON_CLANMATH}/vec3.cpp" "${PROTON_CLANMATH}/vec4.cpp"
 )
+
+
+# Includes a specific list of Components to the project. The names of
+# the Components are the base names of the files without the .cpp extension.
+#
+# Example:
+# proton_include_components(CustomInputComponent ArcadeInputComponent)
+macro(proton_include_components)
+	foreach(comp ${ARGV})
+		list(APPEND PROTON_SOURCES "${PROTON_ENTITY}/${comp}.cpp")
+	endforeach(comp)
+endmacro(proton_include_components)
+
 # TouchDeviceEmulatorPointerEventHandler needs these components
 proton_include_components(RectRenderComponent FocusRenderComponent)
 
