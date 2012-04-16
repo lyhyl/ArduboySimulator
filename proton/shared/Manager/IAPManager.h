@@ -34,7 +34,8 @@ public:
 	void BuyItem(string itemName);
 	bool IsItemPurchased( const string item);
 	void Reset(); //call this after a purchase to reset things
-	string GetExtraData() {return m_extraData;} //the order# if webos, after a successful purchase
+	string GetExtraData() {return m_extraData;} //the order# or receipt, after a successful purchase
+	string GetItemID() {return m_lastItemID;} //last itemID that was processed
 
 	enum ResponseCode
 	{
@@ -50,8 +51,10 @@ public:
 
 	};
 
-	boost::signal<void (VariantList*)> m_sig_item_purchase_result; //to avoid polling, you can use this.  parm 1 is the return code (uint)
-
+	//to avoid polling, you can use this.  parm 0 is the return code (uint), parm 1 is the receipt (depends on platform),
+	//parm 2 is the item id in question
+	boost::signal<void (VariantList*)> m_sig_item_purchase_result; 
+	
 protected:
 	
 	enum eState
@@ -68,6 +71,7 @@ protected:
 		CANCELED,
 		REFUNDED
 	};
+	
 	eState m_state;
 	eReturnState m_returnState;
 	unsigned int m_timer;
@@ -76,6 +80,7 @@ protected:
 	string m_itemToBuy;
 	string m_extraData;
 	bool m_bWaitingForReply;
+	string m_lastItemID;
 };
 
 #endif // IAPManager_h__

@@ -66,6 +66,7 @@ Entity * CreateCheckbox(Entity *pBG, string name, string text, float x, float y,
 
 void DisableAllButtonsEntity(Entity *pEnt, bool bRecursive = true);
 void EnableAllButtonsEntity(Entity *pEnt, bool bRecursive = true, int delayBeforeActionMS = 0, eTimingSystem timing = GetTiming());
+Entity * DisableEntityButtonByName(const string &entityName, Entity *pRootEntity = GetEntityRoot());
 void SlideScreen(Entity *pEnt, bool bIn, int speedMS = 500, int delayToStartMS = 0);
 void SlideScreenVertical(Entity *pEnt, bool bIn, int speedMS = 500, int delayToStartMS = 0);
 void BobEntity(Entity *pEnt, float bobAmount = 3);
@@ -106,7 +107,7 @@ void RemoveInputFocusIfNeeded(Entity *pEnt); //just removes input
 void FadeOutEntity(Entity *pEnt, bool bRecursive=true, int timeMS=300, int delayBeforeFadingMS = 0);
 void FadeOutAndKillEntity(Entity *pEnt, bool bRecursive = true, int timeMS=300, int delayBeforeFadingMS = 0);
 void FadeOutAndKillChildrenEntities(Entity *pEnt, int timeMS=300, int delayBeforeFadingMS = 0);
-void FadeInEntity(Entity *pEnt, bool bRecursive=true, int timeMS=300, int delayBeforeFadingMS = 0);
+void FadeInEntity(Entity *pEnt, bool bRecursive=true, int timeMS=300, int delayBeforeFadingMS = 0, float fadeTarget = 1.0f);
 void KillEntity(Entity *pEnt, int timeMS = 0, eTimingSystem timing = GetTiming());
 EntityComponent * PulsateColorEntity(Entity *pEnt, bool bRecursive, unsigned int color, unsigned int pulsateSpeedMS = 250);
 

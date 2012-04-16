@@ -318,11 +318,11 @@ std::string GetOverlayImageEntity(Entity *pEntWithOverlayComponent)
 	return var->GetString();
 }
 
-void FadeInEntity(Entity *pEnt, bool bRecursive, int timeMS, int delayBeforeFadingMS)
+void FadeInEntity(Entity *pEnt, bool bRecursive, int timeMS, int delayBeforeFadingMS, float fadeTarget)
 {
 	pEnt->GetVar("alpha")->Set(0.0f); //so we can fade in
 
-	SetupInterpolateComponent(pEnt, "", "alpha", 1.0f, timeMS, delayBeforeFadingMS);
+	SetupInterpolateComponent(pEnt, "", "alpha", fadeTarget, timeMS, delayBeforeFadingMS);
 
 	if (!bRecursive) return;
 
@@ -332,7 +332,7 @@ void FadeInEntity(Entity *pEnt, bool bRecursive, int timeMS, int delayBeforeFadi
 	EntityList::iterator itor = pChildren->begin();
 	while (itor != pChildren->end())
 	{
-		FadeInEntity( *itor, bRecursive, timeMS, delayBeforeFadingMS);
+		FadeInEntity( *itor, bRecursive, timeMS, delayBeforeFadingMS, fadeTarget);
 		itor++;
 	}
 }
@@ -462,6 +462,23 @@ bool IsDisabledEntity(Entity *pEnt)
 	}
 
 	return false;
+}
+
+Entity * DisableEntityButtonByName(const string &entityName, Entity *pRootEntity)
+{
+	Entity *pEnt = pRootEntity->GetEntityByName(entityName);
+
+	if (!pEnt) return NULL;
+
+	EntityComponent * pComp = pEnt->GetComponentByName("Button2D");
+
+	if (pComp)
+	{
+		pComp->GetVar("disabled")->Set(uint32(1));
+	}
+	
+	return pEnt;
+
 }
 
 void DisableAllButtonsEntity(Entity *pEnt, bool bRecursive)
@@ -1494,8 +1511,9 @@ void EntitySetScaleBySize(Entity *pEnt, CL_Vec2f vDestSize, bool bPreserveAspect
 	if (bPreserveAspectRatio)
 	{
 		float aspectRatio = vSize.x /vSize.y;
+		
 		//knock the X setting out and replace with aspect correct size
-		if (aspectRatio > 1.0)	
+		if (aspectRatio <  1.0)	
 		{
 			//actually, lets do it the other way
 			vDestSize.y = vDestSize.x * (1/aspectRatio);
@@ -1740,9 +1758,18 @@ Entity * SetTextEntityByName(const string &entityName, string text, Entity *pRoo
 	if (!pEnt) return NULL; //couldn't find it
 
 	EntityComponent *pTextComp = pEnt->GetComponentByName("TextRender");
+	
 	if (!pTextComp)
 	{
-		assert(!"Well, we found the entity but it doesn't have a TextRender component.  How the heck can we change its label?");
+		//also try for another kind of component
+		pTextComp = pEnt->GetComponentByName("TextBoxRender");
+	}
+	
+	
+	
+	if (!pTextComp)
+	{
+		assert(!"Well, we found the entity but it doesn't have a TextRender or TextBoxRender component.  How the heck can we change its label?");
 		return NULL;
 	}
 
