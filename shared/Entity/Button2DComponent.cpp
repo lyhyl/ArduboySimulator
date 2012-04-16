@@ -163,6 +163,7 @@ void Button2DComponent::PerformClick(VariantList *pVList)
 
 	//why are we setting the parent here?  Well, I must have had a good reason.. someone must want this as output.
 	//Don't change to be safe.  -Seth
+	
 	pVList->m_variant[1].Set(GetParent());
 
 	switch (*m_pVisualStyle)
@@ -208,14 +209,17 @@ void Button2DComponent::OnTouchEnd(VariantList *pVList)
 		TouchTrackInfo *pTouch = GetBaseApp()->GetTouch(pVList->Get(2).GetUINT32());
 		if (!pTouch->WasHandled() || pTouch->GetEntityThatHandledIt() == NULL || pTouch->GetEntityThatHandledIt() == GetParent())
 		{
-			PerformClick(pVList);
+			if (*m_pDisabled == 0)
+				PerformClick(pVList);
 		}
 		break;
 	}
 
 	case BUTTON_STYLE_CLICK_ON_TOUCH_PRESS_RELEASE:
-		if (m_pressed) {
-			PerformClick(pVList);
+		if (m_pressed)
+		{
+			if (*m_pDisabled == 0)
+				PerformClick(pVList);
 		}
 		break;
 

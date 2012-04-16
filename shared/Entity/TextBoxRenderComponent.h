@@ -14,6 +14,21 @@
 #include "Entity.h"
 #include "Renderer/Surface.h"
 
+/*
+
+This component lets you draw word wrapped text into a predefined rect area.
+
+The rect is just the parent entities size.
+
+By default, the text is left justified, but it also supports ALIGNMENT_UPPER_CENTER, you can enable that like this:
+
+pTextEnt->GetComponentByName("TextBoxRender")->GetVar("textAlignment")->Set( (uint32)ALIGNMENT_UPPER_CENTER);
+
+Note:  The size of the parent entity is modified with the height of the final text height, which is a bit confusing and I'd
+like to change (should stay static) , but this is a breaking change.  I'll fix if someone else bugs me though. -Seth
+
+*/
+
 class TextBoxRenderComponent: public EntityComponent
 {
 public:
@@ -38,7 +53,7 @@ private:
 	void OnFontChanged(Variant *pDataObject);
 	void DrawTextNormal(CL_Vec2f vPos);
 	void DrawTextType(CL_Vec2f vPos);
-
+	void OnTextAlignmentChanged(Variant *pDataObject);
 	CL_Vec2f *m_pPos2d;
 	CL_Vec2f *m_pSize2d;
 	CL_Vec2f *m_pEnclosedSize2d;
@@ -57,6 +72,7 @@ private:
 	uint32 *m_pTimingSystem;
 	uint32 m_lastLineRendered;
 	uint32 m_lastCharRendered;
+	uint32 *m_pTextAlignment;
 
 };
 

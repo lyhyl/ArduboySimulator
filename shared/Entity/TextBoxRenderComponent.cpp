@@ -12,34 +12,6 @@ TextBoxRenderComponent::~TextBoxRenderComponent()
 {
 }
 
-void TextBoxRenderComponent::OnTextChanged(Variant *pDataObject)
-{
-	//we need to breakdown the text and convert it into word wrapped lines in our deque
-	m_lines.clear();
-	GetBaseApp()->GetFont(eFont(*m_pFontID))->MeasureTextAndAddByLinesIntoDeque(*m_pSize2d, *m_pText, &m_lines, *m_pFontScale, *m_pEnclosedSize2d);
-	m_typeTimer = GetTick(eTimingSystem(*m_pTimingSystem));
-	m_lastLineRendered = 0;
-	m_lastCharRendered = 0;
-	GetVar("totalHeightInPixels")->Set(m_lines.size()*GetBaseApp()->GetFont(eFont(*m_pFontID))->GetLineHeight(*m_pFontScale));
-	GetVar("totalLines")->Set(uint32(m_lines.size()));
-
-	m_pSize2d->y = m_lines.size()*GetBaseApp()->GetFont(eFont(*m_pFontID))->GetLineHeight(*m_pFontScale);
-}
-
-
-void TextBoxRenderComponent::OnScaleChanged(Variant *pDataObject)
-{
-	//OPTIMIZE: this is lame, recomputing everything, but whatever
-	OnTextChanged(NULL);
-}
-
-
-void TextBoxRenderComponent::OnFontChanged(Variant *pDataObject)
-{
-	//OPTIMIZE: this is lame, recomputing everything, but whatever
-	OnTextChanged(NULL);
-}
-
 void TextBoxRenderComponent::OnAdd(Entity *pEnt)
 {
 	EntityComponent::OnAdd(pEnt);
@@ -60,6 +32,10 @@ void TextBoxRenderComponent::OnAdd(Entity *pEnt)
 	m_pFontScale = &GetVarWithDefault("fontScale", Variant(1.0f))->GetFloat();
 	m_pEffectPower = &GetVarWithDefault("effectPower", Variant(30.0f))->GetFloat();
 	m_pStyle = &GetVarWithDefault("style", Variant(uint32(STYLE_NORMAL)))->GetUINT32();
+	
+	//this controls the alignment of the wrapped text within the text rect, not the text rect itself!
+	m_pTextAlignment = &GetVarWithDefault("textAlignment", (uint32)ALIGNMENT_UPPER_LEFT)->GetUINT32();
+	GetVar("textAlignment")->GetSigOnChanged()->connect(1, boost::bind(&TextBoxRenderComponent::OnTextAlignmentChanged, this, _1));
 
 	//if "fileName" is set, we'll know about it here
 	m_pText = &GetVar("text")->GetString(); //local to us
@@ -78,6 +54,42 @@ void TextBoxRenderComponent::OnRemove()
 {
 	EntityComponent::OnRemove();
 }
+
+
+void TextBoxRenderComponent::OnTextChanged(Variant *pDataObject)
+{
+	//we need to breakdown the text and convert it into word wrapped lines in our deque
+	m_lines.clear();
+	GetBaseApp()->GetFont(eFont(*m_pFontID))->MeasureTextAndAddByLinesIntoDeque(*m_pSize2d, *m_pText, &m_lines, *m_pFontScale, *m_pEnclosedSize2d);
+	m_typeTimer = GetTick(eTimingSystem(*m_pTimingSystem));
+	m_lastLineRendered = 0;
+	m_lastCharRendered = 0;
+	GetVar("totalHeightInPixels")->Set(m_lines.size()*GetBaseApp()->GetFont(eFont(*m_pFontID))->GetLineHeight(*m_pFontScale));
+	GetVar("totalLines")->Set(uint32(m_lines.size()));
+
+	m_pSize2d->y = GetVar("totalHeightInPixels")->GetFloat();
+}
+
+
+void TextBoxRenderComponent::OnScaleChanged(Variant *pDataObject)
+{
+	//OPTIMIZE: this is lame, recomputing everything, but whatever
+	OnTextChanged(NULL);
+}
+
+void TextBoxRenderComponent::OnTextAlignmentChanged(Variant *pDataObject)
+{
+	//not really needed yet, alignment isn't used during the computation process
+	//OnTextChanged(NULL);
+}
+
+
+void TextBoxRenderComponent::OnFontChanged(Variant *pDataObject)
+{
+	//OPTIMIZE: this is lame, recomputing everything, but whatever
+	OnTextChanged(NULL);
+}
+
 
 void TextBoxRenderComponent::DrawTextNormal(CL_Vec2f vPos)
 {
@@ -108,20 +120,33 @@ void TextBoxRenderComponent::DrawTextNormal(CL_Vec2f vPos)
 			break; //no use drawing any more down here
 		}
 
-		
-		GetBaseApp()->GetFont(eFont(*m_pFontID))->DrawScaled(vPos.x, vPos.y, m_lines[i], *m_pFontScale, color, &state, &g_globalBatcher);
+		float lineSizeX;
 
+		switch (*m_pTextAlignment)
+		{
+		case ALIGNMENT_UPPER_CENTER:
+
+			//center the text on its line.  No reason why we couldn't cache this size data, but I suspect it's not a big hit compared to the
+			//actual rendering.
+			lineSizeX = GetBaseApp()->GetFont(eFont(*m_pFontID))->MeasureText(m_lines[i], *m_pFontScale).x;
+			GetBaseApp()->GetFont(eFont(*m_pFontID))->DrawScaled(vPos.x + ( (m_pSize2d->x-lineSizeX)/2), vPos.y, m_lines[i], *m_pFontScale, color, &state, &g_globalBatcher);
+			break;
+
+		default:
+			GetBaseApp()->GetFont(eFont(*m_pFontID))->DrawScaled(vPos.x, vPos.y, m_lines[i], *m_pFontScale, color, &state, &g_globalBatcher);
+
+			break;
+		}
+	
 		//advance to the next line
 		vPos.y += lineHeight;
 	}
-
 	
 }
 
 void TextBoxRenderComponent::DrawTextType(CL_Vec2f vPos)
 {
 	//go through all text and draw it
-
 	
 	if (vPos.x > GetScreenSizeX()) return; //no use drawing stuff that is off the screen to the right
 	unsigned int charsToRender = (unsigned int)((float(GetTick(eTimingSystem(*m_pTimingSystem))-m_typeTimer))/ *m_pEffectPower);
@@ -161,8 +186,27 @@ void TextBoxRenderComponent::DrawTextType(CL_Vec2f vPos)
 			}
 			m_lastCharRendered = charsToRender;
 			
-			GetBaseApp()->GetFont(eFont(*m_pFontID))->DrawScaled(vPos.x, vPos.y, m_lines[i].substr(0, charsToRender), *m_pFontScale, color,  &state,  &g_globalBatcher);
-			break; //all done
+			float lineSizeX;
+
+			switch (*m_pTextAlignment)
+			{
+			case ALIGNMENT_UPPER_CENTER:
+				{
+					//center the text on its line.  No reason why we couldn't cache this size data, but I suspect it's not a big hit compared to the
+					//actual rendering.
+					string textToShow = m_lines[i].substr(0, charsToRender);
+					lineSizeX = GetBaseApp()->GetFont(eFont(*m_pFontID))->MeasureText(textToShow, *m_pFontScale).x;
+					GetBaseApp()->GetFont(eFont(*m_pFontID))->DrawScaled(vPos.x + ( (m_pSize2d->x-lineSizeX)/2), vPos.y, textToShow, *m_pFontScale, color,  &state,  &g_globalBatcher);
+				}
+				break;
+
+			default:
+				GetBaseApp()->GetFont(eFont(*m_pFontID))->DrawScaled(vPos.x, vPos.y, m_lines[i].substr(0, charsToRender), *m_pFontScale, color,  &state,  &g_globalBatcher);
+
+				break;
+			}
+
+				break; //all done
 		}
 		
 		if (vPos.y+lineHeight < 0) 
@@ -206,5 +250,9 @@ void TextBoxRenderComponent::OnRender(VariantList *pVList)
 		break;
 	}
 
-	//DrawRect(vFinalPos, *m_pSize2d); //useful for debugging
+#ifdef _DEBUG
+	
+	//useful for debugging where the text area rect really is
+	//DrawRect(vFinalPos, *m_pSize2d, MAKE_RGBA(200,200,0,200**m_pAlpha));
+#endif
 }
