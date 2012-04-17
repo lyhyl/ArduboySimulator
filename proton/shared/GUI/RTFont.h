@@ -55,9 +55,9 @@ private:
 	void InitDefaults();
 	rtfont_header m_header;
 	vector<FontChar> m_chars;
+	bool m_hasSpaceChar;
 	Surface m_surf;
 	vector<FontState> m_fontStates;
-	float m_spaceBetweenLetters;
 	float m_yOffset; //for some reason the font generator has sort of large vertical offsets, like 10, when it doesn't need them
 	map<unsigned int, signed char> m_kerningMap; 
 	string m_fileName;
