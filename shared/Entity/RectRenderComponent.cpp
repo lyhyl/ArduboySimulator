@@ -60,8 +60,6 @@ void RectRenderComponent::OnRender(VariantList *pVList)
 			vFinalPos -= vRotationPt;
 		}
 
-			//manual rectangle version of a progress bar
-			//vFinalPos -= GetAlignmentOffset(*m_pSize2d, eAlignment(*m_pAlignment));	
 			CL_Rectf r = CL_Rectf(vFinalPos.x, vFinalPos.y, vFinalPos.x+ m_pSize2d->x, vFinalPos.y+m_pSize2d->y); 
 			if (*m_pVisualStyle != STYLE_BORDER_ONLY)
 			{

@@ -79,6 +79,10 @@ void AdManager::SetTapjoyAdVisible(bool bVisible)
 
 void AdManager::OpenTapjoyOfferWall()
 {
+#ifdef _DEBUG
+	LogMsg("Sending message to Android to open the TJ offerwall");
+#endif
+
 	OSMessage o;
 	o.m_type = OSMessage::MESSAGE_TAPJOY_SHOW_OFFERS;
 	GetBaseApp()->AddOSMessage(o);
