@@ -10,7 +10,7 @@ RTFont::RTFont()
 
 void RTFont::InitDefaults()
 {
-	m_spaceBetweenLetters = 0.0f;
+	m_hasSpaceChar = false;
 	m_yOffset = 0.0f;
 }
 
@@ -43,7 +43,6 @@ return;
 	if (!f.IsLoaded()) return;
 	rtfont_header *pHeader = (rtfont_header*)f.GetAsBytes();
 	
-	
 	//skip pas the stuff we don't care about, we're just trying to get to the bitmap image itself
 	int charCount =  pHeader->lastChar - pHeader->firstChar;
 	rtfont_charData *pSrcChar = (rtfont_charData*) (f.GetAsBytes()+sizeof(rtfont_header) );
@@ -56,8 +55,7 @@ return;
 	{
 		return;
 	}
-
-};
+}
 
 bool RTFont::Load( string fileName )
 {
@@ -84,6 +82,7 @@ bool RTFont::Load( string fileName )
 
 	memcpy(&m_header, pHeader, sizeof(rtfont_header));
 	int charCount =  pHeader->lastChar - pHeader->firstChar;
+	m_hasSpaceChar = pHeader->firstChar <= ' ' && pHeader->lastChar > ' ';
 	//LogMsg("Size of font header: %d, sizeof char header: %d", sizeof(rtfont_header), sizeof(rtfont_charData));
 	m_chars.reserve(charCount);
 	
@@ -110,12 +109,17 @@ bool RTFont::Load( string fileName )
 	}
 
 	//now load the font state items (if defined), to let `2 make the text green and stuff
-
-	for (int i=0; i < m_header.fontStateCount; i++)
+	if (m_header.fontStateCount > 0)
 	{
-		FontState fntState(  pSrcBytes[4],  *(unsigned int*)pSrcBytes);
-		m_fontStates.push_back(fntState);
-		pSrcBytes += 8;
+		for (int i=0; i < m_header.fontStateCount; i++)
+		{
+			FontState fntState(  pSrcBytes[4],  *(unsigned int*)pSrcBytes);
+			m_fontStates.push_back(fntState);
+			pSrcBytes += 8;
+		}
+	} else
+	{
+		m_fontStates.push_back(FontState('0', MAKE_RGB(255, 255, 255)));
 	}
 
 	//now load the actual bmp, which this pointer should be sitting at
@@ -213,6 +217,12 @@ void RTFont::MeasureText( rtRectf *pRectOut, const char *pText, int len, float s
 			pLastCharData = NULL;
 			continue;
 		}
+		if (!m_hasSpaceChar && pText[i] == ' ')
+		{
+			curX += scale * m_header.blankCharWidth;
+			pLastCharData = NULL;
+			continue;
+		}
 		if (byte(pText[i])-m_header.firstChar < 0)
 		{
 #ifdef _DEBUG
@@ -233,11 +243,11 @@ void RTFont::MeasureText( rtRectf *pRectOut, const char *pText, int len, float s
 			
 		if (pCharData->xadvance != 0)
 		{
-			curX += (float(pCharData->xadvance)+m_spaceBetweenLetters) *scale;
+			curX += float(pCharData->xadvance) * scale;
 
 		} else
 		{
-			curX += (float(pCharData->charSizeX)+m_spaceBetweenLetters) *scale;
+			curX += float(pCharData->charSizeX) * scale;
 		}
 		
 		float letterHeight = float(pCharData->charSizeY)*scale;
@@ -300,6 +310,12 @@ void RTFont::DrawScaled( float x, float y, const string &text, float scale /*= 1
 		{
 			y += GetLineHeight(scale);
 			x = xStart;
+			pLastCharData = NULL;
+			continue;
+		}
+		if (!m_hasSpaceChar && text[i] == ' ')
+		{
+			x += scale * m_header.blankCharWidth;
 			pLastCharData = NULL;
 			continue;
 		}
@@ -367,11 +383,11 @@ void RTFont::DrawScaled( float x, float y, const string &text, float scale /*= 1
 		
 		if (pCharData->xadvance != 0)
 		{
-			x += (float(pCharData->xadvance)+m_spaceBetweenLetters) *scale;
+			x += float(pCharData->xadvance) * scale;
 
 		} else
 		{
-			x += (float(pCharData->charSizeX)+m_spaceBetweenLetters) *scale;
+			x += float(pCharData->charSizeX) * scale;
 		}
 	}
 
