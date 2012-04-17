@@ -34,6 +34,10 @@ public:
 	void SetChangeableVariant(Variant *var)
 	{
 		m_pChangeable = var;
+		if (m_pChangeable != NULL)
+		{
+			LogMsg("Value is initially %s", m_pChangeable->Print().c_str());
+		}
 	}
 
 private:

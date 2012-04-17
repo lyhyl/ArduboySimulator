@@ -69,7 +69,14 @@ void SpriteAnimationRenderComponent::OnScaleChanged(Variant *pDataObject)
 void SpriteAnimationRenderComponent::OnAnimationNameChanged(Variant *pAnimationName)
 {
 	m_pCurrentAnimation = m_pSpriteAnimationSet->GetAnimation(*m_pAnimationName);
-	m_pCurrentAnimBB = m_pCurrentAnimation->GetBoundingBox();
+
+	if (m_pCurrentAnimation != NULL)
+	{
+		m_pCurrentAnimBB = m_pCurrentAnimation->GetBoundingBox();
+	} else
+	{
+		m_pCurrentAnimBB.left = m_pCurrentAnimBB.top = m_pCurrentAnimBB.right = m_pCurrentAnimBB.bottom = 0.0f;
+	}
 
 	GetVar("phase")->Set(0.0f);
 
