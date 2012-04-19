@@ -120,6 +120,13 @@ void MessageManager::SendGUI( eMessageType type, const Variant &v, int deliverTi
 	Send(m);
 }
 
+void MessageManager::SendGUI( eMessageType type, const VariantList &vList, int deliverTimeMS /*= 0*/ )
+{
+	Message *m = new Message(MESSAGE_CLASS_GUI, TIMER_SYSTEM, type);
+	m->Set(&vList);
+	m->SetDeliveryTime(deliverTimeMS);
+	Send(m);
+}
 
 void MessageManager::AddMessageToList(list <Message*> &messageList, Message *m)
 {

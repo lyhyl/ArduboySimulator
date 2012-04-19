@@ -230,6 +230,7 @@ public:
  
 	void SendGUI( eMessageType type, float parm1, float parm2 = 0, int deliverTimeMS = 0, eTimingSystem timing = TIMER_SYSTEM);
 	void SendGUI( eMessageType type, const Variant &v, int deliverTimeMS = 0);
+	void SendGUI( eMessageType type, const VariantList &vList, int deliverTimeMS = 0);
 	void SendGUIEx( eMessageType type, float parm1, float parm2, int finger, int deliverTimeMS = 0, eTimingSystem timing = TIMER_SYSTEM);
 	void SendGUIStringEx( eMessageType type, float parm1, float parm2, int finger, string s, int deliverTimeMS = 0, eTimingSystem timing = TIMER_SYSTEM);
 
