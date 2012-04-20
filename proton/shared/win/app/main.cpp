@@ -274,7 +274,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		
 			g_leftMouseButtonDown = true;
 			int xPos = GET_X_LPARAM(lParam);
-			int yPos = GET_Y_LPARAM(lParam) + GetYOffset();
+			int yPos = GET_Y_LPARAM(lParam);
 			ConvertCoordinatesIfRequired(xPos, yPos);
 			GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_START, (float)xPos, (float)yPos, 0);
 			break;
@@ -633,7 +633,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 			if (!g_bHasFocus) break;
 			int xPos = GET_X_LPARAM(lParam);
-			int yPos = GET_Y_LPARAM(lParam) + GetYOffset();
+			int yPos = GET_Y_LPARAM(lParam);
 			ConvertCoordinatesIfRequired(xPos, yPos);
 			GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_END, (float)xPos, (float)yPos, 0);
 			g_leftMouseButtonDown = false;
@@ -646,7 +646,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			if (!g_bHasFocus) break;
 		
 			float xPos = (float)GET_X_LPARAM(lParam);
-			float yPos = (float)GET_Y_LPARAM(lParam) + GetYOffset();
+			float yPos = (float)GET_Y_LPARAM(lParam);
 			ConvertCoordinatesIfRequired(xPos, yPos);
 	
 			if (g_leftMouseButtonDown)

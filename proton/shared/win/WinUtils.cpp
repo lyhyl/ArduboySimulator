@@ -184,14 +184,6 @@ eDeviceMemoryClass GetDeviceMemoryClass()
 	return C_DEVICE_MEMORY_CLASS_4;
 }
 
-
-int GetYOffset()
-{
-	return 0;
-	//return 13;
-	//return 23; //otherwise, blitting to 0,0 is off.  Something screwy with how the eglinit is taking into account the windows border?
-}
-
 unsigned int GetSystemTimeTick()
 {
 	return GetTickCount();

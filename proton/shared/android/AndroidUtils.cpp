@@ -353,10 +353,6 @@ eDeviceMemoryClass GetDeviceMemoryClass()
 	return C_DEVICE_MEMORY_CLASS_2;
 }
 
-int GetYOffset()
-{
-	return 0;
-}
 
 unsigned int GetSystemTimeTick()
 {
@@ -367,7 +363,6 @@ unsigned int GetSystemTimeTick()
 double GetSystemTimeAccurate()
 {
 	return double(GetSystemTimeTick());
-	return 0;
 }
 
 unsigned int GetFreeMemory()

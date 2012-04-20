@@ -50,6 +50,7 @@ enum ePlatformID
 	PLATFORM_ID_WINDOWS_MOBILE, //yeah, right.  Doesn't look like we'll be porting here anytime soon.
 	PLATFORM_ID_WEBOS,
 	PLATFORM_ID_BBX, //RIM Playbook
+	PLATFORM_ID_FLASH,
 	
 	//new platforms will be added above here.  Don't count on PLATFORM_ID_COUNT not changing!
 	PLATFORM_ID_COUNT
@@ -95,7 +96,7 @@ std::string GetBaseAppPath();
 std::string GetSavePath();
 std::string GetAppCachePath(); //on iPhone, returns path to save user data that isn't backed up, on Android, returns external sd card path or "" if not available
 void CreateAppCacheDirIfNeeded();
-int GetYOffset();
+
 unsigned int GetSystemTimeTick();
 double GetSystemTimeAccurate();
 unsigned int GetFreeMemory();

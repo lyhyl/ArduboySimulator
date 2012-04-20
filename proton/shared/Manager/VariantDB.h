@@ -36,7 +36,7 @@ public:
 
 #else
 
-#if defined( __APPLE__) || defined(RTLINUX)|| ANDROID_NDK
+#if defined( __APPLE__) || defined(RTLINUX)|| ANDROID_NDK || defined(PLATFORM_FLASH)
 
 #define _GLIBCXX_PERMIT_BACKWARD_HASH
 
@@ -63,7 +63,7 @@ typedef  __gnu_cxx::hash_map<string, FunctionObject*> functionList;
 #else
 	#include <hash_map>
 
-		#if defined RT_WEBOS_ARM || ANDROID_NDK
+		#if defined RT_WEBOS_ARM || ANDROID_NDK 
 
 		namespace __gnu_cxx {
 			/**
