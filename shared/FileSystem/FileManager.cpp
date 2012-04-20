@@ -44,7 +44,7 @@ bool FileInstance::Load( string fileName, bool bAddBasePath )
 
 FileManager::FileManager()
 {
-	LogMsg("File manager initted");
+	//LogMsg("File manager initted");
 }
 
 FileManager::~FileManager()

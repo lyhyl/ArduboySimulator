@@ -143,12 +143,6 @@ eDeviceMemoryClass GetDeviceMemoryClass()
 }
 
 
-int GetYOffset()
-{
-	return 0;
-}
-
-
 // convert the timespec into milliseconds //thanks, cocos2d-x
 long time2millis(struct timespec *times)
 {
@@ -343,8 +337,6 @@ int GetDaysSinceDate(int month,int day, int year)
 
 bool RTCreateDirectory(const std::string &dir_name)
 {
-
-
 	if (dir_name.empty())
 		return false;
 
@@ -353,11 +345,7 @@ bool RTCreateDirectory(const std::string &dir_name)
 
 	// TODO: add here Linux version of GetFullPathName
 	full_path = dir_name;
-
-
 	return ::mkdir(full_path.c_str(), 0755) == 0;
-
-
 }
 
 

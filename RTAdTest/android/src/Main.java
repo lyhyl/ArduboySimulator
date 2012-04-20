@@ -10,7 +10,7 @@
 //Because I'm using javapp preprocesser processing, //# means the command IS being used.  To comment out a preprocessor
 //command, do // #command  (ie, insert a space after the //)
 
-// #define RT_HOOKED_SUPPORT
+//#define RT_HOOKED_SUPPORT
 //#define RT_TAPJOY_SUPPORT
 
 //**********************************************

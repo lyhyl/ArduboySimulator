@@ -37,6 +37,10 @@
 #include "bbx/PlatformSetupBBX.h"
 #endif
 
+#ifdef PLATFORM_FLASH
+#include "flash/PlatformSetupFlash.h"
+#endif
+
 #if defined(__cplusplus) || defined(__OBJC__)
 	#include <cstdio>
 	#include <string>

@@ -220,10 +220,6 @@ double GetSystemTimeAccurate()
 	return uint32((CFAbsoluteTimeGetCurrent()-first)*1000);
 }
 
-int GetYOffset()
-{
-	return 0;
-}
 
 bool IsIphone()
 {

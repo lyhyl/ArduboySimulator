@@ -155,11 +155,6 @@ eDeviceMemoryClass GetDeviceMemoryClass()
 }
 
 
-int GetYOffset()
-{
-	return 0;
-}
-
 unsigned int GetSystemTimeTick()
 {
 	return SDL_GetTicks();
