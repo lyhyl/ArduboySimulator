@@ -14,10 +14,13 @@ set(PROTON_MANAGER "${PROTON_SHARED}/Manager")
 set(PROTON_MATH "${PROTON_SHARED}/Math")
 set(PROTON_NETWORK "${PROTON_SHARED}/Network")
 set(PROTON_RENDERER "${PROTON_SHARED}/Renderer")
+set(PROTON_TESTFW "${PROTON_SHARED}/testfw")
 set(PROTON_UTIL "${PROTON_SHARED}/util")
 set(PROTON_ZLIB "${PROTON_UTIL}/zlib")
 set(PROTON_BOOSTSIGNALS "${PROTON_UTIL}/boost/libs/signals/src")
 set(PROTON_CLANMATH "${PROTON_SHARED}/ClanLib-2.0/Sources/Core/Math")
+
+add_definitions(-DRTLINUX -DBOOST_ALL_NO_LIB -DC_GL_MODE)
 
 # Adds the _DEBUG preprocessor definition to debug builds
 get_directory_property(Defs COMPILE_DEFINITIONS_DEBUG)
@@ -156,6 +159,26 @@ macro(proton_use_bullet)
 	proton_use_irrlicht()
 endmacro(proton_use_bullet)
 
+# Includes the Proton testing framework to the project.
+# If the argument "GUI" is passed to this macro then also the GUI parts
+# of the testing framework are included.
+macro(proton_include_testing)
+	list(APPEND PROTON_SOURCES "${PROTON_TESTFW}/ProtonTester.cpp")
+	
+	# For some reason list(FIND doesn't work in a macro so have to search by hand
+	set(INCLUDE_TEST_GUI FALSE)
+	foreach(arg ${ARGV})
+		string(COMPARE EQUAL ${arg} GUI found)
+		if(found)
+			set(INCLUDE_TEST_GUI TRUE)
+		endif(found)
+	endforeach(arg)
+	
+	if(INCLUDE_TEST_GUI)
+		list(APPEND PROTON_SOURCES "${PROTON_TESTFW}/ProtonTesterGUI.cpp")
+	endif(INCLUDE_TEST_GUI)
+endmacro(proton_include_testing)
+
 # Sets the source files that should be compiled to the application.
 # You only need to supply the source files that you have written yourself.
 # All Proton related source files should be excluded - they are automatically
@@ -164,8 +187,6 @@ endmacro(proton_use_bullet)
 # Example:
 # proton_set_sources(mysource1.cpp mysource2.cpp)
 function(proton_set_sources)
-	add_definitions(-DRTLINUX -DBOOST_ALL_NO_LIB -DC_GL_MODE)
-	
 	list(REMOVE_DUPLICATES PROTON_SOURCES)
 	add_executable(${PROJECT_NAME} ${ARGV} ${PROTON_SOURCES})
 	

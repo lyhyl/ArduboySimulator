@@ -128,18 +128,26 @@ const SpriteFrame* SpriteAnimation::GetFrameAtPhase(float phase) const
 	{
 		return NULL;
 	}
+	if (phase == 1.0f)
+	{
+		return &m_frames.back();
+	}
 
 	const unsigned int phaseInTotalDuration = phase * m_totalDuration;
+
 	unsigned int cumulativeDuration = 0;
+	unsigned int previousCumulativeDuration = 0;
 
 	for (FrameList::const_iterator it(m_frames.begin()); it != m_frames.end(); it++)
 	{
 		cumulativeDuration += (*it).GetDuration();
 
-		if (cumulativeDuration >= phaseInTotalDuration)
+		if (previousCumulativeDuration <= phaseInTotalDuration && phaseInTotalDuration < cumulativeDuration)
 		{
 			return &(*it);
 		}
+
+		previousCumulativeDuration = cumulativeDuration;
 	}
 
 	return NULL;

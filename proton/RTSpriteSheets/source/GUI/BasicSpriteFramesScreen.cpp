@@ -19,16 +19,7 @@ Entity* CreateSpriteEntity(Entity* pParentEnt, float x, float y, const std::stri
 
 Entity* BasicSpriteFramesScreenCreate(Entity *pParentEnt)
 {
-	Entity *pBG = CreateOverlayEntity(pParentEnt, "background", "interface/menu_bg.rttex", 0, 0);
-	AddFocusIfNeeded(pBG);
-
-	float x = 80;
-	float y = 290;
-
-	Entity* pButtonEntity = CreateTextButtonEntity(pBG, "Back", x, y, "Back");
-	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&GoBack);
-	AddHotKeyToButton(pButtonEntity, VIRTUAL_KEY_BACK); //for android's back button, or escape key in windows
-
+	Entity *pBG = CreateCommonControls(pParentEnt);
 	CreateSpriteEntity(pBG, 0, 0, "0");
 
 	Entity* sprite = CreateSpriteEntity(pBG, 1, 0, "1");
@@ -55,6 +46,5 @@ Entity* BasicSpriteFramesScreenCreate(Entity *pParentEnt)
 	comp->GetVar("flipX")->Set(uint32(1));
 	comp->GetVar("flipY")->Set(uint32(1));
 
-	SlideScreen(pBG, true, 500);
 	return pBG;
 }

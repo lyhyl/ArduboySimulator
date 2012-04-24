@@ -1,6 +1,7 @@
 #include "MainMenu.h"
 #include "BasicSpriteFramesScreen.h"
 #include "SpriteAnimationScreen.h"
+#include "TestScreen.h"
 
 #include "App.h"
 
@@ -25,6 +26,9 @@ void MainMenuOnSelect(VariantList *pVList)
 	} else if (pEntClicked->GetName() == "MoreSpriteAnimations")
 	{
 		MoreSpriteAnimationsScreenCreate(pEntClickedParent->GetParent());
+	} else if (pEntClicked->GetName() == "Test")
+	{
+		TestScreenCreate(pEntClickedParent->GetParent());
 	}
 }
 
@@ -54,6 +58,10 @@ Entity * MainMenuCreate(Entity *pParentEnt)
 
 	y += yDistance;
 	pButtonEntity = CreateTextButtonEntity(pBG, "MoreSpriteAnimations", x, y, "Multi-part sprite animation");
+	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MainMenuOnSelect);
+
+	y += yDistance;
+	pButtonEntity = CreateTextButtonEntity(pBG, "Test", x, y, "Sprite animation tests");
 	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MainMenuOnSelect);
 
 	SlideScreen(pBG, true);
