@@ -9,4 +9,5 @@ include_directories("${APP}")
 
 proton_include_all_components()
 proton_use_spriteanimation()
-proton_set_sources("${APP}/App.cpp" "${APP}/GUI/GUICommon.cpp" "${APP}/GUI/MainMenu.cpp" "${APP}/GUI/BasicSpriteFramesScreen.cpp" "${APP}/GUI/SpriteAnimationScreen.cpp")
+proton_include_testing(GUI)
+proton_set_sources("${APP}/App.cpp" "${APP}/GUI/GUICommon.cpp" "${APP}/GUI/MainMenu.cpp" "${APP}/GUI/BasicSpriteFramesScreen.cpp" "${APP}/GUI/SpriteAnimationScreen.cpp" "${APP}/GUI/TestScreen.cpp")
