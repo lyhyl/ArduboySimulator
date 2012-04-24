@@ -15,6 +15,7 @@ set(PROTON_MATH "${PROTON_SHARED}/Math")
 set(PROTON_NETWORK "${PROTON_SHARED}/Network")
 set(PROTON_RENDERER "${PROTON_SHARED}/Renderer")
 set(PROTON_UTIL "${PROTON_SHARED}/util")
+set(PROTON_ZLIB "${PROTON_UTIL}/zlib")
 set(PROTON_BOOSTSIGNALS "${PROTON_UTIL}/boost/libs/signals/src")
 set(PROTON_CLANMATH "${PROTON_SHARED}/ClanLib-2.0/Sources/Core/Math")
 
@@ -117,6 +118,13 @@ macro(proton_use_zipfilesystem)
 	list(APPEND PROTON_SOURCES "${PROTON_FILESYSTEM}/FileSystem.cpp" "${PROTON_FILESYSTEM}/FileSystemZip.cpp" "${PROTON_FILESYSTEM}/StreamingInstanceZip.cpp" "${PROTON_UTIL}/unzip/unzip.c" "${PROTON_UTIL}/unzip/ioapi.c")
 endmacro(proton_use_zipfilesystem)
 
+# By default the project gets linked against a zlib shared library.
+# If this macro is called the zlib sources bundled with Proton are used instead.
+macro(proton_use_internal_zlib)
+	list(APPEND PROTON_SOURCES "${PROTON_ZLIB}/deflate.c" "${PROTON_ZLIB}/inflate.c" "${PROTON_ZLIB}/compress.c" "${PROTON_ZLIB}/zutil.c" "${PROTON_ZLIB}/adler32.c" "${PROTON_ZLIB}/crc32.c" "${PROTON_ZLIB}/trees.c" "${PROTON_ZLIB}/inftrees.c" "${PROTON_ZLIB}/inffast.c")
+	set(PROTON_USE_INTERNAL_ZLIB TRUE)
+endmacro(proton_use_internal_zlib)
+
 # Enables the project to use Irrlicht.
 macro(proton_use_irrlicht)
 	add_definitions(-D_IRR_STATIC_LIB_)
@@ -161,11 +169,13 @@ function(proton_set_sources)
 	list(REMOVE_DUPLICATES PROTON_SOURCES)
 	add_executable(${PROJECT_NAME} ${ARGV} ${PROTON_SOURCES})
 	
-	find_package(ZLIB REQUIRED)
-	if(ZLIB_FOUND)
-		include_directories(${ZLIB_INCLUDE_DIRS})
-		target_link_libraries(${PROJECT_NAME} ${ZLIB_LIBRARIES})
-	endif(ZLIB_FOUND)
+	if(NOT PROTON_USE_INTERNAL_ZLIB)
+		find_package(ZLIB REQUIRED)
+		if(ZLIB_FOUND)
+			include_directories(${ZLIB_INCLUDE_DIRS})
+			target_link_libraries(${PROJECT_NAME} ${ZLIB_LIBRARIES})
+		endif(ZLIB_FOUND)
+	endif(NOT PROTON_USE_INTERNAL_ZLIB)
 	
 	find_package(SDL REQUIRED)
 	if(SDL_FOUND)
