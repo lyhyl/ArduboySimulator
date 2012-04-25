@@ -27,7 +27,7 @@ TEST(Sprite_animation_returns_first_frame_for_phases_less_than_0_5_for_an_animat
 	unsigned int frameLengths[] = { 1, 1 };
 	fillAnimationWithFramesWithLengths(animation, frameLengths, 2);
 
-	TestEq((unsigned int)0, animation.GetFrameAtPhase(0.49f)->GetCellCount());
+	CheckEq((unsigned int)0, animation.GetFrameAtPhase(0.49f)->GetCellCount());
 }
 
 TEST(Sprite_animation_returns_second_frame_for_phases_more_than_0_5_for_an_animation_with_two_frames_and_a_length_of_two)
@@ -37,7 +37,7 @@ TEST(Sprite_animation_returns_second_frame_for_phases_more_than_0_5_for_an_anima
 	unsigned int frameLengths[] = { 1, 1 };
 	fillAnimationWithFramesWithLengths(animation, frameLengths, 2);
 
-	TestEq((unsigned int)1, animation.GetFrameAtPhase(0.51f)->GetCellCount());
+	CheckEq((unsigned int)1, animation.GetFrameAtPhase(0.51f)->GetCellCount());
 }
 
 TEST(Sprite_animation_returns_correct_frames_for_phases_for_an_animation_with_three_frames_and_a_length_of_six)
@@ -47,13 +47,13 @@ TEST(Sprite_animation_returns_correct_frames_for_phases_for_an_animation_with_th
 	unsigned int frameLengths[] = { 1, 2, 3 };
 	fillAnimationWithFramesWithLengths(animation, frameLengths, 3);
 
-	TestEq((unsigned int)0, animation.GetFrameAtPhase(0.0f)->GetCellCount());
-	TestEq((unsigned int)0, animation.GetFrameAtPhase(0.16f)->GetCellCount());
-	TestEq((unsigned int)1, animation.GetFrameAtPhase(0.17f)->GetCellCount());
-	TestEq((unsigned int)1, animation.GetFrameAtPhase(0.49f)->GetCellCount());
-	TestEq((unsigned int)2, animation.GetFrameAtPhase(0.51f)->GetCellCount());
-	TestEq((unsigned int)2, animation.GetFrameAtPhase(0.99f)->GetCellCount());
-	TestEq((unsigned int)2, animation.GetFrameAtPhase(1.0f)->GetCellCount());
+	CheckEq((unsigned int)0, animation.GetFrameAtPhase(0.0f)->GetCellCount());
+	CheckEq((unsigned int)0, animation.GetFrameAtPhase(0.16f)->GetCellCount());
+	CheckEq((unsigned int)1, animation.GetFrameAtPhase(0.17f)->GetCellCount());
+	CheckEq((unsigned int)1, animation.GetFrameAtPhase(0.49f)->GetCellCount());
+	CheckEq((unsigned int)2, animation.GetFrameAtPhase(0.51f)->GetCellCount());
+	CheckEq((unsigned int)2, animation.GetFrameAtPhase(0.99f)->GetCellCount());
+	CheckEq((unsigned int)2, animation.GetFrameAtPhase(1.0f)->GetCellCount());
 }
 
 Entity* TestScreenCreate(Entity *pParentEnt)
