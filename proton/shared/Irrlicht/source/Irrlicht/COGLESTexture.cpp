@@ -99,6 +99,9 @@ namespace irr
 
 		ECOLOR_FORMAT COGLES1Texture::getBestColorFormat(ECOLOR_FORMAT format)
 		{
+		
+			return format;	//SETH - don't attempt to change formats, we get what we get.
+
 			ECOLOR_FORMAT destFormat = ECF_A8R8G8B8;
 			switch (format)
 			{
@@ -230,7 +233,7 @@ namespace irr
 					*/
 				}
 				if (Driver->testGLError())
-					os::Printer::log("Could not glTexImage2D", ELL_ERROR);
+					os::Printer::log("Could not glTexImage2D 1", ELL_ERROR);
 
 				return;
 
@@ -256,12 +259,16 @@ namespace irr
 				InternalFormat=GL_RGB;
 				PixelFormat=GL_RGB;
 				PixelType=GL_UNSIGNED_BYTE;
-				convert=CColorConverter::convert_R8G8B8toB8G8R8;
+				//convert=CColorConverter::convert_R8G8B8toB8G8R8; //SETH - what?  Why convert?
 				break;
 			case ECF_A8R8G8B8:
 				PixelType=GL_UNSIGNED_BYTE;
 				if (!Driver->queryOpenGLFeature(COGLES1ExtensionHandler::IRR_IMG_texture_format_BGRA8888) && !Driver->queryOpenGLFeature(COGLES1ExtensionHandler::IRR_EXT_texture_format_BGRA8888))
 				{
+#ifdef _DEBUG
+					LogMsg("Irrlicht GLES texture:  GLES driver doesn't support BGRA I guess, doing other way");
+#endif
+					assert(!"Uh, I don't think this should be converted to ABGR, won't work on many android chipsets.. -Seth");
 					convert=CColorConverter::convert_A8R8G8B8toA8B8G8R8;
 					InternalFormat=GL_RGBA;
 					PixelFormat=GL_RGBA;
@@ -336,11 +343,20 @@ namespace irr
 			if (newTexture)
 			{
 				if (Driver->testGLError())
-					os::Printer::log("Could not glTexImage2D", ELL_ERROR);
-		glTexImage2D(GL_TEXTURE_2D, level, InternalFormat, image->getDimension().Width,
+					os::Printer::log("Could not glTexImage2D 2", ELL_ERROR);
+				glTexImage2D(GL_TEXTURE_2D, level, InternalFormat, image->getDimension().Width,
 				image->getDimension().Height, 0, PixelFormat, PixelType, source);
 				if (Driver->testGLError())
-					os::Printer::log("Could not glTexImage2D", ELL_ERROR);
+				{
+					
+					os::Printer::log("Could not glTexImage2D 3", ELL_ERROR);
+				}
+#ifdef _DEBUG
+				LogMsg("Irrlicht GLES Texture Loaded:  %d, %d - internal format: %d, pixel type: %d,  colortype: %d",image->getDimension().Width,
+					image->getDimension().Height, InternalFormat, PixelFormat, PixelFormat);
+
+#endif
+
 
 			}
 			else
@@ -355,7 +371,7 @@ namespace irr
 				image->unlock();
 
 			if (Driver->testGLError())
-				os::Printer::log("Could not glTexImage2D", ELL_ERROR);
+				os::Printer::log("Could not glTexImage2D 4", ELL_ERROR);
 		}
 
 

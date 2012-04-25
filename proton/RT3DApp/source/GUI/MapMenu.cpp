@@ -57,7 +57,6 @@ void MapInitScene()
 	smgr->getParameters()->setAttribute(B3D_LOADER_IGNORE_MIPMAP_FLAG, true);
 	//TO LOAD THE QUAKE LEVEL
 
-
 	FileSystemZip *pFileSystem = (FileSystemZip*) GetFileManager()->GetFileSystem(0); //for Android
 	if (pFileSystem) pFileSystem->SetRootDirectory("assets/game/quake");
 	
@@ -114,9 +113,6 @@ void MapInitScene()
 		camera->setAspectRatio(fov);
 		camera->setFOV((120 * M_PI / 360.0f));
 
-
-
-
 	return;
 
 }
@@ -131,6 +127,7 @@ Entity * MapMenuCreate(Entity *pParentEnt)
 	pButtonEntity = CreateTextButtonEntity(pBG, "Back", iPhoneMapX(240),iPhoneMapY(290), "Back"); 
 	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MapMenuOnSelect);
 	pButtonEntity->GetVar("alignment")->Set(uint32(ALIGNMENT_CENTER));
+	AddHotKeyToButton(pButtonEntity, VIRTUAL_KEY_BACK); //for android's back button, or escape key in windows
 
 	//setup movement button
 	Entity *pEnt = pBG->AddEntity(new Entity("controls", new FPSControlComponent));

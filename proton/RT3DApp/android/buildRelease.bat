@@ -2,7 +2,7 @@ call app_info_setup.bat
 :Get the emulator ready if it isn't, because it takes a freakin' long time to load
 REM start emulator %EMULATOR_AVD%
 
-del bin\%APP_NAME%-debug.apk
+del bin\%APP_NAME%-release.apk
 
 :build the C/C++ parts
 call ndk-build -j7
@@ -26,7 +26,7 @@ xcopy ..\bin\audio assets\audio /E /F /Y
 rmdir bin /S /Q
 rmdir gen /S /Q
 :Next package it with the java part
-call ant debug
+call ant release
 
 call InstallOnDefaultPhone.bat
 :adb logcat
