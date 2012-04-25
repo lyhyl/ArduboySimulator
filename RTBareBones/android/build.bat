@@ -1,10 +1,13 @@
+
 call app_info_setup.bat
 :Get the emulator ready if it isn't, because it takes a freakin' long time to load
 REM start emulator %EMULATOR_AVD%
 
 :build the C/C++ parts (Note:  not using cygwin anymore, yay!)
-call ndk-build
-
+@echo on
+echo Ok, making..
+call ndk-build -j7
+@echo on
 if not exist libs/armeabi/lib%SMALL_PACKAGE_NAME%.so ..\..\shared\win\utils\beeper.exe /p
 
 :Copy refresh resources, assuming the windows version had them built with update_media recently...

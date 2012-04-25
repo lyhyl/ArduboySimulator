@@ -43,7 +43,16 @@ namespace irr
 				return;
 		}
 
-		os::Printer::print(text);
+		if (ll ==  ELL_ERROR)
+		{
+			LogError(text);
+		} else
+		{
+			LogMsg(text); //SETH - let's route through Proton instead, so we'll see this on android/webos/etc
+		}
+
+		//os::Printer::print(text);
+
 	}
 
 
