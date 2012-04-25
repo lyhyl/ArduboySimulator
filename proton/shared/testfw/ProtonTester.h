@@ -14,7 +14,7 @@ namespace ProtonTester
 	unsigned int GetNumFailed();
 }
 
-#define TestEq(expected, actual) CmpEq(expected, #expected, actual, #actual, TestLocation(m_testName, __FILE__, __LINE__))
+#define CheckEq(expected, actual) CmpEq(expected, #expected, actual, #actual, CheckLocation(m_testName, __FILE__, __LINE__))
 
 #define TEST(testName) class testName : public TestCase { \
 public: \

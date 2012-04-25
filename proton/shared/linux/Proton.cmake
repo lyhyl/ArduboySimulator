@@ -125,6 +125,7 @@ endmacro(proton_use_zipfilesystem)
 # If this macro is called the zlib sources bundled with Proton are used instead.
 macro(proton_use_internal_zlib)
 	list(APPEND PROTON_SOURCES "${PROTON_ZLIB}/deflate.c" "${PROTON_ZLIB}/inflate.c" "${PROTON_ZLIB}/compress.c" "${PROTON_ZLIB}/zutil.c" "${PROTON_ZLIB}/adler32.c" "${PROTON_ZLIB}/crc32.c" "${PROTON_ZLIB}/trees.c" "${PROTON_ZLIB}/inftrees.c" "${PROTON_ZLIB}/inffast.c")
+	include_directories("${PROTON_ZLIB}")
 	set(PROTON_USE_INTERNAL_ZLIB TRUE)
 endmacro(proton_use_internal_zlib)
 

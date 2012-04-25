@@ -14,17 +14,18 @@ TestResults::TestResults()
 
 void TestResults::clear()
 {
-	m_numPassed = 0;
-	m_numFailed = 0;
+	m_passedTests.clear();
+	m_failedTests.clear();
 
 	m_resultStr.clear();
 }
 
-void TestResults::add(const TestResult &result)
+void TestResults::add(const CheckResult &result)
 {
-	if (result.GetResult() == TestResult::FAIL)
+	if (result.GetResult() == CheckResult::FAIL)
 	{
-		gTestResults.m_numFailed++;
+		gTestResults.m_passedTests.erase(result.GetTestName());
+		gTestResults.m_failedTests.insert(result.GetTestName());
 
 		if (!gTestResults.m_resultStr.empty()) {
 			gTestResults.m_resultStr.append("\n\n");
@@ -33,23 +34,25 @@ void TestResults::add(const TestResult &result)
 		gTestResults.m_resultStr.append(result.GetResultString());
 	} else
 	{
-		gTestResults.m_numPassed++;
+		if (gTestResults.m_failedTests.count(result.GetTestName()) == 0) {
+			gTestResults.m_passedTests.insert(result.GetTestName());
+		}
 	}
 }
 
 unsigned int TestResults::GetTotalRun() const
 {
-	return m_numFailed + m_numPassed;
+	return m_passedTests.size() + m_failedTests.size();
 }
 
 unsigned int TestResults::GetNumPassed() const
 {
-	return m_numPassed;
+	return m_passedTests.size();
 }
 
 unsigned int TestResults::GetNumFailed() const
 {
-	return m_numFailed;
+	return m_failedTests.size();
 }
 
 std::string TestResults::GetResultString() const

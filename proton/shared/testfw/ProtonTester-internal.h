@@ -2,13 +2,14 @@
 #define PROTONTESTER_INTERNAL_H
 
 #include "util/MiscUtils.h"
+#include <set>
 
-struct TestLocation {
+struct CheckLocation {
 	std::string testName;
 	std::string fileName;
 	int lineNumber;
 
-	TestLocation(const std::string& testName, const std::string& fileName, int lineNumber) :
+	CheckLocation(const std::string& testName, const std::string& fileName, int lineNumber) :
 	    testName(testName),
 	    fileName(fileName),
 	    lineNumber(lineNumber)
@@ -16,7 +17,7 @@ struct TestLocation {
 	}
 };
 
-class TestResult
+class CheckResult
 {
 public:
 	enum Result {
@@ -25,7 +26,8 @@ public:
 	};
 
 	template<typename T>
-	TestResult(const TestLocation& testLocation, Result result, const std::string& expectedStr, const std::string& actualStr, const T& actual) :
+	CheckResult(const CheckLocation& testLocation, Result result, const std::string& expectedStr, const std::string& actualStr, const T& actual) :
+	    m_testName(testLocation.testName),
 	    m_result(result)
 	{
 		m_resultStr = testLocation.testName + " (" + testLocation.fileName + ":" + toString(testLocation.lineNumber) + "):\n";
@@ -44,6 +46,11 @@ public:
 		}
 	}
 
+	std::string GetTestName() const
+	{
+		return m_testName;
+	}
+
 	Result GetResult() const
 	{
 		return m_result;
@@ -55,6 +62,7 @@ public:
 	}
 
 private:
+	std::string m_testName;
 	Result m_result;
 	std::string m_resultStr;
 };
@@ -67,7 +75,7 @@ public:
 
 	void clear();
 
-	static void add(const TestResult &result);
+	static void add(const CheckResult &result);
 
 	unsigned int GetTotalRun() const;
 
@@ -78,8 +86,8 @@ public:
 	std::string GetResultString() const;
 
 private:
-	unsigned int m_numPassed;
-	unsigned int m_numFailed;
+	std::set<std::string> m_passedTests;
+	std::set<std::string> m_failedTests;
 
 	std::string m_resultStr;
 
@@ -99,16 +107,16 @@ protected:
 
 
 template<typename T>
-void CmpEq(const T& expected, const std::string& expectedStr, const T& actual, const std::string& actualStr, const TestLocation& testLocation)
+void CmpEq(const T& expected, const std::string& expectedStr, const T& actual, const std::string& actualStr, const CheckLocation& testLocation)
 {
-	TestResult::Result result = TestResult::FAIL;
+	CheckResult::Result result = CheckResult::FAIL;
 
 	if (expected == actual)
 	{
-		result = TestResult::PASS;
+		result = CheckResult::PASS;
 	}
 
-	TestResults::add(TestResult(testLocation, result, expectedStr, actualStr, actual));
+	TestResults::add(CheckResult(testLocation, result, expectedStr, actualStr, actual));
 }
 
 #endif // PROTONTESTER_INTERNAL_H
