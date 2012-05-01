@@ -109,6 +109,8 @@ public:
 	void BlitFromScreen(int dstX, int dstY, int srcX /*= 0*/, int srcY /*= 0*/, int srcWidth /*= 0*/, int srcHeight /*= 0*/);
 	void WriteRawDataOut(string fileName);
 	void WriteBMPOut(string fileName);
+	void FillAlphaBit(unsigned char alpha);
+	void Scale(int newX, int newY); //does simple linear scaling
 
 private:
 
@@ -149,7 +151,8 @@ private:
 	void PreMultiplyAlpha();
 	bool LoadBMPTexture(byte *pMem);
 	bool LoadRTTexture(byte *pMem);
-	
+	void BlitRGBFromRGBA( int dstX, int dstY, SoftSurface *pSrc, int srcX /*= 0*/, int srcY /*= 0*/, int srcWidth /*= 0*/, int srcHeight /*= 0*/ );
+
 	eSurfaceType m_surfaceType;
 	int m_width, m_height;
 	byte *m_pPixels;

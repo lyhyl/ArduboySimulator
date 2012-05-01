@@ -282,4 +282,7 @@ float EnforceMinimumFontLineToScreenRatio(eFont fontID, float fontScale, float m
 
 //Copies one or more properties by name from one entity to another
 void CopyPropertiesToEntity(Entity *pToEnt, Entity *pFromEnt, const string varName1, const string varName2="", const string varName3="");
+
+//Draw a text message on the screen, then (by default) kill it 3 seconds later.  Useful for quick debugging messages sometimes
+void ShowTextMessage(string msg, int timeMS=1500, int delayBeforeStartingMS = 0);
 #endif // EntityUtils_h__

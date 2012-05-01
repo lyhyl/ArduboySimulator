@@ -570,3 +570,8 @@ bool HasVibration()
 
 	return false;
 }
+
+void ForceVideoUpdate()
+{
+//    LogMsg("TODO..video update");
+}

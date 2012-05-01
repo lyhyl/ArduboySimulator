@@ -834,6 +834,39 @@ void SoftSurface::BlitRGBAFromRGBA( int dstX, int dstY, SoftSurface *pSrc, int s
 	}
 }
 
+
+void SoftSurface::BlitRGBFromRGBA( int dstX, int dstY, SoftSurface *pSrc, int srcX /*= 0*/, int srcY /*= 0*/, int srcWidth /*= 0*/, int srcHeight /*= 0*/ )
+{
+
+	byte *pDestImage = GetPointerToPixel(dstX, dstY);
+	byte *pSrcImage = pSrc->GetPointerToPixel(srcX, srcY);
+
+	int bytesPerPixelSource = pSrc->GetBytesPerPixel();
+
+	for (int y=0; y < srcHeight; y++)
+	{
+		for (int x=0; x < srcWidth; x++)
+		{
+			//TODO: Add merges that take alpha into account?
+			/*
+			if (pSrcImage[3] == 0)
+			{
+				//blank!
+			} else*/
+			{
+			//	glColorBytes converted(pSrcImage[0], pSrcImage[1], pSrcImage[2], pSrcImage[3]);
+				memcpy(pDestImage, pSrcImage, m_bytesPerPixel);
+			}
+
+			pDestImage +=m_bytesPerPixel;
+			pSrcImage += bytesPerPixelSource;
+		}
+		pDestImage += GetPitch()-(srcWidth*m_bytesPerPixel);
+		pSrcImage += pSrc->GetPitch()-(srcWidth*bytesPerPixelSource);
+	}
+
+}
+
 int SoftSurface::RGBAToPalette(const glColorBytes &color)
 {
 	assert(GetSurfaceType() == SURFACE_PALETTE_8BIT);
@@ -1009,6 +1042,14 @@ void SoftSurface::Blit( int dstX, int dstY, SoftSurface *pSrc, int srcX /*= 0*/,
 			Blit8BitFromRGBA(dstX, dstY, pSrc, srcX, srcY, srcWidth, srcHeight);
 			return;
 		}
+	} else if (GetSurfaceType() == SURFACE_RGB)
+	{
+		
+		if (pSrc->GetSurfaceType() == SURFACE_RGBA)
+		{
+			BlitRGBFromRGBA(dstX, dstY, pSrc, srcX, srcY, srcWidth, srcHeight);
+			return;
+		}
 	}
 
 	assert(!"We don't handle this combination of surface types yet... SETTTTHHHHH!");
@@ -1124,7 +1165,7 @@ void SoftSurface::WriteBMPOut( string fileName )
 {
 	if (GetSurfaceType() != SURFACE_RGB && GetSurfaceType() != SURFACE_RGBA)
 	{
-		LogError("Can't only save bmps for RGB and RGBA formats, not 8 bit stuff.");
+		LogError("Can only save bmps for RGB and RGBA formats, not 8 bit stuff.");
 		return;
 	}
 
@@ -1172,11 +1213,10 @@ void SoftSurface::WriteBMPOut( string fileName )
 		{
 			byte *pSrc = &m_pPixels[y*imagePitch+x*m_bytesPerPixel];
 			
-			unsigned int color;
 			if (m_bytesPerPixel == 4)
 			{
-				glColorBytes(pSrc[2], pSrc[1], pSrc[0], pSrc[3]);
-				fwrite(&color, 4, 1, fp);
+				glColorBytes converted(pSrc[2], pSrc[1], pSrc[0], pSrc[3]);
+				fwrite(&converted, 4, 1, fp);
 			} else
 			{
 				fwrite(&pSrc[2], 1, 1, fp);
@@ -1198,5 +1238,64 @@ void SoftSurface::WriteBMPOut( string fileName )
 		}
 	}
 	fclose(fp);
+
+}
+
+void SoftSurface::FillAlphaBit( unsigned char alpha )
+{
+	
+	if (GetSurfaceType() != SURFACE_RGBA)
+	{
+		assert(!"This would only work on rgba surfaces, naturally");
+		return;
+	}
+
+	glColorBytes *pSrcImage = (glColorBytes*)GetPointerToPixel(0, 0);
+
+	for (int y=0; y < GetHeight(); y++)
+	{
+		for (int x=0; x < GetWidth(); x++)
+		{
+			(pSrcImage[x]).a = alpha;
+		}
+		pSrcImage += GetWidth();
+	} 
+}
+
+void SoftSurface::Scale( int newX, int newY )
+{
+	assert(m_pPixels && "Uh... no image is loaded");
+	assert(!m_pitchOffset && "The pitch has dead pixel space in it (loaded a .bmp?).. this func won't work right..");
+
+	//create new buffer the same size (memory-wise) as our current one
+	int dataSize = newX*newY*m_bytesPerPixel;
+	byte *pTemp = new byte[dataSize];
+
+	int targetWidth = newX;
+	int targetHeight = newY;
+	int targetPitch = targetWidth*m_bytesPerPixel;
+	float ratioX = (float)m_width/(float)targetWidth;
+	float ratioY = (float)m_height/(float)targetHeight;
+	
+	//step through our current data pixel by pixel, from the top left, reading horizontally
+	for (int y=0; y < targetHeight; y++)
+	{
+		for (int x=0; x < targetWidth; x++)
+		{
+			memcpy(&pTemp[ (y*targetPitch) + x*m_bytesPerPixel ],  GetPointerToPixel(x*ratioX, y*ratioY), m_bytesPerPixel);
+		}
+	}
+
+	//switch to using the new surface we just made
+
+	SAFE_DELETE_ARRAY(m_pPixels);
+	m_pPixels = pTemp;
+	m_usedPitch = targetPitch;
+	m_width = targetWidth;
+	m_height = targetHeight;
+	
+	int oldMem = m_memUsed;
+	m_memUsed = m_width*m_height*m_bytesPerPixel;
+	GetBaseApp()->ModMemUsed(m_memUsed - oldMem); //adjust for our memory counter
 
 }

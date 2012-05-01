@@ -1,16 +1,16 @@
 /*
  Copyright (c) 2010 Steve Oldmeadow
- 
+
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the Software is
  furnished to do so, subject to the following conditions:
- 
+
  The above copyright notice and this permission notice shall be included in
  all copies or substantial portions of the Software.
- 
+
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -18,16 +18,16 @@
  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
- 
+
  $Id$
  */
 
 
 
-/** 
+/**
 @file
 @b IMPORTANT
-There are 3 different ways of using CocosDenshion. Depending on which you choose you 
+There are 3 different ways of using CocosDenshion. Depending on which you choose you
 will need to include different files and frameworks.
 
 @par SimpleAudioEngine
@@ -36,48 +36,43 @@ and some background music and have no interest in learning the lower level worki
 this is the interface to use.
 
 Requirements:
- - Firmware: OS 2.2 or greater 
+ - Firmware: OS 2.2 or greater
  - Files: SimpleAudioEngine.*, CocosDenshion.*
  - Frameworks: OpenAL, AudioToolbox, AVFoundation
- 
+
 @par CDAudioManager
 CDAudioManager is basically a thin wrapper around an AVAudioPlayer object used for playing
 background music and a CDSoundEngine object used for playing sound effects. It manages the
 audio session for you deals with audio session interruption. It is fairly low level and it
-is expected you have some understanding of the underlying technologies. For example, for 
+is expected you have some understanding of the underlying technologies. For example, for
 many use cases regarding background music it is expected you will work directly with the
 backgroundMusic AVAudioPlayer which is exposed as a property.
- 
+
 Requirements:
-  - Firmware: OS 2.2 or greater 
+  - Firmware: OS 2.2 or greater
   - Files: CDAudioManager.*, CocosDenshion.*
   - Frameworks: OpenAL, AudioToolbox, AVFoundation
 
 @par CDSoundEngine
-CDSoundEngine is a sound engine built upon OpenAL and derived from Apple's oalTouch 
+CDSoundEngine is a sound engine built upon OpenAL and derived from Apple's oalTouch
 example. It can playback up to 32 sounds simultaneously with control over pitch, pan
-and gain.  It can be set up to handle audio session interruption automatically.  You 
+and gain.  It can be set up to handle audio session interruption automatically.  You
 may decide to use CDSoundEngine directly instead of CDAudioManager or SimpleAudioEngine
 because you require OS 2.0 compatibility.
- 
+
 Requirements:
-  - Firmware: OS 2.0 or greater 
+  - Firmware: OS 2.0 or greater
   - Files: CocosDenshion.*
   - Frameworks: OpenAL, AudioToolbox
- 
-*/ 
+
+*/
 
 #import <OpenAL/al.h>
 #import <OpenAL/alc.h>
 #import <AudioToolbox/AudioToolbox.h>
 #import <Foundation/Foundation.h>
 #import "CDConfig.h"
-void NSLogMsg (NSString *format, ...);
 
-#ifdef _DEBUG
-#define CD_DEBUG 2
-
-#endif
 
 #if !defined(CD_DEBUG) || CD_DEBUG == 0
 #define CDLOG(...) do {} while (0)
@@ -88,15 +83,15 @@ void NSLogMsg (NSString *format, ...);
 #define CDLOGINFO(...) do {} while (0)
 
 #elif CD_DEBUG > 1
-#define CDLOG(s, ...) NSLog(s, ##__VA_ARGS__)
-#define CDLOGINFO(s, ...) NSLog(s, ##__VA_ARGS__)
+#define CDLOG(...) NSLog(__VA_ARGS__)
+#define CDLOGINFO(...) NSLog(__VA_ARGS__)
 #endif // CD_DEBUG
 
 
 #import "CDOpenALSupport.h"
 
 //Tested source limit on 2.2.1 and 3.1.2 with up to 128 sources and appears to work. Older OS versions e.g 2.2 may support only 32
-#define CD_SOURCE_LIMIT 128 //Total number of sources we will ever want, may actually get less
+#define CD_SOURCE_LIMIT 32 //Total number of sources we will ever want, may actually get less
 #define CD_NO_SOURCE 0xFEEDFAC //Return value indicating playback failed i.e. no source
 #define CD_IGNORE_AUDIO_SESSION 0xBEEFBEE //Used internally to indicate audio session will not be handled
 #define CD_MUTE      0xFEEDBAB //Return value indicating sound engine is muted or non functioning
@@ -108,7 +103,16 @@ void NSLogMsg (NSString *format, ...);
 #define CD_SAMPLE_RATE_BASIC 8000
 #define CD_SAMPLE_RATE_DEFAULT 44100
 
-#define CD_MSG_BAD_AL_CONTEXT @"cdbadalcontext"
+extern NSString * const kCDN_BadAlContext;
+extern NSString * const kCDN_AsynchLoadComplete;
+
+extern float const kCD_PitchDefault;
+extern float const kCD_PitchLowerOneOctave;
+extern float const kCD_PitchHigherOneOctave;
+extern float const kCD_PanDefault;
+extern float const kCD_PanFullLeft;
+extern float const kCD_PanFullRight;
+extern float const kCD_GainDefault;
 
 enum bufferState {
 	CD_BS_EMPTY = 0,
@@ -132,13 +136,13 @@ typedef struct _bufferInfo {
 	ALenum format;
 	ALsizei sizeInBytes;
 	ALsizei frequencyInHertz;
-} bufferInfo;	
+} bufferInfo;
 
 typedef struct _sourceInfo {
 	bool usable;
 	ALuint sourceId;
 	ALuint attachedBufferId;
-} sourceInfo;	
+} sourceInfo;
 
 #pragma mark CDAudioTransportProtocol
 
@@ -172,7 +176,7 @@ typedef struct _sourceInfo {
  */
 @interface CDUtilities : NSObject
 {
-}	
+}
 
 /** Fundamentally the same as the corresponding method is CCFileUtils but added to break binding to cocos2d */
 +(NSString*) fullPathFromRelativePath:(NSString*) relPath;
@@ -183,42 +187,43 @@ typedef struct _sourceInfo {
 #pragma mark CDSoundEngine
 
 /** CDSoundEngine is built upon OpenAL and works with SDK 2.0.
- CDSoundEngine is a sound engine built upon OpenAL and derived from Apple's oalTouch 
+ CDSoundEngine is a sound engine built upon OpenAL and derived from Apple's oalTouch
  example. It can playback up to 32 sounds simultaneously with control over pitch, pan
- and gain.  It can be set up to handle audio session interruption automatically.  You 
+ and gain.  It can be set up to handle audio session interruption automatically.  You
  may decide to use CDSoundEngine directly instead of CDAudioManager or SimpleAudioEngine
  because you require OS 2.0 compatibility.
- 
+
  Requirements:
- - Firmware: OS 2.0 or greater 
+ - Firmware: OS 2.0 or greater
  - Files: CocosDenshion.*
  - Frameworks: OpenAL, AudioToolbox
- 
+
  @since v0.8
  */
 @class CDSoundSource;
 @interface CDSoundEngine : NSObject <CDAudioInterruptProtocol> {
-	
+
 	bufferInfo		*_buffers;
 	sourceInfo		*_sources;
 	sourceGroup	    *_sourceGroups;
 	ALCcontext		*context;
-	int				_sourceGroupTotal;
+	NSUInteger		_sourceGroupTotal;
 	UInt32			_audioSessionCategory;
 	BOOL			_handleAudioSession;
+	ALfloat			_preMuteGain;
+	NSObject        *_mutexBufferLoad;
 	BOOL			mute_;
 	BOOL			enabled_;
-	ALfloat			_preMuteGain;
 
 	ALenum			lastErrorCode_;
 	BOOL			functioning_;
 	float			asynchLoadProgress_;
 	BOOL			getGainWorks_;
-	
+
 	//For managing dynamic allocation of sources and buffers
 	int sourceTotal_;
 	int bufferTotal;
-	 
+
 }
 
 @property (readwrite, nonatomic) ALfloat masterGain;
@@ -229,7 +234,7 @@ typedef struct _sourceInfo {
 /** Total number of sources available */
 @property (readonly) int sourceTotal;
 /** Total number of source groups that have been defined */
-@property (readonly) int sourceGroupTotal;
+@property (readonly) NSUInteger sourceGroupTotal;
 
 /** Sets the sample rate for the audio mixer. For best performance this should match the sample rate of your audio content */
 +(void) setMixerSampleRate:(Float32) sampleRate;
@@ -251,7 +256,7 @@ typedef struct _sourceInfo {
 /** Stops all playing sounds */
 -(void) stopAllSounds;
 -(void) defineSourceGroups:(NSArray*) sourceGroupDefinitions;
--(void) defineSourceGroups:(int[]) sourceGroupDefinitions total:(int) total;
+-(void) defineSourceGroups:(int[]) sourceGroupDefinitions total:(NSUInteger) total;
 -(void) setSourceGroupNonInterruptible:(int) sourceGroupId isNonInterruptible:(BOOL) isNonInterruptible;
 -(void) setSourceGroupEnabled:(int) sourceGroupId enabled:(BOOL) enabled;
 -(BOOL) sourceGroupEnabled:(int) sourceGroupId;
@@ -275,10 +280,10 @@ typedef struct _sourceInfo {
 
 #pragma mark CDSoundSource
 /** CDSoundSource is a wrapper around an OpenAL sound source.
- It allows you to manipulate properties such as pitch, gain, pan and looping while the 
+ It allows you to manipulate properties such as pitch, gain, pan and looping while the
  sound is playing. CDSoundSource is based on the old CDSourceWrapper class but with much
  added functionality.
- 
+
  @since v1.0
  */
 @interface CDSoundSource : NSObject <CDAudioTransportProtocol, CDAudioInterruptProtocol> {
@@ -311,7 +316,7 @@ typedef struct _sourceInfo {
 #pragma mark CDAudioInterruptTargetGroup
 
 /** Container for objects that implement audio interrupt protocol i.e. they can be muted and enabled.
- Setting mute and enabled for the group propagates to all children. 
+ Setting mute and enabled for the group propagates to all children.
  Designed to be used with your CDSoundSource objects to get them to comply with global enabled and mute settings
  if that is what you want to do.*/
 @interface CDAudioInterruptTargetGroup : NSObject <CDAudioInterruptProtocol> {
@@ -330,7 +335,7 @@ typedef struct _sourceInfo {
 @interface CDAsynchBufferLoader : NSOperation {
 	NSArray *_loadRequests;
 	CDSoundEngine *_soundEngine;
-}	
+}
 
 -(id) init:(NSArray *)loadRequests soundEngine:(CDSoundEngine *) theSoundEngine;
 
@@ -349,7 +354,7 @@ typedef struct _sourceInfo {
 @property (readonly) NSString *filePath;
 @property (readonly) int soundId;
 
-- (id)init:(int) theSoundId filePath:(NSString *) theFilePath;
+- (id)init:(int) theSoundId filePath:(const NSString *) theFilePath;
 @end
 
 /** Interpolation type */
@@ -388,7 +393,7 @@ typedef enum {
 	float endValue;
 	id target;
 	BOOL stopTargetWhenComplete;
-	
+
 }
 @property (readwrite, nonatomic) BOOL stopTargetWhenComplete;
 @property (readwrite, nonatomic) float startValue;
