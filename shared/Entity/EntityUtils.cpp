@@ -1825,3 +1825,20 @@ void CopyPropertiesToEntity(Entity *pToEnt, Entity *pFromEnt, const string varNa
 		pToEnt->GetVar(varName3)->Set(*pFromEnt->GetVar(varName3));
 	}
 }
+
+void ShowTextMessage(string msg, int timeMS, int delayBeforeStartingMS)
+{
+
+	Entity *pEnt = CreateTextLabelEntity(NULL, "", 0,0, msg);
+	SetupTextEntity(pEnt, FONT_LARGE, 0.66f);
+
+	//now that we know the size of the text, let's create a black bg, then attach the text to it.
+	Entity *pRect = CreateOverlayRectEntity(NULL, GetScreenSize()/2, GetSize2DEntity(pEnt), MAKE_RGBA(0,0,0,170) );
+	SetAlignmentEntity(pRect, ALIGNMENT_UPPER_CENTER);
+	pRect->AddEntity(pEnt);
+
+	AddFocusIfNeeded(pRect);
+	FadeOutAndKillEntity(pRect, true, 1000, timeMS);
+	ZoomFromPositionEntity(pRect, CL_Vec2f( GetScreenSizeXf()/2, GetScreenSizeYf()), 600);
+
+}

@@ -107,8 +107,14 @@ void AudioManagerDenshion::Preload(string fName, bool bLooping, bool bIsMusic, b
 		assert(!"We don't have that yet..");
 		return;
 	}
-	
-	NSString *soundFile =  [NSString stringWithCString:  fName.c_str() encoding: [NSString defaultCStringEncoding]];
+    string basePath;
+    
+    if (bAddBasePath)
+    {
+        basePath = GetBaseAppPath();
+    }
+    
+	NSString *soundFile =  [NSString stringWithCString:  (basePath+fName).c_str() encoding: [NSString defaultCStringEncoding]];
 	
 	[[SimpleAudioEngine sharedEngine] preloadEffect: soundFile];
 	//GetAudioObjectByFileName(fName, bLooping);
@@ -137,6 +143,13 @@ AudioHandle AudioManagerDenshion::Play( string fName, bool bLooping /*= false*/,
 
 	if (!m_bSoundEnabled) return AUDIO_HANDLE_BLANK;
 
+    string basePath;
+    
+    if (bAddBasePath)
+    {
+        basePath = GetBaseAppPath();
+    }
+    
 	if (bIsMusic)
 	{
 		
@@ -162,12 +175,7 @@ LogMsg("Music disabled, pretending to play");
 			return AUDIO_HANDLE_BLANK;
 		}
 		
-		string basePath;
-		
-		if (bAddBasePath)
-		{
-			basePath = GetBaseAppPath();
-		}
+	
 		NSString *soundFile =  [NSString stringWithCString:  (basePath+fName).c_str() encoding: [NSString defaultCStringEncoding]];
 	
 		if (m_bgMusicPlayer)
@@ -208,7 +216,7 @@ LogMsg("Music disabled, pretending to play");
 
 	//AudioServicesPlaySystemSound(soundId);
 	
-	NSString *soundFile =  [NSString stringWithCString:  fName.c_str() encoding: [NSString defaultCStringEncoding]];
+	NSString *soundFile =  [NSString stringWithCString:  (basePath+fName).c_str() encoding: [NSString defaultCStringEncoding]];
 	
 	//soundId = [[SimpleAudioEngine sharedEngine] playEffect: soundFile];
 	
@@ -243,7 +251,6 @@ void AudioManagerDenshion::SetMusicEnabled( bool bNew )
 		 }
 
 			m_lastMusicID = AUDIO_HANDLE_BLANK;
-	
 		 
 		} else
 		{
@@ -285,24 +292,17 @@ void AudioManagerDenshion::StopMusic()
 
 void AudioManagerDenshion::SetVol( AudioHandle soundID, float vol )
 {
-	if (!soundID) return;
+	if (!soundID || soundID == CD_NO_SOURCE) return;
 
-	
-	//half done..?
-	/*
-	CDSoundEngine *sndEng = [[SimpleAudioEngine sharedEngine]  getSoundEngine];
-	
-	CDSoundSource *snd = [sndEng soundSourceForSound: soundID sourceGroupId: 0];
-	if (snd)
-	{
-		LogMsg("Stopped sound");
-		[snd stop];	
-	} else
-	{
-		LogMsg("Can't find soundsource %d", soundID);	
-	}
-	 */
-	
+    alGetError();
+    alSourcef(soundID, AL_GAIN, vol);
+    ALenum error = alGetError();
+
+    if(error != AL_NO_ERROR) 
+    {
+       LogMsg("AudioManagerDenshion, can't set volume: %x", error);
+    }	
+    
 }
 
 void AudioManagerDenshion::SetMusicVol(float vol )
