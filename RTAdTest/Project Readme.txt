@@ -4,12 +4,13 @@ This example is designed to test the AdManager and IAPManager.
 
 It currently supports:
 
-* Using tapjoy on Android (including using managed points, full screen and banner ads, offer wall)
-* Using In App Billing in iOS, Android Market, webOS
+* Using tapjoy on Android (including using managed points, full screen and banner ads, offer wall) (You have to plug in your own tapjoy account info in the Main.java)
+* Using In App Billing in iOS, Android Market, webOS. You would have to setup the app with your own app id, and your own items
+to really test the IAP though.
 
 Tested to build with:
 
-* Windows GLES
+* Windows GLES (Stuff doesn't really work though, you must run on the real platform to see real ads served or IAP work)
 * Android
 * WebOS
 * iOS

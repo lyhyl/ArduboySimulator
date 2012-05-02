@@ -374,12 +374,9 @@ string StripWhiteSpace(const string & s)
 
 string GetFileNameFromString(const string &path)
 {
-
 	for (int i=path.size()-1; i > 0; i--)
 	{
-		assert(path[i] != '\\' && "Do you want to handle these too?");
-
-		if (path[i] == '/')
+		if (path[i] == '/' || path[i] == '\\')
 		{
 			//well, this must be the cutoff point
 			return path.substr(i+1, path.size()-i);

@@ -22,6 +22,41 @@ AdManager::AdManager()
 
 AdManager::~AdManager()
 {
+	list<AdProvider*>::iterator itor = m_providers.begin();
+	for (;itor != m_providers.end(); itor++)
+	{
+		delete *itor;
+	}
+	m_providers.clear();
+}
+
+void AdManager::AddProvider( AdProvider *provider )
+{
+	m_providers.push_back(provider);
+
+	if (!provider->OnAddToManager(this))
+	{
+		LogError("Unable to init ad provider %s, killing it", provider->GetName().c_str());
+		SAFE_DELETE(provider);
+		return;
+	} else
+	{
+		LogMsg("Ad provider %s initialized.", provider->GetName().c_str());
+	}
+}
+
+AdProvider * AdManager::GetProviderByType( eAdProviderType type )
+{
+	list<AdProvider*>::iterator itor = m_providers.begin();
+	for (;itor != m_providers.end(); itor++)
+	{
+		if ( (*itor)->GetType() == type)
+		{
+			return (*itor);
+		}
+	}
+
+	return NULL;
 }
 
 void AdManager::SetTapjoyFeatureAppVisible( bool bVisible )
@@ -107,6 +142,17 @@ void AdManager::CacheTapjoyFeaturedApp()
 
 void AdManager::OnMessage( Message &m )
 {
+
+	list<AdProvider*>::iterator itor = m_providers.begin();
+	for (;itor != m_providers.end(); itor++)
+	{
+		if ( (*itor)->OnMessage(m))
+		{
+			//it signalled that it handled it and we shouldn't continue processing
+			return;
+		}
+	}
+
 	if (m_returnState == RETURN_STATE_WAITING)
 	{
 		switch (m.GetType())
@@ -222,6 +268,12 @@ void AdManager::OnMessage( Message &m )
 
 void AdManager::Update()
 {
+
+	list<AdProvider*>::iterator itor = m_providers.begin();
+	for (;itor != m_providers.end(); itor++)
+	{
+		return (*itor)->Update();
+	}
 
 	if (m_errorCount > 15) return; //something is seriously wrong, let's not risk hammering the tapjoy service forever
 

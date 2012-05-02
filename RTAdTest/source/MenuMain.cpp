@@ -25,6 +25,32 @@ void MenuMainOnSelect(VariantList *pVList) //0=vec2 point of click, 1=entity sen
 		KillEntity(pMenu);
 	}
 
+	AdProvider *pProvider = GetApp()->m_adManager.GetProviderByType(AD_PROVIDER_CHARTBOOST);
+
+	if (pEntClicked->GetName() == "chartboost_interstitial")
+	{
+		if (pProvider)
+		{
+			pProvider->ShowInterstitial();
+		} else
+		{
+			LogMsg("Chartboost not active.  (RT_CHARTBOOST_ENABLED not defined) ");
+		}
+        return;
+	}
+
+	if (pEntClicked->GetName() == "chartboost_more_games")
+	{
+		if (pProvider)
+		{
+			pProvider->ShowMoreApps();
+		} else
+		{
+			LogMsg("Chartboost not active.  (RT_CHARTBOOST_ENABLED not defined) ");
+		}
+        return;
+	}
+
 	DisableAllButtonsEntity(pEntClicked->GetParent());
 	//GetEntityRoot()->PrintTreeAsText(); //useful for debugging
 }
@@ -36,10 +62,20 @@ Entity * MenuMainCreate(Entity *pParentEnt)
 	AddFocusIfNeeded(pBG);
 	Entity * pButtonEntity;
 
-	pButtonEntity = CreateTextButtonEntity(pBG, "store", 10, 30, "Test IAP (android, iOS, webOS)"); 
+	float x = 10;
+	float y = 10;
+	float spacerY = 50;
+
+	pButtonEntity = CreateTextButtonEntity(pBG, "store", x, y +=spacerY, "Test IAP (android, iOS, webOS)"); 
 	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MenuMainOnSelect);
 
-	pButtonEntity = CreateTextButtonEntity(pBG, "tapjoy", 10, 170, "Test Tapjoy ads (android)"); 
+	pButtonEntity = CreateTextButtonEntity(pBG, "tapjoy", x, y +=spacerY, "Test Tapjoy ads (android)"); 
+	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MenuMainOnSelect);
+
+	pButtonEntity = CreateTextButtonEntity(pBG, "chartboost_interstitial", x, y +=spacerY, "Request Chartboost Interstitial (iOS)"); 
+	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MenuMainOnSelect);
+
+	pButtonEntity = CreateTextButtonEntity(pBG, "chartboost_more_games", x, y +=spacerY, "Request Chartboost More Games Dialog (iOS)"); 
 	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MenuMainOnSelect);
 
 

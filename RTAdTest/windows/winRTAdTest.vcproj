@@ -1171,14 +1171,6 @@
 				Name="Manager"
 				>
 				<File
-					RelativePath="..\..\shared\Manager\AdManager.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\shared\Manager\AdManager.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\shared\Manager\Console.cpp"
 					>
 				</File>
@@ -2146,6 +2138,42 @@
 						>
 					</File>
 				</Filter>
+			</Filter>
+			<Filter
+				Name="Ad"
+				>
+				<File
+					RelativePath="..\..\shared\Manager\AdManager.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\Manager\AdManager.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\Ad\AdProvider.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\Ad\AdProvider.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\Ad\AdProviderChartBoost.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\Ad\AdProviderChartBoost.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\Ad\AdProviderIOS_ChartBoost.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\Ad\AdProviderIOS_ChartBoost.mm"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<File
