@@ -295,7 +295,16 @@ void AudioManagerDenshion::SetVol( AudioHandle soundID, float vol )
 	if (!soundID || soundID == CD_NO_SOURCE) return;
 
     alGetError();
-    alSourcef(soundID, AL_GAIN, vol);
+
+	if (soundID == -1)
+	{
+		//-1 means global
+		alListenerf(AL_GAIN, vol);
+	} else
+	{
+		alSourcef(soundID, AL_GAIN, vol);
+	}
+    
     ALenum error = alGetError();
 
     if(error != AL_NO_ERROR) 
