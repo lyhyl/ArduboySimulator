@@ -12,6 +12,11 @@
 		28AD733F0D9D9553002E5188 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28AD733E0D9D9553002E5188 /* MainWindow.xib */; };
 		28FD15000DC6FC520079059D /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FD14FF0DC6FC520079059D /* OpenGLES.framework */; };
 		28FD15080DC6FC5B0079059D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FD15070DC6FC5B0079059D /* QuartzCore.framework */; };
+		5D02D7C11551278C0015D481 /* AdProvider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D02D7BB1551278C0015D481 /* AdProvider.cpp */; };
+		5D02D7C21551278C0015D481 /* AdProviderChartBoost.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D02D7BD1551278C0015D481 /* AdProviderChartBoost.cpp */; };
+		5D02D7C31551278C0015D481 /* AdProviderIOS_ChartBoost.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D02D7C01551278C0015D481 /* AdProviderIOS_ChartBoost.mm */; };
+		5D02D7C5155127B30015D481 /* libChartBoost.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D02D7C4155127B30015D481 /* libChartBoost.a */; };
+		5D02D7C7155128220015D481 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D02D7C6155128220015D481 /* SystemConfiguration.framework */; };
 		5D0CC93A0F79E0D1004D9AE9 /* Console.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D0CC9320F79E0D1004D9AE9 /* Console.cpp */; };
 		5D0CC93C0F79E0D1004D9AE9 /* GameTimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D0CC9360F79E0D1004D9AE9 /* GameTimer.cpp */; };
 		5D0CC93D0F79E0D1004D9AE9 /* MessageManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D0CC9380F79E0D1004D9AE9 /* MessageManager.cpp */; };
@@ -136,6 +141,14 @@
 		28FD14FF0DC6FC520079059D /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		28FD15070DC6FC5B0079059D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		32CA4F630368D1EE00C91783 /* RTAdTest_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTAdTest_Prefix.pch; sourceTree = "<group>"; };
+		5D02D7BB1551278C0015D481 /* AdProvider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AdProvider.cpp; path = Ad/AdProvider.cpp; sourceTree = "<group>"; };
+		5D02D7BC1551278C0015D481 /* AdProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdProvider.h; path = Ad/AdProvider.h; sourceTree = "<group>"; };
+		5D02D7BD1551278C0015D481 /* AdProviderChartBoost.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AdProviderChartBoost.cpp; path = Ad/AdProviderChartBoost.cpp; sourceTree = "<group>"; };
+		5D02D7BE1551278C0015D481 /* AdProviderChartBoost.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdProviderChartBoost.h; path = Ad/AdProviderChartBoost.h; sourceTree = "<group>"; };
+		5D02D7BF1551278C0015D481 /* AdProviderIOS_ChartBoost.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdProviderIOS_ChartBoost.h; path = Ad/AdProviderIOS_ChartBoost.h; sourceTree = "<group>"; };
+		5D02D7C01551278C0015D481 /* AdProviderIOS_ChartBoost.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AdProviderIOS_ChartBoost.mm; path = Ad/AdProviderIOS_ChartBoost.mm; sourceTree = "<group>"; };
+		5D02D7C4155127B30015D481 /* libChartBoost.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libChartBoost.a; path = ../shared/iOS/ChartBoost/libChartBoost.a; sourceTree = "<group>"; };
+		5D02D7C6155128220015D481 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		5D0CC9320F79E0D1004D9AE9 /* Console.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Console.cpp; path = Manager/Console.cpp; sourceTree = "<group>"; };
 		5D0CC9330F79E0D1004D9AE9 /* Console.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Console.h; path = Manager/Console.h; sourceTree = "<group>"; };
 		5D0CC9360F79E0D1004D9AE9 /* GameTimer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GameTimer.cpp; path = Manager/GameTimer.cpp; sourceTree = "<group>"; };
@@ -305,6 +318,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5D02D7C7155128220015D481 /* SystemConfiguration.framework in Frameworks */,
 				5D6BA8E315118A4A002DC898 /* StoreKit.framework in Frameworks */,
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
 				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
@@ -317,6 +331,7 @@
 				5D3063AB0FD8B00A009DE600 /* OpenAL.framework in Frameworks */,
 				5D82C8B00FF4C02B0082EBE7 /* CFNetwork.framework in Frameworks */,
 				5D82C8B50FF4C0BF0082EBE7 /* AVFoundation.framework in Frameworks */,
+				5D02D7C5155127B30015D481 /* libChartBoost.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -334,6 +349,7 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				5D02D7C6155128220015D481 /* SystemConfiguration.framework */,
 				5DC692580E947EBD00E5AC44 /* shared */,
 				29B97315FDCFA39411CA2CEA /* Source */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
@@ -382,6 +398,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				5D02D7C4155127B30015D481 /* libChartBoost.a */,
 				5D6BA8E215118A4A002DC898 /* StoreKit.framework */,
 				5D82C8B40FF4C0BF0082EBE7 /* AVFoundation.framework */,
 				5D82C8AF0FF4C02B0082EBE7 /* CFNetwork.framework */,
@@ -395,6 +412,19 @@
 				1D30AB110D05D00D00671497 /* Foundation.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		5D02D7BA155127730015D481 /* Ad */ = {
+			isa = PBXGroup;
+			children = (
+				5D02D7BB1551278C0015D481 /* AdProvider.cpp */,
+				5D02D7BC1551278C0015D481 /* AdProvider.h */,
+				5D02D7BD1551278C0015D481 /* AdProviderChartBoost.cpp */,
+				5D02D7BE1551278C0015D481 /* AdProviderChartBoost.h */,
+				5D02D7BF1551278C0015D481 /* AdProviderIOS_ChartBoost.h */,
+				5D02D7C01551278C0015D481 /* AdProviderIOS_ChartBoost.mm */,
+			);
+			name = Ad;
 			sourceTree = "<group>";
 		};
 		5D0CC94A0F79E162004D9AE9 /* Renderer */ = {
@@ -633,6 +663,7 @@
 		5DC692580E947EBD00E5AC44 /* shared */ = {
 			isa = PBXGroup;
 			children = (
+				5D02D7BA155127730015D481 /* Ad */,
 				5D5C0F371275637300A4E4E3 /* Network */,
 				5D165B1E125AA24200F1E8E3 /* FileSystem */,
 				5D165B0D125AA20D00F1E8E3 /* iOS */,
@@ -835,6 +866,9 @@
 				5D4596011510CE0B0088A44D /* ScrollComponent.cpp in Sources */,
 				5D4596021510CE0B0088A44D /* TouchDragComponent.cpp in Sources */,
 				5D6BA8E615118ADE002DC898 /* InAppPurchaseManager.mm in Sources */,
+				5D02D7C11551278C0015D481 /* AdProvider.cpp in Sources */,
+				5D02D7C21551278C0015D481 /* AdProviderChartBoost.cpp in Sources */,
+				5D02D7C31551278C0015D481 /* AdProviderIOS_ChartBoost.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -854,6 +888,10 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = Info.plist;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../shared/iOS/ChartBoost\"",
+				);
 				PRODUCT_NAME = RTAdTest;
 				PROVISIONING_PROFILE = "F3BDD592-F7A6-429A-8E9F-81EBF238EBED";
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
@@ -888,7 +926,7 @@
 					"../shared/ClanLib-2.0/Sources",
 					../shared/FliteTTS/include,
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 3.1.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PREBINDING = NO;
 				PRODUCT_NAME = "";
@@ -914,6 +952,10 @@
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_THUMB_SUPPORT = NO;
 				INFOPLIST_FILE = Info.plist;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../shared/iOS/ChartBoost\"",
+				);
 				PRODUCT_NAME = RTAdTest;
 				PROVISIONING_PROFILE = "F3BDD592-F7A6-429A-8E9F-81EBF238EBED";
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
@@ -944,7 +986,7 @@
 					"../shared/ClanLib-2.0/Sources",
 					../shared/FliteTTS/include,
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 3.1.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 				PRODUCT_NAME = "";

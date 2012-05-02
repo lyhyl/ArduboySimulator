@@ -47,7 +47,7 @@ $(COMPPATH)/InputTextRenderComponent.cpp $(COMPPATH)/InterpolateComponent.cpp $(
 $(COMPPATH)/SelectButtonWithCustomInputComponent.cpp $(COMPPATH)/SliderComponent.cpp $(COMPPATH)/TextBoxRenderComponent.cpp $(COMPPATH)/TextRenderComponent.cpp \
 $(COMPPATH)/EmitVirtualKeyComponent.cpp $(COMPPATH)/OverlayRenderComponent.cpp $(COMPPATH)/TouchHandlerComponent.cpp $(COMPPATH)/TyperComponent.cpp \
 $(COMPPATH)/UnderlineRenderComponent.cpp $(SHARED)/Manager/IAPManager.cpp $(SHARED)/Manager/AdManager.cpp $(COMPPATH)/TouchDragComponent.cpp \
-$(COMPPATH)/RenderScissorComponent.cpp $(COMPPATH)/ScrollBarRenderComponent.cpp \
+$(COMPPATH)/RenderScissorComponent.cpp $(COMPPATH)/ScrollBarRenderComponent.cpp $(SHARED)/Ad/AdProvider.cpp \
 \
 \
 $(APP)/App.cpp ../temp_final_cpp_src/AndroidApp.cpp $(APP)/MenuStore.cpp $(APP)/MenuPurchase.cpp $(APP)/MenuTapjoy.cpp \

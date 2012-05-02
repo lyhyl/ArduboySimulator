@@ -200,14 +200,14 @@ void IAPManager::Update()
 			{
 				//WebOS & iOS
 				//DEBUG - To test successful or faked purchases under Win emulation
-				//GetMessageManager()->SendGUIStringEx(MESSAGE_TYPE_IAP_RESULT,(float)IAPManager::RESULT_OK,0.0f,0, "Faked order!");
+				GetMessageManager()->SendGUIStringEx(MESSAGE_TYPE_IAP_RESULT,(float)IAPManager::RESULT_OK,0.0f,0, "Faked order for testing on Windows");
 
 				//or, for already purchased
-				GetMessageManager()->SendGUIStringEx(MESSAGE_TYPE_IAP_RESULT,(float)IAPManager::RESULT_OK_ALREADY_PURCHASED,0.0f,0, "Faked order!");
+				//GetMessageManager()->SendGUIStringEx(MESSAGE_TYPE_IAP_RESULT,(float)IAPManager::RESULT_OK_ALREADY_PURCHASED,0.0f,0, "Faked order for testing on Windows");
 
 
 				//or, to test for a failed transaction
-				//GetMessageManager()->SendGUIStringEx(MESSAGE_TYPE_IAP_RESULT,(float)IAPManager::RESULT_USER_CANCELED,0.0f,0, "Faked order!");
+				//GetMessageManager()->SendGUIStringEx(MESSAGE_TYPE_IAP_RESULT,(float)IAPManager::RESULT_USER_CANCELED,0.0f,0, "Faked order for testing on Windows");
 
 			}
 

@@ -9,7 +9,7 @@
 
 /*
 
-Seth's class to control Tapjoy ads on Android.  Needs special versions of the Android .java files to work...
+Seth's class to control Tapjoy ads on Android.  Needs special versions of the Android .java files to work.
 
 Also, there is an RTAdTest sample app for this, but it isn't going to be public until I work out some hacky ugliness on the
 java side..
@@ -29,10 +29,13 @@ But here is how it would be used:
 		BaseApp::OnMessage(m);
 	}
 
+
 */
 
 #ifndef AdManager_h__
 #define AdManager_h__
+
+#include "Ad/AdProvider.h"
 
 class AdManager
 {
@@ -62,6 +65,9 @@ public:
 	bool IsReadyForTransaction(); //only need to check this to give/remove tap points
 	void OnRender(); //currently only used to render a fake rect on windows to show where the ad would be.  (ads only display in Android)
 
+	void AddProvider( AdProvider *provider );
+	AdProvider * GetProviderByType( eAdProviderType type );
+	
 	//Tapjoy specific, only supported on Android currently, and only with special java files that aren't public yet
 
 	void SetTapjoyAdVisible(bool bVisible); //will load an ad if not cached, so it might not display right away
@@ -75,10 +81,10 @@ public:
 	void ModifyTapPoints(int mod);
 	void GetTapPointsFromServer();
 	void SetupBanner(CL_Vec2f vBannerSize, eAlignment alignment = ALIGNMENT_DOWN_CENTER); //alignment is ignored from now, always bottom centered
-	
+
 	boost::signal<void (VariantList*)> m_sig_tappoints_awarded; //called when awarded tap points
 
-protected:
+private:
 
 	eReturnState m_returnState;
 	bool m_bTapjoyAdReady;
@@ -100,7 +106,8 @@ protected:
 	eAlignment m_desiredBannerAlignment;
 	CL_Vec2f m_vBannerSize;
 
-private:
+	list<AdProvider*> m_providers;
+
 };
 
 #endif // AdManager_h__

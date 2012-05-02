@@ -30,7 +30,8 @@ set SRC= %SHARED%\PlatformSetup.cpp  %SHARED%\WebOS\SDLMain.cpp %SHARED%\win\app
 %SHARED%\util\CRandom.cpp %SHARED%\util\GLESUtils.cpp %SHARED%\util\MathUtils.cpp %SHARED%\util\MiscUtils.cpp %SHARED%\util\RenderUtils.cpp %SHARED%\util\ResourceUtils.cpp ^
 %SHARED%\util\Variant.cpp %SHARED%\util\boost\libs\signals\src\connection.cpp %SHARED%\util\boost\libs\signals\src\named_slot_map.cpp %SHARED%\util\boost\libs\signals\src\signal_base.cpp ^
 %SHARED%\util\boost\libs\signals\src\slot.cpp %SHARED%\util\boost\libs\signals\src\trackable.cpp %SHARED%\FileSystem\StreamingInstance.cpp %SHARED%\FileSystem\StreamingInstanceZip.cpp ^
-%SHARED%\FileSystem\StreamingInstanceFile.cpp %SHARED%\BaseApp.cpp %SHARED%\util\unzip\unzip.c %SHARED%\util\unzip\ioapi.c %SHARED%\Manager\AdManager.cpp %SHARED%\Manager\IAPManager.cpp
+%SHARED%\FileSystem\StreamingInstanceFile.cpp %SHARED%\BaseApp.cpp %SHARED%\util\unzip\unzip.c %SHARED%\util\unzip\ioapi.c %SHARED%\Manager\AdManager.cpp %SHARED%\Manager\IAPManager.cpp ^
+%SHARED%\Ad\AdProvider.cpp
 
 REM **************************************** ENGINE COMPONENT SOURCE CODE FILES
 set COMPONENT_SRC=%COMPPATH%\FocusInputComponent.cpp %COMPPATH%\FocusUpdateComponent.cpp %COMPPATH%\CustomInputComponent.cpp %COMPPATH%\ArcadeInputComponent.cpp ^

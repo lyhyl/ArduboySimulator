@@ -13,6 +13,10 @@
 #include "MenuStore.h"
 #include "MenuMain.h"
 
+#ifdef RT_CHARTBOOST_ENABLED
+	#include "Ad/AdProviderChartBoost.h"
+#endif
+
 MessageManager g_messageManager;
 MessageManager * GetMessageManager() {return &g_messageManager;}
 
@@ -49,6 +53,7 @@ App::App()
 App::~App()
 {
 }
+
 
 bool App::Init()
 {
@@ -108,9 +113,22 @@ bool App::Init()
 #endif
 	
 	m_IAPManager.Init();
-	
 	m_adManager.Init();
 	GetBaseApp()->SetFPSVisible(true);
+	
+#ifdef RT_CHARTBOOST_ENABLED
+	AdProviderChartBoost *pProvider = new AdProviderChartBoost;
+
+	pProvider->SetupInfo("<insert chartboost appID>", "<insert chartboost appsignature");
+	m_adManager.AddProvider(pProvider);
+ 	pProvider->CacheShowInterstitial();
+	pProvider->CacheShowMoreApps();
+
+	//m_adManager.GetProviderByType(AD_PROVIDER_CHARTBOOST)->ShowInterstitial();
+	//m_adManager.GetProviderByType(AD_PROVIDER_CHARTBOOST)->ShowMoreApps();
+    
+#endif
+	
 	return true;
 }
 
@@ -184,7 +202,6 @@ void App::Draw()
 	
 	BaseApp::Draw();
 	m_adManager.OnRender();
-
 }
 
 void App::OnScreenSizeChange()

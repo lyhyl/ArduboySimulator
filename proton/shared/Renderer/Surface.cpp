@@ -377,8 +377,7 @@ bool Surface::LoadRTTexture(byte *pMem)
 
 				glTexImage2D( GL_TEXTURE_2D, nMipLevel, internalColorFormat, width, height, 0, colorType, format, pTextureData );
 				#ifdef _DEBUG
-				if (nMipLevel == 0)
-					LogMsg("Surface::LoadRTTexture: Loading surface: %d, %d -  internalFormat: %d, format: %d color type: %d", width, height, internalColorFormat, format, colorType);
+				//if (nMipLevel == 0) LogMsg("Surface::LoadRTTexture: Loading surface: %d, %d -  internalFormat: %d, format: %d color type: %d", width, height, internalColorFormat, format, colorType);
 			
 				#endif
 			} else

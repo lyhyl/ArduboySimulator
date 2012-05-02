@@ -8,13 +8,13 @@
  This example helps me test in app billing and tapjoy integration.
  */
 
-
-
 #pragma once
 
 #include "BaseApp.h"
 #include "Manager/IAPManager.h"
 #include "Manager/AdManager.h"
+
+#define RT_CHARTBOOST_ENABLED
 
 class App: public BaseApp
 {
