@@ -7,10 +7,24 @@
 
 #include "irrMath.h"
 
+
+// byte-align structures
+#if defined(_MSC_VER) || defined(__BORLANDC__) || defined (__BCPLUSPLUS__)
+#	pragma pack( push, packing )
+#	pragma pack( 1 )
+#	define PACK_STRUCT
+#elif defined( __GNUC__ )
+#	define PACK_STRUCT	__attribute__((packed))
+#else
+#	error compiler not supported
+#endif
+
 namespace irr
 {
 namespace core
 {
+
+
 
 	//! 3d vector template class with lots of operators and methods.
 	/** The vector3d class is used in Irrlicht for three main purposes:
@@ -402,7 +416,7 @@ namespace core
 
 		//! Z coordinate of the vector
 		T Z;
-	};
+	} PACK_STRUCT; //SETH added this pack, otherwise GCC won't let me pack structs that have these in them in 64 bit systems
 
 	//! partial specialization for integer vectors
 	// Implementor note: inline keyword needed due to template specialization for s32. Otherwise put specialization into a .cpp
@@ -423,6 +437,13 @@ namespace core
 
 } // end namespace core
 } // end namespace irr
+
+// Default alignment
+#if defined(_MSC_VER) || defined(__BORLANDC__) || defined (__BCPLUSPLUS__)
+#	pragma pack( pop, packing )
+#endif
+
+#undef PACK_STRUCT
 
 #endif
 
