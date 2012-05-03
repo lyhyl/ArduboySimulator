@@ -55,10 +55,18 @@
 typedef int64_t sint64;
 #define _SINT64
 #endif
+
 #ifndef _UINT64
 typedef uint64_t uint64;
 #define _UINT64
 #endif
+
+#ifndef HAVE_UINT64
+ //need this to avoid mysql trying to redine uint64
+#define HAVE_UINT64
+#endif
+
+
 #ifndef _SINT32
 typedef int32_t sint32;
 #define _SINT32

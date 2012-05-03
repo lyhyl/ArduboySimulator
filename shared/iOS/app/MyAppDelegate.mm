@@ -41,9 +41,17 @@
 
 - (void)applicationDidFinishLaunching:(UIApplication *)application 
 {
-	
+    
+    CGRect bounds = [[UIScreen mainScreen] bounds];
+    CGPoint center = CGPointMake(bounds.size.width/2, bounds.size.height/2);
+
+    //without doing this, an iPhone-only app won't display on an iPad correctly, starting around iOS 4 or 5?
+    [viewController.view setFrame:bounds];
+    [viewController.view setCenter:center];
+    
 	[window addSubview:viewController.view];
 	[window makeKeyAndVisible];
+
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
 
 	//we don't want to waste cycles doing the accelerometer so we half disable it
