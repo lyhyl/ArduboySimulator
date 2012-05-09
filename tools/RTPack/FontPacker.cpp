@@ -52,9 +52,23 @@ bool FontPacker::WriteHeaderBitMapFontGenerator(FILE *fp, string fntFile, rtfont
 
 	for (int i=0; i < header.lastChar-header.firstChar; i++)
 	{
-		parms = CL_String::tokenize(t.m_lines[ (4+i)-skipped], "=");
+		if (t.m_lines.size() <= i)
+		{
+			//no line here, avoid crash
+			parms.clear();
+		} else
+		{
+			parms = CL_String::tokenize(t.m_lines[ (4+i)-skipped], "=");
+		}
+
 		
-		int index = CL_String::to_int(parms[1]);
+		int index = 0;
+		
+		if (parms.size() > 1)
+		{
+			index =  CL_String::to_int(parms[1]);
+		}
+		
 		
 		if (index == header.firstChar+i)
 		{

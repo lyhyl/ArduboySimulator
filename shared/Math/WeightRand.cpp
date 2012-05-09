@@ -102,7 +102,7 @@ int CWeightRand::GetRandom()
 
 	if (m_b_needs_computation) this->ComputeOdds();
 
-	float f_rand = ((float)rand() / RT_RAND_MAX);
+	float f_rand = ((float)rand() / RAND_MAX);
 
 	//scroll through and figure out which thing we chose
 
@@ -117,7 +117,6 @@ int CWeightRand::GetRandom()
 			return i;
 		}
 	}
-
 
 	return 0;
 }
