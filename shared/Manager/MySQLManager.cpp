@@ -103,13 +103,10 @@ int MySQLManager::AddSelectResults(vector<VariantDB> &vdb)
 				while(field = mysql_fetch_field(result)) 
 				{
 					fieldNames.push_back(field->name);
-			//		printf("%s ", field->name);
 					fieldType.push_back(field->type);
 				}
-		//		printf("\n");
 			}
 		
-		//	printf("%s  ", row[i] ? row[i] : "NULL");
 			switch(fieldType[i])
 			{
 
@@ -246,4 +243,16 @@ void MySQLManager::Update()
 		DoesTableExist("BogusTable", false);
 		m_pingTimer = GetSystemTimeTick()+uint32(C_MYSQL_PING_TIMER_MS);
 	}
+}
+
+std::string MySQLManager::EscapeString( const string &input )
+{
+	char *pBuffer = new char[input.length()*2+1];
+
+	mysql_real_escape_string(m_conn, pBuffer, input.c_str(), input.size());
+
+	string ret = pBuffer;
+	SAFE_DELETE_ARRAY(pBuffer);
+
+	return ret;
 }

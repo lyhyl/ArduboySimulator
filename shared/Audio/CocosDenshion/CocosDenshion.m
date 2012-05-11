@@ -143,8 +143,9 @@ static BOOL _mixerRateSet = NO;
 	alGetError();//Clear error
 	while (!hasFailed && sourceTotal_ < CD_SOURCE_LIMIT) {
 		alGenSources(1, &(_sources[sourceTotal_].sourceId));
-		if (alGetError() == AL_NO_ERROR) {
-            CDLOGINFO(@"Denshion::CDSoundEngine - generated source %d",_sources[sourceTotal_].sourceId);
+		if (alGetError() == AL_NO_ERROR) 
+        {
+         //   CDLOGINFO(@"Denshion::CDSoundEngine - generated source %d",_sources[sourceTotal_].sourceId);
             
 
             //Now try attaching source to null buffer

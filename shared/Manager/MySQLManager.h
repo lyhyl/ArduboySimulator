@@ -34,6 +34,8 @@ public:
 	void Update(); //call every frame, it avoids disconnection by pinging its sql connection every once in a while
 	bool DoResultsExist();
 	bool LostServerConnection() {return m_bLostServerConnection;}
+	string EscapeString(const string &input); //Let's you use ' and \ willy nilly without worrying about it screwing up your query
+
 protected:
 	
 
