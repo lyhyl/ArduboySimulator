@@ -51,8 +51,14 @@ public:
 
 	};
 
-	//to avoid polling, you can use this.  parm 0 is the return code (uint), parm 1 is the receipt (depends on platform),
-	//parm 2 is the item id in question
+	/**
+	 * A signal for reporting changes in the purchasing process.
+	 *
+	 * The parameter variant list contains the following items:
+	 * - 0: the return code of type \c eReturnState as a uint.
+	 * - 1: a string that gives more information about the result. This might depend on the platform.
+	 * - 2: is the item id in question (as a string).
+	 */
 	boost::signal<void (VariantList*)> m_sig_item_purchase_result; 
 	
 protected:

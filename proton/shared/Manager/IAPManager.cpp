@@ -29,18 +29,17 @@ bool IAPManager::IsItemPurchased( const string item)
 
 void IAPManager::OnMessage( Message &m )
 {
-
 	if (m_state == STATE_NONE) 
 	{
 #ifdef SHOW_DEBUG_IAP_MESSAGES
-	
 		if (m.GetType() == MESSAGE_TYPE_IAP_RESULT || m.GetType() == MESSAGE_TYPE_IAP_ITEM_STATE)
 		{
 			LogMsg("Ignoring IAP response, wrong state: %d - Extra: %s", (int)m.GetParm1(), m_extraData.c_str());
 		}
-#endif		return;
+#endif
+		
+		return;
 	}
-
 
 	if (m.GetType() == MESSAGE_TYPE_IAP_RESULT)
 	{
@@ -49,7 +48,7 @@ void IAPManager::OnMessage( Message &m )
 #ifdef SHOW_DEBUG_IAP_MESSAGES
 		LogMsg("Got IAP response: %d - Extra: %s", (int)m.GetParm1(), m_extraData.c_str());
 #endif
-        int result = (int)m.GetParm1();
+		ResponseCode result = ResponseCode((int)m.GetParm1());
         
 		if (result != RESULT_OK && result != RESULT_OK_ALREADY_PURCHASED)
 		{
@@ -251,7 +250,7 @@ void IAPManager::BuyItem( string itemName )
 		o.m_type = OSMessage::MESSAGE_IAP_PURCHASE;
 		o.m_string = itemName;
 	
-		m_itemToBuy.clear();
+		m_itemToBuy = itemName;
 		GetBaseApp()->AddOSMessage(o);
 		m_timer = GetTick(TIMER_SYSTEM);
 		m_bWaitingForReply = true;

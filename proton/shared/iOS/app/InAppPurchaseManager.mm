@@ -38,7 +38,7 @@
 - (void)productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response
 {
     NSArray *products = response.products;
-    proUpgradeProduct = [products count] == 1 ? [[products firstObject] retain] : nil;
+    proUpgradeProduct = [products count] == 1 ? [[products objectAtIndex:0] retain] : nil;
     if (proUpgradeProduct)
     {
         NSLog(@"Product title: %@" , proUpgradeProduct.localizedTitle);
