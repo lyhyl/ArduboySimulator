@@ -92,7 +92,7 @@ uint32 ColorCombineMix(uint32 c1, uint32 c2, float progress);
  * 
  * \return The final resulting color of the operation.
  */
-uint32 ColorCombine(uint32 c1, uint32 c2, float alphaMod);
+uint32 ColorCombine(uint32 c1, uint32 c2, float alphaMod = 1.0f);
 void SetLockedLandscape(bool bNew);
 bool GetLockedLandscape();
 void  ScreenToWorld(CL_Vec2f pt, CL_Vec3f *pReturnA, float dist);
