@@ -81,12 +81,20 @@ public:
 
 	glColorBytes GetPixel( int x, int y )
 	{
-		if (m_surfaceType == SURFACE_PALETTE_8BIT)
+		switch (m_surfaceType)
 		{
+		case SURFACE_PALETTE_8BIT:
 			return m_palette[m_pPixels[ ( ((m_height-1)-y)*(m_usedPitch+m_pitchOffset)+x)]];
+			break;
+
+		case SURFACE_RGBA:
+			return *((glColorBytes*)((m_pPixels+(y*m_usedPitch+x*4))));
+			break;
+
+		default:
+			assert(!"Unhandled pixel type... SSSSEEEEETTTHH!");
 		}
 
-		assert(!"Unhandle pixel type... SSSSEEEEETTTHH!");
 		return glColorBytes(0,0,0,255);
 	}
 

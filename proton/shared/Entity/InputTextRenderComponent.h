@@ -29,6 +29,16 @@ pButtonEntity->GetComponentByName("InputTextRender")->GetVar("inputLengthMax")->
 
 //show *'s, password mode
 pButtonEntity->GetComponentByName("InputTextRender")->GetVar("visualStyle")->Set((uint32)InputTextRenderComponent::STYLE_PASSWORD);
+
+
+To close the keyboard and un cause the current thing being edited to lose focus, you can do this:
+
+Entity *pEnt = GetEntityWithNativeUIFocus();
+if (pEnt)
+{
+	pEnt->GetComponentByName("InputTextRender")->GetFunction("CloseKeyboard")->sig_function(NULL);
+}
+
 */
 
 class InputTextRenderComponent: public EntityComponent
