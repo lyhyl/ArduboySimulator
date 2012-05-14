@@ -8,22 +8,10 @@
 #include <cstdarg>
 #include <cassert>
 #include "PlatformSetup.h"
+#include "BaseApp.h"
 #include <time.h>
 
 using namespace std;
-
-bool g_preferSDCardForUserStorage = false;
-
-uint32 g_callAppResumeASAPTimer = 0;
-bool g_pauseASAP = false;
-string g_musicToPlay;
-int g_musicPos = 0;
-
-//this delay fixes a problem with restoring surfaces before Linux 1.6 devices are ready for it resulting
-//in white textures -  update: unneeded
-#define C_DELAY_BEFORE_RESTORING_SURFACES_MS 1
-
-//out how to make/pass java structs
 
 void StringReplace(const std::string& what, const std::string& with, std::string& in);
 vector<string> StringTokenize (const  string  & theString,  const  string  & theDelimiter );
@@ -42,7 +30,6 @@ void LogMsg ( const char* traceStr, ... )
 	vsnprintf( buffer, logSize, traceStr, argsVA );
 	va_end( argsVA );
 	
-	
 	//__Linux_log_write(Linux_LOG_ERROR,GetAppName(), buffer);
 	printf ((char*)buffer);
 	printf ("\r\n");
@@ -50,6 +37,10 @@ void LogMsg ( const char* traceStr, ... )
 
 	AppendStringToFile( GetBaseAppPath()+"log.txt", GetDateAndTimeAsString()+": "+string(buffer)+"\r\n");
 
+	if (IsBaseAppInitted())
+	{
+		GetBaseApp()->GetConsole()->AddLine(buffer);
+	}
 }
 
 
@@ -83,7 +74,7 @@ void LaunchEmail(string subject, string content)
 
 void LaunchURL(string url)
 {
-	
+	LogMsg("LaunchURL: %s", url.c_str());
 }
 
 string GetClipboardText()
