@@ -238,7 +238,7 @@ void IAPManager::BuyItem( string itemName )
 
 		m_items.clear();
 		m_itemToBuy = itemName;
-	
+		m_state = STATE_WAITING;
 		OSMessage o;
 		o.m_type = OSMessage::MESSAGE_IAP_GET_PURCHASED_LIST;
 		GetBaseApp()->AddOSMessage(o);
