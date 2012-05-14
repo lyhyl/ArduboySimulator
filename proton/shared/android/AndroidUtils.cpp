@@ -353,13 +353,36 @@ eDeviceMemoryClass GetDeviceMemoryClass()
 	return C_DEVICE_MEMORY_CLASS_2;
 }
 
-
 unsigned int GetSystemTimeTick()
 {
+
+	/*
 	struct timeval tv;
 	gettimeofday(&tv, NULL);
 	return tv.tv_usec/1000 + tv.tv_sec*1000;
+	*/
+
+	//More resistent to playing with the date to change timing in games
+
+	static unsigned int incrementingTimer = 0;
+	static double buildUp = 0;
+	static double lastTime = 0;
+
+	struct timespec time;
+	clock_gettime(CLOCK_MONOTONIC, &time);
+	double timeDouble = time.tv_sec*1000 + time.tv_nsec/1000000;
+
+	double change = timeDouble -lastTime;
+	if (change > 0 && change < 500)
+	{
+		incrementingTimer += change;
+	}
+	lastTime = timeDouble;
+
+	return incrementingTimer;
+
 }
+
 double GetSystemTimeAccurate()
 {
 	return double(GetSystemTimeTick());
