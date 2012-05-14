@@ -14,7 +14,9 @@
 #include "Manager/IAPManager.h"
 #include "Manager/AdManager.h"
 
+#ifndef DISABLE_CHARTBOOST
 #define RT_CHARTBOOST_ENABLED
+#endif
 
 class App: public BaseApp
 {
