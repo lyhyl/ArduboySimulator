@@ -103,7 +103,7 @@ void SetIsRotating(bool bNew) ;
 bool GetIsUsingNativeUI();
 void SetIsUsingNativeUI(bool bNew);
 Entity * GetEntityWithNativeUIFocus();
-void SetEntityWithNativeUIFocus(Entity *pEnt);
+void SetEntityWithNativeUIFocus(Entity *pEnt, bool bSendLosingFocusMessage = true);
 uint32 GetBrightColor();
 bool IsLargeScreen();
 float iPhoneMapX(float x);//enter coords for iPhone, if iPad, will convert to relative position (makes porting easier)

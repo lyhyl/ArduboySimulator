@@ -330,12 +330,12 @@ Entity * GetEntityWithNativeUIFocus()
 	return g_pGUIWithGUIFocus;
 }
 
-void SetEntityWithNativeUIFocus(Entity *pEnt)
+void SetEntityWithNativeUIFocus(Entity *pEnt, bool bSendLosingFocusMessage)
 {
 	
 	if (pEnt == g_pGUIWithGUIFocus) return;
 
-	if (pEnt)
+	if (bSendLosingFocusMessage && pEnt)
 	{
 		if (g_pGUIWithGUIFocus)
 		{

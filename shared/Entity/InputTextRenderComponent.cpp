@@ -96,9 +96,14 @@ void InputTextRenderComponent::ActivateKeyboard(VariantList *pVList)
 		{
 			SetIsUsingNativeUI(false); //prepare to accept focus here and unfocus whatever had it
 			GetMessageManager()->CallComponentFunction(this, 1, "ActivateKeyboard");
+			return;
 		}
 	}
 	
+
+	string name = "Unknown";
+	if (GetParent()) name = GetParent()->GetName();
+	LogMsg("InputTextRenderComponent::ActivateKeyboard sending MESSAGE_OPEN_TEXT_BOX from %s", name.c_str());
 	OSMessage o;
 	o.m_type = OSMessage::MESSAGE_OPEN_TEXT_BOX;
 	o.m_string = *m_pText;
@@ -141,6 +146,10 @@ void InputTextRenderComponent::ActivateKeyboard(VariantList *pVList)
 }
 void InputTextRenderComponent::OnLosingNativeGUIFocus(VariantList *pVList)
 {
+	string name = "Unknown";
+	if (GetParent()) name = GetParent()->GetName();
+
+	LogMsg("Item %s losing focus, closing keyboard", name.c_str());
     VariantList vList(this);
 	GetFunction("CloseKeyboard")->sig_function(&vList);
 }
@@ -149,10 +158,10 @@ void InputTextRenderComponent::OnEnterForeground(VariantList *pVList)
 {
 	if (GetEntityWithNativeUIFocus() == GetParent())
 	{
+	//added for android
 
-		//added for android
 #ifdef _DEBUG
-		LogMsg("Reinitting keyboard focus");
+		LogMsg("InputTextRenderComponent::OnEnterForeground - Re-opening on keyboard");
 #endif
 		//re init our keyboard just in case, android needs this
 		GetFunction("ActivateKeyboard")->sig_function(NULL);
@@ -168,9 +177,10 @@ void InputTextRenderComponent::OnEnterBackground(VariantList *pVList)
 	{
 
 #ifdef _DEBUG
-		LogMsg("closing keyboard focus");
+		LogMsg("InputTextRenderComponent::OnEnterBackground - Running CloseKeyboard");
 #endif
-        VariantList vList(this);
+	
+		VariantList vList(this);
 		GetFunction("CloseKeyboard")->sig_function(&vList);
 	}
 
@@ -179,15 +189,18 @@ void InputTextRenderComponent::OnEnterBackground(VariantList *pVList)
 
 void InputTextRenderComponent::CloseKeyboard( VariantList *pVList )
 {
-	
+	string name = "Unknown";
+	if (GetParent()) name = GetParent()->GetName();
+
 	if (GetEntityWithNativeUIFocus() == GetParent())
 	{
-		SetEntityWithNativeUIFocus(NULL);
+		LogMsg("InputTextRenderComponent::CloseKeyboard - setting NativeUIFocus to zero from %s", name.c_str());
+		SetEntityWithNativeUIFocus(NULL, true);
 	}
 
 	if (!*m_pHasFocus) return;
 
-	LogMsg("Attempting to close onscreen keyboard");
+	LogMsg("Sending MESSAGE_CLOSE_TEXT_BOX from %s", name.c_str());
 
 	GetVar("hasFocus")->Set(uint32(0));
 

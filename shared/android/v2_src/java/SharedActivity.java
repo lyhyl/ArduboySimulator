@@ -682,8 +682,7 @@ return m_szDevIDShort;
 
 	  public void toggle_keyboard(boolean show) 
 	  {
-        Log.v("Msg", "Toggling keyboard");
-		 InputMethodManager mgr = (InputMethodManager)app.getSystemService(Context.INPUT_METHOD_SERVICE);
+  		InputMethodManager mgr = (InputMethodManager)app.getSystemService(Context.INPUT_METHOD_SERVICE);
         mgr.hideSoftInputFromWindow (mGLView.getWindowToken(),0);
         if (show) 
 		{
@@ -692,7 +691,10 @@ return m_szDevIDShort;
             // On the Nexus One, SHOW_FORCED makes it impossible
             // to manually dismiss the keyboard.
             // On the Droid SHOW_IMPLICIT doesn't bring up the keyboard.
-        }
+        } else
+        {
+              Log.v("Msg", "Disabling keyboard");
+	    }
     }
 
 	//from MessageManager.h
