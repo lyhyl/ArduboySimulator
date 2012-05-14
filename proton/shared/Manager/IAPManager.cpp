@@ -250,7 +250,7 @@ void IAPManager::BuyItem( string itemName )
 		o.m_type = OSMessage::MESSAGE_IAP_PURCHASE;
 		o.m_string = itemName;
 	
-		m_itemToBuy = itemName;
+		m_itemToBuy.clear();
 		GetBaseApp()->AddOSMessage(o);
 		m_timer = GetTick(TIMER_SYSTEM);
 		m_bWaitingForReply = true;
