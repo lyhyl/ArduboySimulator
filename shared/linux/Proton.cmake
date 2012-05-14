@@ -160,6 +160,17 @@ macro(proton_use_bullet)
 	proton_use_irrlicht()
 endmacro(proton_use_bullet)
 
+# Enables the project to use the in-app purchasing functionality.
+macro(proton_use_iap)
+	add_definitions(-DRT_IAP_SUPPORT)
+	list(APPEND PROTON_SOURCES "${PROTON_MANAGER}/IAPManager.cpp")
+endmacro(proton_use_iap)
+
+# Enables the project to use the ad framework.
+macro(proton_use_ad_framework)
+	list(APPEND PROTON_SOURCES "${PROTON_MANAGER}/AdManager.cpp")
+endmacro(proton_use_ad_framework)
+
 # Includes the Proton testing framework to the project.
 # If the argument "GUI" is passed to this macro then also the GUI parts
 # of the testing framework are included.
