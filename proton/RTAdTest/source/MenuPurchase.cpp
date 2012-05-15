@@ -27,7 +27,6 @@ void MenuPurchaseUpdate(VariantList *pVList)
 			break;
 
 		case IAPManager::RETURN_STATE_FAILED:
-			case IAPManager::RETURN_STATE_FINISHED:
 			LogMsg("** FAILED TO BUY ITEM");
 			break;
                 
