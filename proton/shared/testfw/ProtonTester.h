@@ -7,6 +7,8 @@ namespace ProtonTester
 {
 	void runAllTests();
 
+	std::string GetCurrentlyRunningTestName();
+
 	unsigned int GetTotalRun();
 
 	unsigned int GetNumPassed();
@@ -14,7 +16,11 @@ namespace ProtonTester
 	unsigned int GetNumFailed();
 }
 
-#define CheckEq(expected, actual) CmpEq(expected, #expected, actual, #actual, CheckLocation(m_testName, __FILE__, __LINE__))
+#define RT_CURRENT_CHECK_LOCATION CheckLocation(ProtonTester::GetCurrentlyRunningTestName(), __FILE__, __LINE__)
+
+#define CheckEq(expected, actual) CmpEq(expected, #expected, actual, #actual, RT_CURRENT_CHECK_LOCATION)
+
+#define CheckTrue(boolValue) CmpEq(true, "true", boolValue, #boolValue, RT_CURRENT_CHECK_LOCATION)
 
 #define TEST(testName) class testName : public TestCase { \
 public: \

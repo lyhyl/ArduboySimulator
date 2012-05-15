@@ -172,9 +172,11 @@ macro(proton_use_ad_framework)
 endmacro(proton_use_ad_framework)
 
 # Includes the Proton testing framework to the project.
+# Sets RT_TESTFW preprocessor define which can be used in the code for conditional compiling.
 # If the argument "GUI" is passed to this macro then also the GUI parts
 # of the testing framework are included.
 macro(proton_include_testing)
+	add_definitions(-DRT_TESTFW)
 	list(APPEND PROTON_SOURCES "${PROTON_TESTFW}/ProtonTester.cpp")
 	
 	# For some reason list(FIND doesn't work in a macro so have to search by hand

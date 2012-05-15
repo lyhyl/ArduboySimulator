@@ -3,6 +3,7 @@
 #include "Entity/EntityUtils.h"
 #include "MenuStore.h"
 #include "MenuTapjoy.h"
+#include "MenuTest.h"
 
 void MenuMainOnSelect(VariantList *pVList) //0=vec2 point of click, 1=entity sent from
 {
@@ -22,6 +23,12 @@ void MenuMainOnSelect(VariantList *pVList) //0=vec2 point of click, 1=entity sen
 	if (pEntClicked->GetName() == "tapjoy")
 	{
 		MenuTapjoyCreate(pMenu->GetParent());
+		KillEntity(pMenu);
+	}
+
+	if (pEntClicked->GetName() == "run_tests")
+	{
+		MenuTestCreate(pMenu->GetParent());
 		KillEntity(pMenu);
 	}
 
@@ -78,6 +85,8 @@ Entity * MenuMainCreate(Entity *pParentEnt)
 	pButtonEntity = CreateTextButtonEntity(pBG, "chartboost_more_games", x, y +=spacerY, "Request Chartboost More Games Dialog (iOS)"); 
 	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MenuMainOnSelect);
 
+	pButtonEntity = CreateTextButtonEntity(pBG, "run_tests", x, y +=spacerY, "Run tests");
+	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MenuMainOnSelect);
 
 	return pBG;
 }
