@@ -5,37 +5,80 @@
 //
 //  ***************************************************************
 //  Programmer(s):  Seth A. Robinson (seth@rtsoft.com)
+//                  Aki Koskinen (aki@secondlion.fi)
 //  ***************************************************************
 
 #ifndef IAPManager_h__
 #define IAPManager_h__
 
+#include <set>
+#include <string>
+
+/**
+ * A class for doing in-app purchases (IAP).
+ *
+ * This manager can be used to make an IAP for a single item at a time. It can
+ * also be used to check if some item has already been purchased.
+ *
+ * An IAP process is started for an item with \c BuyItem(). Later on the
+ * \c IAPManager tells how the purchase ended. The end result can be received
+ * by listening to the \c m_sig_item_purchase_result signal or using the
+ * various state methods of the class.
+ */
 class IAPManager
 {
 public:
 	IAPManager();
 	virtual ~IAPManager();
 
-
+	/**
+	 * The result of a purchase process.
+	 */
 	enum eReturnState
 	{
-		RETURN_STATE_NONE,
-		RETURN_STATE_FAILED,
-		RETURN_STATE_PURCHASED,
-		RETURN_STATE_ALREADY_PURCHASED, //applicable to managed items
-		RETURN_STATE_FINISHED
+		RETURN_STATE_NONE,                //!< No result available. This is used e.g. when no purchases have been initiated yet.
+		RETURN_STATE_FAILED,              //!< The purchase process has failed.
+		RETURN_STATE_PURCHASED,           //!< The purchase process has finished successfully.
+		RETURN_STATE_ALREADY_PURCHASED    //!< The item has been purchased already previously. Applicable to managed items.
 	};
 
 	bool Init();
 	void Update();
-	void OnMessage( Message &m );
-	eReturnState GetReturnState() {return m_returnState;}
 
-	void BuyItem(string itemName);
-	bool IsItemPurchased( const string item);
-	void Reset(); //call this after a purchase to reset things
-	string GetExtraData() {return m_extraData;} //the order# or receipt, after a successful purchase
-	string GetItemID() {return m_lastItemID;} //last itemID that was processed
+	/**
+	 * Use this to pass messages for the IAPManager to handle.
+	 * \note This needs to be called in order for the system to work at all!
+	 */
+	void OnMessage( Message &m );
+
+	/**
+	 * Gets the state of the last finished purchase process.
+	 * If a purchase process is in progress or hasn't been initiated yet
+	 * then the state is \link IAPManager::RETURN_STATE_NONE <tt>RETURN_STATE_NONE</tt>\endlink.
+	 */
+	eReturnState GetReturnState() const {return m_returnState;}
+
+	/**
+	 * Starts a purchasing process for the given \a itemName.
+	 */
+	void BuyItem(const std::string &itemName);
+	bool IsItemPurchased(const std::string &item) const;
+
+	/**
+	 * Resets the state of the IAPManager.
+	 */
+	void Reset();
+
+	/**
+	 * The extra data is platform dependent details about the purchase.
+	 * It can be for example the order# or receipt.
+	 */
+	std::string GetExtraData() const {return m_extraData;}
+
+	/**
+	 * Returns the last item name BuyItem() was called with.
+	 */
+	std::string GetItemID() const {return m_lastItemID;}
 
 	enum ResponseCode
 	{
@@ -48,7 +91,6 @@ public:
 		RESULT_DEVELOPER_ERROR,
 		RESULT_ERROR,
         RESULT_OK_ALREADY_PURCHASED
-
 	};
 
 	/**
@@ -62,11 +104,10 @@ public:
 	boost::signal<void (VariantList*)> m_sig_item_purchase_result; 
 	
 protected:
-	
 	enum eState
 	{
 		STATE_NONE,
-		STATE_WAITING,
+		STATE_WAITING
 	};
 
 	enum ItemStateCode
@@ -82,11 +123,18 @@ protected:
 	eReturnState m_returnState;
 	unsigned int m_timer;
 
-	vector<string> m_items;
-	string m_itemToBuy;
-	string m_extraData;
+	std::set<std::string> m_items;
+	std::string m_itemToBuy;
+	std::string m_extraData;
 	bool m_bWaitingForReply;
-	string m_lastItemID;
+	std::string m_lastItemID;
+
+	void sendPurchaseMessage();
+
+	/**
+	 * Changes the state of the purchasing process and sends the m_sig_item_purchase_result signal.
+	 */
+	void endPurchaseProcessWithResult(eReturnState returnState);
 };
 
 #endif // IAPManager_h__
