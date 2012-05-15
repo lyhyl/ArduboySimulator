@@ -79,6 +79,13 @@ private:
 
 };
 
+class Function
+{
+public:
+	virtual ~Function() {}
+	virtual void execute() = 0;
+};
+
 class TestCase
 {
 public:
@@ -106,5 +113,26 @@ void CmpEq(const T& expected, const std::string& expectedStr, const T& actual, c
 
 	TestResults::add(CheckResult(testLocation, result, expectedStr, actualStr, actual));
 }
+
+namespace ProtonTester
+{
+
+void RegisterInitFunction(Function *func);
+
+void RegisterCleanFunction(Function *func);
+
+}
+
+#define RT_CURRENT_CHECK_LOCATION CheckLocation(ProtonTester::GetCurrentlyRunningTestName(), __FILE__, __LINE__)
+
+#define RT_TEST_HARNESS_FUNC(Prefix) class Prefix##Function : public Function { \
+public: \
+Prefix##Function() { ProtonTester::Register##Prefix##Function(this); } \
+virtual ~Prefix##Function() {} \
+virtual void execute(); \
+}; \
+Prefix##Function g_##Prefix##Function; \
+void Prefix##Function::execute()
+
 
 #endif // PROTONTESTER_INTERNAL_H
