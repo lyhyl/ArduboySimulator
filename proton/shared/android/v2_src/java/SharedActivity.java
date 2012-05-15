@@ -496,9 +496,11 @@ import android.view.View.OnClickListener;
 			//Log.d(PackageName, "Finished app in  main thread");
 			app.finish();
 			
-		    mBillingService.unbind();
-  			ResponseHandler.unregister(mIABPurchaseObserver);
-  			
+			if (IAPEnabled)
+			{
+				mBillingService.unbind();
+  				ResponseHandler.unregister(mIABPurchaseObserver);
+  			}
 			android.os.Process.killProcess(android.os.Process.myPid());
 			return;
 		}
@@ -1406,8 +1408,11 @@ class AppRenderer implements GLSurfaceView.Renderer
 			m_gameTimer = SystemClock.uptimeMillis()+m_timerLoopMS;
 		}
 	
-		nativeUpdate(); //maybe later we'll want to adjust this for performance reasons..
-        nativeRender();
+		if (!app.bIsShuttingDown)
+		{
+			nativeUpdate(); //maybe later we'll want to adjust this for performance reasons..
+			nativeRender();
+        }
 
 		//let's process OS messages sent from the app if any exist
 		int type = MESSAGE_NONE;
@@ -1445,6 +1450,8 @@ class AppRenderer implements GLSurfaceView.Renderer
 					Log.v(app.PackageName, "Finishing app from java side");
 					app.bIsShuttingDown = true;
 					nativeDone();
+					Log.v(app.PackageName, "Native shutdown");
+			
 					//app.finish() will get called in the update handler called below, don't need to do it now
 					 app.mMainThreadHandler.post(app.mUpdateMainThread);
 					

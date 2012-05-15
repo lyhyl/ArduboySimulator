@@ -79,7 +79,7 @@ void IAPManager::OnMessage( Message &m )
 		LogMsg("Got Item State response: %d", m.GetParm1());
 	#endif
 		
-		switch (ItemStateCode(m.GetParm1()))
+		switch (ItemStateCode((int)m.GetParm1()))
 		{
 		case END_OF_LIST:
 		{

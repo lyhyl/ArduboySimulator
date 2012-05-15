@@ -990,6 +990,11 @@ void AppOnKey( JNIEnv*  env, jobject jobj, jint type, jint keycode, jint c)
 int AppOSMessageGet(JNIEnv* env)
 {
 
+	if (!IsBaseAppInitted())
+	{
+		return 0;
+	}
+
 	while (!g_messageCache.empty())
 	{
 		AndroidMessageCache *pM = &g_messageCache.front();
