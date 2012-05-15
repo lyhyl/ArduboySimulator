@@ -42,6 +42,15 @@ public:
 		RETURN_STATE_ALREADY_PURCHASED    //!< The item has been purchased already previously. Applicable to managed items.
 	};
 
+	/**
+	 * Explanation reason for a failed purchase.
+	 */
+	enum eFailureReason
+	{
+		FAILURE_REASON_NONE,              //!< Either there was no failure or the reason is not known.
+		FAILURE_REASON_USER_CANCELED      //!< The user canceled the purchase.
+	};
+
 	bool Init();
 	void Update();
 
@@ -57,6 +66,15 @@ public:
 	 * then the state is \link IAPManager::RETURN_STATE_NONE <tt>RETURN_STATE_NONE</tt>\endlink.
 	 */
 	eReturnState GetReturnState() const {return m_returnState;}
+
+	/**
+	 * Gets the detailed reason for a failed purchase.
+	 * The value returned by this method is only interesting when \c GetReturnState()
+	 * returns \link IAPManager::RETURN_STATE_FAILED <tt>RETURN_STATE_FAILED</tt>\endlink.
+	 * If a purchase has not failed then this method returs \link IAPManager::FAILURE_REASON_NONE
+	 * <tt>FAILURE_REASON_NONE</tt>\endlink.
+	 */
+	eFailureReason GetFailureReason() const { return m_failureReason; }
 
 	/**
 	 * Starts a purchasing process for the given \a itemName.
@@ -97,9 +115,15 @@ public:
 	 * A signal for reporting changes in the purchasing process.
 	 *
 	 * The parameter variant list contains the following items:
-	 * - 0: the return code of type \c eReturnState as a uint.
-	 * - 1: a string that gives more information about the result. This might depend on the platform.
-	 * - 2: is the item id in question (as a string).
+	 * - 0: the return code of type \link IAPManager::eReturnState <tt>eReturnState</tt>\endlink
+	 *      as a uint. See \c GetReturnState().
+	 * - 1: a string that gives more information about the result. This might depend on the
+	 *      platform. See \c GetExtraData().
+	 * - 2: the item id in question (as a string). See \c GetItemID().
+	 * - 3: if parameter 0 is \link IAPManager::RETURN_STATE_FAILED <tt>RETURN_STATE_FAILED</tt>\endlink
+	 *      then this parameter contains the detailed failure reason if it's known. The type of this
+	 *      parameter is \link IAPManager::eFailureReason <tt>eFailureReason</tt>\endlink as a uint.
+	 *      See \c GetFailureReason().
 	 */
 	boost::signal<void (VariantList*)> m_sig_item_purchase_result; 
 	
@@ -121,6 +145,7 @@ protected:
 	
 	eState m_state;
 	eReturnState m_returnState;
+	eFailureReason m_failureReason;
 	unsigned int m_timer;
 
 	std::set<std::string> m_items;

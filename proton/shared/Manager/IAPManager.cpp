@@ -9,6 +9,7 @@ IAPManager::IAPManager()
 {
 	m_state = STATE_NONE;
 	m_returnState = RETURN_STATE_NONE;
+	m_failureReason = FAILURE_REASON_NONE;
 	m_timer = 0;
 	m_bWaitingForReply = false;
 }
@@ -61,6 +62,8 @@ void IAPManager::OnMessage( Message &m )
 			}
 			break;
 
+		case RESULT_USER_CANCELED:
+			m_failureReason = FAILURE_REASON_USER_CANCELED;
 		default:
 			endPurchaseProcessWithResult(RETURN_STATE_FAILED);
 			break;
@@ -222,6 +225,7 @@ void IAPManager::Reset()
 {
 	m_state = STATE_NONE;
 	m_returnState = RETURN_STATE_NONE;
+	m_failureReason = FAILURE_REASON_NONE;
 	m_extraData.clear();
 	m_timer = 0;
 }
@@ -243,6 +247,6 @@ void IAPManager::endPurchaseProcessWithResult(eReturnState returnState)
 {
 	m_state = STATE_NONE;
 	m_returnState = returnState;
-	VariantList vList(uint32(m_returnState), m_extraData, m_lastItemID);
+	VariantList vList(uint32(m_returnState), m_extraData, m_lastItemID, uint32(m_failureReason));
 	m_sig_item_purchase_result(&vList);
 }
