@@ -26,11 +26,11 @@ public:
 	};
 
 	template<typename T>
-	CheckResult(const CheckLocation& testLocation, Result result, const std::string& expectedStr, const std::string& actualStr, const T& actual) :
+	CheckResult(const CheckLocation& testLocation, Result result, const std::string& expectedStr, const T& expected, const std::string& actualStr, const T& actual) :
 	    m_testName(testLocation.testName),
 	    m_result(result)
 	{
-		constructResultStr(testLocation, result, expectedStr, actualStr, valueToString(actual));
+		constructResultStr(testLocation, result, expectedStr, valueToString(expected), actualStr, valueToString(actual));
 	}
 
 	std::string GetTestName() const;
@@ -46,7 +46,7 @@ private:
 		return toString(value);
 	}
 
-	void constructResultStr(const CheckLocation& testLocation, Result result, const std::string& expectedStr, const std::string& actualStr, const std::string& actual);
+	void constructResultStr(const CheckLocation& testLocation, Result result, const std::string& expectedStr, const std::string& expected, const std::string& actualStr, const std::string& actual);
 
 	std::string m_testName;
 	Result m_result;
@@ -111,7 +111,7 @@ void CmpEq(const T& expected, const std::string& expectedStr, const T& actual, c
 		result = CheckResult::PASS;
 	}
 
-	TestResults::add(CheckResult(testLocation, result, expectedStr, actualStr, actual));
+	TestResults::add(CheckResult(testLocation, result, expectedStr, expected, actualStr, actual));
 }
 
 namespace ProtonTester

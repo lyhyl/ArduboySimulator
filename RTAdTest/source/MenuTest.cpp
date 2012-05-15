@@ -9,6 +9,7 @@ unsigned int numSignals = 0;
 IAPManager::eReturnState sigReturnState = IAPManager::RETURN_STATE_NONE;
 string sigExtraData;
 string sigItemId;
+IAPManager::eFailureReason sigFailureReason = IAPManager::FAILURE_REASON_NONE;
 
 void MenuTestPurchaseResult(VariantList *vList)
 {
@@ -16,6 +17,7 @@ void MenuTestPurchaseResult(VariantList *vList)
 	sigReturnState = IAPManager::eReturnState(vList->Get(0).GetUINT32());
 	sigExtraData = vList->Get(1).GetString();
 	sigItemId = vList->Get(2).GetString();
+	sigFailureReason = IAPManager::eFailureReason(vList->Get(3).GetUINT32());
 }
 
 #ifdef RT_TESTFW
@@ -39,6 +41,7 @@ CLEAN_TEST()
 	sigReturnState = IAPManager::RETURN_STATE_NONE;
 	sigExtraData.clear();
 	sigItemId.clear();
+	sigFailureReason = IAPManager::FAILURE_REASON_NONE;
 
 	GetBaseApp()->KillOSMessagesByType(OSMessage::MESSAGE_IAP_PURCHASE);
 	GetBaseApp()->KillOSMessagesByType(OSMessage::MESSAGE_IAP_GET_PURCHASED_LIST);
@@ -113,22 +116,24 @@ TEST(When_requesting_to_buy_an_item_on_android_then_IAPManager_adds_a_correct_OS
 	execute_test_when_requesting_to_buy_an_item_then_IAPManager_adds_a_correct_OSMessage(PLATFORM_ID_ANDROID, OSMessage::MESSAGE_IAP_GET_PURCHASED_LIST, false);
 }
 
-void checkSignal(IAPManager::eReturnState expectedReturnState, const std::string& expectedExtraData = string())
+void checkSignal(IAPManager::eReturnState expectedReturnState, const std::string& expectedExtraData = string(), IAPManager::eFailureReason expectedFailureReason = IAPManager::FAILURE_REASON_NONE)
 {
 	CheckEq((unsigned int)1, numSignals);
 	CheckEq(expectedReturnState, sigReturnState);
 	CheckEq(expectedExtraData, sigExtraData);
 	CheckEq(testItem, sigItemId);
+	CheckEq(expectedFailureReason, sigFailureReason);
 }
 
-void checkQueryAPI(IAPManager::eReturnState expectedReturnState, const std::string& expectedExtraData = string())
+void checkQueryAPI(IAPManager::eReturnState expectedReturnState, const std::string& expectedExtraData = string(), IAPManager::eFailureReason expectedFailureReason = IAPManager::FAILURE_REASON_NONE)
 {
 	CheckEq(expectedReturnState, GetApp()->m_IAPManager.GetReturnState());
 	CheckEq(expectedExtraData, GetApp()->m_IAPManager.GetExtraData());
 	CheckEq(testItem, GetApp()->m_IAPManager.GetItemID());
+	CheckEq(expectedFailureReason, GetApp()->m_IAPManager.GetFailureReason());
 }
 
-void execute_test_when_IAPManager_receives_OSMessage_then_it_sends_a_signal_with_the_correct_parameters(IAPManager::ResponseCode iapResult, IAPManager::eReturnState expectedReturnState, ePlatformID enforcePlatform = PLATFORM_ID_UNKNOWN)
+void execute_test_when_IAPManager_receives_OSMessage_then_it_sends_a_signal_with_the_correct_parameters(IAPManager::ResponseCode iapResult, IAPManager::eReturnState expectedReturnState, IAPManager::eFailureReason expectedFailureReason = IAPManager::FAILURE_REASON_NONE, ePlatformID enforcePlatform = PLATFORM_ID_UNKNOWN)
 {
 	if (enforcePlatform != PLATFORM_ID_UNKNOWN)
 	{
@@ -138,10 +143,10 @@ void execute_test_when_IAPManager_receives_OSMessage_then_it_sends_a_signal_with
 	GetApp()->m_IAPManager.BuyItem(testItem);
 	sendIAPResultMessageToIAPManager(iapResult);
 
-	checkSignal(expectedReturnState, extraData);
+	checkSignal(expectedReturnState, extraData, expectedFailureReason);
 }
 
-void execute_test_when_IAPManager_receives_OSMessage_then_it_returns_correct_values_via_the_query_interface(IAPManager::ResponseCode iapResult, IAPManager::eReturnState expectedReturnState, ePlatformID enforcePlatform = PLATFORM_ID_UNKNOWN)
+void execute_test_when_IAPManager_receives_OSMessage_then_it_returns_correct_values_via_the_query_interface(IAPManager::ResponseCode iapResult, IAPManager::eReturnState expectedReturnState, IAPManager::eFailureReason expectedFailureReason = IAPManager::FAILURE_REASON_NONE, ePlatformID enforcePlatform = PLATFORM_ID_UNKNOWN)
 {
 	if (enforcePlatform != PLATFORM_ID_UNKNOWN)
 	{
@@ -151,28 +156,28 @@ void execute_test_when_IAPManager_receives_OSMessage_then_it_returns_correct_val
 	GetApp()->m_IAPManager.BuyItem(testItem);
 	sendIAPResultMessageToIAPManager(iapResult);
 
-	checkQueryAPI(expectedReturnState, extraData);
+	checkQueryAPI(expectedReturnState, extraData, expectedFailureReason);
 }
 
-void execute_test_when_IAPManager_receives_OSMessage_then_it_sends_a_signal_with_the_correct_parameters_and_returns_correct_values_via_the_query_interface(IAPManager::ResponseCode iapResult, IAPManager::eReturnState expectedReturnState, ePlatformID enforcePlatform = PLATFORM_ID_UNKNOWN)
+void execute_test_when_IAPManager_receives_OSMessage_then_it_sends_a_signal_with_the_correct_parameters_and_returns_correct_values_via_the_query_interface(IAPManager::ResponseCode iapResult, IAPManager::eReturnState expectedReturnState, IAPManager::eFailureReason expectedFailureReason = IAPManager::FAILURE_REASON_NONE, ePlatformID enforcePlatform = PLATFORM_ID_UNKNOWN)
 {
-	execute_test_when_IAPManager_receives_OSMessage_then_it_sends_a_signal_with_the_correct_parameters(iapResult, expectedReturnState, enforcePlatform);
-	execute_test_when_IAPManager_receives_OSMessage_then_it_returns_correct_values_via_the_query_interface(iapResult, expectedReturnState, enforcePlatform);
+	execute_test_when_IAPManager_receives_OSMessage_then_it_sends_a_signal_with_the_correct_parameters(iapResult, expectedReturnState, expectedFailureReason, enforcePlatform);
+	execute_test_when_IAPManager_receives_OSMessage_then_it_returns_correct_values_via_the_query_interface(iapResult, expectedReturnState, expectedFailureReason, enforcePlatform);
 }
 
 TEST(When_IAPManager_on_ios_receives_item_purchased_OSMessage_then_return_state_purchased_is_signaled_and_returned_via_the_query_interface)
 {
-	execute_test_when_IAPManager_receives_OSMessage_then_it_sends_a_signal_with_the_correct_parameters_and_returns_correct_values_via_the_query_interface(IAPManager::RESULT_OK, IAPManager::RETURN_STATE_PURCHASED, PLATFORM_ID_IOS);
+	execute_test_when_IAPManager_receives_OSMessage_then_it_sends_a_signal_with_the_correct_parameters_and_returns_correct_values_via_the_query_interface(IAPManager::RESULT_OK, IAPManager::RETURN_STATE_PURCHASED, IAPManager::FAILURE_REASON_NONE, PLATFORM_ID_IOS);
 }
 
 TEST(When_IAPManager_on_ios_receives_item_already_purchased_OSMessage_then_return_state_already_purchased_is_signaled_and_returned_via_the_query_interface)
 {
-	execute_test_when_IAPManager_receives_OSMessage_then_it_sends_a_signal_with_the_correct_parameters_and_returns_correct_values_via_the_query_interface(IAPManager::RESULT_OK_ALREADY_PURCHASED, IAPManager::RETURN_STATE_ALREADY_PURCHASED, PLATFORM_ID_IOS);
+	execute_test_when_IAPManager_receives_OSMessage_then_it_sends_a_signal_with_the_correct_parameters_and_returns_correct_values_via_the_query_interface(IAPManager::RESULT_OK_ALREADY_PURCHASED, IAPManager::RETURN_STATE_ALREADY_PURCHASED, IAPManager::FAILURE_REASON_NONE, PLATFORM_ID_IOS);
 }
 
 TEST(When_IAPManager_receives_user_canceled_OSMessage_then_return_state_failed_is_signaled_and_returned_via_the_query_interface)
 {
-	execute_test_when_IAPManager_receives_OSMessage_then_it_sends_a_signal_with_the_correct_parameters_and_returns_correct_values_via_the_query_interface(IAPManager::RESULT_USER_CANCELED, IAPManager::RETURN_STATE_FAILED);
+	execute_test_when_IAPManager_receives_OSMessage_then_it_sends_a_signal_with_the_correct_parameters_and_returns_correct_values_via_the_query_interface(IAPManager::RESULT_USER_CANCELED, IAPManager::RETURN_STATE_FAILED, IAPManager::FAILURE_REASON_USER_CANCELED);
 }
 
 TEST(When_IAPManager_receives_service_unavailable_OSMessage_then_return_state_failed_is_signaled_and_returned_via_the_query_interface)

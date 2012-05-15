@@ -26,7 +26,7 @@ std::string CheckResult::GetResultString() const
 	return m_resultStr;
 }
 
-void CheckResult::constructResultStr(const CheckLocation& testLocation, Result result, const std::string& expectedStr, const std::string& actualStr, const std::string& actual)
+void CheckResult::constructResultStr(const CheckLocation& testLocation, Result result, const std::string& expectedStr, const std::string& expected, const std::string& actualStr, const std::string& actual)
 {
 	m_resultStr = testLocation.testName + " (" + testLocation.fileName + ":" + toString(testLocation.lineNumber) + "):\n";
 
@@ -39,6 +39,7 @@ void CheckResult::constructResultStr(const CheckLocation& testLocation, Result r
 	case FAIL:
 		m_resultStr += "  Expected:    " + actualStr + "\n";
 		m_resultStr += "  to be:       " + expectedStr + "\n";
+		m_resultStr += "  which is:    " + expected + "\n";
 		m_resultStr += "  but it was:  " + actual;
 		break;
 	}
