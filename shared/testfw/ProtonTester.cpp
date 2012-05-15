@@ -113,6 +113,16 @@ public:
 		return *instance;
 	}
 
+	void registerInitFunction(Function *func)
+	{
+		m_initFunctions.push_back(func);
+	}
+
+	void registerCleanFunction(Function *func)
+	{
+		m_cleanFunctions.push_back(func);
+	}
+
 	void addTestCase(TestCase *testCase)
 	{
 		m_testCases.push_back(testCase);
@@ -125,7 +135,18 @@ public:
 		for (TestCases::iterator it(m_testCases.begin()); it != m_testCases.end(); it++)
 		{
 			m_currentlyRunningTest = (*it);
+
+			for (Functions::iterator initIt(m_initFunctions.begin()); initIt != m_initFunctions.end(); initIt++)
+			{
+				(*initIt)->execute();
+			}
+
 			(*it)->runTest();
+
+			for (Functions::iterator cleanIt(m_cleanFunctions.begin()); cleanIt != m_cleanFunctions.end(); cleanIt++)
+			{
+				(*cleanIt)->execute();
+			}
 		}
 		m_currentlyRunningTest = NULL;
 	}
@@ -146,6 +167,11 @@ private:
 	    m_currentlyRunningTest(NULL)
 	{
 	}
+
+	typedef std::list<Function*> Functions;
+
+	Functions m_initFunctions;
+	Functions m_cleanFunctions;
 
 	typedef std::list<TestCase*> TestCases;
 	TestCases m_testCases;
@@ -169,6 +195,16 @@ std::string TestCase::getTestName() const
 
 namespace ProtonTester
 {
+
+void RegisterInitFunction(Function *func)
+{
+	TestRunner::get().registerInitFunction(func);
+}
+
+void RegisterCleanFunction(Function *func)
+{
+	TestRunner::get().registerCleanFunction(func);
+}
 
 void runAllTests()
 {

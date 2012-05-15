@@ -16,11 +16,13 @@ namespace ProtonTester
 	unsigned int GetNumFailed();
 }
 
-#define RT_CURRENT_CHECK_LOCATION CheckLocation(ProtonTester::GetCurrentlyRunningTestName(), __FILE__, __LINE__)
-
 #define CheckEq(expected, actual) CmpEq(expected, #expected, actual, #actual, RT_CURRENT_CHECK_LOCATION)
 
 #define CheckTrue(boolValue) CmpEq(true, "true", boolValue, #boolValue, RT_CURRENT_CHECK_LOCATION)
+
+#define INIT_TEST() RT_TEST_HARNESS_FUNC(Init)
+
+#define CLEAN_TEST() RT_TEST_HARNESS_FUNC(Clean)
 
 #define TEST(testName) class testName : public TestCase { \
 public: \

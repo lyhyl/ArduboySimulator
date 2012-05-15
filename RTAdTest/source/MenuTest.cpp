@@ -24,14 +24,14 @@ void MenuTestPurchaseResult(VariantList *vList)
 
 ePlatformID originalPlatformID;
 
-void initTest()
+INIT_TEST()
 {
 	GetApp()->m_IAPManager.Reset();
 
 	originalPlatformID = GetEmulatedPlatformID();
 }
 
-void cleanTest()
+CLEAN_TEST()
 {
 	GetApp()->m_IAPManager.Reset();
 
@@ -96,15 +96,11 @@ bool isOSMessageInQueue(OSMessage::eMessageType expectedMessageType, bool expect
 
 void execute_test_when_requesting_to_buy_an_item_then_IAPManager_adds_a_correct_OSMessage(ePlatformID platform, OSMessage::eMessageType expectedMessageType, bool expectItemIdAsMessageString)
 {
-	initTest();
-
 	SetEmulatedPlatformID(platform);
 
 	GetApp()->m_IAPManager.BuyItem(testItem);
 
 	CheckTrue(isOSMessageInQueue(expectedMessageType, expectItemIdAsMessageString));
-
-	cleanTest();
 }
 
 TEST(When_requesting_to_buy_an_item_on_ios_then_IAPManager_adds_a_correct_OSMessage)
@@ -134,8 +130,6 @@ void checkQueryAPI(IAPManager::eReturnState expectedReturnState, const std::stri
 
 void execute_test_when_IAPManager_receives_OSMessage_then_it_sends_a_signal_with_the_correct_parameters(IAPManager::ResponseCode iapResult, IAPManager::eReturnState expectedReturnState, ePlatformID enforcePlatform = PLATFORM_ID_UNKNOWN)
 {
-	initTest();
-
 	if (enforcePlatform != PLATFORM_ID_UNKNOWN)
 	{
 		SetEmulatedPlatformID(enforcePlatform);
@@ -145,14 +139,10 @@ void execute_test_when_IAPManager_receives_OSMessage_then_it_sends_a_signal_with
 	sendIAPResultMessageToIAPManager(iapResult);
 
 	checkSignal(expectedReturnState, extraData);
-
-	cleanTest();
 }
 
 void execute_test_when_IAPManager_receives_OSMessage_then_it_returns_correct_values_via_the_query_interface(IAPManager::ResponseCode iapResult, IAPManager::eReturnState expectedReturnState, ePlatformID enforcePlatform = PLATFORM_ID_UNKNOWN)
 {
-	initTest();
-
 	if (enforcePlatform != PLATFORM_ID_UNKNOWN)
 	{
 		SetEmulatedPlatformID(enforcePlatform);
@@ -162,8 +152,6 @@ void execute_test_when_IAPManager_receives_OSMessage_then_it_returns_correct_val
 	sendIAPResultMessageToIAPManager(iapResult);
 
 	checkQueryAPI(expectedReturnState, extraData);
-
-	cleanTest();
 }
 
 void execute_test_when_IAPManager_receives_OSMessage_then_it_sends_a_signal_with_the_correct_parameters_and_returns_correct_values_via_the_query_interface(IAPManager::ResponseCode iapResult, IAPManager::eReturnState expectedReturnState, ePlatformID enforcePlatform = PLATFORM_ID_UNKNOWN)
@@ -215,36 +203,26 @@ TEST(When_IAPManager_receives_error_OSMessage_then_return_state_failed_is_signal
 
 TEST(When_IAPManager_on_android_receives_purchased_OSMessage_then_item_is_reported_as_purchased)
 {
-	initTest();
-
 	SetEmulatedPlatformID(PLATFORM_ID_ANDROID);
 
 	GetApp()->m_IAPManager.BuyItem(testItem);
 	sendIAPItemStateMessageToIAPManager(PURCHASED);
 
 	CheckTrue(GetApp()->m_IAPManager.IsItemPurchased(testItem));
-
-	cleanTest();
 }
 
 TEST(When_IAPManager_on_android_receives_end_of_list_OSMessage_then_IAPManager_adds_a_correct_OSMessage)
 {
-	initTest();
-
 	SetEmulatedPlatformID(PLATFORM_ID_ANDROID);
 
 	GetApp()->m_IAPManager.BuyItem(testItem);
 	sendIAPItemStateMessageToIAPManager(END_OF_LIST);
 
 	CheckTrue(isOSMessageInQueue(OSMessage::MESSAGE_IAP_PURCHASE, true));
-
-	cleanTest();
 }
 
 TEST(When_IAPManager_on_android_receives_end_of_list_after_purchased_OSMessage_then_return_state_already_purchased_is_signaled_and_returned_via_the_query_interface)
 {
-	initTest();
-
 	SetEmulatedPlatformID(PLATFORM_ID_ANDROID);
 
 	GetApp()->m_IAPManager.BuyItem(testItem);
@@ -253,14 +231,10 @@ TEST(When_IAPManager_on_android_receives_end_of_list_after_purchased_OSMessage_t
 
 	checkSignal(IAPManager::RETURN_STATE_ALREADY_PURCHASED);
 	checkQueryAPI(IAPManager::RETURN_STATE_ALREADY_PURCHASED);
-
-	cleanTest();
 }
 
 TEST(When_IAPManager_on_android_receives_purchased_after_end_of_list_OSMessage_then_return_state_purchased_is_signaled_and_returned_via_the_query_interface)
 {
-	initTest();
-
 	SetEmulatedPlatformID(PLATFORM_ID_ANDROID);
 
 	GetApp()->m_IAPManager.BuyItem(testItem);
@@ -269,14 +243,10 @@ TEST(When_IAPManager_on_android_receives_purchased_after_end_of_list_OSMessage_t
 
 	checkSignal(IAPManager::RETURN_STATE_PURCHASED);
 	checkQueryAPI(IAPManager::RETURN_STATE_PURCHASED);
-
-	cleanTest();
 }
 
 TEST(When_IAPManager_on_android_receives_canceled_OSMessage_then_return_state_failed_is_signaled_and_returned_via_the_query_interface)
 {
-	initTest();
-
 	SetEmulatedPlatformID(PLATFORM_ID_ANDROID);
 
 	GetApp()->m_IAPManager.BuyItem(testItem);
@@ -284,14 +254,10 @@ TEST(When_IAPManager_on_android_receives_canceled_OSMessage_then_return_state_fa
 
 	checkSignal(IAPManager::RETURN_STATE_FAILED);
 	checkQueryAPI(IAPManager::RETURN_STATE_FAILED);
-
-	cleanTest();
 }
 
 TEST(When_IAPManager_on_android_receives_refunded_OSMessage_then_return_state_failed_is_signaled_and_returned_via_the_query_interface)
 {
-	initTest();
-
 	SetEmulatedPlatformID(PLATFORM_ID_ANDROID);
 
 	GetApp()->m_IAPManager.BuyItem(testItem);
@@ -299,8 +265,6 @@ TEST(When_IAPManager_on_android_receives_refunded_OSMessage_then_return_state_fa
 
 	checkSignal(IAPManager::RETURN_STATE_FAILED);
 	checkQueryAPI(IAPManager::RETURN_STATE_FAILED);
-
-	cleanTest();
 }
 #endif
 
