@@ -4,6 +4,45 @@
 
 #include "Entity/EntityUtils.h"
 
+// Template specialization for a boolean type
+template<>
+std::string CheckResult::valueToString(const bool& value)
+{
+	return value ? "true" : "false";
+}
+
+std::string CheckResult::GetTestName() const
+{
+	return m_testName;
+}
+
+CheckResult::Result CheckResult::GetResult() const
+{
+	return m_result;
+}
+
+std::string CheckResult::GetResultString() const
+{
+	return m_resultStr;
+}
+
+void CheckResult::constructResultStr(const CheckLocation& testLocation, Result result, const std::string& expectedStr, const std::string& actualStr, const std::string& actual)
+{
+	m_resultStr = testLocation.testName + " (" + testLocation.fileName + ":" + toString(testLocation.lineNumber) + "):\n";
+
+	switch (result)
+	{
+	case PASS:
+		m_resultStr += "  " + actualStr + "\n  is\n  " + expectedStr;
+		break;
+
+	case FAIL:
+		m_resultStr += "  Expected:    " + actualStr + "\n";
+		m_resultStr += "  to be:       " + expectedStr + "\n";
+		m_resultStr += "  but it was:  " + actual;
+		break;
+	}
+}
 
 TestResults gTestResults;
 
@@ -85,15 +124,33 @@ public:
 
 		for (TestCases::iterator it(m_testCases.begin()); it != m_testCases.end(); it++)
 		{
+			m_currentlyRunningTest = (*it);
 			(*it)->runTest();
+		}
+		m_currentlyRunningTest = NULL;
+	}
+
+	std::string getCurrentlyRunningTestName() const
+	{
+		if (m_currentlyRunningTest != NULL)
+		{
+			return m_currentlyRunningTest->getTestName();
+		} else
+		{
+			return string();
 		}
 	}
 
 private:
-	TestRunner() {}
+	TestRunner() :
+	    m_currentlyRunningTest(NULL)
+	{
+	}
 
 	typedef std::list<TestCase*> TestCases;
 	TestCases m_testCases;
+
+	TestCase *m_currentlyRunningTest;
 };
 
 
@@ -104,6 +161,11 @@ TestCase::TestCase(const std::string& testName) :
 	TestRunner::get().addTestCase(this);
 }
 
+std::string TestCase::getTestName() const
+{
+	return m_testName;
+}
+
 
 namespace ProtonTester
 {
@@ -112,6 +174,11 @@ void runAllTests()
 {
 	TestRunner::get().runAllTests();
 	LogMsg("%s", gTestResults.GetResultString().c_str());
+}
+
+std::string GetCurrentlyRunningTestName()
+{
+	return TestRunner::get().getCurrentlyRunningTestName();
 }
 
 unsigned int GetTotalRun()

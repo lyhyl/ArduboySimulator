@@ -30,38 +30,24 @@ public:
 	    m_testName(testLocation.testName),
 	    m_result(result)
 	{
-		m_resultStr = testLocation.testName + " (" + testLocation.fileName + ":" + toString(testLocation.lineNumber) + "):\n";
-
-		switch (result)
-		{
-		case PASS:
-			m_resultStr += "  " + actualStr + "\n  is\n  " + expectedStr;
-			break;
-
-		case FAIL:
-			m_resultStr += "  Expected:    " + actualStr + "\n";
-			m_resultStr += "  to be:       " + expectedStr + "\n";
-			m_resultStr += "  but it was:  " + toString(actual);
-			break;
-		}
+		constructResultStr(testLocation, result, expectedStr, actualStr, valueToString(actual));
 	}
 
-	std::string GetTestName() const
-	{
-		return m_testName;
-	}
+	std::string GetTestName() const;
 
-	Result GetResult() const
-	{
-		return m_result;
-	}
+	Result GetResult() const;
 
-	std::string GetResultString() const
-	{
-		return m_resultStr;
-	}
+	std::string GetResultString() const;
 
 private:
+	template<typename T>
+	static std::string valueToString(const T& value)
+	{
+		return toString(value);
+	}
+
+	void constructResultStr(const CheckLocation& testLocation, Result result, const std::string& expectedStr, const std::string& actualStr, const std::string& actual);
+
 	std::string m_testName;
 	Result m_result;
 	std::string m_resultStr;
@@ -101,7 +87,9 @@ public:
 	virtual ~TestCase() {}
 	virtual void runTest() = 0;
 
+	std::string getTestName() const;
 protected:
+
 	std::string m_testName;
 };
 
