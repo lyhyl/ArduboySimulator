@@ -8,7 +8,13 @@
 #include <cstdarg>
 #include <cassert>
 #include "PlatformSetup.h"
-#include "BaseApp.h"
+
+#ifndef _CONSOLE 
+	//if console is defined, we might be a linux command line server or something, we don't know what GL/GLES stuff
+	//is and don't use BaseApp
+	#include "BaseApp.h"
+#endif
+
 #include <time.h>
 
 using namespace std;
@@ -37,10 +43,12 @@ void LogMsg ( const char* traceStr, ... )
 
 	AppendStringToFile( GetBaseAppPath()+"log.txt", GetDateAndTimeAsString()+": "+string(buffer)+"\r\n");
 
-	if (IsBaseAppInitted())
-	{
-		GetBaseApp()->GetConsole()->AddLine(buffer);
-	}
+	#ifndef _CONSOLE 
+		if (IsBaseAppInitted())
+		{
+			GetBaseApp()->GetConsole()->AddLine(buffer);
+		}
+	#endif
 }
 
 
