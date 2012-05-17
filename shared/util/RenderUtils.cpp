@@ -637,7 +637,7 @@ void  ScreenToWorld(CL_Vec2f pt, CL_Vec3f *pReturnA, float dist)
 	*pReturnA = CL_Vec3f(  vTemp4.x,  vTemp4.y, vTemp4.z);
 }
 
-CL_Vec3f GetOGLPos(int x, int y, float z, CL_Vec3f *pNormalOut, CL_Mat4f *pModelMatrix)
+CL_Vec3f GetOGLPos(int x, int y, float z, CL_Vec3f *pNormalOut, CL_Mat4f *pModelMatrix, CL_Mat4f *pModelProjectionMatrix)
 {
 		
 	//this xmod/ymod handles some things we do with auto screen stretching if "fake screensize" is used
@@ -688,8 +688,16 @@ CL_Vec3f GetOGLPos(int x, int y, float z, CL_Vec3f *pNormalOut, CL_Mat4f *pModel
 	GLfloat posX, posY, posZ;
 
 	*((CL_Mat4f*)modelview) = *pModelMatrix;
-	*((CL_Mat4f*)projection) = *GetBaseApp()->GetProjectionMatrix();
+	
+	if (pModelProjectionMatrix)
+	{
+		*((CL_Mat4f*)projection) = *pModelProjectionMatrix;
+	} else
+	{
+		*((CL_Mat4f*)projection) = *GetBaseApp()->GetProjectionMatrix();
+	}
 	//glGetFloatv( GL_PROJECTION_MATRIX, projection );
+	
 	
 	viewport[0] = 0;
 	viewport[1] = 0;
