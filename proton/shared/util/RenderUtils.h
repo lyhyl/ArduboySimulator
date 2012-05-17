@@ -96,7 +96,10 @@ uint32 ColorCombine(uint32 c1, uint32 c2, float alphaMod = 1.0f);
 void SetLockedLandscape(bool bNew);
 bool GetLockedLandscape();
 void  ScreenToWorld(CL_Vec2f pt, CL_Vec3f *pReturnA, float dist);
-CL_Vec3f GetOGLPos(int x, int y, float z, CL_Vec3f *pNormalOut, CL_Mat4f *pModelMatrix);
+
+//if you send in a NULL projection matrix, then Proton will guess, which is usually right unless you've setup your own somewhere when
+//doing the 3D
+CL_Vec3f GetOGLPos(int x, int y, float z, CL_Vec3f *pNormalOut, CL_Mat4f *pModelMatrix, CL_Mat4f *pModelProjectionMatrix = NULL);
 bool CanRotateTo(int orientation);
 bool GetIsRotating();
 void SetIsRotating(bool bNew) ;
