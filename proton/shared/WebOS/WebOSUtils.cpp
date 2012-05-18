@@ -691,10 +691,4 @@ string GetMacAddress()
 	return ""; //unimplemented
 }
 
-string GetMacAddress()
-{
-	//TODO
-	return ""; //unimplemented
-}
-
 #endif

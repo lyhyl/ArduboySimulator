@@ -1464,7 +1464,6 @@ class AppRenderer implements GLSurfaceView.Renderer
 		case MESSAGE_TAPJOY_GET_AD: 
 					//#if defined(RT_TAPJOY_SUPPORT)
 						Log.v(app.PackageName, "Getting tapjoy ad");
-						TapjoyConnect.getTapjoyConnectInstance().enableBannerAdAutoRefresh(true);
 						TapjoyConnect.getTapjoyConnectInstance().setBannerAdSize(app.tapBannerSize);
 						TapjoyConnect.getTapjoyConnectInstance().getDisplayAd(app);
 					//#else
@@ -1475,12 +1474,12 @@ class AppRenderer implements GLSurfaceView.Renderer
 	//#if defined(RT_TAPJOY_SUPPORT)
 	
 			case MESSAGE_TAPJOY_GET_FEATURED_APP:
-					//Log.v(app.PackageName, "Getting tapjoy feature");
+					Log.v(app.PackageName, "Getting tapjoy feature");
 					TapjoyConnect.getTapjoyConnectInstance().getFeaturedApp(app);
 					break;
 
 			case MESSAGE_TAPJOY_SHOW_FEATURED_APP:
-					//Log.v(app.PackageName, "show tapjoy feature");
+					Log.v(app.PackageName, "show tapjoy feature");
 					TapjoyConnect.getTapjoyConnectInstance().showFeaturedAppFullScreenAd();
 					break;
 		
@@ -1511,8 +1510,9 @@ class AppRenderer implements GLSurfaceView.Renderer
 			case MESSAGE_TAPJOY_SHOW_AD:
 				
 					app.tapjoy_ad_show = (int)nativeGetLastOSMessageX();
-					//Log.v(app.PackageName, "Showing tapjoy ad, parm is: " + app.tapjoy_ad_show);
-					
+					Log.v(app.PackageName, "Showing tapjoy ad, parm is: " + app.tapjoy_ad_show);
+					TapjoyConnect.getTapjoyConnectInstance().enableBannerAdAutoRefresh(app.tapjoy_ad_show != 0);
+				
 					app.update_display_ad = true;
 					// We must use a handler since we cannot update UI elements from a different thread.
 					app.mMainThreadHandler.post(app.mUpdateMainThread);
