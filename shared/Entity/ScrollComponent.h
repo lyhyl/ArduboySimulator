@@ -114,6 +114,7 @@ private:
 	CL_Vec2f m_vTotalDisplacementOnCurrentSwipe; //helps us detect a scroll from a normal tap
 	float *m_pSwipeDetectDistance; //how far we have to move to detect a swipe, 0 to disable
 	uint32 *m_pDontScrollUntilSwipeDetected; //1 if we don't scroll until they move enough to qualify for a swipe, 0 to always scroll
+	uint32 *m_pEatAllInput; //if 1, we claim all taps as ours.  This solves a very specific problem for a client, most people won't want this..
 };
 
 #endif // ScrollComponent_h__
