@@ -60,7 +60,24 @@ Entity * CreateOverlayButtonEntity(Entity *pParentEnt, string name, string fileN
 Entity * CreateOverlayRectEntity(Entity *pParent, CL_Rectf posAndBoundsRect, uint32 color, RectRenderComponent::eVisualStyle style = RectRenderComponent::STYLE_NORMAL);
 Entity * CreateOverlayRectEntity(Entity *pParent, CL_Vec2f vPos, CL_Vec2f vBounds, uint32 color, RectRenderComponent::eVisualStyle style = RectRenderComponent::STYLE_NORMAL);
 Entity * CreateButtonHotspot(Entity *pParentEnt, string name, CL_Vec2f vPos, CL_Vec2f vBounds, Button2DComponent::eButtonStyle buttonStyle = Button2DComponent::BUTTON_STYLE_CLICK_ON_TOUCH);
-Entity * CreateTextBoxEntity(Entity *pParent, string entName, CL_Vec2f vPos, CL_Vec2f vTextAreaSize, string msg, float scale = 1.0f);
+/**
+ * Creates a new \c Entity and adds a \c TextBoxRenderComponent to it.
+ *
+ * The \a pParent will be the parent \c Entity for the new \c Entity. It mustn't be \c NULL.
+ * The name of the new \c Entity is set to \a entName.
+ *
+ * The new \c Entity's position ("pos2d") and size ("size2d") are
+ * set to \a vPos and \a vTextAreaSize respectively.
+ *
+ * The following values are set to the created \c TextBoxRenderComponent:
+ * - the text is set to \a msg
+ * - the scale of the text is set to \a scale
+ * - the text alignment in set to \a textAlignment
+ *
+ * \see TextBoxRenderComponent
+ * \return The newly created \c Entity.
+ */
+Entity * CreateTextBoxEntity(Entity *pParent, string entName, CL_Vec2f vPos, CL_Vec2f vTextAreaSize, string msg, float scale = 1.0f, eAlignment textAlignment = ALIGNMENT_UPPER_LEFT);
 Entity * CreateInputTextEntity(Entity *pParentEnt, string name, float x, float y, string text, float sizeX=0, float sizeY=0);
 Entity * CreateCheckbox(Entity *pBG, string name, string text, float x, float y, bool bChecked, eFont fontID = FONT_SMALL, float fontScale = 1.0f);
 

@@ -1027,7 +1027,7 @@ void SetAlignmentEntity(Entity *pEnt, eAlignment align)
 	pEnt->GetVar("alignment")->Set(uint32(align));
 }
 
-Entity * CreateTextBoxEntity(Entity *pParent, string entName, CL_Vec2f vPos, CL_Vec2f vTextAreaSize, string msg, float scale)
+Entity * CreateTextBoxEntity(Entity *pParent, string entName, CL_Vec2f vPos, CL_Vec2f vTextAreaSize, string msg, float scale, eAlignment textAlignment)
 {
 	Entity *pText = pParent->AddEntity(new Entity(entName));
 	
@@ -1035,6 +1035,7 @@ Entity * CreateTextBoxEntity(Entity *pParent, string entName, CL_Vec2f vPos, CL_
 	pText->GetVar("size2d")->Set(vTextAreaSize);
 	pTextComp->GetVar("fontScale")->Set(scale);
 	pTextComp->GetVar("text")->Set(msg);
+	pTextComp->GetVar("textAlignment")->Set((uint32)textAlignment);
 	pText->GetVar("pos2d")->Set(vPos);
 	return pText;
 }
