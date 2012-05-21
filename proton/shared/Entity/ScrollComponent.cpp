@@ -43,6 +43,7 @@ void ScrollComponent::OnAdd(Entity *pEnt)
 	m_pEnforceFingerTracking = &GetVarWithDefault("fingerTracking", uint32(0))->GetUINT32();
 	m_pSwipeDetectDistance = &GetVarWithDefault("swipeDetectDistance", 25.0f)->GetFloat();
 	m_pDontScrollUntilSwipeDetected = &GetVarWithDefault("dontScrollUntilSwipeDetected", uint32(0))->GetUINT32();
+	m_pEatAllInput = &GetVarWithDefault("eatAllInput", uint32(0))->GetUINT32();
 
 	GetParent()->GetFunction("OnOverStart")->sig_function.connect(1, boost::bind(&ScrollComponent::OnOverStart, this, _1));
 	GetParent()->GetFunction("OnOverEnd")->sig_function.connect(1, boost::bind(&ScrollComponent::OnOverEnd, this, _1));
@@ -97,6 +98,17 @@ void ScrollComponent::OnOverStart(VariantList *pVList)
 {
 	uint32 fingerID = pVList->Get(2).GetUINT32();
 	if (!isInterestingFinger(fingerID)) return;
+
+
+	if (*m_pEnforceFingerTracking && m_activeFinger == -1 && *m_pDontScrollUntilSwipeDetected == 0 && *m_pEatAllInput != 0)
+	{
+		TouchTrackInfo *pTouch = GetBaseApp()->GetTouch(fingerID);
+		if (pTouch->WasHandled()) return;
+		pTouch->SetWasHandled(true, GetParent());
+		m_activeFinger = fingerID;
+	}
+
+
 
 	SetIsScrolling(false); 
 	m_lastTouchPos = pVList->m_variant[0].GetVector2();
