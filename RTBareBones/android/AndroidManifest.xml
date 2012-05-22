@@ -26,6 +26,29 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    </application>
-      <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="9" />
+
+
+    <activity android:name="com.tapjoy.TJCOffersWebView" android:configChanges="keyboardHidden|orientation" />
+    <activity android:name="com.tapjoy.TapjoyFeaturedAppWebView" android:configChanges="keyboardHidden|orientation" />
+    <activity android:name="com.tapjoy.TapjoyVideoView" android:configChanges="keyboardHidden|orientation" />
+
+    <receiver android:name="com.tapjoy.TapjoyReferralTracker" android:exported="true">
+      <intent-filter>
+        <action android:name="com.android.vending.INSTALL_REFERRER" />
+      </intent-filter>
+    </receiver>
+
+    <service android:name="BillingService" />
+
+    <receiver android:name="BillingReceiver">
+      <intent-filter>
+        <action android:name="com.android.vending.billing.IN_APP_NOTIFY" />
+        <action android:name="com.android.vending.billing.RESPONSE_CODE" />
+        <action android:name="com.android.vending.billing.PURCHASE_STATE_CHANGED" />
+      </intent-filter>
+    </receiver>
+  
+  
+  </application>
+      <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="9" />
 </manifest> 
