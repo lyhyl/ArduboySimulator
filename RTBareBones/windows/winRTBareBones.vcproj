@@ -499,6 +499,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\android\ant.properties"
+					>
+				</File>
+				<File
 					RelativePath="..\android\app_info_setup.bat"
 					>
 				</File>
@@ -527,7 +531,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\android\default.properties"
+					>
+				</File>
+				<File
 					RelativePath="..\android\src\com\rtsoft\rtbarebones\Main.java"
+					>
+				</File>
+				<File
+					RelativePath="..\android\project.properties"
 					>
 				</File>
 				<File

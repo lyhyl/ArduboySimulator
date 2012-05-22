@@ -139,6 +139,7 @@ void App::OnAccel(VariantList *pVList)
 
 //test for arcade keys.  To enable this test, search for TRACKBALL/ARCADETEST: below and uncomment the stuff under it.
 //Note: You'll need to look at the debug log to see the output.  (For android, run PhoneLog.bat from RTBareBones/android)
+
 void App::OnArcadeInput(VariantList *pVList)
 {
 
