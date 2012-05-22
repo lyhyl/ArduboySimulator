@@ -21,7 +21,7 @@ class Entity;
 { \
 	GLenum __error = glGetError(); \
 	if(__error) { \
-		LogError("OpenGL error 0x%04X (%d) in %s line %d\n", __error,__error, __FUNCTION__, __LINE__); \
+		LogError("OpenGL error 0x%04X (%d) in %s file %s:%d\n", __error,__error, __FUNCTION__, __FILE__, __LINE__); \
 	} \
 }
 #else
