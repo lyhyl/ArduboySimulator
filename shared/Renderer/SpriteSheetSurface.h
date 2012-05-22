@@ -31,7 +31,6 @@ public:
 	 */
 	CL_Vec2f GetFrameSize(const std::string& frameName);
 
-	virtual bool LoadFileFromMemory( byte *pMem, int inputSize =0 );
 	virtual bool InitBlankSurface( int x, int y);
 	virtual bool InitFromSoftSurface(SoftSurface *pSurf);
 

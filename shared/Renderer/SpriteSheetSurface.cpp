@@ -54,12 +54,6 @@ void SpriteSheetSurface::BlitFrame(float x, float y, const std::string& frameNam
 	}
 }
 
-bool SpriteSheetSurface::LoadFileFromMemory(byte *pMem, int inputSize)
-{
-	m_frames.clear();
-	return Surface::LoadFileFromMemory(pMem, inputSize);
-}
-
 bool SpriteSheetSurface::InitBlankSurface(int x, int y)
 {
 	m_frames.clear();
