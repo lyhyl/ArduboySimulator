@@ -278,7 +278,7 @@ const char * GetBundlePrefix()
 
 const char * GetBundleName()
 {
-	const char * bundleName = "RTLooneyLadders";
+	const char * bundleName = "rtlooneyladders";
 	return bundleName;
 }
 

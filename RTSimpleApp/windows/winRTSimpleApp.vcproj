@@ -556,6 +556,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\android\ant.properties"
+					>
+				</File>
+				<File
 					RelativePath="..\android\app_info_setup.bat"
 					>
 				</File>
@@ -568,7 +572,31 @@
 					>
 				</File>
 				<File
-					RelativePath="..\android\src\com\rtsoft\rtsimpleapp\Main.java"
+					RelativePath="..\android\build_prepare.bat"
+					>
+				</File>
+				<File
+					RelativePath="..\android\buildRelease.bat"
+					>
+				</File>
+				<File
+					RelativePath="..\android\Clean.bat"
+					>
+				</File>
+				<File
+					RelativePath="..\android\default.properties"
+					>
+				</File>
+				<File
+					RelativePath="..\android\InstallOnDefaultPhone.bat"
+					>
+				</File>
+				<File
+					RelativePath="..\android\InstallOnDefaultPhoneRelease.bat"
+					>
+				</File>
+				<File
+					RelativePath="..\android\ViewLogDefaultPhone.bat"
 					>
 				</File>
 				<Filter
@@ -588,6 +616,14 @@
 					</File>
 					<File
 						RelativePath="..\android\jni\Application.mk"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="src"
+					>
+					<File
+						RelativePath="..\android\src\Main.java"
 						>
 					</File>
 				</Filter>
@@ -612,7 +648,31 @@
 					>
 				</File>
 				<File
+					RelativePath="..\bbx\app_info_setup.bat"
+					>
+				</File>
+				<File
 					RelativePath="..\bbx\bar-descriptor.xml"
+					>
+				</File>
+				<File
+					RelativePath="..\bbx\PackageAndRunDevice.bat"
+					>
+				</File>
+				<File
+					RelativePath="..\bbx\PackageRelease.bat"
+					>
+				</File>
+				<File
+					RelativePath="..\bbx\RequestDebugToken.bat"
+					>
+				</File>
+				<File
+					RelativePath="..\bbx\SignFinal.bat"
+					>
+				</File>
+				<File
+					RelativePath="..\bbx\UploadRelease.bat"
 					>
 				</File>
 			</Filter>
@@ -4553,50 +4613,6 @@
 				Name="android"
 				>
 				<File
-					RelativePath="..\..\shared\android\AndroidApp.cpp"
-					>
-					<FileConfiguration
-						Name="Common Debug|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Common Release|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug GL|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release GL|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug WebOS|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
 					RelativePath="..\..\shared\android\AndroidUtils.cpp"
 					>
 					<FileConfiguration
@@ -4649,16 +4665,92 @@
 					>
 				</File>
 				<Filter
-					Name="app"
+					Name="v2_src"
 					>
-					<File
-						RelativePath="..\..\shared\android\src\com\rtsoft\shared\SharedActivity.java"
+					<Filter
+						Name="java"
 						>
-					</File>
-					<File
-						RelativePath="..\..\shared\android\src\com\rtsoft\shared\SharedMultiTouchInput.java"
+						<File
+							RelativePath="..\..\shared\android\v2_src\java\BillingReceiver.java"
+							>
+						</File>
+						<File
+							RelativePath="..\..\shared\android\v2_src\java\BillingService.java"
+							>
+						</File>
+						<File
+							RelativePath="..\..\shared\android\v2_src\java\Consts.java"
+							>
+						</File>
+						<File
+							RelativePath="..\..\shared\android\v2_src\java\PurchaseObserver.java"
+							>
+						</File>
+						<File
+							RelativePath="..\..\shared\android\v2_src\java\ResponseHandler.java"
+							>
+						</File>
+						<File
+							RelativePath="..\..\shared\android\v2_src\java\Security.java"
+							>
+						</File>
+						<File
+							RelativePath="..\..\shared\android\v2_src\java\SharedActivity.java"
+							>
+						</File>
+						<File
+							RelativePath="..\..\shared\android\v2_src\java\SharedMultiTouchInput.java"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="cpp"
 						>
-					</File>
+						<File
+							RelativePath="..\..\shared\android\v2_src\cpp\AndroidApp.cpp"
+							>
+							<FileConfiguration
+								Name="Common Debug|Win32"
+								ExcludedFromBuild="true"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Common Release|Win32"
+								ExcludedFromBuild="true"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Debug GL|Win32"
+								ExcludedFromBuild="true"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
+								ExcludedFromBuild="true"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Debug WebOS|Win32"
+								ExcludedFromBuild="true"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+								/>
+							</FileConfiguration>
+						</File>
+					</Filter>
 				</Filter>
 			</Filter>
 			<Filter
