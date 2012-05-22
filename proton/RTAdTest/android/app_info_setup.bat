@@ -9,7 +9,6 @@ set EMULATOR_AVD=@AVD_16
 ::Update/write our local.properties file with our ANDROID NDK dir
 call android update project -p ./
 
-
 :Use below to set your ant home dir if it isn't already an environmental var!
 :set ANT_HOME=d:\pro\ant
 copy ..\..\shared\android\util\javapp.jar %ANT_HOME%\lib\
