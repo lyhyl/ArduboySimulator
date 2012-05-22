@@ -2,7 +2,7 @@
 	"title": "RTLooneyLadders",
 	"type": "pdk",
 	"main": "RTLooneyLadders",
-	"id": "com.rtsoft.RTLooneyLadders",
+	"id": "com.rtsoft.rtlooneyladders",
 	"version": "1.0.0",
 	"vendor": "Robinson Technologies",
 	"icon": "icon.png",

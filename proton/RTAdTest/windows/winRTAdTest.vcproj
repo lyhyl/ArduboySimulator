@@ -515,10 +515,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\android\build.sh"
-					>
-				</File>
-				<File
 					RelativePath="..\android\build.xml"
 					>
 				</File>
@@ -1963,10 +1959,6 @@
 					>
 				</File>
 				<Filter
-					Name="app"
-					>
-				</Filter>
-				<Filter
 					Name="v2_src"
 					>
 					<File
@@ -2048,18 +2040,18 @@
 							RelativePath="..\..\shared\android\v2_src\java\SharedMultiTouchInput.java"
 							>
 						</File>
-					</Filter>
-					<Filter
-						Name="util"
-						>
-						<File
-							RelativePath="..\..\shared\android\v2_src\java\util\Base64.java"
+						<Filter
+							Name="util"
 							>
-						</File>
-						<File
-							RelativePath="..\..\shared\android\v2_src\java\util\Base64DecoderException.java"
-							>
-						</File>
+							<File
+								RelativePath="..\..\shared\android\v2_src\java\util\Base64.java"
+								>
+							</File>
+							<File
+								RelativePath="..\..\shared\android\v2_src\java\util\Base64DecoderException.java"
+								>
+							</File>
+						</Filter>
 					</Filter>
 				</Filter>
 			</Filter>
