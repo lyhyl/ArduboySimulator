@@ -702,7 +702,8 @@ void CenterWindow(HWND hWnd)
 	wb = (desk.right - desk.left) / 2;
 	hb = (desk.bottom - desk.top) / 2;
 
-	SetWindowPos(hWnd, NULL, wb - wa, hb - ha, wa*2, ha*2, 0);
+	SetWindowPos(hWnd, NULL, wb - wa, hb - ha, r.right - r.left, r.bottom - r.top, 0); 
+
 }
 
 bool InitVideo(int width, int height, bool bFullscreen, float aspectRatio)
