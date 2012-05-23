@@ -9,12 +9,11 @@
 
 /*
 
-Seth's class to control Tapjoy ads on Android.  Needs special versions of the Android .java files to work.
+Seth's class to control Tapjoy and other ad providers.
 
-Also, there is an RTAdTest sample app for this, but it isn't going to be public until I work out some hacky ugliness on the
-java side..
+See the RTAdTest example.
 
-But here is how it would be used:
+Here is how to add it to an existing project:
 
 1.  Add #include "Manager/AdManager.h" to your App.h
 2.  Add AdManager m_adManager; as a member variable in your App class
@@ -28,8 +27,6 @@ But here is how it would be used:
 		m_adManager.OnMessage(m);
 		BaseApp::OnMessage(m);
 	}
-
-
 */
 
 #ifndef AdManager_h__
