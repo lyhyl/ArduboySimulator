@@ -78,7 +78,7 @@ EntityComponent* SetupInterpolateComponent(Entity *pEnt, const string& component
 	return pComp;
 }
 
-void SlideScreen(Entity *pEnt, bool bIn, int speedMS, int delayToStartMS)
+EntityComponent * SlideScreen(Entity *pEnt, bool bIn, int speedMS, int delayToStartMS)
 {
 	
 	CL_Vec2f vEndPos;
@@ -94,10 +94,10 @@ void SlideScreen(Entity *pEnt, bool bIn, int speedMS, int delayToStartMS)
 		vEndPos = CL_Vec2f(GetScreenSizeXf(),vOrigPos.y);
 	}
 
-	SetupInterpolateComponent(pEnt, "", "pos2d", vEndPos, speedMS, delayToStartMS);
+	return SetupInterpolateComponent(pEnt, "", "pos2d", vEndPos, speedMS, delayToStartMS);
 }
 
-void SlideScreenVertical(Entity *pEnt, bool bIn, int speedMS, int delayToStartMS)
+EntityComponent * SlideScreenVertical(Entity *pEnt, bool bIn, int speedMS, int delayToStartMS)
 {
 	CL_Vec2f vEndPos;
 	CL_Vec2f vOrigPos = pEnt->GetVar("pos2d")->GetVector2();
@@ -112,7 +112,7 @@ void SlideScreenVertical(Entity *pEnt, bool bIn, int speedMS, int delayToStartMS
 		vEndPos = CL_Vec2f(vOrigPos.x, GetScreenSizeYf());
 	}
 
-	SetupInterpolateComponent(pEnt, "", "pos2d", vEndPos, speedMS, delayToStartMS);
+	return SetupInterpolateComponent(pEnt, "", "pos2d", vEndPos, speedMS, delayToStartMS);
 }
 
 //bounces for ever

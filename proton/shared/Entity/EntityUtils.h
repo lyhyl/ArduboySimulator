@@ -84,8 +84,8 @@ Entity * CreateCheckbox(Entity *pBG, string name, string text, float x, float y,
 void DisableAllButtonsEntity(Entity *pEnt, bool bRecursive = true);
 void EnableAllButtonsEntity(Entity *pEnt, bool bRecursive = true, int delayBeforeActionMS = 0, eTimingSystem timing = GetTiming());
 Entity * DisableEntityButtonByName(const string &entityName, Entity *pRootEntity = GetEntityRoot());
-void SlideScreen(Entity *pEnt, bool bIn, int speedMS = 500, int delayToStartMS = 0);
-void SlideScreenVertical(Entity *pEnt, bool bIn, int speedMS = 500, int delayToStartMS = 0);
+EntityComponent * SlideScreen(Entity *pEnt, bool bIn, int speedMS = 500, int delayToStartMS = 0);
+EntityComponent * SlideScreenVertical(Entity *pEnt, bool bIn, int speedMS = 500, int delayToStartMS = 0);
 void BobEntity(Entity *pEnt, float bobAmount = 3);
 void OneTimeBobEntity(Entity *pEnt, float bobAmount = -10, int delayBeforeBob = 0, int durationMS = 100);
 /**
