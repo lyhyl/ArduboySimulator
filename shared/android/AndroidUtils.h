@@ -31,6 +31,8 @@ float AppGetLastOSMessageX(JNIEnv* env);
 float AppGetLastOSMessageY(JNIEnv* env);
 void AppOnAccelerometerUpdate(JNIEnv* env, jobject jobj, jfloat x, jfloat y, jfloat z);
 void AppOnTrackball(JNIEnv* env, jobject jobj, jfloat x, jfloat y);
+void AppOnJoypad(JNIEnv* env, jobject jobj, jfloat xL, jfloat yL, jfloat xR, jfloat yR);
+void AppOnJoypadButtons(JNIEnv* env, jobject jobj, jint key, jint value);
 void AppOnSendGUIEx(JNIEnv*  env, jobject thiz,jint messageType, jint parm1, jint parm2, jint finger );
 jstring AppGetLastOSMessageString(JNIEnv* env);
 void AppOnSendGUIStringEx(JNIEnv* env, jobject thiz,jint messageType, jint parm1, jint parm2, jint finger, jstring s );
