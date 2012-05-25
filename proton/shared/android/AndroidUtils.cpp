@@ -253,6 +253,20 @@ void LaunchEmail(string subject, string content)
 {
 }
 
+void FireAchievement(string achievement)
+{
+	JNIEnv *env = GetJavaEnv();
+	LogMsg("Attempting to fire Achievement %s", achievement.c_str());
+
+	if (!env) 
+		return;
+	jclass cls = env->FindClass(GetAndroidMainClassName());
+	jmethodID mid = env->GetStaticMethodID(cls,
+		"HandleAchievement",
+		"(Ljava/lang/String;)V");
+	env->CallStaticVoidMethod(cls, mid, env->NewStringUTF(achievement.c_str()));
+}
+
 void LaunchURL(string url)
 {
 	JNIEnv *env = GetJavaEnv();
@@ -1051,7 +1065,17 @@ float AppGetLastOSMessageParm1(JNIEnv* env)
 	return g_lastOSMessage.m_parm1;
 }
 
+void AppOnJoypadButtons(JNIEnv* env, jobject jobj, jint key, jint value)
+{
+	GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_JOYPAD_BUTTONS, Variant(key, value, 0.0f));
+}
 
+void AppOnJoypad(JNIEnv* env, jobject jobj, jfloat xL, jfloat yL, jfloat xR, jfloat yR)
+{
+	//LogMsg("Got %.2f, %.2f", x, y);
+	VariantList vList(xL, yL, xR, yR);
+	GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_JOYPAD, vList);
+}
 
 void AppOnTrackball(JNIEnv* env, jobject jobj, jfloat x, jfloat y)
 {
