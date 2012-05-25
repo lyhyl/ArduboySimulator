@@ -28,6 +28,14 @@ extern "C"
 	{
 		AppOnTrackball(env, thiz, x, y);
 	}
+	JNIEXPORT void JNICALL Java_${PACKAGE_NAME_WITH_UNDERSCORES}_SharedActivity_nativeOnJoyPadButtons(  JNIEnv*  env, jobject thiz, jint key, jint value)
+	{
+		AppOnJoypadButtons(env, thiz, key, value);
+	}
+	JNIEXPORT void JNICALL Java_${PACKAGE_NAME_WITH_UNDERSCORES}_SharedActivity_nativeOnJoyPad(  JNIEnv*  env, jobject thiz, jfloat xL, jfloat yL, jfloat xR, jfloat yR)
+	{
+		AppOnJoypad(env, thiz, xL, yL, xR, yR);
+	}
 	JNIEXPORT void JNICALL Java_${PACKAGE_NAME_WITH_UNDERSCORES}_AppGLSurfaceView_nativePause( JNIEnv*  env )
 	{
 		AppPause(env);
