@@ -82,7 +82,7 @@ enum eVirtualKeys
 	VIRTUAL_KEY_F15,
 	VIRTUAL_KEY_F16,
 	VIRTUAL_KEY_TRACKBALL_DOWN = 500035,
-	
+
 	//Controller buttons - laid out like an xbox controller
 
 	//Note:  For xperia play, you must use VIRTUAL_KEY_DIR_CENTER instead of VIRTUAL_DPAD_BUTTON_DOWN, they
@@ -139,7 +139,7 @@ enum eMessageType
 	MESSAGE_TYPE_PRELOAD_SOUND,
 	MESSAGE_TYPE_GUI_CHAR_RAW,
 	MESSAGE_TYPE_SET_SOUND_ENABLED,
-	
+
 	MESSAGE_TYPE_TAPJOY_AD_READY,
 	MESSAGE_TYPE_TAPJOY_FEATURED_APP_READY,
 	MESSAGE_TYPE_TAPJOY_MOVIE_AD_READY,
@@ -154,15 +154,17 @@ enum eMessageType
 	MESSAGE_TYPE_TAPJOY_AWARD_TAP_POINTS_RETURN,
 	MESSAGE_TYPE_TAPJOY_AWARD_TAP_POINTS_RETURN_ERROR,
 	MESSAGE_TYPE_TAPJOY_EARNED_TAP_POINTS,
+	MESSAGE_TYPE_GUI_JOYPAD_BUTTONS, //For Jake's android gamepad input
+	MESSAGE_TYPE_GUI_JOYPAD, //For Jake's android gamepad input
 
 	MESSAGE_USER = 1000 //users can add their own messages starting here
-	
+
 };
 
 class Message: public boost::signals::trackable
 {
 
-	public:
+public:
 
 	Message(eMessageClass messageClass, eTimingSystem timer, eMessageType type) : m_class(messageClass), m_timerMethod(timer), m_type(type)
 	{
@@ -188,12 +190,12 @@ class Message: public boost::signals::trackable
 	void Set(const VariantList *v) {if (v) m_variantList = *v;}
 	void SetTargetEntity(Entity *pEnt);
 	Entity * GetTargetEntity() {return m_pTargetEntity;}
-	
+
 	void SetTargetComponent(EntityComponent *pComp);
 	void SetComponentToAdd(EntityComponent *pComp);
 	void ClearComponent() {m_pComponent = NULL;}
 	EntityComponent * GetTargetComponent() {return m_pComponent;}
-	
+
 	void OnEntityDestroyed(Entity *pEnt);
 	void OnComponentDestroyed(VariantList *pVList);
 	void SetVarName(string const &varName) {m_varName = varName;}
@@ -216,7 +218,7 @@ private:
 	EntityComponent *m_pComponent;
 	string m_varName;
 	string m_stringParm;
-	
+
 
 };
 
@@ -227,7 +229,7 @@ class MessageManager
 public:
 	MessageManager();
 	virtual ~MessageManager();
- 
+
 	void SendGUI( eMessageType type, float parm1, float parm2 = 0, int deliverTimeMS = 0, eTimingSystem timing = TIMER_SYSTEM);
 	void SendGUI( eMessageType type, const Variant &v, int deliverTimeMS = 0);
 	void SendGUI( eMessageType type, const VariantList &vList, int deliverTimeMS = 0);
@@ -243,14 +245,14 @@ public:
 	void CallComponentFunction( EntityComponent *pComp, int timeMS, const string &funcName, const VariantList *v = NULL, eTimingSystem timing = GetTiming()); //assumes you know the components address
 	void CallComponentFunction( Entity *pEnt, const string &compName, int timeMS,const string &funcName, const VariantList *v = NULL, eTimingSystem timing = GetTiming() ); //useful for calling components that don't exist yet
 	void AddComponent(Entity *pEnt, int timeMS, EntityComponent *pComp, eTimingSystem timing = GetTiming());
-	
+
 	void DeleteMessagesByFunctionCallName(const string &name, eTimingSystem timing = GetTiming());
 	void DeleteMessagesToComponent( EntityComponent *pComponent);
 	void DeleteMessagesByType(eMessageType type, eTimingSystem timing = GetTiming());
 
 	void DumpMessages();
 	void Update(); //run every tick
-	
+
 private:
 
 	void Send(Message *m);
