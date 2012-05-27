@@ -108,6 +108,12 @@ import ${PACKAGE_NAME}.Consts.ResponseCode;
 
 import android.view.View.OnClickListener;
 
+
+
+// ADB Controller
+import com.bda.controller.Controller;
+import com.bda.controller.ControllerListener;
+
 //#if defined(RT_TAPJOY_SUPPORT)
 	public class SharedActivity extends Activity implements SensorEventListener,  TapjoyNotifier, TapjoyFeaturedAppNotifier, TapjoySpendPointsNotifier, TapjoyDisplayAdNotifier, TapjoyAwardPointsNotifier, TapjoyEarnedPointsNotifier, TapjoyVideoNotifier
 //#else
@@ -147,6 +153,8 @@ import android.view.View.OnClickListener;
 	public static boolean run_hooked;
 	public static int tapjoy_ad_show; //0 for don't shot, 1 for show
 	
+	
+	Controller mController = null;
 	
 	//GOOGLE IAB
 	public BillingService mBillingService;
@@ -393,6 +401,11 @@ import android.view.View.OnClickListener;
      {
      	Log.d(PackageName, "Destroying...");
 		
+		if(mController != null)
+		{
+			mController.exit();
+		}
+		
         super.onDestroy();
         mBillingService.unbind();
     }
@@ -427,7 +440,12 @@ import android.view.View.OnClickListener;
 		setContentView(mGLView);
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
 		if (securityEnabled) this.license_init();
-		
+	
+	
+		// ADB CONTROLLER STUFF	
+		mController = Controller.getInstance(this);
+		mController.init();
+		mController.setListener(new ExampleControllerListener(), new Handler());
 	
 		//#if defined(RT_TAPJOY_SUPPORT)
 			
@@ -472,6 +490,10 @@ import android.view.View.OnClickListener;
 		accelHzSave = hzTemp;
         mGLView.onPause();
         super.onPause();
+        if(mController != null)
+		{
+			mController.onPause();
+		}
 		//_sounds.autoPause();
     }
 
@@ -484,6 +506,10 @@ import android.view.View.OnClickListener;
         mGLView.onResume();
 		setup_accel(accelHzSave);
 		super.onResume();
+		if(mController != null)
+		{
+			mController.onResume();
+		}
 	}
 	
 	// Create runnable for posting
@@ -600,25 +626,25 @@ import android.view.View.OnClickListener;
 	public static String get_deviceID()
 	{
 		String m_szDevIDShort = "35" + //we make this look like a valid IMEI
-            Build.BOARD.length()%10+ Build.BRAND.length()%10 +
-            Build.CPU_ABI.length()%10 + Build.DEVICE.length()%10 +
-            Build.DISPLAY.length()%10 + Build.HOST.length()%10 +
-            Build.ID.length()%10 + Build.MANUFACTURER.length()%10 +
-            Build.MODEL.length()%10 + Build.PRODUCT.length()%10 +
-            Build.TAGS.length()%10 + Build.TYPE.length()%10 +
-            Build.USER.length()%10 ; //13 digits
+        Build.BOARD.length()%10+ Build.BRAND.length()%10 +
+        Build.CPU_ABI.length()%10 + Build.DEVICE.length()%10 +
+        Build.DISPLAY.length()%10 + Build.HOST.length()%10 +
+        Build.ID.length()%10 + Build.MANUFACTURER.length()%10 +
+        Build.MODEL.length()%10 + Build.PRODUCT.length()%10 +
+        Build.TAGS.length()%10 + Build.TYPE.length()%10 +
+        Build.USER.length()%10 ; //13 digits
 
-if (app.checkCallingOrSelfPermission("android.permission.READ_PHONE_STATE") == PackageManager.PERMISSION_GRANTED)
-{
-	TelephonyManager tm = (TelephonyManager) app.getSystemService(Context.TELEPHONY_SERVICE);
-	final String DeviceId, SerialNum;
-	DeviceId = tm.getDeviceId();
-	SerialNum = tm.getSimSerialNumber();
-	return m_szDevIDShort + DeviceId + SerialNum;
-} else
-{
-return m_szDevIDShort;
-}
+		if (app.checkCallingOrSelfPermission("android.permission.READ_PHONE_STATE") == PackageManager.PERMISSION_GRANTED)
+		{
+			TelephonyManager tm = (TelephonyManager) app.getSystemService(Context.TELEPHONY_SERVICE);
+			final String DeviceId, SerialNum;
+			DeviceId = tm.getDeviceId();
+			SerialNum = tm.getSimSerialNumber();
+			return m_szDevIDShort + DeviceId + SerialNum;
+		} else
+		{
+			return m_szDevIDShort;
+		}
 	}
 
   @Override
@@ -768,7 +794,102 @@ return m_szDevIDShort;
 
 
 	final static int MESSAGE_USER = 1000; //send your own messages after this #
+
+	final static int VIRTUAL_KEY_ADB_LEFT_JOY_HORIZONTAL = 510001;
+	final static int VIRTUAL_KEY_ADB_LEFT_JOY_VERTICAL = 510002;
+	final static int VIRTUAL_KEY_ADB_RIGHT_JOY_HORIZONTAL = 510003;
+	final static int VIRTUAL_KEY_ADB_RIGHT_JOY_VERTICAL = 510004;
+	final static int VIRTUAL_KEY_ADB_LEFT_SHOULDER = 510005;
+	final static int VIRTUAL_KEY_ADB_RIGHT_SHOULDER = 510006;
+
+	//============================================================================================
 	
+	// ADB Controller code
+
+	int mButtonA = 0;
+	int mButtonB = 0;
+	int mButtonX = 0;
+	int mButtonY = 0;
+	int mButtonStart = 0;
+	int mButtonSelect = 0;
+	int mButtonL1 = 0;
+	int mButtonR1 = 0;
+	int mPadUp = 0;
+	int mPadDown = 0;
+	int mPadLeft = 0;
+	int mPadRight = 0;
+	float mAxisX = 0;
+	float mAxisY = 0;
+	float mAxisZ = 0;
+	float mAxisRZ = 0;
+
+	class ExampleControllerListener implements com.bda.controller.ControllerListener
+	{
+		public void onKeyEvent(com.bda.controller.KeyEvent event)
+		{
+			switch(event.getKeyCode())
+				{
+				case com.bda.controller.KeyEvent.KEYCODE_BUTTON_A:
+					break;
+
+				case com.bda.controller.KeyEvent.KEYCODE_BUTTON_B:
+
+					break;
+
+				case com.bda.controller.KeyEvent.KEYCODE_BUTTON_X:
+					break;
+
+				case com.bda.controller.KeyEvent.KEYCODE_BUTTON_Y:
+					break;
+
+				case com.bda.controller.KeyEvent.KEYCODE_BUTTON_START:
+					break;
+
+				case com.bda.controller.KeyEvent.KEYCODE_BUTTON_SELECT:
+					break;
+
+				case com.bda.controller.KeyEvent.KEYCODE_BUTTON_L1:
+					nativeOnJoyPadButtons(VIRTUAL_KEY_ADB_LEFT_SHOULDER, event.getAction());
+					break;
+
+				case com.bda.controller.KeyEvent.KEYCODE_BUTTON_R1:
+					nativeOnJoyPadButtons(VIRTUAL_KEY_ADB_RIGHT_SHOULDER, event.getAction());
+					break;
+
+				case com.bda.controller.KeyEvent.KEYCODE_DPAD_UP:
+					break;
+
+				case com.bda.controller.KeyEvent.KEYCODE_DPAD_DOWN:
+					break;
+
+				case com.bda.controller.KeyEvent.KEYCODE_DPAD_LEFT:
+					break;
+
+				case com.bda.controller.KeyEvent.KEYCODE_DPAD_RIGHT:
+					break;
+				}
+		}
+		
+		public void onMotionEvent(com.bda.controller.MotionEvent event)
+		{
+			// read left analog stick
+			float lX = event.getAxisValue(com.bda.controller.MotionEvent.AXIS_X);
+			float lY = event.getAxisValue(com.bda.controller.MotionEvent.AXIS_Y);
+			float rX = event.getAxisValue(com.bda.controller.MotionEvent.AXIS_Z);
+			float rY = event.getAxisValue(com.bda.controller.MotionEvent.AXIS_RZ);
+			nativeOnJoyPad(lX, lY, rX, rY);
+		}
+		
+		public void onStateEvent(com.bda.controller.StateEvent event)
+		{
+		}
+	}
+
+
+	
+
+	
+	//================================================================================
 	
 	public int TranslateKeycodeToProtonVirtualKey(int keycode)
 	{
@@ -1223,6 +1344,8 @@ return m_szDevIDShort;
 	public GLSurfaceView mGLView;
 	public static native void nativeOnKey(int type, int keycode, int c);
 	public static native void nativeOnTrackball(float x, float y);
+	public static native void nativeOnJoyPad(float xL, float yL, float xR, float yR);
+	public static native void nativeOnJoyPadButtons(int key, int value);
 	public static native void nativeLaunchURL();
 	public static native void nativeOnAccelerometerUpdate(float x, float y, float z);
 	public static native void nativeSendGUIEx(int messageType, int parm1, int parm2, int finger);
