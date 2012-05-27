@@ -442,6 +442,9 @@ return m_szDevIDShort;
 	final static int VIRTUAL_KEY_VOLUME_UP = 500009;
 	final static int VIRTUAL_KEY_VOLUME_DOWN = 500010;
 	final static int VIRTUAL_KEY_SHIFT = 500011;
+	
+
+	
 	final static int VIRTUAL_KEY_TRACKBALL_DOWN = 500035;
 	final static int VIRTUAL_DPAD_BUTTON_LEFT = 500036; //square on xperia
 	final static int VIRTUAL_DPAD_BUTTON_UP = 500037; //triangle on xperia

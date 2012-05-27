@@ -26,6 +26,16 @@ extern "C"
 	{
 		AppOnTrackball(env, thiz, x, y);
 	}
+	// JAKE ADDED - DO NOT REMOVE - Machineworks requires this
+	JNIEXPORT void JNICALL Java_com_rtsoft_shared_SharedActivity_nativeOnJoyPadButtons(  JNIEnv*  env, jobject thiz, jint key, jint value)
+	{
+		AppOnJoypadButtons(env, thiz, key, value);
+	}
+	JNIEXPORT void JNICALL Java_com_rtsoft_shared_SharedActivity_nativeOnJoyPad(  JNIEnv*  env, jobject thiz, jfloat xL, jfloat yL, jfloat xR, jfloat yR)
+	{
+		AppOnJoypad(env, thiz, xL, yL, xR, yR);
+	}
+	// JAKE END
 	JNIEXPORT void JNICALL Java_com_rtsoft_shared_AppGLSurfaceView_nativePause( JNIEnv*  env )
 	{
 		AppPause(env);
