@@ -145,7 +145,7 @@ protected:
 	AudioHandle m_lastMusicID;
 	bool m_bVibrationDisabled;
 	string m_midiSoundBankFile; //only used by FMOD currently
-	float m_musicVol; //only used by FMOD currently.  0 means none, 1 means full blast
+	float m_musicVol; // 0 means none, 1 means full blast
 	bool m_bSoundEnabled;
 };
 
