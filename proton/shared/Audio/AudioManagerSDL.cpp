@@ -15,6 +15,34 @@
 #define C_CHANNEL_OFFSET_SO_ZERO_ISNT_USED 1
 
 
+class SoundObject
+{
+public:
+	SoundObject() :
+	    m_pSound(NULL),
+	    m_bIsLooping(false),
+	    m_pLastChannelToUse(AUDIO_HANDLE_BLANK)
+	{
+	}
+
+	~SoundObject()
+	{
+		Mix_FreeChunk(m_pSound);
+	}
+
+	Mix_Chunk *m_pSound;
+	string m_fileName;
+	bool m_bIsLooping;
+	int m_pLastChannelToUse;
+};
+
+static bool g_MusicHasFinished = false;
+
+void musicFinishedCallback()
+{
+	g_MusicHasFinished = true;
+}
+
 AudioManagerSDL::AudioManagerSDL()
 {
 	m_pMusicChannel = NULL;
@@ -80,6 +108,8 @@ bool AudioManagerSDL::Init()
 	// later we don't need to come and revisit this every time we add a new sound. 
 	Mix_AllocateChannels(NUM_CHANNELS);
 
+	Mix_HookMusicFinished(musicFinishedCallback);
+
 	return true;
 }
 
@@ -88,10 +118,8 @@ void AudioManagerSDL::KillCachedSounds(bool bKillMusic, bool bKillLooping, int i
 	LogMsg("Killing sound cache");
 	list<SoundObject*>::iterator itor = m_soundList.begin();
 
-
 	while (itor != m_soundList.end())
 	{
-
 		if (!bKillLooping && (*itor)->m_bIsLooping) 
 		{
 			itor++;
@@ -101,8 +129,7 @@ void AudioManagerSDL::KillCachedSounds(bool bKillMusic, bool bKillLooping, int i
 		if (!bKillSoundsPlaying)
 		{
 			//are any channels currently using this sound?
-
-			if ((*itor)->m_pLastChannelToUse-C_CHANNEL_OFFSET_SO_ZERO_ISNT_USED && IsPlaying( (AudioHandle)(*itor)->m_pLastChannelToUse-C_CHANNEL_OFFSET_SO_ZERO_ISNT_USED) )
+			if ((*itor)->m_pLastChannelToUse != AUDIO_HANDLE_BLANK && IsPlaying((AudioHandle)(*itor)->m_pLastChannelToUse))
 			{
 				itor++;
 				continue;
@@ -184,18 +211,6 @@ void AudioManagerSDL::Preload( string fName, bool bLooping /*= false*/, bool bIs
 
 	if (bIsMusic) return;//we don't preload music that way
 
-	if (bIsMusic && !GetMusicEnabled()) return; //ignoring because music is off right now
-
-
-	if (bIsMusic) 
-	{
-		m_lastMusicFileName = fName;
-		bForceStreaming = true;
-	}
-
-	string basePath;
-
-
 	SoundObject *pObject = GetSoundObjectByFileName( fName.c_str());
 
 	if (!pObject)
@@ -206,7 +221,7 @@ void AudioManagerSDL::Preload( string fName, bool bLooping /*= false*/, bool bIs
 
 		assert(! (GetFileExtension(fName) == "mp3") && "SDL mixer doesn't support mp3 for non music playback though");
 
-
+		string basePath;
 		if (bAddBasePath)
 		{
 			basePath = GetBaseAppPath();
@@ -237,8 +252,8 @@ AudioHandle AudioManagerSDL::Play( string fName, bool bLooping /*= false*/, bool
 	//LogMsg("********** AudioSDL: Thinking of playing %s, music=%d", fName.c_str(), int(bIsMusic));
 #endif
 
-	if (!GetSoundEnabled()) return 0;
-	if ( !GetMusicEnabled() && bIsMusic )
+	if (!GetSoundEnabled() && !bIsMusic) return AUDIO_HANDLE_BLANK;
+	if (!GetMusicEnabled() && bIsMusic)
 	{
 		m_bLastMusicLooping = bLooping;
 		m_lastMusicFileName = fName;
@@ -250,13 +265,9 @@ AudioHandle AudioManagerSDL::Play( string fName, bool bLooping /*= false*/, bool
 	{
 		return (AudioHandle) m_pMusicChannel;
 	}
-	if (bIsMusic)
-	{
-		StopMusic();
-	}
+
 	int loops = 0;
 	if (bLooping) loops = -1;
-
 
 	if (bIsMusic)
 	{
@@ -269,13 +280,6 @@ AudioHandle AudioManagerSDL::Play( string fName, bool bLooping /*= false*/, bool
 
 		m_lastMusicFileName = fName;
 
-		/*
-		if (GetFileExtension(fName) == "mp3")
-		{
-			fName = ModifyFileExtension(fName, "ogg");
-		}
-		*/
-		
 		StopMusic();
 		m_pMusicChannel = Mix_LoadMUS( (basePath+fName).c_str());
 
@@ -305,7 +309,6 @@ AudioHandle AudioManagerSDL::Play( string fName, bool bLooping /*= false*/, bool
 		}
 
 		return (AudioHandle) m_pMusicChannel;
-
 	}
 
 	//non music
@@ -320,7 +323,7 @@ AudioHandle AudioManagerSDL::Play( string fName, bool bLooping /*= false*/, bool
 		if (!pObject)
 		{
 			LogError("Unable to cache sound %s", fName.c_str());
-			return false;
+			return AUDIO_HANDLE_BLANK;
 
 		}
 	}
@@ -331,14 +334,13 @@ AudioHandle AudioManagerSDL::Play( string fName, bool bLooping /*= false*/, bool
 
 	//play it
 	
-	pObject->m_pLastChannelToUse = Mix_PlayChannel(-1, pObject->m_pSound, loops)+C_CHANNEL_OFFSET_SO_ZERO_ISNT_USED;
-
-	if (pObject->m_pLastChannelToUse == -1)
+	int channel = Mix_PlayChannel(-1, pObject->m_pSound, loops);
+	if (channel == -1)
 	{
-		//error
-
-		return false;
+		pObject->m_pLastChannelToUse = AUDIO_HANDLE_BLANK;
+		return AUDIO_HANDLE_BLANK;
 	}
+	pObject->m_pLastChannelToUse = channel + C_CHANNEL_OFFSET_SO_ZERO_ISNT_USED;
 
 	//need this because sometimes it's set to nothing by default??
 	SetVol(pObject->m_pLastChannelToUse, 1.0f);
@@ -355,7 +357,11 @@ AudioHandle AudioManagerSDL::Play( string fName, int vol, int pan /*= 0*/ )
 
 void AudioManagerSDL::Update()
 {
-	
+	if (g_MusicHasFinished)
+	{
+		g_MusicHasFinished = false;
+		StopMusic();
+	}
 }
 
 void AudioManagerSDL::Stop( AudioHandle soundID )
@@ -409,11 +415,9 @@ void AudioManagerSDL::SetMusicEnabled( bool bNew )
 		} else
 		{
 			//kill the music
-			
-				StopMusic();
+			StopMusic();
 		}
 	}
-
 }
 
 void AudioManagerSDL::StopMusic()
@@ -425,9 +429,13 @@ void AudioManagerSDL::StopMusic()
 	m_lastMusicID = AUDIO_HANDLE_BLANK;
 }
 
+void AudioManagerSDL::FadeOutMusic(unsigned int duration)
+{
+	Mix_FadeOutMusic(duration);
+}
+
 int AudioManagerSDL::GetMemoryUsed()
 {
-	
 	return 0;
 }
 
@@ -436,7 +444,6 @@ void AudioManagerSDL::SetFrequency( AudioHandle soundID, int freq )
 	assert(soundID);
 	//SDL::Channel *pChannel = (SDL::Channel*) soundID;
 	//pChannel->setFrequency(float(freq));
-
 }
 
 void AudioManagerSDL::SetPan( AudioHandle soundID, float pan )
@@ -486,7 +493,6 @@ void AudioManagerSDL::SetMusicVol(float vol )
 		Mix_VolumeMusic(ivol);
 	}
 	m_musicVol = vol;
-	
 }
 
 
