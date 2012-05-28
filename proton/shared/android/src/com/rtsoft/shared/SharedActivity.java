@@ -625,70 +625,141 @@ return m_szDevIDShort;
     
 	//************** SOUND STUFF *************
 
-    // JNI to play music, etc
-    public MediaPlayer _music = null;
-    public synchronized static void music_play(String fname)
+	// JNI to play music, etc
+	public MediaPlayer _music = null;
+	
+	private static class MusicFadeOutThread extends Thread {
+		private final int m_duration;
+
+		public MusicFadeOutThread(int duration)
+		{
+			super();
+			m_duration = duration;
+		}
+
+		public void run()
+		{
+			final int volumeChangeInterval = 100;  // change volume every this amount of ms
+			final int totalSteps = m_duration / volumeChangeInterval;
+			int remainingSteps = totalSteps;
+			
+			while (remainingSteps > 0)
+			{
+				synchronized (app._music)
+				{
+					float phase = (float)remainingSteps / (float)totalSteps;
+					app._music.setVolume(phase * m_lastMusicVol, phase * m_lastMusicVol);
+					remainingSteps--;
+				}
+				
+				try {
+					Thread.sleep(volumeChangeInterval);
+				} catch (InterruptedException ie)
+				{
+					return;
+				}
+			}
+
+			synchronized (app._music)
+			{
+				app._music.stop();
+				app._music.setVolume(m_lastMusicVol, m_lastMusicVol);
+			}
+		}
+	}
+	
+	private MusicFadeOutThread musicFadeOutThread = null;
+
+	public synchronized static void music_play(String fname)
 	{
 		if (app._music != null)
 		{
 			app._music.reset();
 		} else
 		{
-	       app._music = new MediaPlayer();
- 		}
-       // Log.v("music_play",fname);
-		 
+			app._music = new MediaPlayer();
+		}
+		
 		if (fname.charAt(0) == '/')
 		{
 			//load as raw, not an asset
-			   try { 
+			try { 
 				app._music.setDataSource(fname);
 				app._music.setLooping(true);
 				app._music.prepare();
+				music_set_volume(m_lastMusicVol);
 				app._music.start();
 			} catch(IOException e) 
 			{ 
-			Log.v("Can't load music (raw)", fname);
+				Log.v("Can't load music (raw)", fname);
 			}
 			catch(IllegalStateException e) 
-		{ 
-			Log.v("Can't load music (raw), illegal state", fname);
-			app._music.reset();
+			{ 
+				Log.v("Can't load music (raw), illegal state", fname);
+				app._music.reset();
 			}
 			return;
 		}
 
-        AssetManager am = app.getAssets();
-        try { 
-            AssetFileDescriptor fd = am.openFd(fname);
-            app._music.setDataSource(fd.getFileDescriptor(),fd.getStartOffset(),fd.getLength());
-            fd.close();
-            app._music.setLooping(true);
-            app._music.prepare();
-            app._music.start();
-        } catch(IOException e) 
+		AssetManager am = app.getAssets();
+		try { 
+			AssetFileDescriptor fd = am.openFd(fname);
+			app._music.setDataSource(fd.getFileDescriptor(),fd.getStartOffset(),fd.getLength());
+			fd.close();
+			app._music.setLooping(true);
+			app._music.prepare();
+			music_set_volume(m_lastMusicVol);
+			app._music.start();
+		} catch(IOException e) 
 		{ 
-		Log.v("Can't load music", fname);
+			Log.v("Can't load music", fname);
 		}
 		catch(IllegalStateException e) 
 		{ 
 			Log.v("Can't load music, illegal state", fname);
 			app._music.reset();
 		}
-    }
+	}
 
-    public synchronized static void music_stop() 
+	public synchronized static void music_stop() 
 	{
-        if (app._music == null) { return; }
-        app._music.stop();
-    }
+		if (app._music == null) { return; }
+		
+		if (app.musicFadeOutThread != null && app.musicFadeOutThread.isAlive()) {
+			try {
+				app.musicFadeOutThread.interrupt();
+				app.musicFadeOutThread.join();
+			} catch (InterruptedException ie)
+			{
+			}
+		}
+		
+		app._music.stop();
+	}
 	
+	public synchronized static void music_fadeout(int duration)
+	{
+		if (app._music == null || !app._music.isPlaying())
+		{
+			return;
+		}
+		
+		if (duration <= 0)
+		{
+			music_stop();
+		} else if (app.musicFadeOutThread == null || !app.musicFadeOutThread.isAlive())
+		{
+			app.musicFadeOutThread = new MusicFadeOutThread(duration);
+			app.musicFadeOutThread.start();
+		}
+	}
+
 	public synchronized static void music_set_volume(float v) 
 	{
-        if (app._music == null) { return; }
+		if (app._music == null) { return; }
 		m_lastMusicVol = v;
 		app._music.setVolume(v,v);
-    }
+	}
 
     public synchronized static void vibrate(int vibMS) 
 	{
@@ -781,18 +852,19 @@ return m_szDevIDShort;
         app._sounds.stop(streamID);
     }
 
-	  public static void sound_set_vol(int streamID, float left, float right ) 
+	public static void sound_set_vol(int streamID, float left, float right ) 
 	{
 		//Log.v("MSG", "setting sound vol: "+streamID);
 		//Log.v("Sound vol:", ""+left);
-        app._sounds.setVolume(streamID, left, right);
-    }
-		  public static void sound_set_rate(int streamID, float rate ) 
+		app._sounds.setVolume(streamID, left, right);
+	}
+	
+	public static void sound_set_rate(int streamID, float rate ) 
 	{
 		//Log.v("MSG", "Playing sound: "+soundID);
 		//Log.v("Sound vol:", ""+leftVol);
-        app._sounds.setRate(streamID, rate);
-    }
+		app._sounds.setRate(streamID, rate);
+	}
 
 	//****************************************
 

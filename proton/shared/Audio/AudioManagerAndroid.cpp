@@ -195,11 +195,9 @@ void AudioManagerAndroid::Preload( string fName, bool bLooping /*= false*/, bool
 
 AudioHandle AudioManagerAndroid::Play( string fName, bool bLooping /*= false*/, bool bIsMusic, bool bAddBasePath, bool bForceStreaming)
 {
+	if (!GetSoundEnabled() && !bIsMusic) return AUDIO_HANDLE_BLANK;
 
-
-	if (!GetSoundEnabled()) return AUDIO_HANDLE_BLANK;
-
-	if ( !GetMusicEnabled() && bIsMusic )
+	if (!GetMusicEnabled() && bIsMusic)
 	{
 		m_bLastMusicLooping = bLooping;
 		m_lastMusicFileName = fName;
@@ -397,6 +395,17 @@ void AudioManagerAndroid::StopMusic()
 		env->CallStaticVoidMethod(cls, mid);
 	}
 	
+}
+
+void AudioManagerAndroid::FadeOutMusic(unsigned int duration)
+{
+	JNIEnv *env = GetJavaEnv();
+	if (env)
+	{
+		jclass cls = env->FindClass(GetAndroidMainClassName());
+		jmethodID mid = env->GetStaticMethodID(cls, "music_fadeout", "(I)V");
+		env->CallStaticVoidMethod(cls, mid, jint(duration));
+	}
 }
 
 int AudioManagerAndroid::GetMemoryUsed()
