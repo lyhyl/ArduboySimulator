@@ -1068,18 +1068,20 @@ float AppGetLastOSMessageParm1(JNIEnv* env)
 // JAKE ADDED - MachineWorks needs this, so please leave.
 void AppOnJoypadButtons(JNIEnv* env, jobject jobj, jint key, jint value)
 {
+	//LogMsg("Received key %d, value %d", key, value);
 	GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_JOYPAD_BUTTONS, Variant(key, value, 0.0f));
 }
 
 void AppOnJoypad(JNIEnv* env, jobject jobj, jfloat xL, jfloat yL, jfloat xR, jfloat yR)
 {
-	//LogMsg("Got %.2f, %.2f", x, y);
+	//LogMsg("Got %.2f, %.2f", xL, yL);
 	VariantList vList(xL, yL, xR, yR);
 	GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_JOYPAD, vList);
 }
 
 void AppOnJoypadConnection(JNIEnv* env, jobject jobj, jint connect)
 {
+	//LogMsg("Received conect value %d", connect);
 	GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_JOYPAD_CONNECT, Variant(connect, 0.0f, 0.0f));
 }
 // Jake End

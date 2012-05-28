@@ -546,26 +546,25 @@ import android.view.View.OnClickListener;
 	public static String get_externaldir()
 	{
 		//directory of external storage
-	boolean mExternalStorageAvailable = false;
-	boolean mExternalStorageWriteable = false;
+		boolean mExternalStorageAvailable = false;
+		boolean mExternalStorageWriteable = false;
 
-		String state = Environment.getExternalStorageState();
-    if (Environment.MEDIA_MOUNTED.equals(state))
-	{
-        mExternalStorageAvailable = mExternalStorageWriteable = true;
-    } else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) 
-	{
-        mExternalStorageAvailable = true;
-        mExternalStorageWriteable = false;
-    } else 
-	{
-       // mExternalStorageAvailable = mExternalStorageWriteable = false;
-    }
+			String state = Environment.getExternalStorageState();
+		if (Environment.MEDIA_MOUNTED.equals(state))
+		{
+			mExternalStorageAvailable = mExternalStorageWriteable = true;
+		} else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) 
+		{
+			mExternalStorageAvailable = true;
+			mExternalStorageWriteable = false;
+		} else 
+		{
+		   // mExternalStorageAvailable = mExternalStorageWriteable = false;
+		}
 
-	if (mExternalStorageWriteable == false) return "";
+		if (mExternalStorageWriteable == false) return "";
 
-
-	return Environment.getExternalStorageDirectory().toString();
+		return Environment.getExternalStorageDirectory().toString();
 	}
 
 	// JNI used to get Save data dir
@@ -608,17 +607,18 @@ import android.view.View.OnClickListener;
             Build.TAGS.length()%10 + Build.TYPE.length()%10 +
             Build.USER.length()%10 ; //13 digits
 
-if (app.checkCallingOrSelfPermission("android.permission.READ_PHONE_STATE") == PackageManager.PERMISSION_GRANTED)
-{
-	TelephonyManager tm = (TelephonyManager) app.getSystemService(Context.TELEPHONY_SERVICE);
-	final String DeviceId, SerialNum;
-	DeviceId = tm.getDeviceId();
-	SerialNum = tm.getSimSerialNumber();
-	return m_szDevIDShort + DeviceId + SerialNum;
-} else
-{
-return m_szDevIDShort;
-}
+		if (app.checkCallingOrSelfPermission("android.permission.READ_PHONE_STATE") == PackageManager.PERMISSION_GRANTED)
+		{
+			TelephonyManager tm = (TelephonyManager) app.getSystemService(Context.TELEPHONY_SERVICE);
+			final String DeviceId, SerialNum;
+			DeviceId = tm.getDeviceId();
+			SerialNum = tm.getSimSerialNumber();
+			return m_szDevIDShort + DeviceId + SerialNum;
+		} 
+		else
+		{
+			return m_szDevIDShort;
+		}
 	}
 
   @Override
@@ -661,6 +661,19 @@ return m_szDevIDShort;
 		//sensorManager.registerListener(app, sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION), sensorManager.SENSOR_DELAY_GAME);
 	
 	}
+	
+	// Achievement handler (called from C++ class, and the actual handler is overriden in Main.java to do the actual app specific API call
+	public void FireAchievement(String achievement)
+	{
+		Log.v("Achievement", "Firing in Wrong instance");
+	}
+	 
+	// JNI to talk to Kiip
+    public static void HandleAchievement(String achievement)
+	{
+        Log.v("Achievement", "Unlocked value: "+achievement);
+		app.FireAchievement(achievement);
+    }
 	
 	/**
      * The listener that listen to events from the accelerometer listener
@@ -899,15 +912,13 @@ return m_szDevIDShort;
 		Log.v(app.PackageName, "Tapjoy loaded featured App..");
 		nativeSendGUIEx(MESSAGE_TYPE_TAPJOY_FEATURED_APP_READY, 1,0,0);
 	}
-	
-	
+
 	// Notifier for when there is an error or no featured app to display.
 	public void getFeaturedAppResponseFailed(String error)
 	{
 			Log.v(app.PackageName, "Displaying Featured App error: "+ error);
 		nativeSendGUIStringEx(MESSAGE_TYPE_TAPJOY_FEATURED_APP_READY, 0,0,0, error);
 	}
-
 
 	public void getDisplayAdResponse(View view)
 	{
@@ -938,7 +949,7 @@ return m_szDevIDShort;
 		app.adView.setLayoutParams(layout);
 		Log.v(app.PackageName, "adLinearLayout dimensions: " + app.mGLView.getMeasuredWidth() + "x" + app.mGLView.getMeasuredHeight());
 		nativeSendGUIEx(MESSAGE_TYPE_TAPJOY_AD_READY, (int)1,0,0);
-		}
+	}
 
 	public void getDisplayAdResponseFailed(String error)
 	{
@@ -946,7 +957,7 @@ return m_szDevIDShort;
 		
 //		update_text = true;
 //		displayText = "Display Ads: " + error;
-	nativeSendGUIEx(MESSAGE_TYPE_TAPJOY_AD_READY, 0,0,0);
+		nativeSendGUIEx(MESSAGE_TYPE_TAPJOY_AD_READY, 0,0,0);
 			
 		// We must use a handler since we cannot update UI elements from a different thread.
 		//mMainThreadHandler.post(mUpdateResults);
@@ -958,7 +969,7 @@ return m_szDevIDShort;
 	{
 		Log.i("${SMALL_PACKAGE_NAME}", "currencyName: " + currencyName);
 		Log.i("${SMALL_PACKAGE_NAME}", "pointTotal: " + pointTotal);
-			nativeSendGUIStringEx(MESSAGE_TYPE_TAPJOY_TAP_POINTS_RETURN, pointTotal,0,0, currencyName);
+		nativeSendGUIStringEx(MESSAGE_TYPE_TAPJOY_TAP_POINTS_RETURN, pointTotal,0,0, currencyName);
 	}
 	
 	// This method must be implemented if using the TapjoyConnect.getTapPoints() method.
@@ -967,7 +978,7 @@ return m_szDevIDShort;
 	{
 		Log.i("${SMALL_PACKAGE_NAME}", "getTapPoints error: " + error);
 	
-			nativeSendGUIStringEx(MESSAGE_TYPE_TAPJOY_TAP_POINTS_RETURN_ERROR, 0,0,0, error);
+		nativeSendGUIStringEx(MESSAGE_TYPE_TAPJOY_TAP_POINTS_RETURN_ERROR, 0,0,0, error);
 	}
 	
 	// Notifier for when spending virtual currency succeeds.
@@ -1353,7 +1364,6 @@ class AppGLSurfaceView extends GLSurfaceView
     // single touch version, works starting API4/??
     public synchronized boolean onTouchEvent(final MotionEvent e)
 	{
-      	
 		if (app.is_demo)
 		{
 			app.showDialog(0);
@@ -1362,7 +1372,8 @@ class AppGLSurfaceView extends GLSurfaceView
 		if (mMultiTouchClassAvailable) 
 		{
 			return WrapSharedMultiTouchInput.OnInput(e);
-		} else
+		} 
+		else
 		{
 			float x = e.getX(); float y = e.getY();
      		int finger = 0; //planning ahead for multi touch
@@ -1407,12 +1418,10 @@ class WrapSharedMultiTouchInput
    {
        return SharedMultiTouchInput.OnInput(e);
    }
-
 }
 
 class AppRenderer implements GLSurfaceView.Renderer 
 {
-    
 	public AppRenderer(SharedActivity _app)
 	{
 		app = _app;
@@ -1466,12 +1475,10 @@ class AppRenderer implements GLSurfaceView.Renderer
 
     public synchronized void onDrawFrame(GL10 gl)
     {
-    
 		if (m_timerLoopMS != 0)
 		{
 			while (m_gameTimer > SystemClock.uptimeMillis() || m_gameTimer > SystemClock.uptimeMillis()+m_timerLoopMS+1)
 			{
-		
 				//wait a bit - no exception catch needed for the SystemClock version of sleep
 				SystemClock.sleep(1); 
 			} 
@@ -1502,7 +1509,7 @@ class AppRenderer implements GLSurfaceView.Renderer
 		
 				case MESSAGE_SET_ACCELEROMETER_UPDATE_HZ: 
 					app.setup_accel(nativeGetLastOSMessageX());
-				break;
+					break;
 
 				case MESSAGE_SET_FPS_LIMIT: 
 					if (nativeGetLastOSMessageX() == 0)
@@ -1515,7 +1522,7 @@ class AppRenderer implements GLSurfaceView.Renderer
 					}
 				
 				//app.setup_accel(nativeGetLastOSMessageX());
-				break;
+					break;
 
 				case MESSAGE_FINISH_APP: 
 					Log.v(app.PackageName, "Finishing app from java side");
@@ -1530,9 +1537,9 @@ class AppRenderer implements GLSurfaceView.Renderer
 					// this pushes an event onto the UI/Event Thread from the GL thread
 					
 					//android.os.Process.killProcess(android.os.Process.myPid());
-				break;
+					break;
 
-		case MESSAGE_TAPJOY_GET_AD: 
+				case MESSAGE_TAPJOY_GET_AD: 
 					//#if defined(RT_TAPJOY_SUPPORT)
 						Log.v(app.PackageName, "Getting tapjoy ad");
 						TapjoyConnect.getTapjoyConnectInstance().setBannerAdSize(app.tapBannerSize);
@@ -1540,46 +1547,43 @@ class AppRenderer implements GLSurfaceView.Renderer
 					//#else
 						Log.v(app.PackageName, "ERROR: RT_TAPJOY_ENABLED isn't defined in Java project, you can't use it!");
 					//#endif
-			break;
+					break;
 	
 	//#if defined(RT_TAPJOY_SUPPORT)
 	
-			case MESSAGE_TAPJOY_GET_FEATURED_APP:
+				case MESSAGE_TAPJOY_GET_FEATURED_APP:
 					Log.v(app.PackageName, "Getting tapjoy feature");
 					TapjoyConnect.getTapjoyConnectInstance().getFeaturedApp(app);
 					break;
 
-			case MESSAGE_TAPJOY_SHOW_FEATURED_APP:
+				case MESSAGE_TAPJOY_SHOW_FEATURED_APP:
 					Log.v(app.PackageName, "show tapjoy feature");
 					TapjoyConnect.getTapjoyConnectInstance().showFeaturedAppFullScreenAd();
 					break;
 		
+				case MESSAGE_TAPJOY_GET_TAP_POINTS:
+					Log.v(app.PackageName, "Getting tapjoy points");
+					TapjoyConnect.getTapjoyConnectInstance().getTapPoints(app);
+					break;
 			
-			case MESSAGE_TAPJOY_GET_TAP_POINTS:
-				Log.v(app.PackageName, "Getting tapjoy points");
-				TapjoyConnect.getTapjoyConnectInstance().getTapPoints(app);
-			break;
-		
-			case MESSAGE_TAPJOY_SPEND_TAP_POINTS:
+				case MESSAGE_TAPJOY_SPEND_TAP_POINTS:
 					Log.v(app.PackageName, "Spending tappoints: " + nativeGetLastOSMessageParm1());
 					TapjoyConnect.getTapjoyConnectInstance().spendTapPoints(nativeGetLastOSMessageParm1(), app);
+					break;	
 				
-			break;	
-			
-			case MESSAGE_TAPJOY_AWARD_TAP_POINTS:
+				case MESSAGE_TAPJOY_AWARD_TAP_POINTS:
 					TapjoyConnect.getTapjoyConnectInstance().awardTapPoints(nativeGetLastOSMessageParm1(), app);
-						
-			break;
-			
-			case MESSAGE_TAPJOY_SHOW_OFFERS:
-					// This will show Offers web view from where you can download the latest offers.
-					// Note: If you want to provide your own publisher id then use following method to show offer web view:
-					//		TapjoyOffers.getTapjoyOffersInstance().showOffers(this, "provide here publisher id");
-					TapjoyConnect.getTapjoyConnectInstance().showOffers();
-			break;
-			
-			case MESSAGE_TAPJOY_SHOW_AD:
+					break;
 				
+				case MESSAGE_TAPJOY_SHOW_OFFERS:
+						// This will show Offers web view from where you can download the latest offers.
+						// Note: If you want to provide your own publisher id then use following method to show offer web view:
+						//		TapjoyOffers.getTapjoyOffersInstance().showOffers(this, "provide here publisher id");
+					TapjoyConnect.getTapjoyConnectInstance().showOffers();
+					break;
+				
+				case MESSAGE_TAPJOY_SHOW_AD:
+					
 					app.tapjoy_ad_show = (int)nativeGetLastOSMessageX();
 					Log.v(app.PackageName, "Showing tapjoy ad, parm is: " + app.tapjoy_ad_show);
 					TapjoyConnect.getTapjoyConnectInstance().enableBannerAdAutoRefresh(app.tapjoy_ad_show != 0);
@@ -1587,52 +1591,45 @@ class AppRenderer implements GLSurfaceView.Renderer
 					app.update_display_ad = true;
 					// We must use a handler since we cannot update UI elements from a different thread.
 					app.mMainThreadHandler.post(app.mUpdateMainThread);
-
 					break;
-	
-	case MESSAGE_REQUEST_AD_SIZE:
-	app.adBannerWidth = (int)nativeGetLastOSMessageX();
-	app.adBannerHeight = (int)nativeGetLastOSMessageY();
-	
-	app.adBannerWidth = 480;
-	app.adBannerHeight = 72;
-	
-	app.tapBannerSize = app.adBannerWidth+"x"+app.adBannerHeight;		
-		Log.v(app.PackageName, "Setting tapjoy banner size to " + app.tapBannerSize);
-
-	break;
+		
+				case MESSAGE_REQUEST_AD_SIZE:
+					app.adBannerWidth = (int)nativeGetLastOSMessageX();
+					app.adBannerHeight = (int)nativeGetLastOSMessageY();
+				
+					app.adBannerWidth = 480;
+					app.adBannerHeight = 72;
+				
+					app.tapBannerSize = app.adBannerWidth+"x"+app.adBannerHeight;		
+					Log.v(app.PackageName, "Setting tapjoy banner size to " + app.tapBannerSize);
+					break;
 	
 		//#endif
 			
-			case MESSAGE_IAP_PURCHASE:
-			    
-			    String parm = nativeGetLastOSMessageString();
-			    	//Log.v(app.PackageName, "Buying "+parm);
-				
-				  if (!app.mBillingService.requestPurchase(parm, "")) 
-				  {
+				case MESSAGE_IAP_PURCHASE:
+					
+					String parm = nativeGetLastOSMessageString();
+						//Log.v(app.PackageName, "Buying "+parm);
+					
+					if (!app.mBillingService.requestPurchase(parm, "")) 
+					{
 					   Log.d(app.PackageName, "requestPurchase>> Billing not supported?!");
-		    		   SharedActivity.nativeSendGUIEx(app.MESSAGE_TYPE_IAP_RESULT, ResponseCode.RESULT_BILLING_UNAVAILABLE.ordinal(),0,0);
-	
-				  }
-			break;
-			
+					   SharedActivity.nativeSendGUIEx(app.MESSAGE_TYPE_IAP_RESULT, ResponseCode.RESULT_BILLING_UNAVAILABLE.ordinal(),0,0);
+
+					}
+					break;
+				
 				case MESSAGE_IAP_GET_PURCHASED_LIST:
-			             	app.mBillingService.restoreTransactions();
-			break;
-		
+					app.mBillingService.restoreTransactions();
+					break;
 			
 				case MESSAGE_HOOKED_SHOW_RATE_DIALOG:
 					Log.v(app.PackageName, "Launching hooked");
-					
 					app.run_hooked = true;
 					app.mMainThreadHandler.post(app.mUpdateMainThread);
-
-				break;
+					break;
 				
 				default:
-
-				
 					Log.v("Unhandled","Unhandled OS message");
 			}
 		}
