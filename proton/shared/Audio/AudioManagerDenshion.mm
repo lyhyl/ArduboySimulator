@@ -8,13 +8,20 @@
 #include <AVFoundation/AVFoundation.h>
 #endif
 
+#include "BaseApp.h"
+
 AVAudioPlayer * m_bgMusicPlayer;
 
 
-AudioManagerDenshion::AudioManagerDenshion()
+AudioManagerDenshion::AudioManagerDenshion() :
+	m_musicFadeOutInProgress(false),
+	m_musicFadeOutStartTime(0),
+	m_musicFadeOutDuration(0)
 {
 	m_bgMusicPlayer = NULL;
 	m_bDisabledMusicRecently = false;
+	
+	m_lastMusicID = (AudioHandle)-2;
 }
 
 AudioManagerDenshion::~AudioManagerDenshion()
@@ -95,13 +102,11 @@ void AudioManagerDenshion::DestroyAudioCache()
 
 void AudioManagerDenshion::Stop(AudioHandle id)
 {
-
 	[[SimpleAudioEngine sharedEngine]stopEffect: id];
 }
 
 void AudioManagerDenshion::Preload(string fName, bool bLooping, bool bIsMusic, bool bAddBasePath , bool bForceStreaming)
 {
- 
 	if (bIsMusic)
 	{
 		assert(!"We don't have that yet..");
@@ -141,7 +146,7 @@ AudioHandle AudioManagerDenshion::Play( string fName, bool bLooping /*= false*/,
 	LogMsg("Playing %s", fName.c_str());
 	#endif
 
-	if (!m_bSoundEnabled) return AUDIO_HANDLE_BLANK;
+	if (!GetSoundEnabled() && !bIsMusic) return AUDIO_HANDLE_BLANK;
 
     string basePath;
     
@@ -152,10 +157,8 @@ AudioHandle AudioManagerDenshion::Play( string fName, bool bLooping /*= false*/,
     
 	if (bIsMusic)
 	{
-		
 		if (!GetMusicEnabled()) 
 		{
-			
 			m_lastMusicFileName = fName;
 			m_bLastMusicLooping = bLooping;
 
@@ -165,17 +168,15 @@ LogMsg("Music disabled, pretending to play");
 			return AUDIO_HANDLE_BLANK;
 		}
 		
-		
 		if (m_lastMusicFileName == fName && m_bLastMusicLooping == true && !m_bDisabledMusicRecently)
 		{
 			//it's already playing!
 			#ifdef _DEBUG
 			LogMsg("Seems to already be playing");
 			#endif
-			return AUDIO_HANDLE_BLANK;
+			return m_lastMusicID;
 		}
 		
-	
 		NSString *soundFile =  [NSString stringWithCString:  (basePath+fName).c_str() encoding: [NSString defaultCStringEncoding]];
 	
 		if (m_bgMusicPlayer)
@@ -185,52 +186,36 @@ LogMsg("Music disabled, pretending to play");
  			 m_bgMusicPlayer = NULL;
 		}
 		
-		m_bgMusicPlayer = [AVAudioPlayer alloc ];
+		m_bgMusicPlayer = [AVAudioPlayer alloc];
 		
 		[m_bgMusicPlayer initWithContentsOfURL: [NSURL fileURLWithPath:soundFile] error:nil];
 		if (bLooping)
 		{
 			m_bgMusicPlayer.numberOfLoops = -1;
 		}
-
-	m_lastMusicFileName = fName;
-	m_bLastMusicLooping = bLooping;
-	m_bDisabledMusicRecently = false;
+		
+		m_lastMusicFileName = fName;
+		m_bLastMusicLooping = bLooping;
+		m_bDisabledMusicRecently = false;
 		m_bgMusicPlayer.volume = m_musicVol;
-	[m_bgMusicPlayer prepareToPlay];
-
-	// when you want to play the file
-
-	[m_bgMusicPlayer play];
+		[m_bgMusicPlayer prepareToPlay];
+		[m_bgMusicPlayer play];
 		
-		
-	return AUDIO_HANDLE_BLANK;
+		return m_lastMusicID;
 	}
 
 	UInt32 soundId = AUDIO_HANDLE_BLANK;
 
-	//AudioObjectOS *pAudio = GetAudioObjectByFileName(fName, bLooping);
-	//if (!pAudio) return soundId;
-
-	//soundId = pAudio->m_id;
-
-	//AudioServicesPlaySystemSound(soundId);
-	
 	NSString *soundFile =  [NSString stringWithCString:  (basePath+fName).c_str() encoding: [NSString defaultCStringEncoding]];
-	
-	//soundId = [[SimpleAudioEngine sharedEngine] playEffect: soundFile];
 	
 	soundId = [[SimpleAudioEngine sharedEngine] playEffect: soundFile pitch:1.0f pan:0.0f gain:1.0f loop:bLooping];
 	return soundId;
 }
 
-
 void AudioManagerDenshion::Kill()
 {
 	DestroyAudioCache();
-	
 }
-
 
 void AudioManagerDenshion::SetMusicEnabled( bool bNew )
 {
@@ -239,56 +224,96 @@ void AudioManagerDenshion::SetMusicEnabled( bool bNew )
 		AudioManager::SetMusicEnabled(bNew);
 		if (!bNew)
 		{
-		
-		//music has been disabled
-		 if (m_bgMusicPlayer)
-		 {
-			 [m_bgMusicPlayer stop];
-			 [m_bgMusicPlayer release];
-			 m_bgMusicPlayer = NULL;
-			 m_bDisabledMusicRecently = true;
-			 
-		 }
-
-			m_lastMusicID = AUDIO_HANDLE_BLANK;
-		 
+			//music has been disabled
+			if (m_bgMusicPlayer)
+			{
+				[m_bgMusicPlayer stop];
+				[m_bgMusicPlayer release];
+				m_bgMusicPlayer = NULL;
+				m_bDisabledMusicRecently = true;
+			}
 		} else
 		{
-		
-		//turn music back on?
-		
+			//turn music back on?
 			if (!m_lastMusicFileName.empty())
 			{
 				Play(m_lastMusicFileName, m_bLastMusicLooping, true);
 			}
 			m_bDisabledMusicRecently = true;
 		}
-		
 	}
 }
 
 void AudioManagerDenshion::StopMusic()
 {
-		
-		LogMsg("Killing music..");
-		
-		if (m_bgMusicPlayer)
-		{
-			LogMsg("bgMusicPlayer was active, killing it");
-			[m_bgMusicPlayer stop];
-			[m_bgMusicPlayer release];
- 			 m_bgMusicPlayer = NULL;
- 			 
- 		
-		}
-		
-		 	m_lastMusicFileName = "";
-			m_bLastMusicLooping = false;
-			m_lastMusicID = AUDIO_HANDLE_BLANK;
-			m_bDisabledMusicRecently = false;
+	LogMsg("Killing music..");
 	
+	if (m_bgMusicPlayer)
+	{
+		LogMsg("bgMusicPlayer was active, killing it");
+		[m_bgMusicPlayer stop];
+		[m_bgMusicPlayer release];
+		m_bgMusicPlayer = NULL;
+		
+		m_musicFadeOutInProgress = false;
+	}
+	
+	m_lastMusicFileName = "";
+	m_bLastMusicLooping = false;
+	m_bDisabledMusicRecently = false;
 }
 
+void AudioManagerDenshion::Update()
+{
+	if (m_musicFadeOutInProgress)
+	{
+		unsigned int now = GetBaseApp()->GetGameTick();
+		
+		if (now - m_musicFadeOutStartTime >= m_musicFadeOutDuration)
+		{
+			StopMusic();
+			m_musicFadeOutInProgress = false;
+		} else
+		{
+			if (now - m_musicFadeOutPreviouslySetTime >= 100)
+			{
+				float phase = 1.0f - (float(now - m_musicFadeOutStartTime) / float(m_musicFadeOutDuration));
+				m_bgMusicPlayer.volume = phase * m_musicVol;
+				m_musicFadeOutPreviouslySetTime = now;
+			}
+		}
+	}
+}
+
+void AudioManagerDenshion::FadeOutMusic(unsigned int duration)
+{
+	if (m_bgMusicPlayer == NULL)
+	{
+		return;
+	}
+	
+	if (duration == 0)
+	{
+		StopMusic();
+		return;
+	}
+	
+	m_musicFadeOutInProgress = true;
+	m_musicFadeOutDuration = duration;
+	m_musicFadeOutStartTime = GetBaseApp()->GetGameTick();
+	m_musicFadeOutPreviouslySetTime = m_musicFadeOutStartTime;
+}
+
+bool AudioManagerDenshion::IsPlaying(AudioHandle soundID)
+{
+	if (soundID == m_lastMusicID)
+	{
+		return m_bgMusicPlayer != NULL;
+	}
+	
+	// FIXME report the correct playing status for sound effects
+	return false;
+}
 
 void AudioManagerDenshion::SetVol( AudioHandle soundID, float vol )
 {
@@ -316,7 +341,6 @@ void AudioManagerDenshion::SetVol( AudioHandle soundID, float vol )
 
 void AudioManagerDenshion::SetMusicVol(float vol )
 {
-	
 	//CDSoundEngine *sndEng = [[SimpleAudioEngine sharedEngine]  getSoundEngine];
 	if (m_bgMusicPlayer)
 	{

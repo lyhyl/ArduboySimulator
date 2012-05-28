@@ -30,12 +30,21 @@ public:
 	virtual void SetMusicEnabled( bool bNew );
 	virtual void Vibrate(int duration = 300);
 	virtual void StopMusic();
+	virtual void Update();
+	virtual void FadeOutMusic(unsigned int duration = 1000);
+	virtual bool IsPlaying(AudioHandle soundID);
 	virtual void SetVol( AudioHandle soundID, float vol );
 	virtual void SetMusicVol(float vol );
 
 protected:
 	void DestroyAudioCache();
 	bool m_bDisabledMusicRecently;
+	
+	bool m_musicFadeOutInProgress;
+	unsigned int m_musicFadeOutStartTime;
+	unsigned int m_musicFadeOutDuration;
+	unsigned int m_musicFadeOutPreviouslySetTime;
+	
 };
 
 #endif // AudioManagerDenshion_h__
