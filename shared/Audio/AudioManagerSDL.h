@@ -16,32 +16,7 @@
 
 #include "SDL_mixer.h"
 
-class SoundObject
-{
-public:
-
-	SoundObject()
-	{
-		m_pSound = NULL;
-		m_bIsLooping = false;
-		m_pLastChannelToUse = 0;
-	}
-
-	~SoundObject()
-	{
-		if (m_pSound)
-		{
-			Mix_FreeChunk(m_pSound);
-			m_pSound = NULL;
-			m_pLastChannelToUse = 0;
-		}
-	}
-
-	Mix_Chunk *m_pSound;
-	string m_fileName;
-	bool m_bIsLooping;
-	int m_pLastChannelToUse;
-};
+class SoundObject;
 
 class AudioManagerSDL: public AudioManager
 {
@@ -59,7 +34,6 @@ public:
 
 	virtual void Preload(string fName, bool bLooping = false, bool bIsMusic = false, bool bAddBasePath = true, bool bForceStreaming = false);
 
-	SoundObject * GetSoundObjectByFileName(string fName);
 	virtual void KillCachedSounds(bool bKillMusic, bool bKillLooping, int ignoreSoundsUsedInLastMS, int killSoundsLowerPriorityThanThis, bool bKillSoundsPlaying);
 	virtual void Update();
 	virtual void Stop(AudioHandle soundID);
@@ -67,8 +41,8 @@ public:
 	virtual bool IsPlaying(AudioHandle soundID);
 	virtual void SetMusicEnabled(bool bNew);
 	virtual void StopMusic();
+	virtual void FadeOutMusic(unsigned int duration = 1000);
 	virtual int GetMemoryUsed();
-	bool DeleteSoundObjectByFileName(string fName);
 	virtual void SetFrequency(AudioHandle soundID, int freq);
 	virtual void SetPan(AudioHandle soundID, float pan); //0 is normal stereo, -1 is all left, +1 is all right
 	virtual void SetVol(AudioHandle soundID, float vol);
@@ -78,16 +52,14 @@ public:
 	virtual void SetMusicVol(float vol);
 
 private:
+	SoundObject * GetSoundObjectByFileName(string fName);
+	bool DeleteSoundObjectByFileName(string fName);
 
 	list<SoundObject*> m_soundList;
 	Mix_Music *m_pMusicChannel;
 
-protected:
-
-
-private:
 };
 
 
+#endif // defined RT_WEBOS || defined RT_USE_SDL_AUDIO
 #endif // AudioManagerSDL_h__
-#endif
