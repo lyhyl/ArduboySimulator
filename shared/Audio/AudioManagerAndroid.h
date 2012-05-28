@@ -73,6 +73,7 @@ public:
 	virtual bool IsPlaying(AudioHandle soundID);
 	virtual void SetMusicEnabled(bool bNew);
 	virtual void StopMusic();
+	virtual void FadeOutMusic(unsigned int duration = 1000);
 	virtual int GetMemoryUsed();
 	bool DeleteSoundObjectByFileName(string fName);
 	virtual void SetFrequency(AudioHandle soundID, int freq);
