@@ -234,15 +234,15 @@ AudioHandle AudioManagerAndroid::Play( string fName, bool bLooping /*= false*/, 
 		{
 			fName = ModifyFileExtension(fName, "ogg");
 		} else
-			if (GetFileExtension(fName) == "wav")
+		if (GetFileExtension(fName) == "wav")
+		{
+			fName = ModifyFileExtension(fName, "ogg");
+			if (!FileExists(fName))
 			{
-				fName = ModifyFileExtension(fName, "ogg");
-				if (!FileExists(fName))
-				{
-					//well, fooey.  change it back
-					fName = ModifyFileExtension(fName, "wav");
-				}
+				//well, fooey.  change it back
+				fName = ModifyFileExtension(fName, "wav");
 			}
+		}
 
 		JNIEnv *env = GetJavaEnv();
 		if (env)
@@ -251,10 +251,10 @@ AudioHandle AudioManagerAndroid::Play( string fName, bool bLooping /*= false*/, 
 			jclass cls = env->FindClass(GetAndroidMainClassName());
 			jmethodID mid = env->GetStaticMethodID(cls,
 				"music_play",
-				"(Ljava/lang/String;)V");
+				"(Ljava/lang/String;Z)V");
 			jstring mystr = env->NewStringUTF((basePath+fName).c_str());
 
-			env->CallStaticVoidMethod(cls, mid, mystr);
+			env->CallStaticVoidMethod(cls, mid, mystr, jboolean(bLooping));
 		}
 
 	
