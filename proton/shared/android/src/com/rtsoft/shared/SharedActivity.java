@@ -670,7 +670,7 @@ return m_szDevIDShort;
 	
 	private MusicFadeOutThread musicFadeOutThread = null;
 
-	public synchronized static void music_play(String fname)
+	public synchronized static void music_play(String fname, boolean looping)
 	{
 		if (app._music != null)
 		{
@@ -685,7 +685,7 @@ return m_szDevIDShort;
 			//load as raw, not an asset
 			try { 
 				app._music.setDataSource(fname);
-				app._music.setLooping(true);
+				app._music.setLooping(looping);
 				app._music.prepare();
 				music_set_volume(m_lastMusicVol);
 				app._music.start();
@@ -706,7 +706,7 @@ return m_szDevIDShort;
 			AssetFileDescriptor fd = am.openFd(fname);
 			app._music.setDataSource(fd.getFileDescriptor(),fd.getStartOffset(),fd.getLength());
 			fd.close();
-			app._music.setLooping(true);
+			app._music.setLooping(looping);
 			app._music.prepare();
 			music_set_volume(m_lastMusicVol);
 			app._music.start();
