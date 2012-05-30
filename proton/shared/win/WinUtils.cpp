@@ -74,6 +74,10 @@ string GetAppCachePath()
 	return "";
 }
 
+void FireAchievement(std::string achievement)
+{
+}
+
 void LaunchURL(string url)
 {
 	//LogMsg("Launching %s", url.c_str());
@@ -330,6 +334,40 @@ void GetDateAndTime(int *monthOut, int *dayOut, int *yearOut, int *hourOut, int 
 	*hourOut = today.tm_hour;
 	*minOut = today.tm_min;
 	*secOut = today.tm_sec;
+}
+
+bool LaterThanNow(const int year, const int month, const int day)
+{
+	int nowyear, nowmonth, nowday, nowhour, nowmin, nowsec;
+	GetDateAndTime(&nowmonth, &nowday, &nowyear, &nowhour, &nowmin, &nowsec);
+	LogMsg("Comparing against date year %d, month %d, day %d", nowyear, nowmonth, nowday);
+	if (nowyear < year )
+	{
+		return false;
+	}
+	if (nowyear > year )
+	{
+		return true;
+	}
+	// year must be equal
+	if (nowmonth < month )
+	{
+		return false;
+	}
+	if (nowmonth > month )
+	{
+		return true;
+	}
+	// month must be equal
+	if (nowday < day )
+	{
+		return false;
+	}
+	if (nowday > day )
+	{
+		return true;
+	}
+	return false;
 }
 
 bool RTCreateDirectory(const std::string &dir_name)

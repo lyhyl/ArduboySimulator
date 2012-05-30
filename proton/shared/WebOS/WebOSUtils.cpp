@@ -154,6 +154,10 @@ eDeviceMemoryClass GetDeviceMemoryClass()
 #endif
 }
 
+bool LaterThanNow(const int year, const int month, const int day)
+{
+	return false;
+}
 
 unsigned int GetSystemTimeTick()
 {
