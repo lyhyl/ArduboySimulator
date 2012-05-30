@@ -104,7 +104,13 @@ enum eVirtualKeys
 	VIRTUAL_DPAD_HAT_DOWN,
 	VIRTUAL_DPAD_HAT_LEFT,
 
-	VIRTUAL_KEY_CUSTOM_START = 510000 //if you add your own, do it after this
+	VIRTUAL_KEY_CUSTOM_START = 510000, //if you add your own, do it after this
+	VIRTUAL_KEY_ADB_LEFT_JOY_HORIZONTAL,
+	VIRTUAL_KEY_ADB_LEFT_JOY_VERTICAL,
+	VIRTUAL_KEY_ADB_RIGHT_JOY_HORIZONTAL,
+	VIRTUAL_KEY_ADB_RIGHT_JOY_VERTICAL,
+	VIRTUAL_KEY_ADB_LEFT_SHOULDER,
+	VIRTUAL_KEY_ADB_RIGHT_SHOULDER,
 };
 
 enum eVirtualKeyInfo
@@ -156,8 +162,9 @@ enum eMessageType
 	MESSAGE_TYPE_TAPJOY_EARNED_TAP_POINTS,
 	MESSAGE_TYPE_GUI_JOYPAD_BUTTONS, //For Jake's android gamepad input
 	MESSAGE_TYPE_GUI_JOYPAD, //For Jake's android gamepad input
+	MESSAGE_TYPE_GUI_JOYPAD_CONNECT, // For Jakes android gamepad input
 
-	MESSAGE_USER = 1000 //users can add their own messages starting here
+	MESSAGE_USER = 1000, //users can add their own messages starting here
 
 };
 

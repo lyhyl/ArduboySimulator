@@ -317,6 +317,11 @@ int GetSystemData()
 	
 	return C_PIRATED_NO;
 }
+
+bool LaterThanNow(const int year, const int month, const int day)
+{
+	return false;
+}
 	
 unsigned int GetSystemTimeTick()
 {

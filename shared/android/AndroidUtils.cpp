@@ -367,6 +367,45 @@ eDeviceMemoryClass GetDeviceMemoryClass()
 	return C_DEVICE_MEMORY_CLASS_2;
 }
 
+bool LaterThanNow(const int year, const int month, const int day)
+{
+	struct timeval  nowSecs;
+    gettimeofday(&nowSecs, NULL);
+	time_t  nowtime = nowSecs.tv_sec;
+	struct tm *now = localtime(&nowtime);
+	now->tm_year += 1900;
+	now->tm_mon ++;
+	LogMsg("Comparing against date year %d, month %d, day %d", now->tm_year, now->tm_mon, now->tm_mday);
+
+	if (now->tm_year< year )
+	{
+		return false;
+	}
+	if (now->tm_year> year )
+	{
+		return true;
+	}
+	// year must be equal
+	if (now->tm_mon < month )
+	{
+		return false;
+	}
+	if (now->tm_mon > month )
+	{
+		return true;
+	}
+	// month must be equal
+	if (now->tm_mday < day )
+	{
+		return false;
+	}
+	if (now->tm_mday > day )
+	{
+		return true;
+	}
+	return false;
+}
+
 unsigned int GetSystemTimeTick()
 {
 

@@ -97,10 +97,12 @@ std::string GetSavePath();
 std::string GetAppCachePath(); //on iPhone, returns path to save user data that isn't backed up, on Android, returns external sd card path or "" if not available
 void CreateAppCacheDirIfNeeded();
 
+bool LaterThanNow(const int year, const int month, const int day);
 unsigned int GetSystemTimeTick();
 double GetSystemTimeAccurate();
 unsigned int GetFreeMemory();
 void LaunchURL(std::string url);
+void FireAchievement(std::string achievement);
 void LogMsg(const char *lpFormat, ...);
 void LogError (const char* traceStr, ... );
 void SetLastStringInput(std::string s);
