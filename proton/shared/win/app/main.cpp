@@ -6,6 +6,10 @@
 #include "WebOS/SDLMain.h"
 #include "BaseApp.h"
 
+#ifdef RT_FLASH_TEST
+	#include "flash/app/cpp/GLFlashAdaptor.h"
+#endif
+
 #ifndef RT_WEBOS
 	#include <direct.h>
 #endif
@@ -1069,10 +1073,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 	}
 	*/
 
+#ifdef RT_FLASH_TEST
+	GLFlashAdaptor_Initialize();
+#endif
+
 	if (!InitVideo(GetPrimaryGLX(), GetPrimaryGLY(), false, 0))
 	{
 		goto cleanup;
 	}
+
+
 
 	if (!GetBaseApp()->Init())
 	{
@@ -1080,6 +1090,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 		MessageBox(NULL, "Error initializing the game.  Did you unzip everything right?", "Unable to load stuff", NULL);
 		goto cleanup;
 	}
+
+
 
 #ifdef C_GL_MODE
 	if (!g_glesExt.InitExtensions())
@@ -1165,10 +1177,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 				GetBaseApp()->Draw();
 
 				g_bHasFocus = true;
+				
+				if (g_bIsMinimized) goto skipRender; //we don't need to re-init anything, we're just minimized
+
 				GetBaseApp()->OnEnterBackground();
 				GetBaseApp()->m_sig_unloadSurfaces();
 #ifdef C_GL_MODE
-
 				DestroyVideo(false);
 			
 				g_bHasFocus = false;
@@ -1177,7 +1191,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 					MessageBox(NULL, "Error changing video mode", "Error", NULL);
 					goto cleanup;
 				}
-
 #else
 				LogMsg("Ignoring SET_VIDEO_MODE, only setup to work with normal GL, not GLES");
 #endif

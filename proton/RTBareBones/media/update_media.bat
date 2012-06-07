@@ -1,5 +1,5 @@
-:You don't have to make media for this example, otherwise it will delete your bin/interface directory, but I want this on svn so it's easy to build this most simple example, even for
-:people who don't have windows to make the font.
+echo You don't have to make media for this example, otherwise it will delete your bin/interface directory, but I want this on svn so it's easy to build this most simple example, even for
+echo people who don't have windows to make the font.
 
 pause
 
@@ -18,9 +18,9 @@ REM Process our images and textures and copy them into the bin directory
 
 REM -pvrtc4 for compressed, -pvrt4444 or -pvrt8888 (32 bit)  for uncompressed
 
-cd game
-for /r %%f in (*.bmp *.png) do ..\%PACK_EXE%  -pvrt8888 %%f
-cd ..
+:cd game
+:for /r %%f in (*.bmp *.png) do ..\%PACK_EXE%  -pvrt8888 %%f
+:cd ..
 
 cd interface
 for /r %%f in (*.bmp *.png) do ..\%PACK_EXE%  -pvrt8888 %%f
@@ -41,6 +41,9 @@ REM copy the stuff we care about
 
 mkdir ..\bin\interface
 xcopy interface ..\bin\interface /E /F /Y /EXCLUDE:exclude.txt
+
+:Special case, delete the .rttex, for this one example, we only want a .bmp there
+del ..\bin\interface\test.rttex
 
 REM Convert everything to lowercase, otherwise the iphone will choke on the files
 REM for /r %%f in (*.*) do ..\media\LowerCase.bat  %%f
