@@ -383,7 +383,7 @@ bool Surface::LoadRTTexture(byte *pMem)
 			} else
 			{
 
-#ifdef C_GL_MODE
+#if defined(C_GL_MODE) || defined(RT_GLES_ADAPTOR_MODE)
 
 				assert(!"You cannot use PVR compressed textures in GL mode!");
 #else
@@ -733,7 +733,6 @@ void Surface::Blit( float x, float y, unsigned int rgba, float rotationDegrees, 
 		CHECK_GL_ERROR();
 
 		assert((rgba&0xFF)*256 != 0 && "Why send something with zero alpha?");
-		
 	
 		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 		CHECK_GL_ERROR();

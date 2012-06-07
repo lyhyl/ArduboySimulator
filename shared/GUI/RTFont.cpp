@@ -59,7 +59,6 @@ return;
 
 bool RTFont::Load( string fileName )
 {
-	
 	m_kerningMap.clear();
 	m_chars.clear();
 	m_fontStates.clear();
@@ -284,6 +283,11 @@ void RTFont::DrawScaled( float x, float y, const string &text, float scale /*= 1
 		pState = &myState;
 	}
 
+	if (m_fontStates.empty())
+	{
+		//abort crash, no font is loaded
+		return;
+	}
 	if (pState->empty())
 	{
 		if (color == MAKE_RGBA(255,255,255,0)) //alpha has been stripped, don't forget
@@ -366,18 +370,17 @@ void RTFont::DrawScaled( float x, float y, const string &text, float scale /*= 1
 		src.right = src.left + pCharData->charSizeX;
 		src.bottom = src.top + pCharData->charSizeY;
 
-
 		if (pBatcher)
 		{
 			pBatcher->BlitEx(&m_surf, dst, src, pState->front().m_color + curAlpha);
-
 		} else
 		{
 			g_globalBatcher.BlitEx(&m_surf, dst, src, pState->front().m_color + curAlpha);
 		}
-		
 
+		//instead of using the batcher, here is another way, albeit slow
 		//m_surf.BlitEx(dst, src, pState->front().m_color + curAlpha);
+
 	
 		//add some space between the letters, too
 		

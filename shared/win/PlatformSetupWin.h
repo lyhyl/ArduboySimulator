@@ -42,6 +42,16 @@
 #endif
 
 #else
+
+#ifdef RT_FLASH_TEST
+	//Allow us to use our fake flash functions from GLFlashAdaptor.cpp, can help with debugging certain things
+	//even though we can't really talk to Flash from MSVC++
+	#define _DLL_EXPORTS
+
+#define inline_as3(...)  ((void)0)
+
+#endif
+
 #include <GLES/egl.h>
 #include <GLES/gl.h>
 #include "Renderer/GLES/glext.h"

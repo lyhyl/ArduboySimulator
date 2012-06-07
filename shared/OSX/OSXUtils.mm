@@ -25,7 +25,7 @@ void LogMsg(const char *lpFormat, ...)
 	
 	std::va_list argPtr ;
 	va_start( argPtr, lpFormat ) ;
-	NSLogv([MWString stringWithCString:lpFormat], argPtr) ;
+	NSLogv([NSString stringWithCString:lpFormat], argPtr) ;
 	
 	const int logSize = 4096;
 	char buffer[logSize];
@@ -40,9 +40,14 @@ void LogMsg(const char *lpFormat, ...)
 
 void LaunchURL(string url)
 {
-	NSURL *appStoreUrl = [NSURL URLWithString:[MWString stringWithCString: url.c_str() encoding: [MWString defaultCStringEncoding]]];
+	NSURL *appStoreUrl = [NSURL URLWithString:[NSString stringWithCString: url.c_str() encoding: [NSString defaultCStringEncoding]]];
 	[[NSWorkspace sharedWorkspace] openURL:appStoreUrl];
 }
+
+bool LaterThanNow(const int year, const int month, const int day)
+{
+	return false;
+}	
 
 eNetworkType IsNetReachable(string url)
 {
@@ -52,7 +57,7 @@ eNetworkType IsNetReachable(string url)
 	/*
 	// Before trying to connect, verify we have a network connection
 	
-	MWString *str =  [MWString stringWithCString: url.c_str() encoding: [MWString defaultCStringEncoding]];
+	NSString *str =  [NSString stringWithCString: url.c_str() encoding: [NSString defaultCStringEncoding]];
 	
 	SCNetworkReachabilityFlags          flags;
 	SCNetworkReachabilityRef reachability =  SCNetworkReachabilityCreateWithName(NULL, [str UTF8String]);
@@ -119,7 +124,7 @@ string GetSavePath()
         return "";
     }
  
-    MWString *resolvedPath = [paths objectAtIndex:0];
+    NSString *resolvedPath = [paths objectAtIndex:0];
  
 	return string([resolvedPath cStringUsingEncoding:NSUTF8StringEncoding])+"/"+string(GetAppName())+"/";
 }
@@ -141,7 +146,7 @@ void RemoveFile(string fileName, bool bAddSavePath)
 		fileName = GetSavePath()+fileName;
 	}
 	
-	MWString *str =  [MWString stringWithCString: fileName.c_str() encoding: [MWString defaultCStringEncoding]];
+	NSString *str =  [NSString stringWithCString: fileName.c_str() encoding: [NSString defaultCStringEncoding]];
 	
 	NSFileManager *FM = [NSFileManager defaultManager];
 	[FM removeItemAtPath:str error:NULL];
@@ -205,11 +210,6 @@ int GetSystemData()
 {	
 	return C_PIRATED_NO;
 }
-	
-bool LaterThanNow(const int year, const int month, const int day)
-{
-	return false;
-}	
 	
 unsigned int GetSystemTimeTick()
 {
@@ -278,7 +278,7 @@ unsigned int GetFreeMemory ()
 void CreateDirectoryRecursively(string basePath, string path)
 {
 	string fileName = basePath+path;
-	MWString *str =  [MWString stringWithCString: fileName.c_str() encoding: [MWString defaultCStringEncoding]];
+	NSString *str =  [NSString stringWithCString: fileName.c_str() encoding: [NSString defaultCStringEncoding]];
 [[NSFileManager defaultManager] createDirectoryAtPath:str
                           withIntermediateDirectories:YES
                                            attributes:nil
@@ -297,7 +297,7 @@ vector<string> GetDirectoriesAtPath(string path)
 	LogMsg("Scanning dir %s", path.c_str());
 	vector<string> v;
 	
-	MWString *str =  [MWString stringWithCString: path.c_str() encoding: [MWString defaultCStringEncoding]];
+	NSString *str =  [NSString stringWithCString: path.c_str() encoding: [NSString defaultCStringEncoding]];
 	NSArray *origContents = [[NSFileManager defaultManager] directoryContentsAtPath:str];
 	NSLog(@"Number of files = %d", origContents.count);
 	
@@ -322,7 +322,7 @@ vector<string> GetFilesAtPath(string path)
 	
 	vector<string> v;
 	
-	MWString *str =  [MWString stringWithCString: path.c_str() encoding: [MWString defaultCStringEncoding]];
+	NSString *str =  [NSString stringWithCString: path.c_str() encoding: [NSString defaultCStringEncoding]];
 	NSArray *origContents = [[NSFileManager defaultManager] directoryContentsAtPath:str];
 	//NSLog(@"Number of files = %d", origContents.count);
 	
@@ -350,7 +350,7 @@ bool IsIphoneOriPad()
 string GetClipboardText()
 {
 	NSPasteboard *pb = [NSPasteboard generalPasteboard];
-	MWString *info = [pb stringForType: MWStringPboardType];
+	NSString *info = [pb stringForType: NSStringPboardType];
     string text = [info cStringUsingEncoding:NSUTF8StringEncoding];
 	return text;
 }

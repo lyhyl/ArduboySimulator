@@ -37,8 +37,6 @@ private:
 };
 
 
-extern App g_App;
-
 App * GetApp();
 const char * GetAppName();
 const char * GetBundlePrefix();
