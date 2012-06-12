@@ -15,8 +15,34 @@ std::string ToUpperCaseString (const std::string & s);
 bool CaseInsensitiveCompare(const char*a, const char*b);
 void SetIntWithTarget(int32 *p_out_dest, int r_target, int r_amount);
 int mod(int a, int b);
+/**
+ * Returns a random number limited by \a range.
+ *
+ * If \a range is positive the returned value is on the interval [0, range[.
+ *
+ * If \a range is negative the returned value is on the interval [0, -range[.
+ */
 int Random(int range);
+/**
+ * Returns a random number between \a rangeMin and \a rangeMax.
+ * The range includes \a rangeMin but not \a rangeMax, in other words
+ * the returned value is on the interval [rangeMin, rangeMax[.
+ *
+ * This function is meant to be used so that \a rangeMin < \a rangeMax.
+ * However the behaviour is well defined for other combinations as well.
+ * - If \a rangeMin equals \a rangeMax then \a rangeMin is returned.
+ * - If \a rangeMin != \a rangeMax the returned value is on the interval
+ *   [rangeMin, rangeMin+abs(rangeMax-rangeMin)[.
+ */
 int RandomRange(int rangeMin, int rangeMax);
+/**
+ * Returns a random floating point number between \a rangeMin and \a rangeMax.
+ *
+ * The behaviour of this function is similar to RandomRange(). The notes on
+ * that function apply to this function too.
+ *
+ * \see RandomRange()
+ */
 float RandomRangeFloat(float rangeMin, float rangeMax);
 float LerpFloat(float f_origin, float f_target, float f_percent);
 std::string RemoveLastPartOfDir(std::string path);
