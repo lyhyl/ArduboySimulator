@@ -113,9 +113,11 @@ void TouchHandlerComponent::HandleClickEnd( CL_Vec2f &pt, uint32 fingerID )
 {
 	if (!m_pTouchOver->GetUINT32()) return;
 
+	const bool touchAreaContainsTouchPoint = m_touchArea.contains(pt);
+
 	if (*m_pIgnoreTouchesOutsideRect != 0)
 	{
-		if (!m_touchArea.contains(pt))
+		if (!touchAreaContainsTouchPoint)
 		{
 			//they lifted a finger, but not in our rect so ignore it
 			return;
@@ -123,11 +125,11 @@ void TouchHandlerComponent::HandleClickEnd( CL_Vec2f &pt, uint32 fingerID )
 	}
 
 	m_pTouchOver->Set(uint32(0));
-    VariantList vList(pt, GetParent(), fingerID, uint32(m_touchArea.contains(pt)));
+    VariantList vList(pt, GetParent(), fingerID, uint32(touchAreaContainsTouchPoint));
 
 	GetParent()->GetFunction("OnOverEnd")->sig_function(&vList);
 
-	if (m_touchArea.contains(pt))
+	if (touchAreaContainsTouchPoint)
 	{
 		GetParent()->GetFunction("OnTouchEnd")->sig_function(&vList);
 	}

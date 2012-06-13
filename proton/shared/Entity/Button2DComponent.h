@@ -35,8 +35,13 @@ index 1 is the parent entity
  *   default click sound. See \c SetDefaultAudioClickSound().
  * - <b>"disabled" (uint32):</b> used to disable the button. 0 (the default) means
  *   the button is enabled, any other values disables it.
+ * - <b>"visualStyle" (uint32):</b> determines the button's visual style, i.e. what
+ *   the button looks like when it's pressed. This needs to be one of the values of
+ *   \link Button2DComponent::eVisualStyle <tt>eVisualStyle</tt>\endlink.
+ *   The default value is \link Button2DComponent::STYLE_FADE_ALPHA_ON_HOVER
+ *   <tt>STYLE_FADE_ALPHA_ON_HOVER</tt>\endlink.
  * - <b>"buttonStyle" (uint32):</b> determines the button's behaviour style. This
- *   needs to be one of the values of \link Button2DComponent::eButtonStyle \c eButtonStyle \endlink.
+ *   needs to be one of the values of \link Button2DComponent::eButtonStyle <tt>eButtonStyle</tt>\endlink.
  *   By default is whatever is the current global default button style. See \c SetDefaultButtonStyle().
  * - <b>"repeatDelayMS" (uint32):</b> a delay in milliseconds during which a button is
  *   non-clickable after it has been clicked. Default is 250 milliseconds.
@@ -56,11 +61,23 @@ public:
 	virtual void OnAdd(Entity *pEnt);
 	virtual void OnRemove();
 
+	/**
+	 * Visual behaviour styles.
+	 */
 	enum eVisualStyle
 	{
+		/// No visual change.
 		STYLE_NONE,
+		/// The alpha value of the visuals is set to half of the original value.
 		STYLE_FADE_ALPHA_ON_HOVER,
-		STYLE_INVISIBLE_UNTIL_CLICKED //like above, but invisible unless clicked/hovered
+		/// The visuals is scaled down slightly.
+		STYLE_SCALE_DOWN_ON_HOVER,
+		/**
+		 * The button is invisible until it is clicked. After a click it stays visible for
+		 * a while and then disappears again. The duration of the visibility period is the
+		 * value of the \c repeatDelayMS variant of the component.
+		 */
+		STYLE_INVISIBLE_UNTIL_CLICKED
 	};
 
 	/**
@@ -95,6 +112,8 @@ private:
 	void buttonNoLongerPressed();
 
 	float m_alphaSave;
+	CL_Vec2f m_scale2dSave;
+	CL_Rectf m_touchPaddingSave;
 	string *m_pOnClickAudioFile;
 	uint32 *m_pDisabled;
 	unsigned int m_repeatTimer; //so we don't let them hit the button too fast
@@ -105,6 +124,8 @@ private:
 	string *m_pOverFileName;
 	uint32 *m_pTouchOver;
 	float *m_pAlpha;
+	CL_Vec2f *m_pScale2d;
+	CL_Rectf *m_pTouchPadding;
 	uint32 *m_pVisible;
 	bool m_pressed;
 	
