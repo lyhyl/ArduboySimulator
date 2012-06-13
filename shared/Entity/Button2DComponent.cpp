@@ -41,11 +41,12 @@ void Button2DComponent::OnAdd(Entity *pEnt)
 	m_pOverFileName = &GetVar("overFileName")->GetString();
 	m_pTouchOver = &GetParent()->GetVar("touchOver")->GetUINT32();
 	m_pAlpha = &GetParent()->GetVarWithDefault("alpha", Variant(1.0f))->GetFloat();
+	m_pScale2d = &GetParent()->GetVarWithDefault("scale2d", Variant(1.0f, 1.0f))->GetVector2();
+	m_pTouchPadding = &GetParent()->GetVarWithDefault(string("touchPadding"), Variant(CL_Rectf()))->GetRect();
 	m_pVisible = &GetParent()->GetVarWithDefault("visible", uint32(1))->GetUINT32();
 
 	m_repeatTimer = 0;
 
-	//register to get updated every frame
 	GetParent()->GetFunction("PerformClick")->sig_function.connect(1, boost::bind(&Button2DComponent::PerformClick, this, _1));
 
 	GetParent()->GetFunction("OnOverStart")->sig_function.connect(1, boost::bind(&Button2DComponent::OnOverStart, this, _1));
@@ -89,12 +90,15 @@ void Button2DComponent::UpdateButtonVisuals(Variant *pVariant)
 
 void Button2DComponent::OnOverStart(VariantList *pVList)
 {
-	//LogMsg("Now over button");
-
 	switch (*m_pVisualStyle)
 	{
 	case STYLE_FADE_ALPHA_ON_HOVER:
 		m_alphaSave = *m_pAlpha;
+		break;
+
+	case STYLE_SCALE_DOWN_ON_HOVER:
+		m_scale2dSave = *m_pScale2d;
+		m_touchPaddingSave = *m_pTouchPadding;
 		break;
 	}
 
@@ -104,14 +108,24 @@ void Button2DComponent::OnOverStart(VariantList *pVList)
 
 	UpdateButtonVisuals(NULL);
 
-	switch (*m_pVisualStyle)
+	if (*m_pDisabled == 0 && *m_pVisible != 0 && m_repeatTimer < GetBaseApp()->GetTick())
 	{
-	case STYLE_FADE_ALPHA_ON_HOVER:
-		if (*m_pDisabled == 0 && *m_pVisible != 0 && m_repeatTimer < GetBaseApp()->GetTick())
-		{	
+		switch (*m_pVisualStyle)
+		{
+		case STYLE_FADE_ALPHA_ON_HOVER:
 			GetParent()->GetVar("alpha")->Set(m_alphaSave*0.5f);
+			break;
+
+		case STYLE_SCALE_DOWN_ON_HOVER:
+			CL_Vec2f originalSize(GetParent()->GetVar("size2d")->GetVector2());
+			GetParent()->GetVar("scale2d")->Set(m_scale2dSave * 0.9f);
+			CL_Vec2f scaledDownSize(GetParent()->GetVar("size2d")->GetVector2());
+			// Enlarge the touch padding temporarily so that the touch area matches the original, non-scaled one
+			CL_Rectf enlargedPadding = m_touchPaddingSave;
+			enlargedPadding.translate((originalSize - scaledDownSize) / 2.0f);
+			GetParent()->GetVar("touchPadding")->Set(enlargedPadding);
+			break;
 		}
-		break;
 	}
 }
 
@@ -128,8 +142,6 @@ void Button2DComponent::OnOverMove(VariantList *pVList)
 
 void Button2DComponent::OnOverEnd(VariantList *pVList)
 {
-	//LogMsg("Now off button");
-
 	if (pVList->Get(3).GetUINT32() == 0) {
 		// The touch point moved outside the button so it's not pressed anymore
 		m_pressed = false;
@@ -148,9 +160,16 @@ void Button2DComponent::OnTouchStart(VariantList *pVList)
 	{
 		pTouch->SetWasHandled(true, GetParent());
 	
-		if (*m_pVisualStyle == STYLE_FADE_ALPHA_ON_HOVER)
+		switch (*m_pVisualStyle)
 		{
+		case STYLE_FADE_ALPHA_ON_HOVER:
 			m_alphaSave = *m_pAlpha;
+			break;
+
+		case STYLE_SCALE_DOWN_ON_HOVER:
+			m_scale2dSave = *m_pScale2d;
+			m_touchPaddingSave = *m_pTouchPadding;
+			break;
 		}
 
 		PerformClick(pVList);
@@ -170,6 +189,11 @@ void Button2DComponent::PerformClick(VariantList *pVList)
 	{
 		case STYLE_FADE_ALPHA_ON_HOVER:
 			GetParent()->GetVar("alpha")->Set(m_alphaSave);
+			break;
+
+		case STYLE_SCALE_DOWN_ON_HOVER:
+			GetParent()->GetVar("scale2d")->Set(m_scale2dSave);
+			GetParent()->GetVar("touchPadding")->Set(m_touchPaddingSave);
 			break;
 
 		case STYLE_INVISIBLE_UNTIL_CLICKED:
@@ -200,9 +224,9 @@ void Button2DComponent::PerformClick(VariantList *pVList)
 #endif
 	}
 }
+
 void Button2DComponent::OnTouchEnd(VariantList *pVList)
 {
-	//LogMsg("Released button while highlighted");
 	switch (*m_pButtonStyle) {
 	case BUTTON_STYLE_CLICK_ON_TOUCH_RELEASE:
 	{
@@ -238,6 +262,11 @@ void Button2DComponent::buttonNoLongerPressed()
 	{
 	case STYLE_FADE_ALPHA_ON_HOVER:
 		GetParent()->GetVar("alpha")->Set(m_alphaSave);
+		break;
+
+	case STYLE_SCALE_DOWN_ON_HOVER:
+		GetParent()->GetVar("scale2d")->Set(m_scale2dSave);
+		GetParent()->GetVar("touchPadding")->Set(m_touchPaddingSave);
 		break;
 	}
 }
