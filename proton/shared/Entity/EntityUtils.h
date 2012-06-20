@@ -17,7 +17,6 @@
 #include "Entity/ProgressBarComponent.h"
 #include "Entity/UnderlineRenderComponent.h"
 #include "Entity/TapSequenceDetectComponent.h"
-#include "Entity/HTTPComponent.h"
 #include "Entity/TyperComponent.h"
 #include "Entity/RectRenderComponent.h"
 #include "Entity/ScrollComponent.h"
@@ -233,7 +232,7 @@ EntityComponent * SetButtonStyleEntity(Entity *pEnt, Button2DComponent::eButtonS
 void SetButtonClickSound(Entity *pEnt, string fileName);
 void SetAlphaEntity(Entity *pEnt, float alpha);
 void PreloadKeyboard(OSMessage::eParmKeyboardType keyboardType=OSMessage::PARM_KEYBOARD_TYPE_ASCII);
-void SendFakeInputMessageToEntity(Entity *pEnt, eMessageType msg, CL_Vec2f vClickPos);
+void SendFakeInputMessageToEntity(Entity *pEnt, eMessageType msg, CL_Vec2f vClickPos, int delayBeforeStartingMS = 0);
 void SendFakeButtonPushToEntity(Entity *pEntity, int timeMS);
 void SetButtonRepeatDelayMS(Entity *pEnt, uint32 delayMS);
 void LightBarOnChange(VariantList *pVList);
@@ -275,7 +274,7 @@ void AdjustGUIElementForWindowView(Entity *pEnt, CL_Rectf r, float rotation);
 void ManuallySetAlignmentEntity(Entity *pEnt, eAlignment alignment); //takes into account rotation as in screen rotation
 bool IsDisabledEntity(Entity *pEnt);
 void RemovePaddingEntity(Entity *pEnt);
-void FakeClickAnEntity(Entity *pEnt); //good for pretending to click a Button2D programically or something
+void FakeClickAnEntity(Entity *pEnt, int delayBeforeStartingMS = 0); //good for pretending to click a Button2D programically or something
 bool FakeClickAnEntityByName(Entity *pEntitySearchRoot, const string name);
 bool EntityIsOnScreen(Entity *pEnt); //returns true if any part of an entity overlaps the visible screen.  (reads pos2d and size2d to test)
 

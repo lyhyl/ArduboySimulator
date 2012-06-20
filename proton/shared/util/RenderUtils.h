@@ -140,4 +140,5 @@ void SetForcedOrientation(eOrientationMode orientation);
 bool NeedToUseFakeScreenSize(); //true if using a fake (stretched to device) screen and it's a different size than our primary screen
 CL_Rectf GetScreenRect();
 float SinPulseByCustomTimerMS(int ms, unsigned int timerMS);
+void RenderTexturedGLTriangleWithDrawElements();
 #endif // RenderUtils_h__

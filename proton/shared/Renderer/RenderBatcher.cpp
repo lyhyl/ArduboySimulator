@@ -56,6 +56,9 @@ void RenderBatcher::BlitEx(Surface *pSurf, rtRectf dst, rtRectf src, unsigned in
 
 	//but since we're not I duplicate a few verts for two triangles after I fill out the 4 I care about
 
+
+	//  0 1   3
+    //    2   5 4
 	vertices[0].vPos.x = dst.left; vertices[0].vPos.y = dst.top; vertices[0].vPos.z = 0;
 	vertices[1].vPos.x = dst.right; vertices[1].vPos.y = dst.top; vertices[1].vPos.z = 0;
 	vertices[2].vPos.x = dst.right; vertices[2].vPos.y = dst.bottom; vertices[2].vPos.z = 0;
@@ -95,49 +98,60 @@ void RenderBatcher::BlitEx(Surface *pSurf, rtRectf dst, rtRectf src, unsigned in
 	vertices[4] = vertices[2];
 }
 
-void RenderBatcher::Flush()
+
+void RenderBatcher::Flush(eFlushMode mode)
 {
-	
-	if (m_batchEvents.empty()) return;
-	CHECK_GL_ERROR();
-	int curPrim = 0;
-	RenderBatchEvent event;
-
-	if (m_verts.empty())
+	if (mode == FLUSH_SETUP || mode == FLUSH_SETUP_RENDER_UNSETUP)
 	{
-		assert(!"Hmm?");
-		m_batchEvents.clear();
-		return;
-	}
-	glEnable(GL_BLEND);
-	glVertexPointer(3, GL_FLOAT, sizeof(BatchVert), &m_verts[0].vPos.x);
-	glTexCoordPointer(2, GL_FLOAT,  sizeof(BatchVert), &m_verts[0].vUv.x);
-	glColorPointer(4, GL_UNSIGNED_BYTE,  sizeof(BatchVert), &m_verts[0].color);
-	glEnableClientState(GL_COLOR_ARRAY);
-	glColor4x(1 << 16, 1 << 16, 1 << 16, 1 << 16);
 
-	CHECK_GL_ERROR();
-
-	while (!m_batchEvents.empty())
-	{
-	
-		event = m_batchEvents.front();
-	//	LogMsg("Rendering event, %d prims", event.m_vertCount);
-
-		m_batchEvents.pop_front();
-		//glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-		if (event.m_pSurf) event.m_pSurf->Bind();
-		::glDrawArrays(GL_TRIANGLES,curPrim,event.m_vertCount);
-		curPrim += event.m_vertCount;
+		if (m_batchEvents.empty()) return;
 		CHECK_GL_ERROR();
+		
+		if (m_verts.empty())
+		{
+			assert(!"Hmm?");
+			m_batchEvents.clear();
+			return;
+		}
+
+		glEnable(GL_BLEND);
+		glVertexPointer(3, GL_FLOAT, sizeof(BatchVert), &m_verts[0].vPos.x);
+		glTexCoordPointer(2, GL_FLOAT,  sizeof(BatchVert), &m_verts[0].vUv.x);
+		glColorPointer(4, GL_UNSIGNED_BYTE,  sizeof(BatchVert), &m_verts[0].color);
+		glEnableClientState(GL_COLOR_ARRAY);
+		glColor4x(1 << 16, 1 << 16, 1 << 16, 1 << 16);
 	}
 
-	glDisable( GL_BLEND );
-	glDisableClientState(GL_COLOR_ARRAY);
-	glColor4x(1 << 16, 1 << 16, 1 << 16, 1 << 16); //need this for some gl drivers
+	if (mode == FLUSH_RENDER || mode == FLUSH_SETUP_RENDER_UNSETUP)
+	{
 
-	m_verts.clear();
-	assert(m_batchEvents.empty());
+		CHECK_GL_ERROR();
+
+		int curPrim = 0;
+		RenderBatchEvent event;
+
+		while (!m_batchEvents.empty())
+		{
+			event = m_batchEvents.front();
+		//	LogMsg("Rendering event, %d prims", event.m_vertCount);
+
+			m_batchEvents.pop_front();
+			if (event.m_pSurf) event.m_pSurf->Bind();
+			::glDrawArrays(GL_TRIANGLES,curPrim,event.m_vertCount);
+			curPrim += event.m_vertCount;
+			CHECK_GL_ERROR();
+		}
+	}
+
+	if (mode == FLUSH_UNSETUP || mode == FLUSH_SETUP_RENDER_UNSETUP)
+	{
+		glDisable( GL_BLEND );
+		glDisableClientState(GL_COLOR_ARRAY);
+		glColor4x(1 << 16, 1 << 16, 1 << 16, 1 << 16); //need this for some gl drivers
+
+		m_verts.clear();
+		assert(m_batchEvents.empty());
+	}
 }
 
 void RenderBatcher::BlitRawImage(int x, int y, SoftSurface &soft)
@@ -223,7 +237,7 @@ void RenderBatcher::glDrawArrays( const CL_Vec3f *pVerts, const CL_Vec3f *vNorma
 
 	if (glDrawMode != GL_TRIANGLE_STRIP)
 	{
-		assert(!"Uh, we don't handle anything else right now.. implement yourself?");
+		assert(!"Uh, we don't handle anything else right now.. implement yourself?  Won't be hard, as we just convert to triangles anyway below");
 		return;
 	}
 	

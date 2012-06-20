@@ -1,8 +1,5 @@
 #include "PlatformPrecomp.h"
 #include "NetSocket.h"
-//#include "BaseApp.h"
-
-
 
 #ifndef WINAPI
 	#include <sys/types.h> 
@@ -19,7 +16,6 @@
 #elif defined(PLATFORM_BBX)
 #include <fcntl.h>
 
-
 #else
 	#include <sys/fcntl.h>
 #endif
@@ -32,6 +28,12 @@
 #if defined(RT_WEBOS_ARM) || defined(ANDROID_NDK) || defined (RTLINUX)
 	#include <linux/sockios.h>
 	#include <errno.h>
+
+#elif defined (PLATFORM_FLASH)
+
+#include <sys/sockio.h>
+#include <sys/errno.h>
+
 #else
 	
 	#include <sys/sockio.h>

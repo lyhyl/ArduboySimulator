@@ -205,7 +205,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\source;..\..\shared;..\..\shared\win\;..\..\shared\util\boost;&quot;..\..\shared\ClanLib-2.0\Sources&quot;;..\..\shared\win\include"
+				AdditionalIncludeDirectories="..\source;..\..\shared;..\..\shared\util\boost;&quot;..\..\shared\ClanLib-2.0\Sources&quot;;..\..\shared\win\include;..\..\shared\win\"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;BOOST_ALL_NO_LIB;_USE_32BIT_TIME_T;C_GL_MODE;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0;_NO_DEBUG_HEAP=1"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -427,6 +427,89 @@
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
+		<Configuration
+			Name="Flash GLES Debug Test|Win32"
+			OutputDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="1"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="..\source;..\..\shared;..\..\shared\win\;..\..\shared\win\powerVR\OGLES\Include;..\..\shared\win\powerVR\OGLES\Windows\Include;..\..\shared\win\include;..\..\shared\util\boost;&quot;..\..\shared\ClanLib-2.0\Sources&quot;;..\..\shared\FliteTTS\include;..\..\shared\Irrlicht\include"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;BOOST_ALL_NO_LIB;_USE_32BIT_TIME_T;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0;_NO_DEBUG_HEAP=1;C_NO_NETWORK;RT_FLASH_TEST;RT_GLES_ADAPTOR_MODE"
+				MinimalRebuild="true"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="1"
+				BufferSecurityCheck="true"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="PlatformPrecomp.h"
+				WarningLevel="3"
+				Detect64BitPortabilityProblems="false"
+				DebugInformationFormat="4"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="libgles_cm.lib zdll.lib wsock32.lib"
+				OutputFile="../bin/winRTBareBones.exe"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="..\..\shared\win\powerVR\OGLES\WindowsX86\Lib;..\..\shared\win\lib;..\..\shared\win\fmod"
+				GenerateDebugInformation="true"
+				ProgramDatabaseFile="$(OutDir)/RTBareBones.pdb"
+				SubSystem="2"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
 	</Configurations>
 	<References>
 	</References>
@@ -488,6 +571,13 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Debug WebOS|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Flash GLES Debug Test|Win32"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -631,6 +721,42 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="flash"
+				>
+				<File
+					RelativePath="..\flash\app_info_setup.bat"
+					>
+				</File>
+				<File
+					RelativePath="..\flash\build_prepare.bat"
+					>
+				</File>
+				<File
+					RelativePath="..\flash\BuildDebug.bat"
+					>
+				</File>
+				<File
+					RelativePath="..\flash\BuildRelease.bat"
+					>
+				</File>
+				<File
+					RelativePath="..\flash\exports.txt"
+					>
+				</File>
+				<File
+					RelativePath="..\flash\Makefile"
+					>
+				</File>
+				<File
+					RelativePath="..\flash\test.html"
+					>
+				</File>
+				<File
+					RelativePath="..\flash\upload.bat"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="shared"
@@ -684,6 +810,14 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug WebOS|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Flash GLES Debug Test|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -749,6 +883,14 @@
 							Name="VCCLCompilerTool"
 						/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="Flash GLES Debug Test|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\shared\win\MemMgr.h"
@@ -795,6 +937,14 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Debug WebOS|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Flash GLES Debug Test|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -875,6 +1025,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\shared\util\TextScanner.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\util\TextScanner.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\shared\util\Variant.cpp"
 					>
 				</File>
@@ -928,6 +1086,14 @@
 								UsePrecompiledHeader="0"
 							/>
 						</FileConfiguration>
+						<FileConfiguration
+							Name="Flash GLES Debug Test|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
 					</File>
 					<File
 						RelativePath="..\..\shared\util\boost\libs\signals\src\named_slot_map.cpp"
@@ -966,6 +1132,14 @@
 						</FileConfiguration>
 						<FileConfiguration
 							Name="Debug WebOS|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Flash GLES Debug Test|Win32"
 							>
 							<Tool
 								Name="VCCLCompilerTool"
@@ -1016,6 +1190,14 @@
 								UsePrecompiledHeader="0"
 							/>
 						</FileConfiguration>
+						<FileConfiguration
+							Name="Flash GLES Debug Test|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
 					</File>
 					<File
 						RelativePath="..\..\shared\util\boost\libs\signals\src\slot.cpp"
@@ -1060,6 +1242,14 @@
 								UsePrecompiledHeader="0"
 							/>
 						</FileConfiguration>
+						<FileConfiguration
+							Name="Flash GLES Debug Test|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
 					</File>
 					<File
 						RelativePath="..\..\shared\util\boost\libs\signals\src\trackable.cpp"
@@ -1098,6 +1288,14 @@
 						</FileConfiguration>
 						<FileConfiguration
 							Name="Debug WebOS|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Flash GLES Debug Test|Win32"
 							>
 							<Tool
 								Name="VCCLCompilerTool"
@@ -1379,6 +1577,14 @@
 									UsePrecompiledHeader="0"
 								/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="Flash GLES Debug Test|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\..\shared\ClanLib-2.0\Sources\Core\Math\mat3.cpp"
@@ -1417,6 +1623,14 @@
 							</FileConfiguration>
 							<FileConfiguration
 								Name="Debug WebOS|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Flash GLES Debug Test|Win32"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -1467,6 +1681,14 @@
 									UsePrecompiledHeader="0"
 								/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="Flash GLES Debug Test|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\..\shared\ClanLib-2.0\Sources\Core\Math\rect.cpp"
@@ -1505,6 +1727,14 @@
 							</FileConfiguration>
 							<FileConfiguration
 								Name="Debug WebOS|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Flash GLES Debug Test|Win32"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -1555,6 +1785,14 @@
 									UsePrecompiledHeader="0"
 								/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="Flash GLES Debug Test|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\..\shared\ClanLib-2.0\Sources\Core\Math\vec3.cpp"
@@ -1599,6 +1837,14 @@
 									UsePrecompiledHeader="0"
 								/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="Flash GLES Debug Test|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\..\shared\ClanLib-2.0\Sources\Core\Math\vec4.cpp"
@@ -1637,6 +1883,14 @@
 							</FileConfiguration>
 							<FileConfiguration
 								Name="Debug WebOS|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Flash GLES Debug Test|Win32"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -1765,6 +2019,14 @@
 							UsePrecompiledHeader="0"
 						/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="Flash GLES Debug Test|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\shared\WebOS\WebOSUtils.h"
@@ -1811,6 +2073,14 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Debug WebOS|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Flash GLES Debug Test|Win32"
 						ExcludedFromBuild="true"
 						>
 						<Tool
@@ -1866,6 +2136,14 @@
 						</FileConfiguration>
 						<FileConfiguration
 							Name="Debug WebOS|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Flash GLES Debug Test|Win32"
 							ExcludedFromBuild="true"
 							>
 							<Tool
@@ -2045,6 +2323,14 @@
 							Name="VCCLCompilerTool"
 						/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="Flash GLES Debug Test|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\shared\bbx\bbutil.h"
@@ -2087,6 +2373,14 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Debug WebOS|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Flash GLES Debug Test|Win32"
 						ExcludedFromBuild="true"
 						>
 						<Tool
@@ -2137,6 +2431,14 @@
 							Name="VCCLCompilerTool"
 						/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="Flash GLES Debug Test|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\shared\bbx\BBXUtils.h"
@@ -2146,6 +2448,242 @@
 					RelativePath="..\..\shared\bbx\PlatformSetupBBX.h"
 					>
 				</File>
+			</Filter>
+			<Filter
+				Name="flash"
+				>
+				<File
+					RelativePath="..\..\shared\flash\FlashUtils.cpp"
+					>
+					<FileConfiguration
+						Name="Common Debug|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Common Release|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug GL|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release GL|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug WebOS|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Flash GLES Debug Test|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\shared\flash\FlashUtils.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\flash\PlatformSetupFlash.h"
+					>
+				</File>
+				<Filter
+					Name="app"
+					>
+					<File
+						RelativePath="..\..\..\..\pro\alchemy\sdk\usr\include\AS3.h"
+						>
+					</File>
+					<Filter
+						Name="cpp"
+						>
+						<File
+							RelativePath="..\..\shared\flash\app\cpp\GLFlashAdaptor.cpp"
+							>
+							<FileConfiguration
+								Name="Common Debug|Win32"
+								ExcludedFromBuild="true"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Common Release|Win32"
+								ExcludedFromBuild="true"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Debug GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
+								ExcludedFromBuild="true"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Debug WebOS|Win32"
+								ExcludedFromBuild="true"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Flash GLES Debug Test|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
+						</File>
+						<File
+							RelativePath="..\..\shared\flash\app\cpp\GLFlashAdaptor.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\shared\flash\app\cpp\main.cpp"
+							>
+							<FileConfiguration
+								Name="Common Debug|Win32"
+								ExcludedFromBuild="true"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(InputName)1.obj"
+									XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Common Release|Win32"
+								ExcludedFromBuild="true"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(InputName)1.obj"
+									XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Debug GL|Win32"
+								ExcludedFromBuild="true"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(InputName)1.obj"
+									XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
+								ExcludedFromBuild="true"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(InputName)1.obj"
+									XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Debug WebOS|Win32"
+								ExcludedFromBuild="true"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(InputName)1.obj"
+									XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Flash GLES Debug Test|Win32"
+								ExcludedFromBuild="true"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(InputName)1.obj"
+									XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								/>
+							</FileConfiguration>
+						</File>
+					</Filter>
+					<Filter
+						Name="flash"
+						>
+						<File
+							RelativePath="..\..\shared\flash\app\flash\com\adobe\utils\AGALMiniAssembler.as"
+							>
+						</File>
+						<File
+							RelativePath="..\..\shared\flash\app\flash\AlcConsole.as"
+							>
+						</File>
+						<File
+							RelativePath="..\..\shared\flash\app\flash\com\adobe\utils\PerspectiveMatrix3D.as"
+							>
+						</File>
+					</Filter>
+				</Filter>
+				<Filter
+					Name="gles"
+					>
+					<File
+						RelativePath="..\..\shared\flash\GLES\egl.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\shared\flash\GLES\gl.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\shared\flash\GLES\glext.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\shared\flash\GLES\glplatform.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 		<File

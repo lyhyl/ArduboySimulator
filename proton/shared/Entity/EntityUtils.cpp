@@ -1172,19 +1172,29 @@ void PreloadKeyboard(OSMessage::eParmKeyboardType keyboardType)
 }
 
 
-void SendFakeInputMessageToEntity(Entity *pEnt, eMessageType msg, CL_Vec2f vClickPos)
+void SendFakeInputMessageToEntity(Entity *pEnt, eMessageType msg, CL_Vec2f vClickPos, int delayBeforeStartingMS)
 {
 	VariantList v;
 	v.Get(0).Set((float)msg);
 	v.Get(1).Set(vClickPos);
 	v.Get(2).Set(uint32(C_MAX_TOUCHES_AT_ONCE-1));
 
-	//fake out our touch tracker, will override the 11th finger touch..
-	GetBaseApp()->GetTouch(C_MAX_TOUCHES_AT_ONCE-1)->SetWasHandled(false);
-	GetBaseApp()->GetTouch(C_MAX_TOUCHES_AT_ONCE-1)->SetIsDown(true);
-	GetBaseApp()->GetTouch(C_MAX_TOUCHES_AT_ONCE-1)->SetPos(vClickPos);
+	if (delayBeforeStartingMS == 0)
+	{
+		//fake out our touch tracker, will override the 11th finger touch..
+		GetBaseApp()->GetTouch(C_MAX_TOUCHES_AT_ONCE-1)->SetWasHandled(false);
+		GetBaseApp()->GetTouch(C_MAX_TOUCHES_AT_ONCE-1)->SetIsDown(true);
+		GetBaseApp()->GetTouch(C_MAX_TOUCHES_AT_ONCE-1)->SetPos(vClickPos);
 
-	pEnt->CallFunctionRecursively("OnInput", &v);
+		//do it now
+		pEnt->CallFunctionRecursively("OnInput", &v);	
+	} else
+	{
+		//schedule it to happen later
+		GetMessageManager()->CallEntityFunction(pEnt, delayBeforeStartingMS, "OnInput", &v);
+		
+	}
+	
 }
 
 void LightBarOnChange(VariantList *pVList)
@@ -1679,12 +1689,12 @@ bool FakeClickAnEntityByName(Entity *pEntitySearchRoot, const string name)
 	return false; //couldn't find it
 }
 
-void FakeClickAnEntity(Entity *pEnt)
+void FakeClickAnEntity(Entity *pEnt, int delayBeforeStartingMS)
 {
 	CL_Vec2f vClickPos = pEnt->GetVar("pos2d")->GetVector2();
 
-	SendFakeInputMessageToEntity(pEnt, MESSAGE_TYPE_GUI_CLICK_START, vClickPos);
-	SendFakeInputMessageToEntity(pEnt, MESSAGE_TYPE_GUI_CLICK_END, vClickPos);
+	SendFakeInputMessageToEntity(pEnt, MESSAGE_TYPE_GUI_CLICK_START, vClickPos, delayBeforeStartingMS);
+	SendFakeInputMessageToEntity(pEnt, MESSAGE_TYPE_GUI_CLICK_END, vClickPos, delayBeforeStartingMS);
 }
 
 

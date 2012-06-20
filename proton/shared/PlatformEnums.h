@@ -95,12 +95,14 @@ void NotifyOSOfOrientationPreference(eOrientationMode orientation);
 std::string GetBaseAppPath();
 std::string GetSavePath();
 std::string GetAppCachePath(); //on iPhone, returns path to save user data that isn't backed up, on Android, returns external sd card path or "" if not available
+void SetAppCachePath(std::string path); //useful to set to ./ so you can ignore a file with the same name in a mounted zip, on windows at least
 void CreateAppCacheDirIfNeeded();
 
 bool LaterThanNow(const int year, const int month, const int day);
 unsigned int GetSystemTimeTick();
 double GetSystemTimeAccurate();
 unsigned int GetFreeMemory();
+unsigned int GetNativeMemoryUsed(); //for flash, this means how many bytes the Flash system is using
 void LaunchURL(std::string url);
 void FireAchievement(std::string achievement);
 void LogMsg(const char *lpFormat, ...);

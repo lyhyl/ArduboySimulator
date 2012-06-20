@@ -11,6 +11,7 @@
 #include "Renderer/LinearParticle.h"
 #include "Entity/EntityUtils.h"//create the classes that our globally library expects to exist somewhere.
 #include "Renderer/SoftSurface.h"
+#include "GUI/AboutMenu.h"
 
 SurfaceAnim g_surf;
  
@@ -42,28 +43,35 @@ FileManager * GetFileManager() {return &g_fileManager;}
 #endif
 	
 #else
-#include "Audio/AudioManagerSDL.h"
-#include "Audio/AudioManagerAndroid.h"
 
 #if defined RT_WEBOS || defined RTLINUX
+#include "Audio/AudioManagerSDL.h"
 AudioManagerSDL g_audioManager; //sound in windows and WebOS
 //AudioManager g_audioManager; //to disable sound
 #elif defined ANDROID_NDK
+#include "Audio/AudioManagerAndroid.h"
 AudioManagerAndroid g_audioManager; //sound for android
 #elif defined PLATFORM_BBX
-
-//AudioManager g_audioManager; //to disable sound
 #include "Audio/AudioManagerBBX.h"
+//AudioManager g_audioManager; //to disable sound
 AudioManagerBBX g_audioManager;
-
+#elif defined PLATFORM_FLASH
+//AudioManager g_audioManager; //to disable sound
+#include "Audio/AudioManagerFlash.h"
+AudioManagerFlash g_audioManager;
 #else
 
 //in windows
 //AudioManager g_audioManager; //to disable sound
 
+#ifdef RT_FLASH_TEST
+#include "Audio/AudioManagerFlash.h"
+AudioManagerFlash g_audioManager;
+#else
+
 #include "Audio/AudioManagerAudiere.h"
 AudioManagerAudiere g_audioManager;  //Use Audiere for audio
-
+#endif
 //#include "Audio/AudioManagerFMOD.h"
 //AudioManagerFMOD g_audioManager; //if we wanted FMOD sound in windows
 
@@ -192,6 +200,7 @@ else
  
 	//preload audio
 	GetAudioManager()->Preload("audio/click.wav");
+	//GetAudioManager()->Preload("audio/techno.mp3");
 
 	return true;
 }
@@ -221,6 +230,7 @@ void App::Update()
 		//build a dummy entity called "GUI" to put our GUI menu entities under
 		Entity *pGUIEnt = GetEntityRoot()->AddEntity(new Entity("GUI"));
 		MainMenuCreate(pGUIEnt);
+		
 	}
 }
 
@@ -229,8 +239,6 @@ void App::Draw()
 	PrepareForGL();
 //	glClearColor(0.6,0.6,0.6,1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
-
 	
 	BaseApp::Draw();
 }

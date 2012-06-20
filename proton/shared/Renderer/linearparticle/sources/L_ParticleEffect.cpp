@@ -28,7 +28,7 @@
 #include "L_ParticleEffect.h"
 #include "L_ParticleMem.h"
 
-#if !defined(C_GL_MODE) &&  !defined( ANDROID_NDK) && !defined( PLATFORM_BBX) && !defined( RT_WEBOS)
+#if !defined(C_GL_MODE) &&  !defined( ANDROID_NDK) && !defined( PLATFORM_BBX) && !defined( RT_WEBOS) && !defined( RT_GLES_ADAPTOR_MODE)
 	#define RT_USE_POINT_SPRITES
 #endif
 
@@ -508,11 +508,20 @@ if (particle_list.size() == 0) return;
 #ifndef RT_USE_POINT_SPRITES
 
 	//OPTIMIZE: naive way to draw them with separate blits for normal GL mode or android code
+	g_globalBatcher.Flush();
 	while( iter != particle_list.end() )
 	{
 		(*iter)->draw(x_shift, y_shift, x_size_mod, y_size_mod);
 		iter++;
 	}
+	
+	g_globalBatcher.Flush(RenderBatcher::FLUSH_SETUP);
+	glBlendFunc( GL_SRC_ALPHA, GL_ONE); //custom render mode change
+
+	g_globalBatcher.Flush(RenderBatcher::FLUSH_RENDER);
+
+	glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );  //undo custom render mode change
+	g_globalBatcher.Flush(RenderBatcher::FLUSH_UNSETUP);
 
 #else
 

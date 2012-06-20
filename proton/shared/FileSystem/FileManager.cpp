@@ -93,11 +93,7 @@ StreamingInstance * FileManager::GetStreaming( string fileName, int *pSizeOut, b
 
 byte * FileManager::Get( string fileName, int *pSizeOut, bool bAddBasePath )
 {
-		if (bAddBasePath)
-		{
-			fileName = GetBaseAppPath() + fileName;
-		}
-
+	
 		byte * pData = NULL;
 
 		//first check any mounted systems in reverse order of the mounting
@@ -113,6 +109,12 @@ byte * FileManager::Get( string fileName, int *pSizeOut, bool bAddBasePath )
 
 		if (!pData)
 		{
+	
+			if (bAddBasePath)
+			{
+				fileName = GetBaseAppPath() + fileName;
+			}
+
 			//just try to load it from the default filesystem.  Should I create a FileSystemDefault for this to make it cleaner?
 		
 			FILE *fp = fopen(fileName.c_str(), "rb");
@@ -150,7 +152,6 @@ byte * FileManager::Get( string fileName, int *pSizeOut, bool bAddBasePath )
 			*pSizeOut = decompressedSize;
 			SAFE_DELETE_ARRAY(pData);
 			return pDecompressedData;
-			
 		}
 
 		return pData;
@@ -193,11 +194,7 @@ bool FileManager::FileExists( string fileName, bool bAddBasePath)
 
 int FileManager::GetFileSize( string fileName, bool bAddBasePath /*= true*/ )
 {
-	if (bAddBasePath)
-	{
-		fileName = GetBaseAppPath() + fileName;
-	}
-
+	
 	//first check any mounted systems in reverse order of the mounting
 	list<FileSystem*>::reverse_iterator itor = m_fileSystems.rbegin();
 
@@ -207,6 +204,11 @@ int FileManager::GetFileSize( string fileName, bool bAddBasePath /*= true*/ )
 		int fileSize = ((*itor)->GetFileSize(fileName));
 		if (fileSize >= 0) return fileSize;
 		itor++;
+	}
+
+	if (bAddBasePath)
+	{
+		fileName = GetBaseAppPath() + fileName;
 	}
 
 	//vanilla file system version

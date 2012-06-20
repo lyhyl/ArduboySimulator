@@ -678,6 +678,14 @@ void L_Particle::run(int time_elapesed_t)
 
 void L_Particle::draw(int x_shift, int y_shift, float x_size_mod, float y_size_mod)
 {
+
+	surface->BlitScaled(x_pos+x_shift, y_pos+y_shift, CL_Vec2f(current_size*x_size_mod,current_size*y_size_mod), ALIGNMENT_CENTER, 
+		MAKE_RGBA(current_color.r, current_color.g,current_color.b,current_color.a), L_RADIAN_TO_DEGREE(current_radian),
+		&g_globalBatcher);
+/*
+	//non render batch way (slow)
+
 	surface->BlitScaled(x_pos+x_shift, y_pos+y_shift, CL_Vec2f(current_size*x_size_mod,current_size*y_size_mod), ALIGNMENT_CENTER, 
 		MAKE_RGBA(current_color.r, current_color.g,current_color.b,current_color.a), L_RADIAN_TO_DEGREE(current_radian));
+		*/
 }

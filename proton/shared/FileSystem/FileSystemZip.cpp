@@ -286,8 +286,6 @@ int FileSystemZip::GetFileSize( string fileName )
 	{
 		return -1; //not found in this zip
 	}
-	return true;
-	
 
 	int err = UNZ_OK;
 

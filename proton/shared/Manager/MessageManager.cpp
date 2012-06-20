@@ -217,7 +217,7 @@ void MessageManager::Deliver(Message *m)
 				case MESSAGE_TYPE_CALL_ENTITY_FUNCTION:
 					m->GetTargetComponent()->GetShared()->CallFunctionIfExists(m->GetVarName(), &m->GetVariantList());
 					break;
-				
+
 				case MESSAGE_TYPE_REMOVE_COMPONENT:
 					//actually, we're targeting an entity but adding this component...
 					m->GetTargetEntity()->AddComponent(m->GetTargetComponent());
@@ -258,6 +258,23 @@ void MessageManager::Deliver(Message *m)
 				case MESSAGE_TYPE_CALL_ENTITY_FUNCTION:
 					m->GetTargetEntity()->GetFunction(m->GetVarName())->sig_function(&m->GetVariantList());
 					break;
+
+				case MESSAGE_TYPE_CALL_ENTITY_FUNCTION_RECURSIVELY:
+
+					if (m->GetType() == MESSAGE_TYPE_GUI_CLICK_START)
+					{
+						//this function is sort of a hack to fake a mouse click, used with automation stuff for stress tests
+
+						//fake out our touch tracker, will override the 11th finger touch..
+						GetBaseApp()->GetTouch(C_MAX_TOUCHES_AT_ONCE-1)->SetWasHandled(false);
+						GetBaseApp()->GetTouch(C_MAX_TOUCHES_AT_ONCE-1)->SetIsDown(true);
+						GetBaseApp()->GetTouch(C_MAX_TOUCHES_AT_ONCE-1)->SetPos(m->GetVariantList().Get(1).GetVector2());
+					}
+
+					m->GetTargetEntity()->CallFunctionRecursively(m->GetVarName(), &m->GetVariantList());
+
+					break;
+
 				case MESSAGE_TYPE_REMOVE_COMPONENT:
 					m->GetTargetEntity()->RemoveComponentByName(m->GetVarName());
 					break;
@@ -332,6 +349,16 @@ void MessageManager::SetComponentVariable( EntityComponent *pComp, int timeMS, c
 }
 
 void MessageManager::CallEntityFunction( Entity *pEnt, int timeMS, const string &funcName, const VariantList *v, eTimingSystem timing )
+{
+	Message *m = new Message(MESSAGE_CLASS_ENTITY, timing, MESSAGE_TYPE_CALL_ENTITY_FUNCTION);
+	m->Set(v);
+	m->SetVarName(funcName);
+	m->SetTargetEntity(pEnt);
+	m->SetDeliveryTime(timeMS);
+	Send(m);
+}
+
+void MessageManager::CallEntityFunctionRecursively( Entity *pEnt, int timeMS, const string &funcName, const VariantList *v, eTimingSystem timing )
 {
 	Message *m = new Message(MESSAGE_CLASS_ENTITY, timing, MESSAGE_TYPE_CALL_ENTITY_FUNCTION);
 	m->Set(v);
