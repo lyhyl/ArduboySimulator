@@ -87,6 +87,16 @@ void RenderSpinningTriangle()
 
 void RenderTexturedGLTriangle()
 {
+
+
+	glPushMatrix();
+	glLoadIdentity();
+	glTranslatef(0,0,-2);
+	glRotatef(float( (GetBaseApp()->GetGameTick()/10) %360) , 0, 1, 0); //rotate it
+	glDisable(GL_CULL_FACE); //so we can see the back of the triangle too
+
+
+
 	//let's draw a simple triangle 
 	/*
 	 2
@@ -110,6 +120,7 @@ void RenderTexturedGLTriangle()
 	};
 	//unsigned int rgba = MAKE_RGBA(255,255,255,255);
 	//glColor4x( (rgba >>8 & 0xFF)*256,  (rgba>>16& 0xFF)*256, (rgba>>24& 0xFF)*256, (rgba&0xFF)*256);
+	
 	glVertexPointer(3, GL_FLOAT,  0, vVertices);
 	glTexCoordPointer(2, GL_FLOAT,  0, vTexCoords);
 
@@ -118,14 +129,92 @@ void RenderTexturedGLTriangle()
 	
 	glEnable(GL_BLEND);
 	glEnable(GL_ALPHA_TEST);
-	
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glDisable(GL_CULL_FACE); //so we can see the back of the triangle too
 
+	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glEnable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
 	glDisable(GL_ALPHA_TEST);
+	CHECK_GL_ERROR();
 
+	glEnable(GL_CULL_FACE); //so we can see the back of the triangle too
+	glPopMatrix();
+	CHECK_GL_ERROR();
 }
 
+
+
+void RenderTexturedGLTriangleWithDrawElements()
+{
+
+
+	glPushMatrix();
+	glLoadIdentity();
+	glTranslatef(0,0,-2);
+	glRotatef(float( (GetBaseApp()->GetGameTick()/10) %360) , 0, 1, 0); //rotate it
+	glDisable(GL_CULL_FACE); //so we can see the back of the triangle too
+
+
+
+	//let's draw a simple triangle 
+	/*
+	 2
+	0 1
+	*/
+
+	const float triSize = 0.4f;
+
+	GLfloat vVertices[] = 
+	{
+		4000,4000,4000,
+		4000,4000,4000,
+
+		-triSize, -triSize, 0.0f,
+		triSize, -triSize, 0.0f,
+		0.0f, triSize, 0.0f
+	};
+
+	GLfloat vTexCoords[] = 
+	{
+		0,0,
+		0,0,
+		0,0,
+		1, 0,
+		0.5,1
+	};
+	//unsigned int rgba = MAKE_RGBA(255,255,255,255);
+	//glColor4x( (rgba >>8 & 0xFF)*256,  (rgba>>16& 0xFF)*256, (rgba>>24& 0xFF)*256, (rgba&0xFF)*256);
+	
+	glVertexPointer(3, GL_FLOAT,  0, vVertices);
+	glTexCoordPointer(2, GL_FLOAT,  0, vTexCoords);
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	
+	glEnable(GL_BLEND);
+	glEnable(GL_ALPHA_TEST);
+	glDisable(GL_CULL_FACE); //so we can see the back of the triangle too
+
+	//glDrawArrays(GL_TRIANGLES, 0, 3);
+	
+	uint16 index[5];
+	index[0] = 0;
+	index[1] = 1;
+	index[2] = 2;
+	index[3] = 3;
+	index[4] = 4;
+
+	glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, &index[1]);
+	
+	glEnable(GL_CULL_FACE);
+	glDisable(GL_BLEND);
+	glDisable(GL_ALPHA_TEST);
+	CHECK_GL_ERROR();
+
+	glEnable(GL_CULL_FACE); //so we can see the back of the triangle too
+	glPopMatrix();
+	CHECK_GL_ERROR();
+}
 
 void RenderTexturedRectangle(float RectSize)
 {
@@ -166,6 +255,7 @@ void RenderTexturedRectangle(float RectSize)
 	glDisable(GL_BLEND);
 	glDisable(GL_ALPHA_TEST);
 }
+
 
 void SetupFakePrimaryScreenSize(int x, int y)
 {

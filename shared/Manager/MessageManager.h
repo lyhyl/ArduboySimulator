@@ -104,13 +104,14 @@ enum eVirtualKeys
 	VIRTUAL_DPAD_HAT_DOWN,
 	VIRTUAL_DPAD_HAT_LEFT,
 
-	VIRTUAL_KEY_CUSTOM_START = 510000, //if you add your own, do it after this
 	VIRTUAL_KEY_ADB_LEFT_JOY_HORIZONTAL,
 	VIRTUAL_KEY_ADB_LEFT_JOY_VERTICAL,
 	VIRTUAL_KEY_ADB_RIGHT_JOY_HORIZONTAL,
 	VIRTUAL_KEY_ADB_RIGHT_JOY_VERTICAL,
 	VIRTUAL_KEY_ADB_LEFT_SHOULDER,
 	VIRTUAL_KEY_ADB_RIGHT_SHOULDER,
+
+	VIRTUAL_KEY_CUSTOM_START = 510000, //if you add your own at the app specific level, do it after this
 };
 
 enum eVirtualKeyInfo
@@ -121,6 +122,8 @@ enum eVirtualKeyInfo
 
 enum eMessageType
 {
+	//Do NOT change the order of these!  Only add new stuff at the end.
+
 	MESSAGE_TYPE_GUI_CLICK_START,
 	MESSAGE_TYPE_GUI_CLICK_END,
 	MESSAGE_TYPE_GUI_CLICK_MOVE, //only send when button/finger is held down
@@ -163,6 +166,8 @@ enum eMessageType
 	MESSAGE_TYPE_GUI_JOYPAD_BUTTONS, //For Jake's android gamepad input
 	MESSAGE_TYPE_GUI_JOYPAD, //For Jake's android gamepad input
 	MESSAGE_TYPE_GUI_JOYPAD_CONNECT, // For Jakes android gamepad input
+
+	MESSAGE_TYPE_CALL_ENTITY_FUNCTION_RECURSIVELY, //used to schedule fake clicks, helps me with debugging
 
 	MESSAGE_USER = 1000, //users can add their own messages starting here
 
@@ -249,6 +254,8 @@ public:
 	void SetComponentVariable( EntityComponent *pComp, int timeMS, const string &varName, const Variant &v, eTimingSystem timing = GetTiming() );
 	void RemoveComponentByName(Entity *pEnt, int timeMS, const string &compName, eTimingSystem timing = GetTiming());
 	void CallEntityFunction( Entity *pEnt, int timeMS, const string &funcName, const VariantList *v = NULL, eTimingSystem timing = GetTiming());
+	void CallEntityFunctionRecursively( Entity *pEnt, int timeMS, const string &funcName,const VariantList *v = NULL, eTimingSystem timing = GetTiming());
+
 	void CallComponentFunction( EntityComponent *pComp, int timeMS, const string &funcName, const VariantList *v = NULL, eTimingSystem timing = GetTiming()); //assumes you know the components address
 	void CallComponentFunction( Entity *pEnt, const string &compName, int timeMS,const string &funcName, const VariantList *v = NULL, eTimingSystem timing = GetTiming() ); //useful for calling components that don't exist yet
 	void AddComponent(Entity *pEnt, int timeMS, EntityComponent *pComp, eTimingSystem timing = GetTiming());
@@ -267,7 +274,6 @@ private:
 	void DumpMessagesInList(list<Message*> m);
 	void Deliver(Message *m);
 	void DeleteAllMessages();
-
 	//a separate queue for each timing system
 	list <Message*> m_gameMessages;
 	list <Message*> m_systemMessages;

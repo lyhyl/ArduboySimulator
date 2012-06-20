@@ -291,6 +291,9 @@ void DrawRect(CL_Vec2f &vPos, CL_Vec2f &vSize, uint32 color, float lineWidth)
 	DrawRect(vPos.x, vPos.y, vSize.x, vSize.y, color, lineWidth);
 }
 
+//old way using GL_LINES, but doesn't work on the Flash target
+
+/*
 void  DrawLine( GLuint rgba,   float ax, float ay, float bx, float by, float lineWidth )
 {
 	SetupOrtho();
@@ -322,6 +325,54 @@ void  DrawLine( GLuint rgba,   float ax, float ay, float bx, float by, float lin
 		glEnable( GL_TEXTURE_2D );
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);	
 		CHECK_GL_ERROR();
+}
+*/
+void  DrawLine( GLuint rgba,   float ax, float ay, float bx, float by, float lineWidth )
+{
+	SetupOrtho();
+	g_globalBatcher.Flush();
+
+	glDisable( GL_TEXTURE_2D );
+
+	glEnableClientState(GL_VERTEX_ARRAY);	
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	
+	//	0 1
+	//	3 2
+	//glDisable(GL_CULL_FACE); //so we can see the back of the triangle too
+
+	static GLfloat	vertices[3*4];
+
+	vertices[0*3+0] = ax; vertices[0*3+1] = ay;
+	vertices[1*3+0] = bx; vertices[1*3+1] = by;
+	vertices[2*3+0] = bx+lineWidth; vertices[2*3+1] = by+lineWidth;
+	vertices[3*3+0] = ax+lineWidth; vertices[3*3+1] = ay+lineWidth;
+
+	//set the Z
+	vertices[0*3+2] = 0;
+	vertices[1*3+2] = 0;
+	vertices[2*3+2] = 0;
+	vertices[3*3+2] = 0;
+
+
+	//glLineWidth(lineWidth); 
+	//glEnable (GL_LINE_SMOOTH);
+	//glDisable(GL_LINE_SMOOTH);
+	//glHint (GL_LINE_SMOOTH_HINT, GL_NICEST);
+
+	glVertexPointer(3, GL_FLOAT, 0, vertices);
+	//glColor4f(1, 1, 1, 1);
+	glEnable( GL_BLEND );
+	glColor4x( (rgba >>8 & 0xFF)*256,  (rgba>>16& 0xFF)*256, (rgba>>24& 0xFF)*256, (rgba&0xFF)*256);
+
+	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+	glColor4x(1 << 16, 1 << 16, 1 << 16, 1 << 16);
+
+	
+	glDisable( GL_BLEND );
+	glEnable( GL_TEXTURE_2D );
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);	
+	CHECK_GL_ERROR();
 }
 
 void  GenerateFillRect( GLuint rgba, float x, float y, float w, float h )
@@ -436,9 +487,7 @@ void RemoveOrthoRenderSize()
 
 void SetupOrtho()
 {
-
 	if (!NeedsOrthoSet()) return;
-	
 
 	CHECK_GL_ERROR();
 	g_globalBatcher.Flush();
@@ -454,32 +503,29 @@ void SetupOrtho()
 	glDisableClientState(GL_NORMAL_ARRAY);
 
 	CHECK_GL_ERROR();
-	
 	RotateGLIfNeeded();
+
 	//Note:  We could setup our projection matrix upside down so the upper left would be 0,0, but.. then you have to wind your
 	//triangles backwards (or keep switching to front face culling) which I find even more confusing than dealing with the y offsets.
 
-	//don't ask me why, but when irrlicht is used as the main renderer this comes out backwards
+
+	//When PrepareForGL() is called (removing our 2d ortho stuff), it gets turned back into normal back face culling
+
 #ifdef _IRR_STATIC_LIB_
 	glFrontFace( GL_CW );
 	glCullFace(GL_BACK);
 #else
+	//glFrontFace( GL_CCW );
 	glCullFace(GL_FRONT);
 #endif
+	
 
 	g_renderOrthoRenderSizeX = GetScreenSizeXf();
 	g_renderOrthoRenderSizeY = GetScreenSizeYf();
-
 	
 	float tempX = g_renderOrthoRenderSizeX;
 	float tempY = g_renderOrthoRenderSizeY;
 
-	/*
-	if (InLandscapeGUIMode())
-	{
-		swap(tempX, tempY);
-	}
-	*/
     CHECK_GL_ERROR();
 
 	glOrthof( 0,  tempX, tempY, 0,  -1, 1 );		

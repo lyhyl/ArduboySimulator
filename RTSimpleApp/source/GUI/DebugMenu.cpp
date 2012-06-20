@@ -14,10 +14,7 @@ void DebugMenuOnSelect(VariantList *pVList) //0=vec2 point of click, 1=entity se
 	}
 	if (pEntClicked->GetName() == "music_on")
 	{
-		if (GetAudioManager()->Play("audio/techno.mp3", true, true) == AUDIO_HANDLE_BLANK) {
-			// If the mp3 didn't start playing try the ogg instead
-			GetAudioManager()->Play("audio/techno.ogg", true, true);
-		}
+		GetAudioManager()->Play("audio/techno.mp3", true, true);
 	}
 
 	if (pEntClicked->GetName() == "music_off")

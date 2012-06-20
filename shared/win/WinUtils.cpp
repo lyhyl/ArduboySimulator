@@ -19,6 +19,8 @@ using namespace std;
 void StringReplace(const std::string& what, const std::string& with, std::string& in);
 vector<string> StringTokenize (const  string  & theString,  const  string  & theDelimiter );
 
+string g_appCachePath;
+
 class FastTimerDX
 {
 public:
@@ -71,7 +73,11 @@ string GetSavePath()
 
 string GetAppCachePath()
 {
-	return "";
+	return g_appCachePath;
+}
+void SetAppCachePath(std::string path)
+{
+	g_appCachePath = path;
 }
 
 void FireAchievement(std::string achievement)

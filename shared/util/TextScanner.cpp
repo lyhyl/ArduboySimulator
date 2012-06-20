@@ -178,6 +178,7 @@ bool TextScanner::SaveFile( const string &fName, bool bAddBasePath /*= true*/ )
 {
 	string f;
 
+	string lineFeed = "\r\n";
 	if (bAddBasePath)
 	{
 		f = GetSavePath()+fName;
@@ -196,6 +197,7 @@ bool TextScanner::SaveFile( const string &fName, bool bAddBasePath /*= true*/ )
 	for (uint32 i=0; i < m_lines.size(); i++)
 	{
 		fwrite(m_lines[i].c_str(), m_lines[i].size(), 1, fp);
+		fwrite(lineFeed.c_str(), lineFeed.size(), 1, fp);
 	}
 	
 	fclose(fp);

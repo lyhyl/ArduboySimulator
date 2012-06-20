@@ -867,6 +867,21 @@ void SoftSurface::BlitRGBFromRGBA( int dstX, int dstY, SoftSurface *pSrc, int sr
 
 }
 
+
+void SoftSurface::BlitRGBFromRGB( int dstX, int dstY, SoftSurface *pSrc, int srcX /*= 0*/, int srcY /*= 0*/, int srcWidth /*= 0*/, int srcHeight /*= 0*/ )
+{
+
+	byte *pDestImage = GetPointerToPixel(dstX, dstY);
+	byte *pSrcImage = pSrc->GetPointerToPixel(srcX, srcY);
+
+	for (int y=0; y < srcHeight; y++)
+	{
+		memcpy(pDestImage, pSrcImage, srcWidth*m_bytesPerPixel);
+		pDestImage += GetPitch();
+		pSrcImage += pSrc->GetPitch();
+	}
+}
+
 int SoftSurface::RGBAToPalette(const glColorBytes &color)
 {
 	assert(GetSurfaceType() == SURFACE_PALETTE_8BIT);
@@ -1049,7 +1064,12 @@ void SoftSurface::Blit( int dstX, int dstY, SoftSurface *pSrc, int srcX /*= 0*/,
 		{
 			BlitRGBFromRGBA(dstX, dstY, pSrc, srcX, srcY, srcWidth, srcHeight);
 			return;
-		}
+		} else
+			if (pSrc->GetSurfaceType() == SURFACE_RGB)
+			{
+				BlitRGBFromRGB(dstX, dstY, pSrc, srcX, srcY, srcWidth, srcHeight);
+				return;
+			}
 	}
 
 	assert(!"We don't handle this combination of surface types yet... SETTTTHHHHH!");

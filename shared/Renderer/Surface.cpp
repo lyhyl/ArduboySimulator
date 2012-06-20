@@ -673,12 +673,12 @@ void Surface::BlitEx(rtRectf dst, rtRectf src, unsigned int rgba, float rotation
 	EndRender(rotation, rgba);
 }
 
-void Surface::BlitScaled( float x, float y, CL_Vec2f vScale, eAlignment alignment, unsigned int rgba, float rotation)
+void Surface::BlitScaled( float x, float y, CL_Vec2f vScale, eAlignment alignment, unsigned int rgba, float rotation, RenderBatcher *pRenderBatcher)
 {
-	BlitScaledWithRotatePoint(x,y,vScale,alignment,rgba,rotation,CL_Vec2f(x,y));
+	BlitScaledWithRotatePoint(x,y,vScale,alignment,rgba,rotation,CL_Vec2f(x,y), pRenderBatcher);
 }
 
-void Surface::BlitScaledWithRotatePoint( float x, float y, CL_Vec2f vScale, eAlignment alignment, unsigned int rgba, float rotation, CL_Vec2f vRotationPt)
+void Surface::BlitScaledWithRotatePoint( float x, float y, CL_Vec2f vScale, eAlignment alignment, unsigned int rgba, float rotation, CL_Vec2f vRotationPt, RenderBatcher *pRenderBatcher)
 {
 	
 	assert(vScale.x != 0 && vScale.y != 0 && "Dahell?");
@@ -690,7 +690,14 @@ void Surface::BlitScaledWithRotatePoint( float x, float y, CL_Vec2f vScale, eAli
 	dst.AdjustPosition(vStart.x, vStart.y);
 	dst.Scale(alignment, vScale);
 
-	BlitEx(dst, src, rgba, rotation, vRotationPt);
+	if (pRenderBatcher)
+	{
+		//rotation ignored for now
+		pRenderBatcher->BlitEx(this, dst, src, rgba);
+	} else
+	{
+		BlitEx(dst, src, rgba, rotation, vRotationPt);
+	}
 }
 
 
@@ -1093,7 +1100,17 @@ bool Surface::InitFromSoftSurface( SoftSurface *pSurf, bool bCreateSurface, int 
 	
 	} else
 	{
-		byte *pPixelData = new byte[dataSize];
+		SoftSurface s;
+		SoftSurface::eSurfaceType tempSurfType = SoftSurface::SURFACE_RGB;
+
+		if (colorFormat == GL_RGBA)
+		{
+			tempSurfType = SoftSurface::SURFACE_RGBA;
+		}
+
+		s.Init(m_texWidth, m_texHeight, tempSurfType);
+		byte *pPixelData = s.GetPixelData();
+
 		assert(pPixelData);
 		if (!pPixelData)
 		{
@@ -1102,22 +1119,35 @@ bool Surface::InitFromSoftSurface( SoftSurface *pSurf, bool bCreateSurface, int 
 		}
 
 		memset(pPixelData,0, dataSize);
-		glTexImage2D( GL_TEXTURE_2D, mipLevel, internalColorFormat, m_texWidth, m_texHeight, 0, colorFormat, pixelFormat, pPixelData );
-		SAFE_DELETE_ARRAY(pPixelData);
-		int yStart = 0;
+	
+		#ifdef RT_GLES_ADAPTOR_MODE
+			//do it the simpler way, for Flash
+			int yStart = 0;
+			bool bUpsideDownMode = true;
+			if (bUpsideDownMode)
+			{
+				yStart += (m_texHeight-m_originalHeight);
+			} 
+			s.Blit(0,yStart, pSurf);
+			glTexImage2D( GL_TEXTURE_2D, mipLevel, internalColorFormat, m_texWidth, m_texHeight, 0, colorFormat, pixelFormat, pPixelData );
 
-		bool bUpsideDownMode = true;
-		if (bUpsideDownMode)
-		{
-			yStart += (m_texHeight-m_originalHeight);
-		} 
-		
+		#else
+			//normal way
+			glTexImage2D( GL_TEXTURE_2D, mipLevel, internalColorFormat, m_texWidth, m_texHeight, 0, colorFormat, pixelFormat, pPixelData );
 
-		assert(pSurf->GetWidth()%4 == 0 && "This will probably crash glTexSubImage2D.  Pad your textures to multiples of 4, or use the .rttex format.");
-		//note: We could get around the error above with glPixelStorei(GL_PACK_ALIGNMENT, 1), but I don't think
-		//it's available on all platforms so not going to bother
-		
-		glTexSubImage2D(GL_TEXTURE_2D, mipLevel, 0, yStart, pSurf->GetWidth(), pSurf->GetHeight(), internalColorFormat, pixelFormat, pSurf->GetPixelData());
+			int yStart = 0;
+			bool bUpsideDownMode = true;
+			if (bUpsideDownMode)
+			{
+				yStart += (m_texHeight-m_originalHeight);
+			} 
+
+			assert(pSurf->GetWidth()%4 == 0 && "This will probably crash glTexSubImage2D.  Pad your textures to multiples of 4, or use the .rttex format.");
+			//note: We could get around the error above with glPixelStorei(GL_PACK_ALIGNMENT, 1), but I don't think
+			//it's available on all platforms so not going to bother
+			
+			glTexSubImage2D(GL_TEXTURE_2D, mipLevel, 0, yStart, pSurf->GetWidth(), pSurf->GetHeight(), internalColorFormat, pixelFormat, pSurf->GetPixelData());
+		#endif
 	}
 
 	if (bCreateSurface && mipLevel == 0)
@@ -1128,4 +1158,12 @@ bool Surface::InitFromSoftSurface( SoftSurface *pSurf, bool bCreateSurface, int 
 
 	CHECK_GL_ERROR();
 	return true;
+}
+
+
+string PrintGLColor(glColorBytes color)
+{
+	char st[128];
+	sprintf(st, "%d, %d, %d, %d", color.r, color.g, color.b, color.a);
+	return string(st);
 }

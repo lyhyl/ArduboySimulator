@@ -24,6 +24,7 @@ struct glColorBytes
 };
 
 class SoftSurface;
+class RenderBatcher;
 
 #define NO_TEXTURE_LOADED (2000000000) //I had this as 4294967294u but saw some weirdness with some compiles
 
@@ -85,8 +86,8 @@ public:
 	virtual void BlitEx(rtRectf dst, rtRectf src, unsigned int rgba = MAKE_RGBA(255,255,255,255), float rotationDegrees = 0, CL_Vec2f vRotatePt = CL_Vec2f(0,0)); //more advanced version, can do scaling and sub-texture blits
 
 	//these actually just call the above ones
-	void BlitScaled( float x, float y, CL_Vec2f vScale, eAlignment alignment = ALIGNMENT_CENTER, unsigned int rgba  = MAKE_RGBA(255,255,255,255), float rotation=0);
-	void BlitScaledWithRotatePoint( float x, float y, CL_Vec2f vScale, eAlignment alignment, unsigned int rgba, float rotation, CL_Vec2f vRotationPt);
+	void BlitScaled( float x, float y, CL_Vec2f vScale, eAlignment alignment = ALIGNMENT_CENTER, unsigned int rgba  = MAKE_RGBA(255,255,255,255), float rotation=0,  RenderBatcher *pRenderBatcher = NULL);
+	void BlitScaledWithRotatePoint( float x, float y, CL_Vec2f vScale, eAlignment alignment, unsigned int rgba, float rotation, CL_Vec2f vRotationPt, RenderBatcher *pRenderBatcher = NULL);
 
 	rtRectf GetRectf() {return rtRectf(0,0, float(m_originalWidth), float(m_originalWidth));}
 	void SetSmoothing( bool bSmoothing);
@@ -148,4 +149,6 @@ private:
 };
 
 extern GLuint g_lastBound;
+std::string PrintGLColor(glColorBytes color);
+
 #endif // Surface_h__

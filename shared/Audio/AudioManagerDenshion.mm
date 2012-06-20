@@ -179,6 +179,12 @@ LogMsg("Music disabled, pretending to play");
 		
 		NSString *soundFile =  [NSString stringWithCString:  (basePath+fName).c_str() encoding: [NSString defaultCStringEncoding]];
 	
+        if (![[NSFileManager defaultManager] fileExistsAtPath:soundFile])
+        {
+            LogMsg("Error: Can't locate audio file %s!",
+                   fName.c_str());
+            return AUDIO_HANDLE_BLANK;
+        }
 		if (m_bgMusicPlayer)
 		{
 			[m_bgMusicPlayer stop];
@@ -187,9 +193,10 @@ LogMsg("Music disabled, pretending to play");
 		}
 		
 		m_bgMusicPlayer = [AVAudioPlayer alloc];
-		
+        
 		[m_bgMusicPlayer initWithContentsOfURL: [NSURL fileURLWithPath:soundFile] error:nil];
-		if (bLooping)
+
+        if (bLooping)
 		{
 			m_bgMusicPlayer.numberOfLoops = -1;
 		}
