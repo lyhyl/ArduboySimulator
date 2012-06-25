@@ -38,7 +38,7 @@ $(SHARED)/util/CRandom.cpp $(SHARED)/util/GLESUtils.cpp $(SHARED)/util/MathUtils
 $(SHARED)/util/Variant.cpp $(SHARED)/util/boost/libs/signals/src/connection.cpp $(SHARED)/util/boost/libs/signals/src/named_slot_map.cpp $(SHARED)/util/boost/libs/signals/src/signal_base.cpp \
 $(SHARED)/util/boost/libs/signals/src/slot.cpp $(SHARED)/util/boost/libs/signals/src/trackable.cpp $(SHARED)/BaseApp.cpp $(SHARED)/FileSystem/FileSystem.cpp \
 $(SHARED)/FileSystem/FileSystemZip.cpp $(SHARED)/util/unzip/unzip.c $(SHARED)/util/unzip/ioapi.c $(SHARED)/FileSystem/StreamingInstance.cpp \
-$(SHARED)/FileSystem/StreamingInstanceZip.cpp $(SHARED)/FileSystem/StreamingInstanceFile.cpp \
+$(SHARED)/FileSystem/StreamingInstanceZip.cpp $(SHARED)/FileSystem/StreamingInstanceFile.cpp $(SHARED)/Ad/AdProvider.cpp \
 \
 \
 $(COMPPATH)/FocusInputComponent.cpp $(COMPPATH)/FocusUpdateComponent.cpp $(COMPPATH)/CustomInputComponent.cpp $(COMPPATH)/ArcadeInputComponent.cpp \
@@ -47,11 +47,11 @@ $(COMPPATH)/InputTextRenderComponent.cpp $(COMPPATH)/InterpolateComponent.cpp $(
 $(COMPPATH)/SelectButtonWithCustomInputComponent.cpp $(COMPPATH)/SliderComponent.cpp $(COMPPATH)/TextBoxRenderComponent.cpp $(COMPPATH)/TextRenderComponent.cpp \
 $(COMPPATH)/EmitVirtualKeyComponent.cpp $(COMPPATH)/OverlayRenderComponent.cpp $(COMPPATH)/TouchHandlerComponent.cpp $(COMPPATH)/TyperComponent.cpp \
 $(COMPPATH)/UnderlineRenderComponent.cpp $(SHARED)/Manager/IAPManager.cpp $(SHARED)/Manager/AdManager.cpp $(COMPPATH)/TouchDragComponent.cpp \
-$(COMPPATH)/RenderScissorComponent.cpp $(COMPPATH)/ScrollBarRenderComponent.cpp $(SHARED)/Ad/AdProvider.cpp \
+$(COMPPATH)/RenderScissorComponent.cpp $(COMPPATH)/ScrollBarRenderComponent.cpp $(SHARED)/Ad/AdProviderChartboost.cpp \
 \
 \
 $(APP)/App.cpp ../temp_final_cpp_src/AndroidApp.cpp $(APP)/MenuStore.cpp $(APP)/MenuPurchase.cpp $(APP)/MenuTapjoy.cpp \
-$(APP)/MenuMain.cpp $(APP)/MenuAdWait.cpp
+$(APP)/MenuMain.cpp $(APP)/MenuAdWait.cpp $(APP)/MenuTest.cpp
 
 
 LOCAL_LDLIBS := -lGLESv1_CM -ldl -llog -lz

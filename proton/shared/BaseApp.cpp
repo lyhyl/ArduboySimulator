@@ -147,8 +147,7 @@ void BaseApp::Draw()
 	{
 		char stTemp[256];
 		sprintf(stTemp, "fps: %d - M: %.2f, T: %.2f A: %.2f F: %.2f", m_gameTimer.GetFPS(), (float(m_memUsed)/1024)/1024, (float(m_texMemUsed)/1024)/1024,  float(GetAudioManager()->GetMemoryUsed()/1024)/ 1024, float(GetFreeMemory()/1024)/ 1024);
-		char stExtra[128];
-
+	
 #ifdef _IRR_STATIC_LIB_
 		int prims = 0;
 		if (GetIrrlichtManager()->GetDriver())

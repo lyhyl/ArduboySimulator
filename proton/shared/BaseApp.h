@@ -53,6 +53,8 @@ struct OSMessage
 {
 	enum eMessageType
 	{
+		//DO *NOT* change the order of these, only add new ones at the end!
+
 		MESSAGE_NONE,
 		MESSAGE_OPEN_TEXT_BOX,
 		MESSAGE_CLOSE_TEXT_BOX,
@@ -83,6 +85,15 @@ struct OSMessage
         MESSAGE_ALLOW_SCREEN_DIMMING, //send 1 for yes, 0 to no (supported by iOS only right now)
 		
 		MESSAGE_REQUEST_AD_SIZE, //send x and y, applicable to Tapjoy only on Android right now
+		
+		//for chartboost, only used for Android
+		MESSAGE_CHARTBOOST_CACHE_INTERSTITIAL, //23
+		MESSAGE_CHARTBOOST_SHOW_INTERSTITIAL,
+		MESSAGE_CHARTBOOST_CACHE_MORE_APPS,
+		MESSAGE_CHARTBOOST_SHOW_MORE_APPS,
+		MESSAGE_CHARTBOOST_SETUP, //send chartboost app id/app sig as strings
+		MESSAGE_CHARTBOOST_NOTIFY_INSTALL,
+	
 		MESSAGE_USER = 1000
 	};
 
@@ -100,9 +111,11 @@ struct OSMessage
 	float m_x, m_y; //location of text box, or screen size if using MESSAGE_SET_VIDEO_MODE
 	float m_sizeX, m_sizeY;
 	float m_fontSize; //aspect ratio if using MESSAGE_SET_VIDEO_MODE
-	string m_string; //default text of text box
+	string m_string; //first text parm
 	uint32 m_parm2; //well, I use it to describe the input box type with the input stuff
 	bool m_fullscreen; //used with MESSAGE_SET_VIDEO_MODE
+	string m_string2; //second text parm
+
 };
 
 enum eInputMode

@@ -168,7 +168,7 @@ enum eMessageType
 	MESSAGE_TYPE_GUI_JOYPAD_CONNECT, // For Jakes android gamepad input
 
 	MESSAGE_TYPE_CALL_ENTITY_FUNCTION_RECURSIVELY, //used to schedule fake clicks, helps me with debugging
-
+	
 	MESSAGE_USER = 1000, //users can add their own messages starting here
 
 };

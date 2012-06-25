@@ -56,6 +56,18 @@ string PrintVector3(CL_Vec3f v)
 	return string(st);
 }
 
+string PrintMatrix(CL_Mat4f v)
+{
+	string r;
+	char st[128];
+	for (int i=0; i < 4; i++)
+	{
+		sprintf(st, "%.3f, %.3f, %.3f %.3f\n", v.matrix[i*4], v.matrix[i*4+1], v.matrix[i*4+2], v.matrix[i*4+3]);
+		r += st;
+	}
+	return r;
+}
+
 string PrintRect(CL_Rectf v)
 {
 	char st[128];

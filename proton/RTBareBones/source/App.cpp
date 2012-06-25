@@ -10,6 +10,7 @@
 #include "Entity/CustomInputComponent.h" //used for the back button (android)
 #include "Entity/FocusInputComponent.h" //needed to let the input component see input messages
 #include "Entity/ArcadeInputComponent.h" 
+//#include "util/TextScanner.h"
 
 MessageManager g_messageManager;
 MessageManager * GetMessageManager() {return &g_messageManager;}
@@ -263,6 +264,23 @@ void App::Update()
 		//INPUT TEST - wire up input to some functions to manually handle.  AppInput will use LogMsg to
 		//send them to the log.  (Each device has a way to view a debug log in real-time)
 		GetBaseApp()->m_sig_input.connect(&AppInput);
+
+		/*
+		//file handling test, if TextScanner.h is included at the top..
+
+		TextScanner t;
+		t.m_lines.push_back("Testing 123");
+		t.m_lines.push_back("Fuck ya'll!");
+		t.m_lines.push_back("Whoopsopsop!");
+
+		LogMsg("Saving file...");
+		t.SaveFile("temp.txt");
+
+
+		TextScanner b;
+		b.LoadFile("temp.txt");
+		b.DumpToLog();
+		*/
 	}
 
 	//game is thinking.  
@@ -282,7 +300,7 @@ void App::Draw()
 
 	//after our 2d rect call above, we need to prepare for raw GL again. (it keeps it in ortho mode if we don't for speed)
 	PrepareForGL();
-	RenderSpinningTriangle();
+	//RenderSpinningTriangle();
 	
 	//let's blit a bmp, but first load it if needed
 	if (!m_surf.IsLoaded())
@@ -290,8 +308,12 @@ void App::Draw()
 		m_surf.LoadFile("interface/test.bmp");
 	}
 
-	//m_surf.Bind();
-	//RenderTexturedSpinningTriangle();
+
+	m_surf.Bind();
+
+	//RenderTexturedGLTriangle();
+	RenderTexturedGLTriangleWithDrawElements();
+
 	//blit the logo with the Y mirrored
 	//rtRect texRect = rtRect(0, m_surf.GetHeight(), m_surf.GetWidth(), 0);
 	//rtRect destRect = rtRect(0,0, m_surf.GetWidth(), m_surf.GetHeight());

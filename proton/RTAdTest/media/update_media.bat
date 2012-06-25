@@ -41,4 +41,4 @@ REM for /r %%f in (*.*) do ..\media\LowerCase.bat  %%f
 
 del icon.rttex
 del default.rttex
-pause
+

@@ -12,6 +12,8 @@
 
 //#define RT_HOOKED_SUPPORT
 //#define RT_TAPJOY_SUPPORT
+//#define RT_CHARTBOOST_SUPPORT
+//#define RT_FLURRY_SUPPORT
 
 //**********************************************
 
