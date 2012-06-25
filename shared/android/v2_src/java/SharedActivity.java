@@ -94,6 +94,11 @@ import android.widget.RelativeLayout;
 	import com.tapjoy.TapjoyVideoStatus;
 //#endif
 
+//#if defined(RT_CHARTBOOST_SUPPORT)
+	import com.chartboost.sdk.CBDialogActivity;
+	import com.chartboost.sdk.ChartBoost;
+//#endif
+
 //Android in app billing
 
 import ${PACKAGE_NAME}.BillingService.RequestPurchase;
@@ -147,6 +152,10 @@ import android.view.View.OnClickListener;
 	public static boolean run_hooked;
 	public static int tapjoy_ad_show; //0 for don't shot, 1 for show
 	
+	//#if defined(RT_CHARTBOOST_SUPPORT)
+	public static boolean cb_cacheInterstitial = false;
+	public static boolean cb_showInterstitial = false;
+	//#endif
 	
 	//GOOGLE IAB
 	public BillingService mBillingService;
@@ -439,7 +448,6 @@ import android.view.View.OnClickListener;
 			addContentView(adLinearLayout, l);
 		//#endif
 		
-		
 		update_display_ad = false;
 		run_hooked = false;
 		tapjoy_ad_show = 0;
@@ -484,6 +492,10 @@ import android.view.View.OnClickListener;
         mGLView.onResume();
 		setup_accel(accelHzSave);
 		super.onResume();
+
+		//#if defined(RT_CHARTBOOST_SUPPORT)
+			ChartBoost.getSharedChartBoost(this);
+		//#endif
 	}
 	
 	// Create runnable for posting
@@ -513,6 +525,32 @@ import android.view.View.OnClickListener;
 	{
 	
 		//	Log.d(PackageName, "Update");
+	
+	
+	//#if defined(RT_CHARTBOOST_SUPPORT)
+
+	if (cb_cacheInterstitial)
+	{
+		Log.v(app.PackageName, "Caching CB interstitial");
+		//String location = nativeGetLastOSMessageString();
+				
+		ChartBoost _cb = ChartBoost.getSharedChartBoost(this);
+		_cb.cacheInterstitial();
+		cb_cacheInterstitial = false;
+	}
+	
+	if (cb_showInterstitial)
+	{
+
+		Log.v(app.PackageName, "Showing CB interstitial");
+		//String location = nativeGetLastOSMessageString();
+				
+		ChartBoost _cb = ChartBoost.getSharedChartBoost(this);
+		_cb.showInterstitial();
+	}
+	
+	//#endif
+
 	
 	if (run_hooked && HookedEnabled)
 	{
@@ -779,6 +817,10 @@ import android.view.View.OnClickListener;
 	final static int MESSAGE_TYPE_TAPJOY_AWARD_TAP_POINTS_RETURN_ERROR = 33;
 	final static int MESSAGE_TYPE_TAPJOY_EARNED_TAP_POINTS = 34;
 
+	final static int MESSAGE_TYPE_GUI_JOYPAD_BUTTONS = 35; //For Jake's android gamepad input
+	final static int MESSAGE_TYPE_GUI_JOYPAD = 36; //For Jake's android gamepad input
+	final static int MESSAGE_TYPE_GUI_JOYPAD_CONNECT = 37; // For Jakes android gamepad input
+	final static int MESSAGE_TYPE_CALL_ENTITY_FUNCTION_RECURSIVELY = 38; //used to schedule fake clicks, helps me with debugging
 
 	final static int MESSAGE_USER = 1000; //send your own messages after this #
 	
@@ -1470,6 +1512,15 @@ class AppRenderer implements GLSurfaceView.Renderer
 	final static int MESSAGE_ALLOW_SCREEN_DIMMING = 21;
 	final static int MESSAGE_REQUEST_AD_SIZE = 22;
 
+	//CHARTBOOST STUFF
+
+	final static int MESSAGE_CHARTBOOST_CACHE_INTERSTITIAL = 23;
+	final static int MESSAGE_CHARTBOOST_SHOW_INTERSTITIAL = 24;
+	final static int MESSAGE_CHARTBOOST_CACHE_MORE_APPS = 25;
+	final static int MESSAGE_CHARTBOOST_SHOW_MORE_APPS = 26;
+	final static int MESSAGE_CHARTBOOST_SETUP = 27;
+	final static int MESSAGE_CHARTBOOST_NOTIFY_INSTALL = 28;
+
 	static long m_gameTimer = 0;
 	static int m_timerLoopMS = 0; //every this MS, the loop runs.  0 for no fps limit
 
@@ -1549,6 +1600,50 @@ class AppRenderer implements GLSurfaceView.Renderer
 					//#endif
 					break;
 	
+
+	
+				case MESSAGE_CHARTBOOST_SETUP:
+				{
+				
+				//#if defined(RT_CHARTBOOST_SUPPORT)
+
+					ChartBoost _cb = ChartBoost.getSharedChartBoost(app);
+					String appID = nativeGetLastOSMessageString();
+					String appSig = nativeGetLastOSMessageString2();
+					Log.v(app.PackageName, "Setting up chartboost "+appID+" : "+appSig);
+			
+					_cb.setAppId(appID);
+					_cb.setAppSignature(appSig);
+				//#else
+						Log.v(app.PackageName, "ERROR: RT_CHARTBOOST_ENABLED isn't defined in Main.java, you can't use it!");
+				//#endif
+				}
+					break;
+	
+	//#if defined(RT_CHARTBOOST_SUPPORT)
+
+			case MESSAGE_CHARTBOOST_CACHE_INTERSTITIAL:
+				{
+					//must wait and do it in UI thread
+					app.cb_cacheInterstitial = true;
+					app.mMainThreadHandler.post(app.mUpdateMainThread);
+				}
+					break;
+					
+			case MESSAGE_CHARTBOOST_SHOW_INTERSTITIAL:
+			{
+					//must wait and do it in UI thread
+					app.cb_showInterstitial = true;
+					app.mMainThreadHandler.post(app.mUpdateMainThread);
+
+			}	
+					break;
+		
+		//TODO:  Handle the other messages...
+		
+	//#endif
+	
+
 	//#if defined(RT_TAPJOY_SUPPORT)
 	
 				case MESSAGE_TAPJOY_GET_FEATURED_APP:
@@ -1648,5 +1743,6 @@ class AppRenderer implements GLSurfaceView.Renderer
 	private static native float nativeGetLastOSMessageX();
 	private static native float nativeGetLastOSMessageY();
 	private static native String nativeGetLastOSMessageString();
+	private static native String nativeGetLastOSMessageString2();
 	public SharedActivity app;
 }

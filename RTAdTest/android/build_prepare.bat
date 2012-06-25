@@ -12,6 +12,8 @@ call android update project -p ./
 rmdir assets /S /Q
 mkdir assets
 
+mkdir libs
+
 :It's ok if you get "0 files copied" messages, there just aren't files in some of these
 mkdir assets\interface
 xcopy ..\bin\interface assets\interface /E /F /Y
@@ -56,9 +58,52 @@ echo d | xcopy ..\..\shared\android\optional_src\com\tapjoy temp_final_src\com\t
 rmdir temp_final_cpp_src  /S /Q
 call ant preprocess_cpp
 
+:optional libs we made need, you need to download and put in the appropriate place if you use them
+
+goto skipstartapp;
+:for startapp
+set TEMPFILE=..\..\shared\android\optional_src\libs\startapp\SearchHelperService-1.0.14-jar-with-dependencies.jar
+
+:Extra check to make sure we can locate the files
+if exist "%TEMPFILE%" (
+echo Located startapp files.
+) else (
+echo Cannot find the tapjoy library files.  Download from startapp and place lib into shared\android\optional_src\libs\startapp
+..\..\shared\win\utils\beeper.exe /p
+)
+copy %TEMPFILE% libs
+:skipstartapp
+
+:goto skiphooked;
+:For Hooked/wasabi
+set TEMPFILE=..\..\shared\android\optional_src\libs\wasabi\wasabi.jar
+:Extra check to make sure we can locate the files
+if exist "%TEMPFILE%" (
+echo Located startapp files.
+) else (
+echo Cannot find the tapjoy library files.  Download from startapp and place lib into shared\android\optional_src\libs\startapp
+..\..\shared\win\utils\beeper.exe /p
+)
+copy %TEMPFILE% libs
+:skiphooked
+
+
+:for Chartboost
+set TEMPFILE=..\..\shared\android\optional_src\libs\ChartBoost\chartboost.jar
+
+:Extra check to make sure we can locate the files
+if exist "%TEMPFILE%" (
+echo Located startapp files.
+) else (
+echo Cannot find the ChartBoost .jar file.  Download and place lib into shared\android\optional_src\libs\ChartBoost
+..\..\shared\win\utils\beeper.exe /p
+)
+copy %TEMPFILE% libs
+
+
 :Next package it with the java part
 call ant preprocess
 
-:build the C/C++ parts
-call ndk-build
+:build the C/C++ parts.. you might want to remove/modify the -j7 part if you don't have a multicore processor with 8 threads...
+call ndk-build -j7
 if not exist libs/armeabi/lib%SMALL_PACKAGE_NAME%.so ..\..\shared\win\utils\beeper.exe /p

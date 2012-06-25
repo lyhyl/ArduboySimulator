@@ -638,6 +638,14 @@
 					RelativePath="..\source\MenuTapjoy.h"
 					>
 				</File>
+				<File
+					RelativePath="..\source\MenuTest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\source\MenuTest.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter
@@ -2164,6 +2172,70 @@
 				</File>
 				<File
 					RelativePath="..\..\shared\Ad\AdProviderIOS_ChartBoost.mm"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="testfw"
+				>
+				<File
+					RelativePath="..\..\shared\testfw\ProtonTester-internal.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\testfw\ProtonTester.cpp"
+					>
+					<FileConfiguration
+						Name="Common Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Common Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug GL|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release GL|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug WebOS|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\shared\testfw\ProtonTester.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\testfw\ProtonTesterGUI.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\testfw\ProtonTesterGUI.h"
 					>
 				</File>
 			</Filter>

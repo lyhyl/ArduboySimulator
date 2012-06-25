@@ -1,3 +1,4 @@
+#include "PlatformPrecomp.h"
 #include "ProtonTesterGUI.h"
 
 #include "ProtonTester.h"

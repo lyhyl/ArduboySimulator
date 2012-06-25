@@ -8,6 +8,7 @@
 #define PLATFORM_WINDOWS
 #endif
 
+
 #define snprintf _snprintf
 
 #ifndef _CONSOLE
@@ -48,8 +49,7 @@
 	//even though we can't really talk to Flash from MSVC++
 	#define _DLL_EXPORTS
 
-#define inline_as3(...)  ((void)0)
-
+	#define inline_as3(...)  ((void)0)
 #endif
 
 #include <GLES/egl.h>
@@ -137,3 +137,7 @@ typedef  unsigned char      byte;        /* byte type */
 
 
 #include "WinUtils.h"
+
+#ifdef RT_FLASH_TEST
+#include "flash/app/cpp/GLFlashAdaptor.h"
+#endif

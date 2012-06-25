@@ -1,3 +1,4 @@
+#include "PlatformPrecomp.h"
 #include "MenuTest.h"
 #include "MenuMain.h"
 

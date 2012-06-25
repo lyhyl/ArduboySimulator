@@ -147,13 +147,11 @@ void RenderTexturedGLTriangle()
 void RenderTexturedGLTriangleWithDrawElements()
 {
 
-
 	glPushMatrix();
 	glLoadIdentity();
 	glTranslatef(0,0,-2);
 	glRotatef(float( (GetBaseApp()->GetGameTick()/10) %360) , 0, 1, 0); //rotate it
 	glDisable(GL_CULL_FACE); //so we can see the back of the triangle too
-
 
 
 	//let's draw a simple triangle 
@@ -185,7 +183,14 @@ void RenderTexturedGLTriangleWithDrawElements()
 	//unsigned int rgba = MAKE_RGBA(255,255,255,255);
 	//glColor4x( (rgba >>8 & 0xFF)*256,  (rgba>>16& 0xFF)*256, (rgba>>24& 0xFF)*256, (rgba&0xFF)*256);
 	
+#ifdef RT_GLES_ADAPTOR_MODE
+	//glVertexPointerEx(3, GL_FLOAT,  0, vVertices, 5);
+
+	//make sure doing it the dumb way still works too
 	glVertexPointer(3, GL_FLOAT,  0, vVertices);
+#else
+	glVertexPointer(3, GL_FLOAT,  0, vVertices);
+#endif
 	glTexCoordPointer(2, GL_FLOAT,  0, vTexCoords);
 
 	glEnableClientState(GL_VERTEX_ARRAY);
@@ -204,7 +209,8 @@ void RenderTexturedGLTriangleWithDrawElements()
 	index[3] = 3;
 	index[4] = 4;
 
-	glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, &index[1]);
+	//setup to start at an offset, needed this to test something
+	glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, &index[2]);
 	
 	glEnable(GL_CULL_FACE);
 	glDisable(GL_BLEND);

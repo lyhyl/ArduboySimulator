@@ -82,17 +82,26 @@ Entity * EnterNameMenuCreate(Entity *pParentEnt)
 	//create input box
 	pButtonEntity = CreateInputTextEntity(pBG, "name_input_box", vTextAreaPos.x+nameWidth, nameEntryY, GetApp()->GetShared()->GetVarWithDefault("name", string("Player"))->GetString());
 	
-	//if you wanted to allow spaces and other symbols, change to "loose" filtering like this:
-	//pButtonEntity->GetComponentByName("InputTextRender")->GetVar("filtering")->Set(uint32(InputTextRenderComponent::FILTERING_LOOSE));
+	EntityComponent *pTextRenderComp = pButtonEntity->GetComponentByName("InputTextRender");
+
+	//To allow spaces and punctuation, we active loose filtering. Use FILTERING_STRICT instead for say, a highscore name
+	pTextRenderComp->GetVar("filtering")->Set(uint32(InputTextRenderComponent::FILTERING_LOOSE));
 
 	//you also need to do this for loose filtering to make sure the best keyboard is chosen on the device
-	//pButtonEntity->GetComponentByName("InputTextRender")->GetVar("inputType")->Set(uint32(InputTextRenderComponent::INPUT_TYPE_ASCII_FULL));
+	pTextRenderComp->GetVar("inputType")->Set(uint32(InputTextRenderComponent::INPUT_TYPE_ASCII_FULL));
 
-	//if you wanted text that appear until it's activated:
-	//pButtonEntity->GetComponentByName("InputTextRender")->GetVar("placeHolderText")->Set("Tap here to enter your name");
+	//control how many characters the user can enter
+	pTextRenderComp->GetVar("inputLengthMax")->Set(uint32(18));
 
-	
-	//pButtonEntity->GetComponentByName("InputTextRender")->GetVar("font")->Set(uint32(FONT_LARGE));
+	//show *'s, password mode
+	//pTextRenderComp->GetVar("visualStyle")->Set((uint32)InputTextRenderComponent::STYLE_PASSWORD);
+
+
+	//if you wanted text to appear until it's activated:
+	//pTextRenderComp->GetVar("placeHolderText")->Set("Tap here to enter your name");
+
+	//to change the font of the text in the input box
+	//pTextRenderComp->GetVar("font")->Set(uint32(FONT_LARGE));
 
 
 	//let's add a checkbox too, for fun
