@@ -11,6 +11,11 @@ void MenuStoreOnSelect(VariantList *pVList) //0=vec2 point of click, 1=entity se
 
 	LogMsg("Clicked %s entity at %s", pEntClicked->GetName().c_str(),pVList->m_variant[1].Print().c_str());
 
+	if (pEntClicked->GetName() != "back")
+	{
+		GetApp()->GetAdManager()->TrackingLog("ClickedIAP", "item", pEntClicked->GetName());
+	}
+
 	if (pEntClicked->GetName() == "BuyTestPurchased")
 	{
 		GetApp()->m_IAPManager.BuyItem("android.test.purchased");
@@ -93,6 +98,8 @@ Entity * MenuStoreCreate(Entity *pParentEnt)
 
 	pButtonEntity = CreateTextButtonEntity(pBG, "back", 10, y+=ySpacer, "Back"); 
 	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MenuStoreOnSelect);
+	GetApp()->GetAdManager()->TrackingOnPageView();
+	GetApp()->GetAdManager()->TrackingLog("ClickStore");
 
 
 	return pBG;

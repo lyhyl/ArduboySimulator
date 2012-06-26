@@ -84,6 +84,11 @@ extern "C"
 	{
 		return AppGetLastOSMessageString2(env);
 	}
+	JNIEXPORT jstring Java_${PACKAGE_NAME_WITH_UNDERSCORES}_AppRenderer_nativeGetLastOSMessageString3(JNIEnv*  env)
+	{
+		return AppGetLastOSMessageString3(env);
+	}
+
 	/* Call to initialize the graphics state */
 	JNIEXPORT void JNICALL Java_${PACKAGE_NAME_WITH_UNDERSCORES}_AppRenderer_nativeInit( JNIEnv*  env )
 	{

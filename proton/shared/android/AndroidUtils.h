@@ -39,6 +39,7 @@ void AppOnJoypadConnection(JNIEnv* env, jobject jobj, jint connect);
 void AppOnSendGUIEx(JNIEnv*  env, jobject thiz,jint messageType, jint parm1, jint parm2, jint finger );
 jstring AppGetLastOSMessageString(JNIEnv* env);
 jstring AppGetLastOSMessageString2(JNIEnv* env);
+jstring AppGetLastOSMessageString3(JNIEnv* env);
 void AppOnSendGUIStringEx(JNIEnv* env, jobject thiz,jint messageType, jint parm1, jint parm2, jint finger, jstring s );
 float AppGetLastOSMessageParm1(JNIEnv* env);
 #endif // AndroidUtils_h__

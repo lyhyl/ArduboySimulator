@@ -411,3 +411,36 @@ void AdManager::SetupBanner(CL_Vec2f vBannerSize, eAlignment alignment /*= ALIGN
 	GetBaseApp()->AddOSMessage(o);
 	
 }
+
+bool AdManager::ProviderExistsByType( eAdProviderType type )
+{
+	list<AdProvider*>::iterator itor = m_providers.begin();
+	for (;itor != m_providers.end(); itor++)
+	{
+		if ( (*itor)->GetType() == type)
+		{
+			return true;
+		}
+	}
+
+	return false;	
+}
+
+void AdManager::TrackingLog( string eventName, string optionalKey /*= ""*/, string optionalValue /*= ""*/ )
+{
+	list<AdProvider*>::iterator itor = m_providers.begin();
+	for (;itor != m_providers.end(); itor++)
+	{
+		(*itor)->TrackingLog(eventName, optionalKey, optionalValue);
+	}
+}
+
+void AdManager::TrackingOnPageView()
+{
+	list<AdProvider*>::iterator itor = m_providers.begin();
+	for (;itor != m_providers.end(); itor++)
+	{
+		(*itor)->TrackingOnPageView();
+	}
+}
+

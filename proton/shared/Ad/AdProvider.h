@@ -18,7 +18,8 @@ class AdManager;
 enum eAdProviderType
 {
 	AD_PROVIDER_UNKNOWN, //this means we don't care, useful if you add your own custom ad provider
-	AD_PROVIDER_CHARTBOOST
+	AD_PROVIDER_CHARTBOOST,
+	AD_PROVIDER_FLURRY //more like statistics than ads, but I don't really want to have to make a StaticsManager too, do I?!
 };
 
 class AdProvider
@@ -37,6 +38,9 @@ public:
 
 	virtual void ShowMoreApps(std::string location = "", std::string parm2 = "", std::string parm3 = ""){LogMsg("ShowMoreApps not supported by %s", GetName().c_str());};
 	virtual void CacheShowMoreApps(std::string location = "", std::string parm2 = "", std::string parm3 = ""){LogMsg("CacheShowMoreApps not supported by %s", GetName().c_str());};
+
+	virtual void TrackingOnPageView(){}; 
+	virtual void TrackingLog(string eventName, string optionalKey = "", string optionalValue = ""){};
 
 	eAdProviderType GetType() { return m_adProviderType;}
 

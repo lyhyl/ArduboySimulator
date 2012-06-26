@@ -93,7 +93,15 @@ struct OSMessage
 		MESSAGE_CHARTBOOST_SHOW_MORE_APPS,
 		MESSAGE_CHARTBOOST_SETUP, //send chartboost app id/app sig as strings
 		MESSAGE_CHARTBOOST_NOTIFY_INSTALL,
-	
+		MESSAGE_CHARTBOOST_RESERVED1,
+		MESSAGE_CHARTBOOST_RESERVED2,
+
+		//FLURRY
+		MESSAGE_FLURRY_SETUP,
+		MESSAGE_FLURRY_ON_PAGE_VIEW,
+		MESSAGE_FLURRY_LOG_EVENT,
+
+		
 		MESSAGE_USER = 1000
 	};
 
@@ -115,6 +123,7 @@ struct OSMessage
 	uint32 m_parm2; //well, I use it to describe the input box type with the input stuff
 	bool m_fullscreen; //used with MESSAGE_SET_VIDEO_MODE
 	string m_string2; //second text parm
+	string m_string3; //third text parm
 
 };
 

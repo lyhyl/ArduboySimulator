@@ -14,7 +14,8 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Build;
 import android.os.Environment;
-
+import java.util.Map;
+import java.util.HashMap;
 import android.content.DialogInterface;
 import android.widget.Button;
 import android.widget.TextView;
@@ -98,6 +99,11 @@ import android.widget.RelativeLayout;
 	import com.chartboost.sdk.CBDialogActivity;
 	import com.chartboost.sdk.ChartBoost;
 //#endif
+
+//#if defined(RT_FLURRY_SUPPORT)
+	import com.flurry.android.FlurryAgent;
+//#endif
+
 
 //Android in app billing
 
@@ -513,7 +519,15 @@ import android.view.View.OnClickListener;
 				mBillingService.unbind();
   				ResponseHandler.unregister(mIABPurchaseObserver);
   			}
+			
+			//#if defined(RT_FLURRY_SUPPORT)
+				Log.v(app.PackageName, "Flurry finishing session");
+				FlurryAgent.onEndSession(app);
+			//#endif
+	
+	
 			android.os.Process.killProcess(android.os.Process.myPid());
+			
 			return;
 		}
 			updateResultsInUi();
@@ -1520,6 +1534,13 @@ class AppRenderer implements GLSurfaceView.Renderer
 	final static int MESSAGE_CHARTBOOST_SHOW_MORE_APPS = 26;
 	final static int MESSAGE_CHARTBOOST_SETUP = 27;
 	final static int MESSAGE_CHARTBOOST_NOTIFY_INSTALL = 28;
+	final static int MESSAGE_CHARTBOOST_RESERVED1 = 29;
+	final static int MESSAGE_CHARTBOOST_RESERVED2 = 30;
+
+	//FLURRY
+	final static int MESSAGE_FLURRY_SETUP = 31;
+	final static int MESSAGE_FLURRY_ON_PAGE_VIEW = 32;
+	final static int MESSAGE_FLURRY_LOG_EVENT = 33;
 
 	static long m_gameTimer = 0;
 	static int m_timerLoopMS = 0; //every this MS, the loop runs.  0 for no fps limit
@@ -1596,12 +1617,57 @@ class AppRenderer implements GLSurfaceView.Renderer
 						TapjoyConnect.getTapjoyConnectInstance().setBannerAdSize(app.tapBannerSize);
 						TapjoyConnect.getTapjoyConnectInstance().getDisplayAd(app);
 					//#else
-						Log.v(app.PackageName, "ERROR: RT_TAPJOY_ENABLED isn't defined in Java project, you can't use it!");
+						Log.v(app.PackageName, "ERROR: RT_TAPJOY_SUPPORT isn't defined in Java project, you can't use it!");
 					//#endif
 					break;
 	
+	case MESSAGE_FLURRY_SETUP:
+				{
+				//#if defined(RT_FLURRY_SUPPORT)
 
+					String apiKey = nativeGetLastOSMessageString();
+					//Log.v(app.PackageName, "Setting up flurry: "+apiKey);
+					FlurryAgent.onStartSession(app, apiKey);
+					
+				//#else
+						Log.v(app.PackageName, "ERROR: RT_FLURRY_SUPPORT isn't defined in Main.java, you can't use it!");
+				//#endif
+				}
+					break;
 	
+	//#if defined(RT_FLURRY_SUPPORT)
+	
+	
+	case MESSAGE_FLURRY_ON_PAGE_VIEW:
+				{
+					//Log.v(app.PackageName, "MESSAGE_FLURRY_ON_PAGE_VIEW> Incrementing page view");
+					FlurryAgent.onPageView();
+				}
+					break;
+
+	case MESSAGE_FLURRY_LOG_EVENT:
+				{
+					String event = nativeGetLastOSMessageString();
+					String key = nativeGetLastOSMessageString2();
+					String data = nativeGetLastOSMessageString3();
+					
+					if (!key.isEmpty())
+					{
+						//Log.v(app.PackageName, "MESSAGE_FLURRY_LOG_EVENT: Event + key/data: "+event+" key: "+key+", data: "+data);
+					
+						Map<String,String> m=new HashMap<String, String>();
+						m.put(key, data);
+						FlurryAgent.logEvent(event, m, true);
+					} else
+					{
+						//Log.v(app.PackageName, "MESSAGE_FLURRY_LOG_EVENT: Event: "+event);
+						FlurryAgent.logEvent(event, true);
+					}
+				}
+					break;
+				
+	
+	//#endif
 				case MESSAGE_CHARTBOOST_SETUP:
 				{
 				
@@ -1610,12 +1676,12 @@ class AppRenderer implements GLSurfaceView.Renderer
 					ChartBoost _cb = ChartBoost.getSharedChartBoost(app);
 					String appID = nativeGetLastOSMessageString();
 					String appSig = nativeGetLastOSMessageString2();
-					Log.v(app.PackageName, "Setting up chartboost "+appID+" : "+appSig);
+					//Log.v(app.PackageName, "Setting up chartboost "+appID+" : "+appSig);
 			
 					_cb.setAppId(appID);
 					_cb.setAppSignature(appSig);
 				//#else
-						Log.v(app.PackageName, "ERROR: RT_CHARTBOOST_ENABLED isn't defined in Main.java, you can't use it!");
+						Log.v(app.PackageName, "ERROR: RT_CHARTBOOST_SUPPORT isn't defined in Main.java, you can't use it!");
 				//#endif
 				}
 					break;
@@ -1744,5 +1810,6 @@ class AppRenderer implements GLSurfaceView.Renderer
 	private static native float nativeGetLastOSMessageY();
 	private static native String nativeGetLastOSMessageString();
 	private static native String nativeGetLastOSMessageString2();
+	private static native String nativeGetLastOSMessageString3();
 	public SharedActivity app;
 }

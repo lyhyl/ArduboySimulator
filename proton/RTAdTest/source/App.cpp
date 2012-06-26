@@ -17,6 +17,11 @@
 	#include "Ad/AdProviderChartBoost.h"
 #endif
 
+
+#ifdef RT_FLURRY_ENABLED
+#include "Ad/AdProviderFlurry.h"
+#endif
+
 MessageManager g_messageManager;
 MessageManager * GetMessageManager() {return &g_messageManager;}
 
@@ -119,7 +124,8 @@ bool App::Init()
 #ifdef RT_CHARTBOOST_ENABLED
 	AdProviderChartBoost *pProvider = new AdProviderChartBoost;
 
-	pProvider->SetupInfo("<insert chartboost appID>", "<insert chartboost appsignature");
+//	pProvider->SetupInfo("<insert chartboost appID>", "<insert chartboost appsignature");
+	pProvider->SetupInfo("4fe81392f776592663000009", "a109d06d3ea78a9ec8d12a46aa9eb723ac2b8302"); //rtadtest Android
 	m_adManager.AddProvider(pProvider);
  	pProvider->CacheShowInterstitial();
 	pProvider->CacheShowMoreApps();
@@ -127,6 +133,14 @@ bool App::Init()
 	//m_adManager.GetProviderByType(AD_PROVIDER_CHARTBOOST)->ShowInterstitial();
 	//m_adManager.GetProviderByType(AD_PROVIDER_CHARTBOOST)->ShowMoreApps();
     
+#endif
+
+#ifdef RT_FLURRY_ENABLED
+
+	AdProviderFlurry *pFlurryProvider = new AdProviderFlurry;
+	pFlurryProvider->SetupInfo("<your flurry API key>");
+	m_adManager.AddProvider(pFlurryProvider);
+
 #endif
 	
 	return true;

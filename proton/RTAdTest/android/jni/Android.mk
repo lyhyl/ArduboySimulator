@@ -40,6 +40,7 @@ $(SHARED)/util/boost/libs/signals/src/slot.cpp $(SHARED)/util/boost/libs/signals
 $(SHARED)/FileSystem/FileSystemZip.cpp $(SHARED)/util/unzip/unzip.c $(SHARED)/util/unzip/ioapi.c $(SHARED)/FileSystem/StreamingInstance.cpp \
 $(SHARED)/FileSystem/StreamingInstanceZip.cpp $(SHARED)/FileSystem/StreamingInstanceFile.cpp $(SHARED)/Ad/AdProvider.cpp \
 \
+$(SHARED)/Ad/AdProviderChartboost.cpp $(SHARED)/Ad/AdProviderFlurry.cpp \
 \
 $(COMPPATH)/FocusInputComponent.cpp $(COMPPATH)/FocusUpdateComponent.cpp $(COMPPATH)/CustomInputComponent.cpp $(COMPPATH)/ArcadeInputComponent.cpp \
 $(COMPPATH)/Button2DComponent.cpp $(COMPPATH)/FilterComponent.cpp $(COMPPATH)/FocusRenderComponent.cpp $(COMPPATH)/FilterInputComponent.cpp $(COMPPATH)/EntityUtils.cpp \
@@ -47,7 +48,7 @@ $(COMPPATH)/InputTextRenderComponent.cpp $(COMPPATH)/InterpolateComponent.cpp $(
 $(COMPPATH)/SelectButtonWithCustomInputComponent.cpp $(COMPPATH)/SliderComponent.cpp $(COMPPATH)/TextBoxRenderComponent.cpp $(COMPPATH)/TextRenderComponent.cpp \
 $(COMPPATH)/EmitVirtualKeyComponent.cpp $(COMPPATH)/OverlayRenderComponent.cpp $(COMPPATH)/TouchHandlerComponent.cpp $(COMPPATH)/TyperComponent.cpp \
 $(COMPPATH)/UnderlineRenderComponent.cpp $(SHARED)/Manager/IAPManager.cpp $(SHARED)/Manager/AdManager.cpp $(COMPPATH)/TouchDragComponent.cpp \
-$(COMPPATH)/RenderScissorComponent.cpp $(COMPPATH)/ScrollBarRenderComponent.cpp $(SHARED)/Ad/AdProviderChartboost.cpp \
+$(COMPPATH)/RenderScissorComponent.cpp $(COMPPATH)/ScrollBarRenderComponent.cpp \
 \
 \
 $(APP)/App.cpp ../temp_final_cpp_src/AndroidApp.cpp $(APP)/MenuStore.cpp $(APP)/MenuPurchase.cpp $(APP)/MenuTapjoy.cpp \
