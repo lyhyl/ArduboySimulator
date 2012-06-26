@@ -18,6 +18,8 @@
 #define RT_CHARTBOOST_ENABLED
 #endif
 
+#define RT_FLURRY_ENABLED
+
 class App: public BaseApp
 {
 public:
@@ -35,7 +37,7 @@ public:
 	virtual void OnMessage(Message &m);
 
 	void OnExitApp(VariantList *pVarList);
-	
+	AdManager * GetAdManager() {return &m_adManager;}
 	
 	//we'll wire these to connect to some signals we care about
 	void OnAccel(VariantList *pVList);

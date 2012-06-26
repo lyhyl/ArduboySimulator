@@ -53,6 +53,8 @@ private:
 	std::string m_resultStr;
 };
 
+template<>
+std::string CheckResult::valueToString(const bool& value);
 
 class TestResults
 {

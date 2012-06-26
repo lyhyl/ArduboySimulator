@@ -79,14 +79,16 @@ Entity * MenuMainCreate(Entity *pParentEnt)
 	pButtonEntity = CreateTextButtonEntity(pBG, "tapjoy", x, y +=spacerY, "Test Tapjoy ads (android)"); 
 	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MenuMainOnSelect);
 
-	pButtonEntity = CreateTextButtonEntity(pBG, "chartboost_interstitial", x, y +=spacerY, "Request Chartboost Interstitial (iOS)"); 
+	pButtonEntity = CreateTextButtonEntity(pBG, "chartboost_interstitial", x, y +=spacerY, "Request Chartboost Interstitial (iOS, Android)"); 
 	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MenuMainOnSelect);
 
-	pButtonEntity = CreateTextButtonEntity(pBG, "chartboost_more_games", x, y +=spacerY, "Request Chartboost More Games Dialog (iOS)"); 
+	pButtonEntity = CreateTextButtonEntity(pBG, "chartboost_more_games", x, y +=spacerY, "Request Chartboost More Games Dialog (iOS, Android)"); 
 	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MenuMainOnSelect);
 
 	pButtonEntity = CreateTextButtonEntity(pBG, "run_tests", x, y +=spacerY, "Run tests");
 	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MenuMainOnSelect);
+
+	GetApp()->GetAdManager()->TrackingOnPageView();
 
 	return pBG;
 }

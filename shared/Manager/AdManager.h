@@ -62,10 +62,14 @@ public:
 	bool IsReadyForTransaction(); //only need to check this to give/remove tap points
 	void OnRender(); //currently only used to render a fake rect on windows to show where the ad would be.  (ads only display in Android)
 
-	void AddProvider( AdProvider *provider );
-	AdProvider * GetProviderByType( eAdProviderType type );
+	void AddProvider(AdProvider *provider);
+	AdProvider * GetProviderByType(eAdProviderType type);
+	bool ProviderExistsByType(eAdProviderType type);
 	
 	//Tapjoy specific, only supported on Android currently, and only with special java files that aren't public yet
+
+	void TrackingOnPageView(); //will handled by Flurry or other trackers
+	void TrackingLog(string eventName, string optionalKey = "", string optionalValue = "");
 
 	void SetTapjoyAdVisible(bool bVisible); //will load an ad if not cached, so it might not display right away
 	void SetTapjoyFeatureAppVisible(bool bVisible); //will load an ad if not cached, so it might not display right away

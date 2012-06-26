@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\source;..\..\shared;..\..\shared\win\;..\..\shared\win\powerVR\OGLES\Include;..\..\shared\win\powerVR\OGLES\Windows\Include;..\..\shared\win\include;..\..\shared\util\boost;&quot;..\..\shared\ClanLib-2.0\Sources&quot;;..\..\shared\FliteTTS\include;..\..\shared\Irrlicht\include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;BOOST_ALL_NO_LIB;_USE_32BIT_TIME_T;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0;_NO_DEBUG_HEAP=1;C_NO_NETWORK"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;BOOST_ALL_NO_LIB;_USE_32BIT_TIME_T;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0;_NO_DEBUG_HEAP=1;C_NO_NETWORK;RT_TESTFW"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -2164,6 +2164,14 @@
 				</File>
 				<File
 					RelativePath="..\..\shared\Ad\AdProviderChartBoost.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\Ad\AdProviderFlurry.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\Ad\AdProviderFlurry.h"
 					>
 				</File>
 				<File

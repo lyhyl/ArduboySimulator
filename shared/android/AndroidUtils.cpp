@@ -1093,6 +1093,11 @@ jstring AppGetLastOSMessageString2(JNIEnv* env)
 	return(env->NewStringUTF(g_lastOSMessage.m_string2.c_str()));
 }
 
+jstring AppGetLastOSMessageString3(JNIEnv* env)
+{
+	return(env->NewStringUTF(g_lastOSMessage.m_string3.c_str()));
+}
+
 float AppGetLastOSMessageX(JNIEnv* env)
 {
 	return g_lastOSMessage.m_x;
