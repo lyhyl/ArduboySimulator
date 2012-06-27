@@ -154,7 +154,7 @@ void BaseApp::Draw()
 		{
 			prims = GetIrrlichtManager()->GetDriver()->getPrimitiveCountDrawn();
 		}
-	
+		char stExtra[256];
 		sprintf(stExtra, " Prims: %d", prims);
 		strcat(stTemp, stExtra);
 #endif		

@@ -300,7 +300,7 @@ void App::Draw()
 
 	//after our 2d rect call above, we need to prepare for raw GL again. (it keeps it in ortho mode if we don't for speed)
 	PrepareForGL();
-	//RenderSpinningTriangle();
+	RenderSpinningTriangle();
 	
 	//let's blit a bmp, but first load it if needed
 	if (!m_surf.IsLoaded())
@@ -312,7 +312,7 @@ void App::Draw()
 	m_surf.Bind();
 
 	//RenderTexturedGLTriangle();
-	RenderTexturedGLTriangleWithDrawElements();
+	//RenderTexturedGLTriangleWithDrawElements();
 
 	//blit the logo with the Y mirrored
 	//rtRect texRect = rtRect(0, m_surf.GetHeight(), m_surf.GetWidth(), 0);
