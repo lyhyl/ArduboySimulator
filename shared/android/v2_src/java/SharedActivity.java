@@ -1653,14 +1653,14 @@ class AppRenderer implements GLSurfaceView.Renderer
 					
 					if (!key.isEmpty())
 					{
-						//Log.v(app.PackageName, "MESSAGE_FLURRY_LOG_EVENT: Event + key/data: "+event+" key: "+key+", data: "+data);
+						Log.v(app.PackageName, "MESSAGE_FLURRY_LOG_EVENT: Event + key/data: "+event+" key: "+key+", data: "+data);
 					
 						Map<String,String> m=new HashMap<String, String>();
 						m.put(key, data);
 						FlurryAgent.logEvent(event, m, true);
 					} else
 					{
-						//Log.v(app.PackageName, "MESSAGE_FLURRY_LOG_EVENT: Event: "+event);
+						Log.v(app.PackageName, "MESSAGE_FLURRY_LOG_EVENT: Event: "+event);
 						FlurryAgent.logEvent(event, true);
 					}
 				}
