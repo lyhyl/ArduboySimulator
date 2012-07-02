@@ -7,11 +7,11 @@
 //  Programmer(s):  Seth A. Robinson (seth@rtsoft.com)
 //  ***************************************************************
 
-//This component reads the android trackball data, and keyboard data, and converts them to direction up/down key events.
+//This component helps convert input from the various kinds of input devices into things a game can use, such as directional presses
+//and releases.  It can also do rudimentry keybinding.
 
-//The way it does it with the trackball is it detects a direction, then keeps the key "down" until no movement is detected after 100
-//ms or so.
-
+//It internally converts android trackball movements into fake directional key presses.  Used with GamepadManager, it can also
+//route gamepad/joystick input as direction keys too,
 
 //Check RTLooneyLadders for a working example.
 
@@ -123,6 +123,8 @@ public:
 
 	bool GetDirectionKeysAsVector(CL_Vec2f *pVecOut);
 	bool GetDirectionKeys(bool &bLeftOut, bool &bRightOut, bool &bUpOut, bool &bDownOut);
+
+	void SetDirectionKey(eMoveButtonDir moveDir, bool bPressed);
 
 	enum TrackballMode
 	{

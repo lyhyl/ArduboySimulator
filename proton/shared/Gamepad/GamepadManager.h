@@ -8,7 +8,7 @@
 //  ***************************************************************
 
 /*
-This handles gamepads for Proton.
+This handles gamepads for Proton. See RTLooneyLadders for a working example.
 
 	* A gamepad provider can add one or more gamepads
 	* You can use more than one gamepad provider at once
@@ -19,6 +19,8 @@ To use, you would add this to your App.cpp (or somewhere)
 
 GamepadManager g_gamepadManager;
 GamepadManager * GetGamepadManager() {return &g_gamepadManager;}
+
+You also need to call g_gamepadManager.Update() in your App::Update.
 
 BaseApp.cpp already has it in its header.
 
@@ -82,7 +84,7 @@ public:
 	Gamepad * GetGamepad(eGamepadID id);  //returns NULL if unavailable
 
 	bool RemoveProviderByName(string name); //returns true if something was actually removed
-	void AddProvider(GamepadProvider *provider);  //You new, we handle deleting it
+	bool AddProvider(GamepadProvider *provider);  //You new, we handle deleting it.  Returns false on error, and kills deletes it for you
 	
 	void AddGamepad(Gamepad * pad); //You new, we handle deleting it
 

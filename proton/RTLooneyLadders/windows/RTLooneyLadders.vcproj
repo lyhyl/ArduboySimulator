@@ -228,7 +228,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opengl32.lib audiere.lib zdll.lib wsock32.lib"
+				AdditionalDependencies="opengl32.lib audiere.lib zdll.lib wsock32.lib dinput8.lib dxguid.lib"
 				OutputFile="../bin/RTLooneyLadders.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\..\shared\win\lib;..\..\shared\win\fmod\api\lib;..\..\shared\win\audiere\lib"
@@ -308,7 +308,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opengl32.lib audiere.lib zdll.lib wsock32.lib"
+				AdditionalDependencies="opengl32.lib audiere.lib zdll.lib wsock32.lib dinput8.lib dxguid.lib"
 				OutputFile="../bin/RTLooneyLadders.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\..\shared\win\lib;..\..\shared\win\fmod\api\lib;..\..\shared\win\audiere\lib"
@@ -565,6 +565,30 @@
 				</File>
 				<File
 					RelativePath="..\android\build.xml"
+					>
+				</File>
+				<File
+					RelativePath="..\android\build_prepare.bat"
+					>
+				</File>
+				<File
+					RelativePath="..\android\buildRelease.bat"
+					>
+				</File>
+				<File
+					RelativePath="..\android\Clean.bat"
+					>
+				</File>
+				<File
+					RelativePath="..\android\InstallOnDefaultPhone.bat"
+					>
+				</File>
+				<File
+					RelativePath="..\android\InstallOnDefaultPhoneRelease.bat"
+					>
+				</File>
+				<File
+					RelativePath="..\android\ViewLogDefaultPhone.bat"
 					>
 				</File>
 				<Filter
@@ -2667,6 +2691,90 @@
 						>
 					</File>
 				</Filter>
+			</Filter>
+			<Filter
+				Name="Gamepad"
+				>
+				<File
+					RelativePath="..\..\shared\Gamepad\Gamepad.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\Gamepad\Gamepad.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\Gamepad\Gamepad_iCade.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\Gamepad\Gamepad_iCade.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\Gamepad\GamepadIOS_60Beat.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\Gamepad\GamepadIOS_60Beat.mm"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\Gamepad\GamepadManager.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\Gamepad\GamepadManager.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\Gamepad\GamepadProvider.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\Gamepad\GamepadProvider.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\Gamepad\GamepadProvider_iCade.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\Gamepad\GamepadProvider_iCade.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\Gamepad\GamepadProviderIOS_60Beat.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\Gamepad\GamepadProviderIOS_60Beat.mm"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\Gamepad\GamepadProviderIOS_60BeatNative.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\Gamepad\GamepadProviderIOS_60BeatNative.mm"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\Gamepad\GamepadProviderWindows.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\Gamepad\GamepadProviderWindows.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\Gamepad\GamepadWindows.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\Gamepad\GamepadWindows.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<File

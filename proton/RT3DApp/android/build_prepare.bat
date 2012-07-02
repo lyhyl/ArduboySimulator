@@ -25,6 +25,7 @@ mkdir assets\audio
 xcopy ..\bin\audio assets\audio /E /F /Y
 
 :Kill old files handing around to avoid confusion
+del libs\armeabi\lib%SMALL_PACKAGE_NAME%.so
 rmdir bin /S /Q
 rmdir gen /S /Q
 rmdir temp_final_src /S /Q

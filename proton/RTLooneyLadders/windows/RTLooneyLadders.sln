@@ -9,6 +9,7 @@ Global
 		Common Release|Win32 = Common Release|Win32
 		Debug GL|Win32 = Debug GL|Win32
 		Debug WebOS|Win32 = Debug WebOS|Win32
+		Flash GLES Debug Test|Win32 = Flash GLES Debug Test|Win32
 		Release GL|Win32 = Release GL|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
@@ -20,6 +21,8 @@ Global
 		{EDF3C631-F9BD-4E50-BD8F-804734B7ECAF}.Debug GL|Win32.Build.0 = Debug GL|Win32
 		{EDF3C631-F9BD-4E50-BD8F-804734B7ECAF}.Debug WebOS|Win32.ActiveCfg = Debug WebOS|Win32
 		{EDF3C631-F9BD-4E50-BD8F-804734B7ECAF}.Debug WebOS|Win32.Build.0 = Debug WebOS|Win32
+		{EDF3C631-F9BD-4E50-BD8F-804734B7ECAF}.Flash GLES Debug Test|Win32.ActiveCfg = Debug WebOS|Win32
+		{EDF3C631-F9BD-4E50-BD8F-804734B7ECAF}.Flash GLES Debug Test|Win32.Build.0 = Debug WebOS|Win32
 		{EDF3C631-F9BD-4E50-BD8F-804734B7ECAF}.Release GL|Win32.ActiveCfg = Release GL|Win32
 		{EDF3C631-F9BD-4E50-BD8F-804734B7ECAF}.Release GL|Win32.Build.0 = Release GL|Win32
 	EndGlobalSection

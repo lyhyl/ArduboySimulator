@@ -10,6 +10,8 @@
 #ifndef Gamepad_h__
 #define Gamepad_h__
 
+#include "Entity/ArcadeInputComponent.h"
+
 class GamepadProvider;
 
 enum eGamepadID
@@ -91,7 +93,6 @@ public:
 	//for using signals to get the button/stick events as they happen (probably better than directly polling in most situations)
 
 	boost::signal<void (VariantList*)> m_sig_gamepad_buttons; //for arcade style events coming from buttons, you'll get VIRTUAL_DPAD_BUTTON_X and so forth
-	boost::signal<void (VariantList*)> m_sig_four_directions; //for arcade movement controls like left/right/up/down (VIRTUAL_DPAD_LEFT and so forth)
 
 	//analog input
 
@@ -111,6 +112,11 @@ public:
 
 protected:
 
+	void SendArcadeDirectionByDegrees(int val);
+	void OnArcadeCompDestroyed( VariantList *pVList );
+	void SendArcadeDirectionRelease();
+
+	bool m_bJustSentStickRelease;
 	string m_name;
 	GamepadProvider *m_pPadProvider;
 
@@ -132,7 +138,11 @@ protected:
 	bool m_bIsUsed; //if true, means we've allocated it for a player, just a thing to help us know which gamepads are
 	//available.  Use GetGamepadManager()->Reset(); between games to reset this;
 
-private:
+	//helps when sending stick movement as directions
+	MoveButtonState m_dirButtons[MOVE_BUTTON_DIR_COUNT];
+	ArcadeInputComponent *m_pArcadeComp;
+
+
 };
 
 #endif // Gamepad_h__
