@@ -9,5 +9,5 @@
 .jpg
 .png
 .tga
-
-
+.psd
+.rtpak
