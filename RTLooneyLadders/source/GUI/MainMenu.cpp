@@ -6,6 +6,7 @@
 #include "GUI/AboutMenu.h"
 #include "GUI/GameMenu.h"
 #include "Entity/ArcadeInputComponent.h"
+#include "Gamepad/GamepadManager.h"
 
 void MainMenuOnSelect(VariantList *pVList) //0=vec2 point of click, 1=entity sent from
 {
@@ -109,8 +110,7 @@ void SelectionSelect()
 	int selection = pIcon->GetVar("curSelection")->GetUINT32();
 	LogMsg("Chose %d", selection);
 	
-	FakeClickToButton(pIcon->GetParent()->GetEntityByName(toString(selection)), 20);
-	
+	SendFakeButtonPushToEntity(pIcon->GetParent()->GetEntityByName(toString(selection)), 20);
 	
 	GetApp()->GetVar("level")->Set(uint32(selection));
 }
@@ -154,7 +154,21 @@ void SetupArrowSelector(Entity *pBG, int itemCount, uint32 defaultItem)
 	Entity *pIcon = CreateOverlayRectEntity(pBG, CL_Vec2f(0,0),CL_Vec2f(30,30),MAKE_RGBA(180,0,0,180));
 	pIcon->SetName("SelectIcon");
 
-	EntityComponent *pComp = pIcon->AddComponent(new ArcadeInputComponent);
+	ArcadeInputComponent *pComp = (ArcadeInputComponent*)pIcon->AddComponent(new ArcadeInputComponent);
+
+	//connect to a gamepad/joystick too if available
+	Gamepad *pPad = GetGamepadManager()->GetDefaultGamepad();
+
+	if (pPad)
+	{
+		pPad->ConnectToArcadeComponent(pComp, true, true);
+
+		//if we cared about the analog sticks too, we'd do this:
+		//pPad->m_sig_left_stick.connect(1, boost::bind(&OnGamepadStickUpdate, this, _1));	
+		//pPad->m_sig_right_stick.connect(1, boost::bind(&OnGamepadStickUpdate, this, _1));	
+	}
+
+
 	AddKeyBinding(pComp, "Up", VIRTUAL_KEY_DIR_UP, VIRTUAL_KEY_DIR_UP);
 	AddKeyBinding(pComp, "Down", VIRTUAL_KEY_DIR_DOWN, VIRTUAL_KEY_DIR_DOWN);
 	AddKeyBinding(pComp, "Enter", 13, 13);

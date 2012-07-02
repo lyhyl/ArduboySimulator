@@ -352,6 +352,12 @@ bool ArcadeInputComponent::GetDirectionKeys( bool &bLeftOut, bool &bRightOut, bo
 
 	return (bLeftOut || bRightOut || bUpOut || bDownOut);
 }
+
+void ArcadeInputComponent::SetDirectionKey(eMoveButtonDir moveDir, bool bPressed )
+{
+	m_buttons[moveDir].OnPressToggle(bPressed, m_customSignal);
+}
+
 void AddKeyBinding(EntityComponent *pComp, string name, uint32 inputcode, uint32 outputcode)
 {
     VariantList vList(name, inputcode, outputcode);

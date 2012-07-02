@@ -5,6 +5,7 @@
 #include "Entity/DPadComponent.h"
 #include "Entity/SelectButtonWithCustomInputComponent.h"
 #include "Entity/ArcadeInputComponent.h"
+#include "Gamepad/GamepadManager.h"
 
 #include "Component/CharComponent.h"
 #include "Component/CharManagerComponent.h"
@@ -177,7 +178,20 @@ Entity * GameMenuCreate(Entity *pParentEnt)
 	
 	//arcade input component is a way to tie keys/etc to send signals through GetBaseApp()->m_sig_arcade_input
 
-	EntityComponent *pComp = pBG->AddComponent(new ArcadeInputComponent);
+	ArcadeInputComponent *pComp = (ArcadeInputComponent*) pBG->AddComponent(new ArcadeInputComponent);
+	
+	//connect to a gamepad/joystick too if available
+	Gamepad *pPad = GetGamepadManager()->GetDefaultGamepad();
+
+	if (pPad)
+	{
+		pPad->ConnectToArcadeComponent(pComp, true, true);
+
+		//if we cared about the analog sticks too, we'd do this:
+		//pPad->m_sig_left_stick.connect(1, boost::bind(&OnGamepadStickUpdate, this, _1));	
+		//pPad->m_sig_right_stick.connect(1, boost::bind(&OnGamepadStickUpdate, this, _1));	
+	}
+	
 	//these arrow keys will be triggered by the keyboard, if applicable
 	AddKeyBinding(pComp, "Left", VIRTUAL_KEY_DIR_LEFT, VIRTUAL_KEY_DIR_LEFT);
 	AddKeyBinding(pComp, "Right", VIRTUAL_KEY_DIR_RIGHT, VIRTUAL_KEY_DIR_RIGHT);

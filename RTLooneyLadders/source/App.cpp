@@ -7,6 +7,8 @@
 #include "Renderer/SoftSurface.h"
 #include "Entity/ArcadeInputComponent.h" 
 #include "GUI/GameMenu.h"
+#include "Gamepad/GamepadManager.h"
+#include "Gamepad/GamepadProvider_iCade.h"
 
 SurfaceAnim g_surf;
  
@@ -16,12 +18,19 @@ MessageManager * GetMessageManager() {return &g_messageManager;}
 FileManager g_fileManager;
 FileManager * GetFileManager() {return &g_fileManager;}
 
+GamepadManager g_gamepadManager;
+GamepadManager * GetGamepadManager() {return &g_gamepadManager;}
+
 #ifdef __APPLE__
 
 #if TARGET_OS_IPHONE == 1
 	//it's an iPhone or iPad
 	#include "Audio/AudioManagerOS.h"
 	AudioManagerOS g_audioManager;
+
+	#ifdef RT_IOS_60BEAT_GAMEPAD_SUPPORT
+	#include "Gamepad/GamepadProviderIOS_60Beat.h"
+	#endif
 #else
 	//it's being compiled as a native OSX app
    #include "Audio/AudioManagerFMOD.h"
@@ -40,6 +49,8 @@ AudioManagerSDL g_audioManager; //sound in windows and WebOS
 AudioManagerAndroid g_audioManager; //sound for android
 #else
 //in windows
+
+#include "Gamepad/GamepadProviderWindows.h"
 
 #include "Audio/AudioManagerAudiere.h"
 //#include "Audio/AudioManagerFMOD.h"
@@ -183,6 +194,24 @@ bool App::Init()
 	m_varDB.GetVarWithDefault("level", Variant(uint32(1)));
 	//preload audio
 	GetAudioManager()->Preload("audio/click.wav");
+	
+	
+
+#ifdef PLATFORM_WINDOWS
+	//If you don't have directx, just comment out this and remove the dx lib dependency, directx is only used for the
+	//gamepad input on windows
+	GetGamepadManager()->AddProvider(new GamepadProviderWindows); //use directx joysticks
+#endif
+
+	GetGamepadManager()->AddProvider(new GamepadProvider_iCade); //use iCade, this actually should work with any platform...
+
+#if defined(PLATFORM_IOS) && defined(RT_IOS_60BEAT_GAMEPAD_SUPPORT)
+		//startup the 60beat gamepad stuff.. really, we should only do this if they've checked to use it in options
+		//or such because their driver may slow us down.. unsure
+		GetGamepadManager()->AddProvider(new GamepadProviderIOS_60Beat);
+		GetBaseApp()->SetAllowScreenDimming(false);
+#endif
+
 	return true;
 }
 
@@ -196,6 +225,7 @@ void App::Kill()
 void App::Update()
 {
 	BaseApp::Update();
+	g_gamepadManager.Update();
 
 	if (!m_bDidPostInit)
 	{

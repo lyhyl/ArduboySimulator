@@ -5,6 +5,19 @@
 	#define SHOW_DEBUG_IAP_MESSAGES
 #endif
 
+#if defined PLATFORM_WINDOWS || defined PLATFORM_LINUX
+	//you can also define FAKE_SUCCESSFULLY_IAP_REPLY in your project for iOS/android/webos builds, for testing IAP that hasn't been setup yet
+	#define FAKE_IAP_REPLY
+#endif
+
+//set a default for when faking IAP responses
+#if defined(FAKE_IAP_REPLY) && !defined(FAKE_IAP_RESPONSE_SUCCESS) && !defined(FAKE_IAP_RESPONSE_FAILED) && !defined(FAKE_IAP_RESPONSE_ALREADY_PURCHASED) 
+	#define FAKE_IAP_RESPONSE_SUCCESS
+	//#define FAKE_IAP_RESPONSE_FAILED
+	//#define FAKE_IAP_RESPONSE_ALREADY_PURCHASED
+
+#endif
+
 IAPManager::IAPManager()
 {
 	m_state = STATE_NONE;
@@ -151,13 +164,15 @@ bool IAPManager::Init()
 
 void IAPManager::Update()
 {
-#if defined PLATFORM_WINDOWS || defined PLATFORM_LINUX
+
+#if defined (FAKE_IAP_REPLY)
 	if (m_bWaitingForReply)
 	{
 		//don't support billing on this platform (probably testing in desktop), fake it after 3 seconds for testing purposes
 
 		if (m_timer+3000 < GetTick(TIMER_SYSTEM))
 		{
+			LogMsg("Doing fake reply");
 			//fake a successful sale message back to us, so we'll process the order even while emulating on desktop
 			m_bWaitingForReply = false;
 			
@@ -167,21 +182,31 @@ void IAPManager::Update()
 				//rely on this behavior so I don't want to mess with it.. something to do with how Android actually checks the
 				//status of all IAP when you try to buy something, to see if it's already been bought...
 				Message m(MESSAGE_CLASS_GUI, TIMER_SYSTEM, MESSAGE_TYPE_IAP_ITEM_STATE);
-				m.SetParm1(PURCHASED); //to fake purchased
-				//m.SetParm1(CANCELED); //to fake canceled
+				#if defined (FAKE_IAP_RESPONSE_SUCCESS)
+					m.SetParm1(PURCHASED); //to fake purchased
+		 		#elif FAKE_IAP_RESPONSE_ALREADY_PURCHASED
+					m.SetParm1(PURCHASED); //to fake purchased.. on android, we don't have a special message showing a previous bought thing?  Hrm.
+				#else
+					m.SetParm1(CANCELED); //to fake canceled
+				#endif
+
 				OnMessage(m);
 			} else
 			{
 				//WebOS & iOS
 				//DEBUG - To test successful or faked purchases under desktop emulation
+				#if defined (FAKE_IAP_RESPONSE_SUCCESS)
 				GetMessageManager()->SendGUIStringEx(MESSAGE_TYPE_IAP_RESULT,(float)IAPManager::RESULT_OK,0.0f,0, "Faked order for testing on desktop");
-
+				#elif FAKE_IAP_RESPONSE_ALREADY_PURCHASED
 				//or, for already purchased
-				//GetMessageManager()->SendGUIStringEx(MESSAGE_TYPE_IAP_RESULT,(float)IAPManager::RESULT_OK_ALREADY_PURCHASED,0.0f,0, "Faked order for testing on desktop");
-
-
+				GetMessageManager()->SendGUIStringEx(MESSAGE_TYPE_IAP_RESULT,(float)IAPManager::RESULT_OK_ALREADY_PURCHASED,0.0f,0, "Faked order for testing on desktop");
+				#else
 				//or, to test for a failed transaction
 				//GetMessageManager()->SendGUIStringEx(MESSAGE_TYPE_IAP_RESULT,(float)IAPManager::RESULT_USER_CANCELED,0.0f,0, "Faked order for testing on desktop");
+				#endif
+
+			
+
 			}
 		}
 	}
@@ -211,9 +236,14 @@ void IAPManager::BuyItem(const string &itemName)
 		m_items.clear();
 		m_state = STATE_WAITING;
 
-		OSMessage o;
-		o.m_type = OSMessage::MESSAGE_IAP_GET_PURCHASED_LIST;
-		GetBaseApp()->AddOSMessage(o);
+		#ifndef FAKE_IAP_REPLY
+			OSMessage o;
+			o.m_type = OSMessage::MESSAGE_IAP_GET_PURCHASED_LIST;
+			GetBaseApp()->AddOSMessage(o);
+		#else
+		//faking it, this way is easier
+		sendPurchaseMessage();
+		#endif
 	} else
 	{
 		//issue buy command the normal way, it's not like Android where you need to get a list of stuff first
@@ -232,10 +262,13 @@ void IAPManager::Reset()
 
 void IAPManager::sendPurchaseMessage()
 {
+	#ifndef FAKE_IAP_REPLY
+	//this is the real thing, send message to native system
 	OSMessage o;
 	o.m_type = OSMessage::MESSAGE_IAP_PURCHASE;
 	o.m_string = m_itemToBuy;
 	GetBaseApp()->AddOSMessage(o);
+	#endif
 
 	m_itemToBuy.clear();
 	m_timer = GetTick(TIMER_SYSTEM);

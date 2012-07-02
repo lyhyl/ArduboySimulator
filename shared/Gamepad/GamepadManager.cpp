@@ -27,7 +27,7 @@ GamepadManager::~GamepadManager()
 
 }
 
-void GamepadManager::AddProvider( GamepadProvider *provider )
+bool GamepadManager::AddProvider( GamepadProvider *provider )
 {
 	m_providers.push_back(provider);
 
@@ -35,11 +35,13 @@ void GamepadManager::AddProvider( GamepadProvider *provider )
 	{
 		LogError("Unable to init gamepad provider %s, killing it", provider->GetName().c_str());
 		SAFE_DELETE(provider);
-		return;
+		return false;
 	} else
 	{
 		LogMsg("Gamepad provider %s initialized.", provider->GetName().c_str());
 	}
+
+	return true;
 }
 
 void GamepadManager::Update()
