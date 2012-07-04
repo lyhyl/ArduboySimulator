@@ -146,22 +146,9 @@ char * GetAndroidMainClassName()
 
 };
 
-//this isn't really defined anywhere yet, if you need it, make your own header. Better to just use GetAppCachePath()
-//directly.
-void SetPreferSDCardForStorage(bool bNew)
+
+string GetSavePathBasic()
 {
-	g_preferSDCardForUserStorage = bNew;
-}
-
-string GetSavePath()
-{
-
-	if (g_preferSDCardForUserStorage)
-	{
-		string storageDir = GetAppCachePath();
-		if (!storageDir.empty()) return storageDir;
-	}
-
 	JNIEnv *env = GetJavaEnv();
 	if (!env) return "";
 
@@ -175,8 +162,29 @@ string GetSavePath()
 	const char * ss=env->GetStringUTFChars(ret,0);
 	sprintf(r,"%s",ss);
 	env->ReleaseStringUTFChars(ret, ss);
-	string retString = string(r)+"/";
-	
+	return string(r)+"/";
+}
+
+//this isn't really defined anywhere yet, if you need it, make your own header. Better to just use GetAppCachePath()
+//directly.
+void SetPreferSDCardForStorage(bool bNew)
+{
+	g_preferSDCardForUserStorage = bNew;
+}
+
+string GetSavePath()
+{
+
+	LogMsg("Starting get save path..");
+
+	if (g_preferSDCardForUserStorage)
+	{
+		string storageDir = GetAppCachePath();
+		if (!storageDir.empty()) return storageDir;
+	}
+	LogMsg("continuing get save path..");
+
+	string retString = GetSavePathBasic();
 	
 #ifdef _DEBUG
 	LogMsg("Save dir is %s", string(retString).c_str());
@@ -212,6 +220,9 @@ string GetAPKFile()
 
 string GetAppCachePath()
 {
+
+	LogMsg("Getting app cache..");
+
 	JNIEnv *env = GetJavaEnv();
 	if (!env) return "";
 
@@ -241,7 +252,7 @@ string GetAppCachePath()
 			return retString;
 		}
 
-		retString = GetSavePath();
+		retString = GetSavePathBasic();
 #ifdef _DEBUG
 	//	LogMsg("GetAppCachePath returned blank, so giving %s",retString.c_str());
 #endif

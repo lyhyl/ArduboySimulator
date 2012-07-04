@@ -126,6 +126,7 @@ bool BaseApp::Init()
 	{
 		GetAudioManager()->Init();
 	}
+
 	return true;
 }
 

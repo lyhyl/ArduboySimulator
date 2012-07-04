@@ -942,7 +942,7 @@ import android.view.View.OnClickListener;
 		{
 			//XPeria's O button, not the back button!
 			//Log.v("onKeyDown","Sending xperia back key");
-			nativeOnKey(0, VIRTUAL_DPAD_BUTTON_DOWN, e.getUnicodeChar()); 
+			nativeOnKey(0, VIRTUAL_DPAD_BUTTON_RIGHT, e.getUnicodeChar()); 
 		
 			return true; //signal that we handled it
 		}
@@ -1185,7 +1185,7 @@ import android.view.View.OnClickListener;
 				app._music.start();
 			} catch(IOException e) 
 			{ 
-				Log.v("Can't load music (raw)", fname);
+				Log.v("Can't load music (raw)", fname, e);
 			}
 			catch(IllegalStateException e) 
 			{ 

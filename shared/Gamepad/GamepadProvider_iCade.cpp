@@ -16,9 +16,8 @@ GamepadProvider_iCade::~GamepadProvider_iCade()
 bool GamepadProvider_iCade::Init()
 {
 	LogMsg("Initting _iCade gamepad provider");
-	
 	m_pPad = new Gamepad_iCade;
-	//m_pPad->SetProvider(this);
+	m_pPad->SetProvider(this);
 	GetGamepadManager()->AddGamepad(m_pPad);
 	return true; //success
 }

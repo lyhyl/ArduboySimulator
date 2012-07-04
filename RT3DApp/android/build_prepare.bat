@@ -59,6 +59,60 @@ echo d | xcopy ..\..\shared\android\optional_src\com\android temp_final_src\com\
 rmdir temp_final_cpp_src  /S /Q
 call ant preprocess_cpp
 
+:for startapp   (comment out the goto if you want to use it)
+goto skipstartapp;
+set TEMPFILE=..\..\shared\android\optional_src\libs\startapp\SearchHelperService-1.0.14-jar-with-dependencies.jar
+:Extra check to make sure we can locate the files
+if exist "%TEMPFILE%" (
+echo Located startapp files.
+) else (
+echo Cannot find the tapjoy library files.  Download from startapp and place lib into shared\android\optional_src\libs\startapp
+..\..\shared\win\utils\beeper.exe /p
+)
+copy %TEMPFILE% libs
+:skipstartapp
+
+:For Hooked/wasabi  (comment out the goto if you want to use it)
+goto skiphooked;
+set TEMPFILE=..\..\shared\android\optional_src\libs\wasabi\wasabi.jar
+:Extra check to make sure we can locate the files
+if exist "%TEMPFILE%" (
+echo Located startapp files.
+) else (
+echo Cannot find the Hooked/Wasabi library files.  Download from Hooked and place lib into shared\android\optional_src\libs\wasabi
+..\..\shared\win\utils\beeper.exe /p
+)
+copy %TEMPFILE% libs
+:skiphooked
+
+:for Chartboost  (comment out the goto if you want to use it)
+goto skipchartboost;
+set TEMPFILE=..\..\shared\android\optional_src\libs\ChartBoost\chartboost.jar
+
+:Extra check to make sure we can locate the files
+if exist "%TEMPFILE%" (
+echo Located flurry files.
+) else (
+echo Cannot find the ChartBoost .jar file.  Download and place lib into shared\android\optional_src\libs\ChartBoost
+..\..\shared\win\utils\beeper.exe /p
+)
+copy %TEMPFILE% libs
+:skipchartboost
+
+:for Flurry  (comment out the goto if you want to use it)
+goto skipflurry;
+set TEMPFILE=..\..\shared\android\optional_src\libs\Flurry\FlurryAgent.jar
+
+:Extra check to make sure we can locate the files
+if exist "%TEMPFILE%" (
+echo Located flurry files.
+) else (
+echo Cannot find FlurryAgent.jar.  Download and place lib into shared\android\optional_src\libs\Flurry
+..\..\shared\win\utils\beeper.exe /p
+)
+copy %TEMPFILE% libs
+:skipflurry
+
 :Next preprocess the java part (this isn't the real final java compile/pakaging, that happens later)
 call ant preprocess
 

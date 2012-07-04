@@ -157,6 +157,7 @@ void ArcadeInputComponent::AddKeyBinding(VariantList *pVList)
 	b.m_name = pVList->Get(0).GetString();
 	b.m_inputkeycode = pVList->Get(1).GetUINT32();
 	b.m_outputkeycode = pVList->Get(2).GetUINT32();
+	b.m_bOutputAsNormalKeyToo = pVList->Get(3).GetUINT32() != 0;
 	m_bindings.push_back(b);
 }
 
@@ -224,6 +225,21 @@ void ArcadeInputComponent::ActivateBinding(ArcadeKeyBind *pBind, bool bDown)
 	} else
 	{
 		GetBaseApp()->m_sig_arcade_input(&v);
+	}
+
+	if (bDown)
+	{
+		//send as normal key, only on the keydown
+		VariantList v2;
+		v2.Get(0).Set((float)MESSAGE_TYPE_GUI_CHAR);
+		v2.Get(1).Set(0,0);
+		v2.Get(2).Set(uint32(pBind->m_outputkeycode));
+		GetBaseApp()->m_sig_input(&v2);
+	}
+	if (pBind->m_bOutputAsNormalKeyToo)
+	{
+		//also send as regular global key
+		GetBaseApp()->m_sig_raw_keyboard(&v);
 	}
 }
 
@@ -358,8 +374,8 @@ void ArcadeInputComponent::SetDirectionKey(eMoveButtonDir moveDir, bool bPressed
 	m_buttons[moveDir].OnPressToggle(bPressed, m_customSignal);
 }
 
-void AddKeyBinding(EntityComponent *pComp, string name, uint32 inputcode, uint32 outputcode)
+void AddKeyBinding(EntityComponent *pComp, string name, uint32 inputcode, uint32 outputcode, bool bAlsoSendAsNormalRawKey)
 {
-    VariantList vList(name, inputcode, outputcode);
+    VariantList vList(name, inputcode, outputcode, uint32(bAlsoSendAsNormalRawKey!=0));
 	pComp->GetFunction("AddKeyBinding")->sig_function(&vList);
 }

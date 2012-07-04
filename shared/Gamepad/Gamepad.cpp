@@ -124,6 +124,7 @@ void Gamepad::SendArcadeDirectionByDegrees(int val)
 		break;
 
 	case 315:
+	case -45:
 		m_pArcadeComp->SetDirectionKey(MOVE_BUTTON_DIR_LEFT, true);
 		m_pArcadeComp->SetDirectionKey(MOVE_BUTTON_DIR_UP, true);
 
@@ -198,6 +199,7 @@ void Gamepad::ConnectToArcadeComponent( ArcadeInputComponent *pComp, bool bSendB
 	{
 		LogMsg("Gamepad %s disconnecting itself from old arcade component so we can connect to the new one", GetName().c_str());
 		m_pArcadeComp->GetFunction("OnDelete")->sig_function.disconnect(boost::bind(&Gamepad::OnArcadeCompDestroyed, this, _1));
+		m_pArcadeComp = NULL;
 	}
 
 	if (bSendButtonEvents)

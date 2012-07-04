@@ -60,7 +60,7 @@ public:
 	eVirtualKeys m_useAsButton;
 };
 
-class Gamepad
+class Gamepad: public boost::signals::trackable
 {
 public:
 	

@@ -10,7 +10,7 @@
 #ifndef GamepadProvider_h__
 #define GamepadProvider_h__
 
-class GamepadProvider
+class GamepadProvider: public boost::signals::trackable
 {
 public:
 	GamepadProvider();

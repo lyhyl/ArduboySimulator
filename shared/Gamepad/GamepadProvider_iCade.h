@@ -25,7 +25,7 @@ public:
 	GamepadProvider_iCade();
 	virtual ~GamepadProvider_iCade();
 
-	virtual string GetName() {return "_iCade";}
+	virtual string GetName() {return "iCade";}
 	virtual bool Init();
 	virtual void Kill();
 	virtual void Update();

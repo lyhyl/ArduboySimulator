@@ -115,19 +115,38 @@ EntityComponent * SlideScreenVertical(Entity *pEnt, bool bIn, int speedMS, int d
 	return SetupInterpolateComponent(pEnt, "", "pos2d", vEndPos, speedMS, delayToStartMS);
 }
 
-//bounces for ever
-void BobEntity(Entity *pEnt, float bobAmount)
+bool IsEntityBobbing(Entity *pEnt)
 {
-	CL_Vec2f vEndPos = pEnt->GetVar("pos2d")->GetVector2();
+	if (!pEnt) return false;
+
+	return pEnt->GetComponentByName("ic_bob") != NULL;
+}
+
+//bounces for ever
+void BobEntity(Entity *pEnt, float bobAmount, int delayBeforeBob, int durationOfEachBobMS)
+{
+	if (!pEnt) return;
+
+	CL_Vec2f vEndPos = GetPos2DEntity(pEnt);
 
 	vEndPos.y += bobAmount;
 
-	SetupInterpolateComponent(pEnt, "", "pos2d", vEndPos, 1000, 0, INTERPOLATE_SMOOTHSTEP, InterpolateComponent::ON_FINISH_BOUNCE);
+	EntityComponent *pComp = SetupInterpolateComponent(pEnt, "ic_bob", "pos2d", vEndPos, durationOfEachBobMS, delayBeforeBob, INTERPOLATE_SMOOTHSTEP, InterpolateComponent::ON_FINISH_BOUNCE);
+
+	//move it back to where it started if we ever stop bobbing
+	pComp->GetVar("set_value_on_finish")->Set(GetPos2DEntity(pEnt));
+}
+
+void BobEntityStop(Entity *pEnt)
+{
+	if (!pEnt) return;
+	pEnt->RemoveComponentByName("ic_bob");
+
 }
 
 void OneTimeBobEntity(Entity *pEnt, float bobAmount, int delayBeforeBob, int durationMS)
 {
-	if (pEnt->GetComponentByName("ic_pos"))
+	if (pEnt->GetComponentByName("ic_bob"))
 	{
 		//well, we already have one of these active, don't trigger it again yet until it's dead
 	} else
@@ -135,7 +154,7 @@ void OneTimeBobEntity(Entity *pEnt, float bobAmount, int delayBeforeBob, int dur
 		CL_Vec2f vEndPos = pEnt->GetVar("pos2d")->GetVector2();
 		vEndPos.y += bobAmount;
 
-		EntityComponent *pComp = SetupInterpolateComponent(pEnt, "ic_pos", "pos2d", vEndPos, durationMS, delayBeforeBob, INTERPOLATE_SMOOTHSTEP, InterpolateComponent::ON_FINISH_BOUNCE);
+		EntityComponent *pComp = SetupInterpolateComponent(pEnt, "ic_bob", "pos2d", vEndPos, durationMS, delayBeforeBob, INTERPOLATE_SMOOTHSTEP, InterpolateComponent::ON_FINISH_BOUNCE);
 		pComp->GetVar("deleteAfterPlayCount")->Set(uint32(2));
 	}
 }
@@ -782,6 +801,11 @@ void RemoveFocusIfNeeded(Entity *pEnt)
 void RemoveInputFocusIfNeeded(Entity *pEnt)
 {
 	pEnt->RemoveComponentByName("FocusInput");
+}
+
+bool EntityHasInputFocus(Entity *pEnt)
+{
+	return pEnt->GetComponentByName("FocusInput", true) != NULL;
 }
 
 void AddFocusIfNeeded(Entity *pEnt, bool bAlsoLinkMoveMessages, int delayInputMS, int updateAndRenderDelay)
@@ -1585,9 +1609,7 @@ void EntityScaleiPad(Entity *pEnt, bool bPerserveAspectRatio)
 		}
 	
 	pEnt->GetVar("scale2d")->Set(CL_Vec2f( vDestSize.x / vSize.x, vDestSize.y / vSize.y));
-	
 }
-
 
 EntityComponent * AddHotKeyToButton(Entity *pEnt, uint32 keycode)
 {

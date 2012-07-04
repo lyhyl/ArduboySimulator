@@ -179,7 +179,8 @@ CL_Vec2f RTFont::MeasureText( const string &text, float scale /*= 1.0f*/ )
 {
 	//TODO: Switch to using CL_Rectf
 	rtRectf r;
-		 
+	
+
 	MeasureText(&r, &text[0], text.length(), scale);
 	return CL_Vec2f(r.GetWidth(), r.GetHeight());
 }
@@ -190,6 +191,14 @@ void RTFont::MeasureText( rtRectf *pRectOut, const char *pText, int len, float s
 	rtRectf dst(0,0,0,0);
 	rtfont_charData *pCharData, *pLastCharData;
 	FontStateStack state;
+
+
+	if (!IsLoaded())
+	{
+		*pRectOut = dst;
+		LogMsg("Error: Font not loaded!");
+		return;
+	}
 
 	int lines = 0;
 	float curX = 0;

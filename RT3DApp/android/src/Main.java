@@ -1,6 +1,5 @@
 //This is the only app-specific java file for the android project.  The real work is done in
-//shared/android/src/rtsoft/shared/SharedActivity.java.  When editing that, be careful, as it is used
-//by all Proton projects.
+//shared/android/v2_src/java.  When editing that, be careful, as it is used by all Proton projects.
 
 //Thanks to Phil Hassey for his help and code
 
@@ -12,6 +11,8 @@
 
 // #define RT_HOOKED_SUPPORT
 // #define RT_TAPJOY_SUPPORT
+// #define RT_CHARTBOOST_SUPPORT
+// #define RT_FLURRY_SUPPORT
 
 //**********************************************
 

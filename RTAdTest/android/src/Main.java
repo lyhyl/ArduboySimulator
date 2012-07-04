@@ -1,6 +1,5 @@
 //This is the only app-specific java file for the android project.  The real work is done in
-//shared/android/src/rtsoft/shared/SharedActivity.java.  When editing that, be careful, as it is used
-//by all Proton projects.
+//shared/android/v2_src/java.  When editing that, be careful, as it is used by all Proton projects.
 
 //Thanks to Phil Hassey for his help and code
 
@@ -41,7 +40,7 @@ public class Main extends SharedActivity
 		dllname= "RTAdTest";
 		BASE64_PUBLIC_KEY = "public key from android market";
 		securityEnabled = false; 
-   	IAPEnabled = true;
+   		IAPEnabled = true;
 
 		//********************* You probably don't need to change anything below this **************
 		

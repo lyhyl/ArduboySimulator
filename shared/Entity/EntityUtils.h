@@ -85,7 +85,10 @@ void EnableAllButtonsEntity(Entity *pEnt, bool bRecursive = true, int delayBefor
 Entity * DisableEntityButtonByName(const string &entityName, Entity *pRootEntity = GetEntityRoot());
 EntityComponent * SlideScreen(Entity *pEnt, bool bIn, int speedMS = 500, int delayToStartMS = 0);
 EntityComponent * SlideScreenVertical(Entity *pEnt, bool bIn, int speedMS = 500, int delayToStartMS = 0);
-void BobEntity(Entity *pEnt, float bobAmount = 3);
+
+bool IsEntityBobbing(Entity *pEnt); //returns true if BobEntity or OneTimeBobEntity is active on this entity
+void BobEntity(Entity *pEnt, float bobAmount = 3, int delayBeforeBob = 0, int durationOfEachBobMS = 1000); //make an entity vertically "bounce" forever
+void BobEntityStop(Entity *pEnt); //stop bouncing
 void OneTimeBobEntity(Entity *pEnt, float bobAmount = -10, int delayBeforeBob = 0, int durationMS = 100);
 /**
  * Ensures that the given \c Entity has needed focus \link EntityComponent \c EntityComponents \endlink.
@@ -301,4 +304,6 @@ void CopyPropertiesToEntity(Entity *pToEnt, Entity *pFromEnt, const string varNa
 
 //Draw a text message on the screen, then (by default) kill it 3 seconds later.  Useful for quick debugging messages sometimes
 void ShowTextMessage(string msg, int timeMS=1500, int delayBeforeStartingMS = 0);
+
+bool EntityHasInputFocus(Entity *pEnt); //returns true if this entity can currently receive input
 #endif // EntityUtils_h__
