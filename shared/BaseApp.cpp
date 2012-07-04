@@ -327,6 +327,15 @@ void BaseApp::OnMessage(Message &m)
 					break;
 				}
 
+			case MESSAGE_TYPE_HW_TOUCH_KEYBOARD_WILL_SHOW:
+			case MESSAGE_TYPE_HW_TOUCH_KEYBOARD_WILL_HIDE:
+				{
+					v.Get(0).Set((float)m.GetType());
+					m_sig_hardware(&v);
+					break;
+				}
+
+
 			case MESSAGE_TYPE_OS_CONNECTION_CHECKED:
 				{
 					v.Get(0).Set((float)m.GetType());

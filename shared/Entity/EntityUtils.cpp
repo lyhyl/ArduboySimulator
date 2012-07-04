@@ -786,7 +786,9 @@ void RemoveInputFocusIfNeeded(Entity *pEnt)
 
 void AddFocusIfNeeded(Entity *pEnt, bool bAlsoLinkMoveMessages, int delayInputMS, int updateAndRenderDelay)
 {
-	if (!pEnt->GetComponentByName("FocusUpdate", true))
+	EntityComponent *pComp = pEnt->GetComponentByName("FocusUpdate", true);
+	
+	if (!pComp)
 	{
 		if (updateAndRenderDelay == 0)
 		{
@@ -1154,6 +1156,7 @@ void PreloadKeyboard(OSMessage::eParmKeyboardType keyboardType)
 {
 	if (GetEmulatedPlatformID() == PLATFORM_ID_ANDROID) return; //no point on this platform I don't think..
 
+    
 	OSMessage o;
 	o.m_type = OSMessage::MESSAGE_OPEN_TEXT_BOX;
 	o.m_string = "";
@@ -1169,6 +1172,15 @@ void PreloadKeyboard(OSMessage::eParmKeyboardType keyboardType)
 
 	o.m_type = OSMessage::MESSAGE_CLOSE_TEXT_BOX;
 	GetBaseApp()->AddOSMessage(o);
+    
+    VariantList v;
+    
+    v.Get(0).Set((float)MESSAGE_TYPE_HW_KEYBOARD_INPUT_STARTING);
+    GetBaseApp()->m_sig_hardware(&v);
+
+    v.Get(0).Set((float)MESSAGE_TYPE_HW_KEYBOARD_INPUT_ENDING);
+    GetBaseApp()->m_sig_hardware(&v);
+    
 }
 
 
@@ -1837,6 +1849,15 @@ void CopyPropertiesToEntity(Entity *pToEnt, Entity *pFromEnt, const string varNa
 	}
 }
 
+
+void MoveEntityToTop(VariantList *pVList)
+{
+	Entity *pEnt =pVList->Get(0).GetEntity();
+
+	RemoveFocusIfNeeded(pEnt);
+	AddFocusIfNeeded(pEnt);
+}
+
 void ShowTextMessage(string msg, int timeMS, int delayBeforeStartingMS)
 {
 
@@ -1851,5 +1872,10 @@ void ShowTextMessage(string msg, int timeMS, int delayBeforeStartingMS)
 	AddFocusIfNeeded(pRect);
 	FadeOutAndKillEntity(pRect, true, 1000, timeMS);
 	ZoomFromPositionEntity(pRect, CL_Vec2f( GetScreenSizeXf()/2, GetScreenSizeYf()), 600);
+		
+	//hack to make sure we're on the top of the screen.. maybe we should do it every frame..
+	VariantList v(pRect);
+	GetMessageManager()->CallEntityFunction(pRect, timeMS+1, "MoveToTop", &v, TIMER_SYSTEM);
+	pRect->GetFunction("MoveToTop")->sig_function.connect(MoveEntityToTop);
 
 }

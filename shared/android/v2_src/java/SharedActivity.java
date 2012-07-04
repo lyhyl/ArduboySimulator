@@ -835,6 +835,9 @@ import android.view.View.OnClickListener;
 	final static int MESSAGE_TYPE_GUI_JOYPAD = 36; //For Jake's android gamepad input
 	final static int MESSAGE_TYPE_GUI_JOYPAD_CONNECT = 37; // For Jakes android gamepad input
 	final static int MESSAGE_TYPE_CALL_ENTITY_FUNCTION_RECURSIVELY = 38; //used to schedule fake clicks, helps me with debugging
+	
+	final static int MESSAGE_TYPE_HW_TOUCH_KEYBOARD_WILL_SHOW = 39; //ios only, when not using external keyboard
+	final static int MESSAGE_TYPE_HW_TOUCH_KEYBOARD_WILL_HIDE = 40; //ios only, when not using external keyboard
 
 	final static int MESSAGE_USER = 1000; //send your own messages after this #
 	

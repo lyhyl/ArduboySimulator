@@ -6,5 +6,5 @@
 
 Entity * MainMenuCreate(Entity *pParentEnt);
 void AddKeyBinding(EntityComponent *pComp, string name, uint32 inputcode, uint32 outputcode);
-void FakeClickToButton(Entity *pChosenButton, int32 delayMS);
+void UnlockAllLevels();
 #endif // MainMenu_h__

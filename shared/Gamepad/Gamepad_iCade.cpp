@@ -1,5 +1,6 @@
 #include "PlatformPrecomp.h"
 #include "Gamepad_iCade.h"
+#include "Entity/EntityUtils.h"
 
 
 void ArcadeKeyboardControl::Setup(Gamepad_iCade *pPad,  char keyDown, char keyUp, int buttonID, eVirtualKeys vKeyToSend )
@@ -17,6 +18,8 @@ void ArcadeKeyboardControl::Setup(Gamepad_iCade *pPad,  char keyDown, char keyUp
 
 Gamepad_iCade::Gamepad_iCade()
 {
+    m_bScanningForICade = false;
+    m_bCurrentlyActive = false;
 	
 }
 
@@ -25,8 +28,46 @@ Gamepad_iCade::~Gamepad_iCade()
 	Kill();
 }
 
+void Gamepad_iCade::ActivateFakeKeyboardIOS()
+{
+
+#ifdef PLATFORM_IOS
+ 	
+	if (GetIsUsingNativeUI())
+        {
+                SetIsUsingNativeUI(false); //prepare to accept focus here and unfocus whatever had it
+//                GetMessageManager()->CallComponentFunction(this, 1, "ActivateKeyboard");
+  //              return;
+        }
+        
+        
+        string name = "Unknown";
+        LogMsg("Opening fake keyboard for iCade");
+        OSMessage o;
+        o.m_type = OSMessage::MESSAGE_OPEN_TEXT_BOX;
+        o.m_string = "";
+        SetLastStringInput("");
+        o.m_x = -1000;
+        o.m_y = -1000; 
+        o.m_parm1 = 2024; //not used anymore
+        o.m_fontSize = 30.0f;
+        o.m_sizeX = 217;
+        o.m_sizeY = 40;
+        o.m_parm2 = OSMessage::PARM_KEYBOARD_TYPE_ASCII;
+            
+        GetBaseApp()->AddOSMessage(o);
+        SetIsUsingNativeUI(true);
+       
+        m_bScanningForICade = true;
+       // SetEntityWithNativeUIFocus(GetParent());
+#endif
+		 m_bCurrentlyActive = true;
+}
+
 bool Gamepad_iCade::Init()
 {
+	m_name = "iCade";
+
 	m_axisUsedCount = 2;
 
 	//setup our keys.. later, we may want to add other configs for other keyboard/based fake controllers, but this one is for the iCade:
@@ -53,9 +94,69 @@ bool Gamepad_iCade::Init()
 	m_keys[KEY_ARCADE_DIR_DOWN].Setup(this, 'X', 'Z', -1, VIRTUAL_KEY_DIR_DOWN);
 
 	GetBaseApp()->m_sig_raw_keyboard.connect(1, boost::bind(&Gamepad_iCade::OnRawKeyboardInput, this, _1));
-	return true;
+	GetBaseApp()->m_sig_hardware.connect(1, boost::bind(&Gamepad_iCade::OnHardwareMessage, this, _1));
+	//ShowTextMessage("Checking for iCade..", 400);
+	ActivateFakeKeyboardIOS();
+    
+    return true;
 }
 
+void Gamepad_iCade::OnHardwareMessage( VariantList *pVList )
+{
+	eMessageType msg = (eMessageType) (int)pVList->Get(0).GetFloat();
+
+	switch (msg)
+	{
+            
+	case MESSAGE_TYPE_HW_TOUCH_KEYBOARD_WILL_SHOW:
+#ifdef _DEBUG
+		LogMsg("iCade: Noticing HW will show");
+#endif
+#ifdef PLATFORM_IOS
+		if (m_bScanningForICade)
+        {
+            m_bScanningForICade = false;
+		if (GetIsUsingNativeUI())
+		{
+            LogMsg("iCade not detected, the touch screen came up..");
+			ShowTextMessage("iCade not detected... disabling", 2000);
+			
+            OSMessage o;
+            o.m_type = OSMessage::MESSAGE_CLOSE_TEXT_BOX;
+            GetBaseApp()->AddOSMessage(o);
+
+            SetIsUsingNativeUI(false);
+		} else {
+            LogMsg("Touch screen came up but.. ");
+        }
+        }
+#endif
+		break;
+
+	case MESSAGE_TYPE_HW_TOUCH_KEYBOARD_WILL_HIDE:
+#ifdef _DEBUG
+		LogMsg("iCade: Noticing HW will hide");
+#endif
+
+		break;
+            
+        case MESSAGE_TYPE_HW_KEYBOARD_INPUT_STARTING:
+            LogMsg("iCade noticed we're using an input box..");
+            m_bScanningForICade = false;
+            m_bCurrentlyActive = false;
+            break;
+            
+        case MESSAGE_TYPE_HW_KEYBOARD_INPUT_ENDING:
+		#ifdef _DEBUG           
+			LogMsg("iCade reinitting keyboard, as something else closed it, and it has to be on all the time for iOS to be able to read keystrokes");
+		#endif
+            //reinitialize the keyboard for the iCade, only does anything on iOS, needed because iOS needs a fake input
+			//box active to be able to read keystrokes from the bluetooth keyboard, unlike Android/Win
+            ActivateFakeKeyboardIOS();
+            break;
+	}
+	
+}
 
 void Gamepad_iCade::Kill()
 {
@@ -74,7 +175,8 @@ void Gamepad_iCade::OnRawKeyboardInput( VariantList *pVList )
 
 	if (bOnDown)
 	{
-		LogMsg("Gamepad_iCade got: %c (%d)", (char)c, c);
+
+		//LogMsg("Gamepad_iCade got: %c (%d)", (char)c, c);
 		
 		//with only this many options, iteratoring through our keys for a match is not going to be a speed issue...
 	
@@ -172,7 +274,7 @@ void Gamepad_iCade::Update()
 	{
 		//convert to vector
 		SetAxis(0, (float)sin(DEG2RAD((float)degrees))); 
-		SetAxis(1, (float)cos(DEG2RAD((float)degrees))); 
+		SetAxis(1, -(float)cos(DEG2RAD((float)degrees))); 
 	}
 	
 	Gamepad::Update();

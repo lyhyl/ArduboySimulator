@@ -168,8 +168,13 @@ enum eMessageType
 	MESSAGE_TYPE_GUI_JOYPAD_CONNECT, // For Jakes android gamepad input
 
 	MESSAGE_TYPE_CALL_ENTITY_FUNCTION_RECURSIVELY, //used to schedule fake clicks, helps me with debugging
+	MESSAGE_TYPE_HW_TOUCH_KEYBOARD_WILL_SHOW, //ios only, when not using external keyboard
+	MESSAGE_TYPE_HW_TOUCH_KEYBOARD_WILL_HIDE, //ios only, when not using external keyboard
+	MESSAGE_TYPE_HW_KEYBOARD_INPUT_ENDING, //proton is done with input and requesting that the keyboard hide 
+    MESSAGE_TYPE_HW_KEYBOARD_INPUT_STARTING, //proton is asking for the keyboard to open 
+    
 	
-	MESSAGE_USER = 1000, //users can add their own messages starting here
+    MESSAGE_USER = 1000, //users can add their own messages starting here
 
 };
 

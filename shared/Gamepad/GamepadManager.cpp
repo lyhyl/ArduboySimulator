@@ -159,3 +159,13 @@ void GamepadManager::RemoveGamepadsByProvider( GamepadProvider *provider )
 		}
 	}
 }
+
+Gamepad * GamepadManager::GetGamepad( eGamepadID id )
+{
+	if ((int)id < 0 || (int)id >= (int)m_gamepads.size() )
+	{
+		return NULL;
+	}
+
+	return m_gamepads[id];
+}

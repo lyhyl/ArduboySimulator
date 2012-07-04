@@ -80,6 +80,7 @@ void SelectionMove(bool bDown)
 	LogMsg("Chose %d", selection);
 }
 
+/*
 void FakeClickToButton(Entity *pChosenButton, int32 delayMS)
 {
 	
@@ -102,6 +103,7 @@ void FakeClickToButton(Entity *pChosenButton, int32 delayMS)
 	}
 
 }
+*/
 
 
 void SelectionSelect()
@@ -133,10 +135,12 @@ void OnSelectInput(VariantList *pVList)
 		SelectionSelect();
 		break;
 
+/*
 	case 'U':
 		UnlockAllLevels();
 		break;
-	
+*/
+
 	case VIRTUAL_KEY_DIR_UP:
 		SelectionMove(false);
 	break;
@@ -156,11 +160,19 @@ void SetupArrowSelector(Entity *pBG, int itemCount, uint32 defaultItem)
 
 	ArcadeInputComponent *pComp = (ArcadeInputComponent*)pIcon->AddComponent(new ArcadeInputComponent);
 
+	/*
 	//connect to a gamepad/joystick too if available
-	Gamepad *pPad = GetGamepadManager()->GetDefaultGamepad();
+	
+	*/
 
-	if (pPad)
+	//Just connect to all pads at once.. ok to do for a single player game.. otherwise, we should use
+	//Gamepad *pPad = GetGamepadManager()->GetDefaultGamepad(); instead probably, or let the user choose.
+	//Keep in mind pads can be removed/added on the fly
+
+
+	for (int i=0; i < GetGamepadManager()->GetGamepadCount(); i++)
 	{
+		Gamepad *pPad = GetGamepadManager()->GetGamepad((eGamepadID)i);
 		pPad->ConnectToArcadeComponent(pComp, true, true);
 
 		//if we cared about the analog sticks too, we'd do this:
@@ -223,6 +235,10 @@ Entity * MainMenuCreate(Entity *pParentEnt)
 	float y = 400;
 	float ySpacer = 45;
 
+	//for testing input..
+	CreateInputTextEntity(pBG, "Crap", 20,40, "Test");
+	CreateInputTextEntity(pBG, "Crap", 20,80, "Test2");
+	
 	int levelsPassed = GetApp()->GetVar("passed")->GetUINT32();
 
 	for (int i=1; i <= TOTAL_LEVELS; i++)

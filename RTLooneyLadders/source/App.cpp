@@ -107,6 +107,8 @@ bool App::Init()
 	//SetDefaultAudioClickSound("audio/enter.wav");
 	SetDefaultButtonStyle(Button2DComponent::BUTTON_STYLE_CLICK_ON_TOUCH_RELEASE);
 	SetManualRotationMode(true);
+	
+	//to test at various FPS
 	//SetFPSLimit(30);
 
 	//we'll use a virtual screen size of this, and it will be scaled to any device
@@ -192,11 +194,13 @@ bool App::Init()
 	m_varDB.Load("save.dat", &bFileExisted);
 
 	m_varDB.GetVarWithDefault("level", Variant(uint32(1)));
+	
+	//Actually, because this isn't a real game, let's just cheat and give the player access to all the levels
+	UnlockAllLevels();
+	
 	//preload audio
 	GetAudioManager()->Preload("audio/click.wav");
 	
-	
-
 #ifdef PLATFORM_WINDOWS
 	//If you don't have directx, just comment out this and remove the dx lib dependency, directx is only used for the
 	//gamepad input on windows
