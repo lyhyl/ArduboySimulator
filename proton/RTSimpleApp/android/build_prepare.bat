@@ -14,6 +14,12 @@ call android update project -p ./
 rmdir assets /S /Q
 mkdir assets
 
+rmdir libs /S /Q
+:why this dell? because rmdir fails if it's a file, which can be caused somehow
+del libs
+mkdir libs
+del 
+
 :It's ok if you get "0 files copied" messages, there just aren't files in some of these
 mkdir assets\interface
 xcopy ..\bin\interface assets\interface /E /F /Y

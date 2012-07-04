@@ -20,8 +20,8 @@
 Example of usage:
 
 EntityComponent *pComp = pIcon->AddComponent(new ArcadeInputComponent);
-AddKeyBinding(pComp, "Up", VIRTUAL_KEY_DIR_UP, VIRTUAL_KEY_DIR_UP);
-AddKeyBinding(pComp, "Unlock", 'U', 'U');
+AddKeyBinding(pComp, "Up", VIRTUAL_KEY_DIR_UP, VIRTUAL_KEY_DIR_UP, false);
+AddKeyBinding(pComp, "Unlock", 'U', 'U', false);
 
 //route messages to the entity you want to have them:
 GetBaseApp()->m_sig_arcade_input.connect(pBG->GetFunction("OnArcadeInput")->sig_function);
@@ -97,12 +97,16 @@ public:
 		m_requireShift = false;
 		m_requireAlt = false;
 		m_requireCtrl = false;
+		m_bOutputAsNormalKeyToo = false;
 	}
 
 	string m_name;
 	uint32 m_inputkeycode;
 	uint32 m_outputkeycode;
-	
+
+	bool m_bOutputAsNormalKeyToo; //if true, will through the normal sig_raw_keyboard in addition to m_sig_arcade_input, this
+	//can be useful to say, let a gamepad mapping also trigger normal keys, which buttons may be hooked to
+
 	//unused right now
 	bool m_requireShift;
 	bool m_requireAlt;
@@ -162,6 +166,6 @@ private:
 	boost::signal<void (VariantList*)> *m_customSignal; //if not null, messages will be sent here
 };
 
-void AddKeyBinding(EntityComponent *pComp, string name, uint32 inputcode, uint32 outputcode);
+void AddKeyBinding(EntityComponent *pComp, string name, uint32 inputcode, uint32 outputcode, bool bAlsoSendAsNormalRawKey = false);
 
 #endif // ArcadeInputComponent_h__

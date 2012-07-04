@@ -2785,6 +2785,10 @@
 			RelativePath="..\..\Programmer Readme.txt"
 			>
 		</File>
+		<File
+			RelativePath="..\Project Readme.txt"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

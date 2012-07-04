@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="winRTBareBones"
-	ProjectGUID="{04D58809-BAE3-4CF4-AD22-15CBF470A0A5}"
+	ProjectGUID="{B4AF0729-C4C8-470F-A075-2D37021ACC6D}"
 	RootNamespace="winRTBareBones"
 	Keyword="Win32Proj"
 	>
