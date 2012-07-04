@@ -7,7 +7,7 @@
 #include "OverlayRenderComponentSpy.h"
 #include "CharManagerComponent.h"
 
-
+const float C_PLAYER_SPEED = 5.0f;
 
 
 CharComponent::CharComponent()
@@ -115,9 +115,9 @@ void CharComponent::OnRender(VariantList *pVList)
 void CharComponent::UpdateMove()
 {
 	
-	if (m_updateThink > GetTick(TIMER_GAME)) return; //not yet
+	//if (m_updateThink > GetTick(TIMER_GAME)) return; //not yet
 
-	float amount = *m_pSpeed;
+	float amount = C_PLAYER_SPEED;
 	if (m_state == STATE_MOVE_LEFT) amount *= -1;
 	uint32 timeMS = 40;
 	
@@ -134,19 +134,22 @@ void CharComponent::UpdateMove()
 		}
 	}
 	
-	ZoomToPositionOffsetEntity(GetParent(), CL_Vec2f(amount, 0), timeMS, INTERPOLATE_LINEAR);
+	SetPos2DEntity(GetParent(), GetPos2DEntity(GetParent()) + CL_Vec2f(amount*GetBaseApp()->GetDelta(), 0));
+	//LogMsg("Moving %.2f", amount);
+	//ZoomToPositionOffsetEntity(GetParent(), CL_Vec2f(amount, 0), timeMS, INTERPOLATE_LINEAR);
+	
+	
 	m_updateThink = GetTick(TIMER_GAME)+ timeMS;
 	
 	if (m_soundTimer < GetTick(TIMER_GAME))
 	{
 		GetAudioManager()->Play("audio/walk_blip.wav");
-		m_soundTimer = GetTick(TIMER_GAME)+ 150;
+		m_soundTimer = GetTick(TIMER_GAME)+ 300;
 	}
 }
 
 void CharComponent::PlayerAI()
 {
-
 
 	if (m_moveASAP)
 	{
@@ -170,8 +173,7 @@ void CharComponent::PlayerAI()
             GetMessageManager()->CallComponentFunction(GetCharManager(), 1, "InitEffect", &vList);
 
 			OnGotDoor();
-			
-
+	
 			//give power up?
 
 			int r = Random(12);
@@ -181,7 +183,7 @@ void CharComponent::PlayerAI()
 				ShowQuickMessage("SHE GIVES YOU AN EXTRA LIFE!");
 				OnModLivesLost(1);
 			}
-			if (r > 8)
+			if (r > 5)
 			{
 				ShowQuickMessage("SHE GIVES YOU A DYNAMITE!");
 				OnModDyno(1);
@@ -381,8 +383,6 @@ void CharComponent::SetPositionByFloorAndCell(VariantList *pVList )
 
 void CharComponent::SetPositionByFloorAndX(VariantList *pVList )
 {
-	
-	
 	uint32 floorID = pVList->Get(0).GetUINT32();
 	float x = pVList->Get(1).GetFloat();
 	*m_pFloorID = floorID;
@@ -391,13 +391,13 @@ void CharComponent::SetPositionByFloorAndX(VariantList *pVList )
 	m_pPos2d->x = x;
 }
 
-
 void CharComponent::Stop()
 {
 	m_state = STATE_STOP;
 	m_updateThink = 0;
 	AnimateStopEntityAndSetFrame(GetParent(), 0, 0, 0);
 }
+
 void CharComponent::Move( bool bRight, bool bButtonDown)
 {
 	if (*m_pPaused)
@@ -418,7 +418,7 @@ void CharComponent::Move( bool bRight, bool bButtonDown)
 	{
 		if (bRight) m_state = STATE_MOVE_RIGHT; else m_state = STATE_MOVE_LEFT;
 		m_updateThink = GetTick(TIMER_GAME);
-		AnimateEntity(GetParent(), 1, 2, 300, InterpolateComponent::ON_FINISH_REPEAT, 0);
+		AnimateEntity(GetParent(), 1, 2, 150, InterpolateComponent::ON_FINISH_REPEAT, 0);
 		AnimateEntitySetMirrorMode(GetParent(), !bRight, false);
 	} else
 	{
@@ -481,8 +481,6 @@ void CharComponent::UpLadder()
 		GetMessageManager()->SetComponentVariable(this, 1000, "paused", uint32(0));
 		return;
 	}
-
-	
 
 		ShowQuickMessage("There is no ladder or elevator here!");
 }

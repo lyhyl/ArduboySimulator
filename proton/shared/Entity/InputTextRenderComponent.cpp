@@ -110,7 +110,7 @@ void InputTextRenderComponent::ActivateKeyboard(VariantList *pVList)
 	SetLastStringInput(*m_pText);
 	o.m_x = -1000;
 	o.m_y = -1000; 
-	o.m_parm1 = *m_pInputLengthMax; //length of input allowed
+	o.m_parm1 = *m_pInputLengthMax; //no longer used...
 	o.m_fontSize = 30.0f;
 	o.m_sizeX = 217;
 	o.m_sizeY = 40;
@@ -143,7 +143,14 @@ void InputTextRenderComponent::ActivateKeyboard(VariantList *pVList)
 	SetIsUsingNativeUI(true);
 	SetEntityWithNativeUIFocus(GetParent());
 
+    //send message to whoever cares, iCade gamepad on iOS cares about this
+    VariantList v;
+    v.Get(0).Set((float)MESSAGE_TYPE_HW_KEYBOARD_INPUT_STARTING);
+    GetBaseApp()->m_sig_hardware(&v);
+    
+    
 }
+
 void InputTextRenderComponent::OnLosingNativeGUIFocus(VariantList *pVList)
 {
 	string name = "Unknown";
@@ -207,6 +214,12 @@ void InputTextRenderComponent::CloseKeyboard( VariantList *pVList )
 	OSMessage o;
 	o.m_type = OSMessage::MESSAGE_CLOSE_TEXT_BOX;
 	GetBaseApp()->AddOSMessage(o);
+
+    //send message to people who care, iCade gamepad on iOS cares about this...
+    VariantList v;
+    v.Get(0).Set((float)MESSAGE_TYPE_HW_KEYBOARD_INPUT_ENDING);
+    GetBaseApp()->m_sig_hardware(&v);
+    
 }
 
 void InputTextRenderComponent::OnAdd(Entity *pEnt)
@@ -295,8 +308,11 @@ void InputTextRenderComponent::OnUpdate(VariantList *pVList)
 
 	if (*m_pHasFocus)
 	{
-		string curString = FilterToValidAscii(GetLastStringInput(), *m_pFiltering == FILTERING_STRICT);
+
+	
+	//	string curString = FilterToValidAscii(GetLastStringInput(), *m_pFiltering == FILTERING_STRICT);
 				
+		string curString = GetLastStringInput(); //don't have to filter, already was
 		if (*m_pText != curString)
 		{
 			if (curString.size() > m_pText->size())
@@ -316,7 +332,7 @@ void InputTextRenderComponent::OnUpdate(VariantList *pVList)
 		
 			GetVar("text")->Set(curString);
 		}
-
+	
 		if (!GetIsUsingNativeUI())
 		{
 			//the keyboard is closed, we're done

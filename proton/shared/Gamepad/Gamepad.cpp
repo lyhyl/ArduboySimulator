@@ -4,7 +4,7 @@
 
 
 #ifdef _DEBUG
-	#define SHOW_GAMEPAD_DEBUG_STUFF
+	//#define SHOW_GAMEPAD_DEBUG_STUFF
 #endif
 
 
@@ -36,7 +36,7 @@ void Gamepad::SetAxis( int axis, float val )
 	m_axis[axis].m_axis = val;
 
 #ifdef SHOW_GAMEPAD_DEBUG_STUFF
-	LogMsg("Got axis %d: %.2f", axis, val);
+	if (val != 0)	LogMsg("Got axis %d: %.2f", axis, val);
 #endif
 
 }
@@ -247,7 +247,9 @@ void Gamepad::Update()
 				int dir = (int(RAD2DEG(atan2(GetLeftStick().y, GetLeftStick().x))+(180)));
 				//convert into 8 directions
 				int finaldir = mod(dir-(45/2), 360)/45;
-				LogMsg("Pressing %s, which is dir %d (final: %d)", PrintVector2(GetLeftStick()).c_str(), dir, finaldir);
+#ifdef _DEBUG
+	//			LogMsg("Pressing %s, which is dir %d (final: %d)", PrintVector2(GetLeftStick()).c_str(), dir, finaldir);
+#endif
 				SendArcadeDirectionByDegrees( (finaldir*45)-45 );
 				m_bJustSentStickRelease = false;
 			} else

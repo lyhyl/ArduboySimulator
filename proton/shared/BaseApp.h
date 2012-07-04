@@ -287,7 +287,15 @@ public:
 	 *   the event was a key press or release.
 	 */
 	boost::signal<void (VariantList*)> m_sig_raw_keyboard;
-	
+
+	/**
+     - 0: the eSystemType, as float.  Should be cast to (eMessageType)(int)
+	 * Signal to notify about hardware messages.  Currently there are only two,
+	 * MESSAGE_TYPE_HW_TOUCH_KEYBOARD_WILL_SHOW and MESSAGE_TYPE_HW_TOUCH_KEYBOARD_WILL_HIDE
+	 */
+	boost::signal<void (VariantList*)> m_sig_hardware;
+
+
 	/**
 	 * Signal to notify that it's time to release surfaces.
 	 * Sent for example when the app goes to background.

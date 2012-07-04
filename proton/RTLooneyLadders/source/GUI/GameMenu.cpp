@@ -126,7 +126,7 @@ void OnGotDoor()
 		ShowBigMessage("YOU PASSED THE LEVEL!");
 		GetMessageManager()->SendGame(MESSAGE_TYPE_PLAY_MUSIC, "audio/win.ogg", 1000);
 
-		FakeClickToButton(GetEntityRoot()->GetEntityByName("Back"), 6000);
+		FakeClickAnEntity(GetEntityRoot()->GetEntityByName("Back"), 6000);
 		LogMsg("Won");
 		uint32 passed = GetApp()->GetVar("passed")->GetUINT32();
 		passed = rt_max(passed, GetApp()->GetVar("level")->GetUINT32());
@@ -151,7 +151,7 @@ int OnModLivesLost(int mod)
 	if (numLeft == 0)
 	{
 		ShowBigMessage("OUT OF LIVES.  YOU FAIL!");
-		FakeClickToButton(GetEntityRoot()->GetEntityByName("Back"), 6000);
+		FakeClickAnEntity(GetEntityRoot()->GetEntityByName("Back"), 6000);
 	}
 
 	pTextComp->GetVar("text")->Set(toString(numLeft));
@@ -180,11 +180,19 @@ Entity * GameMenuCreate(Entity *pParentEnt)
 
 	ArcadeInputComponent *pComp = (ArcadeInputComponent*) pBG->AddComponent(new ArcadeInputComponent);
 	
+	/*
 	//connect to a gamepad/joystick too if available
-	Gamepad *pPad = GetGamepadManager()->GetDefaultGamepad();
+	
+	*/
 
-	if (pPad)
+	//Just connect to all pads at once.. ok to do for a single player game.. otherwise, we should use
+	//Gamepad *pPad = GetGamepadManager()->GetDefaultGamepad(); instead probably, or let the user choose.
+	//Keep in mind pads can be removed/added on the fly
+
+
+	for (int i=0; i < GetGamepadManager()->GetGamepadCount(); i++)
 	{
+		Gamepad *pPad = GetGamepadManager()->GetGamepad( (eGamepadID) i);
 		pPad->ConnectToArcadeComponent(pComp, true, true);
 
 		//if we cared about the analog sticks too, we'd do this:

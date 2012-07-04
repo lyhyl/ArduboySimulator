@@ -177,7 +177,11 @@ LogMsg("Music disabled, pretending to play");
 			return m_lastMusicID;
 		}
 		
-		NSString *soundFile =  [NSString stringWithCString:  (basePath+fName).c_str() encoding: [NSString defaultCStringEncoding]];
+        string fNameTemp = basePath+fName;
+        StringReplace(".ogg",".mp3", fNameTemp);
+       
+        
+		NSString *soundFile =  [NSString stringWithCString:  fNameTemp.c_str() encoding: [NSString defaultCStringEncoding]];
 	
         if (![[NSFileManager defaultManager] fileExistsAtPath:soundFile])
         {

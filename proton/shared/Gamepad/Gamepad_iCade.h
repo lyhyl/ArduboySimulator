@@ -63,15 +63,15 @@ public:
 	virtual void Kill();
 	virtual void Update();
 
-protected:
-
-	void OnRawKeyboardInput( VariantList *pVList );
-
-
 private:
 
+	void OnRawKeyboardInput( VariantList *pVList );
+	void ActivateFakeKeyboardIOS(); //only does something on iOS
+	void OnHardwareMessage( VariantList *pVList );
 
 	ArcadeKeyboardControl m_keys[KEY_ARCADE_TOTAL_COUNT];
+    bool m_bScanningForICade; //only used for iOS..
+    bool m_bCurrentlyActive; //iOS...
 };
 
 #endif // Gamepad_iCade_h__

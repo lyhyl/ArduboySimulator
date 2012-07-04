@@ -39,7 +39,7 @@ public:
 		FILTER_INDEX = 3 //where we should stick return info in the pVList for filters
 	};
 	
-	//a way to control recursive messages we receieve, to break a chain of input or such
+	//a way to control recursive messages we receive, to break a chain of input or such
 	enum eFilterCommunication
 	{
 		FILTER_ALLOW,

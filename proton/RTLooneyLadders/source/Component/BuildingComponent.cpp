@@ -206,19 +206,14 @@ void BuildingComponent::GetRandomEmptyFloorAndCell(uint32 &floorID, uint32 &cell
 
 void BuildingComponent::SetupCharacters()
 {
-	
 	//spawn guys
 
 	for (int i=0; i < *m_pEGuys; i++)
 	{
-		
 		uint32 floor, cell;
 		
 		GetRandomNonWallFloorAndCell(floor, cell);
-
 		GetCharManager()->AddChar(ID_WEAK_ENEMY, AI_PATROL, floor, cell);
-
-
 	}
 	
 	/*
@@ -404,6 +399,7 @@ void BuildingComponent::MakeElevatorPair(uint32 floorIDA, uint32 cellA, uint32 f
 	m_floors[floorIDB].m_cells[cellB].m_color = color;
 
 };
+
 void BuildingComponent::MakeAllRoomsReachable()
 {
   FloorMap map;
@@ -441,6 +437,7 @@ void BuildingComponent::MakeAllRoomsReachable()
 
   PrintMappingStatistics(&map, false);
 }
+
 void BuildingComponent::OnBuildLevel(VariantList *pVList)
 {
 	LogMsg("Building level");
@@ -464,7 +461,6 @@ void BuildingComponent::OnBuildLevel(VariantList *pVList)
 		m_floors[i].m_cells[*m_pCellsPerFloor-1].m_type = BCell::TYPE_WALL;
 	}
 
-	
 	//populate it
 	for (uint32 i=0; i < *m_pFloors; i++)
 	{
@@ -488,7 +484,6 @@ void BuildingComponent::OnBuildLevel(VariantList *pVList)
 
 	}
 
-
 	//how about some extra elevators?
 
 	for (int i=0; i < *m_pElevators; i++)
@@ -505,10 +500,7 @@ void BuildingComponent::OnBuildLevel(VariantList *pVList)
 		//PutItemOnFloor(&m_floors[i], BCell::TYPE_LADDER_UP, 0, (*m_pCellsPerFloor)-1);
 	}
 
-
-
 	MakeAllRoomsReachable();
-
 
 	//add treasure
 	for (uint32 i=0; i < *m_pDoors; i++)
@@ -516,8 +508,6 @@ void BuildingComponent::OnBuildLevel(VariantList *pVList)
 		PutItemOnRandomFloor(BCell::TYPE_DOOR1, 0);
 	}
 
-	
-	
 
 	//set camera position
 	GetParent()->GetVar("pos2d")->Set(CL_Vec2f(0, -GetScreenSizeYf()));
@@ -527,7 +517,6 @@ void BuildingComponent::OnBuildLevel(VariantList *pVList)
 void BuildingComponent::DrawCell(BCell *pCell, CL_Vec2f vScreenPos, CL_Vec2f vScale)
 {
 	
-
 	//rtRect r(vScreenPos.x, vScreenPos.y, vScreenPos.x+ m_cellSize.x, vScreenPos.y+m_cellSize.y);
 	//DrawRect(rtRect(r));
 	
@@ -580,6 +569,11 @@ void BuildingComponent::DrawFloor(BFloor *pFloor, CL_Vec2f vCamPos, CL_Vec2f vSc
 	{
 		vWorldPos = CL_Vec2f(i*m_cellSize.x,FloorToY(pFloor->m_floorID)); 
 		vScreenPos = WorldToScreenPos(vWorldPos);
+		
+		//we don't really want sub-pixel rendering.. do this
+		vScreenPos.x = (int)vScreenPos.x;
+		vScreenPos.y = (int)vScreenPos.y;
+
 		//LogMsg("Drawing floor %d, cell %d (%s local) at %s", pFloor->m_floorID, i, PrintVector2(vWorldPos).c_str(),  PrintVector2(vScreenPos).c_str());	
 		DrawCell(&pFloor->m_cells[i], vScreenPos, vScale);
 	}
@@ -642,9 +636,7 @@ CL_Vec2f BuildingComponent::FloorAndCellToWorldPos( uint32 floorID, uint32 cell 
 CL_Vec2f BuildingComponent::FloorAndCellToWorldPosForCharacter( uint32 floorID, uint32 cell )
 {
 	return CL_Vec2f(cell*m_cellSize.x+m_cellSize.x/2, FloorToY(floorID)+145);
-
 }
-
 
 bool BuildingComponent::IsCloseToLadder( uint32 floorID, float posX, CL_Vec2f &pVDoorPosOut )
 {

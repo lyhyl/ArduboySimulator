@@ -2,6 +2,10 @@
 #ifndef OverlayRenderComponentSpy_h__
 #define OverlayRenderComponentSpy_h__
 
+//Well, I wanted to use OverlayRender but I don't know how to elegantly add in the building scale and position to the final
+//render.. er...  so I justcopied OverlayRenderComponent.cpp and added them in this guys render.  Should figure out a 
+//smarter way... could do a render filter to adjust the position, but scale.. uh.. hrm.
+
 #include "Entity/Component.h"
 #include "Entity/Entity.h"
 #include "Renderer/SurfaceAnim.h"

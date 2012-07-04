@@ -53,6 +53,7 @@
 	[window makeKeyAndVisible];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 
 	//we don't want to waste cycles doing the accelerometer so we half disable it
 	[[UIAccelerometer sharedAccelerometer] setDelegate:nil];
@@ -93,7 +94,8 @@
 	[_textField setTextColor:[UIColor whiteColor]];
 	[_textField setFont:[UIFont fontWithName:@"Arial" size:pMsg->m_fontSize]];
 	[_textField setPlaceholder:@""];	
-	[_textField setText:[NSString stringWithCString: pMsg->m_string.c_str() encoding: [NSString defaultCStringEncoding]]];
+    //we send in the "0" as default text, because if we send blank, we won't get backspace messages.
+	[_textField setText:[NSString stringWithCString: "00" encoding: [NSString defaultCStringEncoding]]];
 	[_textField setAutocorrectionType: UITextAutocorrectionTypeNo];
 	[_textField setClearsOnBeginEditing: NO];
 	
@@ -127,10 +129,21 @@
 	SetIsUsingNativeUI(true);
 	
 }
+- (void) keyboardWillHide:(NSNotification *) notification
+{
+   	GetMessageManager()->SendGUI(MESSAGE_TYPE_HW_TOUCH_KEYBOARD_WILL_HIDE, 0.0f);		
+}
+
 - (void) keyboardWillShow:(NSNotification *) notification
 {
    
    LogMsg("Keyboarding showing");
+  
+    
+    /*
+     //What is all this?  Can't remember why I need it..
+     
+    
     UIView *keyboardView = nil;
  
     NSArray *windows = [[UIApplication sharedApplication] windows];
@@ -159,21 +172,14 @@
             }
         }
     }
+     */
+    
+    	GetMessageManager()->SendGUI(MESSAGE_TYPE_HW_TOUCH_KEYBOARD_WILL_SHOW, 0.0f);		
+
+    
 }
 - (void)OnTextChangedNotification:(NSNotification *)note 
 {
-    
-   // NSLog(_textField.text);
-    
-    string  s = string([ _textField.text cStringUsingEncoding:NSUTF8StringEncoding]);
-	SetLastStringInput(s);
-	//LogMsg("Did encoding");
-	
-    //LogMsg(s.c_str());
-    //_textField.text = [NSString stringWithCString: s.c_str() encoding: [NSString defaultCStringEncoding]];
-    //if ([[myTextField stringValue] length] > limit) {
-      //  [myTextField setStringValue:[[myTextField stringValue] substringToIndex:limit]];
-   
 }
 
 - (void) KillTextBox
@@ -263,55 +269,40 @@
 	}
 }
 
-#define LEGAL	@"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-0123456789"
-#define LEGAL_FULL	@" ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz~`1234567890!@#$%^&*()_+-=[]{}|;': ,.<>/?\\\""
-
-#define LEGAL_NUM	@"-0123456789."
-
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
-	//NSLog(string);
-	//NSLog(textField.text);
+	NSLog(string);
 	
-	if (textField.text.length >= m_inputboxMaxLen && range.length == 0)
-	{
-		return NO; // return NO to not change text
-	}else{
-		
-		
-		NSCharacterSet *cs;
-		switch (m_requestedKeyboardType)
-		{
-		
-			case UIKeyboardTypeNumbersAndPunctuation:
-				cs = [[NSCharacterSet characterSetWithCharactersInString:LEGAL_NUM] invertedSet];
-			break;
-			
-			case UIKeyboardTypeASCIICapable:
+    if ([string length] == 0)
+    {
+        //hack for backspace
+        GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, 8.0f, 1.0f);
+        
+        //signal keyboard down
+        GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW, 8.0f, 1.0f);
+        
+        //we don't really have a keyboard up, so we'll fake it now
+        GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW, 8.0f, 0.0f);
+        return false;
+    }
     
-                if (m_keyboardType == OSMessage::PARM_KEYBOARD_TYPE_ASCII_FULL)
-                {
-                    cs = [[NSCharacterSet characterSetWithCharactersInString:LEGAL_FULL] invertedSet];
-                
-                } else
-                {
-                    cs = [[NSCharacterSet characterSetWithCharactersInString:LEGAL] invertedSet];
-                    
-                }
-                
-				break;
-			
-			
-			default:
-			cs = [[NSCharacterSet characterSetWithCharactersInString:LEGAL_FULL] invertedSet];
+    for (int i=0; i < [string length]; i++)
+    {
+        float letter = (float)[string characterAtIndex:i];
+        float upCasedLetter = (float)[ [string uppercaseString] characterAtIndex:i];
+        
+        GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, letter, 1.0f);
+        
+        //signal keyboard down
+        GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW, upCasedLetter, 1.0f);
 
-		}
-		
-		NSString *filtered = [[string componentsSeparatedByCharactersInSet:cs] componentsJoinedByString:@""];
-		return [string isEqualToString:filtered];
-	}
-
-	return YES;
+        //we don't really have a keyboard up, so we'll fake it now
+        GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW, upCasedLetter, 0.0f);
+    }
+    
+    //ignore all changes so our text field doesn't fill up, but the truth is we already sent the characters to Proton.  This
+    //method doesn't work for kanji/unicode stuff...
+    return false;
 }
 
 // Saves the user name and score after the user enters it in the provided text field. 
@@ -331,7 +322,7 @@
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
-	[textField setPlaceholder:@""];	
+	//[textField setPlaceholder:@""];	
 }
 
 // Terminates the editing session
