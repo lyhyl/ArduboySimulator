@@ -318,8 +318,68 @@ int GetSystemData()
 	return C_PIRATED_NO;
 }
 
+bool CheckDay(const int year, const int month, const int day)
+{
+	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+	
+	[dateFormatter setDateFormat:@"yyyy"];
+    int nowyear = [[dateFormatter stringFromDate:[NSDate date]] intValue];
+
+    [dateFormatter setDateFormat:@"MM"];
+    int nowmonth = [[dateFormatter stringFromDate:[NSDate date]] intValue];
+
+    [dateFormatter setDateFormat:@"dd"];
+    int nowday = [[dateFormatter stringFromDate:[NSDate date]] intValue];
+    [dateFormatter release];
+
+	if ((nowyear == year) && (nowmonth == month) && (nowday == day))
+	{
+		return true;
+	}
+	return false;
+}
+
 bool LaterThanNow(const int year, const int month, const int day)
 {
+	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+	
+	[dateFormatter setDateFormat:@"yyyy"];
+    int nowyear = [[dateFormatter stringFromDate:[NSDate date]] intValue];
+
+    [dateFormatter setDateFormat:@"MM"];
+    int nowmonth = [[dateFormatter stringFromDate:[NSDate date]] intValue];
+
+    [dateFormatter setDateFormat:@"dd"];
+    int nowday = [[dateFormatter stringFromDate:[NSDate date]] intValue];
+    [dateFormatter release];
+    
+    if (nowyear< year )
+	{
+		return false;
+	}
+	if (nowyear> year )
+	{
+		return true;
+	}
+	// year must be equal
+	if (nowmonth < month )
+	{
+		return false;
+	}
+	if (nowmonth > month )
+	{
+		return true;
+	}
+	// month must be equal
+	if (nowday < day )
+	{
+		return false;
+	}
+	if (nowday > day )
+	{
+		return true;
+	}
+    
 	return false;
 }
 	
