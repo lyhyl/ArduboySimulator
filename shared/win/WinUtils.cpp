@@ -342,6 +342,18 @@ void GetDateAndTime(int *monthOut, int *dayOut, int *yearOut, int *hourOut, int 
 	*secOut = today.tm_sec;
 }
 
+bool CheckDay(const int year, const int month, const int day)
+{
+	int nowyear, nowmonth, nowday, nowhour, nowmin, nowsec;
+	GetDateAndTime(&nowmonth, &nowday, &nowyear, &nowhour, &nowmin, &nowsec);
+	LogMsg("Comparing against date year %d, month %d, day %d", nowyear, nowmonth, nowday);
+	if ((nowday == day) && (nowmonth == month) && (nowyear == year))
+	{
+		return true;
+	}
+	return false;
+}
+
 bool LaterThanNow(const int year, const int month, const int day)
 {
 	int nowyear, nowmonth, nowday, nowhour, nowmin, nowsec;
