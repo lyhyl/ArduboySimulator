@@ -7,6 +7,7 @@ include(../../shared/linux/Proton.cmake)
 proton_include_all_components()
 proton_use_sdl_audio()
 proton_use_linearparticles()
+proton_include_gamepad("iCade")
 
 set(APP "../source")
 include_directories("${APP}")

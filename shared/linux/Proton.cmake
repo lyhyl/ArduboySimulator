@@ -10,6 +10,7 @@ set(PROTON_AUDIO "${PROTON_SHARED}/Audio")
 set(PROTON_ENTITY "${PROTON_SHARED}/Entity")
 set(PROTON_FILESYSTEM "${PROTON_SHARED}/FileSystem")
 set(PROTON_GUI "${PROTON_SHARED}/GUI")
+set(PROTON_GAMEPAD "${PROTON_SHARED}/Gamepad")
 set(PROTON_MANAGER "${PROTON_SHARED}/Manager")
 set(PROTON_MATH "${PROTON_SHARED}/Math")
 set(PROTON_NETWORK "${PROTON_SHARED}/Network")
@@ -170,6 +171,16 @@ endmacro(proton_use_iap)
 macro(proton_use_ad_framework)
 	list(APPEND PROTON_SOURCES "${PROTON_MANAGER}/AdManager.cpp")
 endmacro(proton_use_ad_framework)
+
+# Enables the project to use gamepads. The supported gamepad names can be given as arguments,
+# for example: proton_include_gamepad(mypad SomeOtherPad)
+macro(proton_include_gamepad)
+	foreach(gamepadname ${ARGV})
+		list(APPEND PROTON_SOURCES "${PROTON_GAMEPAD}/Gamepad_${gamepadname}.cpp" "${PROTON_GAMEPAD}/GamepadProvider_${gamepadname}.cpp")
+	endforeach(gamepadname)
+	
+	list(APPEND PROTON_SOURCES "${PROTON_GAMEPAD}/GamepadManager.cpp" "${PROTON_GAMEPAD}/Gamepad.cpp" "${PROTON_GAMEPAD}/GamepadProvider.cpp")
+endmacro(proton_include_gamepad)
 
 # Includes the Proton testing framework to the project.
 # Sets RT_TESTFW preprocessor define which can be used in the code for conditional compiling.
