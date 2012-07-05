@@ -99,6 +99,7 @@ void SetAppCachePath(std::string path); //useful to set to ./ so you can ignore 
 void CreateAppCacheDirIfNeeded();
 
 bool LaterThanNow(const int year, const int month, const int day);
+bool CheckDay(const int year, const int month, const int day);
 unsigned int GetSystemTimeTick();
 double GetSystemTimeAccurate();
 unsigned int GetFreeMemory();
