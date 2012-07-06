@@ -1,9 +1,9 @@
 #include "PlatformPrecomp.h"
-#include "Gamepad_iCade.h"
+#include "GamepadiCade.h"
 #include "Entity/EntityUtils.h"
 
 
-void ArcadeKeyboardControl::Setup(Gamepad_iCade *pPad,  char keyDown, char keyUp, int buttonID, eVirtualKeys vKeyToSend )
+void ArcadeKeyboardControl::Setup(GamepadiCade *pPad,  char keyDown, char keyUp, int buttonID, eVirtualKeys vKeyToSend )
 {
 	if (buttonID != -1)
 	{
@@ -16,19 +16,19 @@ void ArcadeKeyboardControl::Setup(Gamepad_iCade *pPad,  char keyDown, char keyUp
 }
 
 
-Gamepad_iCade::Gamepad_iCade()
+GamepadiCade::GamepadiCade()
 {
     m_bScanningForICade = false;
     m_bCurrentlyActive = false;
 	
 }
 
-Gamepad_iCade::~Gamepad_iCade()
+GamepadiCade::~GamepadiCade()
 {
 	Kill();
 }
 
-void Gamepad_iCade::ActivateFakeKeyboardIOS()
+void GamepadiCade::ActivateFakeKeyboardIOS()
 {
 
 #ifdef PLATFORM_IOS
@@ -64,7 +64,7 @@ void Gamepad_iCade::ActivateFakeKeyboardIOS()
 		 m_bCurrentlyActive = true;
 }
 
-bool Gamepad_iCade::Init()
+bool GamepadiCade::Init()
 {
 	m_name = "iCade";
 
@@ -93,15 +93,15 @@ bool Gamepad_iCade::Init()
 	m_keys[KEY_ARCADE_DIR_UP].Setup(this, 'W', 'E', -1, VIRTUAL_KEY_DIR_UP);
 	m_keys[KEY_ARCADE_DIR_DOWN].Setup(this, 'X', 'Z', -1, VIRTUAL_KEY_DIR_DOWN);
 
-	GetBaseApp()->m_sig_raw_keyboard.connect(1, boost::bind(&Gamepad_iCade::OnRawKeyboardInput, this, _1));
-	GetBaseApp()->m_sig_hardware.connect(1, boost::bind(&Gamepad_iCade::OnHardwareMessage, this, _1));
+	GetBaseApp()->m_sig_raw_keyboard.connect(1, boost::bind(&GamepadiCade::OnRawKeyboardInput, this, _1));
+	GetBaseApp()->m_sig_hardware.connect(1, boost::bind(&GamepadiCade::OnHardwareMessage, this, _1));
 	//ShowTextMessage("Checking for iCade..", 400);
 	ActivateFakeKeyboardIOS();
     
     return true;
 }
 
-void Gamepad_iCade::OnHardwareMessage( VariantList *pVList )
+void GamepadiCade::OnHardwareMessage( VariantList *pVList )
 {
 	eMessageType msg = (eMessageType) (int)pVList->Get(0).GetFloat();
 
@@ -158,13 +158,13 @@ void Gamepad_iCade::OnHardwareMessage( VariantList *pVList )
 	
 }
 
-void Gamepad_iCade::Kill()
+void GamepadiCade::Kill()
 {
 
 }
 
 
-void Gamepad_iCade::OnRawKeyboardInput( VariantList *pVList )
+void GamepadiCade::OnRawKeyboardInput( VariantList *pVList )
 {
 	//0 = keycode, 1 = pressed or released
 	bool bOnDown = pVList->Get(1).GetUINT32() != VIRTUAL_KEY_RELEASE;
@@ -176,7 +176,7 @@ void Gamepad_iCade::OnRawKeyboardInput( VariantList *pVList )
 	if (bOnDown)
 	{
 
-		//LogMsg("Gamepad_iCade got: %c (%d)", (char)c, c);
+		//LogMsg("GamepadiCade got: %c (%d)", (char)c, c);
 		
 		//with only this many options, iteratoring through our keys for a match is not going to be a speed issue...
 	
@@ -224,7 +224,7 @@ void Gamepad_iCade::OnRawKeyboardInput( VariantList *pVList )
 	}
 }
 
-void Gamepad_iCade::Update()
+void GamepadiCade::Update()
 {
 
 	int degrees = -1; 

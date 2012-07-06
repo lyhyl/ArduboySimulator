@@ -21,15 +21,15 @@
 		5D17BA5A0FBD5DD8009D74BC /* FocusInputComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D17BA540FBD5DD8009D74BC /* FocusInputComponent.cpp */; };
 		5D17BA5B0FBD5DD8009D74BC /* FocusRenderComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D17BA560FBD5DD8009D74BC /* FocusRenderComponent.cpp */; };
 		5D17BA5C0FBD5DD8009D74BC /* FocusUpdateComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D17BA580FBD5DD8009D74BC /* FocusUpdateComponent.cpp */; };
-		5D2F534015A2A7BB00B8CED1 /* Gamepad_iCade.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D2F533815A2A7BB00B8CED1 /* Gamepad_iCade.cpp */; };
 		5D2F534115A2A7BB00B8CED1 /* Gamepad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D2F533915A2A7BB00B8CED1 /* Gamepad.cpp */; };
 		5D2F534215A2A7BB00B8CED1 /* GamepadManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D2F533A15A2A7BB00B8CED1 /* GamepadManager.cpp */; };
-		5D2F534315A2A7BB00B8CED1 /* GamepadProvider_iCade.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D2F533B15A2A7BB00B8CED1 /* GamepadProvider_iCade.cpp */; };
 		5D2F534415A2A7BB00B8CED1 /* GamepadProvider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D2F533C15A2A7BB00B8CED1 /* GamepadProvider.cpp */; };
-		5D2F534515A2A7BB00B8CED1 /* GamepadIOS_60Beat.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D2F533D15A2A7BB00B8CED1 /* GamepadIOS_60Beat.mm */; };
-		5D2F534615A2A7BB00B8CED1 /* GamepadProviderIOS_60Beat.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D2F533E15A2A7BB00B8CED1 /* GamepadProviderIOS_60Beat.mm */; };
-		5D2F534715A2A7BB00B8CED1 /* GamepadProviderIOS_60BeatNative.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D2F533F15A2A7BB00B8CED1 /* GamepadProviderIOS_60BeatNative.mm */; };
 		5D2F534A15A2A92B00B8CED1 /* SBJoystickLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D2F534915A2A92B00B8CED1 /* SBJoystickLib.a */; };
+		5D2F537615A6666E00B8CED1 /* GamepadiCade.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D2F537115A6666E00B8CED1 /* GamepadiCade.cpp */; };
+		5D2F537715A6666E00B8CED1 /* GamepadProvideriCade.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D2F537215A6666E00B8CED1 /* GamepadProvideriCade.cpp */; };
+		5D2F537815A6666E00B8CED1 /* Gamepad60Beat.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D2F537315A6666E00B8CED1 /* Gamepad60Beat.mm */; };
+		5D2F537915A6666E00B8CED1 /* GamepadProvider60Beat.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D2F537415A6666E00B8CED1 /* GamepadProvider60Beat.mm */; };
+		5D2F537A15A6666E00B8CED1 /* GamepadProvider60BeatNative.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D2F537515A6666E00B8CED1 /* GamepadProvider60BeatNative.mm */; };
 		5D3063450FD88F95009DE600 /* ProgressBarComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D30633F0FD88F95009DE600 /* ProgressBarComponent.cpp */; };
 		5D3063460FD88F95009DE600 /* TapSequenceDetectComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3063410FD88F95009DE600 /* TapSequenceDetectComponent.cpp */; };
 		5D3063470FD88F95009DE600 /* UnderlineRenderComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3063430FD88F95009DE600 /* UnderlineRenderComponent.cpp */; };
@@ -191,24 +191,24 @@
 		5D17BA570FBD5DD8009D74BC /* FocusRenderComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FocusRenderComponent.h; path = Entity/FocusRenderComponent.h; sourceTree = "<group>"; };
 		5D17BA580FBD5DD8009D74BC /* FocusUpdateComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FocusUpdateComponent.cpp; path = Entity/FocusUpdateComponent.cpp; sourceTree = "<group>"; };
 		5D17BA590FBD5DD8009D74BC /* FocusUpdateComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FocusUpdateComponent.h; path = Entity/FocusUpdateComponent.h; sourceTree = "<group>"; };
-		5D2F533015A2A7BB00B8CED1 /* Gamepad_iCade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Gamepad_iCade.h; path = Gamepad/Gamepad_iCade.h; sourceTree = "<group>"; };
 		5D2F533115A2A7BB00B8CED1 /* Gamepad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Gamepad.h; path = Gamepad/Gamepad.h; sourceTree = "<group>"; };
-		5D2F533215A2A7BB00B8CED1 /* GamepadIOS_60Beat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GamepadIOS_60Beat.h; path = Gamepad/GamepadIOS_60Beat.h; sourceTree = "<group>"; };
 		5D2F533315A2A7BB00B8CED1 /* GamepadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GamepadManager.h; path = Gamepad/GamepadManager.h; sourceTree = "<group>"; };
-		5D2F533415A2A7BB00B8CED1 /* GamepadProvider_iCade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GamepadProvider_iCade.h; path = Gamepad/GamepadProvider_iCade.h; sourceTree = "<group>"; };
 		5D2F533515A2A7BB00B8CED1 /* GamepadProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GamepadProvider.h; path = Gamepad/GamepadProvider.h; sourceTree = "<group>"; };
-		5D2F533615A2A7BB00B8CED1 /* GamepadProviderIOS_60Beat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GamepadProviderIOS_60Beat.h; path = Gamepad/GamepadProviderIOS_60Beat.h; sourceTree = "<group>"; };
-		5D2F533715A2A7BB00B8CED1 /* GamepadProviderIOS_60BeatNative.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GamepadProviderIOS_60BeatNative.h; path = Gamepad/GamepadProviderIOS_60BeatNative.h; sourceTree = "<group>"; };
-		5D2F533815A2A7BB00B8CED1 /* Gamepad_iCade.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Gamepad_iCade.cpp; path = Gamepad/Gamepad_iCade.cpp; sourceTree = "<group>"; };
 		5D2F533915A2A7BB00B8CED1 /* Gamepad.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Gamepad.cpp; path = Gamepad/Gamepad.cpp; sourceTree = "<group>"; };
 		5D2F533A15A2A7BB00B8CED1 /* GamepadManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GamepadManager.cpp; path = Gamepad/GamepadManager.cpp; sourceTree = "<group>"; };
-		5D2F533B15A2A7BB00B8CED1 /* GamepadProvider_iCade.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GamepadProvider_iCade.cpp; path = Gamepad/GamepadProvider_iCade.cpp; sourceTree = "<group>"; };
 		5D2F533C15A2A7BB00B8CED1 /* GamepadProvider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GamepadProvider.cpp; path = Gamepad/GamepadProvider.cpp; sourceTree = "<group>"; };
-		5D2F533D15A2A7BB00B8CED1 /* GamepadIOS_60Beat.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = GamepadIOS_60Beat.mm; path = Gamepad/GamepadIOS_60Beat.mm; sourceTree = "<group>"; };
-		5D2F533E15A2A7BB00B8CED1 /* GamepadProviderIOS_60Beat.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = GamepadProviderIOS_60Beat.mm; path = Gamepad/GamepadProviderIOS_60Beat.mm; sourceTree = "<group>"; };
-		5D2F533F15A2A7BB00B8CED1 /* GamepadProviderIOS_60BeatNative.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = GamepadProviderIOS_60BeatNative.mm; path = Gamepad/GamepadProviderIOS_60BeatNative.mm; sourceTree = "<group>"; };
 		5D2F534815A2A90300B8CED1 /* SBJoystick.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SBJoystick.h; path = addons/sbgamepad/lib/SBJoystick.h; sourceTree = "<group>"; };
 		5D2F534915A2A92B00B8CED1 /* SBJoystickLib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = SBJoystickLib.a; path = addons/sbgamepad/lib/SBJoystickLib.a; sourceTree = "<group>"; };
+		5D2F536C15A6666E00B8CED1 /* Gamepad60Beat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Gamepad60Beat.h; path = Gamepad/Gamepad60Beat.h; sourceTree = "<group>"; };
+		5D2F536D15A6666E00B8CED1 /* GamepadiCade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GamepadiCade.h; path = Gamepad/GamepadiCade.h; sourceTree = "<group>"; };
+		5D2F536E15A6666E00B8CED1 /* GamepadProvider60Beat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GamepadProvider60Beat.h; path = Gamepad/GamepadProvider60Beat.h; sourceTree = "<group>"; };
+		5D2F536F15A6666E00B8CED1 /* GamepadProvider60BeatNative.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GamepadProvider60BeatNative.h; path = Gamepad/GamepadProvider60BeatNative.h; sourceTree = "<group>"; };
+		5D2F537015A6666E00B8CED1 /* GamepadProvideriCade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GamepadProvideriCade.h; path = Gamepad/GamepadProvideriCade.h; sourceTree = "<group>"; };
+		5D2F537115A6666E00B8CED1 /* GamepadiCade.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GamepadiCade.cpp; path = Gamepad/GamepadiCade.cpp; sourceTree = "<group>"; };
+		5D2F537215A6666E00B8CED1 /* GamepadProvideriCade.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GamepadProvideriCade.cpp; path = Gamepad/GamepadProvideriCade.cpp; sourceTree = "<group>"; };
+		5D2F537315A6666E00B8CED1 /* Gamepad60Beat.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Gamepad60Beat.mm; path = Gamepad/Gamepad60Beat.mm; sourceTree = "<group>"; };
+		5D2F537415A6666E00B8CED1 /* GamepadProvider60Beat.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = GamepadProvider60Beat.mm; path = Gamepad/GamepadProvider60Beat.mm; sourceTree = "<group>"; };
+		5D2F537515A6666E00B8CED1 /* GamepadProvider60BeatNative.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = GamepadProvider60BeatNative.mm; path = Gamepad/GamepadProvider60BeatNative.mm; sourceTree = "<group>"; };
 		5D30633F0FD88F95009DE600 /* ProgressBarComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ProgressBarComponent.cpp; path = Entity/ProgressBarComponent.cpp; sourceTree = "<group>"; };
 		5D3063400FD88F95009DE600 /* ProgressBarComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProgressBarComponent.h; path = Entity/ProgressBarComponent.h; sourceTree = "<group>"; };
 		5D3063410FD88F95009DE600 /* TapSequenceDetectComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TapSequenceDetectComponent.cpp; path = Entity/TapSequenceDetectComponent.cpp; sourceTree = "<group>"; };
@@ -519,22 +519,22 @@
 		5D2F532F15A2A78400B8CED1 /* Gamepad */ = {
 			isa = PBXGroup;
 			children = (
-				5D2F533015A2A7BB00B8CED1 /* Gamepad_iCade.h */,
+				5D2F536C15A6666E00B8CED1 /* Gamepad60Beat.h */,
+				5D2F536D15A6666E00B8CED1 /* GamepadiCade.h */,
+				5D2F536E15A6666E00B8CED1 /* GamepadProvider60Beat.h */,
+				5D2F536F15A6666E00B8CED1 /* GamepadProvider60BeatNative.h */,
+				5D2F537015A6666E00B8CED1 /* GamepadProvideriCade.h */,
+				5D2F537115A6666E00B8CED1 /* GamepadiCade.cpp */,
+				5D2F537215A6666E00B8CED1 /* GamepadProvideriCade.cpp */,
+				5D2F537315A6666E00B8CED1 /* Gamepad60Beat.mm */,
+				5D2F537415A6666E00B8CED1 /* GamepadProvider60Beat.mm */,
+				5D2F537515A6666E00B8CED1 /* GamepadProvider60BeatNative.mm */,
 				5D2F533115A2A7BB00B8CED1 /* Gamepad.h */,
-				5D2F533215A2A7BB00B8CED1 /* GamepadIOS_60Beat.h */,
 				5D2F533315A2A7BB00B8CED1 /* GamepadManager.h */,
-				5D2F533415A2A7BB00B8CED1 /* GamepadProvider_iCade.h */,
 				5D2F533515A2A7BB00B8CED1 /* GamepadProvider.h */,
-				5D2F533615A2A7BB00B8CED1 /* GamepadProviderIOS_60Beat.h */,
-				5D2F533715A2A7BB00B8CED1 /* GamepadProviderIOS_60BeatNative.h */,
-				5D2F533815A2A7BB00B8CED1 /* Gamepad_iCade.cpp */,
 				5D2F533915A2A7BB00B8CED1 /* Gamepad.cpp */,
 				5D2F533A15A2A7BB00B8CED1 /* GamepadManager.cpp */,
-				5D2F533B15A2A7BB00B8CED1 /* GamepadProvider_iCade.cpp */,
 				5D2F533C15A2A7BB00B8CED1 /* GamepadProvider.cpp */,
-				5D2F533D15A2A7BB00B8CED1 /* GamepadIOS_60Beat.mm */,
-				5D2F533E15A2A7BB00B8CED1 /* GamepadProviderIOS_60Beat.mm */,
-				5D2F533F15A2A7BB00B8CED1 /* GamepadProviderIOS_60BeatNative.mm */,
 			);
 			name = Gamepad;
 			sourceTree = "<group>";
@@ -1091,14 +1091,14 @@
 				5DD3273912C1CEF60009B0F3 /* ArcadeInputComponent.cpp in Sources */,
 				5DD3275F12C387A40009B0F3 /* DPadComponent.cpp in Sources */,
 				5DD327A612C97DEF0009B0F3 /* EmitVirtualKeyComponent.cpp in Sources */,
-				5D2F534015A2A7BB00B8CED1 /* Gamepad_iCade.cpp in Sources */,
 				5D2F534115A2A7BB00B8CED1 /* Gamepad.cpp in Sources */,
 				5D2F534215A2A7BB00B8CED1 /* GamepadManager.cpp in Sources */,
-				5D2F534315A2A7BB00B8CED1 /* GamepadProvider_iCade.cpp in Sources */,
 				5D2F534415A2A7BB00B8CED1 /* GamepadProvider.cpp in Sources */,
-				5D2F534515A2A7BB00B8CED1 /* GamepadIOS_60Beat.mm in Sources */,
-				5D2F534615A2A7BB00B8CED1 /* GamepadProviderIOS_60Beat.mm in Sources */,
-				5D2F534715A2A7BB00B8CED1 /* GamepadProviderIOS_60BeatNative.mm in Sources */,
+				5D2F537615A6666E00B8CED1 /* GamepadiCade.cpp in Sources */,
+				5D2F537715A6666E00B8CED1 /* GamepadProvideriCade.cpp in Sources */,
+				5D2F537815A6666E00B8CED1 /* Gamepad60Beat.mm in Sources */,
+				5D2F537915A6666E00B8CED1 /* GamepadProvider60Beat.mm in Sources */,
+				5D2F537A15A6666E00B8CED1 /* GamepadProvider60BeatNative.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

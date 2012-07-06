@@ -8,7 +8,7 @@
 #include "Entity/ArcadeInputComponent.h" 
 #include "GUI/GameMenu.h"
 #include "Gamepad/GamepadManager.h"
-#include "Gamepad/GamepadProvider_iCade.h"
+#include "Gamepad/GamepadProvideriCade.h"
 
 SurfaceAnim g_surf;
  
@@ -29,7 +29,7 @@ GamepadManager * GetGamepadManager() {return &g_gamepadManager;}
 	AudioManagerOS g_audioManager;
 
 	#ifdef RT_IOS_60BEAT_GAMEPAD_SUPPORT
-	#include "Gamepad/GamepadProviderIOS_60Beat.h"
+	#include "Gamepad/GamepadProvider60Beat.h"
 	#endif
 #else
 	//it's being compiled as a native OSX app
@@ -50,7 +50,7 @@ AudioManagerAndroid g_audioManager; //sound for android
 #else
 //in windows
 
-#include "Gamepad/GamepadProviderWindows.h"
+#include "Gamepad/GamepadProviderDirectX.h"
 
 #include "Audio/AudioManagerAudiere.h"
 //#include "Audio/AudioManagerFMOD.h"
@@ -204,15 +204,15 @@ bool App::Init()
 #ifdef PLATFORM_WINDOWS
 	//If you don't have directx, just comment out this and remove the dx lib dependency, directx is only used for the
 	//gamepad input on windows
-	GetGamepadManager()->AddProvider(new GamepadProviderWindows); //use directx joysticks
+	GetGamepadManager()->AddProvider(new GamepadProviderDirectX); //use directx joysticks
 #endif
 
-	GetGamepadManager()->AddProvider(new GamepadProvider_iCade); //use iCade, this actually should work with any platform...
+	GetGamepadManager()->AddProvider(new GamepadProvideriCade); //use iCade, this actually should work with any platform...
 
 #if defined(PLATFORM_IOS) && defined(RT_IOS_60BEAT_GAMEPAD_SUPPORT)
 		//startup the 60beat gamepad stuff.. really, we should only do this if they've checked to use it in options
 		//or such because their driver may slow us down.. unsure
-		GetGamepadManager()->AddProvider(new GamepadProviderIOS_60Beat);
+		GetGamepadManager()->AddProvider(new GamepadProvider60Beat);
 		GetBaseApp()->SetAllowScreenDimming(false);
 #endif
 

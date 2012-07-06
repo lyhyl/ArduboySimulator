@@ -2704,19 +2704,27 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\shared\Gamepad\Gamepad_iCade.cpp"
+					RelativePath="..\..\shared\Gamepad\Gamepad60Beat.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\shared\Gamepad\Gamepad_iCade.h"
+					RelativePath="..\..\shared\Gamepad\Gamepad60Beat.mm"
 					>
 				</File>
 				<File
-					RelativePath="..\..\shared\Gamepad\GamepadIOS_60Beat.h"
+					RelativePath="..\..\shared\Gamepad\GamepadDirectX.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\shared\Gamepad\GamepadIOS_60Beat.mm"
+					RelativePath="..\..\shared\Gamepad\GamepadDirectX.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\Gamepad\GamepadiCade.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\Gamepad\GamepadiCade.h"
 					>
 				</File>
 				<File
@@ -2736,43 +2744,35 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\shared\Gamepad\GamepadProvider_iCade.cpp"
+					RelativePath="..\..\shared\Gamepad\GamepadProvider60Beat.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\shared\Gamepad\GamepadProvider_iCade.h"
+					RelativePath="..\..\shared\Gamepad\GamepadProvider60Beat.mm"
 					>
 				</File>
 				<File
-					RelativePath="..\..\shared\Gamepad\GamepadProviderIOS_60Beat.h"
+					RelativePath="..\..\shared\Gamepad\GamepadProvider60BeatNative.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\shared\Gamepad\GamepadProviderIOS_60Beat.mm"
+					RelativePath="..\..\shared\Gamepad\GamepadProvider60BeatNative.mm"
 					>
 				</File>
 				<File
-					RelativePath="..\..\shared\Gamepad\GamepadProviderIOS_60BeatNative.h"
+					RelativePath="..\..\shared\Gamepad\GamepadProviderDirectX.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\shared\Gamepad\GamepadProviderIOS_60BeatNative.mm"
+					RelativePath="..\..\shared\Gamepad\GamepadProviderDirectX.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\shared\Gamepad\GamepadProviderWindows.cpp"
+					RelativePath="..\..\shared\Gamepad\GamepadProvideriCade.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\shared\Gamepad\GamepadProviderWindows.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\shared\Gamepad\GamepadWindows.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\shared\Gamepad\GamepadWindows.h"
+					RelativePath="..\..\shared\Gamepad\GamepadProvideriCade.h"
 					>
 				</File>
 			</Filter>

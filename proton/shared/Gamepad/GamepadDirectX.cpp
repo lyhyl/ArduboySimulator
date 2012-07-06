@@ -1,20 +1,20 @@
 #include "PlatformPrecomp.h"
-#include "GamepadWindows.h"
+#include "GamepadDirectX.h"
 
-GamepadWindows::GamepadWindows()
+GamepadDirectX::GamepadDirectX()
 {
 	m_lpDirectInputDevice = NULL;
 }
 
-GamepadWindows::~GamepadWindows()
+GamepadDirectX::~GamepadDirectX()
 {
 	Kill();
 }
 
-bool GamepadWindows::Init()
+bool GamepadDirectX::Init()
 {
 
-	HRESULT result = ((GamepadProviderWindows*)m_pPadProvider)->GetDInput()->CreateDevice( m_diDeviceInstance.guidInstance, &m_lpDirectInputDevice,0);
+	HRESULT result = ((GamepadProviderDirectX*)m_pPadProvider)->GetDInput()->CreateDevice( m_diDeviceInstance.guidInstance, &m_lpDirectInputDevice,0);
 
 	if (FAILED(result))
 	{
@@ -22,7 +22,7 @@ bool GamepadWindows::Init()
 		return false;
 	}
 
-	result = m_lpDirectInputDevice->SetCooperativeLevel(((GamepadProviderWindows*)m_pPadProvider)->GetHWND(), DISCL_FOREGROUND|DISCL_NONEXCLUSIVE);
+	result = m_lpDirectInputDevice->SetCooperativeLevel(((GamepadProviderDirectX*)m_pPadProvider)->GetHWND(), DISCL_FOREGROUND|DISCL_NONEXCLUSIVE);
 	if (FAILED(result))
 	{
 		LogError ("Unable to the set cooperative level");
@@ -68,7 +68,7 @@ bool GamepadWindows::Init()
 	}
 	m_axisUsedCount = 0;
 	// Enumerate the axes of the joyctick 
-	if (FAILED(m_lpDirectInputDevice->EnumObjects(&GamepadWindows::enum_axes_callback, (void*) this, DIDFT_AXIS)))
+	if (FAILED(m_lpDirectInputDevice->EnumObjects(&GamepadDirectX::enum_axes_callback, (void*) this, DIDFT_AXIS)))
 	{
 		LogError("debug", "Unable to enumerate joystick axis");
 	}
@@ -76,7 +76,7 @@ bool GamepadWindows::Init()
 
 	// Enumerate the buttons available
 	m_buttonsUsedCount = 0;
-	if (FAILED(m_lpDirectInputDevice->EnumObjects(&GamepadWindows::enum_button_callback, (void*) this, DIDFT_BUTTON)))
+	if (FAILED(m_lpDirectInputDevice->EnumObjects(&GamepadDirectX::enum_button_callback, (void*) this, DIDFT_BUTTON)))
 	{
 		LogError("debug", "Unable to enumerate joystickbuttons");
 	}
@@ -108,26 +108,26 @@ bool GamepadWindows::Init()
 }
 
 
-BOOL CALLBACK GamepadWindows::enum_axes_callback( const DIDEVICEOBJECTINSTANCE* instance, void* context )
+BOOL CALLBACK GamepadDirectX::enum_axes_callback( const DIDEVICEOBJECTINSTANCE* instance, void* context )
 {
-	GamepadWindows *pPad = (GamepadWindows *)context;
+	GamepadDirectX *pPad = (GamepadDirectX *)context;
 	pPad->m_axisUsedCount++;
 	return DIENUM_CONTINUE;
 }
 
-BOOL CALLBACK GamepadWindows::enum_button_callback( const DIDEVICEOBJECTINSTANCE* instance, void* context )
+BOOL CALLBACK GamepadDirectX::enum_button_callback( const DIDEVICEOBJECTINSTANCE* instance, void* context )
 {
-	GamepadWindows *pPad = (GamepadWindows *)context;
+	GamepadDirectX *pPad = (GamepadDirectX *)context;
 	pPad->m_buttonsUsedCount++;
 	return DIENUM_CONTINUE;
 }
 
-void GamepadWindows::Kill()
+void GamepadDirectX::Kill()
 {
 	SAFE_RELEASE(m_lpDirectInputDevice);
 }
 
-void GamepadWindows::Update()
+void GamepadDirectX::Update()
 {
 	m_lpDirectInputDevice->Poll();
 

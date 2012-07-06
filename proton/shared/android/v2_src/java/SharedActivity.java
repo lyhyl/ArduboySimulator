@@ -35,6 +35,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.IOException;
@@ -1177,8 +1178,11 @@ import android.view.View.OnClickListener;
 		if (fname.charAt(0) == '/')
 		{
 			//load as raw, not an asset
-			try { 
-				app._music.setDataSource(fname);
+			try {
+				File file = new File(fname);
+				FileInputStream is = new FileInputStream(file);
+				app._music.setDataSource(is.getFD());
+				is.close();
 				app._music.setLooping(looping);
 				app._music.prepare();
 				music_set_volume(m_lastMusicVol);

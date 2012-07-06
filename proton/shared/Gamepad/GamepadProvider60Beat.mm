@@ -1,25 +1,25 @@
 #include "PlatformPrecomp.h"
-#include "GamepadProviderIOS_60Beat.h"
-#include "GamepadIOS_60Beat.h"
+#include "GamepadProvider60Beat.h"
+#include "Gamepad60Beat.h"
 #include "GamepadManager.h"
 #import "SBJoystick.h"
-#import "GamepadProviderIOS_60BeatNative.h"
+#import "GamepadProvider60BeatNative.h"
 
 id m_padDriver = nil;
 
 
-GamepadProviderIOS_60Beat::GamepadProviderIOS_60Beat()
+GamepadProvider60Beat::GamepadProvider60Beat()
 {
 	Kill();
 }
 
-GamepadProviderIOS_60Beat::~GamepadProviderIOS_60Beat()
+GamepadProvider60Beat::~GamepadProvider60Beat()
 {
 }
 
-bool GamepadProviderIOS_60Beat::Init()
+bool GamepadProvider60Beat::Init()
 {
-	LogMsg("Initting IOS_60Beat gamepad provider");
+	LogMsg("Initting 60Beat gamepad provider");
     [SBJoystick sharedInstance].loggingEnabled = YES;
     [SBJoystick sharedInstance].enabled = YES;
     
@@ -27,13 +27,13 @@ bool GamepadProviderIOS_60Beat::Init()
     m_padDriver = [SBeatPadNative new];
     [m_padDriver Start];
     
-    m_pPad = new GamepadIOS_60Beat;
+    m_pPad = new Gamepad60Beat;
     m_pPad->SetProvider(this);
     GetGamepadManager()->AddGamepad(m_pPad);
     return true; //success
 }
 
-void GamepadProviderIOS_60Beat::Kill()
+void GamepadProvider60Beat::Kill()
 {
 	[SBJoystick sharedInstance].enabled = NO;
     [m_padDriver release];
@@ -41,18 +41,18 @@ void GamepadProviderIOS_60Beat::Kill()
 }
 
 
-void GamepadProviderIOS_60Beat::Update()
+void GamepadProvider60Beat::Update()
 {
 	[m_padDriver Update: m_pPad];
 }
 
-CL_Vec2f GamepadProviderIOS_60Beat::GetLeftStickPos()
+CL_Vec2f GamepadProvider60Beat::GetLeftStickPos()
 {
     
     return CL_Vec2f([m_padDriver GetLeftStickPos].x,[m_padDriver GetLeftStickPos].y);
 }
 
-CL_Vec2f GamepadProviderIOS_60Beat::GetRightStickPos()
+CL_Vec2f GamepadProvider60Beat::GetRightStickPos()
 {
     
      return CL_Vec2f([m_padDriver GetRightStickPos].x,[m_padDriver GetRightStickPos].y);
