@@ -176,7 +176,7 @@ endmacro(proton_use_ad_framework)
 # for example: proton_include_gamepad(mypad SomeOtherPad)
 macro(proton_include_gamepad)
 	foreach(gamepadname ${ARGV})
-		list(APPEND PROTON_SOURCES "${PROTON_GAMEPAD}/Gamepad_${gamepadname}.cpp" "${PROTON_GAMEPAD}/GamepadProvider_${gamepadname}.cpp")
+		list(APPEND PROTON_SOURCES "${PROTON_GAMEPAD}/Gamepad${gamepadname}.cpp" "${PROTON_GAMEPAD}/GamepadProvider${gamepadname}.cpp")
 	endforeach(gamepadname)
 	
 	list(APPEND PROTON_SOURCES "${PROTON_GAMEPAD}/GamepadManager.cpp" "${PROTON_GAMEPAD}/Gamepad.cpp" "${PROTON_GAMEPAD}/GamepadProvider.cpp")
