@@ -91,6 +91,10 @@ public:
 			return *((glColorBytes*)((m_pPixels+(y*m_usedPitch+x*4))));
 			break;
 
+		case SURFACE_RGB:
+			return *((glColorBytes*)((m_pPixels+(y*m_usedPitch+x*3))));
+			break;
+
 		default:
 			assert(!"Unhandled pixel type... SSSSEEEEETTTHH!");
 		}

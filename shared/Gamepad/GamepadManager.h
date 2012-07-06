@@ -28,7 +28,7 @@ Next you need to add a "gamepad provider" which in turn will add one or more gam
 
 For Directx in windows, you would do:
 
-GetGamepadManager()->AddProvider(new GamepadProviderWindows);
+GetGamepadManager()->AddProvider(new GamepadProviderDirectX);
 
 All gamepads would now be added, and you can access them with GetGamepadManager()->GetGamepad(0); (for gamepad 0)
 

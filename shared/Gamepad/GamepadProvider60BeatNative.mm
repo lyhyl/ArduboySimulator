@@ -7,9 +7,9 @@
 //
 
 #include "PlatformPrecomp.h"
-#import "GamepadProviderIOS_60BeatNative.h"
-#include "GamepadProviderIOS_60Beat.h"
-#include "GamepadIOS_60Beat.h"
+#import "GamepadProvider60BeatNative.h"
+#include "GamepadProvider60Beat.h"
+#include "Gamepad60Beat.h"
 
 void PadButtonStates::SetButtonState(bool bDown)
 {
@@ -89,7 +89,7 @@ bool PadButtonStates::WasReleased()
 
 }
 
-- (void) Update: (GamepadIOS_60Beat*) pPad
+- (void) Update: (Gamepad60Beat*) pPad
 {
     
     for (int i=0; i < SBEAT_BUTTON_COUNT; i++)

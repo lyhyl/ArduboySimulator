@@ -1,6 +1,6 @@
 #include "PlatformPrecomp.h"
-#include "GamepadProviderWindows.h"
-#include "GamepadWindows.h"
+#include "GamepadProviderDirectX.h"
+#include "GamepadDirectX.h"
 #include "GamepadManager.h"
 
 HWND hwndMain;
@@ -20,16 +20,16 @@ BOOL CALLBACK EnumWindowProc(HWND hwnd, LPARAM lParam)
 }
 
 
-GamepadProviderWindows::GamepadProviderWindows()
+GamepadProviderDirectX::GamepadProviderDirectX()
 {
 	
 }
 
-GamepadProviderWindows::~GamepadProviderWindows()
+GamepadProviderDirectX::~GamepadProviderDirectX()
 {
 }
 
-bool GamepadProviderWindows::Init()
+bool GamepadProviderDirectX::Init()
 {
 	LogMsg("Initting windows gamepad provider");
 	
@@ -47,7 +47,7 @@ bool GamepadProviderWindows::Init()
 	//enumerate each device
 	result = directinput->EnumDevices(
 		DI8DEVCLASS_GAMECTRL,
-		&GamepadProviderWindows::enum_devices_callback,
+		&GamepadProviderDirectX::enum_devices_callback,
 		this,
 		DIEDFL_ATTACHEDONLY);
 	if (FAILED(result))
@@ -58,18 +58,18 @@ bool GamepadProviderWindows::Init()
 	return true; //success
 }
 
-void GamepadProviderWindows::Kill()
+void GamepadProviderDirectX::Kill()
 {
 	SAFE_RELEASE(directinput);
 }
 
 
-BOOL GamepadProviderWindows::enum_devices_callback(LPCDIDEVICEINSTANCE lpddi, LPVOID pvRef)
+BOOL GamepadProviderDirectX::enum_devices_callback(LPCDIDEVICEINSTANCE lpddi, LPVOID pvRef)
 {
-	GamepadProviderWindows *self = (GamepadProviderWindows *) pvRef;
+	GamepadProviderDirectX *self = (GamepadProviderDirectX *) pvRef;
 
 	
-	GamepadWindows *pPad = new GamepadWindows;
+	GamepadDirectX *pPad = new GamepadDirectX;
 	pPad->SetProvider(self);
 	pPad->SetDeviceInstance(*lpddi);
 	GetGamepadManager()->AddGamepad(pPad);
@@ -81,12 +81,12 @@ BOOL GamepadProviderWindows::enum_devices_callback(LPCDIDEVICEINSTANCE lpddi, LP
 }
 
 
-void GamepadProviderWindows::Update()
+void GamepadProviderDirectX::Update()
 {
 	
 }
 
-HWND GamepadProviderWindows::GetHWND()
+HWND GamepadProviderDirectX::GetHWND()
 {
 	return hwndMain;
 }

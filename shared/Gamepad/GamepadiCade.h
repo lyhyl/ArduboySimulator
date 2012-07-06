@@ -1,5 +1,5 @@
 //  ***************************************************************
-//  Gamepad_iCade - Creation date: 07/1/2012
+//  GamepadiCade - Creation date: 07/1/2012
 //  -------------------------------------------------------------
 //  Robinson Technologies Copyright (C) 2012 - All Rights Reserved
 //
@@ -7,11 +7,11 @@
 //  Programmer(s):  Seth A. Robinson (seth@rtsoft.com)
 //  ***************************************************************
 
-#ifndef Gamepad_iCade_h__
-#define Gamepad_iCade_h__
+#ifndef GamepadiCade_h__
+#define GamepadiCade_h__
 
 #include "Gamepad.h"
-#include "GamepadProvider_iCade.h"
+#include "GamepadProvideriCade.h"
 
 class ArcadeKeyboardControl
 {
@@ -22,7 +22,7 @@ public:
 	}
 
 
-	void Setup(Gamepad_iCade *pPad, char keyDown, char keyUp, int buttonID, eVirtualKeys vKeyToSend);
+	void Setup(GamepadiCade *pPad, char keyDown, char keyUp, int buttonID, eVirtualKeys vKeyToSend);
 	char m_keyDown, m_keyUp;
 	eVirtualKeys m_keyToSend;
 	bool m_bPushed;
@@ -54,11 +54,11 @@ enum eArcadeKeyboardControls
 	KEY_ARCADE_TOTAL_COUNT
 
 };
-class Gamepad_iCade: public Gamepad
+class GamepadiCade: public Gamepad
 {
 public:
-	Gamepad_iCade();
-	virtual ~Gamepad_iCade();
+	GamepadiCade();
+	virtual ~GamepadiCade();
 	virtual bool Init();
 	virtual void Kill();
 	virtual void Update();
@@ -74,4 +74,4 @@ private:
     bool m_bCurrentlyActive; //iOS...
 };
 
-#endif // Gamepad_iCade_h__
+#endif // GamepadiCade_h__

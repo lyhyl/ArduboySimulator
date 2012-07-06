@@ -1,5 +1,5 @@
 //  ***************************************************************
-//  GamepadProvider_iCade - Creation date: 07/1/2012
+//  GamepadProvideriCade - Creation date: 07/1/2012
 //  -------------------------------------------------------------
 //  Robinson Technologies Copyright (C) 2012 - All Rights Reserved
 //
@@ -12,18 +12,18 @@
  Provides an interface for the iCade controller.  Basically we just rewrote the keystrokes to look like a joystick.
  */
 
-#ifndef GamepadProvider_iCade_h__
-#define GamepadProvider_iCade_h__
+#ifndef GamepadProvideriCade_h__
+#define GamepadProvideriCade_h__
 
 #include "GamepadProvider.h"
 
-class Gamepad_iCade;
+class GamepadiCade;
 
-class GamepadProvider_iCade: public GamepadProvider
+class GamepadProvideriCade: public GamepadProvider
 {
 public:
-	GamepadProvider_iCade();
-	virtual ~GamepadProvider_iCade();
+	GamepadProvideriCade();
+	virtual ~GamepadProvideriCade();
 
 	virtual string GetName() {return "iCade";}
 	virtual bool Init();
@@ -34,7 +34,7 @@ protected:
 	
 private:
 
-    Gamepad_iCade *m_pPad;
+    GamepadiCade *m_pPad;
 };
 
-#endif // GamepadProvider_iCade_h__
+#endif // GamepadProvideriCade_h__

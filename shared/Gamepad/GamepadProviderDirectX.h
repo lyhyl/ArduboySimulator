@@ -1,5 +1,5 @@
 //  ***************************************************************
-//  GamepadProviderWindows - Creation date: 01/27/2012
+//  GamepadProviderDirectX - Creation date: 01/27/2012
 //  -------------------------------------------------------------
 //  Robinson Technologies Copyright (C) 2012 - All Rights Reserved
 //
@@ -19,7 +19,7 @@ on is zero?  Uh.. oh well, fix when you need the triggers working I guess.
 
 To use, you would do:
 
-GetGamepadManager()->AddProvider(new GamepadProviderWindows);
+GetGamepadManager()->AddProvider(new GamepadProviderDirectX);
 
 Which assumes you already have something like:
 
@@ -32,8 +32,8 @@ in your App.cpp or somewhere.
 From there, you can use GetGamepadManager()->GetDefaultGamepad() and connect signals to it for buttons and stick data, or poll it.
 */
 
-#ifndef GamepadProviderWindows_h__
-#define GamepadProviderWindows_h__
+#ifndef GamepadProviderDirectX_h__
+#define GamepadProviderDirectX_h__
 
 #include "GamepadProvider.h"
 
@@ -44,18 +44,18 @@ From there, you can use GetGamepadManager()->GetDefaultGamepad() and connect sig
 #error Found DirectX headers older than 8.0. Please download a newer directx, and make sure its FIRST in the include path and library path (Tools->Options->Directories in MSVC).
 #endif
 
-class GamepadProviderWindows: public GamepadProvider
+class GamepadProviderDirectX: public GamepadProvider
 {
 public:
-	GamepadProviderWindows();
-	virtual ~GamepadProviderWindows();
+	GamepadProviderDirectX();
+	virtual ~GamepadProviderDirectX();
 
-	virtual string GetName() {return "Windows";}
+	virtual string GetName() {return "DirectX";}
 	virtual bool Init();
 	virtual void Kill();
 	virtual void Update();
 
-	//Used by our custom GamepadWindows class
+	//Used by our custom GamepadDirectX class
 	HWND GetHWND();
 	LPDIRECTINPUT8 GetDInput(){return directinput;}
 
@@ -69,4 +69,4 @@ private:
 
 };
 
-#endif // GamepadProviderWindows_h__
+#endif // GamepadProviderDirectX_h__

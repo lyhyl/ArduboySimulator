@@ -1,5 +1,5 @@
 //  ***************************************************************
-//  GamepadWindows - Creation date: 01/27/2012
+//  GamepadDirectX - Creation date: 01/27/2012
 //  -------------------------------------------------------------
 //  Robinson Technologies Copyright (C) 2012 - All Rights Reserved
 //
@@ -9,17 +9,17 @@
 
 //The DirectInput code was mostly stolen from Clanlib, thanks guys!
 
-#ifndef GamepadWindows_h__
-#define GamepadWindows_h__
+#ifndef GamepadDirectX_h__
+#define GamepadDirectX_h__
 
 #include "Gamepad.h"
-#include "GamepadProviderWindows.h"
+#include "GamepadProviderDirectX.h"
 
-class GamepadWindows: public Gamepad
+class GamepadDirectX: public Gamepad
 {
 public:
-	GamepadWindows();
-	virtual ~GamepadWindows();
+	GamepadDirectX();
+	virtual ~GamepadDirectX();
 	virtual bool Init();
 	virtual void Kill();
 	virtual void Update();
@@ -39,4 +39,4 @@ private:
 
 };
 
-#endif // GamepadWindows_h__
+#endif // GamepadDirectX_h__

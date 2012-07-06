@@ -1,20 +1,20 @@
 #include "PlatformPrecomp.h"
-#include "GamepadIOS_60Beat.h"
-#include "GamepadProviderIOS_60BeatNative.h"
+#include "Gamepad60Beat.h"
+#include "GamepadProvider60BeatNative.h"
 
 
-GamepadIOS_60Beat::GamepadIOS_60Beat()
+Gamepad60Beat::Gamepad60Beat()
 {
 	m_pPadProvider = NULL;
 	
 }
 
-GamepadIOS_60Beat::~GamepadIOS_60Beat()
+Gamepad60Beat::~Gamepad60Beat()
 {
 	Kill();
 }
 
-bool GamepadIOS_60Beat::Init()
+bool Gamepad60Beat::Init()
 {
     m_axisUsedCount = 4;
     SetRightStickAxis(2,3);
@@ -45,15 +45,15 @@ bool GamepadIOS_60Beat::Init()
 }
 
 
-void GamepadIOS_60Beat::Kill()
+void Gamepad60Beat::Kill()
 {
 	
 }
 
-void GamepadIOS_60Beat::Update()
+void Gamepad60Beat::Update()
 {
 
-	GamepadProviderIOS_60Beat *pProv = (GamepadProviderIOS_60Beat*)m_pPadProvider;
+	GamepadProvider60Beat *pProv = (GamepadProvider60Beat*)m_pPadProvider;
 
     CL_Vec2f vLeft = pProv->GetLeftStickPos();
     SetAxis(0, vLeft.x);

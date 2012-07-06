@@ -13,7 +13,7 @@
 //To avoid problems with losing button presses on poor framerates, we are going to keep track ourselves.
 //Note:  The SBeat library doesn't really send events, it's more like we just poll at 30 fps and have to do stuff
 //our self
-class GamepadIOS_60Beat;
+class Gamepad60Beat;
 
 enum eButton60BeatButtons
 {
@@ -71,5 +71,5 @@ private:
 - (CGPoint) GetLeftStickPos;
 - (CGPoint) GetRightStickPos;
 - (void) Start;
-- (void) Update: (GamepadIOS_60Beat*) pPad;
+- (void) Update: (Gamepad60Beat*) pPad;
 @end
