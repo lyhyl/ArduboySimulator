@@ -113,6 +113,7 @@ void ArcadeInputComponent::OnAdd(Entity *pEnt)
 	GetBaseApp()->m_sig_raw_keyboard.connect(1, boost::bind(&ArcadeInputComponent::OnRawKeyboard, this, _1));
 
 	GetFunction("SetOutputEntity")->sig_function.connect(1, boost::bind(&ArcadeInputComponent::SetOutput, this, _1));
+	GetFunction("RemoveKeyBindingsStartingWith")->sig_function.connect(1, boost::bind(&ArcadeInputComponent::RemoveKeyBindingsStartingWith, this, _1));
 
 	GetFunction("AddKeyBinding")->sig_function.connect(1, boost::bind(&ArcadeInputComponent::AddKeyBinding, this, _1));
 	m_pTrackballMode = &GetVarWithDefault("trackball_mode", uint32(TRACKBALL_MODE_WALKING))->GetUINT32();
@@ -372,6 +373,24 @@ bool ArcadeInputComponent::GetDirectionKeys( bool &bLeftOut, bool &bRightOut, bo
 void ArcadeInputComponent::SetDirectionKey(eMoveButtonDir moveDir, bool bPressed )
 {
 	m_buttons[moveDir].OnPressToggle(bPressed, m_customSignal);
+}
+
+void ArcadeInputComponent::RemoveKeyBindingsStartingWith( VariantList *pVList )
+{
+	ArcadeBindList::iterator itor = m_bindings.begin();
+
+	for (;itor != m_bindings.end(); itor++)
+	{
+		if (StringFromStartMatches(itor->m_name, pVList->Get(0).GetString()))
+		{
+#ifdef _DEBUG
+			LogMsg("Removing binding %s", itor->m_name.c_str());
+#endif
+			ArcadeBindList::iterator itorTemp = itor;
+			itor++;
+			m_bindings.erase(itorTemp);
+		}
+	}
 }
 
 void AddKeyBinding(EntityComponent *pComp, string name, uint32 inputcode, uint32 outputcode, bool bAlsoSendAsNormalRawKey)

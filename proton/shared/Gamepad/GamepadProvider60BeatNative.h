@@ -72,4 +72,6 @@ private:
 - (CGPoint) GetRightStickPos;
 - (void) Start;
 - (void) Update: (Gamepad60Beat*) pPad;
+- (void) SendDirIfNeeded: (Gamepad60Beat*) pPad buttonID: (int) buttonID down:(Boolean) bDown;
+
 @end

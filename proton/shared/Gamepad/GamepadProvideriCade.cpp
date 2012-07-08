@@ -15,7 +15,7 @@ GamepadProvideriCade::~GamepadProvideriCade()
 
 bool GamepadProvideriCade::Init()
 {
-	LogMsg("Initting _iCade gamepad provider");
+	LogMsg("Initting iCade gamepad provider");
 	m_pPad = new GamepadiCade;
 	m_pPad->SetProvider(this);
 	GetGamepadManager()->AddGamepad(m_pPad);
@@ -31,3 +31,9 @@ void GamepadProvideriCade::Update()
 	
 }
 
+void GamepadProvideriCade::OnLostiCadeConnection()
+{
+	//this can only happen on iOS
+	LogMsg("Noticed we lost (or couldn't get) iCade connection.");
+	m_sig_failed_to_connect(this);
+}

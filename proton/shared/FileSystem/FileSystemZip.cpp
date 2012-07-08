@@ -308,6 +308,6 @@ int FileSystemZip::GetFileSize( string fileName )
 		return false;
 	}
 
-	LogMsg("File is filesize %d", (int)file_info.uncompressed_size );
+//	LogMsg("File is filesize %d", (int)file_info.uncompressed_size );
 	return (int)file_info.uncompressed_size;
 }

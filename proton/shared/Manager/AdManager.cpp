@@ -305,8 +305,7 @@ void AdManager::GetTapPointsFromServer()
 
 void AdManager::Init()
 {
-	//GetTapPointsFromServer();
-	//CacheTapjoyFeaturedApp();
+	LogMsg("AdManager initted.");
 }
 
 std::string AdManager::GetPointsString()

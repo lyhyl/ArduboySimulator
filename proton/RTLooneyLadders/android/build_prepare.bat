@@ -74,7 +74,7 @@ set TEMPFILE=..\..\shared\android\optional_src\libs\startapp\SearchHelperService
 if exist "%TEMPFILE%" (
 echo Located startapp files.
 ) else (
-echo Cannot find the tapjoy library files.  Download from startapp and place lib into shared\android\optional_src\libs\startapp
+echo Cannot find the startapp library files.  Download from startapp and place lib into shared\android\optional_src\libs\startapp
 ..\..\shared\win\utils\beeper.exe /p
 )
 copy %TEMPFILE% libs
@@ -85,7 +85,7 @@ goto skiphooked;
 set TEMPFILE=..\..\shared\android\optional_src\libs\wasabi\wasabi.jar
 :Extra check to make sure we can locate the files
 if exist "%TEMPFILE%" (
-echo Located startapp files.
+echo Located Hooked/wasabi files.
 ) else (
 echo Cannot find the Hooked/Wasabi library files.  Download from Hooked and place lib into shared\android\optional_src\libs\wasabi
 ..\..\shared\win\utils\beeper.exe /p
@@ -99,7 +99,7 @@ set TEMPFILE=..\..\shared\android\optional_src\libs\ChartBoost\chartboost.jar
 
 :Extra check to make sure we can locate the files
 if exist "%TEMPFILE%" (
-echo Located flurry files.
+echo Located Chartboost files.
 ) else (
 echo Cannot find the ChartBoost .jar file.  Download and place lib into shared\android\optional_src\libs\ChartBoost
 ..\..\shared\win\utils\beeper.exe /p

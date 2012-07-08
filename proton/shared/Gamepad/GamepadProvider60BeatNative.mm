@@ -89,6 +89,33 @@ bool PadButtonStates::WasReleased()
 
 }
 
+- (void) SendDirIfNeeded: (Gamepad60Beat*) pPad buttonID: (int) buttonID down:(Boolean) bDown
+{
+    
+    switch(buttonID)
+    {
+            
+        case SBEAT_BUTTON_UP:
+            pPad->SendArcadeDirectionByKey(VIRTUAL_KEY_DIR_UP, bDown);
+            break;
+
+        case SBEAT_BUTTON_DOWN:
+            pPad->SendArcadeDirectionByKey(VIRTUAL_KEY_DIR_DOWN, bDown);
+            break;
+            
+        case SBEAT_BUTTON_LEFT:
+            pPad->SendArcadeDirectionByKey(VIRTUAL_KEY_DIR_LEFT, bDown);
+            break;
+            
+        case SBEAT_BUTTON_RIGHT:
+            pPad->SendArcadeDirectionByKey(VIRTUAL_KEY_DIR_RIGHT, bDown);
+            break;
+        default:
+            ;
+    }
+    
+}
+
 - (void) Update: (Gamepad60Beat*) pPad
 {
     
@@ -96,12 +123,15 @@ bool PadButtonStates::WasReleased()
     {
         if (m_buttons[i].WasPressed())
         {
-           // LogMsg("Was pressed for reals, sending");
+            //LogMsg("%d Was pressed for reals, sending", i);
+            [self SendDirIfNeeded: pPad buttonID: i down: true];
+            
             pPad->OnButton(true, i);
             continue;
         }
         if (m_buttons[i].WasReleased())
         {
+            [self SendDirIfNeeded: pPad buttonID: i down: false];
             pPad->OnButton(false, i);
             continue;
         }

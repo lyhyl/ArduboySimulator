@@ -19,7 +19,12 @@ GamepadProvider60Beat::~GamepadProvider60Beat()
 
 bool GamepadProvider60Beat::Init()
 {
-	LogMsg("Initting 60Beat gamepad provider");
+
+#ifndef RT_IOS_60BEAT_GAMEPAD_SUPPORT
+    assert(!"You really should define RT_IOS_60BEAT_GAMEPAD_SUPPORT in your xCode project, so the FMOD SoundManager will do mixing in a compatible way with 60beat's stuff");
+#endif
+	
+    LogMsg("Initting 60Beat gamepad provider");
     [SBJoystick sharedInstance].loggingEnabled = YES;
     [SBJoystick sharedInstance].enabled = YES;
     
@@ -30,6 +35,11 @@ bool GamepadProvider60Beat::Init()
     m_pPad = new Gamepad60Beat;
     m_pPad->SetProvider(this);
     GetGamepadManager()->AddGamepad(m_pPad);
+    
+    //get notified on suspend/resume    
+    GetBaseApp()->m_sig_enterforeground.connect(1, boost::bind(&GamepadProvider60Beat::OnEnterForeground, this, _1));
+	GetBaseApp()->m_sig_enterbackground.connect(1, boost::bind(&GamepadProvider60Beat::OnEnterBackground, this, _1));
+
     return true; //success
 }
 
@@ -58,3 +68,12 @@ CL_Vec2f GamepadProvider60Beat::GetRightStickPos()
      return CL_Vec2f([m_padDriver GetRightStickPos].x,[m_padDriver GetRightStickPos].y);
 }
 
+void GamepadProvider60Beat::OnEnterBackground(VariantList *pVList)
+{
+    [[SBJoystick sharedInstance] beginInterruption];
+}
+
+void GamepadProvider60Beat::OnEnterForeground(VariantList *PVList)
+{
+    [[SBJoystick sharedInstance] endInterruption];
+}

@@ -109,7 +109,8 @@ public:
     void SetAxis(int axis, float val); //must be -1 to 1.  axis 0 and 1 should be the main joystick
 	void OnButton(bool bDown, int buttonID);
 	void OnHat(int index, float val); 
-
+    void SendArcadeDirectionByKey(eVirtualKeys key, bool bDown);
+    
 protected:
 
 	void SendArcadeDirectionByDegrees(int val);

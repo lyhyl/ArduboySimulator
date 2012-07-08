@@ -27,21 +27,21 @@ GamepadManager::~GamepadManager()
 
 }
 
-bool GamepadManager::AddProvider( GamepadProvider *provider )
+GamepadProvider * GamepadManager::AddProvider( GamepadProvider *provider )
 {
-	m_providers.push_back(provider);
 
 	if (!provider->Init())
 	{
 		LogError("Unable to init gamepad provider %s, killing it", provider->GetName().c_str());
 		SAFE_DELETE(provider);
-		return false;
+		return NULL;
 	} else
 	{
+		m_providers.push_back(provider);
 		LogMsg("Gamepad provider %s initialized.", provider->GetName().c_str());
 	}
 
-	return true;
+	return provider;
 }
 
 void GamepadManager::Update()
@@ -168,4 +168,18 @@ Gamepad * GamepadManager::GetGamepad( eGamepadID id )
 	}
 
 	return m_gamepads[id];
+}
+
+GamepadProvider * GamepadManager::GetProviderByName( string name )
+{
+	list<GamepadProvider*>::iterator itor = m_providers.begin();
+	for (;itor != m_providers.end(); itor++)
+	{
+		if ( (*itor)->GetName() == name)
+		{
+			return (*itor);
+		}
+	}
+
+	return NULL;
 }

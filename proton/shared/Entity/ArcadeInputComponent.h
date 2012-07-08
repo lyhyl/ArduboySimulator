@@ -40,6 +40,14 @@ AddKeyBinding(pComp, "Fire", VIRTUAL_KEY_CONTROL, VIRTUAL_KEY_GAME_FIRE);
 pComp->GetFunction("SetOutputEntity")->sig_function(&VariantList(GetParent())); //redirect its messages to our parent entity, will call OnArcadeInput
 GetParent()->GetFunction("OnArcadeInput")->sig_function.connect(1, boost::bind(&VehicleControlComponent::OnArcadeInput, this, _1));	
 
+
+//If you want to delete a group of specific bindings, you can do it like this:
+
+VariantList vList((string)"Keyboard");
+
+//get the component, wherever it is, this would depend on the specific app
+GetEntityRoot()->GetComponentByName("ArcadeInput")>GetFunction("RemoveKeyBindingsStartingWith")->sig_function(&vList);
+
 */
 
 
@@ -147,7 +155,9 @@ private:
 	void OnTrackballModeChanged(Variant *pVar);
 	void OnCustomOutputRemoved(Entity *pEnt);
 	void SetOutput(VariantList *pVList);
-	CL_Vec2f *m_pPos2d;
+	void RemoveKeyBindingsStartingWith(VariantList *pVList);
+	
+CL_Vec2f *m_pPos2d;
 	/*
 	CL_Vec2f *m_pSize2d;
 	CL_Vec2f *m_pScale2d;

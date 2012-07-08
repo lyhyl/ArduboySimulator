@@ -24,12 +24,12 @@
 		5D2F534115A2A7BB00B8CED1 /* Gamepad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D2F533915A2A7BB00B8CED1 /* Gamepad.cpp */; };
 		5D2F534215A2A7BB00B8CED1 /* GamepadManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D2F533A15A2A7BB00B8CED1 /* GamepadManager.cpp */; };
 		5D2F534415A2A7BB00B8CED1 /* GamepadProvider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D2F533C15A2A7BB00B8CED1 /* GamepadProvider.cpp */; };
-		5D2F534A15A2A92B00B8CED1 /* SBJoystickLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D2F534915A2A92B00B8CED1 /* SBJoystickLib.a */; };
 		5D2F537615A6666E00B8CED1 /* GamepadiCade.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D2F537115A6666E00B8CED1 /* GamepadiCade.cpp */; };
 		5D2F537715A6666E00B8CED1 /* GamepadProvideriCade.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D2F537215A6666E00B8CED1 /* GamepadProvideriCade.cpp */; };
 		5D2F537815A6666E00B8CED1 /* Gamepad60Beat.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D2F537315A6666E00B8CED1 /* Gamepad60Beat.mm */; };
 		5D2F537915A6666E00B8CED1 /* GamepadProvider60Beat.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D2F537415A6666E00B8CED1 /* GamepadProvider60Beat.mm */; };
 		5D2F537A15A6666E00B8CED1 /* GamepadProvider60BeatNative.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D2F537515A6666E00B8CED1 /* GamepadProvider60BeatNative.mm */; };
+		5D3049D215A96A9D00F83BE0 /* SBJoystickLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D3049D115A96A9D00F83BE0 /* SBJoystickLib.a */; };
 		5D3063450FD88F95009DE600 /* ProgressBarComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D30633F0FD88F95009DE600 /* ProgressBarComponent.cpp */; };
 		5D3063460FD88F95009DE600 /* TapSequenceDetectComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3063410FD88F95009DE600 /* TapSequenceDetectComponent.cpp */; };
 		5D3063470FD88F95009DE600 /* UnderlineRenderComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3063430FD88F95009DE600 /* UnderlineRenderComponent.cpp */; };
@@ -197,8 +197,6 @@
 		5D2F533915A2A7BB00B8CED1 /* Gamepad.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Gamepad.cpp; path = Gamepad/Gamepad.cpp; sourceTree = "<group>"; };
 		5D2F533A15A2A7BB00B8CED1 /* GamepadManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GamepadManager.cpp; path = Gamepad/GamepadManager.cpp; sourceTree = "<group>"; };
 		5D2F533C15A2A7BB00B8CED1 /* GamepadProvider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GamepadProvider.cpp; path = Gamepad/GamepadProvider.cpp; sourceTree = "<group>"; };
-		5D2F534815A2A90300B8CED1 /* SBJoystick.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SBJoystick.h; path = addons/sbgamepad/lib/SBJoystick.h; sourceTree = "<group>"; };
-		5D2F534915A2A92B00B8CED1 /* SBJoystickLib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = SBJoystickLib.a; path = addons/sbgamepad/lib/SBJoystickLib.a; sourceTree = "<group>"; };
 		5D2F536C15A6666E00B8CED1 /* Gamepad60Beat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Gamepad60Beat.h; path = Gamepad/Gamepad60Beat.h; sourceTree = "<group>"; };
 		5D2F536D15A6666E00B8CED1 /* GamepadiCade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GamepadiCade.h; path = Gamepad/GamepadiCade.h; sourceTree = "<group>"; };
 		5D2F536E15A6666E00B8CED1 /* GamepadProvider60Beat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GamepadProvider60Beat.h; path = Gamepad/GamepadProvider60Beat.h; sourceTree = "<group>"; };
@@ -209,6 +207,8 @@
 		5D2F537315A6666E00B8CED1 /* Gamepad60Beat.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Gamepad60Beat.mm; path = Gamepad/Gamepad60Beat.mm; sourceTree = "<group>"; };
 		5D2F537415A6666E00B8CED1 /* GamepadProvider60Beat.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = GamepadProvider60Beat.mm; path = Gamepad/GamepadProvider60Beat.mm; sourceTree = "<group>"; };
 		5D2F537515A6666E00B8CED1 /* GamepadProvider60BeatNative.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = GamepadProvider60BeatNative.mm; path = Gamepad/GamepadProvider60BeatNative.mm; sourceTree = "<group>"; };
+		5D3049D015A96A9D00F83BE0 /* SBJoystick.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBJoystick.h; path = iOS/60BeatGamepad/lib/SBJoystick.h; sourceTree = "<group>"; };
+		5D3049D115A96A9D00F83BE0 /* SBJoystickLib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = SBJoystickLib.a; path = iOS/60BeatGamepad/lib/SBJoystickLib.a; sourceTree = "<group>"; };
 		5D30633F0FD88F95009DE600 /* ProgressBarComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ProgressBarComponent.cpp; path = Entity/ProgressBarComponent.cpp; sourceTree = "<group>"; };
 		5D3063400FD88F95009DE600 /* ProgressBarComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProgressBarComponent.h; path = Entity/ProgressBarComponent.h; sourceTree = "<group>"; };
 		5D3063410FD88F95009DE600 /* TapSequenceDetectComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TapSequenceDetectComponent.cpp; path = Entity/TapSequenceDetectComponent.cpp; sourceTree = "<group>"; };
@@ -424,7 +424,7 @@
 				5D3063AB0FD8B00A009DE600 /* OpenAL.framework in Frameworks */,
 				5D82C8B00FF4C02B0082EBE7 /* CFNetwork.framework in Frameworks */,
 				5D82C8B50FF4C0BF0082EBE7 /* AVFoundation.framework in Frameworks */,
-				5D2F534A15A2A92B00B8CED1 /* SBJoystickLib.a in Frameworks */,
+				5D3049D215A96A9D00F83BE0 /* SBJoystickLib.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -539,13 +539,13 @@
 			name = Gamepad;
 			sourceTree = "<group>";
 		};
-		5D2F534B15A2B78F00B8CED1 /* thirdparty */ = {
+		5D3049CF15A96A5B00F83BE0 /* 60BeatControlpad */ = {
 			isa = PBXGroup;
 			children = (
-				5D2F534915A2A92B00B8CED1 /* SBJoystickLib.a */,
-				5D2F534815A2A90300B8CED1 /* SBJoystick.h */,
+				5D3049D015A96A9D00F83BE0 /* SBJoystick.h */,
+				5D3049D115A96A9D00F83BE0 /* SBJoystickLib.a */,
 			);
-			name = thirdparty;
+			name = 60BeatControlpad;
 			sourceTree = "<group>";
 		};
 		5D3063690FD890CF009DE600 /* Audio */ = {
@@ -606,6 +606,7 @@
 		5D5C10211275792500A4E4E3 /* iOS */ = {
 			isa = PBXGroup;
 			children = (
+				5D3049CF15A96A5B00F83BE0 /* 60BeatControlpad */,
 				5D5C10261275793C00A4E4E3 /* app */,
 				5D5C10221275793700A4E4E3 /* PlatformSetupIOS.h */,
 				5D5C10231275793700A4E4E3 /* iOSUtils.mm */,
@@ -812,7 +813,6 @@
 		5DC692580E947EBD00E5AC44 /* shared */ = {
 			isa = PBXGroup;
 			children = (
-				5D2F534B15A2B78F00B8CED1 /* thirdparty */,
 				5D2F532F15A2A78400B8CED1 /* Gamepad */,
 				5D5C10211275792500A4E4E3 /* iOS */,
 				5D5C10011275779000A4E4E3 /* FileSystem */,
@@ -1116,6 +1116,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../shared/addons/sbgamepad/lib\"",
+					"\"$(SRCROOT)/../shared/iOS/60BeatGamepad/lib\"",
 				);
 				PRODUCT_NAME = RTLooneyLadders;
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
@@ -1176,6 +1177,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../shared/addons/sbgamepad/lib\"",
+					"\"$(SRCROOT)/../shared/iOS/60BeatGamepad/lib\"",
 				);
 				PRODUCT_NAME = RTLooneyLadders;
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
