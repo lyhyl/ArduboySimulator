@@ -1731,26 +1731,41 @@ void FakeClickAnEntity(Entity *pEnt, int delayBeforeStartingMS)
 	SendFakeInputMessageToEntity(pEnt, MESSAGE_TYPE_GUI_CLICK_END, vClickPos, delayBeforeStartingMS);
 }
 
+bool IsCheckboxChecked(Entity *pEnt)
+{
+	if (!pEnt)
+	{
+		assert(!"No entity");
+		return false;
+	}
+
+	return pEnt->GetVar("checked")->GetUINT32() != 0;
+}
+
+void SetCheckBoxChecked(Entity *pEnt, bool bChecked, bool bShowAnim)
+{
+
+	if (!bChecked)
+	{
+		//uncheck it
+		pEnt->GetVar("checked")->Set(uint32(0));
+		//the image too
+		AnimateStopEntityAndSetFrame(pEnt, 0, 0, 0);
+	} else
+	{
+		//check it
+		pEnt->GetVar("checked")->Set(uint32(1));
+		//the image too
+		AnimateStopEntityAndSetFrame(pEnt, 0, 1, 0);
+	}
+	
+	OneTimeBobEntity(pEnt);
+}
 
 void OnCheckboxToggle(VariantList *pVList)
 {
 	Entity *pEntClicked = pVList->m_variant[1].GetEntity();
-	bool bIsChecked = pEntClicked->GetVar("checked")->GetUINT32() != 0;
-
-	if (bIsChecked)
-	{
-		//uncheck it
-		pEntClicked->GetVar("checked")->Set(uint32(0));
-		//the image too
-		AnimateStopEntityAndSetFrame(pEntClicked, 0, 0, 0);
-	} else
-	{
-		//check it
-		pEntClicked->GetVar("checked")->Set(uint32(1));
-		//the image too
-		AnimateStopEntityAndSetFrame(pEntClicked, 0, 1, 0);
-	}
-	OneTimeBobEntity(pEntClicked);
+	SetCheckBoxChecked(pEntClicked, !IsCheckboxChecked(pEntClicked));
 }
 
 Entity * CreateCheckbox(Entity *pBG, string name, string text, float x, float y, bool bChecked, eFont fontID, float fontScale)

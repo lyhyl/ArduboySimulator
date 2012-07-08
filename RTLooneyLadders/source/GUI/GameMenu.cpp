@@ -6,6 +6,7 @@
 #include "Entity/SelectButtonWithCustomInputComponent.h"
 #include "Entity/ArcadeInputComponent.h"
 #include "Gamepad/GamepadManager.h"
+#include "Gamepad/GamepadProvideriCade.h"
 
 #include "Component/CharComponent.h"
 #include "Component/CharManagerComponent.h"
@@ -173,6 +174,10 @@ int OnModDyno(int mod)
 
 Entity * GameMenuCreate(Entity *pParentEnt)
 {
+    GetGamepadManager()->RemoveProviderByName("iCade");
+    GetGamepadManager()->AddProvider(new GamepadProvideriCade); //use iCade, this actually should work with any platform...
+
+    
 	Entity *pBG = pParentEnt->AddEntity(new Entity("GameMenu"));
 	AddFocusIfNeeded(pBG);
 	
@@ -210,6 +215,13 @@ Entity * GameMenuCreate(Entity *pParentEnt)
 	//for xperia play on android
 	AddKeyBinding(pComp, "XperiaA", VIRTUAL_KEY_DIR_CENTER, VIRTUAL_KEY_GAME_FIRE); //for experia plays X button
 	AddKeyBinding(pComp, "XPeriaB", VIRTUAL_DPAD_BUTTON_DOWN, VIRTUAL_KEY_GAME_FIRE); //for experia plays O button
+
+    AddKeyBinding(pComp, "Dynamite2", VIRTUAL_DPAD_BUTTON_LEFT, VIRTUAL_KEY_GAME_FIRE); //map another icade button 
+    AddKeyBinding(pComp, "Dynamite3", VIRTUAL_DPAD_BUTTON_RIGHT, VIRTUAL_KEY_GAME_FIRE); //map another icade button 
+    AddKeyBinding(pComp, "Dynamite4", VIRTUAL_DPAD_BUTTON_UP, VIRTUAL_KEY_GAME_FIRE); //map another icade button 
+    AddKeyBinding(pComp, "Back", VIRTUAL_DPAD_RTRIGGER, VIRTUAL_KEY_BACK, true);
+    
+
 
 	GetBaseApp()->m_sig_arcade_input.connect(pBG->GetFunction("OnArcadeInput")->sig_function);
 	pBG->GetShared()->GetFunction("OnArcadeInput")->sig_function.connect(&OnArcadeInput);

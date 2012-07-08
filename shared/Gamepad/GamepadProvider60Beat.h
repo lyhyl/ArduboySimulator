@@ -49,6 +49,8 @@ public:
     
 protected:
 	
+    void OnEnterBackground(VariantList *pVList);
+    void OnEnterForeground(VariantList *pVList);
 
 private:
 

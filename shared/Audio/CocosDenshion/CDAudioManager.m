@@ -22,9 +22,6 @@
  $Id$
  */
 
-#ifdef RT_IOS_60BEAT_GAMEPAD_SUPPORT
-    #import "SBJoystick.h" //support for the 60beat gamepad
-#endif
 
 #import "CDAudioManager.h"
 
@@ -710,19 +707,11 @@ static BOOL configured = FALSE;
 -(void) beginInterruption {
 	CDLOGINFO(@"Denshion::CDAudioManager - begin interruption");
 	[self audioSessionInterrupted];
-	
-#ifdef RT_IOS_60BEAT_GAMEPAD_SUPPORT
-    [[SBJoystick sharedInstance] beginInterruption];
-#endif
 }
 
 -(void) endInterruption {
 	CDLOGINFO(@"Denshion::CDAudioManager - end interruption");
 	[self audioSessionResumed];
-	
-#ifdef RT_IOS_60BEAT_GAMEPAD_SUPPORT
-    [[SBJoystick sharedInstance] endInterruption];
-#endif
 }
 
 #if __CC_PLATFORM_IOS >= 40000

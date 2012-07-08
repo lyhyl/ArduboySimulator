@@ -63,6 +63,31 @@ void Gamepad::OnButton( bool bDown, int buttonID )
 	m_sig_gamepad_buttons(&v);
 }
 
+void Gamepad::SendArcadeDirectionByKey(eVirtualKeys key, bool bDown)
+{
+    if (!m_pArcadeComp) return;
+    
+	switch (key)
+	{
+        case VIRTUAL_KEY_DIR_UP:
+            m_pArcadeComp->SetDirectionKey(MOVE_BUTTON_DIR_UP, bDown);
+            break;
+        case VIRTUAL_KEY_DIR_DOWN:
+            m_pArcadeComp->SetDirectionKey(MOVE_BUTTON_DIR_DOWN, bDown);
+            break;
+        case VIRTUAL_KEY_DIR_LEFT:
+            m_pArcadeComp->SetDirectionKey(MOVE_BUTTON_DIR_LEFT, bDown);
+            break;
+        case VIRTUAL_KEY_DIR_RIGHT:
+            m_pArcadeComp->SetDirectionKey(MOVE_BUTTON_DIR_RIGHT, bDown);
+            break;
+            
+        default:
+            LogMsg("SendArcadeDirectionByKey Unhandled direction ( %d)", key);
+	}
+    
+}
+
 void Gamepad::SendArcadeDirectionByDegrees(int val)
 {
 	//seriously?  Don't we have a better way to do this?

@@ -1,6 +1,7 @@
 #include "PlatformPrecomp.h"
 #include "GamepadiCade.h"
 #include "Entity/EntityUtils.h"
+#include "GamepadManager.h"
 
 
 void ArcadeKeyboardControl::Setup(GamepadiCade *pPad,  char keyDown, char keyUp, int buttonID, eVirtualKeys vKeyToSend )
@@ -12,7 +13,6 @@ void ArcadeKeyboardControl::Setup(GamepadiCade *pPad,  char keyDown, char keyUp,
 
 	m_keyDown = keyDown;
 	m_keyUp = keyUp;
-	m_keyToSend = vKeyToSend;
 }
 
 
@@ -70,11 +70,11 @@ bool GamepadiCade::Init()
 
 	m_axisUsedCount = 2;
 
-	//setup our keys.. later, we may want to add other configs for other keyboard/based fake controllers, but this one is for the iCade:
+	//setup our keys.. later, we may want to add other configs for other keyboard/based fake controllers, but this one is for the iCade mobile:
 
 	m_keys[KEY_ARCADE_BUTTON_LEFT].Setup(this, 'Y', 'T', 0, VIRTUAL_DPAD_BUTTON_LEFT );
-	m_keys[KEY_ARCADE_BUTTON_RIGHT].Setup(this, 'J', 'N', 1, VIRTUAL_DPAD_BUTTON_RIGHT );
-	m_keys[KEY_ARCADE_BUTTON_UP].Setup(this, 'U', 'F', 2, VIRTUAL_DPAD_BUTTON_UP );
+	m_keys[KEY_ARCADE_BUTTON_UP].Setup(this, 'U', 'F', 1, VIRTUAL_DPAD_BUTTON_UP );
+	m_keys[KEY_ARCADE_BUTTON_RIGHT].Setup(this, 'J', 'N', 2, VIRTUAL_DPAD_BUTTON_RIGHT );
 	m_keys[KEY_ARCADE_BUTTON_DOWN].Setup(this, 'H', 'R', 3, VIRTUAL_DPAD_BUTTON_DOWN );
 
 	//more buttons.. I'm using naming that matches the new ICG07 (triggers/buttons), but it works with the old iCade too, just keep in mind they
@@ -105,6 +105,8 @@ void GamepadiCade::OnHardwareMessage( VariantList *pVList )
 {
 	eMessageType msg = (eMessageType) (int)pVList->Get(0).GetFloat();
 
+	GamepadProvideriCade *pProvider = (GamepadProvideriCade*) GetGamepadManager()->GetProviderByName("iCade");
+
 	switch (msg)
 	{
             
@@ -126,6 +128,12 @@ void GamepadiCade::OnHardwareMessage( VariantList *pVList )
             GetBaseApp()->AddOSMessage(o);
 
             SetIsUsingNativeUI(false);
+
+            if (pProvider)
+            {
+                pProvider->OnLostiCadeConnection(); //let it know what happened
+            }
+
 		} else {
             LogMsg("Touch screen came up but.. ");
         }

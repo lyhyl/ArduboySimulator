@@ -81,6 +81,13 @@ bool AudioManagerFMOD::Init()
 			result = system->setSoftwareFormat(48000, FMOD_SOUND_FORMAT_PCMFLOAT, 0,0, FMOD_DSP_RESAMPLER_LINEAR);
 			FMOD_ERROR_CHECK(result);
 		}
+        
+#ifdef RT_IOS_60BEAT_GAMEPAD_SUPPORT
+        //to work with the 60beat gampad, we must be at 44k
+        result = system->setSoftwareFormat(44100, FMOD_SOUND_FORMAT_PCM16, 0,0, FMOD_DSP_RESAMPLER_LINEAR);
+        FMOD_ERROR_CHECK(result);
+#endif
+
 	}
 
 	result = system->init(32, FMOD_INIT_NORMAL, 0);

@@ -645,8 +645,22 @@ import android.view.View.OnClickListener;
 
 	public static String get_clipboard()
 	{
-		ClipboardManager clipboard = (ClipboardManager) app.getSystemService(CLIPBOARD_SERVICE);
-		String data = clipboard.getText().toString();
+	//Note: On Honeycomb this appears to cause a crash because it has to be done in the main thread, which isn't active when
+	//JNI invokes this.  So we have to do a callback and send back the answer later? Argh.  For now, I'll try/catch the crash, it
+	//will just be a no-op.
+	
+	String data = "Thread error, sorry, paste can't be used here.";
+	
+	 try
+	   {
+        	ClipboardManager clipboard = (ClipboardManager) app.getSystemService(CLIPBOARD_SERVICE);
+			data = clipboard.getText().toString();
+	
+       } catch (Exception ex) 
+	   {
+           	Log.d(PackageName, "get_clipboard> Avoided crash. "+ex);
+		
+       }
 		return data;
 	}
 	public static String get_deviceID()

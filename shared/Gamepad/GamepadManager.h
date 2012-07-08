@@ -83,8 +83,10 @@ public:
 
 	Gamepad * GetGamepad(eGamepadID id);  //returns NULL if unavailable
 
+	GamepadProvider * GetProviderByName(string name); //returns NULL if non exists
+
 	bool RemoveProviderByName(string name); //returns true if something was actually removed
-	bool AddProvider(GamepadProvider *provider);  //You new, we handle deleting it.  Returns false on error, and kills deletes it for you
+	GamepadProvider * AddProvider(GamepadProvider *provider);  //You new, we handle deleting it.  Returns false on error, and kills deletes it for you
 	
 	void AddGamepad(Gamepad * pad); //You new, we handle deleting it
 

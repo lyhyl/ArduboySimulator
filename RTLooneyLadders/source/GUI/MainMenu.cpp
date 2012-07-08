@@ -7,6 +7,7 @@
 #include "GUI/GameMenu.h"
 #include "Entity/ArcadeInputComponent.h"
 #include "Gamepad/GamepadManager.h"
+#include "Gamepad/GamepadProvideriCade.h"
 
 void MainMenuOnSelect(VariantList *pVList) //0=vec2 point of click, 1=entity sent from
 {
@@ -115,6 +116,11 @@ void SelectionSelect()
 	SendFakeButtonPushToEntity(pIcon->GetParent()->GetEntityByName(toString(selection)), 20);
 	
 	GetApp()->GetVar("level")->Set(uint32(selection));
+    
+    //you know?  Let's reconnect the icade each time we load a level.  Generally we'd have a "Connect iCade" option in the options instead, but whatever.
+    
+  
+    
 }
 
 void UnlockAllLevels()
@@ -190,6 +196,11 @@ void SetupArrowSelector(Entity *pBG, int itemCount, uint32 defaultItem)
 	AddKeyBinding(pComp, "XPeriaSelect", VIRTUAL_DPAD_SELECT, VIRTUAL_KEY_DIR_DOWN); 
 	AddKeyBinding(pComp, "XperiaX", VIRTUAL_KEY_DIR_CENTER, 13); //for experia plays X button
 	AddKeyBinding(pComp, "XperiaO", VIRTUAL_DPAD_BUTTON_RIGHT, 13); //for xperia O button 
+	AddKeyBinding(pComp, "Select1", VIRTUAL_DPAD_BUTTON_DOWN, 13); //for an icade button
+	AddKeyBinding(pComp, "Select2", VIRTUAL_DPAD_BUTTON_LEFT, 13); //for another icade button
+    AddKeyBinding(pComp, "Select3", VIRTUAL_DPAD_BUTTON_UP, 13); //for another icade button
+    AddKeyBinding(pComp, "Select4", VIRTUAL_DPAD_RTRIGGER, 13);  //for another icade button
+    
 
 	PulsateColorEntity(pIcon, false, MAKE_RGBA(60,0,0,130));
 
@@ -212,6 +223,8 @@ void SetupArrowSelector(Entity *pBG, int itemCount, uint32 defaultItem)
 	Entity *pActiveSel = pBG->GetEntityByName(toString(defaultItem));
 	CL_Vec2f vPos = pActiveSel->GetVar("pos2d")->GetVector2()+CL_Vec2f(-60, 0);
 	pIcon->GetVar("pos2d")->Set(vPos);
+    
+ 
 	
 }
 

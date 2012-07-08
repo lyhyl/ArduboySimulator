@@ -2208,6 +2208,14 @@
 					</FileConfiguration>
 				</File>
 				<File
+					RelativePath="..\..\shared\Audio\AudioManagerDenshion.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\Audio\AudioManagerDenshion.mm"
+					>
+				</File>
+				<File
 					RelativePath="..\..\shared\Audio\AudioManagerFMOD.cpp"
 					>
 					<FileConfiguration
@@ -2327,6 +2335,50 @@
 					RelativePath="..\..\shared\Audio\AudioManagerSDL.h"
 					>
 				</File>
+				<Filter
+					Name="Denshion"
+					>
+					<File
+						RelativePath="..\..\shared\Audio\CocosDenshion\CDAudioManager.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\shared\Audio\CocosDenshion\CDAudioManager.m"
+						>
+					</File>
+					<File
+						RelativePath="..\..\shared\Audio\CocosDenshion\CDConfig.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\shared\Audio\CocosDenshion\CDOpenALSupport.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\shared\Audio\CocosDenshion\CDOpenALSupport.m"
+						>
+					</File>
+					<File
+						RelativePath="..\..\shared\Audio\CocosDenshion\CocosDenshion.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\shared\Audio\CocosDenshion\CocosDenshion.m"
+						>
+					</File>
+					<File
+						RelativePath="..\..\shared\Audio\CocosDenshion\LICENSE.cocosdenshion"
+						>
+					</File>
+					<File
+						RelativePath="..\..\shared\Audio\CocosDenshion\SimpleAudioEngine.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\shared\Audio\CocosDenshion\SimpleAudioEngine.m"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="Network"

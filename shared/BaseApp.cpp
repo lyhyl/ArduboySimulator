@@ -187,6 +187,10 @@ void BaseApp::Draw()
 	case ERROR_SPACE:
 		GetFont(FONT_SMALL)->DrawScaled(2,14, "LOW STORAGE SPACE!", 0.7f);
 		break;
+            
+        case ERROR_NONE:
+            
+        break;
 	}
 
 	SetupOrtho();
@@ -490,7 +494,7 @@ void BaseApp::OnEnterBackground()
 	#endif
 	
 		
-	if (GetEmulatedPlatformID() != PLATFORM_ID_ANDROID)
+	if (GetPlatformID() != PLATFORM_ID_ANDROID)
 	{
 		//android will do it elsewhere, but for other platforms we fake this message here
 		m_sig_pre_enterbackground(NULL); 
@@ -500,6 +504,7 @@ void BaseApp::OnEnterBackground()
 	}
 
 	GetAudioManager()->Suspend();
+    
 }
 
 void BaseApp::OnEnterForeground()

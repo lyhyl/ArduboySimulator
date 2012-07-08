@@ -20,6 +20,8 @@ public:
 	virtual void Kill()=0;
 	virtual void Update()=0;
 
+	boost::signal<void (GamepadProvider*)> m_sig_failed_to_connect; //only used by iCade at the moment
+
 protected:
 	
 

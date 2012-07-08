@@ -18,7 +18,7 @@ bool Gamepad60Beat::Init()
 {
     m_axisUsedCount = 4;
     SetRightStickAxis(2,3);
-    m_name = "60beat";
+    m_name = "60Beat";
     
     //improve button mappings
     

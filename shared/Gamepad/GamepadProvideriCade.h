@@ -29,7 +29,9 @@ public:
 	virtual bool Init();
 	virtual void Kill();
 	virtual void Update();
- 
+	
+	void OnLostiCadeConnection();
+	
 protected:
 	
 private:

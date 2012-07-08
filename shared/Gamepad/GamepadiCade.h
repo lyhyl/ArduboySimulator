@@ -19,12 +19,12 @@ public:
 	ArcadeKeyboardControl()
 	{
 		m_bPushed = false;
+        
 	}
 
 
 	void Setup(GamepadiCade *pPad, char keyDown, char keyUp, int buttonID, eVirtualKeys vKeyToSend);
 	char m_keyDown, m_keyUp;
-	eVirtualKeys m_keyToSend;
 	bool m_bPushed;
 
 };
@@ -35,10 +35,11 @@ enum eArcadeKeyboardControls
 	//one.. so the button/trigger mappings are really just the
 	//"Other four buttons" on the old icade
 
+    //don't change the order, they match the virtual keys
 	KEY_ARCADE_BUTTON_LEFT,
 	KEY_ARCADE_BUTTON_UP,
-	KEY_ARCADE_BUTTON_DOWN,
 	KEY_ARCADE_BUTTON_RIGHT,
+	KEY_ARCADE_BUTTON_DOWN,
 
 	KEY_ARCADE_BUTTON_L,
 	KEY_ARCADE_BUTTON_R,

@@ -3,7 +3,7 @@
 
 void ChartBoostIOS_StartSession(string appID, string appSignature)
 {
-	ChartBoost *cb = [ChartBoost sharedChartBoost];
+	Chartboost *cb = [Chartboost sharedChartboost];
 	NSString * NSappId = [NSString stringWithCString: appID.c_str() encoding: [NSString defaultCStringEncoding]];
     NSString * NSappSig = [NSString stringWithCString: appSignature.c_str() encoding: [NSString defaultCStringEncoding]];
 	cb.appId = NSappId;
@@ -15,7 +15,7 @@ void ChartBoostIOS_StartSession(string appID, string appSignature)
 void ChartBoostIOS_ShowInterstitial(string location)
 {
   
-    ChartBoost *cb = [ChartBoost sharedChartBoost];
+    Chartboost *cb = [Chartboost sharedChartboost];
     LogMsg("Asking ChartBoost to show interstitial...");
 
 	if (location.empty())
@@ -30,7 +30,7 @@ void ChartBoostIOS_ShowInterstitial(string location)
 void ChartBoostIOS_CacheShowInterstitial(string location)
 {
   
-    ChartBoost *cb = [ChartBoost sharedChartBoost];
+    Chartboost *cb = [Chartboost sharedChartboost];
     LogMsg("Asking ChartBoost to cache interstitial...");
 
 	if (location.empty())
@@ -45,14 +45,14 @@ void ChartBoostIOS_CacheShowInterstitial(string location)
 
 void ChartBoostIOS_ShowMoreApps()
 {
-	ChartBoost *cb = [ChartBoost sharedChartBoost];
+	Chartboost *cb = [Chartboost sharedChartboost];
     LogMsg("Asking ChartBoost to show more apps...");
 	[cb showMoreApps];
 }
 
 void ChartBoostIOS_CacheShowMoreApps()
 {
-	ChartBoost *cb = [ChartBoost sharedChartBoost];
+	Chartboost *cb = [Chartboost sharedChartboost];
     LogMsg("Asking ChartBoost to cache more apps...");
 	[cb cacheMoreApps];
 }
