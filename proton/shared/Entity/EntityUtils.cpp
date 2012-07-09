@@ -356,16 +356,6 @@ void FadeInEntity(Entity *pEnt, bool bRecursive, int timeMS, int delayBeforeFadi
 	}
 }
 
-EntityComponent * ZoomToPositionFromThisOffsetEntity(Entity *pEnt, CL_Vec2f vPos, unsigned int speedMS, eInterpolateType interpolateType,  int delayBeforeActionMS)
-{
-	CL_Vec2f vEndPos;
-	
-	vEndPos = pEnt->GetVar("pos2d")->GetVector2();
-	pEnt->GetVar("pos2d")->Set(vEndPos+vPos);
-
-	return SetupInterpolateComponent(pEnt, "ic_pos", "pos2d", vEndPos, speedMS, delayBeforeActionMS, interpolateType);
-}
-
 EntityComponent * MorphToVec2Entity(Entity *pEnt, string targetVar, CL_Vec2f vTargetSize, unsigned int speedMS, eInterpolateType interpolateType,  int delayBeforeActionMS)
 {
 	return SetupInterpolateComponent(pEnt, "ic_" + targetVar, targetVar, vTargetSize, speedMS, delayBeforeActionMS, interpolateType);
@@ -398,6 +388,16 @@ EntityComponent * MorphToFloatComponent(EntityComponent *pTargetComp, string tar
 	return pComp;
 }
 
+EntityComponent * ZoomToPositionFromThisOffsetEntity(Entity *pEnt, CL_Vec2f offset, unsigned int speedMS, eInterpolateType interpolateType,  int delayBeforeActionMS)
+{
+	CL_Vec2f vEndPos;
+
+	vEndPos = pEnt->GetVar("pos2d")->GetVector2();
+	pEnt->GetVar("pos2d")->Set(vEndPos+offset);
+
+	return SetupInterpolateComponent(pEnt, "ic_pos", "pos2d", vEndPos, speedMS, delayBeforeActionMS, interpolateType);
+}
+
 EntityComponent * ZoomFromPositionEntity(Entity *pEnt, CL_Vec2f vPos, unsigned int speedMS, eInterpolateType interpolateType,  int delayBeforeActionMS)
 {
 	CL_Vec2f vEndPos = pEnt->GetVar("pos2d")->GetVector2();
@@ -411,14 +411,14 @@ EntityComponent * ZoomToPositionEntity(Entity *pEnt, CL_Vec2f vPos, unsigned int
 	return MorphToVec2Entity(pEnt, "pos2d", vPos, speedMS, interpolateType, delayBeforeActionMS);
 }
 
-EntityComponent * ZoomToPositionOffsetEntity(Entity *pEnt, CL_Vec2f vPos, unsigned int speedMS, eInterpolateType interpolateType, int delayBeforeActionMS)
+EntityComponent * ZoomToPositionOffsetEntity(Entity *pEnt, CL_Vec2f offset, unsigned int speedMS, eInterpolateType interpolateType, int delayBeforeActionMS)
 {
-	return MorphToVec2Entity(pEnt, "pos2d", pEnt->GetVar("pos2d")->GetVector2()+vPos, speedMS, interpolateType, delayBeforeActionMS);
+	return MorphToVec2Entity(pEnt, "pos2d", pEnt->GetVar("pos2d")->GetVector2()+offset, speedMS, interpolateType, delayBeforeActionMS);
 }
 
-EntityComponent * ZoomToPositionOffsetEntityMulti(Entity *pEnt, CL_Vec2f vPos, unsigned int speedMS, eInterpolateType interpolateType, int delayBeforeActionMS)
+EntityComponent * ZoomToPositionOffsetEntityMulti(Entity *pEnt, CL_Vec2f offset, unsigned int speedMS, eInterpolateType interpolateType, int delayBeforeActionMS)
 {
-	return MorphToVec2EntityMulti(pEnt, "pos2d", pEnt->GetVar("pos2d")->GetVector2()+vPos, speedMS, interpolateType, delayBeforeActionMS);
+	return MorphToVec2EntityMulti(pEnt, "pos2d", pEnt->GetVar("pos2d")->GetVector2()+offset, speedMS, interpolateType, delayBeforeActionMS);
 }
 
 EntityComponent * ZoomToPositionEntityMulti(Entity *pEnt, CL_Vec2f vPos, unsigned int speedMS, eInterpolateType interpolateType, int delayBeforeActionMS)
