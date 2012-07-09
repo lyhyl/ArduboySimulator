@@ -139,11 +139,29 @@ EntityComponent * PulsateColorEntity(Entity *pEnt, bool bRecursive, unsigned int
 EntityComponent * TypeTextLabelEntity(Entity *pEnt, int delayBeforeActionMS = 0, uint32 textTypeSpeedMS = 50,
 									  TyperComponent::eMode = TyperComponent::MODE_ONCE_AND_REMOVE_SELF, string textToAddByTyping = "");
 
-EntityComponent * ZoomToPositionFromThisOffsetEntity(Entity *pEnt, CL_Vec2f vPos, unsigned int speedMS, eInterpolateType interpolateType = INTERPOLATE_SMOOTHSTEP,  int delayBeforeActionMS = 0);
 /**
  * Adds a position animation to an \c Entity.
+ * If there is a previous position animation running it is removed first.
+ *
+ * The animation starts from the current position of the \c Entity offset by \a offset.
+ * The animation will end to the current position of the \c Entity.
+ *
+ * \param pEnt the \c Entity to animate.
+ * \param offset the offset from where the animation starts.
+ * \param speedMS the duration of the animation in milliseconds.
+ * \param interpolateType the type of the interpolation.
+ * \param delayBeforeActionMS delay in milliseconds before the animation is started.
+ *        If set to 0 the animation is started immediately.
+ * \return the \c EntityComponent that performs the animation.
+ */
+EntityComponent * ZoomToPositionFromThisOffsetEntity(Entity *pEnt, CL_Vec2f offset, unsigned int speedMS, eInterpolateType interpolateType = INTERPOLATE_SMOOTHSTEP,  int delayBeforeActionMS = 0);
+/**
+ * Adds a position animation to an \c Entity.
+ * If there is a previous position animation running it is removed first.
  *
  * The animation starts from the current position of the \c Entity.
+ * The end position is determined by \a vPos.
+ *
  * \param pEnt the \c Entity to animate.
  * \param vPos the end position of the animation.
  * \param speedMS the duration of the animation in milliseconds.
@@ -153,12 +171,45 @@ EntityComponent * ZoomToPositionFromThisOffsetEntity(Entity *pEnt, CL_Vec2f vPos
  * \return the \c EntityComponent that performs the animation.
  */
 EntityComponent * ZoomToPositionEntity(Entity *pEnt, CL_Vec2f vPos, unsigned int speedMS, eInterpolateType interpolateType = INTERPOLATE_SMOOTHSTEP,  int delayBeforeActionMS = 0);
+/**
+ * Adds a position animation to an \c Entity.
+ * If there is a previous position animation running it is removed first.
+ *
+ * The animation starts from the position determined by \a vPos.
+ * The animation will end to the current position of the \c Entity.
+ *
+ * \param pEnt the \c Entity to animate.
+ * \param vPos the start position of the animation.
+ * \param speedMS the duration of the animation in milliseconds.
+ * \param interpolateType the type of the interpolation.
+ * \param delayBeforeActionMS delay in milliseconds before the animation is started.
+ *        If set to 0 the animation is started immediately.
+ * \return the \c EntityComponent that performs the animation.
+ */
 EntityComponent * ZoomFromPositionEntity(Entity *pEnt, CL_Vec2f vPos, unsigned int speedMS, eInterpolateType interpolateType = INTERPOLATE_SMOOTHSTEP,  int delayBeforeActionMS = 0);
-EntityComponent * ZoomToPositionOffsetEntity(Entity *pEnt, CL_Vec2f vPos, unsigned int speedMS, eInterpolateType interpolateType = INTERPOLATE_SMOOTHSTEP,  int delayBeforeActionMS = 0);
-//like above, but allows more than one to be layered instead of assuming you want to ignore the previous one
-EntityComponent * ZoomToPositionOffsetEntityMulti(Entity *pEnt, CL_Vec2f vPos, unsigned int speedMS, eInterpolateType interpolateType = INTERPOLATE_SMOOTHSTEP,  int delayBeforeActionMS = 0);
-
-//like above, but allows more than one to be layered instead of assuming you want to ignore the previous one
+/**
+ * Adds a position animation to an \c Entity.
+ * If there is a previous position animation running it is removed first.
+ *
+ * The animation starts from the current position of the \c Entity.
+ * The animation will end to the current position of the \c Entity offset by \a offset.
+ *
+ * \param pEnt the \c Entity to animate.
+ * \param offset the offset to where the animation ends.
+ * \param speedMS the duration of the animation in milliseconds.
+ * \param interpolateType the type of the interpolation.
+ * \param delayBeforeActionMS delay in milliseconds before the animation is started.
+ *        If set to 0 the animation is started immediately.
+ * \return the \c EntityComponent that performs the animation.
+ */
+EntityComponent * ZoomToPositionOffsetEntity(Entity *pEnt, CL_Vec2f offset, unsigned int speedMS, eInterpolateType interpolateType = INTERPOLATE_SMOOTHSTEP,  int delayBeforeActionMS = 0);
+/**
+ * Like ZoomToPositionOffsetEntity() but doesn't remove any animations currently running.
+ */
+EntityComponent * ZoomToPositionOffsetEntityMulti(Entity *pEnt, CL_Vec2f offset, unsigned int speedMS, eInterpolateType interpolateType = INTERPOLATE_SMOOTHSTEP,  int delayBeforeActionMS = 0);
+/**
+ * Like ZoomToPositionEntity() but doesn't remove any animations currently running.
+ */
 EntityComponent * ZoomToPositionEntityMulti(Entity *pEnt, CL_Vec2f vPos, unsigned int speedMS, eInterpolateType interpolateType = INTERPOLATE_SMOOTHSTEP,  int delayBeforeActionMS = 0);
 
 /**
