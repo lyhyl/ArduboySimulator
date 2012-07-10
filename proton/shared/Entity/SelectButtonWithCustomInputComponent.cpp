@@ -69,9 +69,11 @@ void SelectButtonWithCustomInputComponent::OnInput( VariantList *pVList )
 	{
 	
 	case MESSAGE_TYPE_GUI_CHAR_RAW:
-
-		LogMsg("Got raw char %d", pVList->Get(2).GetUINT32());
+		#ifdef _DEBUG
+				LogMsg("Got raw char %d", pVList->Get(2).GetUINT32());
+		#endif
 		break;
+
 	case MESSAGE_TYPE_GUI_CHAR:
 		{
 		if (*m_pKeyCode != 0)

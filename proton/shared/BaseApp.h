@@ -239,6 +239,17 @@ public:
 	 *     parameter contains the keycode of the pressed key as a uint32.
 	 *   - For \link eMessageType::MESSAGE_TYPE_GUI_PASTE MESSAGE_TYPE_GUI_PASTE\endlink this
 	 *     parameter contains the contents of the clipboard as a \c string.
+	 * - 3: this parameter depends on the value of the first member (the type).
+	 *   - For \link eMessageType::MESSAGE_TYPE_GUI_CLICK_START MESSAGE_TYPE_GUI_CLICK_START\endlink,
+	 *     \link eMessageType::MESSAGE_TYPE_GUI_CLICK_END MESSAGE_TYPE_GUI_CLICK_END\endlink,
+	 *     \link eMessageType::MESSAGE_TYPE_GUI_CLICK_MOVE MESSAGE_TYPE_GUI_CLICK_MOVE\endlink,
+	 *     \link eMessageType::MESSAGE_TYPE_GUI_CLICK_MOVE_RAW MESSAGE_TYPE_GUI_CLICK_MOVE_RAW\endlink
+	 *     \link eMessageType::MESSAGE_TYPE_GUI_CHAR MESSAGE_TYPE_GUI_CHAR\endlink this
+	 *     \link eMessageType::MESSAGE_TYPE_GUI_CHAR MESSAGE_TYPE_GUI_CHAR_RAW\endlink this
+	 *		parameter contains the state of the control/shift/alt keys as a bitfield (uint32).
+	 *	    Test against the eVirtualKeyModifiers to determine which keys were down at the time this msg was generated.
+	 *   - For \link eMessageType::MESSAGE_TYPE_GUI_PASTE MESSAGE_TYPE_GUI_PASTE\endlink this
+	 *     parameter contains the contents of the clipboard as a \c string.
 	 */
 	boost::signal<void (VariantList*)> m_sig_input;
 	/**

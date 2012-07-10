@@ -139,7 +139,6 @@ void TouchHandlerComponent::OnInput( VariantList *pVList )
 {
 	//0 = message type, 1 = parent coordinate offset
 	CL_Vec2f pt = pVList->Get(1).GetVector2();
-	//pt += GetAlignmentOffset(*m_pSize2d, eAlignment(*m_pAlignment));
 
 	uint32 fingerID = 0;
 	if (pVList->Get(2).GetType() == Variant::TYPE_UINT32)

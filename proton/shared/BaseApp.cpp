@@ -161,6 +161,7 @@ void BaseApp::Draw()
 #endif		
 	
 #ifdef PLATFORM_FLASH
+		char stExtra[256];
 		sprintf(stExtra, " Flash: %.2f", float(GetNativeMemoryUsed())/1024/1024);
 		strcat(stTemp, stExtra);
 
@@ -237,6 +238,8 @@ void BaseApp::OnMessage(Message &m)
 					v.Get(0).Set((float)m.GetType());
 					v.Get(1).Set(float(m.GetParm1()), float(m.GetParm2()) );
 					v.Get(2).Set(uint32(m.GetParm3()));
+					v.Get(3).Set(m.GetParm4());
+
 			
 					if (m.GetType() == MESSAGE_TYPE_GUI_CLICK_START)
 					{
@@ -267,6 +270,7 @@ void BaseApp::OnMessage(Message &m)
 					v.Get(0).Set(float(m.GetType()));
 					v.Get(1).Set(float(m.GetParm1()), float(m.GetParm2()) );
 					v.Get(2).Set(uint32(m.GetParm3()));
+					v.Get(3).Set(m.GetParm4());
 
 					if (m.GetType() == MESSAGE_TYPE_GUI_CLICK_MOVE)
 					{
@@ -298,6 +302,7 @@ void BaseApp::OnMessage(Message &m)
 					v.Get(0).Set(uint32(m.GetParm1()));
 					v.Get(1).Set(uint32(m.GetParm2()));
 					v.Get(2).Set(uint32(m.GetParm3()));
+					v.Get(3).Set(m.GetParm4());
 					m_sig_raw_keyboard(&v);
 				}
 				break;
@@ -311,6 +316,7 @@ void BaseApp::OnMessage(Message &m)
 					v.Get(0).Set((float)m.GetType());
 					v.Get(1).Set(0,0);
 					v.Get(2).Set(uint32(m.GetParm1()));
+					v.Get(3).Set(m.GetParm4());
 					m_sig_input(&v);
 				}
 				break;

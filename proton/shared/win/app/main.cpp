@@ -91,6 +91,8 @@ void InitVideoSize()
 	AddVideoMode("Playbook", 600,1024, PLATFORM_ID_BBX);
 	AddVideoMode("Playbook Landscape", 1024,600, PLATFORM_ID_BBX);
 
+	AddVideoMode("Flash", 480, 320, PLATFORM_ID_FLASH);
+
 	//WORK: Change device emulation here
 	string desiredVideoMode = "iPhone Landscape"; //name needs to match one of the ones defined above
  	SetVideoModeByName(desiredVideoMode);
@@ -184,6 +186,30 @@ bool g_leftMouseButtonDown = false; //to help emulate how an iphone works
 HWND				g_hWnd	= 0;
 HDC					g_hDC		= 0;
 HINSTANCE g_hInstance = 0;
+
+#define KEY_DOWN  0x8000
+
+uint32 GetWinkeyModifiers()
+{
+
+	uint32 modifierKeys = 0;
+
+	if (GetKeyState(VK_CONTROL) & KEY_DOWN)
+	{
+		modifierKeys = modifierKeys | VIRTUAL_KEY_MODIFIER_CONTROL;
+	}
+
+	if (GetKeyState(VK_SHIFT)& KEY_DOWN)
+	{
+		modifierKeys = modifierKeys | VIRTUAL_KEY_MODIFIER_SHIFT;
+	}
+
+	if (GetKeyState(VK_MENU)& KEY_DOWN)
+	{
+		modifierKeys = modifierKeys | VIRTUAL_KEY_MODIFIER_ALT;
+	}
+	return modifierKeys;
+}
 
 int ConvertWindowsKeycodeToProtonVirtualKey(int keycode)
 {
@@ -280,7 +306,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			int xPos = GET_X_LPARAM(lParam);
 			int yPos = GET_Y_LPARAM(lParam);
 			ConvertCoordinatesIfRequired(xPos, yPos);
-			GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_START, (float)xPos, (float)yPos, 0);
+			GetMessageManager()->SendGUIEx2(MESSAGE_TYPE_GUI_CLICK_START, (float)xPos, (float)yPos, 0, GetWinkeyModifiers());
 			break;
 		}
 		break;
@@ -443,6 +469,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				break;
 			#endif
 
+			//int vKey = ConvertWindowsKeycodeToProtonVirtualKey(wParam); 
+
 			GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, (float)wParam, (float)lParam);  //lParam holds a lot of random data about the press, look it up if
 			//you actually want to access it
 		}
@@ -543,19 +571,19 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 						//no conversion was done, it may need additional vkey processing
 						if (wmCharKey >= VK_F1 &&wmCharKey <= VK_F24)
 						{
-							GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, (float)ConvertWindowsKeycodeToProtonVirtualKey(wmCharKey), 1.0f);  
+							GetMessageManager()->SendGUIEx2(MESSAGE_TYPE_GUI_CHAR, (float)ConvertWindowsKeycodeToProtonVirtualKey(wmCharKey), 1.0f, 0, GetWinkeyModifiers());  
 						} else
 						{
 							if (wmCharKey <= 90)
 							{
-								GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, (float)wmCharKey, 1.0f);  
+								GetMessageManager()->SendGUIEx2(MESSAGE_TYPE_GUI_CHAR, (float)wmCharKey, 1.0f, 0, GetWinkeyModifiers());  
 							}
 						}
 
 					} else
 					{
 						//normal
-						GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, (float)wmCharKey, 1.0f);  
+						GetMessageManager()->SendGUIEx2(MESSAGE_TYPE_GUI_CHAR, (float)wmCharKey, 1.0f, 0, GetWinkeyModifiers());  
 					}
 				}
 
@@ -569,7 +597,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				if (wmCharKey != 0)
 				{
 					//LogMsg("Sending repeat key..");
-					GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, (float)wmCharKey, 1.0f);  
+					GetMessageManager()->SendGUIEx2(MESSAGE_TYPE_GUI_CHAR, (float)wmCharKey, 1.0f, 0, GetWinkeyModifiers());  
 				}
 
 				#endif
@@ -601,7 +629,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			}
 			*/
 
-			GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW, float(key) , float(0));  
+			GetMessageManager()->SendGUIEx2(MESSAGE_TYPE_GUI_CHAR_RAW, float(key) , float(0), 0, GetWinkeyModifiers());  
 		}
 	break;
 	
@@ -639,7 +667,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			int xPos = GET_X_LPARAM(lParam);
 			int yPos = GET_Y_LPARAM(lParam);
 			ConvertCoordinatesIfRequired(xPos, yPos);
-			GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_END, (float)xPos, (float)yPos, 0);
+			GetMessageManager()->SendGUIEx2(MESSAGE_TYPE_GUI_CLICK_END, (float)xPos, (float)yPos, 0, GetWinkeyModifiers());
 			g_leftMouseButtonDown = false;
 		}
 		return true;
@@ -655,10 +683,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	
 			if (g_leftMouseButtonDown)
 			{
-				GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_MOVE, xPos, yPos, 0);
+				GetMessageManager()->SendGUIEx2(MESSAGE_TYPE_GUI_CLICK_MOVE, xPos, yPos, 0, GetWinkeyModifiers());
 				break;
 			} 
-			GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_MOVE_RAW, xPos, yPos, 0);
+			GetMessageManager()->SendGUIEx2(MESSAGE_TYPE_GUI_CLICK_MOVE_RAW, xPos, yPos, 0, GetWinkeyModifiers());
 		}
 		//sreturn true;
 
