@@ -120,6 +120,13 @@ enum eVirtualKeyInfo
 	VIRTUAL_KEY_PRESS
 };
 
+enum eVirtualKeyModifiers
+{
+	VIRTUAL_KEY_MODIFIER_CONTROL=1,
+	VIRTUAL_KEY_MODIFIER_ALT=2,
+	VIRTUAL_KEY_MODIFIER_SHIFT=4
+};
+
 enum eMessageType
 {
 	//Do NOT change the order of these!  Only add new stuff at the end.
@@ -196,6 +203,8 @@ public:
 	float GetParm2() {return m_parm2;}
 	void SetParm3(int parm3) {m_parm3 = parm3;}
 	int GetParm3() {return m_parm3;}
+	void SetParm4(int parm4) {m_parm4 = parm4;}
+	uint32 GetParm4() {return m_parm4;}
 	eTimingSystem GetTimingMethod() {return m_timerMethod;}
 	unsigned int GetDeliveryTime() {return m_deliveryTime;}
 	eMessageType GetType() {return m_type;}
@@ -228,6 +237,7 @@ private:
 	float m_parm1;
 	float m_parm2;
 	int m_parm3;
+	uint32 m_parm4;
 	unsigned int m_deliveryTime;
 	Variant m_variant;
 	VariantList m_variantList;
@@ -251,6 +261,7 @@ public:
 	void SendGUI( eMessageType type, const Variant &v, int deliverTimeMS = 0);
 	void SendGUI( eMessageType type, const VariantList &vList, int deliverTimeMS = 0);
 	void SendGUIEx( eMessageType type, float parm1, float parm2, int finger, int deliverTimeMS = 0, eTimingSystem timing = TIMER_SYSTEM);
+	void SendGUIEx2( eMessageType type, float parm1, float parm2, int finger, uint32 modifiers, int deliverTimeMS = 0, eTimingSystem timing = TIMER_SYSTEM);
 	void SendGUIStringEx( eMessageType type, float parm1, float parm2, int finger, string s, int deliverTimeMS = 0, eTimingSystem timing = TIMER_SYSTEM);
 
 	void SendGame( eMessageType type, const string msg, int deliverTimeMS = 0, eTimingSystem timing = TIMER_GAME);

@@ -87,6 +87,7 @@ void MessageManager::SendGUI( eMessageType type, float parm1, float parm2, int d
 	m->SetParm1(parm1);
 	m->SetParm2(parm2);
 	m->SetParm3(0); //finger id unknown so..
+	m->SetParm4(0); //alt/shift/etc unknown so
 	m->SetDeliveryTime(deliverTimeMS);
 	Send(m);
 }
@@ -101,6 +102,16 @@ void MessageManager::SendGUIEx( eMessageType type, float parm1, float parm2, int
 	Send(m);
 }
 
+void MessageManager::SendGUIEx2( eMessageType type, float parm1, float parm2, int finger, uint32 modifiers, int deliverTimeMS, eTimingSystem timing)
+{
+	Message *m = new Message(MESSAGE_CLASS_GUI, timing, type);
+	m->SetParm1(parm1);
+	m->SetParm2(parm2);
+	m->SetParm3(finger);
+	m->SetParm4(modifiers);
+	m->SetDeliveryTime(deliverTimeMS);
+	Send(m);
+}
 void MessageManager::SendGUIStringEx( eMessageType type, float parm1, float parm2, int finger, string s, int deliverTimeMS, eTimingSystem timing)
 {
 	Message *m = new Message(MESSAGE_CLASS_GUI, timing, type);

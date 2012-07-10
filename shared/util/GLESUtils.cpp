@@ -293,7 +293,7 @@ void DrawRect(CL_Vec2f &vPos, CL_Vec2f &vSize, uint32 color, float lineWidth)
 
 //old way using GL_LINES, but doesn't work on the Flash target
 
-/*
+#ifndef PLATFORM_FLASH
 void  DrawLine( GLuint rgba,   float ax, float ay, float bx, float by, float lineWidth )
 {
 	SetupOrtho();
@@ -326,7 +326,7 @@ void  DrawLine( GLuint rgba,   float ax, float ay, float bx, float by, float lin
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);	
 		CHECK_GL_ERROR();
 }
-*/
+#else
 void  DrawLine( GLuint rgba,   float ax, float ay, float bx, float by, float lineWidth )
 {
 	SetupOrtho();
@@ -336,30 +336,51 @@ void  DrawLine( GLuint rgba,   float ax, float ay, float bx, float by, float lin
 
 	glEnableClientState(GL_VERTEX_ARRAY);	
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	
-	//	0 1
-	//	3 2
-	//glDisable(GL_CULL_FACE); //so we can see the back of the triangle too
+	glDisable(GL_CULL_FACE);
 
 	static GLfloat	vertices[3*4];
 
-	vertices[0*3+0] = ax; vertices[0*3+1] = ay;
-	vertices[1*3+0] = bx; vertices[1*3+1] = by;
-	vertices[2*3+0] = bx+lineWidth; vertices[2*3+1] = by+lineWidth;
-	vertices[3*3+0] = ax+lineWidth; vertices[3*3+1] = ay+lineWidth;
+	CL_Vec2f start = CL_Vec2f(ax, ay);
+	CL_Vec2f end = CL_Vec2f(bx, by);
+
+	float dx = ax - bx;
+	float dy = ay - by;
+
+	CL_Vec2f rightSide = CL_Vec2f(dy, -dx);
+
+	if (rightSide.length() > 0) 
+	{
+		rightSide.normalize();
+		rightSide *= lineWidth/2;
+	}
+	
+	CL_Vec2f  leftSide =CL_Vec2f(-dy, dx);
+	
+	if (leftSide.length() > 0) 
+	{
+		leftSide.normalize();
+		leftSide *= lineWidth/2;
+	}
+
+	CL_Vec2f one = leftSide + start;
+
+	CL_Vec2f two = rightSide + start;
+
+	CL_Vec2f three = rightSide + end;
+
+	CL_Vec2f four = leftSide = end;
+
+	vertices[0*3+0] = one.x; vertices[0*3+1] = one.y;
+	vertices[1*3+0] = two.x; vertices[1*3+1] = two.y;
+	vertices[2*3+0] = three.x; vertices[2*3+1] = three.y;
+	vertices[3*3+0] = four.x; vertices[3*3+1] = four.y;
 
 	//set the Z
 	vertices[0*3+2] = 0;
 	vertices[1*3+2] = 0;
 	vertices[2*3+2] = 0;
 	vertices[3*3+2] = 0;
-
-
-	//glLineWidth(lineWidth); 
-	//glEnable (GL_LINE_SMOOTH);
-	//glDisable(GL_LINE_SMOOTH);
-	//glHint (GL_LINE_SMOOTH_HINT, GL_NICEST);
-
+	
 	glVertexPointer(3, GL_FLOAT, 0, vertices);
 	//glColor4f(1, 1, 1, 1);
 	glEnable( GL_BLEND );
@@ -368,13 +389,15 @@ void  DrawLine( GLuint rgba,   float ax, float ay, float bx, float by, float lin
 	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 	glColor4x(1 << 16, 1 << 16, 1 << 16, 1 << 16);
 
-	
+	glEnable(GL_CULL_FACE);
+
 	glDisable( GL_BLEND );
 	glEnable( GL_TEXTURE_2D );
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);	
 	CHECK_GL_ERROR();
 }
 
+#endif
 void  GenerateFillRect( GLuint rgba, float x, float y, float w, float h )
 {
 	SetupOrtho();
