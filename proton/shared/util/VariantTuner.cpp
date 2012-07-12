@@ -51,7 +51,7 @@ private:
 
 		if (eMessageType(int(pVList->Get(0).GetFloat())) == MESSAGE_TYPE_GUI_CLICK_START)
 		{
-				OnPressed(fingerID);
+			OnPressed(fingerID);
 		}
 	}
 

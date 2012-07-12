@@ -25,6 +25,10 @@
  *   don't set this. Use "scale2d" instead.
  * - <b>"scale2d" (Vector2):</b> specifies the scale for the drawn surface. Default is (1.0, 1.0).
  * - <b>"rotation" (float):</b> specifies the rotation of the drawn surface. The value is in degrees.
+ * - <b>"rotationCenter" (Vector2):</b> specifies the point around which the surface is rotated.
+ *   The value is a relative measure of the size of the surface. (0, 0) means the top-left corner
+ *   and (1, 1) means the bottom-right corner of the surface. Default is (0.5, 0.5) which is the
+ *   center of the surface.
  * - <b>"color" (uint32), "colorMod" (uint32), "alpha" (float):</b> these values are passed to
  *   \c ColorCombine() function and the result specifies a color tint for the drawn surface.
  *   See \c SurfaceAnim::Blit() for specifics how the tinting works. The defaults are pure opaque
@@ -75,6 +79,7 @@ private:
 	string *m_pFileName;
 	uint32 *m_pFrameX, *m_pFrameY;
 	float *m_pRotation; //in degrees
+	CL_Vec2f *m_pRotationCenter;
 	bool m_bDeleteSurface;
 	uint32 *m_pVisible;
 	uint32 *m_pFlipX, *m_pFlipY;

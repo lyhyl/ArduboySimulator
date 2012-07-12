@@ -80,6 +80,7 @@ void OverlayRenderComponent::OnAdd(Entity *pEnt)
 	m_pSize2d = &GetParent()->GetVar("size2d")->GetVector2();
 	m_pScale2d = &GetParent()->GetVarWithDefault("scale2d", Variant(1.0f, 1.0f))->GetVector2();
 	m_pRotation = &GetParent()->GetVar("rotation")->GetFloat();  //in degrees
+	m_pRotationCenter = &GetParent()->GetVarWithDefault("rotationCenter", Variant(0.5f, 0.5f))->GetVector2();
 	m_pColor = &GetParent()->GetVarWithDefault("color", Variant(MAKE_RGBA(255,255,255,255)))->GetUINT32();
 	m_pColorMod = &GetParent()->GetVarWithDefault("colorMod", Variant(MAKE_RGBA(255,255,255,255)))->GetUINT32();
 	m_pAlpha = &GetParent()->GetVarWithDefault("alpha", Variant(1.0f))->GetFloat();
@@ -147,8 +148,8 @@ void OverlayRenderComponent::OnRender(VariantList *pVList)
 		if (vFinalPos.y > GetOrthoRenderSizeYf() && *m_pRotation == 0) return; //if rotation is enabled, we don't do this early exit check as it could be incorrect
 		CL_Vec2f vRotationPt = vFinalPos;
 		
-		vRotationPt.x += (m_pTex->GetFrameSize().x* (m_pScale2d->x)) /2;
-		vRotationPt.y += (m_pTex->GetFrameSize().y* (m_pScale2d->y)) /2;
+		vRotationPt.x += (m_pTex->GetFrameSize().x* (m_pScale2d->x)) * m_pRotationCenter->x;
+		vRotationPt.y += (m_pTex->GetFrameSize().y* (m_pScale2d->y)) * m_pRotationCenter->y;
 		
 		
 		if (m_pScale2d->x != 1 || m_pScale2d->y != 1 || *m_pFlipX != 0 || *m_pFlipY != 0)
