@@ -6,7 +6,7 @@ include(../../shared/linux/Proton.cmake)
 
 proton_include_all_components()
 proton_use_iap()
-proton_use_ad_framework()
+proton_use_ad_framework("Flurry")
 proton_include_testing(GUI)
 
 add_definitions(-DDISABLE_CHARTBOOST)

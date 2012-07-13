@@ -15,7 +15,6 @@
 	#define FAKE_IAP_RESPONSE_SUCCESS
 	//#define FAKE_IAP_RESPONSE_FAILED
 	//#define FAKE_IAP_RESPONSE_ALREADY_PURCHASED
-
 #endif
 
 IAPManager::IAPManager()
@@ -89,7 +88,7 @@ void IAPManager::OnMessage( Message &m )
 	case MESSAGE_TYPE_IAP_ITEM_STATE:
 	{
 	#ifdef SHOW_DEBUG_IAP_MESSAGES
-		LogMsg("Got Item State response: %d", m.GetParm1());
+		LogMsg("Got Item State response: %d", (int)m.GetParm1());
 	#endif
 		
 		switch (ItemStateCode((int)m.GetParm1()))
@@ -164,7 +163,6 @@ bool IAPManager::Init()
 
 void IAPManager::Update()
 {
-
 #if defined (FAKE_IAP_REPLY)
 	if (m_bWaitingForReply)
 	{
@@ -175,7 +173,7 @@ void IAPManager::Update()
 			LogMsg("Doing fake reply");
 			//fake a successful sale message back to us, so we'll process the order even while emulating on desktop
 			m_bWaitingForReply = false;
-			
+
 			if (GetEmulatedPlatformID() == PLATFORM_ID_ANDROID)
 			{
 				//I'm not sure why Android sends this message instead of just MESSAGE_TYPE_IAP_RESULT.. but some client games
@@ -184,7 +182,7 @@ void IAPManager::Update()
 				Message m(MESSAGE_CLASS_GUI, TIMER_SYSTEM, MESSAGE_TYPE_IAP_ITEM_STATE);
 				#if defined (FAKE_IAP_RESPONSE_SUCCESS)
 					m.SetParm1(PURCHASED); //to fake purchased
-		 		#elif FAKE_IAP_RESPONSE_ALREADY_PURCHASED
+		 		#elif defined (FAKE_IAP_RESPONSE_ALREADY_PURCHASED)
 					m.SetParm1(PURCHASED); //to fake purchased.. on android, we don't have a special message showing a previous bought thing?  Hrm.
 				#else
 					m.SetParm1(CANCELED); //to fake canceled
@@ -196,17 +194,14 @@ void IAPManager::Update()
 				//WebOS & iOS
 				//DEBUG - To test successful or faked purchases under desktop emulation
 				#if defined (FAKE_IAP_RESPONSE_SUCCESS)
-				GetMessageManager()->SendGUIStringEx(MESSAGE_TYPE_IAP_RESULT,(float)IAPManager::RESULT_OK,0.0f,0, "Faked order for testing on desktop");
-				#elif FAKE_IAP_RESPONSE_ALREADY_PURCHASED
-				//or, for already purchased
-				GetMessageManager()->SendGUIStringEx(MESSAGE_TYPE_IAP_RESULT,(float)IAPManager::RESULT_OK_ALREADY_PURCHASED,0.0f,0, "Faked order for testing on desktop");
+				GetMessageManager()->SendGUIStringEx(MESSAGE_TYPE_IAP_RESULT, (float)IAPManager::RESULT_OK, 0.0f, 0, "Faked order for testing: OK");
+				#elif defined (FAKE_IAP_RESPONSE_ALREADY_PURCHASED)
+				GetMessageManager()->SendGUIStringEx(MESSAGE_TYPE_IAP_RESULT, (float)IAPManager::RESULT_OK_ALREADY_PURCHASED, 0.0f, 0, "Faked order for testing: already purchased");
+				#elif defined (FAKE_IAP_RESPONSE_FAILED)
+				GetMessageManager()->SendGUIStringEx(MESSAGE_TYPE_IAP_RESULT, (float)IAPManager::RESULT_ERROR, 0.0f, 0, "Faked order for testing: error");
 				#else
-				//or, to test for a failed transaction
-				//GetMessageManager()->SendGUIStringEx(MESSAGE_TYPE_IAP_RESULT,(float)IAPManager::RESULT_USER_CANCELED,0.0f,0, "Faked order for testing on desktop");
+				GetMessageManager()->SendGUIStringEx(MESSAGE_TYPE_IAP_RESULT, (float)IAPManager::RESULT_USER_CANCELED, 0.0f, 0, "Faked order for testing: user canceled");
 				#endif
-
-			
-
 			}
 		}
 	}

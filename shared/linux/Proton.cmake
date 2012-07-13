@@ -6,6 +6,7 @@ endif(${PROJECT_NOT_SET})
 string(REPLACE "/shared/linux/Proton.cmake" "" PROTON_ROOT "${CMAKE_CURRENT_LIST_FILE}")
 
 set(PROTON_SHARED "${PROTON_ROOT}/shared")
+set(PROTON_AD "${PROTON_SHARED}/Ad")
 set(PROTON_AUDIO "${PROTON_SHARED}/Audio")
 set(PROTON_ENTITY "${PROTON_SHARED}/Entity")
 set(PROTON_FILESYSTEM "${PROTON_SHARED}/FileSystem")
@@ -168,8 +169,17 @@ macro(proton_use_iap)
 endmacro(proton_use_iap)
 
 # Enables the project to use the ad framework.
+# The ad provider names (without the AdProvider prefix) can be passed as arguments.
 macro(proton_use_ad_framework)
 	list(APPEND PROTON_SOURCES "${PROTON_MANAGER}/AdManager.cpp")
+
+	if(${ARGC} GREATER 0)
+		list(APPEND PROTON_SOURCES "${PROTON_AD}/AdProvider.cpp")
+	endif(${ARGC} GREATER 0)
+
+	foreach(adprovider ${ARGV})
+		list(APPEND PROTON_SOURCES "${PROTON_AD}/AdProvider${adprovider}.cpp")
+	endforeach(adprovider)
 endmacro(proton_use_ad_framework)
 
 # Enables the project to use gamepads. The supported gamepad names can be given as arguments,
