@@ -522,3 +522,52 @@ bool CaseInsensitiveCompare( const char*a, const char*b )
 
 	return true;
 }
+
+
+string IntToTime(int ms, bool bTextFormat)
+{
+
+	int seconds = ms/1000;
+
+	int minutes = seconds/60;
+	seconds -= minutes*60;
+
+	int hours = minutes/60;
+	minutes -= hours*60;
+
+	int days = hours/24;
+	minutes -= hours*24;
+
+	assert(days == 0 && hours == 0 && "Fix this to work with these higher values.  When I wrote this I only tested up to 5 mins for my game -Seth");
+
+	string r;
+
+	if (!bTextFormat)
+	{
+		char temp[24];
+		sprintf(temp, "%d:%02d", minutes, seconds);
+		return string(temp);
+	}
+
+
+	if (ms <= 0)
+	{
+		return "None";
+	}
+
+	if (seconds > 0)
+	{
+		r += toString(seconds)+" secs";
+	}
+
+	if (minutes > 0)
+	{
+		if (!r.empty())
+		{
+			r = ", "+r;
+		}
+		r = toString(minutes)+" mins"+r;
+	}
+
+	return r;
+}

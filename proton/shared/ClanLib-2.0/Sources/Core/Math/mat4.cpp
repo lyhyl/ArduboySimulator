@@ -32,6 +32,7 @@
 #include "API/Core/Math/vec4.h"
 #include "API/Core/Math/angle.h"
 #include <limits>
+#include <cassert>
 
 #ifndef WINDOWS
 #define CL_DISABLE_SSE2
@@ -305,6 +306,8 @@ CL_Mat4<Type> CL_Mat4<Type>::rotate(const CL_Angle &angle_x, const CL_Angle &ang
 			//throw CL_Exception("Unknown euler order");
 	}
 
+	assert(!"Unknown euler order");
+	return CL_Mat4<Type>::identity();
 }
 
 template<typename Type>
