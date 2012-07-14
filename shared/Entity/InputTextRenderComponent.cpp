@@ -103,7 +103,10 @@ void InputTextRenderComponent::ActivateKeyboard(VariantList *pVList)
 
 	string name = "Unknown";
 	if (GetParent()) name = GetParent()->GetName();
+#ifdef _DEBUG
 	LogMsg("InputTextRenderComponent::ActivateKeyboard sending MESSAGE_OPEN_TEXT_BOX from %s", name.c_str());
+#endif
+
 	OSMessage o;
 	o.m_type = OSMessage::MESSAGE_OPEN_TEXT_BOX;
 	o.m_string = *m_pText;
@@ -201,13 +204,17 @@ void InputTextRenderComponent::CloseKeyboard( VariantList *pVList )
 
 	if (GetEntityWithNativeUIFocus() == GetParent())
 	{
+#ifdef _DEBUG
 		LogMsg("InputTextRenderComponent::CloseKeyboard - setting NativeUIFocus to zero from %s", name.c_str());
+#endif
 		SetEntityWithNativeUIFocus(NULL, true);
 	}
 
 	if (!*m_pHasFocus) return;
 
+#ifdef _DEBUG
 	LogMsg("Sending MESSAGE_CLOSE_TEXT_BOX from %s", name.c_str());
+#endif
 
 	GetVar("hasFocus")->Set(uint32(0));
 
