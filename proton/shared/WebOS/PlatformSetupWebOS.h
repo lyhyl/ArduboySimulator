@@ -1,6 +1,11 @@
 #ifndef PlatformSetupWebOS_h__
 #define PlatformSetupWebOS_h__
 
+#ifndef PLATFORM_WEBOS
+#define PLATFORM_WEBOS
+#endif
+
+
 //need these for the real compile
 #include <syslog.h>
 #include <unistd.h>
@@ -8,6 +13,7 @@
 #include "WebOSUtils.h"
 #include <GLES/gl.h>
 #include <stdarg.h>
+
 
 
 #ifdef _IRR_STATIC_LIB_
