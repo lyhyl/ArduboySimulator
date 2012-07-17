@@ -559,7 +559,7 @@ import android.view.View.OnClickListener;
 
 		Log.v(app.PackageName, "Showing CB interstitial");
 		//String location = nativeGetLastOSMessageString();
-				
+		cb_showInterstitial = false;
 		ChartBoost _cb = ChartBoost.getSharedChartBoost(this);
 		_cb.showInterstitial();
 	}
@@ -1533,10 +1533,9 @@ class AppRenderer implements GLSurfaceView.Renderer
 
 	final static int MESSAGE_TAPJOY_SHOW_FEATURED_APP = 11; 
 	final static int MESSAGE_TAPJOY_SHOW_AD = 12; 
-	final static int MESSAGE_TAPJOY_SHOW_MOVIE = 13; 
+	final static int MESSAGE_TAPJOY_SHOW_MOVIE_AD = 13; 
 	
 	final static int MESSAGE_IAP_PURCHASE = 14;
-	
 	final static int MESSAGE_IAP_GET_PURCHASED_LIST = 15;
 	
 	final static int MESSAGE_TAPJOY_GET_TAP_POINTS = 16;

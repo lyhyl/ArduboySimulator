@@ -775,6 +775,16 @@ CL_Vec3f GetOGLPos(int x, int y, float z, CL_Vec3f *pNormalOut, CL_Mat4f *pModel
 		//remap to correct values
 		x = (int) (float(x) * xmod);
 		y = (int) (float(y) * ymod);
+
+		switch (GetOrientation())
+		{
+		case ORIENTATION_LANDSCAPE_LEFT:
+		case ORIENTATION_LANDSCAPE_RIGHT:
+			//I have no idea what I'm doing but this fixes a problem with fake scaling and rotation
+			swap(x,y);
+			break;
+		}
+
 	}
 
 	GLint viewport[4];
