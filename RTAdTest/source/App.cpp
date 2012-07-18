@@ -124,8 +124,7 @@ bool App::Init()
 #ifdef RT_CHARTBOOST_ENABLED
 	AdProviderChartBoost *pProvider = new AdProviderChartBoost;
 
-//	pProvider->SetupInfo("<insert chartboost appID>", "<insert chartboost appsignature");
-	pProvider->SetupInfo("4fe81392f776592663000009", "a109d06d3ea78a9ec8d12a46aa9eb723ac2b8302"); //rtadtest Android
+	pProvider->SetupInfo("<insert chartboost appID>", "<insert chartboost appsignature");
 	m_adManager.AddProvider(pProvider);
  	pProvider->CacheShowInterstitial();
 	pProvider->CacheShowMoreApps();
@@ -139,6 +138,7 @@ bool App::Init()
 
 	AdProviderFlurry *pFlurryProvider = new AdProviderFlurry;
 	pFlurryProvider->SetupInfo("<your flurry API key>");
+
 	m_adManager.AddProvider(pFlurryProvider);
 
 #endif
@@ -155,7 +155,7 @@ void App::OnExitApp(VariantList *pVarList)
 {
 	LogMsg("Exiting the app");
 	OSMessage o;
-	o.m_type = OSMessage::MESSAGE_FINISH_APP;
+	o.m_type = OSMessage::MESSAGE_SUSPEND_TO_HOME_SCREEN;
 	GetBaseApp()->AddOSMessage(o);
 }
 
