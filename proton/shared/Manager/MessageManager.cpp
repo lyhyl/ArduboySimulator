@@ -40,8 +40,7 @@ void Message::OnComponentDestroyed( VariantList *pVList )
 
 void Message::SetTargetComponent( EntityComponent *pComp )
 {
-	assert(!m_pTargetEntity && pComp->GetParent());
-//	SetTargetEntity(pComp->GetParent());
+	assert(!m_pTargetEntity);
 	m_pComponent = pComp;
 	if (!pComp) return;
 	m_pComponent->GetFunction("OnDelete")->sig_function.connect(1, boost::bind(&Message::OnComponentDestroyed, this, _1));
