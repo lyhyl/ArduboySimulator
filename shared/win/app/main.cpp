@@ -1192,6 +1192,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 				break;
 			
 			case OSMessage::MESSAGE_FINISH_APP:
+			case OSMessage::MESSAGE_SUSPEND_TO_HOME_SCREEN:
+
 				PostMessage(g_hWnd, WM_CLOSE, 0, 0);
 				break;
 			

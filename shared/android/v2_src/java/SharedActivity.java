@@ -138,6 +138,11 @@ import android.view.View.OnClickListener;
 	public static int adBannerWidth = 0;
 	public static int adBannerHeight = 0;
 	
+	
+	//#if defined(RT_FLURRY_SUPPORT)
+		public static String m_flurryAPIKey = "";	
+	//#endif
+
 	public static boolean HookedEnabled = false;
 	//************************************************************************
 
@@ -488,6 +493,12 @@ import android.view.View.OnClickListener;
         mGLView.onPause();
         super.onPause();
 		//_sounds.autoPause();
+		
+		//#if defined(RT_FLURRY_SUPPORT)
+			Log.v(app.PackageName, "Flurry finishing session");
+			FlurryAgent.onEndSession(app);
+		//#endif
+	
     }
 
     @Override
@@ -503,6 +514,16 @@ import android.view.View.OnClickListener;
 		//#if defined(RT_CHARTBOOST_SUPPORT)
 			ChartBoost.getSharedChartBoost(this);
 		//#endif
+		
+	//#if defined(RT_FLURRY_SUPPORT)
+	if (!m_flurryAPIKey.isEmpty())
+		{
+			Log.v(app.PackageName, "Flurry re-starting session");
+			FlurryAgent.onStartSession(app, m_flurryAPIKey);
+		}
+	//#endif
+	
+					
 	}
 	
 	// Create runnable for posting
@@ -520,13 +541,7 @@ import android.view.View.OnClickListener;
 				mBillingService.unbind();
   				ResponseHandler.unregister(mIABPurchaseObserver);
   			}
-			
-			//#if defined(RT_FLURRY_SUPPORT)
-				Log.v(app.PackageName, "Flurry finishing session");
-				FlurryAgent.onEndSession(app);
-			//#endif
-	
-	
+		
 			android.os.Process.killProcess(android.os.Process.myPid());
 			
 			return;
@@ -1561,6 +1576,8 @@ class AppRenderer implements GLSurfaceView.Renderer
 	final static int MESSAGE_FLURRY_SETUP = 31;
 	final static int MESSAGE_FLURRY_ON_PAGE_VIEW = 32;
 	final static int MESSAGE_FLURRY_LOG_EVENT = 33;
+	
+	final static int MESSAGE_SUSPEND_TO_HOME_SCREEN = 34;
 
 	static long m_gameTimer = 0;
 	static int m_timerLoopMS = 0; //every this MS, the loop runs.  0 for no fps limit
@@ -1624,12 +1641,18 @@ class AppRenderer implements GLSurfaceView.Renderer
 			
 					//app.finish() will get called in the update handler called below, don't need to do it now
 					 app.mMainThreadHandler.post(app.mUpdateMainThread);
+				break;
+				
+				case MESSAGE_SUSPEND_TO_HOME_SCREEN:
+					Log.v(app.PackageName, "Suspending to home screen");
 					
-					//Change by Phil hassey
-					// this pushes an event onto the UI/Event Thread from the GL thread
 					
-					//android.os.Process.killProcess(android.os.Process.myPid());
-					break;
+					Intent i = new Intent();
+					i.setAction(Intent.ACTION_MAIN);
+			        i.addCategory(Intent.CATEGORY_HOME);
+					app.startActivity(i);
+				
+				break;
 
 				case MESSAGE_TAPJOY_GET_AD: 
 					//#if defined(RT_TAPJOY_SUPPORT)
@@ -1645,10 +1668,10 @@ class AppRenderer implements GLSurfaceView.Renderer
 				{
 				//#if defined(RT_FLURRY_SUPPORT)
 
-					String apiKey = nativeGetLastOSMessageString();
-					//Log.v(app.PackageName, "Setting up flurry: "+apiKey);
-					FlurryAgent.onStartSession(app, apiKey);
-					
+					app.m_flurryAPIKey = nativeGetLastOSMessageString();
+					//Log.v(app.PackageName, "Setting up flurry: "+app.m_flurryAPIKey);
+					FlurryAgent.onStartSession(app, app.m_flurryAPIKey);
+				
 				//#else
 						Log.v(app.PackageName, "ERROR: RT_FLURRY_SUPPORT isn't defined in Main.java, you can't use it!");
 				//#endif

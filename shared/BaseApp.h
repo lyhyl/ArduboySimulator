@@ -61,7 +61,7 @@ struct OSMessage
 		MESSAGE_CHECK_CONNECTION,
 		MESSAGE_SET_FPS_LIMIT,
 		MESSAGE_SET_ACCELEROMETER_UPDATE_HZ,
-		MESSAGE_FINISH_APP, //only respected by windows and android right now.  webos and iphone don't really need it
+		MESSAGE_FINISH_APP, //only respected by windows, OSX, and android (Other platforms don't need it, as they have their own way...)
 		MESSAGE_SET_VIDEO_MODE,
 		
 		//for tapjoy integration
@@ -100,6 +100,12 @@ struct OSMessage
 		MESSAGE_FLURRY_SETUP,
 		MESSAGE_FLURRY_ON_PAGE_VIEW,
 		MESSAGE_FLURRY_LOG_EVENT,
+		
+		MESSAGE_SUSPEND_TO_HOME_SCREEN, //Only on Android, if you want BACK from the main menu to look like its quitting, but really only
+										//suspend due to Flurry/etc needing more time to process things.  Really, Android is not supposed to
+										//have a "BACK TO QUIT" button at all, but users have gotten used to it.
+										//On Windows/OS, this message functions the same as MESSAGE_FINISH_APP
+									
 
 		
 		MESSAGE_USER = 1000

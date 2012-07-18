@@ -183,6 +183,8 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 		case OSMessage::MESSAGE_SET_ACCELEROMETER_UPDATE_HZ:
 			break;
 		case OSMessage::MESSAGE_FINISH_APP:
+		case OSMessage::MESSAGE_SUSPEND_TO_HOME_SCREEN:
+		
             m_bQuitASAP = YES;
 			[NSApp terminate:nil];
 			break;
