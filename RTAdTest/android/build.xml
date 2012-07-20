@@ -71,7 +71,7 @@ Well, I'm stuck into my C++ ways and can't figure out decent ways to share sourc
 
 I give up, I'm going to preprocess all the source files with this ant task. -Seth
 -->
-<taskdef resource="javapp-defs.xml" />
+<taskdef resource="javapp-defs.xml" classpath="../../shared/android/util/javapp.jar" />
  
 
 <target name="preprocess">
