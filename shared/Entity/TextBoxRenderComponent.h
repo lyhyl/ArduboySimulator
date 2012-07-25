@@ -27,6 +27,8 @@ pTextEnt->GetComponentByName("TextBoxRender")->GetVar("textAlignment")->Set( (ui
 Note:  The size of the parent entity is modified with the height of the final text height, which is a bit confusing and I'd
 like to change (should stay static) , but this is a breaking change.  I'll fix if someone else bugs me though. -Seth
 
+OnSizeChanged is called on the parent entity when the text is changed.
+
 */
 
 class TextBoxRenderComponent: public EntityComponent

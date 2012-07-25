@@ -48,6 +48,9 @@ void LogDisplayComponent::OnAdd(Entity *pEnt)
 	m_pMaxScrollSpeed = &GetVarWithDefault("maxScrollSpeed", float(7))->GetFloat();
 	m_pPowerMod = &GetVarWithDefault("powerMod", float(0.15))->GetFloat();
 
+	m_pText = &GetVar("text")->GetString(); //local to us
+	GetVar("text")->GetSigOnChanged()->connect(1, boost::bind(&LogDisplayComponent::OnTextChanged, this, _1));
+
 	m_pEnableScrolling = &GetVar("enableScrolling")->GetUINT32();
 	GetVar("enableScrolling")->GetSigOnChanged()->connect(boost::bind(&LogDisplayComponent::OnEnableScrollingChanged, this, _1));
 
@@ -76,13 +79,27 @@ void LogDisplayComponent::OnRemove()
 	EntityComponent::OnRemove();
 }
 
-void LogDisplayComponent::AddLine(VariantList *pVList)
+
+void LogDisplayComponent::InitInternalConsoleIfNeeded()
 {
 	if (!m_bUsingCustomConsole && !m_pInternalConsole)
 	{
 		m_pInternalConsole = new Console;
 		m_pActiveConsole = m_pInternalConsole;
 	}
+}
+
+void LogDisplayComponent::OnTextChanged(Variant *pDataObject)
+{
+	InitInternalConsoleIfNeeded();
+	m_pActiveConsole->Clear(); //erase everything
+	VariantList vList(*pDataObject); //yes, we're doing an ugly extra copy here
+	AddLine(&vList);
+}
+
+void LogDisplayComponent::AddLine(VariantList *pVList)
+{
+	InitInternalConsoleIfNeeded();
 
 	//word wrap it into lines if needed
 	deque<string> lines;
@@ -236,6 +253,12 @@ void LogDisplayComponent::OnRender(VariantList *pVList)
 	eFont fontID = eFont(*m_pFontID);
 	RTFont *pFont = GetBaseApp()->GetFont(fontID);
 	float fontHeight = pFont->GetLineHeight(*m_pFontScale);
+	if (m_curLine > m_pActiveConsole->GetTotalLines())
+	{
+		//our log got smaller?  Well, ok, deal with it
+		m_curLine = 0;
+	}
+	
 	float remainder = m_curLine - (int)m_curLine;
 	float y = (vFinalPos.y + m_pSize2d->y);
 
@@ -343,4 +366,19 @@ void ToggleConsole()
 	{
 		SetConsole(true);
 	}
+}
+
+Entity * CreateLogDisplayEntity(Entity *pParent, string entName, CL_Vec2f vPos, CL_Vec2f vTextAreaSize, string msg, float scale)
+{
+	Entity *pText = pParent->AddEntity(new Entity(entName));
+
+	EntityComponent *pLogComp = pText->AddComponent(new LogDisplayComponent);
+	SetupTextEntity(pText, FONT_SMALL, scale);
+	pText->GetVar("size2d")->Set(vTextAreaSize);
+	pLogComp->GetVar("text")->Set(msg);
+	pText->GetVar("pos2d")->Set(vPos);
+	//pComp->SetConsole(GetApp()->GetGlobalLog());
+	pLogComp->GetVar("enableScrolling")->Set(uint32(1));
+
+	return pText;
 }

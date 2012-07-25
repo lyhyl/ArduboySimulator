@@ -19,11 +19,13 @@ This shows a log of stuff, scrolling so the newest stuff is on the bottom.
 If you use GetFunction("AddLine") (send it a VariantList with a string) to add your own stuff, it will use its internal logging
 system.  
 
-Or, you can cast to this class and use SetConsole() to set your own custom console to feed in data.
+You can also set its "text" variable to just replace everything, like a TextBoxRender component.
 
-Otherwise, it will display the proton system log.
+Or, you can cast to this class and use SetConsole() to set your own custom console to feed in data. (using the Console class)
 
-An easy way to turn use this to show the system log is to use the helper function below.
+Otherwise, it will display the proton system log if you do nothing.
+
+An easy way to use this to show the system log is to use the helper function below.
 
 Just do:
 
@@ -60,6 +62,8 @@ private:
 	void OnTextAdded();
 	void OnUpdate(VariantList *pVList);
 	void ModByDistance(float mod);
+	void OnTextChanged(Variant *pDataObject);
+	void InitInternalConsoleIfNeeded();
 	CL_Vec2f *m_pPos2d;
 	CL_Vec2f *m_pSize2d;
 	uint32 *m_pFontID;
@@ -78,6 +82,7 @@ private:
 	bool m_bIsDraggingLook;
 	float m_curLine; //a float, so we can move slower than one whole line at a time if we wish
 	bool m_bUsingCustomConsole;
+	string *m_pText; //only valid if it was set, so normally you can't read from it when using AddLog or the system log ways.
 
 	//for scrolling momentum stuff, simular to how the ScrollComponent works but.. I recreated it here as I
 	//didn't think it made sense to somehow hook a ScrollComponent into this. -Seth
@@ -87,6 +92,10 @@ private:
 
 };
 
+//misc helpers
+
 void ToggleConsole();
 void SetConsole(bool bOn, bool bEnableScrollbars = false);
+Entity * CreateLogDisplayEntity(Entity *pParent, string entName, CL_Vec2f vPos, CL_Vec2f vTextAreaSize, string msg, float scale=1.0f);
+
 #endif // LogDisplayComponent_h__

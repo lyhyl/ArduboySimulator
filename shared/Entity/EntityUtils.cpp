@@ -43,7 +43,7 @@ Entity * CreateOverlayButtonEntity(Entity *pParentEnt, string name, string fileN
  * is created to the \c Entity and its name is set to this value. If this argument is an empty
  * string it is ignored.
  */
-EntityComponent* SetupInterpolateComponent(Entity *pEnt, const string& componentName, const string& varName, const Variant& targetValue, int durationMS, int delayBeforeStartMS, eInterpolateType interpolationType = INTERPOLATE_SMOOTHSTEP, InterpolateComponent::eOnFinish onFinish = InterpolateComponent::ON_FINISH_DIE)
+EntityComponent* SetupInterpolateComponent(Entity *pEnt, const string& componentName, const string& varName, const Variant& targetValue, int durationMS, int delayBeforeStartMS, eInterpolateType interpolationType = INTERPOLATE_SMOOTHSTEP, InterpolateComponent::eOnFinish onFinish = InterpolateComponent::ON_FINISH_DIE, eTimingSystem timing = GetTiming())
 {
 	EntityComponent *pComp = NULL;
 
@@ -62,6 +62,7 @@ EntityComponent* SetupInterpolateComponent(Entity *pEnt, const string& component
 	}
 
 	pComp->GetVar("var_name")->Set(varName);
+	pComp->GetVar("timingSystem")->Set(uint32(timing));
 	pComp->GetVar("target")->Set(const_cast<Variant&>(targetValue));
 	pComp->GetVar("interpolation")->Set(uint32(interpolationType));
 	pComp->GetVar("on_finish")->Set(uint32(onFinish));
@@ -72,7 +73,7 @@ EntityComponent* SetupInterpolateComponent(Entity *pEnt, const string& component
 	} else
 	{
 		//trigger it to start later
-		GetMessageManager()->SetComponentVariable(pComp, delayBeforeStartMS, "duration_ms", Variant(uint32(durationMS)));
+		GetMessageManager()->SetComponentVariable(pComp, delayBeforeStartMS, "duration_ms", Variant(uint32(durationMS)), timing);
 	}
 
 	return pComp;
@@ -337,11 +338,11 @@ std::string GetOverlayImageEntity(Entity *pEntWithOverlayComponent)
 	return var->GetString();
 }
 
-void FadeInEntity(Entity *pEnt, bool bRecursive, int timeMS, int delayBeforeFadingMS, float fadeTarget)
+void FadeInEntity(Entity *pEnt, bool bRecursive, int timeMS, int delayBeforeFadingMS, float fadeTarget, eTimingSystem timing)
 {
 	pEnt->GetVar("alpha")->Set(0.0f); //so we can fade in
 
-	SetupInterpolateComponent(pEnt, "", "alpha", fadeTarget, timeMS, delayBeforeFadingMS);
+	SetupInterpolateComponent(pEnt, "", "alpha", fadeTarget, timeMS, delayBeforeFadingMS, INTERPOLATE_SMOOTHSTEP, InterpolateComponent::ON_FINISH_DIE, timing);
 
 	if (!bRecursive) return;
 
@@ -351,7 +352,7 @@ void FadeInEntity(Entity *pEnt, bool bRecursive, int timeMS, int delayBeforeFadi
 	EntityList::iterator itor = pChildren->begin();
 	while (itor != pChildren->end())
 	{
-		FadeInEntity( *itor, bRecursive, timeMS, delayBeforeFadingMS, fadeTarget);
+		FadeInEntity( *itor, bRecursive, timeMS, delayBeforeFadingMS, fadeTarget, timing);
 		itor++;
 	}
 }
@@ -598,9 +599,9 @@ void FadeEntity(Entity *pEnt, bool bRecursive, float alpha, int timeMS, int dela
 	}
 }
 
-void FadeOutEntity(Entity *pEnt, bool bRecursive, int timeMS, int delayBeforeFadingMS)
+void FadeOutEntity(Entity *pEnt, bool bRecursive, int timeMS, int delayBeforeFadingMS, eTimingSystem timing)
 {
-	SetupInterpolateComponent(pEnt, "", "alpha", 0.0f, timeMS, delayBeforeFadingMS);
+	SetupInterpolateComponent(pEnt, "", "alpha", 0.0f, timeMS, delayBeforeFadingMS, INTERPOLATE_SMOOTHSTEP, InterpolateComponent::ON_FINISH_DIE, timing);
 
 	if (!bRecursive) return;
 
@@ -610,27 +611,26 @@ void FadeOutEntity(Entity *pEnt, bool bRecursive, int timeMS, int delayBeforeFad
 	EntityList::iterator itor = pChildren->begin();
 	while (itor != pChildren->end())
 	{
-		FadeOutEntity( *itor, bRecursive, timeMS, delayBeforeFadingMS);
+		FadeOutEntity( *itor, bRecursive, timeMS, delayBeforeFadingMS, timing);
 		itor++;
 	}
 }
 
-void FadeOutAndKillEntity(Entity *pEnt, bool bRecursive, int timeMS, int delayBeforeFadingMS)
+void FadeOutAndKillEntity(Entity *pEnt, bool bRecursive, int timeMS, int delayBeforeFadingMS, eTimingSystem timing)
 {
 	if (!pEnt) return;
-	FadeOutEntity(pEnt, bRecursive, timeMS, delayBeforeFadingMS);
-	KillEntity(pEnt, timeMS+delayBeforeFadingMS);
+	FadeOutEntity(pEnt, bRecursive, timeMS, delayBeforeFadingMS, timing);
+	KillEntity(pEnt, timeMS+delayBeforeFadingMS, timing);
 }
 
-void FadeOutAndKillChildrenEntities(Entity *pEnt, int timeMS, int delayBeforeFadingMS)
+void FadeOutAndKillChildrenEntities(Entity *pEnt, int timeMS, int delayBeforeFadingMS, eTimingSystem timing)
 {
 	EntityList *pChildren = pEnt->GetChildren();
 
 	EntityList::iterator itor = pChildren->begin();
 	while (itor != pChildren->end())
 	{
-		FadeOutEntity( *itor, true, timeMS, delayBeforeFadingMS);
-		KillEntity(*itor, timeMS+delayBeforeFadingMS);
+		FadeOutAndKillEntity(*itor, true, timeMS, delayBeforeFadingMS, timing);
 		itor++;
 	}
 }
@@ -1087,6 +1087,59 @@ EntityComponent * SetTextEntity(Entity *pEntWithTextComponent, const string &tex
 
 	pComp->GetVar("text")->Set(text);
 	return pComp;
+}
+
+
+void ResizeScrollerAfterTextboxChanges(VariantList *vList)
+{
+	VariantList v(vList->Get(0).GetEntity()->GetParent()->GetParent());
+	ResizeScrollBounds(&v);
+}
+
+Entity * CreateScrollingTextBoxEntity(Entity *pParent, string entName, CL_Vec2f vPos, CL_Vec2f vTextAreaSize, string msg, float scale, eAlignment textAlignment)
+{
+
+	//first create an entity that will handle the scrollcomponent, and hold an entity that will contain all content that will be scrolled
+
+	CL_Vec2f vTextAreaPos = vPos;
+	CL_Vec2f vTextAreaBounds = vTextAreaSize;
+
+	Entity *pScroll = pParent->AddEntity(new Entity("scroll"));
+	pScroll->GetVar("pos2d")->Set(vTextAreaPos);
+	pScroll->GetVar("size2d")->Set(vTextAreaBounds);
+	pScroll->AddComponent(new TouchHandlerComponent);
+
+	EntityComponent *pScrollComp = pScroll->AddComponent(new ScrollComponent);
+	pScroll->AddComponent(new FilterInputComponent); //lock out taps that are not in our scroll area
+	pScrollComp->GetVar("fingerTracking")->Set(uint32(1));
+	EntityComponent *pScrollBarComp = pScroll->AddComponent(new ScrollBarRenderComponent); 	//also let's add a visual way to see the scroller position
+	//pScroll->GetVar("color")->Set(MAKE_RGBA(61,155, 193, 255)); 
+	Entity *pScrollChild = pScroll->AddEntity(new Entity("scroll_child"));
+
+	pScroll->AddComponent(new RenderScissorComponent()); //so the text/etc won't get drawn outside our scroll box
+
+	//now add the real content to pScrollChild
+
+	Entity *pText = pScrollChild->AddEntity(new Entity(entName));
+	vTextAreaSize -=iPhoneMap(2,10); //so the letters don't overlay the scroll bar
+
+	EntityComponent *pTextComp = pText->AddComponent(new TextBoxRenderComponent);
+	pText->GetVar("size2d")->Set(vTextAreaSize);
+	pTextComp->GetVar("fontScale")->Set(scale);
+	pTextComp->GetVar("text")->Set(msg);
+	pTextComp->GetVar("textAlignment")->Set((uint32)textAlignment);
+
+	//now let the scroll component know to resize itself in a sec
+
+	pScroll->GetFunction("ResizeScrollBounds")->sig_function.connect(ResizeScrollBounds);
+
+	//TODO: I schedule it to happen the next frame, otherwise it resizes incorrectly.  Figure out why later?
+	VariantList vList(pScroll);
+	GetMessageManager()->CallEntityFunction(pScroll, 1, "ResizeScrollBounds", &vList);
+
+	//also, let's have it resize itself whenever the text changes
+	pText->GetFunction("OnSizeChanged")->sig_function.connect(ResizeScrollerAfterTextboxChanges);
+	return pText;
 }
 
 void RemovePaddingEntity(Entity *pEnt)

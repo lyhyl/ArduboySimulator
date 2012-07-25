@@ -29,6 +29,7 @@
 #include "Entity/SelectButtonWithCustomInputComponent.h"
 #include "Entity/SliderComponent.h"
 #include "Entity/EmitVirtualKeyComponent.h"
+#include "Entity/RenderScissorComponent.h"
 
 Entity * CreateTextLabelEntity(Entity *pParentEnt, string name, float x, float y, string text);
 Entity * CreateTextButtonEntity(Entity *pParentEnt, string name, float x, float y, string text, bool bUnderline = true);
@@ -77,6 +78,16 @@ Entity * CreateButtonHotspot(Entity *pParentEnt, string name, CL_Vec2f vPos, CL_
  * \return The newly created \c Entity.
  */
 Entity * CreateTextBoxEntity(Entity *pParent, string entName, CL_Vec2f vPos, CL_Vec2f vTextAreaSize, string msg, float scale = 1.0f, eAlignment textAlignment = ALIGNMENT_UPPER_LEFT);
+
+/**
+Like above, but puts the TextBoxRender component under a ScrollComponent.
+It actually creates the structure scroll->scroll_child->entName.  Function returns entName, but keep in mind it's
+inside two other entities.
+
+It will automatically resize the scroll bars when it notices "text" changing in the TextBoxRender component.
+*/
+Entity * CreateScrollingTextBoxEntity(Entity *pParent, string entName, CL_Vec2f vPos, CL_Vec2f vTextAreaSize, string msg, float scale = 1.0f, eAlignment textAlignment = ALIGNMENT_UPPER_LEFT);
+
 Entity * CreateInputTextEntity(Entity *pParentEnt, string name, float x, float y, string text, float sizeX=0, float sizeY=0);
 
 //Checkbox functionality without needing a new component, purely done with proton messaging stuff
@@ -127,10 +138,10 @@ void EnableRawMessageFocusInput(Entity *pEnt);
 void RemoveFocusIfNeeded(Entity *pEnt); //remove input, think, and render focuses from an entity
 void RemoveInputFocusIfNeeded(Entity *pEnt); //just removes input
 
-void FadeOutEntity(Entity *pEnt, bool bRecursive=true, int timeMS=300, int delayBeforeFadingMS = 0);
-void FadeOutAndKillEntity(Entity *pEnt, bool bRecursive = true, int timeMS=300, int delayBeforeFadingMS = 0);
-void FadeOutAndKillChildrenEntities(Entity *pEnt, int timeMS=300, int delayBeforeFadingMS = 0);
-void FadeInEntity(Entity *pEnt, bool bRecursive=true, int timeMS=300, int delayBeforeFadingMS = 0, float fadeTarget = 1.0f);
+void FadeOutEntity(Entity *pEnt, bool bRecursive=true, int timeMS=300, int delayBeforeFadingMS = 0, eTimingSystem timing = GetTiming());
+void FadeOutAndKillEntity(Entity *pEnt, bool bRecursive = true, int timeMS=300, int delayBeforeFadingMS = 0, eTimingSystem timing = GetTiming());
+void FadeOutAndKillChildrenEntities(Entity *pEnt, int timeMS=300, int delayBeforeFadingMS = 0,  eTimingSystem timing = GetTiming());
+void FadeInEntity(Entity *pEnt, bool bRecursive=true, int timeMS=300, int delayBeforeFadingMS = 0, float fadeTarget = 1.0f, eTimingSystem timing = GetTiming());
 void KillEntity(Entity *pEnt, int timeMS = 0, eTimingSystem timing = GetTiming());
 EntityComponent * PulsateColorEntity(Entity *pEnt, bool bRecursive, unsigned int color, unsigned int pulsateSpeedMS = 250);
 
@@ -224,7 +235,7 @@ EntityComponent * ZoomToPositionEntityMulti(Entity *pEnt, CL_Vec2f vPos, unsigne
  *        If set to 0 the animation is started immediately.
  * \return the \c EntityComponent that performs the animation.
  */
-EntityComponent * ZoomToScaleEntity(Entity *pEnt, CL_Vec2f vScale, unsigned int speedMS, eInterpolateType interpolateType = INTERPOLATE_SMOOTHSTEP, int delayBeforeActionMS = 0);
+EntityComponent * ZoomToScaleEntity(Entity *pEnt, CL_Vec2f vScale, unsigned int speedMS, eInterpolateType interpolateType = INTERPOLATE_SMOOTHSTEP, int delayBeforeActionMS = 0, eTimingSystem timing = GetTiming());
 
 EntityComponent * MorphToVec2Entity(Entity *pEnt, string targetVar, CL_Vec2f vTargetSize, unsigned int speedMS, eInterpolateType interpolateType = INTERPOLATE_SMOOTHSTEP,  int delayBeforeActionMS = 0);
 //like above, but allows more than one to be layered instead of assuming you want to ignore the previous one
