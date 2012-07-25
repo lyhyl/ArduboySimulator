@@ -37,7 +37,6 @@ void TextBoxRenderComponent::OnAdd(Entity *pEnt)
 	m_pTextAlignment = &GetVarWithDefault("textAlignment", (uint32)ALIGNMENT_UPPER_LEFT)->GetUINT32();
 	GetVar("textAlignment")->GetSigOnChanged()->connect(1, boost::bind(&TextBoxRenderComponent::OnTextAlignmentChanged, this, _1));
 
-	//if "fileName" is set, we'll know about it here
 	m_pText = &GetVar("text")->GetString(); //local to us
 	GetVar("text")->GetSigOnChanged()->connect(1, boost::bind(&TextBoxRenderComponent::OnTextChanged, this, _1));
 
@@ -66,8 +65,15 @@ void TextBoxRenderComponent::OnTextChanged(Variant *pDataObject)
 	m_lastCharRendered = 0;
 	GetVar("totalHeightInPixels")->Set(m_lines.size()*GetBaseApp()->GetFont(eFont(*m_pFontID))->GetLineHeight(*m_pFontScale));
 	GetVar("totalLines")->Set(uint32(m_lines.size()));
-
 	m_pSize2d->y = GetVar("totalHeightInPixels")->GetFloat();
+
+	if (GetParent())
+	{
+		//in case anybody cares, send a signal that our size changed
+		VariantList v(GetParent());
+		GetParent()->GetFunction("OnSizeChanged")->sig_function(&v);
+	}
+	
 }
 
 
