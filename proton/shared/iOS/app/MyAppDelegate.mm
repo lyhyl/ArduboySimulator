@@ -265,7 +265,7 @@
 #endif
 			break;
 		default:
-			LogMsg("Error, unknown message type: %d", pMsg->m_type);
+			LogMsg("iOS Target Warning: unhandled OSMessage type: %d", pMsg->m_type);
 	}
 }
 

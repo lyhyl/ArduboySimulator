@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5D270F1E15C25C47006DEBEA /* libfmodex.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D270F1D15C25C47006DEBEA /* libfmodex.dylib */; };
+		5D270F2A15C25C99006DEBEA /* Gamepad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D270F2015C25C99006DEBEA /* Gamepad.cpp */; };
+		5D270F2B15C25C99006DEBEA /* GamepadiCade.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D270F2215C25C99006DEBEA /* GamepadiCade.cpp */; };
+		5D270F2C15C25C99006DEBEA /* GamepadManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D270F2415C25C99006DEBEA /* GamepadManager.cpp */; };
+		5D270F2D15C25C99006DEBEA /* GamepadProvider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D270F2615C25C99006DEBEA /* GamepadProvider.cpp */; };
+		5D270F2E15C25C99006DEBEA /* GamepadProvideriCade.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D270F2815C25C99006DEBEA /* GamepadProvideriCade.cpp */; };
+		5D270F3115C25CCD006DEBEA /* RenderScissorComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D270F2F15C25CCD006DEBEA /* RenderScissorComponent.cpp */; };
+		5D270F3215C25D43006DEBEA /* libfmodex.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 5D270F1D15C25C47006DEBEA /* libfmodex.dylib */; };
 		5D70B62512B5FED300A1AB17 /* OSXUtils.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D70B61B12B5FED300A1AB17 /* OSXUtils.mm */; };
 		5D70B62612B5FED300A1AB17 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D70B61E12B5FED300A1AB17 /* main.m */; };
 		5D70B62712B5FED300A1AB17 /* MainController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D70B62012B5FED300A1AB17 /* MainController.mm */; };
@@ -101,9 +109,7 @@
 		5D70B83212B6072D00A1AB17 /* MainMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D70B82B12B6072D00A1AB17 /* MainMenu.cpp */; };
 		5D70B83412B6074D00A1AB17 /* audio in Resources */ = {isa = PBXBuildFile; fileRef = 5D70B83312B6074D00A1AB17 /* audio */; };
 		5D70B83612B6075B00A1AB17 /* game in Resources */ = {isa = PBXBuildFile; fileRef = 5D70B83512B6075B00A1AB17 /* game */; };
-		5D70BA5B12B711BC00A1AB17 /* libfmodex.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D70BA5A12B711BC00A1AB17 /* libfmodex.dylib */; };
 		5D70BA6112B7124700A1AB17 /* AudioManagerFMOD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D70BA6012B7124700A1AB17 /* AudioManagerFMOD.cpp */; };
-		5D70BB2412B7208700A1AB17 /* libfmodex.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 5D70BA5A12B711BC00A1AB17 /* libfmodex.dylib */; };
 		5D70C4BF12B7586D00A1AB17 /* MyApplication.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D70C4BE12B7586D00A1AB17 /* MyApplication.mm */; };
 		5DD324A512BF90A70009B0F3 /* GameMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD324A412BF90A70009B0F3 /* GameMenu.cpp */; };
 		5DD324B212BF90C20009B0F3 /* OverlayRenderComponentSpy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD324A712BF90C20009B0F3 /* OverlayRenderComponentSpy.cpp */; };
@@ -133,7 +139,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				5D70BB2412B7208700A1AB17 /* libfmodex.dylib in CopyFiles */,
+				5D270F3215C25D43006DEBEA /* libfmodex.dylib in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -145,6 +151,19 @@
 		256AC3F00F4B6AF500CF3369 /* RTLooneyLadders_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTLooneyLadders_Prefix.pch; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		5D270F1D15C25C47006DEBEA /* libfmodex.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfmodex.dylib; path = ../../shared/OSX/fmod/api/lib/libfmodex.dylib; sourceTree = "<group>"; };
+		5D270F2015C25C99006DEBEA /* Gamepad.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Gamepad.cpp; path = ../../shared/Gamepad/Gamepad.cpp; sourceTree = "<group>"; };
+		5D270F2115C25C99006DEBEA /* Gamepad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Gamepad.h; path = ../../shared/Gamepad/Gamepad.h; sourceTree = "<group>"; };
+		5D270F2215C25C99006DEBEA /* GamepadiCade.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GamepadiCade.cpp; path = ../../shared/Gamepad/GamepadiCade.cpp; sourceTree = "<group>"; };
+		5D270F2315C25C99006DEBEA /* GamepadiCade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GamepadiCade.h; path = ../../shared/Gamepad/GamepadiCade.h; sourceTree = "<group>"; };
+		5D270F2415C25C99006DEBEA /* GamepadManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GamepadManager.cpp; path = ../../shared/Gamepad/GamepadManager.cpp; sourceTree = "<group>"; };
+		5D270F2515C25C99006DEBEA /* GamepadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GamepadManager.h; path = ../../shared/Gamepad/GamepadManager.h; sourceTree = "<group>"; };
+		5D270F2615C25C99006DEBEA /* GamepadProvider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GamepadProvider.cpp; path = ../../shared/Gamepad/GamepadProvider.cpp; sourceTree = "<group>"; };
+		5D270F2715C25C99006DEBEA /* GamepadProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GamepadProvider.h; path = ../../shared/Gamepad/GamepadProvider.h; sourceTree = "<group>"; };
+		5D270F2815C25C99006DEBEA /* GamepadProvideriCade.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GamepadProvideriCade.cpp; path = ../../shared/Gamepad/GamepadProvideriCade.cpp; sourceTree = "<group>"; };
+		5D270F2915C25C99006DEBEA /* GamepadProvideriCade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GamepadProvideriCade.h; path = ../../shared/Gamepad/GamepadProvideriCade.h; sourceTree = "<group>"; };
+		5D270F2F15C25CCD006DEBEA /* RenderScissorComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RenderScissorComponent.cpp; path = ../../shared/Entity/RenderScissorComponent.cpp; sourceTree = "<group>"; };
+		5D270F3015C25CCD006DEBEA /* RenderScissorComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RenderScissorComponent.h; path = ../../shared/Entity/RenderScissorComponent.h; sourceTree = "<group>"; };
 		5D70B61A12B5FED300A1AB17 /* PlatformSetupOSX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlatformSetupOSX.h; path = ../../shared/OSX/PlatformSetupOSX.h; sourceTree = SOURCE_ROOT; };
 		5D70B61B12B5FED300A1AB17 /* OSXUtils.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = OSXUtils.mm; path = ../../shared/OSX/OSXUtils.mm; sourceTree = SOURCE_ROOT; };
 		5D70B61C12B5FED300A1AB17 /* OSXUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OSXUtils.h; path = ../../shared/OSX/OSXUtils.h; sourceTree = SOURCE_ROOT; };
@@ -324,7 +343,6 @@
 		5D70B82C12B6072D00A1AB17 /* MainMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainMenu.h; path = ../source/GUI/MainMenu.h; sourceTree = SOURCE_ROOT; };
 		5D70B83312B6074D00A1AB17 /* audio */ = {isa = PBXFileReference; lastKnownFileType = folder; name = audio; path = ../bin/audio; sourceTree = SOURCE_ROOT; };
 		5D70B83512B6075B00A1AB17 /* game */ = {isa = PBXFileReference; lastKnownFileType = folder; name = game; path = ../bin/game; sourceTree = SOURCE_ROOT; };
-		5D70BA5A12B711BC00A1AB17 /* libfmodex.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; name = libfmodex.dylib; path = "FMOD Programmers API Mac/api/lib/libfmodex.dylib"; sourceTree = DEVELOPER_DIR; };
 		5D70BA5F12B7124700A1AB17 /* AudioManagerFMOD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AudioManagerFMOD.h; path = ../../shared/Audio/AudioManagerFMOD.h; sourceTree = SOURCE_ROOT; };
 		5D70BA6012B7124700A1AB17 /* AudioManagerFMOD.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AudioManagerFMOD.cpp; path = ../../shared/Audio/AudioManagerFMOD.cpp; sourceTree = SOURCE_ROOT; };
 		5D70C4BE12B7586D00A1AB17 /* MyApplication.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MyApplication.mm; sourceTree = "<group>"; };
@@ -365,11 +383,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5D70BA5B12B711BC00A1AB17 /* libfmodex.dylib in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				AFD4D88A113C504F00C2DE76 /* OpenGL.framework in Frameworks */,
 				AF9DBBC6113C611C00D05754 /* QuartzCore.framework in Frameworks */,
 				5DDE02A012B4F50D000C5CC0 /* libz.dylib in Frameworks */,
+				5D270F1E15C25C47006DEBEA /* libfmodex.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -445,11 +463,28 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				5D70BA5A12B711BC00A1AB17 /* libfmodex.dylib */,
+				5D270F1D15C25C47006DEBEA /* libfmodex.dylib */,
 				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
 				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		5D270F1F15C25C65006DEBEA /* Gamepad */ = {
+			isa = PBXGroup;
+			children = (
+				5D270F2015C25C99006DEBEA /* Gamepad.cpp */,
+				5D270F2115C25C99006DEBEA /* Gamepad.h */,
+				5D270F2215C25C99006DEBEA /* GamepadiCade.cpp */,
+				5D270F2315C25C99006DEBEA /* GamepadiCade.h */,
+				5D270F2415C25C99006DEBEA /* GamepadManager.cpp */,
+				5D270F2515C25C99006DEBEA /* GamepadManager.h */,
+				5D270F2615C25C99006DEBEA /* GamepadProvider.cpp */,
+				5D270F2715C25C99006DEBEA /* GamepadProvider.h */,
+				5D270F2815C25C99006DEBEA /* GamepadProvideriCade.cpp */,
+				5D270F2915C25C99006DEBEA /* GamepadProvideriCade.h */,
+			);
+			name = Gamepad;
 			sourceTree = "<group>";
 		};
 		5D70B61912B5FEB000A1AB17 /* OSX */ = {
@@ -585,6 +620,8 @@
 		5D70B6E012B606DC00A1AB17 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				5D270F2F15C25CCD006DEBEA /* RenderScissorComponent.cpp */,
+				5D270F3015C25CCD006DEBEA /* RenderScissorComponent.h */,
 				5DD3277C12C97CB40009B0F3 /* EmitVirtualKeyComponent.h */,
 				5DD3277D12C97CB40009B0F3 /* EmitVirtualKeyComponent.cpp */,
 				5DD3277E12C97CB40009B0F3 /* DPadComponent.h */,
@@ -807,6 +844,7 @@
 		5DDE012412B4D49C000C5CC0 /* shared */ = {
 			isa = PBXGroup;
 			children = (
+				5D270F1F15C25C65006DEBEA /* Gamepad */,
 				5D70B77A12B606DC00A1AB17 /* util */,
 				5D70B75512B606DC00A1AB17 /* Math */,
 				5D70B75212B606DC00A1AB17 /* GUI */,
@@ -1031,6 +1069,12 @@
 				5DD324C912BF911F0009B0F3 /* ArcadeInputComponent.cpp in Sources */,
 				5DD3278012C97CB40009B0F3 /* EmitVirtualKeyComponent.cpp in Sources */,
 				5DD3278112C97CB40009B0F3 /* DPadComponent.cpp in Sources */,
+				5D270F2A15C25C99006DEBEA /* Gamepad.cpp in Sources */,
+				5D270F2B15C25C99006DEBEA /* GamepadiCade.cpp in Sources */,
+				5D270F2C15C25C99006DEBEA /* GamepadManager.cpp in Sources */,
+				5D270F2D15C25C99006DEBEA /* GamepadProvider.cpp in Sources */,
+				5D270F2E15C25C99006DEBEA /* GamepadProvideriCade.cpp in Sources */,
+				5D270F3115C25CCD006DEBEA /* RenderScissorComponent.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1072,6 +1116,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(DEVELOPER_DIR)/FMOD Programmers API Mac/api/lib\"",
+					"\"$(SRCROOT)/../../shared/OSX/fmod/api/lib\"",
 				);
 				PRODUCT_NAME = RTLooneyLadders;
 			};
@@ -1088,6 +1133,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(DEVELOPER_DIR)/FMOD Programmers API Mac/api/lib\"",
+					"\"$(SRCROOT)/../../shared/OSX/fmod/api/lib\"",
 				);
 				PRODUCT_NAME = RTLooneyLadders;
 			};
@@ -1121,7 +1167,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
-				SDKROOT = macosx10.6;
+				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -1149,7 +1195,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				PREBINDING = NO;
-				SDKROOT = macosx10.6;
+				SDKROOT = macosx;
 				VALID_ARCHS = "i386 x86_64";
 			};
 			name = Release;

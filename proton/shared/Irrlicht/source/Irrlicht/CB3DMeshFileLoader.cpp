@@ -1070,19 +1070,22 @@ void CB3DMeshFileLoader::loadTextures(SB3dMaterial& material) const
 					texnameWithUserPath += B3dTexture->TextureName;
 				}
 
-			
+#ifdef _DEBUG
+           //     LogMsg("Finding texture %s for mesh %s", B3dTexture->TextureName.c_str(), B3DFile->getFileName().c_str());
+#endif
+		         
 				core::stringc texNameRTTEX;
 				texNameRTTEX = cutFilenameExtension(texNameRTTEX, B3dTexture->TextureName)+".rttex";
 
-			
+				core::stringc meshPathRTTEX = fs->getFileDir(B3DFile->getFileName()) +"/"+ fs->getFileBasename(texNameRTTEX);
+                
 				if (fs->existFile(texNameRTTEX))
 					tex = SceneManager->getVideoDriver()->getTexture(texNameRTTEX);
-				else if (fs->existFile(fs->getFileDir(B3DFile->getFileName()) +"/"+ fs->getFileBasename(texNameRTTEX)))
-					tex = SceneManager->getVideoDriver()->getTexture(fs->getFileDir(B3DFile->getFileName()) +"/"+ fs->getFileBasename(texNameRTTEX));
-				else
-
-
-				if (fs->existFile(texnameWithUserPath))
+				else if (fs->existFile(meshPathRTTEX))
+					tex = SceneManager->getVideoDriver()->getTexture(meshPathRTTEX);
+                else if (!GetBaseAppPath().empty() && fs->existFile( core::stringc(GetBaseAppPath().c_str())+meshPathRTTEX))
+                    tex = SceneManager->getVideoDriver()->getTexture(core::stringc(GetBaseAppPath().c_str())+meshPathRTTEX);
+				else if (texnameWithUserPath.size()  && fs->existFile(texnameWithUserPath))
 					tex = SceneManager->getVideoDriver()->getTexture(texnameWithUserPath);
 				else if (fs->existFile(B3dTexture->TextureName))
 					tex = SceneManager->getVideoDriver()->getTexture(B3dTexture->TextureName);

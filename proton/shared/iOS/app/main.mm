@@ -12,7 +12,10 @@ int main(int argc, char *argv[])
 
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	srand([[NSDate date] timeIntervalSince1970]);
-	int retVal = UIApplicationMain(argc, argv, nil, nil);
+	
+    signal(SIGPIPE, SIG_IGN); //So socket operations won't throw SIGPIPE exceptions crashing the program
+    
+    int retVal = UIApplicationMain(argc, argv, nil, nil);
 	[pool release];
 	return retVal;
 }

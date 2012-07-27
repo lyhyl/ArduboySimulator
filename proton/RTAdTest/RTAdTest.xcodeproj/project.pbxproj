@@ -34,6 +34,8 @@
 		5D165B83125AA67E00F1E8E3 /* CustomInputComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D165B82125AA67E00F1E8E3 /* CustomInputComponent.cpp */; };
 		5D165B88125AA70800F1E8E3 /* FocusInputComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D165B87125AA70800F1E8E3 /* FocusInputComponent.cpp */; };
 		5D165BA1125AAA3800F1E8E3 /* FileManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D165BA0125AAA3800F1E8E3 /* FileManager.cpp */; };
+		5D270F8015C25F9B006DEBEA /* MenuTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D270F7E15C25F9B006DEBEA /* MenuTest.cpp */; };
+		5D270F8315C25FBB006DEBEA /* AdProviderFlurry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D270F8115C25FBB006DEBEA /* AdProviderFlurry.cpp */; };
 		5D30635B0FD89049009DE600 /* VariantDB.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3063590FD89049009DE600 /* VariantDB.cpp */; };
 		5D30635F0FD890B0009DE600 /* MathUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D30635D0FD890B0009DE600 /* MathUtils.cpp */; };
 		5D3063660FD890CB009DE600 /* AudioManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3063600FD890CB009DE600 /* AudioManager.cpp */; };
@@ -185,6 +187,10 @@
 		5D165B87125AA70800F1E8E3 /* FocusInputComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FocusInputComponent.cpp; path = Entity/FocusInputComponent.cpp; sourceTree = "<group>"; };
 		5D165B9F125AAA3800F1E8E3 /* FileManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FileManager.h; path = FileSystem/FileManager.h; sourceTree = "<group>"; };
 		5D165BA0125AAA3800F1E8E3 /* FileManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FileManager.cpp; path = FileSystem/FileManager.cpp; sourceTree = "<group>"; };
+		5D270F7E15C25F9B006DEBEA /* MenuTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MenuTest.cpp; path = source/MenuTest.cpp; sourceTree = "<group>"; };
+		5D270F7F15C25F9B006DEBEA /* MenuTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MenuTest.h; path = source/MenuTest.h; sourceTree = "<group>"; };
+		5D270F8115C25FBB006DEBEA /* AdProviderFlurry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AdProviderFlurry.cpp; path = Ad/AdProviderFlurry.cpp; sourceTree = "<group>"; };
+		5D270F8215C25FBB006DEBEA /* AdProviderFlurry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdProviderFlurry.h; path = Ad/AdProviderFlurry.h; sourceTree = "<group>"; };
 		5D3063590FD89049009DE600 /* VariantDB.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VariantDB.cpp; path = Manager/VariantDB.cpp; sourceTree = "<group>"; };
 		5D30635A0FD89049009DE600 /* VariantDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VariantDB.h; path = Manager/VariantDB.h; sourceTree = "<group>"; };
 		5D30635D0FD890B0009DE600 /* MathUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MathUtils.cpp; path = util/MathUtils.cpp; sourceTree = "<group>"; };
@@ -365,6 +371,8 @@
 		29B97315FDCFA39411CA2CEA /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				5D270F7E15C25F9B006DEBEA /* MenuTest.cpp */,
+				5D270F7F15C25F9B006DEBEA /* MenuTest.h */,
 				5D4595B01510CCF60088A44D /* MenuAdWait.cpp */,
 				5D4595B11510CCF60088A44D /* MenuAdWait.h */,
 				5D4595B21510CCF60088A44D /* MenuMain.cpp */,
@@ -417,6 +425,8 @@
 		5D02D7BA155127730015D481 /* Ad */ = {
 			isa = PBXGroup;
 			children = (
+				5D270F8115C25FBB006DEBEA /* AdProviderFlurry.cpp */,
+				5D270F8215C25FBB006DEBEA /* AdProviderFlurry.h */,
 				5D02D7BB1551278C0015D481 /* AdProvider.cpp */,
 				5D02D7BC1551278C0015D481 /* AdProvider.h */,
 				5D02D7BD1551278C0015D481 /* AdProviderChartBoost.cpp */,
@@ -869,6 +879,8 @@
 				5D02D7C11551278C0015D481 /* AdProvider.cpp in Sources */,
 				5D02D7C21551278C0015D481 /* AdProviderChartBoost.cpp in Sources */,
 				5D02D7C31551278C0015D481 /* AdProviderIOS_ChartBoost.mm in Sources */,
+				5D270F8015C25F9B006DEBEA /* MenuTest.cpp in Sources */,
+				5D270F8315C25FBB006DEBEA /* AdProviderFlurry.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -882,8 +894,6 @@
 					armv7,
 					armv6,
 				);
-				CODE_SIGN_IDENTITY = "iPhone Developer: Seth Robinson (638X6EAY9H)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer:";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -893,7 +903,6 @@
 					"\"$(SRCROOT)/../shared/iOS/ChartBoost\"",
 				);
 				PRODUCT_NAME = RTAdTest;
-				PROVISIONING_PROFILE = "F3BDD592-F7A6-429A-8E9F-81EBF238EBED";
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
 			};
 			name = Debug;
@@ -903,7 +912,7 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
-				CODE_SIGN_IDENTITY = "iPhone Distribution:";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -945,7 +954,6 @@
 					armv7,
 					armv6,
 				);
-				CODE_SIGN_IDENTITY = "iPhone Developer: Seth Robinson (638X6EAY9H)";
 				COPY_PHASE_STRIP = YES;
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -957,7 +965,6 @@
 					"\"$(SRCROOT)/../shared/iOS/ChartBoost\"",
 				);
 				PRODUCT_NAME = RTAdTest;
-				PROVISIONING_PROFILE = "F3BDD592-F7A6-429A-8E9F-81EBF238EBED";
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
 			};
 			name = AdHoc;
