@@ -636,6 +636,14 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="linux"
+				>
+				<File
+					RelativePath="..\linux\CMakeLists.txt"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="shared"
@@ -1633,6 +1641,14 @@
 					</File>
 					<File
 						RelativePath="..\..\shared\Entity\RectRenderComponent.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\shared\Entity\RenderScissorComponent.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\shared\Entity\RenderScissorComponent.h"
 						>
 					</File>
 					<File

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5D270F5B15C25EBB006DEBEA /* RenderScissorComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D270F5915C25EBB006DEBEA /* RenderScissorComponent.cpp */; };
 		5D70B62512B5FED300A1AB17 /* OSXUtils.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D70B61B12B5FED300A1AB17 /* OSXUtils.mm */; };
 		5D70B62612B5FED300A1AB17 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D70B61E12B5FED300A1AB17 /* main.m */; };
 		5D70B62712B5FED300A1AB17 /* MainController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D70B62012B5FED300A1AB17 /* MainController.mm */; };
@@ -373,6 +374,8 @@
 		256AC3F00F4B6AF500CF3369 /* RT3DApp_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RT3DApp_Prefix.pch; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		5D270F5915C25EBB006DEBEA /* RenderScissorComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RenderScissorComponent.cpp; path = ../../shared/Entity/RenderScissorComponent.cpp; sourceTree = "<group>"; };
+		5D270F5A15C25EBB006DEBEA /* RenderScissorComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RenderScissorComponent.h; path = ../../shared/Entity/RenderScissorComponent.h; sourceTree = "<group>"; };
 		5D70B61A12B5FED300A1AB17 /* PlatformSetupOSX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlatformSetupOSX.h; path = ../../shared/OSX/PlatformSetupOSX.h; sourceTree = SOURCE_ROOT; };
 		5D70B61B12B5FED300A1AB17 /* OSXUtils.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = OSXUtils.mm; path = ../../shared/OSX/OSXUtils.mm; sourceTree = SOURCE_ROOT; };
 		5D70B61C12B5FED300A1AB17 /* OSXUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OSXUtils.h; path = ../../shared/OSX/OSXUtils.h; sourceTree = SOURCE_ROOT; };
@@ -1392,6 +1395,8 @@
 		5D70B6E012B606DC00A1AB17 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				5D270F5915C25EBB006DEBEA /* RenderScissorComponent.cpp */,
+				5D270F5A15C25EBB006DEBEA /* RenderScissorComponent.h */,
 				5DD3277C12C97CB40009B0F3 /* EmitVirtualKeyComponent.h */,
 				5DD3277D12C97CB40009B0F3 /* EmitVirtualKeyComponent.cpp */,
 				5DD3277E12C97CB40009B0F3 /* DPadComponent.h */,
@@ -2694,6 +2699,7 @@
 				5D9307F514D0E579004E2E36 /* pngwtran.c in Sources */,
 				5D9307F614D0E579004E2E36 /* pngwutil.c in Sources */,
 				5D93085614D0E579004E2E36 /* os.cpp in Sources */,
+				5D270F5B15C25EBB006DEBEA /* RenderScissorComponent.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2787,7 +2793,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
-				SDKROOT = macosx10.6;
+				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -2818,7 +2824,7 @@
 				LIBRARY_SEARCH_PATHS = "";
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				PREBINDING = NO;
-				SDKROOT = macosx10.6;
+				SDKROOT = macosx;
 				VALID_ARCHS = "i386 x86_64";
 			};
 			name = Release;

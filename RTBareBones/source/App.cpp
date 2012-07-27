@@ -65,13 +65,6 @@ bool App::Init()
 		SetManualRotationMode(true);
 	}
 
-	if (GetEmulatedPlatformID() == PLATFORM_ID_ANDROID)
-	{
-		//by doing this, we can pretend the screen is 320X480 in our code, but actually it will be
-		//scaled up/down to whatever the HW is.  Yeah, it stretches it so it's not going to look great.
-		//SetupFakePrimaryScreenSize(320,480);
-	}
-
 	LogMsg("The Save path is %s", GetSavePath().c_str());
 	LogMsg("Region string is %s", GetRegionString().c_str());
 

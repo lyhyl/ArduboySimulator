@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5D270FA315C26245006DEBEA /* libfmodex.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D270FA215C26245006DEBEA /* libfmodex.dylib */; };
+		5D270FA415C2625E006DEBEA /* libfmodex.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 5D270FA215C26245006DEBEA /* libfmodex.dylib */; };
 		5D70B62512B5FED300A1AB17 /* OSXUtils.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D70B61B12B5FED300A1AB17 /* OSXUtils.mm */; };
 		5D70B62612B5FED300A1AB17 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D70B61E12B5FED300A1AB17 /* main.m */; };
 		5D70B62712B5FED300A1AB17 /* MainController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D70B62012B5FED300A1AB17 /* MainController.mm */; };
@@ -105,8 +107,6 @@
 		5D70B83212B6072D00A1AB17 /* MainMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D70B82B12B6072D00A1AB17 /* MainMenu.cpp */; };
 		5D70B83412B6074D00A1AB17 /* audio in Resources */ = {isa = PBXBuildFile; fileRef = 5D70B83312B6074D00A1AB17 /* audio */; };
 		5D70B83612B6075B00A1AB17 /* game in Resources */ = {isa = PBXBuildFile; fileRef = 5D70B83512B6075B00A1AB17 /* game */; };
-		5D70BA5B12B711BC00A1AB17 /* libfmodex.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D70BA5A12B711BC00A1AB17 /* libfmodex.dylib */; };
-		5D70BB2412B7208700A1AB17 /* libfmodex.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 5D70BA5A12B711BC00A1AB17 /* libfmodex.dylib */; };
 		5D70C4BF12B7586D00A1AB17 /* MyApplication.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D70C4BE12B7586D00A1AB17 /* MyApplication.mm */; };
 		5D8E368214BEF412003BA3DA /* JPGSurfaceLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D8E368014BEF412003BA3DA /* JPGSurfaceLoader.cpp */; };
 		5D8E368314BEF412003BA3DA /* RTGLESExt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D8E368114BEF412003BA3DA /* RTGLESExt.cpp */; };
@@ -179,7 +179,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				5D70BB2412B7208700A1AB17 /* libfmodex.dylib in CopyFiles */,
+				5D270FA415C2625E006DEBEA /* libfmodex.dylib in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -191,6 +191,7 @@
 		256AC3F00F4B6AF500CF3369 /* RTSimpleApp_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RTSimpleApp_Prefix.pch; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		5D270FA215C26245006DEBEA /* libfmodex.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfmodex.dylib; path = ../../shared/OSX/fmod/api/lib/libfmodex.dylib; sourceTree = "<group>"; };
 		5D70B61A12B5FED300A1AB17 /* PlatformSetupOSX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlatformSetupOSX.h; path = ../../shared/OSX/PlatformSetupOSX.h; sourceTree = SOURCE_ROOT; };
 		5D70B61B12B5FED300A1AB17 /* OSXUtils.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = OSXUtils.mm; path = ../../shared/OSX/OSXUtils.mm; sourceTree = SOURCE_ROOT; };
 		5D70B61C12B5FED300A1AB17 /* OSXUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OSXUtils.h; path = ../../shared/OSX/OSXUtils.h; sourceTree = SOURCE_ROOT; };
@@ -378,7 +379,6 @@
 		5D70B82C12B6072D00A1AB17 /* MainMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainMenu.h; path = ../source/GUI/MainMenu.h; sourceTree = SOURCE_ROOT; };
 		5D70B83312B6074D00A1AB17 /* audio */ = {isa = PBXFileReference; lastKnownFileType = folder; name = audio; path = ../bin/audio; sourceTree = SOURCE_ROOT; };
 		5D70B83512B6075B00A1AB17 /* game */ = {isa = PBXFileReference; lastKnownFileType = folder; name = game; path = ../bin/game; sourceTree = SOURCE_ROOT; };
-		5D70BA5A12B711BC00A1AB17 /* libfmodex.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; name = libfmodex.dylib; path = "FMOD Programmers API Mac/api/lib/libfmodex.dylib"; sourceTree = DEVELOPER_DIR; };
 		5D70C4BE12B7586D00A1AB17 /* MyApplication.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MyApplication.mm; sourceTree = "<group>"; };
 		5D8E367E14BEF412003BA3DA /* JPGSurfaceLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JPGSurfaceLoader.h; path = ../../shared/Renderer/JPGSurfaceLoader.h; sourceTree = SOURCE_ROOT; };
 		5D8E367F14BEF412003BA3DA /* RTGLESExt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RTGLESExt.h; path = ../../shared/Renderer/RTGLESExt.h; sourceTree = SOURCE_ROOT; };
@@ -457,11 +457,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5D70BA5B12B711BC00A1AB17 /* libfmodex.dylib in Frameworks */,
 				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
 				AFD4D88A113C504F00C2DE76 /* OpenGL.framework in Frameworks */,
 				AF9DBBC6113C611C00D05754 /* QuartzCore.framework in Frameworks */,
 				5DDE02A012B4F50D000C5CC0 /* libz.dylib in Frameworks */,
+				5D270FA315C26245006DEBEA /* libfmodex.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -537,7 +537,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				5D70BA5A12B711BC00A1AB17 /* libfmodex.dylib */,
+				5D270FA215C26245006DEBEA /* libfmodex.dylib */,
 				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
 				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
 			);
@@ -1264,6 +1264,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(DEVELOPER_DIR)/FMOD Programmers API Mac/api/lib\"",
+					"\"$(SRCROOT)/../../shared/OSX/fmod/api/lib\"",
 				);
 				PRODUCT_NAME = RTSimpleApp;
 			};
@@ -1280,6 +1281,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(DEVELOPER_DIR)/FMOD Programmers API Mac/api/lib\"",
+					"\"$(SRCROOT)/../../shared/OSX/fmod/api/lib\"",
 				);
 				PRODUCT_NAME = RTSimpleApp;
 			};
@@ -1315,7 +1317,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
-				SDKROOT = macosx10.6;
+				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -1345,7 +1347,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				PREBINDING = NO;
-				SDKROOT = macosx10.6;
+				SDKROOT = macosx;
 				VALID_ARCHS = "i386 x86_64";
 			};
 			name = Release;

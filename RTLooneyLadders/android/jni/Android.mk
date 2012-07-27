@@ -52,7 +52,7 @@ $(COMPPATH)/HTTPComponent.cpp $(COMPPATH)/InputTextRenderComponent.cpp $(COMPPAT
 $(COMPPATH)/RectRenderComponent.cpp $(COMPPATH)/ScrollBarRenderComponent.cpp $(COMPPATH)/ScrollComponent.cpp $(COMPPATH)/TapSequenceDetectComponent.cpp $(COMPPATH)/TextBoxRenderComponent.cpp \
 $(COMPPATH)/TextRenderComponent.cpp $(COMPPATH)/TouchStripComponent.cpp $(COMPPATH)/TrailRenderComponent.cpp $(COMPPATH)/TyperComponent.cpp $(COMPPATH)/UnderlineRenderComponent.cpp \
 $(COMPPATH)/TouchHandlerComponent.cpp $(COMPPATH)/SelectButtonWithCustomInputComponent.cpp $(COMPPATH)/CustomInputComponent.cpp $(COMPPATH)/SliderComponent.cpp \
-$(COMPPATH)/ArcadeInputComponent.cpp $(COMPPATH)/EmitVirtualKeyComponent.cpp  $(COMPPATH)/DPadComponent.cpp \
+$(COMPPATH)/ArcadeInputComponent.cpp $(COMPPATH)/EmitVirtualKeyComponent.cpp  $(COMPPATH)/DPadComponent.cpp $(COMPPATH)/RenderScissorComponent.cpp \
 \
 \
 $(PPATH)/L_Defination.cpp $(PPATH)/L_DroppingEffect.cpp $(PPATH)/L_EffectEmitter.cpp $(PPATH)/L_ExplosionEffect.cpp $(PPATH)/L_MotionController.cpp $(PPATH)/L_Particle.cpp \

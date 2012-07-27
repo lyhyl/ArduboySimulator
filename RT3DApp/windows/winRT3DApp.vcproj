@@ -1591,6 +1591,14 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\shared\Entity\RenderScissorComponent.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\shared\Entity\RenderScissorComponent.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\shared\Entity\ScrollBarRenderComponent.cpp"
 						>
 					</File>

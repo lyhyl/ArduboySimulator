@@ -124,6 +124,11 @@ IReadFile* CProtonReader::createAndOpenFile(const io::path& filename)
 {
 	int size;
 	
+#ifdef _DEBUG
+    
+  //  LogMsg("CProtonReader: going open %s", filename.c_str());
+#endif
+    
 	byte *pBytes = GetFileManager()->Get( filename.c_str(), &size, false);
 
 	if (!pBytes)
@@ -132,12 +137,10 @@ IReadFile* CProtonReader::createAndOpenFile(const io::path& filename)
 		
 		if (!workingDir.empty())
 		{
-
-		
-		//try again with full path
-		string newFileName = workingDir+"/"+string(filename.c_str());
-		LogMsg("Trying with %s", newFileName.c_str());
-		pBytes = GetFileManager()->Get( newFileName, &size, true);
+            //try again with full path
+            string newFileName = workingDir+"/"+string(filename.c_str());
+        //    LogMsg("CProtonReader: Trying with WD %s", newFileName.c_str());
+            pBytes = GetFileManager()->Get( newFileName, &size, true);
 		}
 	}
 	if (pBytes)
@@ -158,7 +161,7 @@ IReadFile* CProtonReader::createAndOpenFile(const io::path& filename)
 	} else
 	{
 #ifdef _DEBUG
-		LogMsg("Proton Irrlicht Filesystem: Was unable to locate the file %s", filename.c_str());
+	//	LogMsg("Proton Irrlicht Filesystem: Was unable to locate the file %s", filename.c_str());
 #endif
 	}
 
@@ -168,6 +171,11 @@ IReadFile* CProtonReader::createAndOpenFile(const io::path& filename)
 irr::s32 CProtonReader::findFile( const io::path& filename, bool isFolder ) const
 {
 	
+#ifdef _DEBUG
+    
+   // LogMsg("CProtonReader::findFile: going to search for %s", filename.c_str());
+#endif
+    
 	if (GetFileManager()->FileExists(filename.c_str(), false)) return 0; //dummy ID to signal we found it
 
 	//try another way too
