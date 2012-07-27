@@ -235,7 +235,7 @@ EntityComponent * ZoomToPositionEntityMulti(Entity *pEnt, CL_Vec2f vPos, unsigne
  *        If set to 0 the animation is started immediately.
  * \return the \c EntityComponent that performs the animation.
  */
-EntityComponent * ZoomToScaleEntity(Entity *pEnt, CL_Vec2f vScale, unsigned int speedMS, eInterpolateType interpolateType = INTERPOLATE_SMOOTHSTEP, int delayBeforeActionMS = 0, eTimingSystem timing = GetTiming());
+EntityComponent * ZoomToScaleEntity(Entity *pEnt, CL_Vec2f vScale, unsigned int speedMS, eInterpolateType interpolateType = INTERPOLATE_SMOOTHSTEP, int delayBeforeActionMS = 0);
 
 EntityComponent * MorphToVec2Entity(Entity *pEnt, string targetVar, CL_Vec2f vTargetSize, unsigned int speedMS, eInterpolateType interpolateType = INTERPOLATE_SMOOTHSTEP,  int delayBeforeActionMS = 0);
 //like above, but allows more than one to be layered instead of assuming you want to ignore the previous one
