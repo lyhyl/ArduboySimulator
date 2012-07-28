@@ -11,10 +11,11 @@
 #endif
 
 //set a default for when faking IAP responses
-#if defined(FAKE_IAP_REPLY) && !defined(FAKE_IAP_RESPONSE_SUCCESS) && !defined(FAKE_IAP_RESPONSE_FAILED) && !defined(FAKE_IAP_RESPONSE_ALREADY_PURCHASED) 
-	#define FAKE_IAP_RESPONSE_SUCCESS
+#if defined(FAKE_IAP_REPLY) && !defined(FAKE_IAP_RESPONSE_SUCCESS) && !defined(FAKE_IAP_RESPONSE_FAILED) && !defined(FAKE_IAP_RESPONSE_ALREADY_PURCHASED) && !defined(FAKE_IAP_RESPONSE_TIME_OUT) 
+	//#define FAKE_IAP_RESPONSE_SUCCESS
 	//#define FAKE_IAP_RESPONSE_FAILED
-	//#define FAKE_IAP_RESPONSE_ALREADY_PURCHASED
+	#define FAKE_IAP_RESPONSE_ALREADY_PURCHASED
+	//#define FAKE_IAP_RESPONSE_TIME_OUT
 #endif
 
 IAPManager::IAPManager()
@@ -134,7 +135,13 @@ void IAPManager::OnMessage( Message &m )
 			if (m_itemToBuy.empty())
 			{
 				//done buying a real item
+
+			#if defined (FAKE_IAP_REPLY) && defined (FAKE_IAP_RESPONSE_ALREADY_PURCHASED)
+				endPurchaseProcessWithResult(RETURN_STATE_ALREADY_PURCHASED);		
+			#else
 				endPurchaseProcessWithResult(RETURN_STATE_PURCHASED);
+			#endif
+			
 			} else
 			{
 				//we're actually just scanning purchased items, not finished
@@ -164,9 +171,15 @@ bool IAPManager::Init()
 void IAPManager::Update()
 {
 #if defined (FAKE_IAP_REPLY)
+	
 	if (m_bWaitingForReply)
 	{
 		//don't support billing on this platform (probably testing in desktop), fake it after 3 seconds for testing purposes
+
+	#ifdef FAKE_IAP_RESPONSE_TIME_OUT
+		//we will never send a reply, as if they suddenly lost connection or whatever
+		return;
+	#endif
 
 		if (m_timer+3000 < GetTick(TIMER_SYSTEM))
 		{
