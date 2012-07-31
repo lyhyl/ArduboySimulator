@@ -309,7 +309,7 @@ bool Surface::LoadRTTexture(byte *pMem)
 
 		if (format == RT_FORMAT_EMBEDDED_FILE)
 		{
-			if ((strncmp((char*)pTextureData, "ÿØ", 2) != 0))
+			if (*((uint16*)pTextureData) != C_JPG_HEADER_MARKER)
 			{
 				//if it's "embedded", but not jpg, let's assume it is raw RGB,.. this way I don't have to use jpg for all the tiny mipmaps.  
 				//I may want to put the format in rttex_mip_header to allow more flexibility though..
@@ -440,7 +440,7 @@ bool Surface::LoadFileFromMemory( byte *pMem, int inputSize )
 	
 	}
 
-	if (strncmp((char*)pMem, "ÿØ", 2) == 0)
+	if (*((uint16*)pMem) == C_JPG_HEADER_MARKER)
 	{
 		SoftSurface s;
 		if (!s.LoadFileFromMemory(pMem, SoftSurface::COLOR_KEY_NONE, inputSize, false))
