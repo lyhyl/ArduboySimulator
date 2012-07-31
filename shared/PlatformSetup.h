@@ -62,6 +62,8 @@
 using namespace std;
 #endif
 
+const uint16 C_JPG_HEADER_MARKER = 55551; 
+
 #ifndef SAFE_DELETE
 #define SAFE_DELETE(p)      { if(p) { delete (p); (p)=NULL; } }
 #endif

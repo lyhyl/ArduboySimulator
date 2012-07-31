@@ -533,14 +533,13 @@ bool SoftSurface::LoadRTTexture(byte *pMem)
 	return true;
 }
 
-
 bool SoftSurface::LoadFileFromMemory( byte *pMem, eColorKeyType colorKey, int inputSize, bool bAddAlphaChannelIfPadded)
 {
 	
 	Kill();
 	SetColorKeyType(colorKey);
 
-	if (strncmp((char*)pMem, "ÿØ", 2) == 0)
+	if (*((uint16*)pMem) == C_JPG_HEADER_MARKER)
 	{
 		//it's a jpg file.  Do we have the proper encoder?
 		#if defined(RT_JPG_SUPPORT)
