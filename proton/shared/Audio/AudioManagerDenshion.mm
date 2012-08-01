@@ -142,65 +142,66 @@ AudioHandle AudioManagerDenshion::PlayWithAVPlayer( string fName)
 
 AudioHandle AudioManagerDenshion::Play( string fName, bool bLooping /*= false*/, bool bIsMusic /*= false*/, bool bAddBasePath, bool bForceStreaming )
 {
-	#ifdef _DEBUG
+#ifdef _DEBUG
 	LogMsg("Playing %s", fName.c_str());
-	#endif
+#endif
 
 	if (!GetSoundEnabled() && !bIsMusic) return AUDIO_HANDLE_BLANK;
+	
+	string basePath;
 
-    string basePath;
-    
-    if (bAddBasePath)
-    {
-        basePath = GetBaseAppPath();
-    }
-    
+	if (bAddBasePath)
+	{
+		basePath = GetBaseAppPath();
+	}
+
 	if (bIsMusic)
 	{
 		if (!GetMusicEnabled()) 
 		{
+#ifdef _DEBUG
+			LogMsg("Music disabled");
+#endif
+
 			m_lastMusicFileName = fName;
 			m_bLastMusicLooping = bLooping;
 
-	#ifdef _DEBUG
-LogMsg("Music disabled, pretending to play");
-#endif
 			return AUDIO_HANDLE_BLANK;
 		}
 		
 		if (m_lastMusicFileName == fName && m_bLastMusicLooping == true && !m_bDisabledMusicRecently)
 		{
-			//it's already playing!
-			#ifdef _DEBUG
-			LogMsg("Seems to already be playing");
-			#endif
-			return m_lastMusicID;
+			if (IsPlaying(m_lastMusicID))
+			{
+#ifdef _DEBUG
+				LogMsg("Seems to already be playing");
+#endif
+				return m_lastMusicID;
+			}
 		}
 		
-        string fNameTemp = basePath+fName;
-        StringReplace(".ogg",".mp3", fNameTemp);
-       
-        
+		string fNameTemp = basePath+fName;
+		StringReplace(".ogg",".mp3", fNameTemp);
+
 		NSString *soundFile =  [NSString stringWithCString:  fNameTemp.c_str() encoding: [NSString defaultCStringEncoding]];
 	
-        if (![[NSFileManager defaultManager] fileExistsAtPath:soundFile])
-        {
-            LogMsg("Error: Can't locate audio file %s!",
-                   fName.c_str());
-            return AUDIO_HANDLE_BLANK;
-        }
+		if (![[NSFileManager defaultManager] fileExistsAtPath:soundFile])
+		{
+			LogMsg("Error: Can't locate audio file %s!", fName.c_str());
+			return AUDIO_HANDLE_BLANK;
+		}
 		if (m_bgMusicPlayer)
 		{
 			[m_bgMusicPlayer stop];
 			[m_bgMusicPlayer release];
- 			 m_bgMusicPlayer = NULL;
+			m_bgMusicPlayer = NULL;
 		}
 		
 		m_bgMusicPlayer = [AVAudioPlayer alloc];
-        
-		[m_bgMusicPlayer initWithContentsOfURL: [NSURL fileURLWithPath:soundFile] error:nil];
 
-        if (bLooping)
+		[m_bgMusicPlayer initWithContentsOfURL: [NSURL fileURLWithPath:soundFile] error:nil];
+		
+		if (bLooping)
 		{
 			m_bgMusicPlayer.numberOfLoops = -1;
 		}
