@@ -1,5 +1,7 @@
 #include "VideoModeSelector.h"
 
+#include "MiscUtils.h"
+
 using namespace std;
 
 VideoMode::VideoMode() :
@@ -137,4 +139,53 @@ const VideoMode* VideoModeSelector::getNamedMode(const string& name) const
 const vector<string>& VideoModeSelector::getModeNames() const
 {
 	return g_videoModeNames;
+}
+
+string VideoModeSelector::modesAsString() const
+{
+	const string nameHeader("Name");
+	const string sizeHeader("Width x height");
+	const string platformHeader("Platform");
+	const string orientationHeader("Orientation");
+
+	const vector<string>& modeNames = getModeNames();
+
+	int maxModeNameLength = nameHeader.size();
+	for (vector<string>::const_iterator it(modeNames.begin()); it != modeNames.end(); it++) {
+		if ((*it).size() > maxModeNameLength) {
+			maxModeNameLength = (*it).size();
+		}
+	}
+
+	int maxSizeStringLength = sizeHeader.size();
+	int maxPlatformStringLength = platformHeader.size();
+
+	const int fieldPadding = 4;
+
+	string ret("Available video modes:\n\n");
+
+	char tmpStr[1024];
+
+	snprintf(tmpStr, sizeof(tmpStr), "%*s%*s%*s%s",
+		   -(maxModeNameLength + fieldPadding), nameHeader.c_str(),
+		   -(maxSizeStringLength + fieldPadding), sizeHeader.c_str(),
+		   -(maxPlatformStringLength + fieldPadding), platformHeader.c_str(),
+		   orientationHeader.c_str());
+	ret += tmpStr;
+	ret += "\n";
+
+	for (vector<string>::const_iterator it(modeNames.begin()); it != modeNames.end(); it++) {
+		const VideoMode *mode = getNamedMode(*it);
+		const string sizeStr = toString(mode->getX()) + " x " + toString(mode->getY());
+
+		snprintf(tmpStr, sizeof(tmpStr), "%*s%*s%*s%s",
+			   -(maxModeNameLength + fieldPadding), it->c_str(),
+			   -(maxSizeStringLength + fieldPadding), sizeStr.c_str(),
+			   -(maxPlatformStringLength + fieldPadding), PlatformIDAsStringDisplay(mode->getPlatformID()).c_str(),
+			   OrientationAsStringDisplay(mode->getOrientationMode()).c_str());
+		ret += "\n";
+		ret += tmpStr;
+	}
+
+	return ret;
 }

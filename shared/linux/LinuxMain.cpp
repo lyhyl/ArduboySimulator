@@ -286,11 +286,7 @@ int main(int argc, char *argv[])
 	string requestedVideoMode("iPhone Landscape");
 	if (argc > 1) {
 		if (string(argv[1]) == "-l") {
-			LogMsg("Available video modes:\n");
-			const vector<string>& modeNames = vms.getModeNames();
-			for (vector<string>::const_iterator it(modeNames.begin()); it != modeNames.end(); it++) {
-				LogMsg("%s", it->c_str());
-			}
+			LogMsg("%s", vms.modesAsString().c_str());
 			return 0;
 		}
 		
