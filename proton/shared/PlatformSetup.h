@@ -113,8 +113,35 @@ int GetScreenSizeX();
 float GetScreenSizeYf();
 float GetScreenSizeXf();
 bool IsLargeScreen();
-std::string PlatformIDAsString(ePlatformID platformID); //will never change
-std::string PlatformIDAsStringDisplay(ePlatformID platformID);  //may change..
+
+/**
+ * Returns a string representation of a platform identifier.
+ * This string is not meant for display purposes. The strings returned by
+ * this method are guaranteed to remain unchanged between different
+ * versions of Proton (expect new string may be added for new platforms).
+ *
+ * \see PlatformIDAsStringDisplay()
+ */
+std::string PlatformIDAsString(ePlatformID platformID);
+
+/**
+ * Returns a string representation of a platform identifier for display purposes.
+ * This string can be used to display a textual representation of a platform for
+ * the user or put it to a log for example. The strings returned by this method
+ * may change from Proton version to another.
+ *
+ * \see PlatformIDAsString()
+ */
+std::string PlatformIDAsStringDisplay(ePlatformID platformID);
+
+/**
+ * Returns a string representation of an orientation mode for display purposes.
+ * This string can be used to display a textual representation of an orientation
+ * mode for the user or put it to a log for example. The strings returned by
+ * this method may change from Proton version to another.
+ */
+std::string OrientationAsStringDisplay(eOrientationMode orientation);
+
 #endif
 
 #endif // PlatformSetup_h__

@@ -70,6 +70,19 @@ string PlatformIDAsStringDisplay(ePlatformID platformID)
 	return "";
 }
 
+string OrientationAsStringDisplay(eOrientationMode orientation)
+{
+	switch (orientation)
+	{
+	case ORIENTATION_DONT_CARE: return "Not specified";
+	case ORIENTATION_PORTRAIT: return "Portrait";
+	case ORIENTATION_PORTRAIT_UPSIDE_DOWN: return "Portrait upside down";
+	case ORIENTATION_LANDSCAPE_LEFT: return "Landscape left";
+	case ORIENTATION_LANDSCAPE_RIGHT: return "Landscape right";
+	default: return "<invalid value>";
+	}
+}
+
 string GetPlatformName()
 {
 	return PlatformIDAsString(GetEmulatedPlatformID());

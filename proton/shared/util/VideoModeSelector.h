@@ -76,7 +76,18 @@ public:
 	 */
 	const VideoMode* getNamedMode(const std::string& name) const;
 	
+	/*!
+	 * Gets all the video mode names currently available in this selector.
+	 */
 	const std::vector<std::string>& getModeNames() const;
+
+	/*!
+	 * Returns a string representation of the video modes currently available
+	 * in this selector. The string representation includes the video mode
+	 * names as well as details about them. The returned string is suitable
+	 * for showing to the user.
+	 */
+	std::string modesAsString() const;
 };
 
 #endif
