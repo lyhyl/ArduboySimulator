@@ -1434,6 +1434,14 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\shared\Entity\ScrollComponent.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\shared\Entity\ScrollComponent.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\shared\Entity\SelectButtonWithCustomInputComponent.cpp"
 						>
 					</File>

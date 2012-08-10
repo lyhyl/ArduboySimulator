@@ -78,7 +78,8 @@ public class BillingService extends Service implements ServiceConnection {
      * to the service and save the request on a queue to be run later when
      * the service is connected.
      */
-    abstract class BillingRequest {
+    abstract class BillingRequest 
+    {
         private final int mStartId;
         protected long mRequestId;
 
@@ -86,7 +87,8 @@ public class BillingService extends Service implements ServiceConnection {
             mStartId = startId;
         }
 
-        public int getStartId() {
+        public int getStartId() 
+        {
             return mStartId;
         }
 
@@ -125,17 +127,24 @@ public class BillingService extends Service implements ServiceConnection {
          * @return true if the request ran successfully; false if the service
          * is not connected or there was an error when trying to use it
          */
-        public boolean runIfConnected() {
-            if (Consts.DEBUG) {
+        public boolean runIfConnected() 
+        {
+            if (Consts.DEBUG)
+            {
                 Log.d(TAG, getClass().getSimpleName());
             }
-            if (mService != null) {
-                try {
+            
+            if (mService != null) 
+            {
+                try 
+                {
                     mRequestId = run();
-                    if (Consts.DEBUG) {
+                    if (Consts.DEBUG)
+                    {
                         Log.d(TAG, "request id: " + mRequestId);
                     }
-                    if (mRequestId >= 0) {
+                    if (mRequestId >= 0) 
+                    {
                         mSentRequests.put(mRequestId, this);
                     }
                     return true;
@@ -168,7 +177,8 @@ public class BillingService extends Service implements ServiceConnection {
          * request.
          * @param responseCode the response code
          */
-        protected void responseCodeReceived(ResponseCode responseCode) {
+        protected void responseCodeReceived(ResponseCode responseCode)
+        {
         }
 
         protected Bundle makeRequestBundle(String method) {
@@ -179,7 +189,8 @@ public class BillingService extends Service implements ServiceConnection {
             return request;
         }
 
-        protected void logResponseCode(String method, Bundle response) {
+        protected void logResponseCode(String method, Bundle response)
+         {
             ResponseCode responseCode = ResponseCode.valueOf(
                     response.getInt(Consts.BILLING_RESPONSE_RESPONSE_CODE));
             if (Consts.DEBUG) {
@@ -257,7 +268,8 @@ public class BillingService extends Service implements ServiceConnection {
         }
 
         @Override
-        protected void responseCodeReceived(ResponseCode responseCode) {
+        protected void responseCodeReceived(ResponseCode responseCode)
+         {
             ResponseHandler.responseCodeReceived(BillingService.this, this, responseCode);
         }
     }
@@ -265,16 +277,19 @@ public class BillingService extends Service implements ServiceConnection {
     /**
      * Wrapper class that confirms a list of notifications to the server.
      */
-    class ConfirmNotifications extends BillingRequest {
+    class ConfirmNotifications extends BillingRequest 
+    {
         final String[] mNotifyIds;
 
-        public ConfirmNotifications(int startId, String[] notifyIds) {
+        public ConfirmNotifications(int startId, String[] notifyIds)
+         {
             super(startId);
             mNotifyIds = notifyIds;
         }
 
         @Override
-        protected long run() throws RemoteException {
+        protected long run() throws RemoteException
+         {
             Bundle request = makeRequestBundle("CONFIRM_NOTIFICATIONS");
             request.putStringArray(Consts.BILLING_REQUEST_NOTIFY_IDS, mNotifyIds);
             Bundle response = mService.sendBillingRequest(request);
@@ -287,7 +302,8 @@ public class BillingService extends Service implements ServiceConnection {
     /**
      * Wrapper class that sends a GET_PURCHASE_INFORMATION message to the server.
      */
-    class GetPurchaseInformation extends BillingRequest {
+    class GetPurchaseInformation extends BillingRequest 
+    {
         long mNonce;
         final String[] mNotifyIds;
 
@@ -302,9 +318,8 @@ public class BillingService extends Service implements ServiceConnection {
             mNonce = Security.generateNonce();
 	
 	
-			Log.i("GetPurchaseInformation", "Run");
+			Log.i("class  GetPurchaseInformation", "Run");
      
-      
             Bundle request = makeRequestBundle("GET_PURCHASE_INFORMATION");
             request.putLong(Consts.BILLING_REQUEST_NONCE, mNonce);
             request.putStringArray(Consts.BILLING_REQUEST_NOTIFY_IDS, mNotifyIds);
@@ -324,10 +339,12 @@ public class BillingService extends Service implements ServiceConnection {
     /**
      * Wrapper class that sends a RESTORE_TRANSACTIONS message to the server.
      */
-    class RestoreTransactions extends BillingRequest {
+    class RestoreTransactions extends BillingRequest
+     {
         long mNonce;
 
-        public RestoreTransactions() {
+        public RestoreTransactions()
+        {
             // This object is never created as a side effect of starting this
             // service so we pass -1 as the startId to indicate that we should
             // not stop this service after executing this request.
@@ -335,7 +352,8 @@ public class BillingService extends Service implements ServiceConnection {
         }
 
         @Override
-        protected long run() throws RemoteException {
+        protected long run() throws RemoteException
+         {
             mNonce = Security.generateNonce();
 
             Bundle request = makeRequestBundle("RESTORE_TRANSACTIONS");
@@ -353,7 +371,10 @@ public class BillingService extends Service implements ServiceConnection {
         }
 
         @Override
-        protected void responseCodeReceived(ResponseCode responseCode) {
+        protected void responseCodeReceived(ResponseCode responseCode)
+        {
+			Log.i("BillingService", "RestoreTransactions got response: " + responseCode);
+     
             ResponseHandler.responseCodeReceived(BillingService.this, this, responseCode);
         }
     }
@@ -392,31 +413,30 @@ public class BillingService extends Service implements ServiceConnection {
         if (Consts.DEBUG) {
             Log.i(TAG, "handleCommand() action: " + action);
         }
-        if (Consts.ACTION_CONFIRM_NOTIFICATION.equals(action)) {
+        if (Consts.ACTION_CONFIRM_NOTIFICATION.equals(action)) 
+        {
             String[] notifyIds = intent.getStringArrayExtra(Consts.NOTIFICATION_ID);
             confirmNotifications(startId, notifyIds);
-        } else if (Consts.ACTION_GET_PURCHASE_INFORMATION.equals(action)) {
+        } else if (Consts.ACTION_GET_PURCHASE_INFORMATION.equals(action))
+        {
             String notifyId = intent.getStringExtra(Consts.NOTIFICATION_ID);
             getPurchaseInformation(startId, new String[] { notifyId });
         } else if (Consts.ACTION_PURCHASE_STATE_CHANGED.equals(action)) 
         {
-                  Log.i("BillingService", "Got ACTION_PURCHASE_STATE_CHANGED: " + action);
+            //Log.i("BillingService", "Got ACTION_PURCHASE_STATE_CHANGED: " + action);
      
             String signedData = intent.getStringExtra(Consts.INAPP_SIGNED_DATA);
             String signature = intent.getStringExtra(Consts.INAPP_SIGNATURE);
             purchaseStateChanged(startId, signedData, signature);
+            
         } else if (Consts.ACTION_RESPONSE_CODE.equals(action))
          {
-         
-                     Log.i("BillingService", "Got ACTION_RESPONSE_CODE: " + action);
+           // Log.i("BillingService", "Got ACTION_RESPONSE_CODE: " + action);
      
             long requestId = intent.getLongExtra(Consts.INAPP_REQUEST_ID, -1);
-            int responseCodeIndex = intent.getIntExtra(Consts.INAPP_RESPONSE_CODE,
-					ResponseCode.RESULT_ERROR.ordinal());
+            int responseCodeIndex = intent.getIntExtra(Consts.INAPP_RESPONSE_CODE, ResponseCode.RESULT_ERROR.ordinal());
             ResponseCode responseCode = ResponseCode.valueOf(responseCodeIndex);
             checkResponseCode(requestId, responseCode);
-            
-            	//SharedActivity.nativeSendGUIEx(SharedActivity.app.MESSAGE_TYPE_IAP_RESULT, ResponseCode.RESULT_ERROR.ordinal(),0,0);
         }
     }
 
@@ -518,39 +538,78 @@ public class BillingService extends Service implements ServiceConnection {
      * @param signedData the signed JSON string (signed, not encrypted)
      * @param signature the signature for the data, signed with the private key
      */
-    private void purchaseStateChanged(int startId, String signedData, String signature) {
+    private void purchaseStateChanged(int startId, String signedData, String signature)
+     {
         ArrayList<Security.VerifiedPurchase> purchases;
+         //Log.d(TAG, "purchaseStateChanged - about to verify" + startId);
+       
+           if (SharedActivity.app == null)
+             {
+				Log.d(TAG, "Ignoring IAB message, app isn't initted.  We'll ask for it later, when the app is run");
+				return;
+			}
+
         purchases = Security.verifyPurchase(signedData, signature);
        
-            Log.d(TAG, "purchaseStateChanged entered, ID " + startId);
+        //Log.d(TAG, "purchaseStateChanged entered, ID " + startId);
        
         if (purchases == null) 
         {
-            Log.d(TAG, "purchases was null, sending reply");
-             SharedActivity.nativeSendGUIEx(SharedActivity.app.MESSAGE_TYPE_IAP_ITEM_STATE, -1,0,0);
-	         // SharedActivity.nativeSendGUIEx(SharedActivity.app.MESSAGE_TYPE_IAP_ITEM_STATE, vp.purchaseState.ordinal(),0,0);
+            //Log.d(TAG, "purchases was null, ignoring");
+             
+             if (SharedActivity.app != null)
+             {
+			//	SharedActivity.nativeSendGUIEx(SharedActivity.app.MESSAGE_TYPE_IAP_ITEM_STATE, -1,0,0);
+	         }
               return;
         }
-
+		
         ArrayList<String> notifyList = new ArrayList<String>();
         for (VerifiedPurchase vp : purchases) 
         {
             if (vp.notificationId != null) 
             {
                 notifyList.add(vp.notificationId);
+            } 
+            
+             if (Consts.DEBUG)
+             {
+				//Log.i(TAG, "purchaseStateNonce>>> Code " + vp.nonce);
+                Log.i(TAG, "purchaseStateNotificationID>>> Code " + vp.notificationId);
+				Log.i(TAG, "purchaseStateOrderID>>> Code " + vp.orderId);
+				Log.i(TAG, "purchaseStateTime>>> Code " + vp.purchaseTime);
+				Log.i(TAG, "purchaseStatePayload>>> Code " + vp.developerPayload);
+				Log.i(TAG, "purchaseStateChanged>>> Code " + vp.purchaseState);
+				Log.i(TAG, "purchaseStateProductid>>> Productid " + vp.productId);
             }
-            Log.i(TAG, "purchaseStateChanged>>> Code " + vp.purchaseState);
-            Log.i(TAG, "purchaseStateChanged>>> Productid " + vp.productId);
        
-          
-           SharedActivity.nativeSendGUIStringEx(SharedActivity.app.MESSAGE_TYPE_IAP_ITEM_STATE, vp.purchaseState.ordinal(),0,0, vp.productId);
-           ResponseHandler.purchaseResponse(this, vp.purchaseState, vp.productId,
-                    vp.orderId, vp.purchaseTime, vp.developerPayload);
+             if (SharedActivity.app != null)
+             {
+				 if (vp.notificationId != null) 
+				{
+					//it's a real notification message of a new purchase/refund
+			           SharedActivity.nativeSendGUIStringEx(SharedActivity.app.MESSAGE_TYPE_IAP_ITEM_STATE, vp.purchaseState.ordinal(),0,0, vp.productId);
+				} else
+				{
+					//it's just a reply to us about getting a list of previously purchased items
+				     SharedActivity.nativeSendGUIStringEx(SharedActivity.app.MESSAGE_TYPE_IAP_PURCHASED_LIST_STATE, vp.purchaseState.ordinal(),0,0, vp.productId);
+				}
+	         }
+		
+			   // Log.i(TAG, "purchaseStateChanged> Sending purchaseResponse");
+			    //let android know we handled it and don't want it send again
+				ResponseHandler.purchaseResponse(this, vp.purchaseState, vp.productId, vp.orderId, vp.purchaseTime, vp.developerPayload);
+                   
         }
 
 		//signal that we're done sending stuff
-		        
-	    SharedActivity.nativeSendGUIEx(SharedActivity.app.MESSAGE_TYPE_IAP_ITEM_STATE, -1,0,0);
+		    
+		  
+		    if (SharedActivity.app != null)
+            {
+				 SharedActivity.nativeSendGUIEx(SharedActivity.app.MESSAGE_TYPE_IAP_PURCHASED_LIST_STATE, -1,0,0);
+			}
+			
 
         if (!notifyList.isEmpty()) 
         {
@@ -571,14 +630,15 @@ public class BillingService extends Service implements ServiceConnection {
      * @param responseCode a response code from Android Market to indicate the state
      * of the request
      */
-    private void checkResponseCode(long requestId, ResponseCode responseCode) {
+    private void checkResponseCode(long requestId, ResponseCode responseCode)
+    {
         BillingRequest request = mSentRequests.get(requestId);
        
-         Log.d(TAG, "checkResponseCode: " + responseCode);
+        //Log.d(TAG, "checkResponseCode: " + responseCode);
        
        if (responseCode != ResponseCode.RESULT_OK)
        {
-          Log.d(TAG, "Sending result error...");
+          //Log.d(TAG, "Sending result error...");
            SharedActivity.nativeSendGUIEx(SharedActivity.app.MESSAGE_TYPE_IAP_RESULT, responseCode.ordinal(),0,0);
        }
       
@@ -597,7 +657,8 @@ public class BillingService extends Service implements ServiceConnection {
      * Runs any pending requests that are waiting for a connection to the
      * service to be established.  This runs in the main UI thread.
      */
-    private void runPendingRequests() {
+    private void runPendingRequests() 
+    {
         int maxStartId = -1;
         BillingRequest request;
         while ((request = mPendingRequests.peek()) != null) {
@@ -634,7 +695,8 @@ public class BillingService extends Service implements ServiceConnection {
      * This runs in the main UI thread.
      */
     public void onServiceConnected(ComponentName name, IBinder service) {
-        if (Consts.DEBUG) {
+        if (Consts.DEBUG)
+        {
             Log.d(TAG, "Billing service connected");
         }
         mService = IMarketBillingService.Stub.asInterface(service);
@@ -644,8 +706,12 @@ public class BillingService extends Service implements ServiceConnection {
     /**
      * This is called when we are disconnected from the MarketBillingService.
      */
-    public void onServiceDisconnected(ComponentName name) {
-        Log.w(TAG, "Billing service disconnected");
+    public void onServiceDisconnected(ComponentName name)
+     {
+         if (Consts.DEBUG)
+         {
+		    Log.w(TAG, "Billing service disconnected");
+         }
         mService = null;
     }
 

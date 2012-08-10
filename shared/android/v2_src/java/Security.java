@@ -133,10 +133,22 @@ public class Security {
 			 */
 			String base64EncodedPublicKey = SharedActivity.app.BASE64_PUBLIC_KEY;
 			//Log.i(TAG, "Security key: " + base64EncodedPublicKey);
-			PublicKey key = Security.generatePublicKey(base64EncodedPublicKey);
-			verified = Security.verify(key, signedData, signature);
-			if (!verified) {
-				Log.w(TAG, "signature does not match data.");
+			
+			 try
+			 {
+				PublicKey key = Security.generatePublicKey(base64EncodedPublicKey);
+				verified = Security.verify(key, signedData, signature);
+		     } catch (Exception e) 
+		     {
+                Log.e("RT", "InvalidKeySpecException:  Did you remember to set the public key in Main.java?! :", e);
+                return null;
+            }
+			
+			
+			
+			if (!verified)
+			{
+				Log.w(TAG, "signature does not match data.  Check your Main.java's BASE64_PUBLIC_KEY var!");
 				return null;
 			}
 		}

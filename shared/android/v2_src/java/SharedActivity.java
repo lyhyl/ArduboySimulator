@@ -147,7 +147,7 @@ import android.view.View.OnClickListener;
 	//************************************************************************
 
 
-	public static SharedActivity app; //a global to use in static functions with JNI
+	public static SharedActivity app = null; //a global to use in static functions with JNI
 	
 	//for the accelerometer
 	private static float accelHzSave     = 0;
@@ -222,7 +222,8 @@ import android.view.View.OnClickListener;
             //    logProductActivity(itemId, purchaseState + "\n\t" + developerPayload);
             }
 
-            if (purchaseState == PurchaseState.PURCHASED) {
+            if (purchaseState == PurchaseState.PURCHASED)
+            {
               //  mOwnedItems.add(itemId);
             }
            // mCatalogAdapter.setOwnedItems(mOwnedItems);
@@ -254,18 +255,22 @@ import android.view.View.OnClickListener;
         }
 
         @Override
-        public void onRestoreTransactionsResponse(RestoreTransactions request,
-                ResponseCode responseCode) {
-            if (responseCode == ResponseCode.RESULT_OK) {
+        public void onRestoreTransactionsResponse(RestoreTransactions request, ResponseCode responseCode)
+         {
+            if (responseCode == ResponseCode.RESULT_OK)
+             {
                   Log.d(PackageName, "completed RestoreTransactions request");
                
                 // Update the shared preferences so that we don't perform
                 // a RestoreTransactions again.
               
             } else {
-                if (Consts.DEBUG) {
+                if (Consts.DEBUG) 
+                {
+					//let it know nothing else is coming
                     Log.d(TAG, "RestoreTransactions error: " + responseCode);
-                }
+           			SharedActivity.nativeSendGUIEx(SharedActivity.app.MESSAGE_TYPE_IAP_ITEM_STATE, -1,0,0);
+	            }
             }
         }
     }
@@ -868,6 +873,11 @@ import android.view.View.OnClickListener;
 	
 	final static int MESSAGE_TYPE_HW_TOUCH_KEYBOARD_WILL_SHOW = 39; //ios only, when not using external keyboard
 	final static int MESSAGE_TYPE_HW_TOUCH_KEYBOARD_WILL_HIDE = 40; //ios only, when not using external keyboard
+	final static int MESSAGE_TYPE_HW_KEYBOARD_INPUT_ENDING = 41; //proton is done with input and requesting that the keyboard hid
+	final static int ESSAGE_TYPE_HW_KEYBOARD_INPUT_STARTING = 42; //proton is asking for the keyboard to open
+   
+	//GOOGLE BILLING again
+	final static int MESSAGE_TYPE_IAP_PURCHASED_LIST_STATE = 43; //for sending back lists of items we've already purchased
 
 	final static int MESSAGE_USER = 1000; //send your own messages after this #
 	

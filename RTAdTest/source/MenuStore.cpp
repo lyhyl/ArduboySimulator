@@ -11,7 +11,7 @@ void MenuStoreOnSelect(VariantList *pVList) //0=vec2 point of click, 1=entity se
 
 	LogMsg("Clicked %s entity at %s", pEntClicked->GetName().c_str(),pVList->m_variant[1].Print().c_str());
 
-	if (pEntClicked->GetName() != "back")
+	if (pEntClicked->GetName() != "back" && pEntClicked->GetName() != "sync")
 	{
 		GetApp()->GetAdManager()->TrackingLog("ClickedIAP", "item", pEntClicked->GetName());
 	}
@@ -45,6 +45,12 @@ void MenuStoreOnSelect(VariantList *pVList) //0=vec2 point of click, 1=entity se
 	{
 		GetApp()->m_IAPManager.BuyItem("com.rtsoft.rtadtest.points");
 	}
+	
+	if (pEntClicked->GetName() == "sync")
+	{
+		GetApp()->m_IAPManager.SyncPurchases();
+		return;
+	}
 
 	if (pEntClicked->GetName() == "back")
 	{
@@ -71,7 +77,10 @@ Entity * MenuStoreCreate(Entity *pParentEnt)
     if (GetEmulatedPlatformID() == PLATFORM_ID_ANDROID)
     {
         //Android has some extra ways to test
-        pButtonEntity = CreateTextButtonEntity(pBG, "BuyTestPurchased", 10, y+=ySpacer, "Buy android.test.purchased"); 
+		pButtonEntity = CreateTextButtonEntity(pBG, "sync", 10, y+=ySpacer, "Sync purchases (android)"); 
+		pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MenuStoreOnSelect);
+
+		pButtonEntity = CreateTextButtonEntity(pBG, "BuyTestPurchased", 10, y+=ySpacer, "Buy android.test.purchased"); 
         pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MenuStoreOnSelect);
 
         pButtonEntity = CreateTextButtonEntity(pBG, "BuyTestRefunded", 10, y+=ySpacer, "Buy android.test.refunded"); 
@@ -82,15 +91,16 @@ Entity * MenuStoreCreate(Entity *pParentEnt)
 
       }
      
-    pButtonEntity = CreateTextButtonEntity(pBG, "BuySword", 10, y+=ySpacer, "Buy com.rtsoft.rtadtest.sword - one time (untested on webos)"); 
+    pButtonEntity = CreateTextButtonEntity(pBG, "BuySword", 10, y+=ySpacer, "Buy com.rtsoft.rtadtest.sword"); 
     pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MenuStoreOnSelect);
-    
+   
+	pButtonEntity = CreateTextButtonEntity(pBG, "BuyShield", 10, y+=ySpacer, "Buy com.rtsoft.rtadtest.shield"); 
+	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MenuStoreOnSelect);
+
     pButtonEntity = CreateTextButtonEntity(pBG, "BuyPoints", 10, y+=ySpacer, "Buy com.rtsoft.rtadtest.points (consumable/unmanaged)"); 
     pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MenuStoreOnSelect);
     
 
-	//pButtonEntity = CreateTextButtonEntity(pBG, "BuyShield", 10, 190, "Buy com.rtsoft.rtadtest.shield"); 
-	//pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MenuStoreOnSelect);
 
 	//pButtonEntity = CreateTextButtonEntity(pBG, "BuyLife", 10, y+=ySpacer, "Buy com.rtsoft.rtadtest.life"); 
 	//pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MenuStoreOnSelect);

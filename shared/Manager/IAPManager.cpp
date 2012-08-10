@@ -2,7 +2,7 @@
 #include "IAPManager.h"
 
 #ifdef _DEBUG
-	#define SHOW_DEBUG_IAP_MESSAGES
+	//#define SHOW_DEBUG_IAP_MESSAGES
 #endif
 
 #if defined PLATFORM_WINDOWS || defined PLATFORM_LINUX
@@ -25,6 +25,7 @@ IAPManager::IAPManager()
 	m_failureReason = FAILURE_REASON_NONE;
 	m_timer = 0;
 	m_bWaitingForReply = false;
+	m_bGettingItemList = false;
 }
 
 IAPManager::~IAPManager()
@@ -36,89 +37,40 @@ bool IAPManager::IsItemPurchased(const string &item) const
 	return m_items.find(item) != m_items.end();
 }
 
-void IAPManager::OnMessage( Message &m )
+void IAPManager::HandlePurchaseListReply(Message &m)
 {
-	if (m_state == STATE_NONE) 
+	//we must have asked for a list of purchased the user has made on android
+	switch (ItemStateCode((int)m.GetParm1()))
 	{
-#ifdef SHOW_DEBUG_IAP_MESSAGES
-		if (m.GetType() == MESSAGE_TYPE_IAP_RESULT || m.GetType() == MESSAGE_TYPE_IAP_ITEM_STATE)
+	case END_OF_LIST:
 		{
-			LogMsg("Ignoring IAP response, wrong state: %d - Extra: %s", (int)m.GetParm1(), m_extraData.c_str());
-		}
+#ifdef SHOW_DEBUG_IAP_MESSAGES
+			LogMsg("(finished receiving purchase history of managed items)");
 #endif
 		
-		return;
-	}
-
-	switch (m.GetType())
-	{
-	case MESSAGE_TYPE_IAP_RESULT:
-	{
-		m_extraData = m.GetStringParm();
-	
-#ifdef SHOW_DEBUG_IAP_MESSAGES
-		LogMsg("Got IAP response: %d - Extra: %s", (int)m.GetParm1(), m_extraData.c_str());
-#endif
-
-		ResponseCode result = ResponseCode((int)m.GetParm1());
-		switch (result)
-		{
-		case RESULT_OK:
-		case RESULT_OK_ALREADY_PURCHASED:
-			if (GetEmulatedPlatformID() != PLATFORM_ID_ANDROID)
-			{
-				//Android sends a MESSAGE_TYPE_IAP_ITEM_STATE instead, I can't remember why.. but for
-				//other platforms we just do this:
-				//we successfully bought it
-
-				endPurchaseProcessWithResult(result == RESULT_OK_ALREADY_PURCHASED ? RETURN_STATE_ALREADY_PURCHASED : RETURN_STATE_PURCHASED);
-			}
-			break;
-
-		case RESULT_USER_CANCELED:
-			m_failureReason = FAILURE_REASON_USER_CANCELED;
-		default:
-			endPurchaseProcessWithResult(RETURN_STATE_FAILED);
-			break;
-		}
-
-		m_itemToBuy.clear();
-		break;
-	}
-
-	case MESSAGE_TYPE_IAP_ITEM_STATE:
-	{
-	#ifdef SHOW_DEBUG_IAP_MESSAGES
-		LogMsg("Got Item State response: %d", (int)m.GetParm1());
-	#endif
-		
-		switch (ItemStateCode((int)m.GetParm1()))
-		{
-		case END_OF_LIST:
-		{
+			//we want to buy an item as soon as this is done
 			if (!m_itemToBuy.empty())
-			{
-				//now buy the item
-
-				//but wait, do we already own it?
-				if (IsItemPurchased(m_itemToBuy))
 				{
-					//just fake a yes to the purchase request now
-					endPurchaseProcessWithResult(RETURN_STATE_ALREADY_PURCHASED);
-					m_itemToBuy.clear();
-					break;
-				}
+					//now buy the item
 
-#ifdef SHOW_DEBUG_IAP_MESSAGES
-				LogMsg("Well, we don't already own it.  Sending buy request for %s", m_itemToBuy.c_str());
-#endif
-				sendPurchaseMessage();
-			}
+					//but wait, do we already own it?
+					if (IsItemPurchased(m_itemToBuy))
+					{
+						//just fake a yes to the purchase request now
+						endPurchaseProcessWithResult(RETURN_STATE_ALREADY_PURCHASED);
+						m_itemToBuy.clear();
+						break;
+					}
 
+					#ifdef SHOW_DEBUG_IAP_MESSAGES
+						LogMsg("Well, we don't already own it.  Sending buy request for %s", m_itemToBuy.c_str());
+					#endif
+					sendPurchaseMessage();
+				} 
 			break;
 		}
 
-		case PURCHASED:
+	case PURCHASED:
 		{
 #ifdef SHOW_DEBUG_IAP_MESSAGES
 			LogMsg("Has purchased %s", m.GetStringParm().c_str());
@@ -131,30 +83,140 @@ void IAPManager::OnMessage( Message &m )
 				LogMsg("Added %s, now has %d purchased items", m.GetStringParm().c_str(), m_items.size());
 			}
 #endif
+		}
 
-			if (m_itemToBuy.empty())
-			{
-				//done buying a real item
+		break;
 
-			#if defined (FAKE_IAP_REPLY) && defined (FAKE_IAP_RESPONSE_ALREADY_PURCHASED)
-				endPurchaseProcessWithResult(RETURN_STATE_ALREADY_PURCHASED);		
-			#else
-				endPurchaseProcessWithResult(RETURN_STATE_PURCHASED);
+	case CANCELED:
+	case REFUNDED:
+		LogMsg("Got canceled or refunded (%d) when asking about previous purchases.  That's weird.", (int)m.GetParm1());
+		break;
+	}
+}
+
+
+void IAPManager::SendUnexpectedPurchaseSignal(eReturnState returnState, string itemID, string extra)
+{
+	#ifdef SHOW_DEBUG_IAP_MESSAGES
+	LogMsg("SendUnexpectedPurchaseSignal> Sending message %d about %s", returnState,  itemID.c_str());
+	#endif
+
+	VariantList vList( (uint32)returnState, extra, itemID);
+	m_sig_item_unexpected_purchase_result(&vList);
+}
+											  
+void IAPManager::HandleIAPBuyResult(Message &m)
+{
+	m_extraData = m.GetStringParm();
+
+#ifdef SHOW_DEBUG_IAP_MESSAGES
+	LogMsg("Got MESSAGE_TYPE_IAP_RESULT response: %d - Extra: %s", (int)m.GetParm1(), m_extraData.c_str());
+#endif
+
+	ResponseCode result = ResponseCode((int)m.GetParm1());
+	switch (result)
+	{
+	case RESULT_OK:
+	case RESULT_OK_ALREADY_PURCHASED:
+		endPurchaseProcessWithResult(result == RESULT_OK_ALREADY_PURCHASED ? RETURN_STATE_ALREADY_PURCHASED : RETURN_STATE_PURCHASED);
+		break;
+
+	case RESULT_USER_CANCELED:
+		m_failureReason = FAILURE_REASON_USER_CANCELED;
+	default:
+		endPurchaseProcessWithResult(RETURN_STATE_FAILED);
+		break;
+	}
+
+	m_itemToBuy.clear();
+}
+
+void IAPManager::HandleItemUpdateState(Message &m)
+{
+	
+	#ifdef SHOW_DEBUG_IAP_MESSAGES
+	LogMsg("New order received/changed: %d, about %s", (int)m.GetParm1(), m.GetStringParm().c_str());
+	#endif
+		
+		switch (ItemStateCode((int)m.GetParm1()))
+		{
+		case END_OF_LIST:
+		{
+			LogMsg("END_OF_LIST while getting an item update state?");
+			break;
+		}
+
+		case PURCHASED:
+		{
+			#ifdef SHOW_DEBUG_IAP_MESSAGES
+						LogMsg("Has purchased %s", m.GetStringParm().c_str());
 			#endif
-			
+			if (m_state == STATE_WAITING)
+			{
+				endPurchaseProcessWithResult(RETURN_STATE_PURCHASED);
 			} else
 			{
-				//we're actually just scanning purchased items, not finished
+				#ifdef SHOW_DEBUG_IAP_MESSAGES
+					LogMsg("Got unplanned item purchase message, must have been delayed and delivered later.  Item: %s", m.GetStringParm().c_str());
+				#endif
+				
+				SendUnexpectedPurchaseSignal(RETURN_STATE_PURCHASED, m.GetStringParm(), "");
 			}
-
 			break;
 		}
 
 		case CANCELED:
+			if (m_state == STATE_WAITING)
+			{
+				endPurchaseProcessWithResult(RETURN_STATE_FAILED);
+			} else
+			{
+				//huh?  This apparently gets sent instead of REFUNDED sometimes
+				//handle as a real refund message that we didn't expect
+				SendUnexpectedPurchaseSignal(RETURN_STATE_REFUNDED, m.GetStringParm(), "");
+			}
+			break;
+		
 		case REFUNDED:
-			endPurchaseProcessWithResult(RETURN_STATE_FAILED);
+			
+			LogMsg("Got item refund message. item: %s", m.GetStringParm().c_str());
+			
+			//I don't think we'd normally ever get this while waiting for a purchase to go through (can't refund what we don't own yet) but
+			//when buying the android.test.refunded item this does happen, so we'll handle it as a cancel if we're waiting on a reply
+			if (m_state == STATE_WAITING)
+			{
+				endPurchaseProcessWithResult(RETURN_STATE_FAILED);
+			} else
+			{
+				//handle as a real refund message that we didn't expect
+				SendUnexpectedPurchaseSignal(RETURN_STATE_REFUNDED, m.GetStringParm(), "");
+			}
+
 			break;
 		}
+}
+
+void IAPManager::OnMessage( Message &m )
+{
+
+	switch (m.GetType())
+	{
+	case MESSAGE_TYPE_IAP_PURCHASED_LIST_STATE:
+		HandlePurchaseListReply(m);
+		break;
+	
+
+	case MESSAGE_TYPE_IAP_RESULT:
+	{
+		HandleIAPBuyResult(m);
+		break;
+	}
+
+	case MESSAGE_TYPE_IAP_ITEM_STATE:
+	{
+		//an item was purchased, or refunded.  Currently called by android only, and can be called at any time the app is initizalized, not
+		//just when we are asking to buy something.
+		HandleItemUpdateState(m);
 		break;
 	}
 
@@ -165,6 +227,7 @@ void IAPManager::OnMessage( Message &m )
 
 bool IAPManager::Init()
 {
+	SyncPurchases(); //only does anything on Android
 	return true;
 }
 
@@ -187,23 +250,6 @@ void IAPManager::Update()
 			//fake a successful sale message back to us, so we'll process the order even while emulating on desktop
 			m_bWaitingForReply = false;
 
-			if (GetEmulatedPlatformID() == PLATFORM_ID_ANDROID)
-			{
-				//I'm not sure why Android sends this message instead of just MESSAGE_TYPE_IAP_RESULT.. but some client games
-				//rely on this behavior so I don't want to mess with it.. something to do with how Android actually checks the
-				//status of all IAP when you try to buy something, to see if it's already been bought...
-				Message m(MESSAGE_CLASS_GUI, TIMER_SYSTEM, MESSAGE_TYPE_IAP_ITEM_STATE);
-				#if defined (FAKE_IAP_RESPONSE_SUCCESS)
-					m.SetParm1(PURCHASED); //to fake purchased
-		 		#elif defined (FAKE_IAP_RESPONSE_ALREADY_PURCHASED)
-					m.SetParm1(PURCHASED); //to fake purchased.. on android, we don't have a special message showing a previous bought thing?  Hrm.
-				#else
-					m.SetParm1(CANCELED); //to fake canceled
-				#endif
-
-				OnMessage(m);
-			} else
-			{
 				//WebOS & iOS
 				//DEBUG - To test successful or faked purchases under desktop emulation
 				#if defined (FAKE_IAP_RESPONSE_SUCCESS)
@@ -215,7 +261,7 @@ void IAPManager::Update()
 				#else
 				GetMessageManager()->SendGUIStringEx(MESSAGE_TYPE_IAP_RESULT, (float)IAPManager::RESULT_USER_CANCELED, 0.0f, 0, "Faked order for testing: user canceled");
 				#endif
-			}
+			
 		}
 	}
 #endif
@@ -232,7 +278,6 @@ void IAPManager::BuyItem(const string &itemName)
 	LogMsg("Planning to buy %s", itemName.c_str());
 #endif
 
-	
 	if (GetEmulatedPlatformID() == PLATFORM_ID_ANDROID)
 	{
 		//The Android in-app-billing way
@@ -243,13 +288,14 @@ void IAPManager::BuyItem(const string &itemName)
 
 		m_items.clear();
 		m_state = STATE_WAITING;
-
+		
 		#ifndef FAKE_IAP_REPLY
 			OSMessage o;
 			o.m_type = OSMessage::MESSAGE_IAP_GET_PURCHASED_LIST;
 			GetBaseApp()->AddOSMessage(o);
 		#else
 		//faking it, this way is easier
+		
 		sendPurchaseMessage();
 		#endif
 	} else
@@ -257,6 +303,7 @@ void IAPManager::BuyItem(const string &itemName)
 		//issue buy command the normal way, it's not like Android where you need to get a list of stuff first
 		sendPurchaseMessage();
 	}
+	
 }
 
 void IAPManager::Reset()
@@ -290,4 +337,17 @@ void IAPManager::endPurchaseProcessWithResult(eReturnState returnState)
 	m_returnState = returnState;
 	VariantList vList(uint32(m_returnState), m_extraData, m_lastItemID, uint32(m_failureReason));
 	m_sig_item_purchase_result(&vList);
+}
+
+void IAPManager::SyncPurchases()
+{
+	LogMsg("Syncing purchases... (android only)");
+	m_items.clear();
+#ifdef PLATFORM_ANDROID
+	OSMessage o;
+	o.m_type = OSMessage::MESSAGE_IAP_GET_PURCHASED_LIST;
+	GetBaseApp()->AddOSMessage(o);
+
+#endif
+
 }

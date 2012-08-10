@@ -22,6 +22,8 @@
 #include "Ad/AdProviderFlurry.h"
 #endif
 
+void OnUnexpectedIAPItemUpdate(VariantList *pVList);
+
 MessageManager g_messageManager;
 MessageManager * GetMessageManager() {return &g_messageManager;}
 
@@ -58,7 +60,6 @@ App::App()
 App::~App()
 {
 }
-
 
 bool App::Init()
 {
@@ -118,6 +119,10 @@ bool App::Init()
 #endif
 	
 	m_IAPManager.Init();
+	
+	//register to recieve unexpected IAP purchase/refund messages, only applicable to Android
+	m_IAPManager.m_sig_item_unexpected_purchase_result.connect(OnUnexpectedIAPItemUpdate);
+	
 	m_adManager.Init();
 	GetBaseApp()->SetFPSVisible(true);
 	
@@ -138,7 +143,6 @@ bool App::Init()
 
 	AdProviderFlurry *pFlurryProvider = new AdProviderFlurry;
 	pFlurryProvider->SetupInfo("<your flurry API key>");
-
 	m_adManager.AddProvider(pFlurryProvider);
 
 #endif
@@ -243,7 +247,7 @@ void App::OnMessage( Message &m )
 	BaseApp::OnMessage(m);
 }
 
-const char * GetAppName() {return "AdTest";}
+const char * GetAppName() {return "RTAdTest";}
 
 //the stuff below is for android/webos builds.  Your app needs to be named like this.
 
@@ -262,3 +266,27 @@ const char * GetBundleName()
 }
 
 
+
+void OnUnexpectedIAPItemUpdate(VariantList *pVList)
+{
+	IAPManager::eReturnState state = (IAPManager::eReturnState)(int)pVList->Get(0).GetUINT32();
+	string extra = pVList->Get(1).GetString(); //probably blank
+	string itemID = pVList->Get(2).GetString();
+
+	switch (state)
+	{
+	case IAPManager::RETURN_STATE_PURCHASED:
+		LogMsg("User bought %s, may have been delayed before.  Process it! (extra: %s)",
+			itemID.c_str(), extra.c_str());
+		break;
+
+	case IAPManager::RETURN_STATE_REFUNDED:
+		LogMsg("User was refunded %s, remove it from them!  Process it! (extra: %s)",
+			itemID.c_str(), extra.c_str());
+		break;
+		
+	default:
+		LogMsg("Unexpected message (%d) about item %s (extra: %s)", state, 
+			itemID.c_str(), extra.c_str());
+	}
+}
