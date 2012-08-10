@@ -181,6 +181,8 @@ enum eMessageType
     MESSAGE_TYPE_HW_KEYBOARD_INPUT_STARTING, //proton is asking for the keyboard to open 
     
 	
+	MESSAGE_TYPE_IAP_PURCHASED_LIST_STATE, //used by android when it IAPManager syncs to get a list of item id's purchased
+
     MESSAGE_USER = 1000, //users can add their own messages starting here
 
 };

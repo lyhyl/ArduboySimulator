@@ -52,9 +52,14 @@ public class BillingReceiver extends BroadcastReceiver {
    
      Log.w(TAG, "Billing receiver got something: " + action);
   
+   if (SharedActivity.app == null)
+   {
+    Log.w(TAG, "Ignoring IAB message, app not alive.  Will get it later: " + action);
+	return;
+   }
         if (Consts.ACTION_PURCHASE_STATE_CHANGED.equals(action)) 
         {
-             Log.i(TAG, "Calling purchaseStateChanged..");
+             //Log.i(TAG, "Calling purchaseStateChanged..");
             String signedData = intent.getStringExtra(Consts.INAPP_SIGNED_DATA);
             String signature = intent.getStringExtra(Consts.INAPP_SIGNATURE);
             purchaseStateChanged(context, signedData, signature);
@@ -90,7 +95,7 @@ public class BillingReceiver extends BroadcastReceiver {
     private void purchaseStateChanged(Context context, String signedData, String signature) 
     {
        
-          Log.w(TAG, "Billing receiver got purchaseStateChanged: ");
+        //  Log.w(TAG, "Billing receiver got purchaseStateChanged: ");
      		
         Intent intent = new Intent(Consts.ACTION_PURCHASE_STATE_CHANGED);
         intent.setClass(context, BillingService.class);
@@ -112,7 +117,7 @@ public class BillingReceiver extends BroadcastReceiver {
      */
     private void notify(Context context, String notifyId)
      {
-         Log.w(TAG, "Billing receiver got notify: "+ notifyId);
+        // Log.w(TAG, "Billing receiver got notify: "+ notifyId);
   
      
         Intent intent = new Intent(Consts.ACTION_GET_PURCHASE_INFORMATION);
@@ -131,9 +136,8 @@ public class BillingReceiver extends BroadcastReceiver {
      */
     private void checkResponseCode(Context context, long requestId, int responseCodeIndex)
      {
-        Log.w(TAG, "Billing receiver got checkResponseCode: "+ responseCodeIndex);
-        // SharedActivity.nativeSendGUIEx(SharedActivity.MESSAGE_TYPE_IAP_ITEM_STATE,  responseCodeIndex,0,0);
-	
+       // Log.i(TAG, " private void checkResponseCode: "+ responseCodeIndex);
+   
         Intent intent = new Intent(Consts.ACTION_RESPONSE_CODE);
         intent.setClass(context, BillingService.class);
         intent.putExtra(Consts.INAPP_REQUEST_ID, requestId);

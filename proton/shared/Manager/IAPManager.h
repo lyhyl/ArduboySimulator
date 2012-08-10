@@ -39,7 +39,8 @@ public:
 		RETURN_STATE_NONE,                //!< No result available. This is used e.g. when no purchases have been initiated yet.
 		RETURN_STATE_FAILED,              //!< The purchase process has failed.
 		RETURN_STATE_PURCHASED,           //!< The purchase process has finished successfully.
-		RETURN_STATE_ALREADY_PURCHASED    //!< The item has been purchased already previously. Applicable to managed items.
+		RETURN_STATE_ALREADY_PURCHASED,   //!< The item has been purchased already previously. Applicable to managed items.
+		RETURN_STATE_REFUNDED			  //!< The item has been refunded - only applicable to android and if you listen to m_sig_item_unexpected_purchase_result
 	};
 
 	/**
@@ -98,6 +99,8 @@ public:
 	 */
 	std::string GetItemID() const {return m_lastItemID;}
 
+	void SyncPurchases(); //on android, it refreshes any outstanding purchases and causes IsItemPurchased() to return valid results
+
 	enum ResponseCode
 	{
 		//Don't change the order, will screw up Android stuff
@@ -112,7 +115,7 @@ public:
 	};
 
 	/**
-	 * A signal for reporting changes in the purchasing process.
+	 * A signal for reporting changes in the purchasing process, when waiting for a buy request to happen
 	 *
 	 * The parameter variant list contains the following items:
 	 * - 0: the return code of type \link IAPManager::eReturnState <tt>eReturnState</tt>\endlink
@@ -127,7 +130,21 @@ public:
 	 */
 	boost::signal<void (VariantList*)> m_sig_item_purchase_result; 
 	
+	/**
+	 * A signal for reporting an unexpected purchase or refund (happens on android only so far, and can happen at ANY TIME the
+	 * app is running)
+	 *
+	 * The parameter variant list contains the following items:
+	 * - 0: the return code of type \link IAPManager::eReturnState <tt>eReturnState</tt>\endlink
+	 *      as a uint. See \c GetReturnState().
+	 * - 1: a string that gives more information about the result. (currently unused)
+	 * - 2: the item id in question (as a string)
+	 */
+	boost::signal<void (VariantList*)> m_sig_item_unexpected_purchase_result; //something we didn't see coming, like an item
+	//refund, or buying an item an hour later at any point in the game. (this can only happens on Android)
+
 protected:
+
 	enum eState
 	{
 		STATE_NONE,
@@ -137,12 +154,25 @@ protected:
 	enum ItemStateCode
 	{
 		//Don't change the order, will screw up Android stuff
+		ITEM_STATE_ERROR = -2, //hack to notice when somethin goes wrong with decryption
 		END_OF_LIST = -1,
 		PURCHASED,
 		CANCELED,
 		REFUNDED
 	};
-	
+
+
+	void sendPurchaseMessage();
+
+	/**
+	 * Changes the state of the purchasing process and sends the m_sig_item_purchase_result signal.
+	 */
+	void endPurchaseProcessWithResult(eReturnState returnState);
+	void HandlePurchaseListReply(Message &m);
+	void HandleIAPBuyResult(Message &m);
+	void HandleItemUpdateState(Message &m);
+	void SendUnexpectedPurchaseSignal(eReturnState returnState, string itemID, string extra);
+
 	eState m_state;
 	eReturnState m_returnState;
 	eFailureReason m_failureReason;
@@ -153,13 +183,10 @@ protected:
 	std::string m_extraData;
 	bool m_bWaitingForReply;
 	std::string m_lastItemID;
+	
+	bool m_bGettingItemList;
 
-	void sendPurchaseMessage();
-
-	/**
-	 * Changes the state of the purchasing process and sends the m_sig_item_purchase_result signal.
-	 */
-	void endPurchaseProcessWithResult(eReturnState returnState);
+	
 };
 
 #endif // IAPManager_h__

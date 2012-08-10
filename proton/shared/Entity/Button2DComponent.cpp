@@ -227,28 +227,29 @@ void Button2DComponent::PerformClick(VariantList *pVList)
 
 void Button2DComponent::OnTouchEnd(VariantList *pVList)
 {
-	switch (*m_pButtonStyle) {
-	case BUTTON_STYLE_CLICK_ON_TOUCH_RELEASE:
+	switch (*m_pButtonStyle) 
 	{
-		TouchTrackInfo *pTouch = GetBaseApp()->GetTouch(pVList->Get(2).GetUINT32());
-		if (!pTouch->WasHandled() || pTouch->GetEntityThatHandledIt() == NULL || pTouch->GetEntityThatHandledIt() == GetParent())
+		case BUTTON_STYLE_CLICK_ON_TOUCH_RELEASE:
 		{
-			if (*m_pDisabled == 0)
-				PerformClick(pVList);
+			TouchTrackInfo *pTouch = GetBaseApp()->GetTouch(pVList->Get(2).GetUINT32());
+			if (!pTouch->WasHandled() || pTouch->GetEntityThatHandledIt() == NULL || pTouch->GetEntityThatHandledIt() == GetParent())
+			{
+				if (*m_pDisabled == 0)
+					PerformClick(pVList);
+			}
+			break;
 		}
-		break;
-	}
 
-	case BUTTON_STYLE_CLICK_ON_TOUCH_PRESS_RELEASE:
-		if (m_pressed)
-		{
-			if (*m_pDisabled == 0)
-				PerformClick(pVList);
-		}
-		break;
+		case BUTTON_STYLE_CLICK_ON_TOUCH_PRESS_RELEASE:
+			if (m_pressed)
+			{
+				if (*m_pDisabled == 0)
+					PerformClick(pVList);
+			}
+			break;
 
-	default:
-		break;
+		default:
+			break;
 	}
 
 	m_pressed = false;

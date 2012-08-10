@@ -1,4 +1,4 @@
-call Clean.bat
+#call Clean.bat
 
 call build_prepare.bat
 :Next package it with the java part

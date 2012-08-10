@@ -569,7 +569,15 @@ string IntToTime(int ms, bool bTextFormat)
 		{
 			r = ", "+r;
 		}
-		r = toString(minutes)+" mins"+r;
+		string mins = " mins";
+
+		if (minutes == 1)
+		{
+			mins = " min";
+		}
+
+		r = toString(minutes) +mins+r;
+		
 	}
 
 	return r;
