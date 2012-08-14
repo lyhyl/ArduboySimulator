@@ -574,10 +574,13 @@ void BaseApp::SetAllowScreenDimming(bool bAllowDimming)
 }
 void BaseApp::SetFPSLimit(float fps) 
 {
-	OSMessage o;
-	o.m_type = OSMessage::MESSAGE_SET_FPS_LIMIT;
-	o.m_x = fps;
-	GetBaseApp()->AddOSMessage(o);
+	if (fps >= 0.0f)
+	{
+		OSMessage o;
+		o.m_type = OSMessage::MESSAGE_SET_FPS_LIMIT;
+		o.m_x = fps;
+		GetBaseApp()->AddOSMessage(o);
+	}
 }
 
 void BaseApp::SetVideoMode(int width, int height, bool bFullScreen, float aspectRatio) //aspectRatio should be 0 to ignore

@@ -59,7 +59,7 @@ struct OSMessage
 		MESSAGE_OPEN_TEXT_BOX,
 		MESSAGE_CLOSE_TEXT_BOX,
 		MESSAGE_CHECK_CONNECTION,
-		MESSAGE_SET_FPS_LIMIT,
+		MESSAGE_SET_FPS_LIMIT, // Limit the frames per second of the main loop. The fps limit is passed in the m_x parameter. 0 means no limitation.
 		MESSAGE_SET_ACCELEROMETER_UPDATE_HZ,
 		MESSAGE_FINISH_APP, //only respected by windows, OSX, and android (Other platforms don't need it, as they have their own way...)
 		MESSAGE_SET_VIDEO_MODE,
@@ -352,7 +352,21 @@ public:
 	bool GetCheatMode() {return m_bCheatMode;}
 	void SetVideoMode(int width, int height, bool bFullScreen, float aspectRatio = 0) /*aspectRatio should be 0 to ignore */;
 	void KillOSMessagesByType(OSMessage::eMessageType type);
+
+	/**
+	 * Limits the running rate of the main loop. The main loop will execute (approximately)
+	 * at most \a fps number of times per second.
+	 *
+	 * Setting \a fps to zero removes the limitation and lets the main loop run as quickly
+	 * as possible. This is also the default.
+	 *
+	 * Negative values for \a fps are meaningless and are silently ignored.
+	 *
+	 * \note Using this function sets an <b>upper bound</b> for the execution rate of the main
+	 * loop. It can't be used for example to ensure a given rate of calls to \c Update().
+	 */
 	void SetFPSLimit(float fps);
+
 	TouchTrackInfo * GetTouch(int index);
 	int GetTotalActiveTouches(); //will return the total number of fingers currently touching the screen.
 

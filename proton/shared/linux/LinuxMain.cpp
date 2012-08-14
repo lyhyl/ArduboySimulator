@@ -221,53 +221,45 @@ void SDLEventLoop()
 		}
 
 		case SDL_KEYDOWN:
+		{
+			if (ev.key.keysym.mod & KMOD_CTRL)
 			{
 				switch (ev.key.keysym.sym)
 				{
-					case SDLK_ESCAPE:
-						// Escape forces us to quit the app
-						// this is also sent when the user makes a back gesture
-						g_bAppFinished = true;
+					case SDLK_l: // Left landscape mode
+						ChangeEmulationOrientationIfPossible(GetPrimaryGLY(), GetPrimaryGLX(), ORIENTATION_LANDSCAPE_LEFT);
+						break;
+
+					case SDLK_r: // Right landscape mode
+						ChangeEmulationOrientationIfPossible(GetPrimaryGLY(), GetPrimaryGLX(), ORIENTATION_LANDSCAPE_RIGHT);
+						break;
+
+					case SDLK_p: // Portrait mode
+						ChangeEmulationOrientationIfPossible(GetPrimaryGLX(), GetPrimaryGLY(), ORIENTATION_PORTRAIT);
+						break;
+
+					case SDLK_u: // Upside down portrait mode
+						ChangeEmulationOrientationIfPossible(GetPrimaryGLX(), GetPrimaryGLY(), ORIENTATION_PORTRAIT_UPSIDE_DOWN);
 						break;
 				}
-				
-				if (ev.key.keysym.mod & KMOD_CTRL) {
-					switch (ev.key.keysym.sym)
-					{
-						case SDLK_l: // Left landscape mode
-							ChangeEmulationOrientationIfPossible(GetPrimaryGLY(), GetPrimaryGLX(), ORIENTATION_LANDSCAPE_LEFT);
-							break;
-
-						case SDLK_r: // Right landscape mode
-							ChangeEmulationOrientationIfPossible(GetPrimaryGLY(), GetPrimaryGLX(), ORIENTATION_LANDSCAPE_RIGHT);
-							break;
-
-						case SDLK_p: // Portrait mode
-							ChangeEmulationOrientationIfPossible(GetPrimaryGLX(), GetPrimaryGLY(), ORIENTATION_PORTRAIT);
-							break;
-							
-						case SDLK_u: // Upside down portrait mode
-							ChangeEmulationOrientationIfPossible(GetPrimaryGLX(), GetPrimaryGLY(), ORIENTATION_PORTRAIT_UPSIDE_DOWN);
-							break;
-					}
-				}
-				
-				int vKey = ConvertSDLKeycodeToProtonVirtualKey(ev.key.keysym.sym);
-				GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW, (float)vKey, (float)VIRTUAL_KEY_PRESS);
-				
-				if (vKey >= SDLK_SPACE && vKey <= SDLK_DELETE || vKey == SDLK_BACKSPACE || vKey == SDLK_RETURN)
-				{
-					signed char key = vKey;
-					
-					if (ev.key.keysym.mod & KMOD_SHIFT || ev.key.keysym.mod & KMOD_CAPS)
-					{
-						key = toupper(key);
-					}
-					
-					GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, (float)key, (float)VIRTUAL_KEY_PRESS);
-				}
 			}
-			break;
+
+			int vKey = ConvertSDLKeycodeToProtonVirtualKey(ev.key.keysym.sym);
+			GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW, (float)vKey, (float)VIRTUAL_KEY_PRESS);
+
+			if (vKey >= SDLK_SPACE && vKey <= SDLK_DELETE || vKey == SDLK_BACKSPACE || vKey == SDLK_RETURN)
+			{
+				signed char key = vKey;
+
+				if (ev.key.keysym.mod & KMOD_SHIFT || ev.key.keysym.mod & KMOD_CAPS)
+				{
+					key = toupper(key);
+				}
+
+				GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR, (float)key, (float)VIRTUAL_KEY_PRESS);
+			}
+		}
+		break;
 			
 		case SDL_KEYUP:
 		{
@@ -329,8 +321,6 @@ int main(int argc, char *argv[])
 		goto cleanup;
 	}
 
-	static unsigned int gameTimer = 0;
-	static unsigned int fpsTimerLoopMS = 0;
 	GetBaseApp()->OnScreenSizeChange();
 
 	if (IsDesktop()) {
@@ -339,19 +329,17 @@ int main(int argc, char *argv[])
 		gPointerEventHandler = new TouchDeviceEmulatorPointerEventHandler(SDL_BUTTON_LEFT, SDL_BUTTON_RIGHT);
 	}
 
+	static Uint32 nextFrameTick = 0;
+	static Uint32 frameDelayMS = 0;
+
 	while(1)
 	{
-		if (g_bAppFinished) break;
-		SDLEventLoop();
-
-		if (fpsTimerLoopMS != 0)
+		if (g_bAppFinished)
 		{
-			while (gameTimer > SDL_GetTicks())
-			{
-				SDL_Delay(1); 
-			}
-			gameTimer = SDL_GetTicks()+fpsTimerLoopMS;
+			break;
 		}
+
+		SDLEventLoop();
 
 		if (g_isInForeground) 
 		{
@@ -364,7 +352,6 @@ int main(int argc, char *argv[])
 		{
 			OSMessage m = GetBaseApp()->GetOSMessages()->front();
 			GetBaseApp()->GetOSMessages()->pop_front();
-			//LogMsg("Got OS message %d, %s", m.m_type, m.m_string.c_str());
 
 			switch (m.m_type)
 			{
@@ -380,7 +367,13 @@ int main(int argc, char *argv[])
 					break;
 					
 				case OSMessage::MESSAGE_SET_FPS_LIMIT:
-					fpsTimerLoopMS = (int) (1000.0f/m.m_x);
+					if (m.m_x == 0.0f)
+					{
+						frameDelayMS = 0;
+					} else
+					{
+						frameDelayMS = (int)(1000.0f / m.m_x);
+					}
 					break;
 
 				case OSMessage::MESSAGE_SET_ACCELEROMETER_UPDATE_HZ:
@@ -408,13 +401,25 @@ int main(int argc, char *argv[])
 			}
 		}
 
-		// You should always have a little delay (recommend 10ms)
-		// at the end of your event loop. This keeps SDL from
-		// hogging all the CPU time. 
 		glFlush();
 		glFinish();
 		SDL_GL_SwapBuffers();
-		SDL_Delay(10); 
+
+		// Control FPS and give some time for other processes too
+		Uint32 sleepTime = 1;
+
+		if (frameDelayMS != 0)
+		{
+			Uint32 ticksNow = SDL_GetTicks();
+
+			if (nextFrameTick != 0 && nextFrameTick > ticksNow)
+			{
+				sleepTime = nextFrameTick - ticksNow;
+			}
+		}
+
+		SDL_Delay(sleepTime);
+		nextFrameTick = SDL_GetTicks() + frameDelayMS;
 	}
 	
 	GetBaseApp()->Kill();
