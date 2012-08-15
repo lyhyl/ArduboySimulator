@@ -327,10 +327,10 @@ bool EntityRetinaRemapIfNeeded(Entity *pEnt, bool bAdjustPosition = true, bool b
  *
  * If the \a bPreserveAspectRatio is set to \c true the resulting scale is uniform.
  * This means that \a pEnt's appearance will preserve its aspect ratio.
- * If \a pEnt is wider than it's tall \a vDestSize.y is ignored and the resulting
+ * If \a pEnt is taller than it's wide \a vDestSize.y is ignored and the resulting
  * width of \a pEnt will be \a vDestSize.x. The height of \a pEnt will be whatever
- * it needs to be to preserve the aspect ratio. Similarly if \a pEnt is taller than
- * it's wide <b>or it's square</b> \a vDestSize.x is ignored and the resulting
+ * it needs to be to preserve the aspect ratio. Similarly if \a pEnt is wider than
+ * it's tall <b>or it's square</b> \a vDestSize.x is ignored and the resulting
  * height of \a pEnt will be \a vDestSize.y. The width of \a pEnt will be whatever
  * it needs to be to preserve the aspect ratio.
  */
