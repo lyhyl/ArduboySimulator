@@ -99,7 +99,14 @@ public:
 	 */
 	std::string GetItemID() const {return m_lastItemID;}
 
-	void SyncPurchases(); //on android, it refreshes any outstanding purchases and causes IsItemPurchased() to return valid results
+	/**
+	 * Refreshes any previous and outstanding purchases and causes \c IsItemPurchased()
+	 * to return valid results.
+	 *
+	 * The synchronization happens asynchronously. When it's
+	 * done \c m_sig_purchased_list_updated gets signaled.
+	 */
+	void SyncPurchases();
 
 	enum ResponseCode
 	{
@@ -143,14 +150,14 @@ public:
 	boost::signal<void (VariantList*)> m_sig_item_unexpected_purchase_result; //something we didn't see coming, like an item
 	//refund, or buying an item an hour later at any point in the game. (this can only happens on Android)
 
-protected:
-
-	enum eState
-	{
-		STATE_NONE,
-		STATE_WAITING
-	};
-
+	/**
+	 * A signal for reporting that the previous purchases are now known and
+	 * \c IsItemPurchased() returns correct results.
+	 *
+	 * The parameter variant list contains no items.
+	 */
+	boost::signal<void (VariantList*)> m_sig_purchased_list_updated;
+	
 	enum ItemStateCode
 	{
 		//Don't change the order, will screw up Android stuff
@@ -161,6 +168,12 @@ protected:
 		REFUNDED
 	};
 
+protected:
+	enum eState
+	{
+		STATE_NONE,
+		STATE_WAITING
+	};
 
 	void sendPurchaseMessage();
 

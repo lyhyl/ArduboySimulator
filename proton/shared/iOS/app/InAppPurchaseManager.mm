@@ -11,8 +11,6 @@
 
 @implementation InAppPurchaseManager
 
-
- 
  //we'd only need this stuff to scan the store and get names and prices... Not implemented yet! 
 - (void)GetProductData: (string)itemID
 {
@@ -27,7 +25,10 @@
     // we will release the request object in the delegate callback
 }
 
-
+- (void)GetPurchasedList
+{
+    [[SKPaymentQueue defaultQueue] restoreCompletedTransactions];
+}
 
 - (void)request:(SKRequest *)request didFailWithError:(NSError *)error
 {
@@ -112,13 +113,16 @@
 }
 
 //
-// called when a transaction has been restored and and successfully completed
+// called when a transaction has been restored and successfully completed
 //
 - (void)restoreTransaction:(SKPaymentTransaction *)transaction
 {
     LogMsg("Restoring transaction");
+    
+    string itemStr([transaction.payment.productIdentifier cStringUsingEncoding:NSUTF8StringEncoding]);
+    GetMessageManager()->SendGUIStringEx(MESSAGE_TYPE_IAP_PURCHASED_LIST_STATE, (float)IAPManager::PURCHASED, 0.0f, 0, itemStr);
+    
     [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
-    GetMessageManager()->SendGUIStringEx(MESSAGE_TYPE_IAP_RESULT,(float)IAPManager::RESULT_OK_ALREADY_PURCHASED,0.0f,0, "Restore");
 }
 
 //
@@ -139,7 +143,6 @@
     }
 
     [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
-
 }
 
 //
@@ -164,6 +167,16 @@
                 break;
         }
     }
-} 
+}
+
+- (void)paymentQueueRestoreCompletedTransactionsFinished:(SKPaymentQueue *)queue
+{
+    GetMessageManager()->SendGUI(MESSAGE_TYPE_IAP_PURCHASED_LIST_STATE, (float)IAPManager::END_OF_LIST);
+}
+
+- (void)paymentQueue:(SKPaymentQueue *)queue restoreCompletedTransactionsFailedWithError:(NSError *)error
+{
+    GetMessageManager()->SendGUI(MESSAGE_TYPE_IAP_PURCHASED_LIST_STATE, (float)IAPManager::END_OF_LIST);
+}
 
 @end
