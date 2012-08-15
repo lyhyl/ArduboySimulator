@@ -48,25 +48,28 @@ void IAPManager::HandlePurchaseListReply(Message &m)
 			LogMsg("(finished receiving purchase history of managed items)");
 #endif
 		
+			VariantList vList;
+			m_sig_purchased_list_updated(&vList);
+			
 			//we want to buy an item as soon as this is done
 			if (!m_itemToBuy.empty())
+			{
+				//now buy the item
+				
+				//but wait, do we already own it?
+				if (IsItemPurchased(m_itemToBuy))
 				{
-					//now buy the item
-
-					//but wait, do we already own it?
-					if (IsItemPurchased(m_itemToBuy))
-					{
-						//just fake a yes to the purchase request now
-						endPurchaseProcessWithResult(RETURN_STATE_ALREADY_PURCHASED);
-						m_itemToBuy.clear();
-						break;
-					}
-
-					#ifdef SHOW_DEBUG_IAP_MESSAGES
-						LogMsg("Well, we don't already own it.  Sending buy request for %s", m_itemToBuy.c_str());
-					#endif
-					sendPurchaseMessage();
-				} 
+					//just fake a yes to the purchase request now
+					endPurchaseProcessWithResult(RETURN_STATE_ALREADY_PURCHASED);
+					m_itemToBuy.clear();
+					break;
+				}
+				
+#ifdef SHOW_DEBUG_IAP_MESSAGES
+				LogMsg("Well, we don't already own it.  Sending buy request for %s", m_itemToBuy.c_str());
+#endif
+				sendPurchaseMessage();
+			} 
 			break;
 		}
 
@@ -227,7 +230,10 @@ void IAPManager::OnMessage( Message &m )
 
 bool IAPManager::Init()
 {
-	SyncPurchases(); //only does anything on Android
+#ifdef PLATFORM_ANDROID
+	SyncPurchases();
+#endif
+
 	return true;
 }
 
@@ -341,13 +347,10 @@ void IAPManager::endPurchaseProcessWithResult(eReturnState returnState)
 
 void IAPManager::SyncPurchases()
 {
-	LogMsg("Syncing purchases... (android only)");
+	LogMsg("Syncing purchases...");
 	m_items.clear();
-#ifdef PLATFORM_ANDROID
+
 	OSMessage o;
 	o.m_type = OSMessage::MESSAGE_IAP_GET_PURCHASED_LIST;
 	GetBaseApp()->AddOSMessage(o);
-
-#endif
-
 }

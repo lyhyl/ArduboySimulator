@@ -231,39 +231,41 @@
 				
 			}
 			break;
-        
-        case OSMessage::MESSAGE_ALLOW_SCREEN_DIMMING:
-        {
-            //I read setting it to NO, then YES fixes a bug on iOS 3.0, so thats
-            //why I'm doing it that way. -Seth
-            
-            UIApplication *myApp = [UIApplication sharedApplication];
-            myApp.idleTimerDisabled = NO;
+			
+		case OSMessage::MESSAGE_ALLOW_SCREEN_DIMMING:
+		{
+			//I read setting it to NO, then YES fixes a bug on iOS 3.0, so thats
+			//why I'm doing it that way. -Seth
 
-            if (pMsg->m_x == 0)
-            {
-                //disable it
-                myApp.idleTimerDisabled = YES;
-            }
-        }
-            
-            break;
-            
-            
+			UIApplication *myApp = [UIApplication sharedApplication];
+			myApp.idleTimerDisabled = NO;
+			
+			if (pMsg->m_x == 0)
+			{
+				//disable it
+				myApp.idleTimerDisabled = YES;
+			}
+		}
+		break;
+
+		case OSMessage::MESSAGE_IAP_GET_PURCHASED_LIST:
+			[m_IOSIAPManager GetPurchasedList];
+		break;
+			
 		case OSMessage::MESSAGE_IAP_PURCHASE:
-            
 			LogMsg("iOS> BUYING %s", pMsg->m_string.c_str());
 #ifdef RT_IAP_SUPPORT
-
+			
 #ifdef _DEBUG
-            [m_IOSIAPManager GetProductData:pMsg->m_string]; //prints debug into to the xcode log, only for debugging
+			[m_IOSIAPManager GetProductData:pMsg->m_string]; //prints debug into to the xcode log, only for debugging
 #endif
-            [m_IOSIAPManager BuyItemByID:pMsg->m_string];
+			[m_IOSIAPManager BuyItemByID:pMsg->m_string];
 #else
-            LogMsg("ERROR: RT_IAP_SUPPORT must be defined in xcode settings, and InAppPurchaseManager.mm added to the project if it's not!");
-            assert(!"ERROR: RT_IAP_SUPPORT must be defined in xcode settings, and InAppPurchaseManager.mm added to the project if it's not!");
+			LogMsg("ERROR: RT_IAP_SUPPORT must be defined in xcode settings, and InAppPurchaseManager.mm added to the project if it's not!");
+			assert(!"ERROR: RT_IAP_SUPPORT must be defined in xcode settings, and InAppPurchaseManager.mm added to the project if it's not!");
 #endif
-			break;
+		break;
+			
 		default:
 			LogMsg("iOS Target Warning: unhandled OSMessage type: %d", pMsg->m_type);
 	}

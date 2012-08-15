@@ -23,5 +23,6 @@
 
 - (void) BuyItemByID:(string)itemID;
 - (void) InitIAP; //call once after initting
+- (void) GetPurchasedList;  // Gets a list of previously purchased items
 - (void) GetProductData: (string)itemID; //Not finished, don't use
 @end
