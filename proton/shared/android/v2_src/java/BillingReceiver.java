@@ -45,12 +45,13 @@ public class BillingReceiver extends BroadcastReceiver {
      * the {@link ResponseHandler}.
      */
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(Context context, Intent intent) 
+    {
     
     
-        String action = intent.getAction();
+    String action = intent.getAction();
    
-     Log.w(TAG, "Billing receiver got something: " + action);
+    //Log.w(TAG, "Billing receiver got something: " + action);
   
    if (SharedActivity.app == null)
    {

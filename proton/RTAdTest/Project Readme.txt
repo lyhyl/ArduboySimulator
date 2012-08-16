@@ -6,7 +6,7 @@ It currently supports:
 
 * Using tapjoy on Android (including using managed points, full screen and banner ads, offer wall) (You have to plug in your own tapjoy account info in the Main.java)
 * Using In App Billing in iOS, Android Market, webOS. You would have to setup the app with your own app id, and your own items
-to really test the IAP though.
+to really test the IAP though. (And edit Main.java with your own android security public key, etc)
 
 Tested to build with:
 

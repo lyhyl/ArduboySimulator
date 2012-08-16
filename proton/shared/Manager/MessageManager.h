@@ -183,9 +183,13 @@ enum eMessageType
 	
 	MESSAGE_TYPE_IAP_PURCHASED_LIST_STATE, //used by android when it IAPManager syncs to get a list of item id's purchased
 
+	MESSAGE_TYPE_CALL_STATIC_FUNCTION, //used by the message manager to call a static function with a VariantList*
+
     MESSAGE_USER = 1000, //users can add their own messages starting here
 
 };
+
+typedef void(*PtrFuncVarList)(VariantList *);
 
 class Message: public boost::signals::trackable
 {
@@ -197,6 +201,7 @@ public:
 		m_deliveryTime = 0; //delivery right away
 		m_pTargetEntity = NULL;
 		m_pComponent = NULL;
+		m_pStaticFunction = NULL;
 	}
 
 	void SetParm1(float parm1) {m_parm1 = parm1;}
@@ -218,6 +223,9 @@ public:
 	void Set(const VariantList *v) {if (v) m_variantList = *v;}
 	void SetTargetEntity(Entity *pEnt);
 	Entity * GetTargetEntity() {return m_pTargetEntity;}
+
+	void SetFunctionPointer(PtrFuncVarList pFunctionWithVList) { m_pStaticFunction = pFunctionWithVList;}
+	PtrFuncVarList GetFunctionPointer() {return m_pStaticFunction;}
 
 	void SetTargetComponent(EntityComponent *pComp);
 	void SetComponentToAdd(EntityComponent *pComp);
@@ -247,7 +255,7 @@ private:
 	EntityComponent *m_pComponent;
 	string m_varName;
 	string m_stringParm;
-
+	PtrFuncVarList m_pStaticFunction;
 
 };
 
@@ -276,11 +284,13 @@ public:
 
 	void CallComponentFunction( EntityComponent *pComp, int timeMS, const string &funcName, const VariantList *v = NULL, eTimingSystem timing = GetTiming()); //assumes you know the components address
 	void CallComponentFunction( Entity *pEnt, const string &compName, int timeMS,const string &funcName, const VariantList *v = NULL, eTimingSystem timing = GetTiming() ); //useful for calling components that don't exist yet
-	void AddComponent(Entity *pEnt, int timeMS, EntityComponent *pComp, eTimingSystem timing = GetTiming());
+	void AddComponent( Entity *pEnt, int timeMS, EntityComponent *pComp, eTimingSystem timing = GetTiming());
 
-	void DeleteMessagesByFunctionCallName(const string &name, eTimingSystem timing = GetTiming());
+	void CallStaticFunction( PtrFuncVarList pFunctionWithVList, int timeMS, const VariantList *v = NULL, eTimingSystem timing = GetTiming() );
+
+	void DeleteMessagesByFunctionCallName( const string &name, eTimingSystem timing = GetTiming());
 	void DeleteMessagesToComponent( EntityComponent *pComponent);
-	void DeleteMessagesByType(eMessageType type, eTimingSystem timing = GetTiming());
+	void DeleteMessagesByType( eMessageType type, eTimingSystem timing = GetTiming());
 
 	void DumpMessages();
 	void Update(); //run every tick

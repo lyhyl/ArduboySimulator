@@ -168,6 +168,12 @@ public:
 		REFUNDED
 	};
 
+	/**
+	 * For testing only - Mimics behavior of getting a delayed purchase (applicable to android only), m_sig_item_unexpected_purchase_result will
+	 * get hit with the call after the delayMS has been reached.  It's ok to schedule multiple items at once.
+	 */
+	void TestDelayedIAP(string itemID, string receipt, int delayMS, eReturnState returnState = RETURN_STATE_PURCHASED );
+
 protected:
 	enum eState
 	{
@@ -199,6 +205,7 @@ protected:
 	
 	bool m_bGettingItemList;
 
+	Entity m_entity; //used for scheduling
 	
 };
 

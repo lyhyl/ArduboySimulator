@@ -26,6 +26,9 @@ IAPManager::IAPManager()
 	m_timer = 0;
 	m_bWaitingForReply = false;
 	m_bGettingItemList = false;
+
+	//This gives us a way to schedule calls to m_sig_item_unexpected_purchase_result, used with TestDelayedIAP
+	m_entity.GetFunction("OnUnexpectedPurchase")->sig_function.connect(m_sig_item_unexpected_purchase_result);
 }
 
 IAPManager::~IAPManager()
@@ -208,7 +211,6 @@ void IAPManager::OnMessage( Message &m )
 		HandlePurchaseListReply(m);
 		break;
 	
-
 	case MESSAGE_TYPE_IAP_RESULT:
 	{
 		HandleIAPBuyResult(m);
@@ -230,10 +232,6 @@ void IAPManager::OnMessage( Message &m )
 
 bool IAPManager::Init()
 {
-#ifdef PLATFORM_ANDROID
-	SyncPurchases();
-#endif
-
 	return true;
 }
 
@@ -353,4 +351,10 @@ void IAPManager::SyncPurchases()
 	OSMessage o;
 	o.m_type = OSMessage::MESSAGE_IAP_GET_PURCHASED_LIST;
 	GetBaseApp()->AddOSMessage(o);
+}
+
+void IAPManager::TestDelayedIAP( string itemID, string receipt, int delayMS, eReturnState returnState /*= RETURN_STATE_PURCHASED */ )
+{
+	VariantList vList( (uint32)returnState, receipt, itemID);
+	GetMessageManager()->CallEntityFunction(&m_entity, delayMS, "OnUnexpectedPurchase", &vList, TIMER_SYSTEM);
 }
