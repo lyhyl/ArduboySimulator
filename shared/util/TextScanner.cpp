@@ -209,3 +209,8 @@ void TextScanner::DeleteLine( int lineNum )
 	if (m_lastLine && m_lastLine >= lineNum) m_lastLine--;
 	m_lines.erase(m_lines.begin()+lineNum);
 }
+
+vector<string> TextScanner::TokenizeLine( int lineNum, const string &theDelimiter /*= "|"*/ )
+{
+	return StringTokenize(m_lines[lineNum], theDelimiter);
+}

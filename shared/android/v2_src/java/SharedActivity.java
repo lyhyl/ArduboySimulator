@@ -1066,8 +1066,8 @@ import android.view.View.OnClickListener;
 	// It is the callback method which contains the currency and points data.
 	public void getUpdatePoints(String currencyName, int pointTotal)
 	{
-		Log.i("${SMALL_PACKAGE_NAME}", "currencyName: " + currencyName);
-		Log.i("${SMALL_PACKAGE_NAME}", "pointTotal: " + pointTotal);
+		//Log.i("${SMALL_PACKAGE_NAME}", "currencyName: " + currencyName);
+		//Log.i("${SMALL_PACKAGE_NAME}", "pointTotal: " + pointTotal);
 		nativeSendGUIStringEx(MESSAGE_TYPE_TAPJOY_TAP_POINTS_RETURN, pointTotal,0,0, currencyName);
 	}
 	
@@ -1083,8 +1083,8 @@ import android.view.View.OnClickListener;
 	// Notifier for when spending virtual currency succeeds.
 	public void getSpendPointsResponse(String currencyName, int pointTotal)
 	{
-		Log.i("${SMALL_PACKAGE_NAME}", "currencyName: " + currencyName);
-		Log.i("${SMALL_PACKAGE_NAME}", "pointTotal: " + pointTotal);
+		//Log.i("${SMALL_PACKAGE_NAME}", "currencyName: " + currencyName);
+		//Log.i("${SMALL_PACKAGE_NAME}", "pointTotal: " + pointTotal);
 		
 		nativeSendGUIStringEx(MESSAGE_TYPE_TAPJOY_SPEND_TAP_POINTS_RETURN, pointTotal,0,0, currencyName);
 	}
@@ -1099,7 +1099,7 @@ import android.view.View.OnClickListener;
 	@Override
 	public void getAwardPointsResponse(String currencyName, int pointTotal)
 	{
-		Log.i("${SMALL_PACKAGE_NAME}", "getAwardPointsResponse: " + currencyName);
+		//Log.i("${SMALL_PACKAGE_NAME}", "getAwardPointsResponse: " + currencyName);
 		nativeSendGUIStringEx(MESSAGE_TYPE_TAPJOY_AWARD_TAP_POINTS_RETURN, pointTotal,0,0, currencyName);
 	}
 
@@ -1113,7 +1113,7 @@ import android.view.View.OnClickListener;
 	@Override
 	public void earnedTapPoints(int amount)
 	{
-		Log.i("${SMALL_PACKAGE_NAME}", "earnedTapPoints: " + amount);
+		//Log.i("${SMALL_PACKAGE_NAME}", "earnedTapPoints: " + amount);
 		nativeSendGUIStringEx(MESSAGE_TYPE_TAPJOY_EARNED_TAP_POINTS, amount,0,0, "");
 	}
 	

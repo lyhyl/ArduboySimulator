@@ -63,7 +63,6 @@ public:
 	float GetParmFloatFromLine( int lineNum, int index, string token = "|");
 	string GetMultipleLineStrings(string label, string token = "|");
 	string GetLine(int lineNum); //0 based, returns "" if out of range
-	vector<string> m_lines;
 	void Replace( const string &thisStr, const string &thatStr );
 	bool IsLoaded() {return !m_lines.empty();}
 	bool SetupFromMemoryAddress(const char *pCharArray);
@@ -72,6 +71,9 @@ public:
 	string GetAll();
 	int GetLineCount() {return (int)m_lines.size();}
 	void DumpToLog(); //sends the entire contents to the log via LogMsg(), helpful when debugging
+	vector<string> TokenizeLine(int lineNum, const string &theDelimiter = "|");
+
+	vector<string> m_lines;
 
 private:
 

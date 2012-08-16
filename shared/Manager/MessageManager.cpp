@@ -245,7 +245,6 @@ void MessageManager::Deliver(Message *m)
 				{
 			
 				case MESSAGE_TYPE_CALL_COMPONENT_FUNCTION_BY_NAME:
-
 					{
 
 						EntityComponent *pComp = m->GetTargetEntity()->GetComponentByName(m->GetStringParm());
@@ -292,6 +291,20 @@ void MessageManager::Deliver(Message *m)
 					LogError("Message delivery error");
 					assert(0);
 				}	//entity's shared space
+			} else
+			{
+				switch (m->GetType())
+				{
+					case MESSAGE_TYPE_CALL_STATIC_FUNCTION:
+						(m->GetFunctionPointer())(&m->GetVariantList());
+						break;
+				
+					default:
+						//LogError("Message delivery error");
+						;
+						//Not actually an error, if an entity is killed while a message is in transit, it will set the entity
+						//to null and some messages may end up here as they are undeliverable
+				}
 			}
 	} else
 	{
@@ -364,6 +377,15 @@ void MessageManager::CallEntityFunction( Entity *pEnt, int timeMS, const string 
 	m->Set(v);
 	m->SetVarName(funcName);
 	m->SetTargetEntity(pEnt);
+	m->SetDeliveryTime(timeMS);
+	Send(m);
+}
+
+void MessageManager::CallStaticFunction(PtrFuncVarList pFunctionWithVList, int timeMS,  const VariantList *v, eTimingSystem timing )
+{
+	Message *m = new Message(MESSAGE_CLASS_ENTITY, timing, MESSAGE_TYPE_CALL_STATIC_FUNCTION);
+	m->Set(v);
+	m->SetFunctionPointer(pFunctionWithVList);
 	m->SetDeliveryTime(timeMS);
 	Send(m);
 }
