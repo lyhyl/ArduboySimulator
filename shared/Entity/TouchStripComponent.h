@@ -38,7 +38,7 @@ private:
 	void SetPosition(CL_Vec2f vPos);
 	void OnTouchStart(VariantList *pVList);
 	void OnInput(VariantList *pVList);
-
+	void OnPrintDiagnostics(VariantList *pVList);
 	uint32 *m_pDisabled;
 	uint32 * m_pVisualStyle;
 	CL_Vec2f *m_pPos2d;

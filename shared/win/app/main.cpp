@@ -181,6 +181,7 @@ bool g_escapeMessageSent = false; //work around for problems on my dev machine w
 #define GET_Y_LPARAM(lp)                        ((int)(short)HIWORD(lp))
 #endif
 bool g_leftMouseButtonDown = false; //to help emulate how an iphone works
+bool g_rightMouseButtonDown = false; //to help emulate how an iphone works
 
 // Windows variables
 HWND				g_hWnd	= 0;
@@ -297,19 +298,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		//PostQuitMessage(0);
 		return 1;
 
-	case WM_LBUTTONDOWN:
-	case WM_LBUTTONDBLCLK:
-		{
-			if (!g_bHasFocus) break;
-		
-			g_leftMouseButtonDown = true;
-			int xPos = GET_X_LPARAM(lParam);
-			int yPos = GET_Y_LPARAM(lParam);
-			ConvertCoordinatesIfRequired(xPos, yPos);
-			GetMessageManager()->SendGUIEx2(MESSAGE_TYPE_GUI_CLICK_START, (float)xPos, (float)yPos, 0, GetWinkeyModifiers());
-			break;
-		}
-		break;
 
 	case WM_PAINT:
 		{
@@ -659,7 +647,19 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		}
 		break;
 
-	
+	case WM_LBUTTONDOWN:
+	case WM_LBUTTONDBLCLK:
+		{
+			if (!g_bHasFocus) break;
+
+			g_leftMouseButtonDown = true;
+			int xPos = GET_X_LPARAM(lParam);
+			int yPos = GET_Y_LPARAM(lParam);
+			ConvertCoordinatesIfRequired(xPos, yPos);
+			GetMessageManager()->SendGUIEx2(MESSAGE_TYPE_GUI_CLICK_START, (float)xPos, (float)yPos, 0, GetWinkeyModifiers());
+			break;
+		}
+		break;
 
 	case WM_LBUTTONUP:
 		{
@@ -673,6 +673,32 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		return true;
 		break;
 
+
+	case WM_RBUTTONDOWN:
+	case WM_RBUTTONDBLCLK:
+		{
+			if (!g_bHasFocus) break;
+			g_rightMouseButtonDown = true;
+			int xPos = GET_X_LPARAM(lParam);
+			int yPos = GET_Y_LPARAM(lParam);
+			ConvertCoordinatesIfRequired(xPos, yPos);
+			GetMessageManager()->SendGUIEx2(MESSAGE_TYPE_GUI_CLICK_START, (float)xPos, (float)yPos, 1, GetWinkeyModifiers());
+			break;
+		}
+		break;
+
+	case WM_RBUTTONUP:
+		{
+			if (!g_bHasFocus) break;
+			int xPos = GET_X_LPARAM(lParam);
+			int yPos = GET_Y_LPARAM(lParam);
+			ConvertCoordinatesIfRequired(xPos, yPos);
+			GetMessageManager()->SendGUIEx2(MESSAGE_TYPE_GUI_CLICK_END, (float)xPos, (float)yPos, 1, GetWinkeyModifiers());
+			g_rightMouseButtonDown = false;
+		}
+		return true;
+		break;
+	
 	case WM_MOUSEMOVE:
 		{
 			if (!g_bHasFocus) break;
@@ -684,8 +710,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			if (g_leftMouseButtonDown)
 			{
 				GetMessageManager()->SendGUIEx2(MESSAGE_TYPE_GUI_CLICK_MOVE, xPos, yPos, 0, GetWinkeyModifiers());
-				break;
 			} 
+		
+			if (g_rightMouseButtonDown)
+			{
+				GetMessageManager()->SendGUIEx2(MESSAGE_TYPE_GUI_CLICK_MOVE, xPos, yPos, 1, GetWinkeyModifiers());
+			} 
+
 			GetMessageManager()->SendGUIEx2(MESSAGE_TYPE_GUI_CLICK_MOVE_RAW, xPos, yPos, 0, GetWinkeyModifiers());
 		}
 		//sreturn true;

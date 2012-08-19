@@ -46,6 +46,8 @@ void TouchStripComponent::OnAdd(Entity *pEnt)
 	GetParent()->GetFunction("OnOverStart")->sig_function.connect(1, boost::bind(&TouchStripComponent::OnOverStart, this, _1));
 	GetParent()->GetFunction("OnInput")->sig_function.connect(1, boost::bind(&TouchStripComponent::OnInput, this, _1));
 
+	GetParent()->GetFunction("PrintDiagnostics")->sig_function.connect(1, boost::bind(&TouchStripComponent::OnPrintDiagnostics, this, _1));
+
 }
 
 void TouchStripComponent::OnRemove()
@@ -73,6 +75,12 @@ void TouchStripComponent::OnOverStart(VariantList *pVList)
 	//LogMsg("Tracking finger %d", fingerID);
 }
 
+void TouchStripComponent::OnPrintDiagnostics(VariantList *pVList)
+{
+	LogMsg("TouchStripComponent: m_activeFinger is %d.  Disabled is %d", m_activeFinger, *m_pDisabled);
+	
+}
+
 void TouchStripComponent::OnInput(VariantList *pVList)
 {
 
@@ -93,7 +101,6 @@ void TouchStripComponent::OnInput(VariantList *pVList)
 	case MESSAGE_TYPE_GUI_CLICK_START:
 		{
 
-		
 		//first, determine if the click is on our area
 		CL_Rectf r(*m_pPos2d, CL_Sizef(m_pSize2d->x, m_pSize2d->y));
 		ApplyPadding(&r, *m_pTouchPadding);
@@ -112,18 +119,18 @@ void TouchStripComponent::OnInput(VariantList *pVList)
 		}
 
 		break;
+	
 	case MESSAGE_TYPE_GUI_CLICK_END:
+		
 		if (fingerID == m_activeFinger)
 		{
 		//	LogMsg("Finger %d released", fingerID);
 			VariantList vList(pt, GetParent(), fingerID);
             GetParent()->GetFunction("OnOverEnd")->sig_function(&vList);
 			m_activeFinger = -1;
-			
-			
-			break;
 		}
-		
+		break;
+
 	case MESSAGE_TYPE_GUI_CLICK_MOVE:
 		{
 			
@@ -132,25 +139,23 @@ void TouchStripComponent::OnInput(VariantList *pVList)
 				//not ours.. but hold on, if it's an unclaimed touch let's take it anyway
 				if (m_activeFinger == -1)			
 				{
-
-				//TouchTrackInfo *pTouch = GetBaseApp()->GetTouch(fingerID);
-				//if (pTouch->WasHandled()) return;
-
+			
 					//well, nobody has claimed it yet.  Tell you what, if they are over us, let's let it count as a first touch
 					CL_Rectf r(*m_pPos2d, CL_Sizef(m_pSize2d->x, m_pSize2d->y));
 					ApplyPadding(&r, *m_pTouchPadding);
 
 					if (r.contains(pt))
 					{
-                        VariantList vList(pt, GetParent(), fingerID);
+						//LogMsg("Touchstrip: Claimed finger %d", fingerID);
+						VariantList vList(pt, GetParent(), fingerID);
 						GetParent()->GetFunction("OnOverStart")->sig_function(&vList);
 					}
 					
 				}
 
 				return;
-				
 			}
+		
 			SetPosition(pt);
 			
 		}	
@@ -159,8 +164,6 @@ void TouchStripComponent::OnInput(VariantList *pVList)
         default: ;
 	}	
 }
-
-
 
 
 void TouchStripComponent::SetPosition(CL_Vec2f vPos)
