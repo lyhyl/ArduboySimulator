@@ -369,6 +369,7 @@ public:
 
 	TouchTrackInfo * GetTouch(int index);
 	int GetTotalActiveTouches(); //will return the total number of fingers currently touching the screen.
+	void ResetTouches(); //not really advised or needed, ignore this
 
 protected:
 	

@@ -2,15 +2,6 @@
 #include "BaseApp.h"
 #include "Renderer/RTGLESExt.h"
 
-#if defined( WIN32)&& defined(_DEBUG)
-	//useful for debugging texture unloading, but we don't really need to do it for Windows builds.
-	//If defined, losing focus (clicking outside the window) will completely unload all textures, and clicking
-	//back will reload them.  If you're doing custom texture stuff, you'll probably want to hook into the
-	//m_sig_unloadSurfaces and m_sig_loadSurfaces signals to know when to do it.
-
-	//#define C_SURFACE_UNLOAD_TEXTURES
-#endif
-
 #ifdef _IRR_STATIC_LIB_
 #include "Irrlicht/IrrlichtManager.h"
 #endif
@@ -239,15 +230,16 @@ void BaseApp::OnMessage(Message &m)
 					v.Get(1).Set(float(m.GetParm1()), float(m.GetParm2()) );
 					v.Get(2).Set(uint32(m.GetParm3()));
 					v.Get(3).Set(m.GetParm4());
-
 			
 					if (m.GetType() == MESSAGE_TYPE_GUI_CLICK_START)
 					{
+					//	LogMsg("Clicked finger %d, down is %d", m.GetParm3(), (int)m_touchTracker[m.GetParm3()].IsDown());
 						m_touchTracker[m.GetParm3()].SetIsDown(true);
 						m_touchTracker[m.GetParm3()].SetPos(v.Get(1).GetVector2());
 						m_touchTracker[m.GetParm3()].SetWasHandled(false);
 					} else
 					{
+					//	LogMsg("Released finger %d, down is %d", m.GetParm3(), (int)m_touchTracker[m.GetParm3()].IsDown());
 						m_touchTracker[m.GetParm3()].SetIsDown(false);
 					}
 
@@ -495,7 +487,8 @@ void BaseApp::OnEnterBackground()
 		LogMsg("Entering background");
 #endif
 	 
-	#ifdef C_SURFACE_UNLOAD_TEXTURES
+	#ifndef PLATFORM_ANDROID
+		if (GetEmulatedPlatformID() == PLATFORM_ID_ANDROID)
 		m_sig_unloadSurfaces();	
 	#endif
 	
@@ -510,6 +503,7 @@ void BaseApp::OnEnterBackground()
 	}
 
 	GetAudioManager()->Suspend();
+	//ResetTouches(); //Turns out we don't need this
     
 }
 
@@ -523,19 +517,15 @@ void BaseApp::OnEnterForeground()
 #ifdef _DEBUG
 		LogMsg("Entering foreground");
 #endif
-	#ifdef C_SURFACE_UNLOAD_TEXTURES
-		
-		if (GetEmulatedPlatformID() != PLATFORM_ID_ANDROID)
+	
+	#ifndef PLATFORM_ANDROID
+		if (GetEmulatedPlatformID() == PLATFORM_ID_ANDROID)
 		{
-			//emulate the android way a bit better, helps when fixing bugs under windows
-			InitializeGLDefaults();
-			LogMsg("gl defaults set");
-			OnScreenSizeChange();
-			LogMsg("OnScreensizechange done");
+			GetBaseApp()->m_sig_loadSurfaces(); //for anyone who cares
 		}
-		
-		GetBaseApp()->m_sig_loadSurfaces(); //for anyone who cares
 	#endif
+
+
 		m_sig_enterforeground(NULL);
 	}
 }
@@ -641,6 +631,21 @@ void BaseApp::OnFullscreenToggleRequest()
 #endif
 }
 
+
+void BaseApp::ResetTouches()
+{
+	for (int i=0; i < C_MAX_TOUCHES_AT_ONCE; i++)
+	{
+		if (m_touchTracker[i].IsDown())
+		{
+			LogMsg("Finger %d is down, sending fake release", i);
+			//release it with a fake message
+			GetMessageManager()->SendGUIEx(MESSAGE_TYPE_GUI_CLICK_END, m_touchTracker[i].GetPos().x, m_touchTracker[i].GetPos().y, i);
+		}
+	}
+
+}
+
 TouchTrackInfo * BaseApp::GetTouch( int index )
 {
 	if (this == 0) return NULL;
@@ -676,3 +681,4 @@ void TouchTrackInfo::SetWasHandled( bool bNew, Entity *pEntity )
 	m_pEntityThatHandledIt = pEntity;
 	m_bHandled = bNew;
 }
+
