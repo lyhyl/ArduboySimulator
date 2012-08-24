@@ -9,6 +9,10 @@
 #import "EAGLView.h"
 #import "InAppPurchaseManager.h"
 
+#ifdef RT_TAPJOY_ENABLED
+#import "TapjoyManager.h"
+#endif
+
 @implementation MyAppDelegate
 
 @synthesize window;
@@ -39,7 +43,7 @@
 	
 }
 
-- (void)applicationDidFinishLaunching:(UIApplication *)application 
+- (void)applicationDidFinishLaunching:(UIApplication *)application
 {
     
     CGRect bounds = [[UIScreen mainScreen] bounds];
@@ -53,7 +57,7 @@
 	[window makeKeyAndVisible];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
-  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 
 	//we don't want to waste cycles doing the accelerometer so we half disable it
 	[[UIAccelerometer sharedAccelerometer] setDelegate:nil];
@@ -70,6 +74,12 @@
     m_IOSIAPManager = [[InAppPurchaseManager alloc] init];
     [m_IOSIAPManager InitIAP];
 #endif
+
+#ifdef RT_TAPJOY_ENABLED
+	m_tapjoyManager = [[TapjoyManager alloc] init];
+	[m_tapjoyManager InitTapjoy:application viewController:viewController]; //viewController.view
+#endif
+	
 }
 
 - (void)accelerometer:(UIAccelerometer*)accelerometer didAccelerate:(UIAcceleration*)acceleration
@@ -203,7 +213,6 @@
 	{
 	
 		case OSMessage::MESSAGE_OPEN_TEXT_BOX:
-			LogMsg("Textbox msg");
 			[self OnOpenTextBox:pMsg];
 			break;
 		
@@ -265,9 +274,30 @@
 			assert(!"ERROR: RT_IAP_SUPPORT must be defined in xcode settings, and InAppPurchaseManager.mm added to the project if it's not!");
 #endif
 		break;
+		
+		
+		//***************** TAPJOY STUFF
+        #ifndef RT_TAPJOY_ENABLED
 			
+		case OSMessage::MESSAGE_TAPJOY_INIT_MAIN:
+				LogMsg("ERROR: RT_TAPJOY_ENABLED must be defined in xcode settings to use Tapjoy! (check the Proton wiki for more info)");
+				assert(!"ERROR: RT_TAPJOY_ENABLED must be defined in xcode settings to use Tapjoy! (check the Proton wiki for more info)");
+        break;
+		#endif
+		
 		default:
-			LogMsg("iOS Target Warning: unhandled OSMessage type: %d", pMsg->m_type);
+		
+			Boolean bHandled = false;
+			
+			#ifdef RT_TAPJOY_ENABLED
+				//give our tapjoy manager a chance to handle it
+				if (!bHandled) bHandled = [m_tapjoyManager onOSMessage:pMsg];
+			#endif
+
+			if (!bHandled)
+			{
+				LogMsg("iOS Target Warning: unhandled OSMessage type: %d", pMsg->m_type);
+			}
 	}
 }
 
@@ -417,3 +447,4 @@ static void MyWriteStreamCallback(CFWriteStreamRef streamRef,
 	GetMessageManager()->SendGUI(MESSAGE_TYPE_OS_CONNECTION_CHECKED, (float)eventType, 0.0f);		
     CFRunLoopStop(CFRunLoopGetCurrent());
 }
+

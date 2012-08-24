@@ -95,12 +95,15 @@ void AdManager::SetTapjoyAdVisible(bool bVisible)
 			o.m_type = OSMessage::MESSAGE_TAPJOY_SHOW_AD;
 			o.m_x = 1; //show ad
 			GetBaseApp()->AddOSMessage(o);
-	
+      
 		} else
 		{
 			//do it after it becomes ready
 			m_bShowTapjoyAdASAP = true;
-		}
+	
+            //it's possible no ad is ready, so we'll make sure one is loaded
+            m_bSendTapjoyAdRequestASAP = true;
+        }
 
 	} else
 	{
@@ -272,7 +275,7 @@ void AdManager::Update()
 	list<AdProvider*>::iterator itor = m_providers.begin();
 	for (;itor != m_providers.end(); itor++)
 	{
-		return (*itor)->Update();
+		(*itor)->Update();
 	}
 
 	if (m_errorCount > 15) return; //something is seriously wrong, let's not risk hammering the tapjoy service forever
@@ -443,3 +446,17 @@ void AdManager::TrackingOnPageView()
 	}
 }
 
+void AdManager::InitTapjoy( string tapjoyID, string tapjoyAppSecretKey )
+{
+
+	//Let the individual platform handle it.  The android side will ignore if it is already initted via Main.java, which was the old way.  (So old apps don't need to be changed)
+#ifdef _DEBUG
+    LogMsg("Sending Tapjoy init message");
+#endif
+    OSMessage o;
+	o.m_type = OSMessage::MESSAGE_TAPJOY_INIT_MAIN;
+	o.m_string = tapjoyID;
+	o.m_string2 = tapjoyAppSecretKey;
+	GetBaseApp()->AddOSMessage(o);
+
+}

@@ -1150,6 +1150,14 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\shared\iOS\app\InAppPurchaseManager.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\shared\iOS\app\InAppPurchaseManager.mm"
+						>
+					</File>
+					<File
 						RelativePath="..\..\shared\iOS\app\main.mm"
 						>
 					</File>
@@ -1167,6 +1175,14 @@
 					</File>
 					<File
 						RelativePath="..\..\shared\iOS\app\MyViewController.mm"
+						>
+					</File>
+					<File
+						RelativePath="..\..\shared\iOS\app\TapjoyManager.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\shared\iOS\app\TapjoyManager.mm"
 						>
 					</File>
 				</Filter>

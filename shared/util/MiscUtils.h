@@ -69,12 +69,12 @@ std::string IntToTime(int ms, bool bTextFormat = false); //converts 18000 (ms) t
 std::vector<std::string> StringTokenize(const std::string& str, const std::string& delimiter);
 std::string PopFirstParmString(std::string *lineInOut, const std::string delimiter = "|"); //removes the first parm from the string sent in, and returns it
 
-//helper to turn anything into a string, like ints/floats
 void ForceRange(float &a, const float min, const float max);
 
 #define rt_min(a,b)    (((a) < (b)) ? (a) : (b))
 #define rt_max(a,b)            (((a) > (b)) ? (a) : (b))
 
+//helper to turn anything into a string, like ints/floats
 template< class C>
 std::string toString(C value)
 {
@@ -82,6 +82,7 @@ std::string toString(C value)
 	o << value;
 	return o.str();
 }
+
 std::string PrefixLeading(const std::string input, unsigned int leadingCount, std::string leadingChar, std::string insertAfterPrefix = "");
 std::string PostfixLeading(const std::string input, unsigned int leadingCount, std::string leadingChar, std::string insertAfterPrefix = "");
 

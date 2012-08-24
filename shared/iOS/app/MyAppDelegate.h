@@ -4,9 +4,12 @@
 //  For license info, check the license.txt file that should have come with this.
 //
 
-
 #import <UIKit/UIKit.h>
 #import "CFNetwork/CFSocketStream.h"
+
+#ifdef RT_TAPJOY_ENABLED
+@class TapjoyManager;
+#endif
 
 @class InAppPurchaseManager;
 @class EAGLView;
@@ -27,6 +30,9 @@
     int m_keyboardType; //what proton actually requested, so we know what items to filter
     InAppPurchaseManager *m_IOSIAPManager;
 
+#ifdef RT_TAPJOY_ENABLED
+    TapjoyManager *m_tapjoyManager;
+#endif
 }
 
 @property (nonatomic, retain) UIWindow *window;
@@ -37,6 +43,7 @@
 - (void) onOSMessage:(OSMessage *)pMsg;
 - (void) ActivateNetworkConnection;
 - (void)accelerometer:(UIAccelerometer*)accelerometer didAccelerate:(UIAcceleration*)acceleration;
+
 @end
 
 void static MyWriteStreamCallback(CFWriteStreamRef streamRef,
