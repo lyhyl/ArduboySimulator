@@ -66,11 +66,12 @@ public:
 	AdProvider * GetProviderByType(eAdProviderType type);
 	bool ProviderExistsByType(eAdProviderType type);
 	
-	//Tapjoy specific, only supported on Android currently, and only with special java files that aren't public yet
-
-	void TrackingOnPageView(); //will handled by Flurry or other trackers
+	void TrackingOnPageView(); //handled by Flurry or other trackers
 	void TrackingLog(string eventName, string optionalKey = "", string optionalValue = "");
 
+	//Tapjoy specific, supported on Android and iOS
+
+	void InitTapjoy(string tapjoyID, string tapjoyAppSecretKey);
 	void SetTapjoyAdVisible(bool bVisible); //will load an ad if not cached, so it might not display right away
 	void SetTapjoyFeatureAppVisible(bool bVisible); //will load an ad if not cached, so it might not display right away
 	void CacheTapjoyAd();
@@ -82,7 +83,7 @@ public:
 	void ModifyTapPoints(int mod);
 	void GetTapPointsFromServer();
 	void SetupBanner(CL_Vec2f vBannerSize, eAlignment alignment = ALIGNMENT_DOWN_CENTER); //alignment is ignored from now, always bottom centered
-
+	
 	boost::signal<void (VariantList*)> m_sig_tappoints_awarded; //called when awarded tap points
 
 private:

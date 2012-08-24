@@ -5,7 +5,7 @@
  *
  
  
- This example helps me test in app billing and tapjoy integration.
+ This example helps me test in app billing and the integration of various ad providers.
  */
 
 #pragma once
@@ -19,6 +19,9 @@
 #endif
 
 #define RT_FLURRY_ENABLED
+
+
+#define RT_TAPJOY_ENABLED //for ios, this must be declared for the whole project, not just here
 
 class App: public BaseApp
 {

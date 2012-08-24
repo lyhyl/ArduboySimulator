@@ -73,9 +73,10 @@ void SetOrthoModeFlag();
 
 bool InLandscapeGUIMode(); //use this for things solely about screen size, so windows fake landscape modes can test GUI things
 int GetOrientation(); //if three, iPhone is in landscape mode and things will be rotated
-float SinPulseByMS(int ms);
-float SinGamePulseByMS(int ms); //will pause when the game is paused
-float SinToZeroToOneRange(float sinIn); //a helper to use with the above functions when you just want 0-1 range
+float SinPulseByMS(int ms); //returns -1 to 1 over the millsecond interval given, good for quickie effects of things bobbing or rotating
+//when you don't want to setup a real timer
+float SinGamePulseByMS(int ms); //like above, but will pause when the game is paused
+float SinToZeroToOneRange(float sinIn); //a helper to use with the above functions when you just want 0-1 range.  (Do SinToZeroToOneRange(SinGamePulseByMS(4000)); for example
 
 uint32 ColorCombineMix(uint32 c1, uint32 c2, float progress);
 

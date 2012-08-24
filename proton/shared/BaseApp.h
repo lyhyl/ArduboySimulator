@@ -107,7 +107,11 @@ struct OSMessage
 										//On Windows/OS, this message functions the same as MESSAGE_FINISH_APP
 									
 
+		//tapjoy again		
 		
+		MESSAGE_TAPJOY_INIT_MAIN,
+		MESSAGE_TAPJOY_INIT_PAID_APP_WITH_ACTIONID, 
+
 		MESSAGE_USER = 1000
 	};
 

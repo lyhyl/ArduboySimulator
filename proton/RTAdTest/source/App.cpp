@@ -96,6 +96,7 @@ bool App::Init()
 	case PLATFORM_ID_IOS:
 		SetLockedLandscape(true); //we stay in portrait but manually rotate, gives better fps on older devices
 		SetupFakePrimaryScreenSize(scaleToX,scaleToY); //game will think it's this size, and will be scaled up
+    //       SetForcedOrientation(ORIENTATION_DONT_CARE);
 		break;
 
 	default:
@@ -120,7 +121,7 @@ bool App::Init()
 	
 	m_IAPManager.Init();
 	
-	//register to recieve unexpected IAP purchase/refund messages, only applicable to Android
+	//register to receive unexpected IAP purchase/refund messages, only applicable to Android
 	m_IAPManager.m_sig_item_unexpected_purchase_result.connect(OnUnexpectedIAPItemUpdate);
 	
 	m_adManager.Init();
@@ -147,6 +148,19 @@ bool App::Init()
 
 #endif
 	
+#ifdef RT_TAPJOY_ENABLED
+
+    m_adManager.SetUsingTapPoints(true);
+    
+#ifdef PLATFORM_IOS
+	m_adManager.InitTapjoy("<tapjoy app id>", "<tapjoy secret key>");
+#else
+	//well, you probably have different keys for Android, so put them here
+	   m_adManager.InitTapjoy("<tapjoy app id>", "<tapjoy secret key>");
+#endif
+	
+#endif
+
 	return true;
 }
 
