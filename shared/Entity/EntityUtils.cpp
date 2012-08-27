@@ -389,6 +389,14 @@ EntityComponent * MorphToFloatComponent(EntityComponent *pTargetComp, string tar
 	return pComp;
 }
 
+
+EntityComponent * MorphToVec2Component(EntityComponent *pTargetComp, string targetVar, CL_Vec2f vTargetSize, unsigned int speedMS, eInterpolateType interpolateType,  int delayBeforeActionMS)
+{
+	EntityComponent* pComp = MorphToVec2Entity(pTargetComp->GetParent(), targetVar, vTargetSize, speedMS, interpolateType, delayBeforeActionMS);
+	pComp->GetVar("component_name")->Set(pTargetComp->GetName());
+	return pComp;
+}
+
 EntityComponent * ZoomToPositionFromThisOffsetEntity(Entity *pEnt, CL_Vec2f offset, unsigned int speedMS, eInterpolateType interpolateType,  int delayBeforeActionMS)
 {
 	CL_Vec2f vEndPos;
@@ -1948,8 +1956,10 @@ void MoveEntityToTop(VariantList *pVList)
 	AddFocusIfNeeded(pEnt);
 }
 
-void ShowTextMessage(string msg, int timeMS, int delayBeforeStartingMS)
+void OnShowTextMessage(VariantList *pVList)
 {
+	string msg = pVList->Get(0).GetString();
+	int timeMS = pVList->Get(1).GetUINT32();
 
 	Entity *pEnt = CreateTextLabelEntity(NULL, "", 0,0, msg);
 	SetupTextEntity(pEnt, FONT_LARGE, 0.66f);
@@ -1962,10 +1972,16 @@ void ShowTextMessage(string msg, int timeMS, int delayBeforeStartingMS)
 	AddFocusIfNeeded(pRect);
 	FadeOutAndKillEntity(pRect, true, 1000, timeMS);
 	ZoomFromPositionEntity(pRect, CL_Vec2f( GetScreenSizeXf()/2, GetScreenSizeYf()), 600);
-		
+
 	//hack to make sure we're on the top of the screen.. maybe we should do it every frame..
 	VariantList v(pRect);
 	GetMessageManager()->CallEntityFunction(pRect, timeMS+1, "MoveToTop", &v, TIMER_SYSTEM);
 	pRect->GetFunction("MoveToTop")->sig_function.connect(MoveEntityToTop);
 
+}
+
+void ShowTextMessage(string msg, int timeMS, int delayBeforeStartingMS)
+{
+	VariantList vList(msg, (uint32)timeMS);
+	GetMessageManager()->CallStaticFunction(OnShowTextMessage, delayBeforeStartingMS, &vList, TIMER_SYSTEM);
 }

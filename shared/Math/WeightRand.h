@@ -1,4 +1,6 @@
 #include "PlatformSetup.h"
+#include "util/CRandom.h"
+
 //Class to let you use random on objects that you want to appear at certain frequencies. 
 //For instance, you could enter the letters of the alphabets with their frequency in english
 //usage and get nice numbers for a word game. (E will pop up much more than Z, etc)
@@ -34,6 +36,7 @@ public:
 	CWeightRand();
 	void AddChoice(int i_index, int i_odds);
 	int GetRandom();
+	int GetRandom(CRandom &rng);
 	void Clear(); //start over
 	int GetOdds(int i_choice); //in case you want to know what the odds were on something
 	void ModChoice(int index, int mod);
@@ -44,11 +47,10 @@ public:
 private:
 
 	void ComputeOdds();
+	int CalcNumber(float f_rand);
 
 	vector<int> a_odds;  //save original
 	vector<float> a_computed_odds; 
-
 	bool m_b_needs_computation; //true if we've never computed or a new number was added
-
 };
 #endif // WeightRand_h__

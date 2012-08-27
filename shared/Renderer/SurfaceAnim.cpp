@@ -27,11 +27,11 @@ void SurfaceAnim::SetupAnim( int framesX, int framesY )
 	m_frameHeight = (float)GetHeight()/framesY;
 }
 
-void SurfaceAnim::BlitAnim(float x, float y, int frameX, int frameY, unsigned int rgba, float rotation, CL_Vec2f vRotationPt)
+void SurfaceAnim::BlitAnim(float x, float y, int frameX, int frameY, unsigned int rgba, float rotationDegrees, CL_Vec2f vRotationPt)
 {
 	if (GetFrameWidth() == GetWidth() && GetFrameHeight() == GetHeight())
 	{
-		Blit(x,y, rgba, rotation, vRotationPt); //don't need the anim code
+		Blit(x,y, rgba, rotationDegrees, vRotationPt); //don't need the anim code
 		return;
 	}
 
@@ -44,7 +44,7 @@ void SurfaceAnim::BlitAnim(float x, float y, int frameX, int frameY, unsigned in
 
 	//calculate the target
 	rtRectf dst(x,y, x+m_frameWidth, y+m_frameHeight);
-	BlitEx(dst, src, rgba, rotation, vRotationPt);
+	BlitEx(dst, src, rgba, rotationDegrees, vRotationPt);
 }
 
 bool SurfaceAnim::LoadFileFromMemory( byte *pMem, int inputSize )
