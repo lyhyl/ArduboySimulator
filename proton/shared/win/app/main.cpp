@@ -91,7 +91,7 @@ void InitVideoSize()
 	AddVideoMode("Playbook", 600,1024, PLATFORM_ID_BBX);
 	AddVideoMode("Playbook Landscape", 1024,600, PLATFORM_ID_BBX);
 
-	AddVideoMode("Flash", 480, 320, PLATFORM_ID_FLASH);
+	AddVideoMode("Flash", 640, 480, PLATFORM_ID_FLASH);
 
 	//WORK: Change device emulation here
 	string desiredVideoMode = "iPhone Landscape"; //name needs to match one of the ones defined above

@@ -97,13 +97,8 @@ void CWeightRand::ComputeOdds()
 
 }
 
-int CWeightRand::GetRandom()
+int CWeightRand::CalcNumber(float f_rand)
 {
-
-	if (m_b_needs_computation) this->ComputeOdds();
-
-	float f_rand = ((float)rand() / RAND_MAX);
-
 	//scroll through and figure out which thing we chose
 
 	float f_temp = 0;
@@ -119,6 +114,26 @@ int CWeightRand::GetRandom()
 	}
 
 	return 0;
+}
+
+int CWeightRand::GetRandom(CRandom &rng)
+{
+
+	if (m_b_needs_computation) this->ComputeOdds();
+
+	float f_rand = ((float)rng.rand() / RT_RAND_MAX);
+
+	return CalcNumber(f_rand);
+}
+
+int CWeightRand::GetRandom()
+{
+
+	if (m_b_needs_computation) this->ComputeOdds();
+
+	float f_rand = ((float)rand() / RT_RAND_MAX);
+
+	return CalcNumber(f_rand);
 }
 
 
