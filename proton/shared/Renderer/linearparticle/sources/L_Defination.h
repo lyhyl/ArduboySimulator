@@ -68,8 +68,8 @@
 #define L_INFINITE_LIFE INT_MAX
 
 
-const L_REAL L_ONE_OVER_RAND_MAX_1 = 1 / (L_REAL)RT_RAND_MAX;
-const L_REAL L_ONE_OVER_RAND_MAX_2 = 1 / ( L_REAL(RT_RAND_MAX) + 1 );
+const L_REAL L_ONE_OVER_RAND_MAX_1 = 1 / (L_REAL)RAND_MAX; //don't convert this to RT_RAND_MAX, it breaks things
+const L_REAL L_ONE_OVER_RAND_MAX_2 = 1 / ( L_REAL(RAND_MAX) + 1 ); //don't convert this to RT_RAND_MAX, it breaks things
 
 // 0 <= random value <= 1
 #define L_RAND_REAL_1() ( (L_REAL)rand() * L_ONE_OVER_RAND_MAX_1 )

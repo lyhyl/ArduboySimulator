@@ -169,6 +169,9 @@ import android.view.View.OnClickListener;
 	public static boolean cb_showInterstitial = false;
 	//#endif
 	
+	public static boolean set_allow_dimming_asap = false;
+	public static boolean set_disallow_dimming_asap = false;
+	
 	//GOOGLE IAB
 	public BillingService mBillingService;
 	//private Set<String> mOwnedItems = new HashSet<String>();
@@ -561,6 +564,21 @@ import android.view.View.OnClickListener;
 	
 		//	Log.d(PackageName, "Update");
 	
+	if (set_allow_dimming_asap)
+	{
+		set_allow_dimming_asap = false;
+		Log.v(app.PackageName, "Allowing screen dimming.");
+		mGLView.setKeepScreenOn(false);
+
+	}
+
+	if (set_disallow_dimming_asap)
+	{
+		set_allow_dimming_asap = false;
+		Log.v(app.PackageName, "Disabling screen dimming.");
+		mGLView.setKeepScreenOn(true);
+	
+	}
 	
 	//#if defined(RT_CHARTBOOST_SUPPORT)
 
@@ -1630,6 +1648,22 @@ class AppRenderer implements GLSurfaceView.Renderer
 					app.setup_accel(nativeGetLastOSMessageX());
 					break;
 
+				case MESSAGE_ALLOW_SCREEN_DIMMING: 
+					if (nativeGetLastOSMessageX() == 0)
+					{
+						//disable screen dimming
+						app.set_disallow_dimming_asap = true; //must do it in the UI thread
+						app.mMainThreadHandler.post(app.mUpdateMainThread);
+
+					} else
+					{
+						Log.v(app.PackageName, "Allowing screen dimming.");
+						app.set_allow_dimming_asap = true; //must do it in the UI thread
+						app.mMainThreadHandler.post(app.mUpdateMainThread);
+
+					}
+					break;
+
 				case MESSAGE_SET_FPS_LIMIT: 
 					if (nativeGetLastOSMessageX() == 0)
 					{
@@ -1706,14 +1740,14 @@ class AppRenderer implements GLSurfaceView.Renderer
 					
 					if (!key.isEmpty())
 					{
-						Log.v(app.PackageName, "MESSAGE_FLURRY_LOG_EVENT: Event + key/data: "+event+" key: "+key+", data: "+data);
+						//Log.v(app.PackageName, "MESSAGE_FLURRY_LOG_EVENT: Event + key/data: "+event+" key: "+key+", data: "+data);
 					
 						Map<String,String> m=new HashMap<String, String>();
 						m.put(key, data);
 						FlurryAgent.logEvent(event, m, true);
 					} else
 					{
-						Log.v(app.PackageName, "MESSAGE_FLURRY_LOG_EVENT: Event: "+event);
+					//	Log.v(app.PackageName, "MESSAGE_FLURRY_LOG_EVENT: Event: "+event);
 						FlurryAgent.logEvent(event, true);
 					}
 				}
@@ -1766,22 +1800,22 @@ class AppRenderer implements GLSurfaceView.Renderer
 	//#if defined(RT_TAPJOY_SUPPORT)
 	
 				case MESSAGE_TAPJOY_GET_FEATURED_APP:
-					Log.v(app.PackageName, "Getting tapjoy feature");
+					//Log.v(app.PackageName, "Getting tapjoy feature");
 					TapjoyConnect.getTapjoyConnectInstance().getFeaturedApp(app);
 					break;
 
 				case MESSAGE_TAPJOY_SHOW_FEATURED_APP:
-					Log.v(app.PackageName, "show tapjoy feature");
+					//Log.v(app.PackageName, "show tapjoy feature");
 					TapjoyConnect.getTapjoyConnectInstance().showFeaturedAppFullScreenAd();
 					break;
 		
 				case MESSAGE_TAPJOY_GET_TAP_POINTS:
-					Log.v(app.PackageName, "Getting tapjoy points");
+					//Log.v(app.PackageName, "Getting tapjoy points");
 					TapjoyConnect.getTapjoyConnectInstance().getTapPoints(app);
 					break;
 			
 				case MESSAGE_TAPJOY_SPEND_TAP_POINTS:
-					Log.v(app.PackageName, "Spending tappoints: " + nativeGetLastOSMessageParm1());
+					//Log.v(app.PackageName, "Spending tappoints: " + nativeGetLastOSMessageParm1());
 					TapjoyConnect.getTapjoyConnectInstance().spendTapPoints(nativeGetLastOSMessageParm1(), app);
 					break;	
 				

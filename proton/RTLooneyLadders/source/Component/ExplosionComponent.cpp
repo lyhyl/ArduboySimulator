@@ -80,6 +80,12 @@ void ExplosionComponent::OnAdd(Entity *pEnt)
 		m_explodeFire = L_ExplosionEffect(0,0,30,1,2,0.4f);
 
 		break;
+
+	default:
+
+		LogMsg("Invalid particle type %d in ExplosionComponent", effect);
+		return;
+		break;
 	}
 	
 

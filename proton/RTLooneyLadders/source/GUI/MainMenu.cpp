@@ -8,6 +8,7 @@
 #include "Entity/ArcadeInputComponent.h"
 #include "Gamepad/GamepadManager.h"
 #include "Gamepad/GamepadProvideriCade.h"
+#include "GUI/IntroMenu.h"
 
 void MainMenuOnSelect(VariantList *pVList) //0=vec2 point of click, 1=entity sent from
 {
@@ -26,6 +27,19 @@ void MainMenuOnSelect(VariantList *pVList) //0=vec2 point of click, 1=entity sen
 		
 		//create the new menu
 		AboutMenuCreate(pEntClicked->GetParent()->GetParent());
+		return;
+	}
+
+	if (pEntClicked->GetName() == toString(TOTAL_LEVELS+2))
+	{
+		DisableAllButtonsEntity(pEntClicked->GetParent());
+		SlideScreen(pEntClicked->GetParent(), false);
+
+		//kill this menu entirely, but we wait half a second while the transition is happening before doing it
+		GetMessageManager()->CallEntityFunction(pEntClicked->GetParent(), 500, "OnDelete", NULL); 
+
+		//create the intro menu again
+		IntroMenuCreate(pEntClicked->GetParent()->GetParent());
 		return;
 	}
 
@@ -81,31 +95,6 @@ void SelectionMove(bool bDown)
 	LogMsg("Chose %d", selection);
 }
 
-/*
-void FakeClickToButton(Entity *pChosenButton, int32 delayMS)
-{
-	
-	if (pChosenButton)
-	{
-		EntityComponent *pComp = pChosenButton->GetComponentByName("Button2D");
-		if (pComp)
-		{
-			CL_Vec2f vPos = pChosenButton->GetVar("pos2d")->GetVector2();
-
-			VariantList v;
-			v.Get(0).Set((float)MESSAGE_TYPE_GUI_CLICK_START);
-			v.Get(1).Set(vPos);
-			GetMessageManager()->CallEntityFunction(pChosenButton, delayMS, "OnInput", &v);
-
-			v.Get(0).Set((float)MESSAGE_TYPE_GUI_CLICK_END);
-			GetMessageManager()->CallEntityFunction(pChosenButton, delayMS, "OnInput", &v);
-			
-		}
-	}
-
-}
-*/
-
 
 void SelectionSelect()
 {
@@ -114,13 +103,7 @@ void SelectionSelect()
 	LogMsg("Chose %d", selection);
 	
 	SendFakeButtonPushToEntity(pIcon->GetParent()->GetEntityByName(toString(selection)), 20);
-	
 	GetApp()->GetVar("level")->Set(uint32(selection));
-    
-    //you know?  Let's reconnect the icade each time we load a level.  Generally we'd have a "Connect iCade" option in the options instead, but whatever.
-    
-  
-    
 }
 
 void UnlockAllLevels()
@@ -215,7 +198,7 @@ void SetupArrowSelector(Entity *pBG, int itemCount, uint32 defaultItem)
     //GetBaseApp()->m_sig_arcade_input.connect(pBG->GetFunction("OnArcadeInput")->sig_function);
     //pBG->GetFunction("OnArcadeInput")->sig_function.connect(&OnSelectInput);
 	
-	if (defaultItem > (uint32)itemCount) defaultItem = 1;
+	if (defaultItem > (uint32)itemCount || defaultItem < 1) defaultItem = 1;
 
 	pIcon->GetVar("itemCount")->Set(uint32(itemCount));
 	pIcon->GetVar("curSelection")->Set(uint32(defaultItem));
@@ -223,11 +206,7 @@ void SetupArrowSelector(Entity *pBG, int itemCount, uint32 defaultItem)
 	Entity *pActiveSel = pBG->GetEntityByName(toString(defaultItem));
 	CL_Vec2f vPos = pActiveSel->GetVar("pos2d")->GetVector2()+CL_Vec2f(-60, 0);
 	pIcon->GetVar("pos2d")->Set(vPos);
-    
- 
-	
 }
-
 
 Entity * MainMenuCreate(Entity *pParentEnt)
 {
@@ -248,9 +227,12 @@ Entity * MainMenuCreate(Entity *pParentEnt)
 	float y = 400;
 	float ySpacer = 45;
 
+
+	/*
 	//for testing input..
 	CreateInputTextEntity(pBG, "Crap", 20,40, "Test");
 	CreateInputTextEntity(pBG, "Crap", 20,80, "Test2");
+	*/
 	
 	int levelsPassed = GetApp()->GetVar("passed")->GetUINT32();
 
@@ -280,9 +262,11 @@ Entity * MainMenuCreate(Entity *pParentEnt)
     pButtonEntity = CreateTextButtonEntity(pBG, toString(TOTAL_LEVELS+1), x, y, "About"); y += ySpacer;
 	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MainMenuOnSelect);
 
-	SetupArrowSelector(pBG, TOTAL_LEVELS+1, GetApp()->GetVar("level")->GetUINT32());
+	pButtonEntity = CreateTextButtonEntity(pBG, toString(TOTAL_LEVELS+2), x, y, "Back"); y += ySpacer;
+	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MainMenuOnSelect);
+
+	SetupArrowSelector(pBG, TOTAL_LEVELS+2, GetApp()->GetVar("level")->GetUINT32());
 
 	SlideScreen(pBG, true);
 	return pBG;
 }
-

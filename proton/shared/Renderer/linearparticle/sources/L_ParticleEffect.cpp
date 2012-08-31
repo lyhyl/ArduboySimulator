@@ -1,5 +1,7 @@
 #include "PlatformPrecomp.h"
 
+#define L_DEBUG_MODE
+
 //===============================================================================
 //
 // LinearParticle Copyright (c) 2006 Wong Chin Foo
@@ -56,6 +58,11 @@ void L_ParticleEffect::Setup(int period_t, int x, int y)
 	life = L_INFINITE_LIFE;
 	addit_vector_enabled = false;
 	velocity = CL_Vec2f(0,0);
+
+	for (int i=0; i < L_PARTICLE_TYPE_LIMIT; i++)
+	{
+		fl_particle[i] = NULL;
+	}
 }
 
 L_ParticleEffect::L_ParticleEffect(int period_t, int x, int y)
@@ -123,7 +130,7 @@ int L_ParticleEffect::add(L_Particle* fl_p, L_REAL prob)
 	if( num_particle_type >= L_PARTICLE_TYPE_LIMIT )
 	{
 		#ifdef L_DEBUG_MODE
-			std::cout<<"LinearParticle : Could not add more than "<<L_PARTICLE_TYPE_LIMIT<<" particles for an effect."<<std::endl;
+			LogMsg("LinearParticle : Could not add more than % particles for an effect.", L_PARTICLE_TYPE_LIMIT);
 		#endif
 
 		return 0;
@@ -273,6 +280,12 @@ void L_ParticleEffect::create_particle(L_REAL in_x, L_REAL in_y, CL_Vec2f* vec_t
 	int chosen = choose_particle();
 
 	L_Particle* par_new;
+	
+	if (!fl_particle[chosen])
+	{
+		LogMsg("L_ParticleEffect::create_particle> Can't add invalid particle");
+		return;
+	}
 	L_NEW_PAR( par_new, *fl_particle[chosen] );
 
 	CL_Vec2f vec_t2 = CL_Vec2f(0,0);
@@ -321,9 +334,9 @@ void L_ParticleEffect::create_particle(L_REAL in_x, L_REAL in_y, CL_Vec2f* vec_t
 
 	par_new->x_pos = in_x;
 	par_new->y_pos = in_y;
-
+	
 	par_new->initialize();
-
+	
 	//add to list
 	particle_list.push_back(par_new);
 }

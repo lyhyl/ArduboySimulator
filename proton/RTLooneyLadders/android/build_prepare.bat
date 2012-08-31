@@ -2,13 +2,7 @@
 
 call app_info_setup.bat
 
-::Update/write our local.properties file with our ANDROID NDK dir
-call android update project -p ./
 @echo on
-
-:Get the emulator ready if it isn't, because it takes a freakin' long time to load
-:start emulator %EMULATOR_AVD%
-
 :Copy refresh resources, assuming the windows version had them built with update_media recently...
 
 rmdir assets /S /Q
@@ -121,9 +115,23 @@ echo Cannot find FlurryAgent.jar.  Download and place lib into shared\android\op
 copy %TEMPFILE% libs
 :skipflurry
 
+:for Moga Controller  (comment out the goto if you want to use it)
+:goto skipmoga;
+set TEMPFILE=..\..\shared\android\optional_src\libs\moga\com.bda.controller.jar
+
+:Extra check to make sure we can locate the files
+if exist "%TEMPFILE%" (
+echo Located moga files.
+) else (
+echo Cannot find com.bda.controller.jar.  Place lib into shared\android\optional_src\libs\moga
+..\..\shared\win\utils\beeper.exe /p
+)
+copy %TEMPFILE% libs
+:skipmoga
+
 :Next preprocess the java part (this isn't the real final java compile/pakaging, that happens later)
 call ant preprocess
 
 :build the C/C++ parts
-call ndk-build -j7
+call ndk-build -j7 
 if not exist libs/armeabi/lib%SMALL_PACKAGE_NAME%.so ..\..\shared\win\utils\beeper.exe /p

@@ -78,7 +78,8 @@ public:
 	Gamepad * GetDefaultGamepad(); //just use this for single player games?
 	eGamepadID GetDefaultGamepadID(); //returns the best gamepad they have
 	void Update(); //must be called every frame, handles updates, disconnections, etc
-
+	void SetDefaultGamepad(Gamepad *pPad);
+	
 	int GetGamepadCount() {return m_gamepads.size();}
 
 	Gamepad * GetGamepad(eGamepadID id);  //returns NULL if unavailable

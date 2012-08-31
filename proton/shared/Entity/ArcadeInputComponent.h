@@ -177,5 +177,5 @@ CL_Vec2f *m_pPos2d;
 };
 
 void AddKeyBinding(EntityComponent *pComp, string name, uint32 inputcode, uint32 outputcode, bool bAlsoSendAsNormalRawKey = false);
-
+string ProtonVirtualKeyToString(eVirtualKeys vKey); //stupid helper function that should probably be somewhere else
 #endif // ArcadeInputComponent_h__

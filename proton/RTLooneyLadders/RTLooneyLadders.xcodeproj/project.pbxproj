@@ -102,6 +102,11 @@
 		5D8486DC0F92409B007338A2 /* signal_base.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D8486D70F92409B007338A2 /* signal_base.cpp */; };
 		5D8486DD0F92409B007338A2 /* slot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D8486D80F92409B007338A2 /* slot.cpp */; };
 		5D8486DE0F92409B007338A2 /* trackable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D8486D90F92409B007338A2 /* trackable.cpp */; };
+		5D94C8BD15F0BF1C00AE4F83 /* ControllerTestMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D94C8B915F0BF1C00AE4F83 /* ControllerTestMenu.cpp */; };
+		5D94C8BE15F0BF1C00AE4F83 /* IntroMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D94C8BB15F0BF1C00AE4F83 /* IntroMenu.cpp */; };
+		5D94C8C315F0C01200AE4F83 /* LogDisplayComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D94C8BF15F0C01200AE4F83 /* LogDisplayComponent.cpp */; };
+		5D94C8C415F0C01200AE4F83 /* TouchDragComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D94C8C115F0C01200AE4F83 /* TouchDragComponent.cpp */; };
+		5D94C8C715F0C07400AE4F83 /* RenderScissorComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D94C8C515F0C07400AE4F83 /* RenderScissorComponent.cpp */; };
 		5D9831DD0F7B626400D94D9B /* rtRect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9831DB0F7B626400D94D9B /* rtRect.cpp */; };
 		5D9831F20F7BD64B00D94D9B /* RTFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9831F00F7BD64B00D94D9B /* RTFont.cpp */; };
 		5DA1FCF70F01EEFD001E9C1B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DA1FCF60F01EEFD001E9C1B /* AudioToolbox.framework */; };
@@ -336,6 +341,16 @@
 		5D8486D70F92409B007338A2 /* signal_base.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = signal_base.cpp; path = util/boost/libs/signals/src/signal_base.cpp; sourceTree = "<group>"; };
 		5D8486D80F92409B007338A2 /* slot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = slot.cpp; path = util/boost/libs/signals/src/slot.cpp; sourceTree = "<group>"; };
 		5D8486D90F92409B007338A2 /* trackable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = trackable.cpp; path = util/boost/libs/signals/src/trackable.cpp; sourceTree = "<group>"; };
+		5D94C8B915F0BF1C00AE4F83 /* ControllerTestMenu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ControllerTestMenu.cpp; path = source/GUI/ControllerTestMenu.cpp; sourceTree = "<group>"; };
+		5D94C8BA15F0BF1C00AE4F83 /* ControllerTestMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ControllerTestMenu.h; path = source/GUI/ControllerTestMenu.h; sourceTree = "<group>"; };
+		5D94C8BB15F0BF1C00AE4F83 /* IntroMenu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = IntroMenu.cpp; path = source/GUI/IntroMenu.cpp; sourceTree = "<group>"; };
+		5D94C8BC15F0BF1C00AE4F83 /* IntroMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IntroMenu.h; path = source/GUI/IntroMenu.h; sourceTree = "<group>"; };
+		5D94C8BF15F0C01200AE4F83 /* LogDisplayComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LogDisplayComponent.cpp; path = Entity/LogDisplayComponent.cpp; sourceTree = "<group>"; };
+		5D94C8C015F0C01200AE4F83 /* LogDisplayComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LogDisplayComponent.h; path = Entity/LogDisplayComponent.h; sourceTree = "<group>"; };
+		5D94C8C115F0C01200AE4F83 /* TouchDragComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TouchDragComponent.cpp; path = Entity/TouchDragComponent.cpp; sourceTree = "<group>"; };
+		5D94C8C215F0C01200AE4F83 /* TouchDragComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TouchDragComponent.h; path = Entity/TouchDragComponent.h; sourceTree = "<group>"; };
+		5D94C8C515F0C07400AE4F83 /* RenderScissorComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RenderScissorComponent.cpp; path = Entity/RenderScissorComponent.cpp; sourceTree = "<group>"; };
+		5D94C8C615F0C07400AE4F83 /* RenderScissorComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RenderScissorComponent.h; path = Entity/RenderScissorComponent.h; sourceTree = "<group>"; };
 		5D9831DB0F7B626400D94D9B /* rtRect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = rtRect.cpp; path = Math/rtRect.cpp; sourceTree = "<group>"; };
 		5D9831DC0F7B626400D94D9B /* rtRect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = rtRect.h; path = Math/rtRect.h; sourceTree = "<group>"; };
 		5D9831F00F7BD64B00D94D9B /* RTFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RTFont.cpp; path = GUI/RTFont.cpp; sourceTree = "<group>"; };
@@ -562,6 +577,10 @@
 		5D4760860FBB1D04008400E3 /* GUI */ = {
 			isa = PBXGroup;
 			children = (
+				5D94C8B915F0BF1C00AE4F83 /* ControllerTestMenu.cpp */,
+				5D94C8BA15F0BF1C00AE4F83 /* ControllerTestMenu.h */,
+				5D94C8BB15F0BF1C00AE4F83 /* IntroMenu.cpp */,
+				5D94C8BC15F0BF1C00AE4F83 /* IntroMenu.h */,
 				5DD3272012C1CE500009B0F3 /* GameMenu.h */,
 				5DD3272112C1CE500009B0F3 /* GameMenu.cpp */,
 				5DDEC3251295639300C42C5E /* AboutMenu.h */,
@@ -653,6 +672,12 @@
 		5D82C88E0FF4BB660082EBE7 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				5D94C8C515F0C07400AE4F83 /* RenderScissorComponent.cpp */,
+				5D94C8C615F0C07400AE4F83 /* RenderScissorComponent.h */,
+				5D94C8BF15F0C01200AE4F83 /* LogDisplayComponent.cpp */,
+				5D94C8C015F0C01200AE4F83 /* LogDisplayComponent.h */,
+				5D94C8C115F0C01200AE4F83 /* TouchDragComponent.cpp */,
+				5D94C8C215F0C01200AE4F83 /* TouchDragComponent.h */,
 				5DD327A412C97DEF0009B0F3 /* EmitVirtualKeyComponent.h */,
 				5DD327A512C97DEF0009B0F3 /* EmitVirtualKeyComponent.cpp */,
 				5DD3275D12C387A40009B0F3 /* DPadComponent.h */,
@@ -1099,6 +1124,11 @@
 				5D2F537815A6666E00B8CED1 /* Gamepad60Beat.mm in Sources */,
 				5D2F537915A6666E00B8CED1 /* GamepadProvider60Beat.mm in Sources */,
 				5D2F537A15A6666E00B8CED1 /* GamepadProvider60BeatNative.mm in Sources */,
+				5D94C8BD15F0BF1C00AE4F83 /* ControllerTestMenu.cpp in Sources */,
+				5D94C8BE15F0BF1C00AE4F83 /* IntroMenu.cpp in Sources */,
+				5D94C8C315F0C01200AE4F83 /* LogDisplayComponent.cpp in Sources */,
+				5D94C8C415F0C01200AE4F83 /* TouchDragComponent.cpp in Sources */,
+				5D94C8C715F0C07400AE4F83 /* RenderScissorComponent.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

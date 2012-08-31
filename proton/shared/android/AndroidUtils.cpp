@@ -1149,21 +1149,46 @@ float AppGetLastOSMessageParm1(JNIEnv* env)
 // JAKE ADDED - MachineWorks needs this, so please leave.
 void AppOnJoypadButtons(JNIEnv* env, jobject jobj, jint key, jint value)
 {
+
+#ifdef RT_MOGA_ENABLED
+	//for Seth's GamepadManagerMoga implementation, so it can be abstracted like any other gamepad
 	//LogMsg("Received key %d, value %d", key, value);
+	VariantList vList((uint32)MESSAGE_TYPE_GUI_JOYPAD_BUTTONS, (uint32) key, (uint32)value);
+	GetBaseApp()->m_sig_joypad_events(&vList);
+#else
+	//LogMsg("Jakes: Received key %d, value %d", key, value);
 	GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_JOYPAD_BUTTONS, Variant(key, value, 0.0f));
+#endif
+
 }
 
 void AppOnJoypad(JNIEnv* env, jobject jobj, jfloat xL, jfloat yL, jfloat xR, jfloat yR)
 {
-	//LogMsg("Got %.2f, %.2f", xL, yL);
-	VariantList vList(xL, yL, xR, yR);
+//	LogMsg("Got %.2f, %.2f and %.2f, %.2f", xL, yL, xR, yR);
+
+#ifdef RT_MOGA_ENABLED
+	//for Seth's GamepadManagerMoga implementation, so it can be abstracted like any other gamepad
+	VariantList vList((uint32)MESSAGE_TYPE_GUI_JOYPAD, xL, yL, xR, yR);
+	GetBaseApp()->m_sig_joypad_events(&vList);
+#else
+	//legacy, for Jake's stuff
+	VariantList vList(MESSAGE_TYPE_GUI_JOYPAD, xL, yL, xR, yR);
 	GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_JOYPAD, vList);
+#endif
 }
 
 void AppOnJoypadConnection(JNIEnv* env, jobject jobj, jint connect)
 {
-	//LogMsg("Received conect value %d", connect);
-	GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_JOYPAD_CONNECT, Variant(connect, 0.0f, 0.0f));
+//	LogMsg("Received connect value %d", connect);
+#ifdef RT_MOGA_ENABLED
+	//for Seth's GamepadManagerMoga implementation, so it can be abstracted like any other gamepad
+	VariantList vList((uint32)MESSAGE_TYPE_GUI_JOYPAD_CONNECT, (uint32)connect);
+	GetBaseApp()->m_sig_joypad_events(&vList);
+#else
+	{
+		GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_JOYPAD_CONNECT, Variant(connect, 0.0f, 0.0f));
+	}
+#endif
 }
 // Jake End
 

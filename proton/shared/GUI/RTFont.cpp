@@ -410,6 +410,19 @@ void RTFont::DrawScaled( float x, float y, const string &text, float scale /*= 1
 
 }
 
+void RTFont::DrawAligned( float x, float y, const string &text, eAlignment alignment/*= ALIGNMENT_UPPER_LEFT*/, float scale /*= 1.0f*/, unsigned int color/*=MAKE_RGBA(255,255,255,255)*/, FontStateStack *pState /*= NULL*/, RenderBatcher *pBatcher /*= NULL*/ )
+{
+	if (alignment != ALIGNMENT_UPPER_LEFT)
+	{
+		CL_Vec2f vSize = MeasureText(text, scale);
+		CL_Vec2f vOffset = GetAlignmentOffset(vSize, alignment);
+		x -= vOffset.x;
+		y -= vOffset.y;
+	}
+
+	DrawScaled(x,y, text, scale, color, pState, pBatcher);
+}
+
 #define MAKE_KERNING_KEY(first,second) uint32( (uint32(first)*256)  + uint32(second))
 
 void RTFont::SetKerningData( int first, int second, signed char data )
@@ -681,3 +694,4 @@ unsigned int RTFont::GetColorFromString( const char *pText )
 
 	return MAKE_RGBA(255,255,255,255);
 }
+

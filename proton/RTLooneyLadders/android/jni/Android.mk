@@ -18,12 +18,13 @@ LZMASRC :=  $(SHARED)/Irrlicht/source/Irrlicht/lzma
 LOCAL_CPP_FEATURES += exceptions
 LOCAL_CPP_FEATURES += rtti
 
-#optional but not used: -DRT_JPG_SUPPORT
+#optional but not used: -DRT_JPG_SUPPORT -DRT_MOGA_ENABLED
 #release flags
-SHARED_FLAGS := -DANDROID_NDK -DBUILD_ANDROID -DNDEBUG 
+#SHARED_FLAGS := -DANDROID_NDK -DBUILD_ANDROID -DNDEBUG
 
 #debug flags
-#SHARED_FLAGS := -DANDROID_NDK -DBUILD_ANDROID -D_DEBUG -DRT_JPG_SUPPORT
+SHARED_FLAGS := -DANDROID_NDK -DBUILD_ANDROID -D_DEBUG
+
 
 LOCAL_CFLAGS := -DGC_BUILD_ANDROID $(SHARED_FLAGS)
 LOCAL_CPPFLAGS := -DGC_BUILD_C $(SHARED_FLAGS)
@@ -46,6 +47,7 @@ $(SHARED)/FileSystem/StreamingInstanceZip.cpp $(SHARED)/FileSystem/StreamingInst
 $(SHARED)/FileSystem/FileManager.cpp \
 \
 $(SHARED)/Gamepad/GamepadManager.cpp $(SHARED)/Gamepad/Gamepad.cpp $(SHARED)/Gamepad/GamepadiCade.cpp $(SHARED)/Gamepad/GamepadProvider.cpp $(SHARED)/Gamepad/GamepadProvideriCade.cpp \
+$(SHARED)/Gamepad/GamepadProviderMoga.cpp $(SHARED)/Gamepad/GamepadMoga.cpp \
 \
 $(COMPPATH)/Button2DComponent.cpp $(COMPPATH)/FilterInputComponent.cpp $(COMPPATH)/FocusInputComponent.cpp $(COMPPATH)/FocusRenderComponent.cpp $(COMPPATH)/FocusUpdateComponent.cpp \
 $(COMPPATH)/HTTPComponent.cpp $(COMPPATH)/InputTextRenderComponent.cpp $(COMPPATH)/InterpolateComponent.cpp $(COMPPATH)/OverlayRenderComponent.cpp $(COMPPATH)/ProgressBarComponent.cpp \
@@ -53,13 +55,15 @@ $(COMPPATH)/RectRenderComponent.cpp $(COMPPATH)/ScrollBarRenderComponent.cpp $(C
 $(COMPPATH)/TextRenderComponent.cpp $(COMPPATH)/TouchStripComponent.cpp $(COMPPATH)/TrailRenderComponent.cpp $(COMPPATH)/TyperComponent.cpp $(COMPPATH)/UnderlineRenderComponent.cpp \
 $(COMPPATH)/TouchHandlerComponent.cpp $(COMPPATH)/SelectButtonWithCustomInputComponent.cpp $(COMPPATH)/CustomInputComponent.cpp $(COMPPATH)/SliderComponent.cpp \
 $(COMPPATH)/ArcadeInputComponent.cpp $(COMPPATH)/EmitVirtualKeyComponent.cpp  $(COMPPATH)/DPadComponent.cpp $(COMPPATH)/RenderScissorComponent.cpp \
+$(COMPPATH)/LogDisplayComponent.cpp $(COMPPATH)/TouchDragComponent.cpp \
 \
 \
 $(PPATH)/L_Defination.cpp $(PPATH)/L_DroppingEffect.cpp $(PPATH)/L_EffectEmitter.cpp $(PPATH)/L_ExplosionEffect.cpp $(PPATH)/L_MotionController.cpp $(PPATH)/L_Particle.cpp \
 $(PPATH)/L_ParticleEffect.cpp $(PPATH)/L_ParticleMem.cpp $(PPATH)/L_ParticleSystem.cpp $(PPATH)/L_ShootingEffect.cpp $(PPATH)/L_EffectManager.cpp \
 \
 $(APP)/App.cpp $(APP)/Component/BuildingComponent.cpp $(APP)/Component/CharComponent.cpp $(APP)/Component/CharManagerComponent.cpp $(APP)/Component/ExplosionComponent.cpp \
-$(APP)/Component/OverlayRenderComponentSpy.cpp $(APP)/GUI/AboutMenu.cpp $(APP)/GUI/GameMenu.cpp $(APP)/GUI/MainMenu.cpp
+$(APP)/Component/OverlayRenderComponentSpy.cpp $(APP)/GUI/AboutMenu.cpp $(APP)/GUI/GameMenu.cpp $(APP)/GUI/MainMenu.cpp \
+$(APP)/GUI/IntroMenu.cpp $(APP)/GUI/ControllerTestMenu.cpp
 
 
 LOCAL_LDLIBS := -lGLESv1_CM -ldl -llog -lz

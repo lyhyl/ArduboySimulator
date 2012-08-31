@@ -650,13 +650,18 @@ void L_Particle::initialize(void)
 	time_elapsed = 0;
 	if (coloring_starting_time == 0) coloring_starting_time = 1; //SETH avoid division by zero later...
 	coloring_process();
+	
+	if (sizing_starting_time == 0) sizing_starting_time = 1;  //SETH avoid division by zero later...
 	sizing_process();
+	if (rotating_starting_time == 0) rotating_starting_time = 1;  //SETH avoid division by zero later...
 	rotating_process();
 }
 
 
 void L_Particle::run(int time_elapesed_t)
 {
+
+	
 	time_elapsed = time_elapesed_t;
 	
 	assert( (!motion_controller)
