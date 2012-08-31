@@ -9,8 +9,12 @@
 #include "GUI/GameMenu.h"
 #include "Gamepad/GamepadManager.h"
 #include "Gamepad/GamepadProvideriCade.h"
-
+#include "GUI/IntroMenu.h"
 SurfaceAnim g_surf;
+
+#ifdef RT_MOGA_ENABLED
+#include "Gamepad/GamepadProviderMoga.h"
+#endif
  
 MessageManager g_messageManager;
 MessageManager * GetMessageManager() {return &g_messageManager;}
@@ -46,6 +50,7 @@ GamepadManager * GetGamepadManager() {return &g_gamepadManager;}
 AudioManagerSDL g_audioManager; //sound in windows and WebOS
 //AudioManager g_audioManager; //to disable sound
 #elif defined ANDROID_NDK
+//AudioManager g_audioManager; //to disable sound
 AudioManagerAndroid g_audioManager; //sound for android
 #else
 //in windows
@@ -69,12 +74,8 @@ BaseApp * GetBaseApp()
 {
 	if (!g_pApp)
 	{
-		#ifndef NDEBUG
-		LogMsg("Creating app object");
-		#endif
 		g_pApp = new App;
 	}
-
 	return g_pApp;
 }
 
@@ -96,7 +97,6 @@ App::~App()
 void App::OnExitApp(VariantList *pVarList)
 {
 	LogMsg("Exiting the app");
-
 	OSMessage o;
 	o.m_type = OSMessage::MESSAGE_FINISH_APP;
 	GetBaseApp()->AddOSMessage(o);
@@ -148,22 +148,13 @@ bool App::Init()
 		}
 		break;
 
-
 	default:
 		SetLockedLandscape(false); //we don't allow portrait mode for this game
 		SetupFakePrimaryScreenSize(scaleToX,scaleToY); //game will think it's this size, and will be scaled up
 	}
 
-
-	if (GetPlatformID() == PLATFORM_ID_WEBOS && !IsIPADSize)
-	{
-		//non Touchpad webos devices are taller than they are higher.. fix that by rotating it
-		LogMsg("Special handling for webos devices to switch to landscape mode..");
-		//	SetLockedLandscape(true);
-		//	SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(), ORIENTATION_LANDSCAPE_LEFT);
-	}
-
 	L_ParticleSystem::init(2000);
+
 
 	if (m_bInitted)	
 	{
@@ -192,7 +183,6 @@ bool App::Init()
 	
 	bool bFileExisted;
 	m_varDB.Load("save.dat", &bFileExisted);
-
 	m_varDB.GetVarWithDefault("level", Variant(uint32(1)));
 	
 	//Actually, because this isn't a real game, let's just cheat and give the player access to all the levels
@@ -201,6 +191,12 @@ bool App::Init()
 	//preload audio
 	GetAudioManager()->Preload("audio/click.wav");
 	
+#ifdef RT_MOGA_ENABLED
+	GetGamepadManager()->AddProvider( new GamepadProviderMoga);
+	GetBaseApp()->SetAllowScreenDimming(false);
+#endif
+
+
 #ifdef PLATFORM_WINDOWS
 	//If you don't have directx, just comment out this and remove the dx lib dependency, directx is only used for the
 	//gamepad input on windows
@@ -215,6 +211,8 @@ bool App::Init()
 		GetGamepadManager()->AddProvider(new GamepadProvider60Beat);
 		GetBaseApp()->SetAllowScreenDimming(false);
 #endif
+
+
 
 	return true;
 }
@@ -240,10 +238,11 @@ void App::Update()
 		Entity *pGUIEnt = GetEntityRoot()->AddEntity(new Entity("GUI"));
 	
 #ifdef _DEBUG
-		MainMenuCreate(pGUIEnt);
+		IntroMenuCreate(pGUIEnt);
+//		MainMenuCreate(pGUIEnt);
 //		GameMenuCreate(pGUIEnt);
 #else
-		MainMenuCreate(pGUIEnt);
+		IntroMenuCreate(pGUIEnt);
 #endif
 	}
 }
@@ -317,22 +316,26 @@ const char * GetBundleName()
 }
 
 
-//below is a sort of hack that allows "release" builds on windows to override the settings of whatever the shared main.cpp is telling
-//us for window sizes
-#ifdef _WINDOWS_
-#include "win/app/main.h"
+#ifdef C_FORCE_BIG_SCREEN_SIZE_FOR_WINDOWS_BUILDS
+
+	//below is a sort of hack that allows "release" builds on windows to override the settings of whatever the shared main.cpp is telling
+	//us for window sizes
+	#ifdef _WINDOWS_
+	#include "win/app/main.h"
+	#endif
+
+	bool App::OnPreInitVideo()
+	{
+		if (!BaseApp::OnPreInitVideo()) return false;
+
+	#if defined(_WINDOWS_)
+
+		//comment out this part if you really want to emulate other systems/phone sizes, from settings in main.cpp
+		SetEmulatedPlatformID(PLATFORM_ID_WINDOWS);
+		g_winVideoScreenX = 1024;
+		g_winVideoScreenY = 768;
+		
+	#endif
+		return true;
+	}
 #endif
-
-bool App::OnPreInitVideo()
-{
-	if (!BaseApp::OnPreInitVideo()) return false;
-
-#if !defined(_DEBUG) && defined(_WINDOWS_)
-
-	SetEmulatedPlatformID(PLATFORM_ID_WINDOWS);
-	g_winVideoScreenX = 768;
-	g_winVideoScreenY = 1024;
-	g_landScapeNoNeckHurtMode = true;
-#endif
-	return true;
-}

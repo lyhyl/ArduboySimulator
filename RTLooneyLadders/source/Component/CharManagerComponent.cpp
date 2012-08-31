@@ -129,6 +129,7 @@ void CharManagerComponent::InitEffect(VariantList *pVList)
 	pEffect->GetVar("effect")->Set(effect);
 	pEnt->AddComponent(pEffect);
 	pEnt->GetVar("pos2d")->Set(vWorldPos);
+	KillEntity(pEnt, 6000);
 }
 
 void CharManagerComponent::AddChar( eID id, eAI ai, uint32 floorID, uint32 cell )

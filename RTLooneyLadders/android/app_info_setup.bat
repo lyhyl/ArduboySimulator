@@ -4,7 +4,7 @@ set APP_NAME=RTLooneyLadders
 set SMALL_PACKAGE_NAME=RTLooneyLadders
 set COMPANY_PACKAGE_NAME=rtsoft
 set PACKAGE_NAME=com.%COMPANY_PACKAGE_NAME%.%SMALL_PACKAGE_NAME%
-set EMULATOR_AVD=@AVD_16
+set EMULATOR_AVD=@AVD_22
 set ANDROID_EMU=emulator-5554
 
 ::Update/write our local.properties file with our ANDROID NDK dir

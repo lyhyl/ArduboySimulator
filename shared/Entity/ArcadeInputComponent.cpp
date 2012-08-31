@@ -398,3 +398,62 @@ void AddKeyBinding(EntityComponent *pComp, string name, uint32 inputcode, uint32
     VariantList vList(name, inputcode, outputcode, uint32(bAlsoSendAsNormalRawKey!=0));
 	pComp->GetFunction("AddKeyBinding")->sig_function(&vList);
 }
+
+string ProtonVirtualKeyToString(eVirtualKeys vKey)
+{
+
+	switch(vKey)
+	{
+	case VIRTUAL_DPAD_BUTTON_LEFT:
+		return "left action button";
+		break;
+	case VIRTUAL_DPAD_BUTTON_RIGHT:
+		return "right action button";
+		break;
+	case VIRTUAL_DPAD_BUTTON_UP:
+		return "up action button";
+		break;
+	case VIRTUAL_DPAD_BUTTON_DOWN:
+		return "down action button";
+		break;
+
+	case VIRTUAL_DPAD_LBUTTON:
+		return "left shoulder button";
+		break;
+
+	case VIRTUAL_DPAD_RBUTTON:
+		return "right shoulder button";
+		break;
+
+	case VIRTUAL_DPAD_SELECT:
+		return "select button";
+		break;
+
+	case VIRTUAL_DPAD_START:
+		return "start button";
+		break;
+
+	case VIRTUAL_DPAD_HAT_LEFT:
+		return "left hat button";
+		break;
+
+	case VIRTUAL_DPAD_HAT_RIGHT:
+		return "right hat button";
+		break;
+
+	case VIRTUAL_DPAD_HAT_UP:
+		return "up hat button";
+		break;
+
+	case VIRTUAL_DPAD_HAT_DOWN:
+		return "down hat button";
+		break;
+
+	default:
+		return "Button ID "+toString(vKey);
+		break;
+	}
+
+	assert(!"wat?");
+	return "";
+}

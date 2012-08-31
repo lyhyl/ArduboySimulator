@@ -105,7 +105,7 @@ public:
 	GamepadProvider * GetProvider() {return m_pPadProvider;}
 	void SetProvider(GamepadProvider *pProvider) {m_pPadProvider = pProvider;}
 
-	//called to set the button data, usually called by our subclass
+	//called to set the button data, usually called by our subclass, you probably don't need this stuff.
     void SetAxis(int axis, float val); //must be -1 to 1.  axis 0 and 1 should be the main joystick
 	void OnButton(bool bDown, int buttonID);
 	void OnHat(int index, float val); 
@@ -120,7 +120,6 @@ protected:
 	bool m_bJustSentStickRelease;
 	string m_name;
 	GamepadProvider *m_pPadProvider;
-
 
 	GamepadAxis m_axis[GAMEPAD_MAX_AXIS];
 	GamepadButton m_buttons[GAMEPAD_MAX_BUTTONS] ;

@@ -205,7 +205,7 @@ Entity * GameMenuCreate(Entity *pParentEnt)
 		//pPad->m_sig_right_stick.connect(1, boost::bind(&OnGamepadStickUpdate, this, _1));	
 	}
 	
-	//these arrow keys will be triggered by the keyboard, if applicable
+	//these arrow keys will be triggered by the keyboard and gamepads if applicable
 	AddKeyBinding(pComp, "Left", VIRTUAL_KEY_DIR_LEFT, VIRTUAL_KEY_DIR_LEFT);
 	AddKeyBinding(pComp, "Right", VIRTUAL_KEY_DIR_RIGHT, VIRTUAL_KEY_DIR_RIGHT);
 	AddKeyBinding(pComp, "Up", VIRTUAL_KEY_DIR_UP, VIRTUAL_KEY_DIR_UP);
@@ -214,18 +214,19 @@ Entity * GameMenuCreate(Entity *pParentEnt)
 
 	//for xperia play on android
 	AddKeyBinding(pComp, "XperiaA", VIRTUAL_KEY_DIR_CENTER, VIRTUAL_KEY_GAME_FIRE); //for experia plays X button
-	AddKeyBinding(pComp, "XPeriaB", VIRTUAL_DPAD_BUTTON_DOWN, VIRTUAL_KEY_GAME_FIRE); //for experia plays O button
 
-    AddKeyBinding(pComp, "Dynamite2", VIRTUAL_DPAD_BUTTON_LEFT, VIRTUAL_KEY_GAME_FIRE); //map another icade button 
+	//VIRTUAL_DPAD_BUTTON_LEFT doesn't mean pushing left on the dpad, it means the button on the left.  (Like, the X button
+	//on a 360 controller.  It makes more sense to use a direction for a button than BLUE, X or A because the button names change
+	//too much dependong the controller)
+
+	AddKeyBinding(pComp, "XPeriaB", VIRTUAL_DPAD_BUTTON_DOWN, VIRTUAL_KEY_GAME_FIRE); //for experia plays O button
+	AddKeyBinding(pComp, "Dynamite2", VIRTUAL_DPAD_BUTTON_LEFT, VIRTUAL_KEY_GAME_FIRE); //map another icade button 
     AddKeyBinding(pComp, "Dynamite3", VIRTUAL_DPAD_BUTTON_RIGHT, VIRTUAL_KEY_GAME_FIRE); //map another icade button 
     AddKeyBinding(pComp, "Dynamite4", VIRTUAL_DPAD_BUTTON_UP, VIRTUAL_KEY_GAME_FIRE); //map another icade button 
     AddKeyBinding(pComp, "Back", VIRTUAL_DPAD_RTRIGGER, VIRTUAL_KEY_BACK, true);
     
-
-
 	GetBaseApp()->m_sig_arcade_input.connect(pBG->GetFunction("OnArcadeInput")->sig_function);
 	pBG->GetShared()->GetFunction("OnArcadeInput")->sig_function.connect(&OnArcadeInput);
-
 
 	//setup level
 	Entity *pLevel = pBG->AddEntity(new Entity("Level"));

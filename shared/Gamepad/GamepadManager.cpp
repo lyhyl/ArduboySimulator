@@ -183,3 +183,8 @@ GamepadProvider * GamepadManager::GetProviderByName( string name )
 
 	return NULL;
 }
+
+void GamepadManager::SetDefaultGamepad( Gamepad *pPad )
+{
+	m_defaultGamepadID = pPad->GetID();
+}

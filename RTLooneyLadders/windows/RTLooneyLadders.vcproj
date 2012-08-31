@@ -64,7 +64,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="audiere.lib zdll.lib wsock32.lib libGLES_CM.lib"
+				AdditionalDependencies="audiere.lib zdll.lib wsock32.lib libGLES_CM.lib dinput8.lib dxguid.lib"
 				OutputFile="../bin/RTLooneyLadders.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\..\shared\win\powerVR\OGLES\WindowsX86\lib;..\..\shared\win\lib;..\..\shared\win\fmod\api\lib;..\..\shared\win\audiere\lib"
@@ -460,29 +460,53 @@
 				Name="GUI"
 				>
 				<File
-					RelativePath="..\source\GUI\AboutMenu.cpp"
+					RelativePath="..\source\GUI\IntroMenu.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\source\GUI\AboutMenu.h"
+					RelativePath="..\source\GUI\IntroMenu.h"
 					>
 				</File>
-				<File
-					RelativePath="..\source\GUI\GameMenu.cpp"
+				<Filter
+					Name="Looney"
 					>
-				</File>
-				<File
-					RelativePath="..\source\GUI\GameMenu.h"
+					<File
+						RelativePath="..\source\GUI\AboutMenu.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\source\GUI\AboutMenu.h"
+						>
+					</File>
+					<File
+						RelativePath="..\source\GUI\GameMenu.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\source\GUI\GameMenu.h"
+						>
+					</File>
+					<File
+						RelativePath="..\source\GUI\MainMenu.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\source\GUI\MainMenu.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Controller Test"
 					>
-				</File>
-				<File
-					RelativePath="..\source\GUI\MainMenu.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\source\GUI\MainMenu.h"
-					>
-				</File>
+					<File
+						RelativePath="..\source\GUI\ControllerTestMenu.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\source\GUI\ControllerTestMenu.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="Component"
@@ -1620,6 +1644,14 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\shared\Entity\LogDisplayComponent.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\shared\Entity\LogDisplayComponent.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\shared\Entity\OverlayRenderComponent.cpp"
 						>
 					</File>
@@ -1793,6 +1825,14 @@
 					</File>
 					<File
 						RelativePath="..\..\shared\Entity\TextRenderComponent.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\shared\Entity\TouchDragComponent.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\shared\Entity\TouchDragComponent.h"
 						>
 					</File>
 					<File
@@ -2804,6 +2844,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\shared\Gamepad\GamepadMoga.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\Gamepad\GamepadMoga.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\shared\Gamepad\GamepadProvider.cpp"
 					>
 				</File>
@@ -2841,6 +2889,14 @@
 				</File>
 				<File
 					RelativePath="..\..\shared\Gamepad\GamepadProvideriCade.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\Gamepad\GamepadProviderMoga.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\Gamepad\GamepadProviderMoga.h"
 					>
 				</File>
 			</Filter>

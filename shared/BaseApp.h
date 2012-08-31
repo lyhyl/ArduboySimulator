@@ -324,6 +324,8 @@ public:
 	boost::signal<void (void)> m_sig_unloadSurfaces;
 	boost::signal<void (void)> m_sig_loadSurfaces; ///< Signal to notify that it's time to reload surfaces.
 
+	boost::signal<void (VariantList*)> m_sig_joypad_events; //only used for the android Moga game controller implementation
+
 	deque <OSMessage> * GetOSMessages() {return &m_OSMessages;}
 	void AddOSMessage(OSMessage &m);
 	void SetManualRotationMode(bool bRotation); //if true, we manually rotate our GL and coordinates for the screen.

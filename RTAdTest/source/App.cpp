@@ -210,7 +210,7 @@ void App::Update()
 		pEnt->AddComponent(new FocusInputComponent);
 
 		SetConsole(true, true);
-		//adjust the console so it's full screen
+		//adjust the console so it isn't full screen
 		Entity *pConsole = GetEntityRoot()->GetEntityByName("ConsoleEnt");
 		
 		pConsole->GetVar("pos2d")->Set(CL_Vec2f(0,GetScreenSizeYf()*.7f));

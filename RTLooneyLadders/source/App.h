@@ -14,12 +14,20 @@ practices...
 
 */
 
-
 #pragma once
 
 #include "BaseApp.h"
 
+#ifdef PLATFORM_ANDROID
+	//Moga controller is still under NDA, so even if you try to use it isn't functional in Proton's public SVN yet.  Coming soon
+	//#define RT_MOGA_ENABLED
+#endif
+
+//this define will cause windows builds to ignore the settings in main.cpp and force 1024X768
+#define C_FORCE_BIG_SCREEN_SIZE_FOR_WINDOWS_BUILDS
 #define TOTAL_LEVELS 6
+
+
 
 class App: public BaseApp
 {
