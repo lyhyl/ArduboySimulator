@@ -581,5 +581,6 @@ string IntToTime(int ms, bool bTextFormat)
 		
 	}
 
+	if (r.empty()) return "Now!";
 	return r;
 }

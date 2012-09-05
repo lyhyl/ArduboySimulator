@@ -574,3 +574,12 @@ bool StringFromStartMatches(const std::string &line, const std::string textToMat
 	}
 	return true;
 }
+
+bool StringFromEndMatches(const std::string &line, const std::string textToMatch)
+{
+	if (line.size() < textToMatch.size()) return false;
+	int sizeOfTextToMatch = strlen(textToMatch.c_str());
+	if (strncmp( &(line.c_str()[line.size()-sizeOfTextToMatch]), textToMatch.c_str(), sizeOfTextToMatch) == 0) return true;
+
+	return false;
+}
