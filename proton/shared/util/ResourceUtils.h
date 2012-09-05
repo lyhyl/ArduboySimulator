@@ -47,3 +47,4 @@ std::string ReplaceMP3( const std::string &fName); //changes mp3 to ogg in a fil
 void AppendStringToFile(const std::string filename, const std::string text);
 std::string StripColorCodes(const std::string text);
 bool StringFromStartMatches(const std::string &line, const std::string textToMatch); //like an strnstr for strings
+bool StringFromEndMatches(const std::string &line, const std::string textToMatch);

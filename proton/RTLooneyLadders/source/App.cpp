@@ -10,7 +10,7 @@
 #include "Gamepad/GamepadManager.h"
 #include "Gamepad/GamepadProvideriCade.h"
 #include "GUI/IntroMenu.h"
-SurfaceAnim g_surf;
+
 
 #ifdef RT_MOGA_ENABLED
 #include "Gamepad/GamepadProviderMoga.h"
