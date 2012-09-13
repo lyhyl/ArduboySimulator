@@ -1164,7 +1164,7 @@ void AppOnJoypadButtons(JNIEnv* env, jobject jobj, jint key, jint value)
 
 void AppOnJoypad(JNIEnv* env, jobject jobj, jfloat xL, jfloat yL, jfloat xR, jfloat yR)
 {
-//	LogMsg("Got %.2f, %.2f and %.2f, %.2f", xL, yL, xR, yR);
+	LogMsg("Got %.2f, %.2f and %.2f, %.2f", xL, yL, xR, yR);
 
 #ifdef RT_MOGA_ENABLED
 	//for Seth's GamepadManagerMoga implementation, so it can be abstracted like any other gamepad
@@ -1172,7 +1172,7 @@ void AppOnJoypad(JNIEnv* env, jobject jobj, jfloat xL, jfloat yL, jfloat xR, jfl
 	GetBaseApp()->m_sig_joypad_events(&vList);
 #else
 	//legacy, for Jake's stuff
-	VariantList vList(MESSAGE_TYPE_GUI_JOYPAD, xL, yL, xR, yR);
+	VariantList vList( xL, yL, xR, yR);
 	GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_JOYPAD, vList);
 #endif
 }
