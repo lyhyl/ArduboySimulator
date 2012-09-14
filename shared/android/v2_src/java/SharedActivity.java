@@ -46,6 +46,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
+import android.content.pm.PackageInfo;
 
 // Licensing Server
 import com.android.vending.licensing.AESObfuscator;
@@ -79,30 +80,30 @@ import android.widget.RelativeLayout;
 
 //#if defined(RT_TAPJOY_SUPPORT)
 	
-	//tapjoy publisher
+//tapjoy publisher
 
-	import com.tapjoy.TapjoyAwardPointsNotifier;
-	import com.tapjoy.TapjoyConnect;
-	import com.tapjoy.TapjoyConstants;
-	import com.tapjoy.TapjoyDisplayAdNotifier;
-	import com.tapjoy.TapjoyDisplayAdSize;
-	import com.tapjoy.TapjoyEarnedPointsNotifier;
-	import com.tapjoy.TapjoyFeaturedAppObject;
-	import com.tapjoy.TapjoyFeaturedAppNotifier;
-	import com.tapjoy.TapjoyLog;
-	import com.tapjoy.TapjoyNotifier;
-	import com.tapjoy.TapjoySpendPointsNotifier;
-	import com.tapjoy.TapjoyVideoNotifier;
-	import com.tapjoy.TapjoyVideoStatus;
+import com.tapjoy.TapjoyAwardPointsNotifier;
+import com.tapjoy.TapjoyConnect;
+import com.tapjoy.TapjoyConstants;
+import com.tapjoy.TapjoyDisplayAdNotifier;
+import com.tapjoy.TapjoyDisplayAdSize;
+import com.tapjoy.TapjoyEarnedPointsNotifier;
+import com.tapjoy.TapjoyFeaturedAppObject;
+import com.tapjoy.TapjoyFeaturedAppNotifier;
+import com.tapjoy.TapjoyLog;
+import com.tapjoy.TapjoyNotifier;
+import com.tapjoy.TapjoySpendPointsNotifier;
+import com.tapjoy.TapjoyVideoNotifier;
+import com.tapjoy.TapjoyVideoStatus;
 //#endif
 
 //#if defined(RT_CHARTBOOST_SUPPORT)
-	import com.chartboost.sdk.CBDialogActivity;
-	import com.chartboost.sdk.ChartBoost;
+import com.chartboost.sdk.CBDialogActivity;
+import com.chartboost.sdk.ChartBoost;
 //#endif
 
 //#if defined(RT_FLURRY_SUPPORT)
-	import com.flurry.android.FlurryAgent;
+import com.flurry.android.FlurryAgent;
 //#endif
 
 
@@ -139,9 +140,9 @@ import android.view.View.OnClickListener;
 	public static int adBannerHeight = 0;
 	
 	
-	//#if defined(RT_FLURRY_SUPPORT)
-		public static String m_flurryAPIKey = "";	
-	//#endif
+//#if defined(RT_FLURRY_SUPPORT)
+	public static String m_flurryAPIKey = "";	
+//#endif
 
 	public static boolean HookedEnabled = false;
 	//************************************************************************
@@ -164,10 +165,10 @@ import android.view.View.OnClickListener;
 	public static boolean run_hooked;
 	public static int tapjoy_ad_show; //0 for don't shot, 1 for show
 	
-	//#if defined(RT_CHARTBOOST_SUPPORT)
+//#if defined(RT_CHARTBOOST_SUPPORT)
 	public static boolean cb_cacheInterstitial = false;
 	public static boolean cb_showInterstitial = false;
-	//#endif
+//#endif
 	
 	public static boolean set_allow_dimming_asap = false;
 	public static boolean set_disallow_dimming_asap = false;
@@ -180,7 +181,7 @@ import android.view.View.OnClickListener;
 	private static final int DIALOG_CANNOT_CONNECT_ID = 1;
     private static final int DIALOG_BILLING_NOT_SUPPORTED_ID = 2;
 
-   private enum Managed { MANAGED, UNMANAGED }
+	private enum Managed { MANAGED, UNMANAGED }
 
 
     /**
@@ -197,63 +198,65 @@ import android.view.View.OnClickListener;
         @Override
         public void onBillingSupported(boolean supported) 
         {
-               Log.d(PackageName, "supported: " + supported);
+            Log.d(PackageName, "supported: " + supported);
             
             if (supported)
-             {
-				 //   restoreDatabase();
-				  //  mBuyButton.setEnabled(true);
-				  //  mEditPayloadButton.setEnabled(true);
+            {
+				//   restoreDatabase();
+				//  mBuyButton.setEnabled(true);
+				//  mEditPayloadButton.setEnabled(true);
          		Log.d(PackageName, "RTPurchaseObserver> Billing supported");
 		
-            } else
-             {
+            } 
+			else
+            {
 		       	Log.d(PackageName, "RTPurchaseObserver> Billing not supported");
-		           // showDialog(DIALOG_BILLING_NOT_SUPPORTED_ID);
+		        //showDialog(DIALOG_BILLING_NOT_SUPPORTED_ID);
             }
         }
 
         @Override
-        public void onPurchaseStateChange(PurchaseState purchaseState, String itemId,
-                int quantity, long purchaseTime, String developerPayload)
-                {
-                Log.d(PackageName, "onPurchaseStateChange() itemId: " + itemId + " " + purchaseState);
+        public void onPurchaseStateChange(PurchaseState purchaseState, String itemId, int quantity, long purchaseTime, String developerPayload)
+         {
+			Log.d(PackageName, "onPurchaseStateChange() itemId: " + itemId + " " + purchaseState);
         
             if (developerPayload == null) {
-           //     logProductActivity(itemId, purchaseState.toString());
-            } else {
-            //    logProductActivity(itemId, purchaseState + "\n\t" + developerPayload);
+				//logProductActivity(itemId, purchaseState.toString());
+            } 
+			else {
+				//logProductActivity(itemId, purchaseState + "\n\t" + developerPayload);
             }
 
             if (purchaseState == PurchaseState.PURCHASED)
             {
-              //  mOwnedItems.add(itemId);
+				//mOwnedItems.add(itemId);
             }
-           // mCatalogAdapter.setOwnedItems(mOwnedItems);
-           // mOwnedItemsCursor.requery();
+			//mCatalogAdapter.setOwnedItems(mOwnedItems);
+			//mOwnedItemsCursor.requery();
 		 }
 
         @Override
-        public void onRequestPurchaseResponse(RequestPurchase request,
-                ResponseCode responseCode)
-                 {
-                Log.d(PackageName,  request.mProductId + ": " + responseCode);
+        public void onRequestPurchaseResponse(RequestPurchase request,ResponseCode responseCode)
+         {
+            Log.d(PackageName,  request.mProductId + ": " + responseCode);
           
             if (responseCode == ResponseCode.RESULT_OK) 
             {
-              		//don't get exited, it was sent, but it doesn't mean it was accepted yet.
-                    Log.d(PackageName,  "purchase was successfully sent to server");
-              //  logProductActivity(request.mProductId, "sending purchase request");
-            } else if (responseCode == ResponseCode.RESULT_USER_CANCELED) 
+				//don't get exited, it was sent, but it doesn't mean it was accepted yet.
+                Log.d(PackageName,  "purchase was successfully sent to server");
+				//logProductActivity(request.mProductId, "sending purchase request");
+            }
+			else if (responseCode == ResponseCode.RESULT_USER_CANCELED) 
             {
-                  nativeSendGUIEx(MESSAGE_TYPE_IAP_RESULT,  ResponseCode.RESULT_USER_CANCELED.ordinal(),0,0);
-	             Log.d(PackageName, "user canceled purchase");
-   		  //  logProductActivity(request.mProductId, "dismissed purchase dialog");
-            } else 
+				nativeSendGUIEx(MESSAGE_TYPE_IAP_RESULT,  ResponseCode.RESULT_USER_CANCELED.ordinal(),0,0);
+				Log.d(PackageName, "user canceled purchase");
+   				//logProductActivity(request.mProductId, "dismissed purchase dialog");
+            } 
+			else 
             {
-                   nativeSendGUIEx(MESSAGE_TYPE_IAP_RESULT,  ResponseCode.RESULT_ERROR.ordinal(),0,0);
-			        Log.d(PackageName,"purchase failed");
-             //   logProductActivity(request.mProductId, "request purchase returned " + responseCode);
+				nativeSendGUIEx(MESSAGE_TYPE_IAP_RESULT,  ResponseCode.RESULT_ERROR.ordinal(),0,0);
+				Log.d(PackageName,"purchase failed");
+				//logProductActivity(request.mProductId, "request purchase returned " + responseCode);
             }
         }
 
@@ -306,7 +309,7 @@ import android.view.View.OnClickListener;
                     return;
                 }
                 // Should allow user access.
-//                 displayResult(getString(R.string.allow));
+				//displayResult(getString(R.string.allow));
             }
     
             public void dontAllow() 
@@ -320,7 +323,7 @@ import android.view.View.OnClickListener;
                     // Don't update UI if Activity is finishing.
                     return;
                 }
-//                 displayResult(getString(R.string.dont_allow));
+				//displayResult(getString(R.string.dont_allow));
                 // Should not allow access. In most cases, the app should assume
                 // the user has access unless it encounters this. If it does,
                 // the app should inform the user of their unlicensed ways
@@ -345,7 +348,7 @@ import android.view.View.OnClickListener;
                 // This is a polite way of saying the developer made a mistake
                 // while setting up or calling the license checker library.
                 // Please examine the error code and fix the error.
-//                 displayResult(result);
+				//displayResult(result);
             }
         }
         
@@ -389,25 +392,25 @@ import android.view.View.OnClickListener;
     
         private void doCheck() 
 		{
-    //         mCheckLicenseButton.setEnabled(false);
-    //         setProgressBarIndeterminateVisibility(true);
-    //         mStatusText.setText(R.string.checking_license);
+			//mCheckLicenseButton.setEnabled(false);
+			//setProgressBarIndeterminateVisibility(true);
+			//mStatusText.setText(R.string.checking_license);
             mChecker.checkAccess(mLicenseCheckerCallback);
         }
         
         private void license_init() 
 		{
-                // Try to use more data here. ANDROID_ID is a single point of attack.
+            // Try to use more data here. ANDROID_ID is a single point of attack.
             String deviceId = Secure.getString(getContentResolver(), Secure.ANDROID_ID);
     
             // Library calls this when it's done.
             mLicenseCheckerCallback = new MyLicenseCheckerCallback();
             // Construct the LicenseChecker with a policy.
             mChecker = new LicenseChecker(
-                this,
-                new ServerManagedPolicy(this,new AESObfuscator(SALT, getPackageName(), deviceId)),
-//                 new StrictPolicy(),
-                BASE64_PUBLIC_KEY);
+										this,
+										new ServerManagedPolicy(this,new AESObfuscator(SALT, getPackageName(), deviceId)),
+//										new StrictPolicy(),
+										BASE64_PUBLIC_KEY);
             doCheck();
         }
     ////////////////////////////////////////////////////////////////////////////
@@ -431,7 +434,7 @@ import android.view.View.OnClickListener;
     {
         super.onStart();
         ResponseHandler.register(mIABPurchaseObserver);
-      //  initializeOwnedItems();
+		//initializeOwnedItems();
     }
 
     @Override
@@ -449,24 +452,23 @@ import android.view.View.OnClickListener;
 		
 		Log.d(PackageName, "SDK version: " + apiVersion);
 				
-				
 		super.onCreate(savedInstanceState);
         mGLView = new AppGLSurfaceView(this, this);
      	
 		setContentView(mGLView);
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
-		if (securityEnabled) this.license_init();
+		if (securityEnabled) 
+			this.license_init();
 		
-	
-		//#if defined(RT_TAPJOY_SUPPORT)
+//#if defined(RT_TAPJOY_SUPPORT)
 			
-			 //Create dummy tapjoy view overlay we'll show ads on
-			adLinearLayout = new RelativeLayout(this);
-			 RelativeLayout.LayoutParams l = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-			//l.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-       		Log.d(PackageName, "Tapjoy enabled - setting up adview overlay");
-			addContentView(adLinearLayout, l);
-		//#endif
+		//Create dummy tapjoy view overlay we'll show ads on
+		adLinearLayout = new RelativeLayout(this);
+		RelativeLayout.LayoutParams l = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+		//l.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+   		Log.d(PackageName, "Tapjoy enabled - setting up adview overlay");
+		addContentView(adLinearLayout, l);
+//#endif
 		
 		update_display_ad = false;
 		run_hooked = false;
@@ -484,12 +486,14 @@ import android.view.View.OnClickListener;
 	       
 			if (!mBillingService.checkBillingSupported()) 
 			{
-             		Log.d(PackageName, "onCreate> Billing not supported? Early error");
+             	Log.d(PackageName, "onCreate> Billing not supported? Early error");
 			} else
 			{
-             		//Log.d(PackageName, "onCreate> Ok so far");
+             	//Log.d(PackageName, "onCreate> Ok so far");
 			}
 		}
+
+		sendVersionDetails();
     }
 
     @Override
@@ -502,10 +506,10 @@ import android.view.View.OnClickListener;
         super.onPause();
 		//_sounds.autoPause();
 		
-		//#if defined(RT_FLURRY_SUPPORT)
-			Log.v(app.PackageName, "Flurry finishing session");
-			FlurryAgent.onEndSession(app);
-		//#endif
+//#if defined(RT_FLURRY_SUPPORT)
+		Log.v(app.PackageName, "Flurry finishing session");
+		FlurryAgent.onEndSession(app);
+//#endif
 	
     }
 
@@ -519,18 +523,17 @@ import android.view.View.OnClickListener;
 		setup_accel(accelHzSave);
 		super.onResume();
 
-		//#if defined(RT_CHARTBOOST_SUPPORT)
-			ChartBoost.getSharedChartBoost(this);
-		//#endif
+//#if defined(RT_CHARTBOOST_SUPPORT)
+		ChartBoost.getSharedChartBoost(this);
+//#endif
 		
-	//#if defined(RT_FLURRY_SUPPORT)
-	if (!m_flurryAPIKey.isEmpty())
+//#if defined(RT_FLURRY_SUPPORT)
+		if (!m_flurryAPIKey.isEmpty())
 		{
 			Log.v(app.PackageName, "Flurry re-starting session");
 			FlurryAgent.onStartSession(app, m_flurryAPIKey);
 		}
-	//#endif
-	
+//#endif	
 					
 	}
 	
@@ -539,21 +542,21 @@ import android.view.View.OnClickListener;
 	{
 		public void run() 
 		{
-		if (app.bIsShuttingDown)
-		{
-			//Log.d(PackageName, "Finished app in  main thread");
-			app.finish();
-			
-			if (IAPEnabled)
+			if (app.bIsShuttingDown)
 			{
-				mBillingService.unbind();
-  				ResponseHandler.unregister(mIABPurchaseObserver);
-  			}
-		
-			android.os.Process.killProcess(android.os.Process.myPid());
+				//Log.d(PackageName, "Finished app in  main thread");
+				app.finish();
+				
+				if (IAPEnabled)
+				{
+					mBillingService.unbind();
+  					ResponseHandler.unregister(mIABPurchaseObserver);
+  				}
 			
-			return;
-		}
+				android.os.Process.killProcess(android.os.Process.myPid());
+				
+				return;
+			}
 			updateResultsInUi();
 		}
 	};
@@ -561,58 +564,55 @@ import android.view.View.OnClickListener;
  
 	private void updateResultsInUi() 
 	{
+		//Log.d(PackageName, "Update");
 	
-		//	Log.d(PackageName, "Update");
-	
-	if (set_allow_dimming_asap)
-	{
-		set_allow_dimming_asap = false;
-		Log.v(app.PackageName, "Allowing screen dimming.");
-		mGLView.setKeepScreenOn(false);
+		if (set_allow_dimming_asap)
+		{
+			set_allow_dimming_asap = false;
+			Log.v(app.PackageName, "Allowing screen dimming.");
+			mGLView.setKeepScreenOn(false);
+		}
 
-	}
+		if (set_disallow_dimming_asap)
+		{
+			set_allow_dimming_asap = false;
+			Log.v(app.PackageName, "Disabling screen dimming.");
+			mGLView.setKeepScreenOn(true);
+		}
 
-	if (set_disallow_dimming_asap)
-	{
-		set_allow_dimming_asap = false;
-		Log.v(app.PackageName, "Disabling screen dimming.");
-		mGLView.setKeepScreenOn(true);
-	
-	}
-	
-	//#if defined(RT_CHARTBOOST_SUPPORT)
+//#if defined(RT_CHARTBOOST_SUPPORT)
 
-	if (cb_cacheInterstitial)
-	{
-		Log.v(app.PackageName, "Caching CB interstitial");
-		//String location = nativeGetLastOSMessageString();
-				
-		ChartBoost _cb = ChartBoost.getSharedChartBoost(this);
-		_cb.cacheInterstitial();
-		cb_cacheInterstitial = false;
-	}
-	
-	if (cb_showInterstitial)
-	{
+		if (cb_cacheInterstitial)
+		{
+			Log.v(app.PackageName, "Caching CB interstitial");
+			//String location = nativeGetLastOSMessageString();
+					
+			ChartBoost _cb = ChartBoost.getSharedChartBoost(this);
+			_cb.cacheInterstitial();
+			cb_cacheInterstitial = false;
+		}
+		
+		if (cb_showInterstitial)
+		{
 
-		Log.v(app.PackageName, "Showing CB interstitial");
-		//String location = nativeGetLastOSMessageString();
-		cb_showInterstitial = false;
-		ChartBoost _cb = ChartBoost.getSharedChartBoost(this);
-		_cb.showInterstitial();
-	}
-	
-	//#endif
+			Log.v(app.PackageName, "Showing CB interstitial");
+			//String location = nativeGetLastOSMessageString();
+			cb_showInterstitial = false;
+			ChartBoost _cb = ChartBoost.getSharedChartBoost(this);
+			_cb.showInterstitial();
+		}
+		
+//#endif
 
-	
-	if (run_hooked && HookedEnabled)
-	{
-		Log.d(PackageName, "Lauching Hooked (wasabi) dialog");
-		run_hooked = false;
-		//#if defined(RT_HOOKED_SUPPORT)
+		
+		if (run_hooked && HookedEnabled)
+		{
+			Log.d(PackageName, "Lauching Hooked (wasabi) dialog");
+			run_hooked = false;
+//#if defined(RT_HOOKED_SUPPORT)
 			WasabiApi.handleLogoViewClick(app);
-		//#endif
-	}
+//#endif
+		}
 		if (update_display_ad)
 		{
 			Log.d(PackageName, "Updating view in main  thread");
@@ -627,7 +627,7 @@ import android.view.View.OnClickListener;
   		}
 	}
 
-  // JNI used to get Save data dir
+	// JNI used to get Save data dir
     public static String get_docdir() 
 	{
 		File fdir = app.getFilesDir();
@@ -640,20 +640,23 @@ import android.view.View.OnClickListener;
 		boolean mExternalStorageAvailable = false;
 		boolean mExternalStorageWriteable = false;
 
-			String state = Environment.getExternalStorageState();
+		String state = Environment.getExternalStorageState();
 		if (Environment.MEDIA_MOUNTED.equals(state))
 		{
 			mExternalStorageAvailable = mExternalStorageWriteable = true;
-		} else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) 
+		} 
+		else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) 
 		{
 			mExternalStorageAvailable = true;
 			mExternalStorageWriteable = false;
-		} else 
+		} 
+		else 
 		{
 		   // mExternalStorageAvailable = mExternalStorageWriteable = false;
 		}
 
-		if (mExternalStorageWriteable == false) return "";
+		if (mExternalStorageWriteable == false) 
+			return "";
 
 		return Environment.getExternalStorageDirectory().toString();
 	}
@@ -662,16 +665,17 @@ import android.view.View.OnClickListener;
     public static String get_apkFileName() 
 	{
 		String apkFilePath = null;
-			ApplicationInfo appInfo = null;
-			PackageManager packMgmr = app.getPackageManager();
-			try {
+		ApplicationInfo appInfo = null;
+		PackageManager packMgmr = app.getPackageManager();
+		try {
 			appInfo = packMgmr.getApplicationInfo(PackageName, 0);
-		} catch (NameNotFoundException e) 
+		} 
+		catch (NameNotFoundException e) 
 		{
 			e.printStackTrace();
 			throw new RuntimeException("Unable to locate assets, aborting...");
 		}
-			return appInfo.sourceDir;	
+		return appInfo.sourceDir;	
 	 }
 
 	public static String get_region()
@@ -683,34 +687,33 @@ import android.view.View.OnClickListener;
 
 	public static String get_clipboard()
 	{
-	//Note: On Honeycomb this appears to cause a crash because it has to be done in the main thread, which isn't active when
-	//JNI invokes this.  So we have to do a callback and send back the answer later? Argh.  For now, I'll try/catch the crash, it
-	//will just be a no-op.
+		//Note: On Honeycomb this appears to cause a crash because it has to be done in the main thread, which isn't active when
+		//JNI invokes this.  So we have to do a callback and send back the answer later? Argh.  For now, I'll try/catch the crash, it
+		//will just be a no-op.
 	
-	String data = "Thread error, sorry, paste can't be used here.";
+		String data = "Thread error, sorry, paste can't be used here.";
 	
-	 try
-	   {
+		try
+		{
         	ClipboardManager clipboard = (ClipboardManager) app.getSystemService(CLIPBOARD_SERVICE);
 			data = clipboard.getText().toString();
-	
-       } catch (Exception ex) 
-	   {
+		} 
+		catch (Exception ex) 
+		{
            	Log.d(PackageName, "get_clipboard> Avoided crash. "+ex);
-		
-       }
+		}
 		return data;
 	}
 	public static String get_deviceID()
 	{
 		String m_szDevIDShort = "35" + //we make this look like a valid IMEI
-            Build.BOARD.length()%10+ Build.BRAND.length()%10 +
-            Build.CPU_ABI.length()%10 + Build.DEVICE.length()%10 +
-            Build.DISPLAY.length()%10 + Build.HOST.length()%10 +
-            Build.ID.length()%10 + Build.MANUFACTURER.length()%10 +
-            Build.MODEL.length()%10 + Build.PRODUCT.length()%10 +
-            Build.TAGS.length()%10 + Build.TYPE.length()%10 +
-            Build.USER.length()%10 ; //13 digits
+								Build.BOARD.length()%10+ Build.BRAND.length()%10 +
+								Build.CPU_ABI.length()%10 + Build.DEVICE.length()%10 +
+								Build.DISPLAY.length()%10 + Build.HOST.length()%10 +
+								Build.ID.length()%10 + Build.MANUFACTURER.length()%10 +
+								Build.MODEL.length()%10 + Build.PRODUCT.length()%10 +
+								Build.TAGS.length()%10 + Build.TYPE.length()%10 +
+								Build.USER.length()%10 ; //13 digits
 
 		if (app.checkCallingOrSelfPermission("android.permission.READ_PHONE_STATE") == PackageManager.PERMISSION_GRANTED)
 		{
@@ -732,15 +735,15 @@ import android.view.View.OnClickListener;
         switch (event.sensor.getType())
 		{
             case Sensor.TYPE_ACCELEROMETER:
-				if (event.values.length < 3) return; //who knows what this is
+				if (event.values.length < 3) 
+					return; //who knows what this is
 				//		Log.d(PackageName, "Accel: " + "x:"+Float.toString(event.values[0]) + " y:"+Float.toString(event.values[1]) + " z:"+Float.toString(event.values[2]));
    				nativeOnAccelerometerUpdate(event.values[0], event.values[1], event.values[2]);
 				break;
 
 	        case Sensor.TYPE_ORIENTATION:
-			
-			//Log.d(PackageName, "Orientation: " + "x:"+Float.toString(event.values[0]));
-			break;
+				//Log.d(PackageName, "Orientation: " + "x:"+Float.toString(event.values[0]));
+				break;
         }
     }
 	
@@ -754,7 +757,6 @@ import android.view.View.OnClickListener;
 	{
 	  	accelHzSave = hz;
 		sensorManager = (SensorManager) app.getSystemService(Context.SENSOR_SERVICE);
-		
 		sensorManager.unregisterListener(this);
 
 		if (hz > 0)
@@ -764,7 +766,6 @@ import android.view.View.OnClickListener;
 		
 		//if we ever need orientation data, do this:
 		//sensorManager.registerListener(app, sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION), sensorManager.SENSOR_DELAY_GAME);
-	
 	}
 	
 	// Achievement handler (called from C++ class, and the actual handler is overriden in Main.java to do the actual app specific API call
@@ -784,7 +785,7 @@ import android.view.View.OnClickListener;
      * The listener that listen to events from the accelerometer listener
      */
     
-	    // JNI to open_url
+	// JNI to open_url
     public static void LaunchURL(String url)
 	{
         Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -794,14 +795,14 @@ import android.view.View.OnClickListener;
 
 	public static void create_dir_recursively(String basepath, String path)
 	{
-     //Log.v("create_dir_recursively", "base: "+basepath+" path: "+path);
+		//Log.v("create_dir_recursively", "base: "+basepath+" path: "+path);
 		String finalPath = basepath+path;
 		File myDir = new File(finalPath);
 		myDir.mkdirs();
 	}
 
-	  public void toggle_keyboard(boolean show) 
-	  {
+	public void toggle_keyboard(boolean show) 
+	{
   		InputMethodManager mgr = (InputMethodManager)app.getSystemService(Context.INPUT_METHOD_SERVICE);
         mgr.hideSoftInputFromWindow (mGLView.getWindowToken(),0);
         if (show) 
@@ -811,9 +812,10 @@ import android.view.View.OnClickListener;
             // On the Nexus One, SHOW_FORCED makes it impossible
             // to manually dismiss the keyboard.
             // On the Droid SHOW_IMPLICIT doesn't bring up the keyboard.
-        } else
+        } 
+		else
         {
-              Log.v("Msg", "Disabling keyboard");
+			Log.v("Msg", "Disabling keyboard");
 	    }
     }
 
@@ -897,12 +899,15 @@ import android.view.View.OnClickListener;
 	//GOOGLE BILLING again
 	final static int MESSAGE_TYPE_IAP_PURCHASED_LIST_STATE = 43; //for sending back lists of items we've already purchased
 
+	final static int MESSAGE_TYPE_CALL_STATIC_FUNCTION = 44; // use by other platforms, but this value needs to be reserved by those platforms.
+
+	// for sending through version values
+	final static int MESSAGE_TYPE_APP_VERSION = 45;
+
 	final static int MESSAGE_USER = 1000; //send your own messages after this #
-	
 	
 	public int TranslateKeycodeToProtonVirtualKey(int keycode)
 	{
-
 		switch (keycode)
 		{
 			case KeyEvent.KEYCODE_BACK:
@@ -932,7 +937,6 @@ import android.view.View.OnClickListener;
 			case 0:
 				keycode = VIRTUAL_KEY_SHIFT;
 				break;
-
 			case KeyEvent.KEYCODE_VOLUME_UP:
 				keycode = VIRTUAL_KEY_VOLUME_UP;
 				break;
@@ -940,41 +944,38 @@ import android.view.View.OnClickListener;
 				keycode = VIRTUAL_KEY_VOLUME_DOWN;
 				break;
 		}
-
 		return keycode;
-		
 	}
 	  // single touch version, works starting API4/??
     public boolean onTrackballEvent (MotionEvent e)
 	{
 		if (e.getAction() == MotionEvent.ACTION_MOVE)
-	  {
-   		nativeOnTrackball(e.getX(),e.getY());
-	 	//Log.d("Hey", "trackball x rel: "+e.getX()+" y rel: "+e.getY());
-	    return true; //signal that we handled it, so its messages don't show up as normal directional presses
-	  } else if (e.getAction() == MotionEvent.ACTION_DOWN)
-	{
-		  //they pushed the button
-		//Log.d("Hey", "Trackball button pushed");
-		  nativeOnKey(1, VIRTUAL_KEY_TRACKBALL_DOWN, VIRTUAL_KEY_TRACKBALL_DOWN); 
-	  }
-   		
+		{
+   			nativeOnTrackball(e.getX(),e.getY());
+	 		//Log.d("Hey", "trackball x rel: "+e.getX()+" y rel: "+e.getY());
+			return true; //signal that we handled it, so its messages don't show up as normal directional presses
+		} 
+		else if (e.getAction() == MotionEvent.ACTION_DOWN)
+		{
+			//they pushed the button
+			//Log.d("Hey", "Trackball button pushed");
+			nativeOnKey(1, VIRTUAL_KEY_TRACKBALL_DOWN, VIRTUAL_KEY_TRACKBALL_DOWN); 
+		}
 		return false; 
 	}
 
-	 public boolean onKeyDown(int keycode, KeyEvent e) 
-	 {
-  //     Log.v("onKeyDown","Keydown Got "+keycode+" "+Character.toString(Character.toChars(e.getUnicodeChar())[0]));
-   
-	
-		if (e.getRepeatCount() > 0) return super.onKeyDown(keycode, e);
+	public boolean onKeyDown(int keycode, KeyEvent e) 
+	{
+		//Log.v("onKeyDown","Keydown Got "+keycode+" "+Character.toString(Character.toChars(e.getUnicodeChar())[0]));
+  
+		if (e.getRepeatCount() > 0) 
+			return super.onKeyDown(keycode, e);
 
 		if(e.isAltPressed() && keycode == KeyEvent.KEYCODE_BACK) 
 		{
 			//XPeria's O button, not the back button!
 			//Log.v("onKeyDown","Sending xperia back key");
 			nativeOnKey(1, VIRTUAL_DPAD_BUTTON_RIGHT, e.getUnicodeChar()); 
-	
 			return true; //signal that we handled it
 		}
         switch (keycode)
@@ -994,14 +995,13 @@ import android.view.View.OnClickListener;
 
     public boolean onKeyUp(int keycode, KeyEvent e)
 	{
-    //    Log.v("onKeyUp","Keyup Got "+keycode+" "+Character.toString(Character.toChars(e.getUnicodeChar())[0]));
+		//Log.v("onKeyUp","Keyup Got "+keycode+" "+Character.toString(Character.toChars(e.getUnicodeChar())[0]));
        
        	if(e.isAltPressed() && keycode == KeyEvent.KEYCODE_BACK) 
 		{
 			//XPeria's O button, not the back button!
 			//Log.v("onKeyDown","Sending xperia back key");
 			nativeOnKey(0, VIRTUAL_DPAD_BUTTON_RIGHT, e.getUnicodeChar()); 
-		
 			return true; //signal that we handled it
 		}
 		
@@ -1019,10 +1019,27 @@ import android.view.View.OnClickListener;
       	nativeOnKey(0, vKey,e.getUnicodeChar()); //0 is type keyup
         return super.onKeyUp(keycode, e);
     }
-    
+
+	// straight version
+	public void sendVersionDetails()
+	{
+		//Log.v(app.PackageName, "Attempting to send app version");
+		PackageInfo pInfo;
+		try {
+			pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+			//Log.v(app.PackageName, "Sending version");
+			nativeSendGUIStringEx(MESSAGE_TYPE_APP_VERSION, 0,0,0, pInfo.versionName);
+		}
+		catch (NameNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			Log.v(app.PackageName, "Cannot load App Version!");
+		}
+	}
+  
   
 	//TAPJOY
-    //#if defined(RT_TAPJOY_SUPPORT)
+//#if defined(RT_TAPJOY_SUPPORT)
     // Notifier for receiving the featured app data on a successful connect.
 	public void getFeaturedAppResponse(TapjoyFeaturedAppObject featuredApObject)
 	{
@@ -1033,7 +1050,7 @@ import android.view.View.OnClickListener;
 	// Notifier for when there is an error or no featured app to display.
 	public void getFeaturedAppResponseFailed(String error)
 	{
-			Log.v(app.PackageName, "Displaying Featured App error: "+ error);
+		Log.v(app.PackageName, "Displaying Featured App error: "+ error);
 		nativeSendGUIStringEx(MESSAGE_TYPE_TAPJOY_FEATURED_APP_READY, 0,0,0, error);
 	}
 
@@ -1044,11 +1061,12 @@ import android.view.View.OnClickListener;
 		int ad_width = app.adBannerWidth;
 		int ad_height = app.adBannerHeight;
 
-		if (ad_width == 0) ad_width = app.adView.getLayoutParams().width;
-		if (ad_height == 0) ad_height = app.adView.getLayoutParams().height;
+		if (ad_width == 0) 
+			ad_width = app.adView.getLayoutParams().width;
+		if (ad_height == 0) 
+			ad_height = app.adView.getLayoutParams().height;
 		
 		Log.v(app.PackageName,  "adView dimensions: " + ad_width + "x" + ad_height);
-		
 		
 		int desired_width = app.mGLView.getMeasuredWidth();
 		Log.v(app.PackageName,  "mGLView width is " + desired_width);
@@ -1060,8 +1078,8 @@ import android.view.View.OnClickListener;
 		RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(desired_width, (desired_width*ad_height)/ad_width);
 	
 		 //RelativeLayout.LayoutParams l = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-			layout.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-			layout.addRule(RelativeLayout.CENTER_HORIZONTAL);
+		layout.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+		layout.addRule(RelativeLayout.CENTER_HORIZONTAL);
 		
 		app.adView.setLayoutParams(layout);
 		Log.v(app.PackageName, "adLinearLayout dimensions: " + app.mGLView.getMeasuredWidth() + "x" + app.mGLView.getMeasuredHeight());
@@ -1072,8 +1090,8 @@ import android.view.View.OnClickListener;
 	{
 		Log.v(app.PackageName, "getDisplayAd error: " + error);
 		
-//		update_text = true;
-//		displayText = "Display Ads: " + error;
+		//update_text = true;
+		//displayText = "Display Ads: " + error;
 		nativeSendGUIEx(MESSAGE_TYPE_TAPJOY_AD_READY, 0,0,0);
 			
 		// We must use a handler since we cannot update UI elements from a different thread.
@@ -1140,13 +1158,12 @@ import android.view.View.OnClickListener;
 	{
 		Log.i("${SMALL_PACKAGE_NAME}", "VIDEO READY");
 		nativeSendGUIStringEx(MESSAGE_TYPE_TAPJOY_MOVIE_AD_READY, 1,0,0, "");
-		
 	}
 	
 	@Override
 	public void videoError(int statusCode)
 	{
-		 String displayText = "Error";
+		String displayText = "Error";
 		 
 		switch (statusCode)
 		{
@@ -1161,9 +1178,8 @@ import android.view.View.OnClickListener;
 				break;
 		}
 		
-			Log.i("${SMALL_PACKAGE_NAME}", "VIDEO ERROR: " + statusCode+" " + displayText);
+		Log.i("${SMALL_PACKAGE_NAME}", "VIDEO ERROR: " + statusCode+" " + displayText);
 		nativeSendGUIStringEx(MESSAGE_TYPE_TAPJOY_MOVIE_AD_READY, 0,statusCode,0, displayText);
-	
 	}
 	
 	public void videoComplete()
@@ -1172,7 +1188,7 @@ import android.view.View.OnClickListener;
 		nativeSendGUIStringEx(MESSAGE_TYPE_TAPJOY_MOVIE_AD_READY, 2,0,0, "");
 	}
 	
-	//#endif
+//#endif
 	//***************************
     
 	//************** SOUND STUFF *************
@@ -1206,7 +1222,8 @@ import android.view.View.OnClickListener;
 				
 				try {
 					Thread.sleep(volumeChangeInterval);
-				} catch (InterruptedException ie)
+				} 
+				catch (InterruptedException ie)
 				{
 					return;
 				}
@@ -1227,7 +1244,8 @@ import android.view.View.OnClickListener;
 		if (app._music != null)
 		{
 			app._music.reset();
-		} else
+		} 
+		else
 		{
 			app._music = new MediaPlayer();
 		}
@@ -1244,7 +1262,8 @@ import android.view.View.OnClickListener;
 				app._music.prepare();
 				music_set_volume(m_lastMusicVol);
 				app._music.start();
-			} catch(IOException e) 
+			} 
+			catch(IOException e) 
 			{ 
 				Log.v("Can't load music (raw)", fname, e);
 			}
@@ -1265,7 +1284,8 @@ import android.view.View.OnClickListener;
 			app._music.prepare();
 			music_set_volume(m_lastMusicVol);
 			app._music.start();
-		} catch(IOException e) 
+		} 
+		catch(IOException e) 
 		{ 
 			Log.v("Can't load music", fname);
 		}
@@ -1284,7 +1304,8 @@ import android.view.View.OnClickListener;
 			try {
 				app.musicFadeOutThread.interrupt();
 				app.musicFadeOutThread.join();
-			} catch (InterruptedException ie)
+			} 
+			catch (InterruptedException ie)
 			{
 			}
 		}
@@ -1302,7 +1323,8 @@ import android.view.View.OnClickListener;
 		if (duration <= 0)
 		{
 			music_stop();
-		} else if (app.musicFadeOutThread == null || !app.musicFadeOutThread.isAlive())
+		} 
+		else if (app.musicFadeOutThread == null || !app.musicFadeOutThread.isAlive())
 		{
 			app.musicFadeOutThread = new MusicFadeOutThread(duration);
 			app.musicFadeOutThread.start();
@@ -1311,7 +1333,10 @@ import android.view.View.OnClickListener;
 
 	public synchronized static void music_set_volume(float v) 
 	{
-		if (app._music == null) { return; }
+		if (app._music == null) 
+		{ 
+			return; 
+		}
 		m_lastMusicVol = v;
 		app._music.setVolume(v,v);
 	}
@@ -1324,13 +1349,19 @@ import android.view.View.OnClickListener;
 
     public synchronized static int music_get_pos() 
 	{
-        if (app._music == null) { return 0; }
+        if (app._music == null) 
+		{ 
+			return 0; 
+		}
         return app._music.getCurrentPosition();
     }
   
 	public synchronized static boolean music_is_playing() 
 	{
-        if (app._music == null) { return false; }
+        if (app._music == null) 
+		{ 
+			return false; 
+		}
         return app._music.isPlaying();
     }
 
@@ -1373,14 +1404,15 @@ import android.view.View.OnClickListener;
 			//must be a raw file on the disc, not in the assets.  load differently
 			int sid = app._sounds.load(fname, 1);
 			return sid;
-	   }
+		}
 		
 		AssetManager am = app.getAssets();
         try { 
             AssetFileDescriptor fd = am.openFd(fname);
             int sid = app._sounds.load(fd.getFileDescriptor(),fd.getStartOffset(),fd.getLength(),1);
             return sid;
-        } catch(IOException e)
+        } 
+		catch(IOException e)
 		{
 			Log.v("Can't load sound", fname);
 		}
@@ -1389,31 +1421,31 @@ import android.view.View.OnClickListener;
 
     public synchronized static int sound_play(int soundID, float leftVol, float rightVol, int priority, int loop, float speedMod ) 
 	{
-	//	Log.v("MSG", "Playing sound: "+soundID);
-	//	Log.v("Sound vol:", ""+leftVol);
+		//Log.v("MSG", "Playing sound: "+soundID);
+		//Log.v("Sound vol:", ""+leftVol);
         return app._sounds.play(soundID,leftVol,rightVol,priority,loop,speedMod);
     }
   
 	public static void sound_kill(int soundID ) 
 	{
-	//	Log.v("MSG", "killing sound: "+soundID);
+		//Log.v("MSG", "killing sound: "+soundID);
        app._sounds.unload(soundID);
     }
 
-	  public static void sound_stop(int streamID ) 
+	public static void sound_stop(int streamID ) 
 	{
 		//Log.v("MSG", "stopping sound: "+streamID);
 		//Log.v("Sound vol:", ""+leftVol);
         app._sounds.stop(streamID);
     }
 
-	  public static void sound_set_vol(int streamID, float left, float right ) 
+	public static void sound_set_vol(int streamID, float left, float right ) 
 	{
 		//Log.v("MSG", "setting sound vol: "+streamID);
 		//Log.v("Sound vol:", ""+left);
         app._sounds.setVolume(streamID, left, right);
     }
-		  public static void sound_set_rate(int streamID, float rate ) 
+	public static void sound_set_rate(int streamID, float rate ) 
 	{
 		//Log.v("MSG", "Playing sound: "+soundID);
 		//Log.v("Sound vol:", ""+leftVol);
@@ -1431,7 +1463,7 @@ import android.view.View.OnClickListener;
 	public static native void nativeSendGUIStringEx(int messageType, int parm1, int parm2, int finger, String s);
 	static 
     {
-//        System.loadLibrary(dllname);
+		//System.loadLibrary(dllname);
     }
 }
 
@@ -1449,7 +1481,7 @@ class AppGLSurfaceView extends GLSurfaceView
    
 		setRenderer(mRenderer);
 	
-		  /* establish whether the "new" class is available to us */
+		/* establish whether the "new" class is available to us */
   
 	 try
 	   {
@@ -1479,7 +1511,7 @@ class AppGLSurfaceView extends GLSurfaceView
 		{
 			nativeResume();   
 		}
-   }
+	}
 		
     // single touch version, works starting API4/??
     public synchronized boolean onTouchEvent(final MotionEvent e)
@@ -1522,7 +1554,8 @@ class WrapSharedMultiTouchInput
        try
 	   {
           Class.forName("${PACKAGE_NAME}.SharedMultiTouchInput");
-       } catch (Exception ex) 
+       } 
+	   catch (Exception ex) 
 	   {
            throw new RuntimeException(ex);
        }
@@ -1669,12 +1702,13 @@ class AppRenderer implements GLSurfaceView.Renderer
 					{
 						//disable it, and avoid a div by 0
 						m_timerLoopMS = 0;
-					} else
+					} 
+					else
 					{
 						m_timerLoopMS = (int) (1000.0f/nativeGetLastOSMessageX());
 					}
 				
-				//app.setup_accel(nativeGetLastOSMessageX());
+					//app.setup_accel(nativeGetLastOSMessageX());
 					break;
 
 				case MESSAGE_FINISH_APP: 
@@ -1684,55 +1718,52 @@ class AppRenderer implements GLSurfaceView.Renderer
 					Log.v(app.PackageName, "Native shutdown");
 			
 					//app.finish() will get called in the update handler called below, don't need to do it now
-					 app.mMainThreadHandler.post(app.mUpdateMainThread);
-				break;
+					app.mMainThreadHandler.post(app.mUpdateMainThread);
+					break;
 				
 				case MESSAGE_SUSPEND_TO_HOME_SCREEN:
 					Log.v(app.PackageName, "Suspending to home screen");
-					
 					
 					Intent i = new Intent();
 					i.setAction(Intent.ACTION_MAIN);
 			        i.addCategory(Intent.CATEGORY_HOME);
 					app.startActivity(i);
-				
-				break;
+					break;
 
 				case MESSAGE_TAPJOY_GET_AD: 
-					//#if defined(RT_TAPJOY_SUPPORT)
+//#if defined(RT_TAPJOY_SUPPORT)
 						Log.v(app.PackageName, "Getting tapjoy ad");
 						TapjoyConnect.getTapjoyConnectInstance().setBannerAdSize(app.tapBannerSize);
 						TapjoyConnect.getTapjoyConnectInstance().getDisplayAd(app);
-					//#else
+//#else
 						Log.v(app.PackageName, "ERROR: RT_TAPJOY_SUPPORT isn't defined in Java project, you can't use it!");
-					//#endif
+//#endif
 					break;
 	
-	case MESSAGE_FLURRY_SETUP:
+				case MESSAGE_FLURRY_SETUP:
 				{
-				//#if defined(RT_FLURRY_SUPPORT)
+//#if defined(RT_FLURRY_SUPPORT)
 
 					app.m_flurryAPIKey = nativeGetLastOSMessageString();
 					//Log.v(app.PackageName, "Setting up flurry: "+app.m_flurryAPIKey);
-					FlurryAgent.onStartSession(app, app.m_flurryAPIKey);
-				
-				//#else
-						Log.v(app.PackageName, "ERROR: RT_FLURRY_SUPPORT isn't defined in Main.java, you can't use it!");
-				//#endif
+					FlurryAgent.onStartSession(app, app.m_flurryAPIKey);		
+//#else
+					Log.v(app.PackageName, "ERROR: RT_FLURRY_SUPPORT isn't defined in Main.java, you can't use it!");
+//#endif
 				}
 					break;
 	
-	//#if defined(RT_FLURRY_SUPPORT)
+//#if defined(RT_FLURRY_SUPPORT)
 	
 	
-	case MESSAGE_FLURRY_ON_PAGE_VIEW:
+				case MESSAGE_FLURRY_ON_PAGE_VIEW:
 				{
 					//Log.v(app.PackageName, "MESSAGE_FLURRY_ON_PAGE_VIEW> Incrementing page view");
 					FlurryAgent.onPageView();
 				}
 					break;
 
-	case MESSAGE_FLURRY_LOG_EVENT:
+				case MESSAGE_FLURRY_LOG_EVENT:
 				{
 					String event = nativeGetLastOSMessageString();
 					String key = nativeGetLastOSMessageString2();
@@ -1745,20 +1776,20 @@ class AppRenderer implements GLSurfaceView.Renderer
 						Map<String,String> m=new HashMap<String, String>();
 						m.put(key, data);
 						FlurryAgent.logEvent(event, m, true);
-					} else
+					} 
+					else
 					{
-					//	Log.v(app.PackageName, "MESSAGE_FLURRY_LOG_EVENT: Event: "+event);
+						//Log.v(app.PackageName, "MESSAGE_FLURRY_LOG_EVENT: Event: "+event);
 						FlurryAgent.logEvent(event, true);
 					}
 				}
 					break;
 				
 	
-	//#endif
+//#endif
 				case MESSAGE_CHARTBOOST_SETUP:
-				{
-				
-				//#if defined(RT_CHARTBOOST_SUPPORT)
+				{				
+//#if defined(RT_CHARTBOOST_SUPPORT)
 
 					ChartBoost _cb = ChartBoost.getSharedChartBoost(app);
 					String appID = nativeGetLastOSMessageString();
@@ -1767,15 +1798,15 @@ class AppRenderer implements GLSurfaceView.Renderer
 			
 					_cb.setAppId(appID);
 					_cb.setAppSignature(appSig);
-				//#else
-						Log.v(app.PackageName, "ERROR: RT_CHARTBOOST_SUPPORT isn't defined in Main.java, you can't use it!");
-				//#endif
+//#else
+					Log.v(app.PackageName, "ERROR: RT_CHARTBOOST_SUPPORT isn't defined in Main.java, you can't use it!");
+//#endif
 				}
 					break;
 	
-	//#if defined(RT_CHARTBOOST_SUPPORT)
+//#if defined(RT_CHARTBOOST_SUPPORT)
 
-			case MESSAGE_CHARTBOOST_CACHE_INTERSTITIAL:
+				case MESSAGE_CHARTBOOST_CACHE_INTERSTITIAL:
 				{
 					//must wait and do it in UI thread
 					app.cb_cacheInterstitial = true;
@@ -1783,21 +1814,21 @@ class AppRenderer implements GLSurfaceView.Renderer
 				}
 					break;
 					
-			case MESSAGE_CHARTBOOST_SHOW_INTERSTITIAL:
-			{
+				case MESSAGE_CHARTBOOST_SHOW_INTERSTITIAL:
+				{
 					//must wait and do it in UI thread
 					app.cb_showInterstitial = true;
 					app.mMainThreadHandler.post(app.mUpdateMainThread);
 
-			}	
+				}	
 					break;
 		
 		//TODO:  Handle the other messages...
 		
-	//#endif
+//#endif
 	
 
-	//#if defined(RT_TAPJOY_SUPPORT)
+//#if defined(RT_TAPJOY_SUPPORT)
 	
 				case MESSAGE_TAPJOY_GET_FEATURED_APP:
 					//Log.v(app.PackageName, "Getting tapjoy feature");
@@ -1852,18 +1883,17 @@ class AppRenderer implements GLSurfaceView.Renderer
 					Log.v(app.PackageName, "Setting tapjoy banner size to " + app.tapBannerSize);
 					break;
 	
-		//#endif
+//#endif
 			
 				case MESSAGE_IAP_PURCHASE:
 					
 					String parm = nativeGetLastOSMessageString();
-						//Log.v(app.PackageName, "Buying "+parm);
+					//Log.v(app.PackageName, "Buying "+parm);
 					
 					if (!app.mBillingService.requestPurchase(parm, "")) 
 					{
 					   Log.d(app.PackageName, "requestPurchase>> Billing not supported?!");
 					   SharedActivity.nativeSendGUIEx(app.MESSAGE_TYPE_IAP_RESULT, ResponseCode.RESULT_BILLING_UNAVAILABLE.ordinal(),0,0);
-
 					}
 					break;
 				

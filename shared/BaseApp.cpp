@@ -32,6 +32,7 @@ BaseApp::BaseApp()
 		SetFPSVisible(false);
 		m_bIsInBackground = false;
 		SetInputMode(INPUT_MODE_NORMAL);
+		m_version = "No default Version"; // this is over written by network messages that come from IOS and Android. For other platforms (like windows), it will remain this.
 		
 		m_touchTracker.resize(C_MAX_TOUCHES_AT_ONCE);
 		ClearError();
@@ -220,7 +221,7 @@ void BaseApp::OnMessage(Message &m)
 	
 	switch (m.GetClass())
 	{
-	case MESSAGE_CLASS_GUI:
+		case MESSAGE_CLASS_GUI:
 			switch (m.GetType())
 			{
 			case MESSAGE_TYPE_GUI_CLICK_START:
@@ -353,6 +354,12 @@ void BaseApp::OnMessage(Message &m)
 					break;
 				}
 				break;
+
+			case MESSAGE_TYPE_APP_VERSION:
+				{
+					m_version = m.GetStringParm();
+					break;
+				}
 			}
 	break;
 		
@@ -674,6 +681,11 @@ int BaseApp::GetTotalActiveTouches()
 	}
 
 	return count;
+}
+
+string BaseApp::GetAppVersion()
+{
+	return m_version;
 }
 
 void TouchTrackInfo::SetWasHandled( bool bNew, Entity *pEntity )

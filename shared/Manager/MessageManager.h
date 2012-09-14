@@ -179,11 +179,12 @@ enum eMessageType
 	MESSAGE_TYPE_HW_TOUCH_KEYBOARD_WILL_HIDE, //ios only, when not using external keyboard
 	MESSAGE_TYPE_HW_KEYBOARD_INPUT_ENDING, //proton is done with input and requesting that the keyboard hide 
     MESSAGE_TYPE_HW_KEYBOARD_INPUT_STARTING, //proton is asking for the keyboard to open 
-    
 	
 	MESSAGE_TYPE_IAP_PURCHASED_LIST_STATE, //used by android when it IAPManager syncs to get a list of item id's purchased
 
 	MESSAGE_TYPE_CALL_STATIC_FUNCTION, //used by the message manager to call a static function with a VariantList*
+
+	MESSAGE_TYPE_APP_VERSION, // version being passed through to game.
 
     MESSAGE_USER = 1000, //users can add their own messages starting here
 
