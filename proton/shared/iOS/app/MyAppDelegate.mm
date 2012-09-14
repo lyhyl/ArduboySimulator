@@ -79,6 +79,11 @@
 	m_tapjoyManager = [[TapjoyManager alloc] init];
 	[m_tapjoyManager InitTapjoy:application viewController:viewController]; //viewController.view
 #endif
+
+	// pass in version
+    NSString *versionString = [NSString stringWithFormat:@"Version %@",[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]];
+    string *versionStr = new string([versionString UTF8String]);
+    GetMessageManager()->SendGUIStringEx(MESSAGE_TYPE_APP_VERSION, 0, 0, 0, *versionStr);
 	
 }
 
