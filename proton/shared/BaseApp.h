@@ -377,6 +377,7 @@ public:
 	int GetTotalActiveTouches(); //will return the total number of fingers currently touching the screen.
 	void ResetTouches(); //not really advised or needed, ignore this
 
+	string GetAppVersion();
 protected:
 	
 	bool m_bConsoleVisible;
@@ -399,7 +400,7 @@ protected:
 	Entity m_entityRoot;
 	bool m_bCheatMode;
 	vector<TouchTrackInfo> m_touchTracker;
-	
+	string m_version;
 };
 
 BaseApp * GetBaseApp(); //supply this yourself.  You create it on the first call if needed.
