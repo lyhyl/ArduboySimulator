@@ -71,8 +71,8 @@ std::string PopFirstParmString(std::string *lineInOut, const std::string delimit
 
 void ForceRange(float &a, const float min, const float max);
 
-#define rt_min(a,b)    (((a) < (b)) ? (a) : (b))
-#define rt_max(a,b)            (((a) > (b)) ? (a) : (b))
+#define rt_min(rangeMin,rangeMax)    (((rangeMin) < (rangeMax)) ? (rangeMin) : (rangeMax))
+#define rt_max(rangeMin,rangeMax)            (((rangeMin) > (rangeMax)) ? (rangeMin) : (rangeMax))
 
 //helper to turn anything into a string, like ints/floats
 template< class C>

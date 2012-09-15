@@ -147,9 +147,12 @@ int RandomRange(int rangeMin, int rangeMax)
 
 float RandomRangeFloat(float rangeMin, float rangeMax)
 {
-	//TODO: Warning: This function is badly broken for high numbers, fix ASAP
-	return float(float(RandomRange(int(rangeMin*1000), int(rangeMax*1000))))/1000;
+	float random = ((float) rand()) / (float) RAND_MAX;
+	float diff = rangeMax - rangeMin;
+	float r = random * diff;
+	return rangeMin + r;
 }
+	
 
 float LerpFloat(float f_origin, float f_target, float f_percent)
 {

@@ -214,7 +214,9 @@ public:
 	float GetDelta() {return m_gameTimer.GetDelta();}
 	float GetGameDelta() {return m_gameTimer.GetGameDelta();}	
 	int GetDeltaTick() {return m_gameTimer.GetDeltaTick();}
-	int GetGameDeltaTick() {return m_gameTimer.GetDeltaGameTick();}
+	int GetGameDeltaTick() {return m_gameTimer.GetDeltaGameTick();} //elapsed time in milliseconds (1000=1 second)
+	float GetElapsedTime() {return (float)m_gameTimer.GetDeltaTick()/1000.0f;} //elapsed time in seconds (1 = 1 second)
+	float GetGameElapsedTime() {return (float)m_gameTimer.GetDeltaGameTick()/1000.0f;} //elapsed time in seconds (1 = 1 second)
 	Console * GetConsole() {return &m_console;}
 	void SetGameTickPause(bool bNew) {m_gameTimer.SetGameTickPause(bNew);}
 	bool GetGameTickPause() {return m_gameTimer.GetGameTickPause();}

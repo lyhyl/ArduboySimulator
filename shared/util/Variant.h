@@ -463,6 +463,7 @@ class VariantList
 		bool SerializeFromMem(byte *pSrc, int length );
 		Variant m_variant[C_MAX_VARIANT_LIST_PARMS]; //non-dynamic for speed
 		void GetVariantListStartingAt(VariantList *pOut, int startIndex); //shift variables over to the right, deleting some.  0 based index
+		std::string GetContentsAsDebugString();
 };
 
 int GetSizeOfData(Variant::eType type);

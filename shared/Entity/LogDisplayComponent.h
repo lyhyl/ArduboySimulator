@@ -25,6 +25,8 @@ Or, you can cast to this class and use SetConsole() to set your own custom conso
 
 Otherwise, it will display the proton system log if you do nothing.
 
+Eitherway, if you use its "AddLine" function, it will handle wrapping for you.
+
 An easy way to use this to show the system log is to use the helper function below.
 
 Just do:
@@ -64,6 +66,7 @@ private:
 	void ModByDistance(float mod);
 	void OnTextChanged(Variant *pDataObject);
 	void InitInternalConsoleIfNeeded();
+	
 	CL_Vec2f *m_pPos2d;
 	CL_Vec2f *m_pSize2d;
 	uint32 *m_pFontID;
