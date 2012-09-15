@@ -1,4 +1,6 @@
-#pragma once
+#ifndef ResourceUtils_h__
+#define ResourceUtils_h__
+
 #include "RTFileFormat.h"
 
 #ifndef CLANLIB_1
@@ -36,6 +38,8 @@ bool SaveToFile(int num, FILE *fp);
 bool SaveToFile(uint32 num, FILE *fp);
 bool SaveToFile(const std::string &str, FILE *fp);
 
+//same thing but for mem
+
 bool IsPowerOf2(int n);
 byte * DecompressRTPackToMemory(byte *pMem, unsigned int *pDecompressedSize=NULL);
 int GetFileSize(const std::string &fName);
@@ -48,3 +52,23 @@ void AppendStringToFile(const std::string filename, const std::string text);
 std::string StripColorCodes(const std::string text);
 bool StringFromStartMatches(const std::string &line, const std::string textToMatch); //like an strnstr for strings
 bool StringFromEndMatches(const std::string &line, const std::string textToMatch);
+
+template <class myType>
+void MemorySerialize( myType &num, uint8 *pMem, int &offsetInOut, bool bSave)
+{
+	if (bSave)
+	{
+		memcpy(&pMem[offsetInOut], &num, sizeof(myType));
+	} else
+	{
+		memcpy(&num, &pMem[offsetInOut], sizeof(myType));
+	}
+
+	offsetInOut += sizeof(myType);
+
+}
+
+//specialized version, not done as a template for compatibility with older compilers
+void MemorySerialize( std::string &num, uint8 *pMem, int &offsetInOut, bool bSave);
+
+#endif // ResourceUtils_h__

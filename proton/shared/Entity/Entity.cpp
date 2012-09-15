@@ -368,6 +368,37 @@ bool Entity::RemoveEntityByName(const string &name, bool bRecursive)
 	return bRemoved;
 }
 
+
+bool Entity::RemoveEntityByNameSafe(const string &name, bool bRecursive)
+{
+	EntityListItor itor = m_children.begin();
+
+	bool bRemoved = false;
+
+	while (itor != m_children.end())
+	{
+		if ((*itor)->GetName() == name)
+		{
+			(*itor)->SetTaggedForDeletion();
+			bRemoved = true;
+		} else
+		{
+			if (bRecursive)
+			{
+				if ((*itor)->RemoveEntityByNameSafe(name, bRecursive))
+				{
+					bRemoved = true;
+				}
+			}
+		}
+
+		itor++;
+	}
+
+	return bRemoved;
+}
+
+
 void Entity::SetTaggedForDeletion()
 {
 	if (m_bTaggedForDeletion) return; //already did it

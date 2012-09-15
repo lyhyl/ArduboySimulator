@@ -621,3 +621,25 @@ void VariantList::GetVariantListStartingAt(VariantList *pOut, int startIndex)
 	}
 }
 
+string VariantList::GetContentsAsDebugString()
+{
+	string s;
+
+	for (int i=0; i < C_MAX_VARIANT_LIST_PARMS; i++)
+	{
+		if (m_variant[i].GetType() == Variant::TYPE_UNUSED)
+		{
+			break;
+
+			if (!s.empty()) s += ", ";
+			s += "Parm "+toString(i)+": "+m_variant[i].Print();
+
+		}
+	}
+
+	if (s.empty())
+	{
+		s = "(None)";
+	}
+	return s;
+}

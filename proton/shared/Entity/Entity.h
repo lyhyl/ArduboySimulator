@@ -60,6 +60,7 @@ public:
 	 */
 	Entity * GetEntityByName(const string &name);
 	bool RemoveEntityByName(const string &name, bool bRecursive = false); //if recursive flag, multiple entities might be deleted...
+	bool RemoveEntityByNameSafe(const string &name, bool bRecursive); //tags for deletion, safely removed ASAP.  Safe to call from inside their own Update()'s etc
 	bool RemoveEntityByAddress(Entity *pEntToDelete, bool DeleteAlso = true);
 	void MoveEntityToTopByAddress(Entity *pEnt); //top of the stack, draws last
 	void MoveEntityToBottomByAddress(Entity *pEnt); //bottom of the stack, draws first

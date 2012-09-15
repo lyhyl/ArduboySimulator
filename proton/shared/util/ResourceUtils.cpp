@@ -583,3 +583,35 @@ bool StringFromEndMatches(const std::string &line, const std::string textToMatch
 
 	return false;
 }
+
+
+void MemorySerialize( std::string &num, uint8 *pMem, int &offsetInOut, bool bSave)
+{
+	uint16 len;
+	assert(num.length() < 1024*64);
+
+	if (bSave)
+	{
+		len = num.length();
+
+		//copy how the len, up to 64k
+		memcpy(&pMem[offsetInOut], &len, sizeof(len));
+		offsetInOut += sizeof(len);
+
+		//now copy the actual content
+		memcpy(&pMem[offsetInOut], num.c_str(), len);
+	
+	} else
+	{
+		memcpy(&len, &pMem[offsetInOut], sizeof(len));
+		offsetInOut += sizeof(len);
+
+		num.resize(len);
+
+		//trust me.
+		memcpy((void*)num.c_str(), &pMem[offsetInOut], len);
+	}
+	offsetInOut += len;
+
+}
+

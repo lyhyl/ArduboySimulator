@@ -64,7 +64,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="audiere.lib zdll.lib wsock32.lib libGLES_CM.lib dinput8.lib dxguid.lib"
+				AdditionalDependencies="audiere.lib zdll.lib ws2_32.lib libGLES_CM.lib dinput8.lib dxguid.lib"
 				OutputFile="../bin/RTLooneyLadders.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\..\shared\win\powerVR\OGLES\WindowsX86\lib;..\..\shared\win\lib;..\..\shared\win\fmod\api\lib;..\..\shared\win\audiere\lib"
@@ -144,7 +144,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libgles_cm.lib  audiere.lib zdll.lib wsock32.lib"
+				AdditionalDependencies="libgles_cm.lib  audiere.lib zdll.lib  ws2_32.lib "
 				OutputFile="../bin/RTLooneyLadders.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\..\shared\win\powerVR\OGLES\WindowsX86\lib;..\..\shared\win\lib;..\..\shared\win\fmod\api\lib;..\..\shared\win\audiere\lib"
@@ -228,7 +228,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opengl32.lib audiere.lib zdll.lib wsock32.lib dinput8.lib dxguid.lib"
+				AdditionalDependencies="opengl32.lib audiere.lib zdll.lib   ws2_32.lib  dinput8.lib dxguid.lib"
 				OutputFile="../bin/RTLooneyLadders.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\..\shared\win\lib;..\..\shared\win\fmod\api\lib;..\..\shared\win\audiere\lib"
@@ -308,7 +308,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opengl32.lib audiere.lib zdll.lib wsock32.lib dinput8.lib dxguid.lib"
+				AdditionalDependencies="opengl32.lib audiere.lib zdll.lib  ws2_32.lib  dinput8.lib dxguid.lib"
 				OutputFile="../bin/RTLooneyLadders.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\..\shared\win\lib;..\..\shared\win\fmod\api\lib;..\..\shared\win\audiere\lib"
