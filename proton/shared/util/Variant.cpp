@@ -630,10 +630,10 @@ string VariantList::GetContentsAsDebugString()
 		if (m_variant[i].GetType() == Variant::TYPE_UNUSED)
 		{
 			break;
-
+		} else
+		{
 			if (!s.empty()) s += ", ";
 			s += "Parm "+toString(i)+": "+m_variant[i].Print();
-
 		}
 	}
 
