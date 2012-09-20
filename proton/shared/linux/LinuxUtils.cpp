@@ -8,6 +8,7 @@
 #include <cstdarg>
 #include <cassert>
 #include "PlatformSetup.h"
+#include <sys/stat.h> //for mkdir
 
 #ifndef _CONSOLE 
 	//if console is defined, we might be a linux command line server or something, we don't know what GL/GLES stuff
