@@ -407,7 +407,7 @@ bool RemoveDirectoryRecursively(string path)
 			case EEXIST: error = "EEXIST";	break;
 			case EFAULT: error = "EFAULT";	break;
 
-			default:
+			default: ;
 		}
 		LogError("RemoveDirectoryRecursively: opendir of %s failed with error %d (s)", path.c_str(), errno, error.c_str());
 		return false;
