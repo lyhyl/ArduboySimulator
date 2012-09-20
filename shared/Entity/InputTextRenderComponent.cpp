@@ -380,7 +380,7 @@ void InputTextRenderComponent::OnRender(VariantList *pVList)
 		pTextToDraw = m_pPlaceHolderText;
 	}
 
-	GetBaseApp()->GetFont(eFont(*m_pFontID))->DrawScaled(vFinalPos.x+m_pTextOffsetPos2d->x* m_pScale2d->x, vFinalPos.y+m_pTextOffsetPos2d->y* m_pScale2d->y, m_displayText, m_pScale2d->x, color);
+	GetBaseApp()->GetFont(eFont(*m_pFontID))->DrawScaled(vFinalPos.x+m_pTextOffsetPos2d->x* m_pScale2d->x, vFinalPos.y+m_pTextOffsetPos2d->y* m_pScale2d->y, *pTextToDraw, m_pScale2d->x, color);
 	
 
 	uint32 borderCol = ColorCombine(*m_pBorderColor, MAKE_RGBA(255,255,255,255), alpha);

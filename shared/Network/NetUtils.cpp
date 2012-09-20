@@ -26,7 +26,7 @@ char *Base64Encode(const char *data, size_t input_length,size_t *output_length)
 	char *encoded_data = (char*)malloc(*output_length);
 	if (encoded_data == NULL) return NULL;
 
-	for (int i = 0, j = 0; i < input_length;) {
+	for (uint32 i = 0, j = 0; i < input_length;) {
 
 		uint32 octet_a = i < input_length ? data[i++] : 0;
 		uint32 octet_b = i < input_length ? data[i++] : 0;
