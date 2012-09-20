@@ -302,17 +302,35 @@ bool RTCreateDirectory(const std::string &dir_name)
 	LogMsg("CreateDirectory: %s", dir_name.c_str());
 #endif
 
-	string temp = dir_name;
-	CreateDirectoryRecursively("", temp);
-	return true;
+	if (dir_name.empty())
+		return false;
+
+	// this will be a full path
+	std::string full_path; 	// calculate the full path
+	// TODO: add here Linux version of GetFullPathName
+	full_path = dir_name;
+	return ::mkdir(full_path.c_str(), 0755) == 0;
 }
 
 void CreateDirectoryRecursively(string basePath, string path)
 {
-#ifdef _DEBUG
-	//LogMsg("CreateDirectoryRecursively: %s, path is %s", basePath.c_str(), path.c_str());
-#endif
-	assert(0);
+	StringReplace("\\", "/", path);
+	StringReplace("\\", "/", basePath);
+
+	vector<string> tok = StringTokenize(path, "/");
+
+	if (!basePath.empty())
+	{
+		if (basePath[basePath.size()-1] != '/') basePath += "/";
+	}
+	path = "";
+	for (unsigned int i=0; i < tok.size(); i++)
+	{
+		path += tok[i].c_str();
+		//LogMsg("Creating %s%s", basePath.c_str(), path.c_str());
+		RTCreateDirectory(basePath+path);
+		path += "/";
+	}
 }
 
 
@@ -409,7 +427,7 @@ bool RemoveDirectoryRecursively(string path)
 
 			default: ;
 		}
-		LogError("RemoveDirectoryRecursively: opendir of %s failed with error %d (s)", path.c_str(), errno, error.c_str());
+		LogError("RemoveDirectoryRecursively: opendir of %s failed with error %d (%s)", path.c_str(), errno, error.c_str());
 		return false;
 	}
 
