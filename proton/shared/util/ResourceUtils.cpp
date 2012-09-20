@@ -363,7 +363,7 @@ void AppendStringToFile(const string filename, const string text)
 	fclose(fp);
 }
 
-//You must SAFE_FREE the pointer it returns at some point!
+//You must SAFE_DELETE_ARRAY the pointer it returns at some point!
 byte * LoadFileIntoMemory(string fileName, unsigned int *p_ui_size, bool bUseSavePath)
 {
 	assert(p_ui_size && "You need to send in a valid int to be filled with the size, not a NULL.");
@@ -578,7 +578,7 @@ bool StringFromStartMatches(const std::string &line, const std::string textToMat
 bool StringFromEndMatches(const std::string &line, const std::string textToMatch)
 {
 	if (line.size() < textToMatch.size()) return false;
-	int sizeOfTextToMatch = strlen(textToMatch.c_str());
+	int sizeOfTextToMatch = (int)strlen(textToMatch.c_str());
 	if (strncmp( &(line.c_str()[line.size()-sizeOfTextToMatch]), textToMatch.c_str(), sizeOfTextToMatch) == 0) return true;
 
 	return false;
@@ -592,7 +592,7 @@ void MemorySerialize( std::string &num, uint8 *pMem, int &offsetInOut, bool bSav
 
 	if (bSave)
 	{
-		len = num.length();
+		len = (uint16) num.length();
 
 		//copy how the len, up to 64k
 		memcpy(&pMem[offsetInOut], &len, sizeof(len));

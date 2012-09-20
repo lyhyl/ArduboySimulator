@@ -398,7 +398,20 @@ bool RemoveDirectoryRecursively(string path)
 	dp = opendir(path.c_str());
 	if (!dp)
 	{
-		LogError("RemoveDirectoryRecursively: opendir failed");
+		string error = "unknown";
+		switch (errno)
+		{
+			case EACCES: error = "EACCES";	break;
+			case EAGAIN: error = "EBADFID"	break;
+
+			case EBUSY: error = "EBUSY"	break;
+			case EEXIST: error = "EEXIST"	break;
+			case EAGAIN: error = "EBADFID"	break;
+			case EFAULT: error = "EFAULT"	break;
+
+			default:
+		}
+		LogError("RemoveDirectoryRecursively: opendir of %s failed with error %d (s)", path.c_str(), errno, error.c_str());
 		return false;
 	}
 
