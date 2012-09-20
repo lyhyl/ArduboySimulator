@@ -396,7 +396,7 @@ vector<string> GetFilesAtPath(string path)
 		if (ent->d_name[0] == '.' && ent->d_name[1] == '.' && ent->d_name[2] == 0) continue;
 
 		//LogMsg("Got %s. type %d", ent->d_name, int(ent->d_type));
-		if (ent->d_type == DT_REG) //regular file
+		if (ent->d_type != DT_DIR) //regular file
 		{
 			v.push_back(ent->d_name);
 		}
@@ -409,7 +409,7 @@ vector<string> GetFilesAtPath(string path)
 
 bool RemoveDirectoryRecursively(string path)
 {
-	//LogMsg(" RemoveDirectoryRecursively: %s", path.c_str());
+//	LogMsg(" RemoveDirectoryRecursively: %s", path.c_str());
 	
 	dirent * buf, * ent;
 	DIR *dp;
@@ -439,18 +439,18 @@ bool RemoveDirectoryRecursively(string path)
 		if (ent->d_name[0] == '.' && ent->d_name[1] == 0) continue;
 		if (ent->d_name[0] == '.' && ent->d_name[1] == '.' && ent->d_name[2] == 0) continue;
 
-		//LogMsg("Got %s. type %d", ent->d_name, int(ent->d_type));
-		if (ent->d_type == DT_REG) //regular file
+//		LogMsg("Got %s. type %d", ent->d_name, int(ent->d_type));
+		if (ent->d_type != DT_DIR) //regular file
 		{
 			string fName = path+string("/")+ent->d_name;
-			//LogMsg("Deleting %s", fName.c_str());
+//			LogMsg("Deleting %s", fName.c_str());
 			unlink( fName.c_str());
 		}
 
 		if (ent->d_type == DT_DIR) //regular file
 		{
 			string fName = path+string("/")+ent->d_name;
-			//LogMsg("Entering DIR %s",fName.c_str());
+//			LogMsg("Entering DIR %s",fName.c_str());
 			if (!RemoveDirectoryRecursively(fName.c_str()))
 			{
 				LogError("Error removing dir %s", fName.c_str());
