@@ -403,10 +403,8 @@ bool RemoveDirectoryRecursively(string path)
 		{
 			case EACCES: error = "EACCES";	break;
 			case EAGAIN: error = "EBADFID";	break;
-
 			case EBUSY: error = "EBUSY";	break;
 			case EEXIST: error = "EEXIST";	break;
-			case EAGAIN: error = "EBADFID";	break;
 			case EFAULT: error = "EFAULT";	break;
 
 			default:
