@@ -162,7 +162,7 @@ float LerpFloat(float f_origin, float f_target, float f_percent)
 char *StringReverse(char *str)
 {
 
-	int length = strlen(str);
+	int length = (int)strlen(str);
 	// we need temp pointers to the beginning and
 	// end of the sequence we wish to reverse
 	char *start = str, *end = str + length - 1;
@@ -246,7 +246,7 @@ string FloatToMoney(float f, int decimalsOfCents)
 
 string PrefixLeading(const string input, unsigned int leadingCount, string leadingChar, string insertAfterPrefix)
 {
-	int charsNeeded = int(leadingCount)-input.size();
+	int charsNeeded = int(leadingCount)- (int)input.size();
 	if (charsNeeded < 0) return input;
 	string s;
 	while (charsNeeded--) s += leadingChar;
@@ -381,7 +381,7 @@ string StripWhiteSpace(const string & s)
 
 string GetFileNameFromString(const string &path)
 {
-	for (int i=path.size()-1; i > 0; i--)
+	for (size_t i=path.size()-1; i > 0; i--)
 	{
 		if (path[i] == '/' || path[i] == '\\')
 		{
@@ -395,7 +395,7 @@ string GetFileNameFromString(const string &path)
 string GetPathFromString(const string &path)
 {
 
-	for (int i=path.size()-1; i > 0; i--)
+	for (size_t i=path.size()-1; i > 0; i--)
 	{
 		if (path[i] == '/' || path[i] == '\\')
 		{
@@ -586,4 +586,9 @@ string IntToTime(int ms, bool bTextFormat)
 
 	if (r.empty()) return "Now!";
 	return r;
+}
+
+int StringToInt( const string &s )
+{
+	return atoi(s.c_str());
 }
