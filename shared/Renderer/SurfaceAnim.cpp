@@ -56,6 +56,7 @@ bool SurfaceAnim::LoadFileFromMemory( byte *pMem, int inputSize )
 	return true;
 }
 
+
 void SurfaceAnim::BlitScaledAnim( float x, float y, int frameX , int frameY, CL_Vec2f vScale, eAlignment alignment /*= ALIGNMENT_CENTER*/,
 								 unsigned int rgba /*= MAKE_RGBA(255,255,255,255)*/, float rotation, CL_Vec2f vRotationPt, bool flipX, bool flipY)
 {
@@ -125,4 +126,9 @@ bool SurfaceAnim::InitFromSoftSurface( SoftSurface *pSurf )
 	m_frameWidth = (float)GetWidth();
 	m_frameHeight = (float)GetHeight();
 	return true;
+}
+
+void SurfaceAnim::BlitRotatedAnim( float x, float y, int frameX, int frameY, CL_Vec2f vScale, eAlignment alignment /*= ALIGNMENT_CENTER*/, unsigned int rgba /*= MAKE_RGBA(255,255,255,255)*/, float rotation/*=0*/, CL_Vec2f vRotationPt /*= CL_Vec2f(x,y)*/, bool flipX /*= false*/, bool flipY /*= false*/ )
+{
+	BlitScaledAnim(x,y,frameX,frameY, vScale, alignment, rgba, rotation, CL_Vec2f(x,y)+vRotationPt, flipX, flipY);
 }

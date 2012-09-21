@@ -678,7 +678,7 @@ void Surface::BlitScaled( float x, float y, CL_Vec2f vScale, eAlignment alignmen
 	BlitScaledWithRotatePoint(x,y,vScale,alignment,rgba,rotation,CL_Vec2f(x,y), pRenderBatcher);
 }
 
-void Surface::BlitScaledWithRotatePoint( float x, float y, CL_Vec2f vScale, eAlignment alignment, unsigned int rgba, float rotation, CL_Vec2f vRotationPt, RenderBatcher *pRenderBatcher)
+void Surface::BlitScaledWithRotatePoint( float x, float y, CL_Vec2f vScale, eAlignment alignment, unsigned int rgba, float rotation, CL_Vec2f vScreenRotationPt, RenderBatcher *pRenderBatcher)
 {
 	
 	assert(vScale.x != 0 && vScale.y != 0 && "Dahell?");
@@ -696,7 +696,7 @@ void Surface::BlitScaledWithRotatePoint( float x, float y, CL_Vec2f vScale, eAli
 		pRenderBatcher->BlitEx(this, dst, src, rgba);
 	} else
 	{
-		BlitEx(dst, src, rgba, rotation, vRotationPt);
+		BlitEx(dst, src, rgba, rotation, vScreenRotationPt);
 	}
 }
 
@@ -1160,6 +1160,13 @@ bool Surface::InitFromSoftSurface( SoftSurface *pSurf, bool bCreateSurface, int 
 	return true;
 }
 
+
+void Surface::BlitRotated( float x, float y, CL_Vec2f vScale, eAlignment alignment /*= ALIGNMENT_CENTER*/,
+						  unsigned int rgba /*= MAKE_RGBA(255,255,255,255)*/, float rotation/*=0*/,
+						  CL_Vec2f vRotationPtLocalCoords /*= CL_Vec2f(0,0)*/, RenderBatcher *pRenderBatcher)
+{
+	BlitScaledWithRotatePoint(x,y,vScale, alignment, rgba, rotation, CL_Vec2f(x,y)+vRotationPtLocalCoords, pRenderBatcher);
+}
 
 string PrintGLColor(glColorBytes color)
 {

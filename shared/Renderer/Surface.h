@@ -88,6 +88,7 @@ public:
 	//these actually just call the above ones
 	void BlitScaled( float x, float y, CL_Vec2f vScale, eAlignment alignment = ALIGNMENT_CENTER, unsigned int rgba  = MAKE_RGBA(255,255,255,255), float rotation=0,  RenderBatcher *pRenderBatcher = NULL);
 	void BlitScaledWithRotatePoint( float x, float y, CL_Vec2f vScale, eAlignment alignment, unsigned int rgba, float rotation, CL_Vec2f vRotationPt, RenderBatcher *pRenderBatcher = NULL);
+	void BlitRotated( float x, float y, CL_Vec2f vScale, eAlignment alignment = ALIGNMENT_CENTER, unsigned int rgba  = MAKE_RGBA(255,255,255,255), float rotation=0, CL_Vec2f vRotationPtLocalCoords =  CL_Vec2f(0,0), RenderBatcher *pRenderBatcher = NULL);
 
 	rtRectf GetRectf() {return rtRectf(0,0, float(m_originalWidth), float(m_originalWidth));}
 	void SetSmoothing( bool bSmoothing);
