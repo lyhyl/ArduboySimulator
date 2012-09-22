@@ -30,6 +30,7 @@ Surface::Surface( string fName, eTextureType type )
 
 void Surface::SetDefaults()
 {
+	m_bSmoothing = true;
 	m_texWidth = 0;
 	m_texHeight = 0;
 	m_memUsed = 0;
@@ -425,6 +426,9 @@ bool Surface::LoadFileFromMemory( byte *pMem, int inputSize )
 		assert(!"LoadFileFromMemory sent a null pointer?  AW HELL NAW");
 		return false;
 	}
+	
+	bool bReturn = false;
+
 	if (m_texWidth == 0)
 	{
 		if (m_textureCreationMethod == TEXTURE_CREATION_NONE)
@@ -438,6 +442,9 @@ bool Surface::LoadFileFromMemory( byte *pMem, int inputSize )
 		//unload happens right away though
 		GetBaseApp()->m_sig_unloadSurfaces.connect(1, boost::bind(&Surface::OnUnloadSurfaces, this));
 	
+#ifdef WINAPI
+		GetBaseApp()->m_sig_enterforeground.connect(1, boost::bind(&Surface::OnEnterForeground, this, _1));
+#endif
 	}
 
 	if (*((uint16*)pMem) == C_JPG_HEADER_MARKER)
@@ -448,16 +455,16 @@ bool Surface::LoadFileFromMemory( byte *pMem, int inputSize )
 			LogMsg("(Failed to load jpg)");
 			return false;
 		}
-		return InitFromSoftSurface(&s);
+		bReturn = InitFromSoftSurface(&s);
 		
 	}else
 	if (strncmp((char*)pMem, "BM", 2) == 0)
 	{
 		//we've got a bitmap on our hands it looks like
-		return LoadBMPTexture(pMem);
+		bReturn = LoadBMPTexture(pMem);
 	} else if (strncmp((char*)pMem, C_RTFILE_TEXTURE_HEADER, 6) == 0)
 	{
-		return LoadRTTexture(pMem);
+		bReturn = LoadRTTexture(pMem);
 	} else
 	{
 		LogError("Surface: Unknown file type");
@@ -465,7 +472,12 @@ bool Surface::LoadFileFromMemory( byte *pMem, int inputSize )
 		return false; 
 	}
 
-	return true;
+	
+	if (bReturn)
+	{
+		SetSmoothing(m_bSmoothing);
+	}
+	return bReturn;
 }
 
 
@@ -611,6 +623,14 @@ void Surface::BlitEx(rtRectf dst, rtRectf src, unsigned int rgba, float rotation
 		return;	
 	}
 
+if (GetBaseApp()->GetDisableSubPixelBlits())
+{
+	//fix issue for cracks when scaling when 2d tile blits
+	dst.bottom = ceil(dst.bottom);
+	dst.right = ceil(dst.right);
+}
+
+
 	SetupForRender(rotation, vRotatePt, rgba);
 
 	if (rotation != 0)
@@ -755,13 +775,16 @@ void Surface::SetTextureType( eTextureType type )
 
 void Surface::SetSmoothing( bool bSmoothing )
 {
-	assert(IsLoaded() && "You should change this to work on things that aren't already loaded as well");
-	Bind();
-	glTexParameterx( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
-	glTexParameterx( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+	if (IsLoaded())
+	{
+		Bind();
+		glTexParameterx( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+		glTexParameterx( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+	}
 
-
+	m_bSmoothing = bSmoothing; //remember for later if we have to restore surfaces
 }
+
 template <typename T>
 T nextPowerOfTwo(T n)
 {
@@ -939,7 +962,11 @@ bool Surface::InitBlankSurface( int x, int y)
 		//unload happens right away though
 		GetBaseApp()->m_sig_unloadSurfaces.connect(1, boost::bind(&Surface::OnUnloadSurfaces, this));
 
+#ifdef WINAPI
+		GetBaseApp()->m_sig_enterforeground.connect(1, boost::bind(&Surface::OnEnterForeground, this, _1));
+#endif
 	}
+
 
 	m_originalWidth = x;
 	m_originalHeight = y;
@@ -1166,6 +1193,15 @@ void Surface::BlitRotated( float x, float y, CL_Vec2f vScale, eAlignment alignme
 						  CL_Vec2f vRotationPtLocalCoords /*= CL_Vec2f(0,0)*/, RenderBatcher *pRenderBatcher)
 {
 	BlitScaledWithRotatePoint(x,y,vScale, alignment, rgba, rotation, CL_Vec2f(x,y)+vRotationPtLocalCoords, pRenderBatcher);
+}
+
+void Surface::OnEnterForeground(VariantList *pVList)
+{
+	//only called on windows, to restore lost properties after doing a Alt-Enter full screen toggle or changing
+	//the res.  Surfaces aren't actually reloaded but they lose some GL settings.. maybe a OnChangeResize signal
+	//would be better for this.
+
+	SetSmoothing(m_bSmoothing);
 }
 
 string PrintGLColor(glColorBytes color)

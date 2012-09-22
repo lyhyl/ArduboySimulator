@@ -246,6 +246,11 @@ ENET_CONTEXT_WALK(context, { \
 size_t
 enet_range_coder_compress (void * context, const ENetBuffer * inBuffers, size_t inBufferCount, size_t inLimit, enet_uint8 * outData, size_t outLimit)
 {
+#ifdef _DEBUG
+//Seth - just some debug stuff to see how much this compresion was really doing.. not bad!
+//	char stCrap[256];
+//	int inBuff = inLimit;
+#endif
     ENetRangeCoder * rangeCoder = (ENetRangeCoder *) context;
     enet_uint8 * outStart = outData, * outEnd = & outData [outLimit];
     const enet_uint8 * inData, * inEnd;
@@ -338,6 +343,10 @@ enet_range_coder_compress (void * context, const ENetBuffer * inBuffers, size_t 
 
     ENET_RANGE_CODER_FLUSH;
 
+#ifdef _DEBUG
+//	sprintf(stCrap, "in buffer count %d, compressed to %d\r\n", inBuff, (outData - outStart));
+//	OutputDebugString(stCrap);
+#endif
     return (size_t) (outData - outStart);
 }
 
