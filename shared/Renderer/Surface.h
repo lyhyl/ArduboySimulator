@@ -134,6 +134,8 @@ private:
 	void PrepareGLForNewTexture();
 	void SetDefaults();
 	void PreMultiplyAlpha(byte *pBytes, int width, int height, int format);
+	void OnEnterForeground(VariantList *pVList); //only wired up in Windows currently, don't need it anywhere
+	//else, windows is a special case
 	GLuint m_glTextureID;
 	int m_texWidth, m_texHeight;
 	int m_originalWidth, m_originalHeight; //if the texture is padded, this info helps us to still draw it as if it wasn't
@@ -146,6 +148,7 @@ private:
 	string m_textureLoaded;
 	bool m_bCreateMipMapsIfNeeded;
 	eTextureCreationMethod m_textureCreationMethod;
+	bool m_bSmoothing;
 	
 };
 

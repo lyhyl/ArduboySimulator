@@ -23,6 +23,7 @@ bool IsBaseAppInitted()
 
 BaseApp::BaseApp()
 {
+		m_bDisableSubPixelBlits = false;
 		m_bCheatMode = false;
 		m_memUsed = m_texMemUsed = 0;	
 		g_isLoggerInitted = true;	

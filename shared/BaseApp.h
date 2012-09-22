@@ -344,7 +344,8 @@ public:
 	void ClearError() {m_error = ERROR_NONE;}
 	void SetLastError(eErrorType error) {m_error = error;}
 	bool IsInBackground() {return m_bIsInBackground;} 
-	
+	bool GetDisableSubPixelBlits() {return m_bDisableSubPixelBlits;}
+	void SetDisableSubPixelBlits(bool bNew) {m_bDisableSubPixelBlits = bNew;} //fixes issue where scaling makes 2d tile based games have cracks
 	void AddCommandLineParm(string parm);
 	vector<string> GetCommandLineParms();
 	void SetAccelerometerUpdateHz(float hz); //another way to think of hz is "how many times per second to update"
@@ -403,6 +404,7 @@ protected:
 	bool m_bCheatMode;
 	vector<TouchTrackInfo> m_touchTracker;
 	string m_version;
+	bool m_bDisableSubPixelBlits;
 };
 
 BaseApp * GetBaseApp(); //supply this yourself.  You create it on the first call if needed.
