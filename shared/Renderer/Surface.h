@@ -11,8 +11,9 @@
 #define Surface_h__
 
 #include "util/RenderUtils.h"
-
 #include "util/boost/boost/signal.hpp"
+
+class VariantList;
 
 struct glColorBytes
 {
@@ -54,7 +55,6 @@ public:
 		BLENDING_MULTIPLY
 	};
 
-	
 	Surface();
 	Surface (string fName); //load in an image right away
 	Surface (string fName, eTextureType type); //load in an image right away
