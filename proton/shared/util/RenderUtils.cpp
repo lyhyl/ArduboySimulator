@@ -958,5 +958,25 @@ rtRectf ConvertFakeScreenRectToReal(rtRectf r)
 	return r;
 }
 
+//a helper for calculating fadein/fadeout times
+
+float GetFadeAlphaFromTime(int curTimeMS, int totalTimeMS, int fadeInMS, int fadeOutMS)
+{
+	//LogMsg("GetFadeAlpha: curTime: %d, total %d", curTimeMS, totalTimeMS);
+
+	if (curTimeMS <= 0 || curTimeMS >= totalTimeMS) return 0;
+
+	if (curTimeMS > totalTimeMS-fadeOutMS)
+	{
+		return 1.0f - ((float)( curTimeMS-(totalTimeMS-fadeOutMS))/(float)fadeOutMS);
+	}
+
+	if (curTimeMS < fadeInMS)
+	{
+		return (float)curTimeMS/(float)fadeInMS;		
+	}
+
+	return 1;
+}
 
 

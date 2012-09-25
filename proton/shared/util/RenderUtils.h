@@ -142,4 +142,5 @@ bool NeedToUseFakeScreenSize(); //true if using a fake (stretched to device) scr
 CL_Rectf GetScreenRect();
 float SinPulseByCustomTimerMS(int ms, unsigned int timerMS);
 void RenderTexturedGLTriangleWithDrawElements();
+float GetFadeAlphaFromTime(int curTimeMS, int totalTimeMS, int fadeInMS, int fadeOutMS);
 #endif // RenderUtils_h__
