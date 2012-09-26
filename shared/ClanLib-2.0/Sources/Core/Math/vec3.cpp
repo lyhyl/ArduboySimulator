@@ -89,9 +89,9 @@ template<typename Type>
 Type CL_Vec3<Type>::distance(const CL_Vec3<Type>& vector) const
 {
 	float value_x, value_y, value_z;
-	value_x = x - vector.x;
-	value_y = y - vector.y;
-	value_z = z - vector.z;
+	value_x = (float)(x - vector.x);
+	value_y = (float)(y - vector.y);
+	value_z = (float)(z - vector.z);
 	return (Type) floor(sqrt(value_x*value_x + value_y*value_y+value_z*value_z)+0.5f);
 }
 

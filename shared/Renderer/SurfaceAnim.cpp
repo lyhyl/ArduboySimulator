@@ -92,7 +92,7 @@ void SurfaceAnim::BlitScaledAnim( float x, float y, int frameX , int frameY, CL_
 
 	dst.AdjustPosition(vStart.x, vStart.y);
 	dst.Scale(alignment, vScale);
-
+	
 	BlitEx(dst, src, rgba, rotation, vRotationPt);
 }
 
