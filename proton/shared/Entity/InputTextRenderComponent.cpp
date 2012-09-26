@@ -23,6 +23,68 @@ InputTextRenderComponent::~InputTextRenderComponent()
 	}
 }
 
+
+void InputTextRenderComponent::OnAdd(Entity *pEnt)
+{
+	EntityComponent::OnAdd(pEnt);
+
+	//shared with the rest of the entity
+	m_pPos2d = &GetParent()->GetVar("pos2d")->GetVector2();
+	m_pSize2d = &GetParent()->GetVar("size2d")->GetVector2();
+	m_pScale2d = &GetParent()->GetVarWithDefault("scale2d", Variant(1.0f, 1.0f))->GetVector2();
+	m_pAlignment = &GetParent()->GetVar("alignment")->GetUINT32();
+	m_pColor = &GetParent()->GetVarWithDefault("color", Variant(MAKE_RGBA(255,255,255,255)))->GetUINT32();
+	m_pColorMod = &GetParent()->GetVarWithDefault("colorMod", Variant(MAKE_RGBA(255,255,255,255)))->GetUINT32();
+	m_pAlpha = &GetParent()->GetVarWithDefault("alpha", Variant(1.0f))->GetFloat();
+
+	GetParent()->GetFunction("OnTouchEnd")->sig_function.connect(1, boost::bind(&InputTextRenderComponent::OnTouchEnd, this, _1));
+	GetParent()->GetFunction("OnTouchStart")->sig_function.connect(1, boost::bind(&InputTextRenderComponent::OnTouchStart, this, _1));
+	GetParent()->GetFunction("OnInput")->sig_function.connect(1, boost::bind(&InputTextRenderComponent::OnInput, this, _1)); //used for keyboard keys on Win
+	GetParent()->GetFunction("OnLosingNativeGUIFocus")->sig_function.connect(1, boost::bind(&InputTextRenderComponent::OnLosingNativeGUIFocus, this, _1)); 
+	GetFunction("ActivateKeyboard")->sig_function.connect(1, boost::bind(&InputTextRenderComponent::ActivateKeyboard, this, _1)); 
+	GetFunction("CloseKeyboard")->sig_function.connect(1, boost::bind(&InputTextRenderComponent::CloseKeyboard, this, _1)); 
+	m_pVisible = &GetParent()->GetVarWithDefault("visible", uint32(1))->GetUINT32();
+	m_pGetFocusOnEnter = &GetVarWithDefault("getFocusOnEnter", uint32(0))->GetUINT32();
+	GetParent()->GetVar("visible")->GetSigOnChanged()->connect(1, boost::bind(&InputTextRenderComponent::OnVisibilityChanged, this, _1));
+	m_pHasFocus = &GetVar("hasFocus")->GetUINT32();
+
+	//our own stuff
+	m_pDisabled = &GetVarWithDefault("disabled", uint32(0))->GetUINT32();
+	GetVar("disabled")->GetSigOnChanged()->connect(1, boost::bind(&InputTextRenderComponent::OnDisabledChanged, this, _1));
+	m_pVisualStyle = &GetVarWithDefault("visualStyle", Variant(uint32(STYLE_NORMAL)))->GetUINT32();
+	GetVar("visualStyle")->GetSigOnChanged()->connect(1, boost::bind(&InputTextRenderComponent::OnVisualStyleChanged, this, _1));
+
+
+	m_pTextSize2d = &GetVar("textSize2d")->GetVector2();
+	m_pTextOffsetPos2d = &GetVarWithDefault("textOffsetPos2d", Variant(3,3))->GetVector2();
+	m_pCursorColor = &GetVarWithDefault("cursorColor", Variant(MAKE_RGBA(209,181,137,255)))->GetUINT32();
+	m_pInputLengthMax = &GetVarWithDefault("inputLengthMax", Variant(uint32(10)))->GetUINT32();
+	m_pBorderColor = &GetVarWithDefault("borderColor", Variant(MAKE_RGBA(255,255,255,255)))->GetUINT32();
+	m_pInputType = &GetVarWithDefault("inputType", Variant(uint32(INPUT_TYPE_ASCII)))->GetUINT32();
+	m_pFiltering = &GetVarWithDefault("filtering", Variant(uint32(FILTERING_STRICT)))->GetUINT32();
+
+	m_pText = &GetVar("text")->GetString(); //local to us
+	GetVar("text")->GetSigOnChanged()->connect(1, boost::bind(&InputTextRenderComponent::OnTextChanged, this, _1));
+
+	m_pPlaceHolderText = &GetVar("placeHolderText")->GetString(); //local to us
+
+	m_pFontID = &GetVarWithDefault("font", uint32(FONT_SMALL))->GetUINT32();
+	GetVar("font")->GetSigOnChanged()->connect(1, boost::bind(&InputTextRenderComponent::OnFontChanged, this, _1));
+	GetParent()->GetVar("scale2d")->GetSigOnChanged()->connect(1, boost::bind(&InputTextRenderComponent::OnScaleChanged, this, _1));
+
+	//register ourselves to render if the parent does
+	GetParent()->GetFunction("OnRender")->sig_function.connect(1, boost::bind(&InputTextRenderComponent::OnRender, this, _1));
+	GetParent()->GetFunction("OnUpdate")->sig_function.connect(1, boost::bind(&InputTextRenderComponent::OnUpdate, this, _1));
+
+	//on android we might need to reinit the soft keyboard
+
+	GetBaseApp()->m_sig_enterforeground.connect(1, boost::bind(&InputTextRenderComponent::OnEnterForeground, this, _1));
+	GetBaseApp()->m_sig_enterbackground.connect(1, boost::bind(&InputTextRenderComponent::OnEnterBackground, this, _1));
+
+}
+
+
+
 void InputTextRenderComponent::OnVisibilityChanged(Variant *pDataObject)
 {
 	if (pDataObject->GetUINT32() == 0)
@@ -229,74 +291,37 @@ void InputTextRenderComponent::CloseKeyboard( VariantList *pVList )
     
 }
 
-void InputTextRenderComponent::OnAdd(Entity *pEnt)
-{
-	EntityComponent::OnAdd(pEnt);
-
-	//shared with the rest of the entity
-	m_pPos2d = &GetParent()->GetVar("pos2d")->GetVector2();
-	m_pSize2d = &GetParent()->GetVar("size2d")->GetVector2();
-	m_pScale2d = &GetParent()->GetVarWithDefault("scale2d", Variant(1.0f, 1.0f))->GetVector2();
-	m_pAlignment = &GetParent()->GetVar("alignment")->GetUINT32();
-	m_pColor = &GetParent()->GetVarWithDefault("color", Variant(MAKE_RGBA(255,255,255,255)))->GetUINT32();
-	m_pColorMod = &GetParent()->GetVarWithDefault("colorMod", Variant(MAKE_RGBA(255,255,255,255)))->GetUINT32();
-	m_pAlpha = &GetParent()->GetVarWithDefault("alpha", Variant(1.0f))->GetFloat();
-	GetParent()->GetFunction("OnTouchEnd")->sig_function.connect(1, boost::bind(&InputTextRenderComponent::OnTouchEnd, this, _1));
-	GetParent()->GetFunction("OnInput")->sig_function.connect(1, boost::bind(&InputTextRenderComponent::OnInput, this, _1)); //used for keyboard keys on Win
-	GetParent()->GetFunction("OnLosingNativeGUIFocus")->sig_function.connect(1, boost::bind(&InputTextRenderComponent::OnLosingNativeGUIFocus, this, _1)); 
-	GetFunction("ActivateKeyboard")->sig_function.connect(1, boost::bind(&InputTextRenderComponent::ActivateKeyboard, this, _1)); 
-	GetFunction("CloseKeyboard")->sig_function.connect(1, boost::bind(&InputTextRenderComponent::CloseKeyboard, this, _1)); 
-	m_pVisible = &GetParent()->GetVarWithDefault("visible", uint32(1))->GetUINT32();
-	m_pGetFocusOnEnter = &GetVarWithDefault("getFocusOnEnter", uint32(0))->GetUINT32();
-	GetParent()->GetVar("visible")->GetSigOnChanged()->connect(1, boost::bind(&InputTextRenderComponent::OnVisibilityChanged, this, _1));
-	m_pHasFocus = &GetVar("hasFocus")->GetUINT32();
-
-	//our own stuff
-	m_pDisabled = &GetVarWithDefault("disabled", uint32(0))->GetUINT32();
-	GetVar("disabled")->GetSigOnChanged()->connect(1, boost::bind(&InputTextRenderComponent::OnDisabledChanged, this, _1));
-	m_pVisualStyle = &GetVarWithDefault("visualStyle", Variant(uint32(STYLE_NORMAL)))->GetUINT32();
-	GetVar("visualStyle")->GetSigOnChanged()->connect(1, boost::bind(&InputTextRenderComponent::OnVisualStyleChanged, this, _1));
-
-	
-	m_pTextSize2d = &GetVar("textSize2d")->GetVector2();
-	m_pTextOffsetPos2d = &GetVarWithDefault("textOffsetPos2d", Variant(3,3))->GetVector2();
-	m_pCursorColor = &GetVarWithDefault("cursorColor", Variant(MAKE_RGBA(209,181,137,255)))->GetUINT32();
-	m_pInputLengthMax = &GetVarWithDefault("inputLengthMax", Variant(uint32(10)))->GetUINT32();
-	m_pBorderColor = &GetVarWithDefault("borderColor", Variant(MAKE_RGBA(255,255,255,255)))->GetUINT32();
-	m_pInputType = &GetVarWithDefault("inputType", Variant(uint32(INPUT_TYPE_ASCII)))->GetUINT32();
-	m_pFiltering = &GetVarWithDefault("filtering", Variant(uint32(FILTERING_STRICT)))->GetUINT32();
-
-	m_pText = &GetVar("text")->GetString(); //local to us
-	GetVar("text")->GetSigOnChanged()->connect(1, boost::bind(&InputTextRenderComponent::OnTextChanged, this, _1));
-
-	m_pPlaceHolderText = &GetVar("placeHolderText")->GetString(); //local to us
-
-	m_pFontID = &GetVarWithDefault("font", uint32(FONT_SMALL))->GetUINT32();
-	GetVar("font")->GetSigOnChanged()->connect(1, boost::bind(&InputTextRenderComponent::OnFontChanged, this, _1));
-	GetParent()->GetVar("scale2d")->GetSigOnChanged()->connect(1, boost::bind(&InputTextRenderComponent::OnScaleChanged, this, _1));
-
-	//register ourselves to render if the parent does
-	GetParent()->GetFunction("OnRender")->sig_function.connect(1, boost::bind(&InputTextRenderComponent::OnRender, this, _1));
-	GetParent()->GetFunction("OnUpdate")->sig_function.connect(1, boost::bind(&InputTextRenderComponent::OnUpdate, this, _1));
-
-	//on android we might need to reinit the soft keyboard
-	
-	GetBaseApp()->m_sig_enterforeground.connect(1, boost::bind(&InputTextRenderComponent::OnEnterForeground, this, _1));
-	GetBaseApp()->m_sig_enterbackground.connect(1, boost::bind(&InputTextRenderComponent::OnEnterBackground, this, _1));
-
-}
-
 
 void InputTextRenderComponent::OnTouchEnd(VariantList *pVList)
 {
+	/*
 	if (*m_pVisible == 0) return;
+
+	TouchTrackInfo *pTouch = GetBaseApp()->GetTouch(pVList->Get(2).GetUINT32());
+	if (pTouch->WasHandled()) return;
+	pTouch->SetWasHandled(true, GetParent());
+
+	if (*m_pDisabled == false)
+	{
+		ActivateKeyboard(NULL);
+	}
+	*/
+}
+
+
+void InputTextRenderComponent::OnTouchStart(VariantList *pVList)
+{
+	if (*m_pVisible == 0) return;
+
+	TouchTrackInfo *pTouch = GetBaseApp()->GetTouch(pVList->Get(2).GetUINT32());
+	if (pTouch->WasHandled()) return;
+	pTouch->SetWasHandled(true, GetParent());
 
 	if (*m_pDisabled == false)
 	{
 		ActivateKeyboard(NULL);
 	}
 }
-
 void InputTextRenderComponent::OnRemove()
 {
 	/*
@@ -473,28 +498,40 @@ void InputTextRenderComponent::OnInput( VariantList *pVList )
 		
 		string input = GetLastStringInput();
 
-		
-		if (c == 13)
+		switch (c)
+		{
+		case 13:
 		{
 			//enter
-            VariantList vList(this);
+			VariantList vList(this);
 			GetFunction("CloseKeyboard")->sig_function(&vList);
-		} else
-		if (c == 8)
-		{
+		}
+			break;
+		
+		case 8:
 			//backspace
 			if (input.length() > 0)
 			{
 				input.erase(input.length()-1, 1);
 			}
-		} else
-		{
+			break;
+
+		case 39:
+		case 37:
+		case 38:
+		case 40:
+		//these are arrow keys on windows, ignore them for now
+		
+		break;
+
+		default:
+
 			if (input.size() < *m_pInputLengthMax)
 			{
 				input += c;
 			} 
 		}
-
+	
 		SetLastStringInput( FilterToValidAscii(input, *m_pFiltering == FILTERING_STRICT));
 		break;
     

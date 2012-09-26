@@ -61,7 +61,19 @@ EntityComponent* SetupInterpolateComponent(Entity *pEnt, const string& component
 		}
 	}
 
+#ifdef _DEBUG
+	if (!pComp->GetParent()->GetShared()->GetVarIfExists(varName))
+	{
+
+		LogMsg("Warning: SetupInterpolateComponent doesn't see a variable named %s in entity %s", varName.c_str(),
+			pComp->GetParent()->GetName().c_str());
+		assert(!"See log output for warning");
+	}
+#endif
+
 	pComp->GetVar("var_name")->Set(varName);
+	
+
 	pComp->GetVar("timingSystem")->Set(uint32(timing));
 	pComp->GetVar("target")->Set(const_cast<Variant&>(targetValue));
 	pComp->GetVar("interpolation")->Set(uint32(interpolationType));
