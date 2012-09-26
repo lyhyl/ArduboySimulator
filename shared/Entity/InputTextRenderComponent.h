@@ -79,6 +79,7 @@ private:
 	void ActivateKeyboard(VariantList *pVList);
 	void CloseKeyboard(VariantList *pVList);
 	void OnTouchEnd(VariantList *pVList);
+	void OnTouchStart(VariantList *pVList);
 	void OnUpdate(VariantList *pVList);
 	void OnInput( VariantList *pVList );
 	void OnLosingNativeGUIFocus(VariantList *pVList);
