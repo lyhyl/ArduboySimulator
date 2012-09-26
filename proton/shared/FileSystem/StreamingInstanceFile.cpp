@@ -43,7 +43,7 @@ int StreamingInstanceFile::Read(byte * pBufferOut, int maxBytesToRead)
 		return 0;
 	}
 
-	int bytesRead = fread(pBufferOut, 1, maxBytesToRead, m_fp);
+	int bytesRead = (int)fread(pBufferOut, 1, maxBytesToRead, m_fp);
 	return bytesRead;
 }
 
