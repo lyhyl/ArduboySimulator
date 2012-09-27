@@ -27,6 +27,17 @@ void SurfaceAnim::SetupAnim( int framesX, int framesY )
 	m_frameHeight = (float)GetHeight()/framesY;
 }
 
+void SurfaceAnim::SetupAnimBySize( int frameWid,int frameHei )
+{
+	assert(IsLoaded() && "Load your image before doing SetupAnim on it");
+
+	m_framesX = int(GetWidth()/frameWid);
+	m_framesY = int(GetWidth()/frameHei);
+
+	m_frameWidth = (float)frameWid;
+	m_frameHeight = (float)frameHei;
+}
+
 void SurfaceAnim::BlitAnim(float x, float y, int frameX, int frameY, unsigned int rgba, float rotationDegrees, CL_Vec2f vRotationPt)
 {
 	if (GetFrameWidth() == GetWidth() && GetFrameHeight() == GetHeight())
