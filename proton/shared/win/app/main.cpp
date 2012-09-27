@@ -592,11 +592,19 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				//repeat key
 				#ifdef C_DONT_USE_WM_CHAR
 				int vKey = ConvertWindowsKeycodeToProtonVirtualKey(wParam); 
-				int wmCharKey = VKeyToWMCharKey(wParam);
-				if (wmCharKey != 0)
+				if (vKey != wParam)
 				{
-					//LogMsg("Sending repeat key..");
-					GetMessageManager()->SendGUIEx2(MESSAGE_TYPE_GUI_CHAR, (float)wmCharKey, 1.0f, 0, GetWinkeyModifiers());  
+					bWasChanged = true;
+				}
+				
+				int wmCharKey = VKeyToWMCharKey(wParam);
+				if ( !bWasChanged || (wParam < 37 || wParam > 40 )) //filter out the garbage the arrow keys make
+				{
+					if (wmCharKey != 0)
+					{
+						//LogMsg("Sending repeat key..");
+						GetMessageManager()->SendGUIEx2(MESSAGE_TYPE_GUI_CHAR, (float)wmCharKey, 1.0f, 0, GetWinkeyModifiers());  
+					}
 				}
 
 				#endif
