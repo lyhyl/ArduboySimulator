@@ -516,12 +516,7 @@ void InputTextRenderComponent::OnInput( VariantList *pVList )
 			}
 			break;
 
-		case 39:
-		case 37:
-		case 38:
-		case 40:
-		//these are arrow keys on windows, ignore them for now
-		
+			
 		break;
 
 		default:
