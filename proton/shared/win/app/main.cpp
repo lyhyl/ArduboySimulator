@@ -453,6 +453,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				wParam = VIRTUAL_KEY_BACK;
 			}
 
+
 			#ifdef C_DONT_USE_WM_CHAR
 				break;
 			#endif
@@ -536,18 +537,27 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		//send the raw key data as well
 		VariantList v;
 		const bool isBitSet = (lParam & (1 << 30)) != 0;
+		bool bWasChanged = false;
 
 			if (!isBitSet)
 			{
 				int vKey = ConvertWindowsKeycodeToProtonVirtualKey(wParam); 
 				GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW, (float)vKey, 1.0f);  
-
+				if (vKey != wParam)
+				{
+					bWasChanged = true;
+				}
 			#ifdef C_DONT_USE_WM_CHAR
 
 			//also send as a normal key press.  Yes this convoluted.. it's done this way so Fkeys also go out as WM proton virtual keys to help with
 		    //hotkeys and such.   -Seth
 
+				if (!bWasChanged)
+				{
+
+				
 				int wmCharKey = VKeyToWMCharKey(wParam);
+			
 				if (wmCharKey != 0)
 				{
 					if (wmCharKey == 27)
@@ -573,6 +583,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 						//normal
 						GetMessageManager()->SendGUIEx2(MESSAGE_TYPE_GUI_CHAR, (float)wmCharKey, 1.0f, 0, GetWinkeyModifiers());  
 					}
+				}
 				}
 
 			#endif
