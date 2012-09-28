@@ -137,7 +137,7 @@ int MySQLManager::AddSelectResults(vector<VariantDB> &vdb)
 						myTm.tm_wday = -1;
 						myTm.tm_yday = -1;
 						assert( sizeof(time_t) == 4 && "Uh oh.. define _USE_32BIT_TIME_T somewhere for MSVC");
-						uint32 t = mktime(&myTm);
+						uint32 t = (uint32)mktime(&myTm);
 						db.GetVar(fieldNames[i])->Set(t);
 					}
 				break;
@@ -160,7 +160,7 @@ int MySQLManager::AddSelectResults(vector<VariantDB> &vdb)
 					myTm.tm_wday = -1;
 					myTm.tm_yday = -1;
 					assert( sizeof(time_t) == 4 && "Uh oh.. define _USE_32BIT_TIME_T somewhere for MSVC");
-					uint32 t = mktime(&myTm);
+					uint32 t = (uint32) mktime(&myTm);
 					db.GetVar(fieldNames[i])->Set(t);
 				}
 				break;
@@ -249,7 +249,7 @@ std::string MySQLManager::EscapeString( const string &input )
 {
 	char *pBuffer = new char[input.length()*2+1];
 
-	mysql_real_escape_string(m_conn, pBuffer, input.c_str(), input.size());
+	mysql_real_escape_string(m_conn, pBuffer, input.c_str(), (unsigned long)input.size());
 
 	string ret = pBuffer;
 	SAFE_DELETE_ARRAY(pBuffer);

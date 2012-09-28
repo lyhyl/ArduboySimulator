@@ -134,6 +134,8 @@ public:
 	/// \brief Returns the size of the rectangle.
 	CL_Sizex<Type> get_size() const { return CL_Sizex<Type>(right - left, bottom - top); }
 
+	CL_Vec2<Type> get_size_vec2() const { return CL_Vec2<Type>(right - left, bottom - top); }
+
 	/// \brief Returns true if the rectangle contains the point.
 	bool contains(const CL_Vec2<Type> &p) const
 	{
