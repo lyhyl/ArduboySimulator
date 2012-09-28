@@ -223,6 +223,38 @@ void DrawRect(const CL_Rectf &r, uint32 color, float lineWidth)
 	DrawRect(r.left, r.top, r.get_width(), r.get_height(), color, lineWidth);
 }
 
+void DrawFilledBitmapRect(rtRect &r, uint32 middleColor,  uint32 borderColor, SurfaceAnim *pSurf )
+{
+	DrawFilledBitmapRect( CL_Rectf(r.left, r.top, r.right, r.bottom), middleColor, borderColor, pSurf);
+}
+
+void DrawFilledBitmapRect(const CL_Rectf &r, uint32 middleColor, uint32 borderColor, SurfaceAnim *pSurf )
+{
+	assert(r.get_width()>20 && "GUIBox rect too small to work!");
+	assert(r.get_height()>20 && "GUIBox rect too small to work!");
+	assert(pSurf->GetFramesX() >= 3 && pSurf->GetFramesY() >= 3 && "The surf needs to be setup as a 3x3 (or larger) first");
+	// draw corners
+	pSurf->BlitAnim(r.left,r.top,0,0, borderColor);
+	pSurf->BlitAnim(r.right-10,r.top,2,0, borderColor);
+	pSurf->BlitAnim(r.left,r.bottom-10,0,2, borderColor);
+	pSurf->BlitAnim(r.right-10,r.bottom-10,2,2, borderColor);
+	CL_Vec2f scale;
+	// draw top and bottom
+	scale.x=(r.get_width()-20)/10;
+	scale.y=1;
+	pSurf->BlitScaledAnim(r.left+10,r.top,1,0,scale,ALIGNMENT_UPPER_LEFT, borderColor);
+	pSurf->BlitScaledAnim(r.left+10,r.bottom-10,1,2,scale,ALIGNMENT_UPPER_LEFT, borderColor);
+
+	// draw sides
+	scale.x=1;
+	scale.y=(r.get_height()-20)/10;
+	pSurf->BlitScaledAnim(r.left,r.top+10,0,1,scale,ALIGNMENT_UPPER_LEFT, borderColor);
+	pSurf->BlitScaledAnim(r.right-10,r.top+10,2,1,scale,ALIGNMENT_UPPER_LEFT, borderColor);
+
+	// fill middle
+	DrawFilledRect(r.left+10,r.top+10,r.get_width()-20,r.get_height()-20,middleColor);
+}
+
 void DrawRect(const rtRect &r, uint32 color, float lineWidth)
 {
 	DrawRect((float)r.left, (float)r.top, (float)r.GetWidth(), (float)r.GetHeight(), color, lineWidth);
@@ -236,8 +268,6 @@ void DrawRect(const rtRectf &r, uint32 color, float lineWidth)
 void DrawRect(float x, float y, float width, float height, uint32 color, float lineWidth)
 {
 	//OPTIMIZE:  This could be done as a single GL call instead... or optimize GenerateFillRect to smartly handle render states
-
-
 	GenerateFillRect(color, x, y, width, lineWidth); //top bar
 	GenerateFillRect(color, x, (y+height)-lineWidth, width, lineWidth); //bottom bar
 	GenerateFillRect(color, x, y+lineWidth, lineWidth, (height-lineWidth*2)); //left side
@@ -404,7 +434,6 @@ void  GenerateFillRect( GLuint rgba, float x, float y, float w, float h )
 
 	//disable depth testing and depth writing
 	glDisable( GL_TEXTURE_2D );
-	
 	
 
 	//3 2

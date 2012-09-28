@@ -6,6 +6,7 @@
 
 RectRenderComponent::RectRenderComponent()
 {
+	m_pSurf = NULL;
 	SetName("RectRender");
 }
 
@@ -32,6 +33,31 @@ void RectRenderComponent::OnAdd(Entity *pEnt)
 	GetParent()->GetFunction("OnRender")->sig_function.connect(1, boost::bind(&RectRenderComponent::OnRender, this, _1));
 	m_pBorderColor = &GetVarWithDefault("borderColor", Variant(MAKE_RGBA(255,255,255,0)))->GetUINT32();
 	m_pVisualStyle = &GetVarWithDefault("visualStyle", uint32(STYLE_NORMAL))->GetUINT32();
+	m_pBmpBorderFileName = &GetVar("m_pBmpBorderFileName")->GetString();
+	GetVar("bmpBorderFileName")->GetSigOnChanged()->connect(boost::bind(&RectRenderComponent::OnUpdateBmpBorderFileName, this, _1));
+}
+
+
+void RectRenderComponent::OnUpdateBmpBorderFileName(Variant *pVariant)
+{
+	if (pVariant->GetString().empty())
+	{
+		m_pSurf = NULL;
+	} else
+	{
+		m_pSurf = GetResourceManager()->GetSurfaceAnim(pVariant->GetString());
+		if (m_pSurf)
+		{
+			if (m_pSurf->GetFramesX() == 1)
+			{
+				//hasn't been setup?  Let's do it ourself
+				m_pSurf->SetupAnim(3,3);
+
+			}
+		}
+	}
+
+	
 }
 
 void RectRenderComponent::OnRemove()
@@ -60,6 +86,15 @@ void RectRenderComponent::OnRender(VariantList *pVList)
 			vFinalPos -= vRotationPt;
 		}
 
+		if (m_pSurf)
+		{
+			CL_Rectf r(vFinalPos, *m_pSize2d);
+			
+			int borderColor = MAKE_RGBA( GET_RED(*m_pBorderColor), GET_GREEN(*m_pBorderColor), GET_BLUE(*m_pBorderColor),
+				255**m_pAlpha);
+			DrawFilledBitmapRect(r, color, borderColor,  m_pSurf);
+		} else
+		{
 			CL_Rectf r = CL_Rectf(vFinalPos.x, vFinalPos.y, vFinalPos.x+ m_pSize2d->x, vFinalPos.y+m_pSize2d->y); 
 			if (*m_pVisualStyle != STYLE_BORDER_ONLY)
 			{
@@ -81,11 +116,12 @@ void RectRenderComponent::OnRender(VariantList *pVList)
 				DrawLine(shadedColor, vFinalPos.x, vFinalPos.y, vFinalPos.x,vFinalPos.y+m_pSize2d->y, 1);
 				DrawLine(shadedColor, vFinalPos.x, vFinalPos.y, vFinalPos.x+m_pSize2d->x,vFinalPos.y, 1);
 			}
+		}
 
-			if (*m_pRotation != 0)
-			{
-				PopRotationMatrix();
-			}
+		if (*m_pRotation != 0)
+		{
+			PopRotationMatrix();
+		}
 
 		
 	}

@@ -35,6 +35,7 @@ public:
 private:
 
 	void OnRender(VariantList *pVList);
+	void OnUpdateBmpBorderFileName(Variant *pVariant);
 
 	CL_Vec2f *m_pPos2d;
 	CL_Vec2f *m_pSize2d;
@@ -46,6 +47,8 @@ private:
 	uint32 *m_pAlignment;
 	float *m_pRotation; //in degrees
 	uint32 *m_pVisualStyle;
+	string *m_pBmpBorderFileName; //if set, we'll do a fancy bitmap border
+	SurfaceAnim *m_pSurf; //only used it using bmp borders
 
 };
 
