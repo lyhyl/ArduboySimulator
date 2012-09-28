@@ -85,14 +85,16 @@ void VideoModeSelector::initializeModes() {
 	addVideoMode("Linux", 1024, 768, PLATFORM_ID_LINUX);
 	addVideoMode("Linux Wide", 1280, 800, PLATFORM_ID_LINUX);
 	
-	//iOS - for testing on Windows, you should probably use the "Landscape" versions unless you want to hurt your neck
+	//iOS - for testing, you should probably use the "Landscape" versions unless you want to hurt your neck
 	addVideoMode("iPhone", 320, 480, PLATFORM_ID_IOS);
-	addVideoMode("iPhone Landscape", 480, 320, PLATFORM_ID_IOS, ORIENTATION_PORTRAIT); //force orientation for emulation so it's not sideways
+	addVideoMode("iPhone Landscape", 480, 320, PLATFORM_ID_IOS, ORIENTATION_PORTRAIT);
 	addVideoMode("iPad", 768, 1024, PLATFORM_ID_IOS);
-	addVideoMode("iPad Landscape", 1024, 768, PLATFORM_ID_IOS, ORIENTATION_PORTRAIT); //force orientation for emulation so it's not sideways);
-	addVideoMode("iPhone4", 640, 960, PLATFORM_ID_IOS, ORIENTATION_PORTRAIT); //force orientation for emulation so it's not sideways););
-	addVideoMode("iPhone4 Landscape", 960,640, PLATFORM_ID_IOS);
+	addVideoMode("iPad Landscape", 1024, 768, PLATFORM_ID_IOS, ORIENTATION_PORTRAIT);
+	addVideoMode("iPhone4", 640, 960, PLATFORM_ID_IOS, ORIENTATION_PORTRAIT);
+	addVideoMode("iPhone4 Landscape", 960, 640, PLATFORM_ID_IOS);
 	addVideoMode("iPad HD", 768*2, 1024*2, PLATFORM_ID_IOS);
+	addVideoMode("iPhone5", 640, 1136, PLATFORM_ID_IOS, ORIENTATION_PORTRAIT);
+	addVideoMode("iPhone5 Landscape", 1136, 640, PLATFORM_ID_IOS);
 	
 	//Palm er, I mean HP. These should use the Debug WebOS build config in MSVC for the best results, it will
 	//use their funky SDL version
