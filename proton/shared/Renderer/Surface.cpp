@@ -626,6 +626,9 @@ void Surface::BlitEx(rtRectf dst, rtRectf src, unsigned int rgba, float rotation
 if (GetBaseApp()->GetDisableSubPixelBlits())
 {
 	//fix issue for cracks when scaling when 2d tile blits
+
+	dst.left = ceil(dst.left);
+	dst.top = ceil(dst.top);
 	dst.bottom = ceil(dst.bottom);
 	dst.right = ceil(dst.right);
 }
@@ -724,6 +727,13 @@ void Surface::BlitScaledWithRotatePoint( float x, float y, CL_Vec2f vScale, eAli
 void Surface::Blit( float x, float y, unsigned int rgba, float rotationDegrees, CL_Vec2f vRotatePt)
 {
 	if (!IsLoaded()) return;
+
+	if (GetBaseApp()->GetDisableSubPixelBlits())
+	{
+		//fix issue for cracks when scaling when 2d tile blits
+		x = ceil(x);
+		y = ceil(y);
+	}
 
 	if (rotationDegrees != 0)
 	{
