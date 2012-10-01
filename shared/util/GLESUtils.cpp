@@ -225,7 +225,7 @@ void DrawRect(const CL_Rectf &r, uint32 color, float lineWidth)
 
 void DrawFilledBitmapRect(rtRect &r, uint32 middleColor,  uint32 borderColor, SurfaceAnim *pSurf )
 {
-	DrawFilledBitmapRect( CL_Rectf(r.left, r.top, r.right, r.bottom), middleColor, borderColor, pSurf);
+	DrawFilledBitmapRect( CL_Rectf((float)r.left,(float) r.top,(float) r.right, (float)r.bottom), middleColor, borderColor, pSurf);
 }
 
 void DrawFilledBitmapRect(const CL_Rectf &r, uint32 middleColor, uint32 borderColor, SurfaceAnim *pSurf )
@@ -435,6 +435,16 @@ void  GenerateFillRect( GLuint rgba, float x, float y, float w, float h )
 	//disable depth testing and depth writing
 	glDisable( GL_TEXTURE_2D );
 	
+	if (GetBaseApp()->GetDisableSubPixelBlits())
+	{
+		//fix issue for cracks when scaling when 2d tile blits
+
+		x = ceil(x);
+		y = ceil(y);
+		w = ceil(w);
+		h = ceil(h);
+	}
+
 
 	//3 2
 	//0 1

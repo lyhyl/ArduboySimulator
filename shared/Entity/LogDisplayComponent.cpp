@@ -147,7 +147,7 @@ void LogDisplayComponent::OnEnableScrollingChanged(Variant *pVariant)
 	GetParent()->GetFunction("OnOverEnd")->sig_function.connect(1, boost::bind(&LogDisplayComponent::OnOverEnd, this, _1));	
 
 	//to see the scroll bar, we'll create a child entity and throw a scroll bar render in it
-	Entity *pScrollEnt = GetParent()->AddEntity(new Entity());
+	Entity *pScrollEnt = GetParent()->AddEntity(new Entity("Scrollbar"));
 	m_pScrollBarComp = pScrollEnt->AddComponent(new ScrollBarRenderComponent); 	//add a visual way to see the scroller position
 
 	//set the size to match ours
