@@ -295,6 +295,7 @@ public:
 
 	void DumpMessages();
 	void Update(); //run every tick
+	void DeleteAllMessages();
 
 private:
 
@@ -302,7 +303,6 @@ private:
 	void AddMessageToList(list <Message*> &messageList, Message *m);
 	void DumpMessagesInList(list<Message*> m);
 	void Deliver(Message *m);
-	void DeleteAllMessages();
 	//a separate queue for each timing system
 	list <Message*> m_gameMessages;
 	list <Message*> m_systemMessages;

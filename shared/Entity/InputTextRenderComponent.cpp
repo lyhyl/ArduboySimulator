@@ -62,6 +62,8 @@ void InputTextRenderComponent::OnAdd(Entity *pEnt)
 	m_pBorderColor = &GetVarWithDefault("borderColor", Variant(MAKE_RGBA(255,255,255,255)))->GetUINT32();
 	m_pInputType = &GetVarWithDefault("inputType", Variant(uint32(INPUT_TYPE_ASCII)))->GetUINT32();
 	m_pFiltering = &GetVarWithDefault("filtering", Variant(uint32(FILTERING_STRICT)))->GetUINT32();
+	m_pTruncateTextIfNeeded = &GetVarWithDefault("truncateTextIfNeeded", Variant(uint32(0)))->GetUINT32();
+	GetVar("truncateTextIfNeeded")->GetSigOnChanged()->connect(1, boost::bind(&InputTextRenderComponent::OnTruncateTextIfNeededChanged, this, _1));
 
 	m_pText = &GetVar("text")->GetString(); //local to us
 	GetVar("text")->GetSigOnChanged()->connect(1, boost::bind(&InputTextRenderComponent::OnTextChanged, this, _1));
@@ -104,7 +106,6 @@ void InputTextRenderComponent::OnDisabledChanged(Variant *pDataObject)
 	}
 }
 
-
 void InputTextRenderComponent::OnTextChanged(Variant *pDataObject)
 {
 	rtRectf rt;
@@ -112,8 +113,17 @@ void InputTextRenderComponent::OnTextChanged(Variant *pDataObject)
 	switch(*m_pVisualStyle)
 	{
 	case STYLE_NORMAL:
+	if (*m_pTruncateTextIfNeeded != 0)
+	{
+		m_displayText = TrimText(m_pText);
+		//also set the real thing
+		*m_pText = m_displayText;
+	} else
+	{
 		m_displayText = *m_pText;
-		break;
+	}
+
+	break;
 
 	case STYLE_PASSWORD:
 		m_displayText.clear();
@@ -345,11 +355,12 @@ void InputTextRenderComponent::OnUpdate(VariantList *pVList)
 	//	string curString = FilterToValidAscii(GetLastStringInput(), *m_pFiltering == FILTERING_STRICT);
 				
 		string curString = GetLastStringInput(); //don't have to filter, already was
+		
 		if (*m_pText != curString)
 		{
 			if (curString.size() > m_pText->size())
 			{
-				//well, a character was added.  send it in case anybody cars
+				//well, a character was added.  send it in case anybody cares
                 VariantList vList( this, uint32(curString[curString.size()-1]));
 				GetFunction("OnChar")->sig_function(&vList);
 			} else
@@ -364,6 +375,7 @@ void InputTextRenderComponent::OnUpdate(VariantList *pVList)
 		
 			GetVar("text")->Set(curString);
 		}
+	
 	
 		if (!GetIsUsingNativeUI())
 		{
@@ -529,11 +541,31 @@ void InputTextRenderComponent::OnInput( VariantList *pVList )
 	
 		SetLastStringInput( FilterToValidAscii(input, *m_pFiltering == FILTERING_STRICT));
 		break;
-    
 	}	
+}
 
+void InputTextRenderComponent::OnTruncateTextIfNeededChanged(Variant *pDataObject)
+{
+	if (pDataObject->GetUINT32() != 0)
+	{
+		//apply it to any existing text
+		GetVar("text")->Set(*m_pText);
+	}
+}
 
-    
-    
-    
+string InputTextRenderComponent::TrimText(string *pText)
+{
+
+	CL_Vec2f vTextSize = GetBaseApp()->GetFont(eFont(*m_pFontID))->MeasureText(*pText, m_pScale2d->x);
+
+	if (vTextSize.x > m_pSize2d->x)
+	{
+		//trim that shit
+		int charsThatFitInArea = GetBaseApp()->GetFont(eFont(*m_pFontID))->CountCharsThatFitX(m_pSize2d->x, *pText, m_pScale2d->x);
+		string temp = *m_pText;
+		TruncateString(temp, charsThatFitInArea);
+		return temp;
+		
+	}
+	return *m_pText;
 }

@@ -8,6 +8,10 @@ EntityComponent::EntityComponent()
 
 EntityComponent::~EntityComponent()
 {
+	if (!m_parent)
+	{
+		OnRemove();
+	}
 }
 EntityComponent::EntityComponent( string name )
 {
@@ -30,8 +34,6 @@ void EntityComponent::OnRemove()
 	{
 		//looks like someone wanted notification
 		VariantList vList(this);
-        
         pFunc->sig_function(&vList);
-
 	}
 }
