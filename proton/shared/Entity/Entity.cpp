@@ -527,3 +527,16 @@ void Entity::MoveComponentToBottomByAddress( EntityComponent *pComp )
 	//delete it from our list, re-add it now
 	m_components.push_front(pComp);
 }
+
+void Entity::AddEntitiesToVectorRescursively( vector<Entity*> *pEntVec )
+{
+	EntityListItor itor = m_children.begin();
+
+	while (itor != m_children.end())
+	{
+		pEntVec->push_back( (*itor));
+		(*itor)->AddEntitiesToVectorRescursively(pEntVec);
+		itor++;
+	}
+
+}

@@ -179,8 +179,6 @@ CL_Vec2f RTFont::MeasureText( const string &text, float scale /*= 1.0f*/ )
 {
 	//TODO: Switch to using CL_Rectf
 	rtRectf r;
-	
-
 	MeasureText(&r, &text[0], text.length(), scale);
 	return CL_Vec2f(r.GetWidth(), r.GetHeight());
 }
@@ -191,7 +189,6 @@ void RTFont::MeasureText( rtRectf *pRectOut, const char *pText, int len, float s
 	rtRectf dst(0,0,0,0);
 	rtfont_charData *pCharData, *pLastCharData;
 	FontStateStack state;
-
 
 	if (!IsLoaded())
 	{
@@ -547,13 +544,26 @@ void RTFont::MeasureTextAndAddByLinesIntoDeque(const CL_Vec2f &textBounds, const
 		return;
 	}
 	char *pCur = (char*)&text[0];
-	
+	int lineCount = 0;
 	while (pCur[0])
 	{
-		pLines->push_back(GetNextLine(textBounds, &pCur, scale, vEnclosingSizeOut));
+		if (pLines)
+		{
+			pLines->push_back(GetNextLine(textBounds, &pCur, scale, vEnclosingSizeOut));
+		} else
+		{
+			GetNextLine(textBounds, &pCur, scale, vEnclosingSizeOut);
+		}
+		lineCount++;
 	}
 
-	vEnclosingSizeOut.y = float(pLines->size())*GetLineHeight(scale);
+#ifdef _DEBUG
+if (pLines)
+{
+	assert(lineCount == pLines->size());
+}
+#endif
+	vEnclosingSizeOut.y = float(lineCount)*GetLineHeight(scale);
 
 }
 
@@ -695,3 +705,66 @@ unsigned int RTFont::GetColorFromString( const char *pText )
 	return MAKE_RGBA(255,255,255,255);
 }
 
+int RTFont::CountCharsThatFitX( float sizeX, const string &text, float scale /*= 1.0f*/ )
+{
+	rtfont_charData *pCharData, *pLastCharData;
+
+	int lines = 0;
+	float curX = 0;
+	pLastCharData = NULL;
+	pCharData = NULL;
+	int lastGood = 0;
+	FontStateStack state;
+
+	for (uint32 i=0; i < text.size(); i++)
+	{
+		if (curX >= sizeX)
+		{
+			return lastGood;
+		}
+
+		lastGood = i;
+
+		if (IsFontCode(&text[i], &state))
+		{
+			if (text[i+1] != 0) i++; //also advance past the color control code
+			continue;
+		}
+
+		if (!m_hasSpaceChar && text[i] == ' ')
+		{
+			curX += scale * m_header.blankCharWidth;
+			continue;
+		}
+	
+		if (byte(text[i])-m_header.firstChar < 0)
+		{
+#ifdef _DEBUG
+			LogMsg("Char %c (%d) is not in our font", text[i], int(byte(text[i])));
+#endif
+			continue;
+		}
+
+		if (pLastCharData)
+		{
+			curX += (GetKerningData(byte(text[i-1]), text[i])*scale);
+		}
+
+		pLastCharData = pCharData;
+		pCharData = &m_chars[byte(text[i])-m_header.firstChar].data;
+
+		if (pCharData->xadvance != 0)
+		{
+			curX += float(pCharData->xadvance) * scale;
+		} else
+		{
+			curX += float(pCharData->charSizeX) * scale;
+		}
+	}
+
+	if (curX >= sizeX)
+	{
+		return lastGood;
+	}
+	return text.size(); //they all fit
+}

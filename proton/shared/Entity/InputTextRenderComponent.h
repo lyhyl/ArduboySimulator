@@ -30,6 +30,8 @@ pButtonEntity->GetComponentByName("InputTextRender")->GetVar("inputLengthMax")->
 //show *'s, password mode
 pButtonEntity->GetComponentByName("InputTextRender")->GetVar("visualStyle")->Set((uint32)InputTextRenderComponent::STYLE_PASSWORD);
 
+//Truncate text to fit input box
+pButtonEntity->GetComponentByName("InputTextRender")->GetVar("truncateTextIfNeeded")->Set(uint32(1));
 
 To close the keyboard and un cause the current thing being edited to lose focus, you can do this:
 
@@ -88,6 +90,9 @@ private:
 	void OnVisibilityChanged(Variant *pDataObject);
 	void OnVisualStyleChanged(Variant *pDataObject);
 	void OnDisabledChanged(Variant *pDataObject);
+	string TrimText(string *pText);
+	void OnTruncateTextIfNeededChanged(Variant *pDataObject);
+
 	CL_Vec2f *m_pPos2d;
 	CL_Vec2f *m_pTextOffsetPos2d;
 	CL_Vec2f *m_pSize2d;
@@ -110,6 +115,7 @@ private:
 	uint32 *m_pFiltering;
 	uint32 *m_pVisible;
 	uint32 *m_pGetFocusOnEnter; //if true, hitting enter (while no keyboard is on the screen and nothing else has focus) will automatically  give this focus
+	uint32 *m_pTruncateTextIfNeeded ; //if true, will truncate text to match screen size, and also limit input
 	string m_displayText;
 };
 
