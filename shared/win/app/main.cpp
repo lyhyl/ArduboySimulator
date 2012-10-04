@@ -6,6 +6,12 @@
 #include "WebOS/SDLMain.h"
 #include "BaseApp.h"
 
+//avoid needing to define _WIN32_WINDOWS > 0x0400.. although I guess we could in PlatformPrecomp's win stuff...
+#ifndef WM_MOUSEWHEEL
+	#define WM_MOUSEWHEEL                   0x020A
+	#define GET_WHEEL_DELTA_WPARAM(wParam)  ((short)HIWORD(wParam))
+#endif
+
 #ifdef RT_FLASH_TEST
 	#include "flash/app/cpp/GLFlashAdaptor.h"
 #endif
@@ -663,6 +669,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			LogMsg("App maximized");
 			g_bIsMinimized = false;
 		
+		}
+		break;
+
+	case WM_MOUSEWHEEL:
+		{
+			//fwKeys = GET_KEYSTATE_WPARAM(wParam);
+			int zDelta = GET_WHEEL_DELTA_WPARAM(wParam);
+			GetMessageManager()->SendGUIEx2(MESSAGE_TYPE_GUI_MOUSEWHEEL, (float)zDelta, 0, 0, GetWinkeyModifiers());
 		}
 		break;
 

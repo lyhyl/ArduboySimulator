@@ -161,6 +161,13 @@ void MessageManager::AddMessageToList(list <Message*> &messageList, Message *m)
 
 void MessageManager::Send(Message *m)
 {
+/*
+	if (m->GetType() != MESSAGE_TYPE_GUI_CLICK_MOVE_RAW)
+	{
+		LogMsg("Sending msg %d", m->GetType());
+	}
+	*/
+
 	if (m->GetTimingMethod() == TIMER_GAME)
 	{
 		AddMessageToList(m_gameMessages, m);

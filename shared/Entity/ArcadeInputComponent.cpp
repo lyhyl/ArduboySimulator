@@ -159,6 +159,13 @@ void ArcadeInputComponent::AddKeyBinding(VariantList *pVList)
 	b.m_inputkeycode = pVList->Get(1).GetUINT32();
 	b.m_outputkeycode = pVList->Get(2).GetUINT32();
 	b.m_bOutputAsNormalKeyToo = pVList->Get(3).GetUINT32() != 0;
+	
+	if (pVList->Get(4).GetType() == Variant::TYPE_UINT32)
+	{
+		//they sent extra info, the binding may require certain modifiers like ctrl/shift/alt
+		b.m_keyModifiersRequired = pVList->Get(4).GetUINT32();
+	}
+	
 	m_bindings.push_back(b);
 }
 
@@ -249,20 +256,40 @@ void ArcadeInputComponent::OnRawKeyboard(VariantList *pVList)
 	int keyCode = pVList->Get(0).GetUINT32();
 	bool bDown = pVList->Get(1).GetUINT32() == 1;
 
+	int modifiers = pVList->Get(3).GetUINT32();
+
 #ifdef _DEBUG
-//	LogMsg("ArcadeInputComponent> Got key %d, %d", keyCode, int(bDown));
+	
+	/*
+	string mods;
+
+	if (modifiers & VIRTUAL_KEY_MODIFIER_CONTROL)
+	{
+		mods += "Control ";
+	}
+	if (modifiers & VIRTUAL_KEY_MODIFIER_SHIFT)
+	{
+		mods += "Shift ";
+	}
+	if (modifiers & VIRTUAL_KEY_MODIFIER_ALT)
+	{
+		mods += "Alt ";
+	}
+
+	LogMsg("ArcadeInputComponent> Got key %d, %d (%s)", keyCode, int(bDown), mods.c_str());
+	*/
+
 #endif
 
 	ArcadeBindList::iterator itor = m_bindings.begin();
 
 	for (;itor != m_bindings.end(); itor++)
 	{
-		if (keyCode == itor->m_inputkeycode)
+		if (keyCode == itor->m_inputkeycode && (itor->m_keyModifiersRequired == 0|| modifiers == itor->m_keyModifiersRequired))
 		{
 			ActivateBinding( &(*itor), bDown );
 		}
 	}
-	
 }
 
 void ArcadeInputComponent::OnTrackball(VariantList *pVList)
@@ -270,7 +297,6 @@ void ArcadeInputComponent::OnTrackball(VariantList *pVList)
 
 	float x = pVList->Get(1).GetVector3().x;
 	float y = pVList->Get(1).GetVector3().y;
-	
 	
 	if (*m_pTrackballMode == TRACKBALL_MODE_MENU_SELECTION)
 	{
@@ -393,9 +419,9 @@ void ArcadeInputComponent::RemoveKeyBindingsStartingWith( VariantList *pVList )
 	}
 }
 
-void AddKeyBinding(EntityComponent *pComp, string name, uint32 inputcode, uint32 outputcode, bool bAlsoSendAsNormalRawKey)
+void AddKeyBinding(EntityComponent *pComp, string name, uint32 inputcode, uint32 outputcode, bool bAlsoSendAsNormalRawKey, uint32 modifiersRequired)
 {
-    VariantList vList(name, inputcode, outputcode, uint32(bAlsoSendAsNormalRawKey!=0));
+    VariantList vList(name, inputcode, outputcode, uint32(bAlsoSendAsNormalRawKey!=0), modifiersRequired);
 	pComp->GetFunction("AddKeyBinding")->sig_function(&vList);
 }
 

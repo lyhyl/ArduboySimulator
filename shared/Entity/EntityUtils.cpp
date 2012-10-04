@@ -656,11 +656,11 @@ void FadeOutAndKillChildrenEntities(Entity *pEnt, int timeMS, int delayBeforeFad
 }
 
 
-void ScaleEntity(Entity *pEnt, float scaleStart, float scaleEnd, int timeMS, int delayBeforeStartingMS)
+void ScaleEntity(Entity *pEnt, float scaleStart, float scaleEnd, int timeMS, int delayBeforeStartingMS, eInterpolateType interpolationType)
 {
 	pEnt->RemoveComponentByName("ic_scale");
 
-	EntityComponent * pComp = SetupInterpolateComponent(pEnt, "", "scale2d", CL_Vec2f(scaleEnd, scaleEnd), timeMS, delayBeforeStartingMS);
+	EntityComponent * pComp = SetupInterpolateComponent(pEnt, "", "scale2d", CL_Vec2f(scaleEnd, scaleEnd), timeMS, delayBeforeStartingMS, interpolationType);
 	pComp->SetName("ic_scale");
 
 	if (scaleStart != -1)

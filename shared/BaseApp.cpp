@@ -225,6 +225,7 @@ void BaseApp::OnMessage(Message &m)
 		case MESSAGE_CLASS_GUI:
 			switch (m.GetType())
 			{
+			
 			case MESSAGE_TYPE_GUI_CLICK_START:
 			case MESSAGE_TYPE_GUI_CLICK_END:
 				{
@@ -352,7 +353,6 @@ void BaseApp::OnMessage(Message &m)
 			case MESSAGE_TYPE_GUI_TOGGLE_FULLSCREEN:
 				{
 					OnFullscreenToggleRequest();
-					break;
 				}
 				break;
 
@@ -361,7 +361,19 @@ void BaseApp::OnMessage(Message &m)
 					m_version = m.GetStringParm();
 					break;
 				}
+		
+			case MESSAGE_TYPE_GUI_MOUSEWHEEL:
+				{
+					v.Get(0).Set((float)m.GetType());
+					v.Get(1).Set(float(m.GetParm1()), float(m.GetParm2()) );
+					v.Get(2).Set(uint32(m.GetParm3()));
+					v.Get(3).Set(m.GetParm4());
+
+					m_sig_input(&v);
+					break;
+				}
 			}
+		
 	break;
 		
 	case MESSAGE_CLASS_GAME:
