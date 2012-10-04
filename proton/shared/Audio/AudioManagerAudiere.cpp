@@ -124,6 +124,7 @@ SoundObject * AudioManagerAudiere::GetSoundObjectByPointer(void *p)
 
 void AudioManagerAudiere::Preload( string fName, bool bLooping /*= false*/, bool bIsMusic /*= false*/, bool bAddBasePath /*= true*/, bool bForceStreaming )
 {
+	if (!m_pDevice) return;
 
 	if (bIsMusic && !GetMusicEnabled()) return; //ignoring because music is off right now
 
@@ -175,6 +176,7 @@ void AudioManagerAudiere::Preload( string fName, bool bLooping /*= false*/, bool
 
 AudioHandle AudioManagerAudiere::Play( string fName, bool bLooping /*= false*/, bool bIsMusic, bool bAddBasePath, bool bForceStreaming)
 {
+	if (!m_pDevice) return AUDIO_HANDLE_BLANK;
 
 	if( !GetMusicEnabled() && bIsMusic )
 	{

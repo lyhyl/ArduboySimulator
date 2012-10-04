@@ -185,6 +185,8 @@ enum eMessageType
 	MESSAGE_TYPE_CALL_STATIC_FUNCTION, //used by the message manager to call a static function with a VariantList*
 
 	MESSAGE_TYPE_APP_VERSION, // version being passed through to game.
+	
+	MESSAGE_TYPE_GUI_MOUSEWHEEL, //mouse wheel delta movement, desktops only.  Only works on Win right now
 
     MESSAGE_USER = 1000, //users can add their own messages starting here
 

@@ -102,10 +102,8 @@ public:
 	{
 		m_inputkeycode = 0;
 		m_outputkeycode = 0;
-		m_requireShift = false;
-		m_requireAlt = false;
-		m_requireCtrl = false;
 		m_bOutputAsNormalKeyToo = false;
+		m_keyModifiersRequired = 0;
 	}
 
 	string m_name;
@@ -114,11 +112,8 @@ public:
 
 	bool m_bOutputAsNormalKeyToo; //if true, will through the normal sig_raw_keyboard in addition to m_sig_arcade_input, this
 	//can be useful to say, let a gamepad mapping also trigger normal keys, which buttons may be hooked to
-
-	//unused right now
-	bool m_requireShift;
-	bool m_requireAlt;
-	bool m_requireCtrl;
+	
+	uint32 m_keyModifiersRequired; //VIRTUAL_KEY_MODIFIER_CONTROL, VIRTUAL_KEY_MODIFIER_SHIFT and VIRTUAL_KEY_MODIFIER_ALT bits
 
 };
 
@@ -176,6 +171,6 @@ CL_Vec2f *m_pPos2d;
 	boost::signal<void (VariantList*)> *m_customSignal; //if not null, messages will be sent here
 };
 
-void AddKeyBinding(EntityComponent *pComp, string name, uint32 inputcode, uint32 outputcode, bool bAlsoSendAsNormalRawKey = false);
+void AddKeyBinding(EntityComponent *pComp, string name, uint32 inputcode, uint32 outputcode, bool bAlsoSendAsNormalRawKey = false, uint32 modifiersRequired = 0);
 string ProtonVirtualKeyToString(eVirtualKeys vKey); //stupid helper function that should probably be somewhere else
 #endif // ArcadeInputComponent_h__
