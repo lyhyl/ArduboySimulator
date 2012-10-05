@@ -40,10 +40,14 @@ public:
 		STYLE_NONE,
 	};
 
+	void OnInput( VariantList *pVList );
+
+	void ModLastPos( CL_Vec2d vPos );
+	void SetLastPos(CL_Vec2d vLastPos); //for a hack I had to do on a project..
+
 private:
 
 	void SetPosition(CL_Vec2f vInputPos);
-	void OnInput( VariantList *pVList );
 	uint32 *m_pDisabled;
 	uint32 * m_pVisualStyle;
 	CL_Vec2f *m_pPos2d;

@@ -5,7 +5,7 @@
 
 #include "PlatformSetup.h"
 
-unsigned int HashString(const char *str);
+unsigned int HashString(const char *str, int len=0); //if 0, stops on null, like for a string
 bool IsEven(int number);
 void ToLowerCase(char *pCharArray);
 void ToUpperCase(char *pCharArray);

@@ -87,6 +87,7 @@ int MySQLManager::AddSelectResults(vector<VariantDB> &vdb)
 	
 	vector<string> fieldNames;
 	vector<enum_field_types> fieldType;
+	vector<int> maxLength;
 
 	int curRow = (int)vdb.size();
 	vdb.resize(curRow+rows);
@@ -104,6 +105,7 @@ int MySQLManager::AddSelectResults(vector<VariantDB> &vdb)
 				{
 					fieldNames.push_back(field->name);
 					fieldType.push_back(field->type);
+					maxLength.push_back(field->max_length);
 				}
 			}
 		
@@ -165,8 +167,52 @@ int MySQLManager::AddSelectResults(vector<VariantDB> &vdb)
 				}
 				break;
 
-			default: //assume string
+			case FIELD_TYPE_TIMESTAMP:
+			{
+					tm	tm;
+					memset( &tm, 0, sizeof( tm ));
+					int nCnt = sscanf( row[i],"%4u%2u%2u%2u%2u%2u",
+						&tm.tm_year, &tm.tm_mon, &tm.tm_mday,
+						&tm.tm_hour, &tm.tm_min, &tm.tm_sec );
+
+					if( nCnt == 6 ) 
+					{
+						tm.tm_year = tm.tm_year - 1900;
+						tm.tm_mon--;
+					} else
+					{
+						LogMsg("Error converting mysql timestamp");
+					}
+
+					assert( sizeof(time_t) == 4 && "Uh oh.. define _USE_32BIT_TIME_T somewhere for MSVC");
+
+
+					uint32 t = (uint32) mktime(&tm);
+					db.GetVar(fieldNames[i])->Set(t);
+				}
+				break;
+
+			case FIELD_TYPE_VAR_STRING:
+				{
+
+					//first we'll get the size of the data in here
+					string &s = db.GetVar(fieldNames[i])->GetString();
+				
+					if (maxLength[i] > 0)
+					{
+						//now put it into the string, keeping things like nulls and such.  (up to you to pull it out right though)
+						s.resize(maxLength[i]);
+						memcpy((void*)s.c_str(), &row[i][0], maxLength[i]);
+					}
+				}
+				break;
+
+			case FIELD_TYPE_STRING:
 				db.GetVar(fieldNames[i])->Set(string(row[i]));
+			break;
+			default:;
+				assert(!"Unknown mysql type");
+				
 			}
 
 		}

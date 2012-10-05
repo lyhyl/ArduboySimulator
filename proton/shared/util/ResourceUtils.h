@@ -54,9 +54,9 @@ bool StringFromStartMatches(const std::string &line, const std::string textToMat
 bool StringFromEndMatches(const std::string &line, const std::string textToMatch);
 
 template <class myType>
-void MemorySerialize( myType &num, uint8 *pMem, int &offsetInOut, bool bSave)
+void MemorySerialize( myType &num, uint8 *pMem, int &offsetInOut, bool bWriteToMem)
 {
-	if (bSave)
+	if (bWriteToMem)
 	{
 		memcpy(&pMem[offsetInOut], &num, sizeof(myType));
 	} else
