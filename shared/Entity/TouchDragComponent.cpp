@@ -47,10 +47,12 @@ void TouchDragComponent::OnRemove()
 	EntityComponent::OnRemove();
 }
 
+
 void TouchDragComponent::SetPosition(CL_Vec2f vInputPos)
 {
 	//if (vPos == m_lastPos) return;
 	
+	//LogMsg("Setting position of %s", PrintVector2(vInputPos).c_str());
 	CL_Vec2f vPos = vInputPos-m_lastPos;
 
 	m_lastPos = vInputPos;
@@ -85,7 +87,7 @@ void TouchDragComponent::OnInput( VariantList *pVList )
 		fingerID = pVList->Get(2).GetUINT32();
 	}
 
-	//LogMsg("Detected finger %d", fingerID);
+	//LogMsg("Detected finger %d at %s", fingerID, PrintVector2(pt).c_str());
 	switch (eMessageType( int(pVList->Get(0).GetFloat())))
 	{
 	case MESSAGE_TYPE_GUI_CLICK_START:
@@ -137,4 +139,13 @@ void TouchDragComponent::OnInput( VariantList *pVList )
         default: ;
 	}	
 
+}
+
+void TouchDragComponent::SetLastPos( CL_Vec2d vLastPos )
+{
+	m_lastPos = vLastPos;
+}
+void TouchDragComponent::ModLastPos( CL_Vec2d vPos )
+{
+	m_lastPos += vPos;
 }

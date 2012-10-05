@@ -7,15 +7,24 @@
 // longword at a time would be faster (need alpha-style "is any byte 0"),
 // or just use the first longword
 
-unsigned int HashString(const char *str)
+unsigned int HashString(const char *str, int len)
 {
-
 	if (!str) return 0;
 
 	unsigned char *n = (unsigned char *) str;
 	unsigned int acc = 0x55555555;
-	while (*n)
-		acc = (acc >> 27) + (acc << 5) + *n++;
+
+	if (len == 0)
+	{
+		while (*n)
+			acc = (acc >> 27) + (acc << 5) + *n++;
+	} else
+	{
+		for (int i=0; i < len; i++)
+		{
+			acc = (acc >> 27) + (acc << 5) + *n++;
+		}
+	}
 	return acc;
 }
 

@@ -585,12 +585,12 @@ bool StringFromEndMatches(const std::string &line, const std::string textToMatch
 }
 
 
-void MemorySerialize( std::string &num, uint8 *pMem, int &offsetInOut, bool bSave)
+void MemorySerialize( std::string &num, uint8 *pMem, int &offsetInOut, bool bWriteToMem)
 {
 	uint16 len;
 	assert(num.length() < 1024*64);
 
-	if (bSave)
+	if (bWriteToMem)
 	{
 		len = (uint16) num.length();
 
