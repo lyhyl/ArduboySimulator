@@ -168,7 +168,6 @@ void Entity::OnDelete(VariantList *pVList)
 
 void Entity::CallFunctionRecursively(string funcName, VariantList *pVList)
 {
-
 	//call ours which may modify it
 	GetShared()->CallFunctionIfExists(funcName, pVList);
 
@@ -181,10 +180,32 @@ void Entity::CallFunctionRecursively(string funcName, VariantList *pVList)
 		(*itor)->CallFunctionRecursively(funcName, pVList);
 		itor++;
 	}
-
 }
 
-void Entity::CallFunctionRecursivelyWithUpdatedVar( const string funcName, VariantList *pVList, const string &varName, int varIndex, eRecursiveVarOp op )
+
+//like below, but calls everything in reverse order
+void Entity::CallFunctionRecursivelyWithUpdatedVarBackwards( const string funcName, VariantList *pVList, const string &varName, int varIndex, eRecursiveVarOp op )
+{
+	vector<EntityCall> entList;
+
+	//scan everybody we would hit, without actually calling anything
+	CallFunctionRecursivelyWithUpdatedVar(funcName, pVList, varName, varIndex, op, &entList);
+	//LogMsg("Got %d items", entList.size());
+
+	CL_Vec2f vOriginal = pVList->m_variant[varIndex].GetVector2();
+
+	//now do the actual calls, in reverse order
+
+	for (int i=entList.size()-1; i >= 0; i--)
+	{
+		pVList->m_variant[varIndex].Set(entList[i].vUpdatedVar);
+		entList[i].pEnt->GetShared()->CallFunctionIfExists(funcName, pVList);
+	}
+
+	pVList->m_variant[varIndex].Set(vOriginal);
+}
+
+void Entity::CallFunctionRecursivelyWithUpdatedVar( const string funcName, VariantList *pVList, const string &varName, int varIndex, eRecursiveVarOp op, vector<EntityCall> *pEntList )
 {
 
 	//OPTIMIZE  Add a AddFilter/RemoveFilter() thing so we don't have to do this check on most entities?
@@ -251,7 +272,20 @@ void Entity::CallFunctionRecursivelyWithUpdatedVar( const string funcName, Varia
 			break;
 	}
 
-	GetShared()->CallFunctionIfExists(funcName, pVList);
+	if (pEntList)
+	{
+		//nope, just send back who we WOULD have called
+		//LogMsg("Adding %s", GetName().c_str());
+		pEntList->push_back(EntityCall());
+		EntityCall *pEntCallItem = &pEntList->back();
+		pEntCallItem->pEnt = this;
+		pEntCallItem->vUpdatedVar = pVList->m_variant[varIndex].GetVector2();
+
+	} else
+	{
+		//do the real call
+		GetShared()->CallFunctionIfExists(funcName, pVList);
+	}
 
 	if (pVar)
 	{
@@ -291,7 +325,7 @@ void Entity::CallFunctionRecursivelyWithUpdatedVar( const string funcName, Varia
 
 		while (itor != childrenTemp.end())
 		{
-			(*itor)->CallFunctionRecursivelyWithUpdatedVar(funcName, pVList, varName, varIndex, op);
+			(*itor)->CallFunctionRecursivelyWithUpdatedVar(funcName, pVList, varName, varIndex, op, pEntList);
 			itor++;
 		}
 		//put it back to how it was

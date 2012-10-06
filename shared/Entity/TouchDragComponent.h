@@ -57,6 +57,8 @@ private:
 	CL_Vec2f m_lastPos;
 	int m_activeFingerID;
 	FunctionObject *m_pOnTouchDragUpdate;
+	CL_Rectf *m_pTouchPadding;
+
 };
 
 #endif // TouchDragComponent_h__

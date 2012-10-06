@@ -35,6 +35,8 @@ void TouchDragComponent::OnAdd(Entity *pEnt)
 	m_pReverseX = &GetVar("reverseX")->GetUINT32();
 	m_pReverseY = &GetVar("reverseY")->GetUINT32();
 
+	m_pTouchPadding = &GetParent()->GetVarWithDefault(string("touchPadding"), Variant(CL_Rectf()))->GetRect();
+
 	//this will only be set if TouchDragComponent is initted before the TouchHandler...
 	//GetParent()->GetVarWithDefault(string("touchPadding"), Variant(CL_Rectf(0.0f, 0.0f, 0.0f, 0.0f)))->GetRect();
 
@@ -95,6 +97,8 @@ void TouchDragComponent::OnInput( VariantList *pVList )
 		{
 			CL_Rectf r(*m_pPos2d, CL_Sizef(m_pSize2d->x, m_pSize2d->y));
 
+			ApplyPadding(&r, *m_pTouchPadding);
+		
 			if (r.contains(pt))
 			{
 						

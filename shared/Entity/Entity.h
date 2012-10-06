@@ -17,6 +17,15 @@ class Entity;
 typedef list<Entity*> EntityList;
 typedef list<Entity*>::iterator EntityListItor;
 
+
+class EntityCall
+{
+public:
+	Entity *pEnt;
+	CL_Vec2f vUpdatedVar;
+
+};
+
 class Entity: public boost::signals::trackable
 {
 public:
@@ -55,7 +64,7 @@ public:
 	/**
 	 * Searches for an \c Entity with the given \a name.
 	 * If the name of this \c Entity is \a name then returns the object itself. Otherwise the
-	 * search decends recursively to the children \c Entities. If no \c Entity with the given
+	 * search descends recursively to the children \c Entities. If no \c Entity with the given
 	 * \a name is found then \c NULL is returned.
 	 */
 	Entity * GetEntityByName(const string &name);
@@ -113,7 +122,11 @@ public:
 	
 	//same as above but also add a number var before calling children, and remove it when done, this allows things like a Render() to
 	//send local coordinates of the parent to take into account
-	void CallFunctionRecursivelyWithUpdatedVar(const string funcName, VariantList *pVList, const string &varName, int varIndex, eRecursiveVarOp op); 
+	void CallFunctionRecursivelyWithUpdatedVar(const string funcName, VariantList *pVList, const string &varName, int varIndex, eRecursiveVarOp op, vector<EntityCall> *pEntList = NULL); 
+
+	//same as above but magically hits everything in reverse order, good for handling input touches, which happens in the
+	//reverse order that you draw things in
+	void CallFunctionRecursivelyWithUpdatedVarBackwards( const string funcName, VariantList *pVList, const string &varName, int varIndex, eRecursiveVarOp op );
 
 	boost::signal<void (Entity*)> sig_onRemoved;
 
