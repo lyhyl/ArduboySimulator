@@ -1283,6 +1283,7 @@ void PreloadKeyboard(OSMessage::eParmKeyboardType keyboardType)
 
 void SendFakeInputMessageToEntity(Entity *pEnt, eMessageType msg, CL_Vec2f vClickPos, int delayBeforeStartingMS)
 {
+	
 	VariantList v;
 	v.Get(0).Set((float)msg);
 	v.Get(1).Set(vClickPos);

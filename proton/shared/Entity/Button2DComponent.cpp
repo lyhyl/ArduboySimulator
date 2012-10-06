@@ -178,6 +178,7 @@ void Button2DComponent::OnTouchStart(VariantList *pVList)
 
 void Button2DComponent::PerformClick(VariantList *pVList)
 {
+
 	assert(pVList && "Need to send in coords so it knows where they clicked on the image");
 
 	//why are we setting the parent here?  Well, I must have had a good reason.. someone must want this as output.

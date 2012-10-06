@@ -32,7 +32,7 @@
 
 bool g_winAllowFullscreenToggle = true;
 bool g_winAllowWindowResize = true;
-
+bool g_bMouseIsInsideArea = true;
 vector<VideoModeEntry> g_videoModes;
 void AddVideoMode(string name, int x, int y, ePlatformID platformID, eOrientationMode forceOrientation = ORIENTATION_DONT_CARE);
 void SetVideoModeByName(string name);
@@ -697,6 +697,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_LBUTTONUP:
 		{
 			if (!g_bHasFocus) break;
+			
 			int xPos = GET_X_LPARAM(lParam);
 			int yPos = GET_Y_LPARAM(lParam);
 			ConvertCoordinatesIfRequired(xPos, yPos);
@@ -756,12 +757,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 		break;
 
+	case WM_MOUSELEAVE:
+		LogMsg("Mouse leaving window");
+		break;
+
 	case WM_CANCELMODE:
 
 		LogMsg("Got WM cancel mode");
 		break;
 	
 	default:
+
+	
 		break;
 	}
 
@@ -1111,6 +1118,52 @@ void ForceVideoUpdate()
 #endif
 }
 
+void CheckIfMouseLeftWindowArea()
+{
+	POINT pt;
+	if (GetCursorPos(&pt))
+	{
+		RECT r;
+
+		GetClientRect(g_hWnd, (LPRECT)&r);
+		ClientToScreen(g_hWnd, (LPPOINT)&r.left);
+		ClientToScreen(g_hWnd, (LPPOINT)&r.right);
+		
+			//LogMsg("Got %d, %d, rect is %d, %d, %d, %d", pt.x, pt.y, r.left, r.top, r.right, r.bottom);
+			bool bInsideRect = false;
+			if (pt.x >= r.left && pt.x <= r.right
+				&& pt.y >= r.top && pt.y <= r.bottom)
+			{
+				bInsideRect = true;
+			}
+
+			if (bInsideRect)
+			{
+				//we're currently inside with our mouse
+				if (!g_bMouseIsInsideArea)
+				{
+					//we entered the area
+					//LogMsg("We entered the window area with  mouse");
+					g_bMouseIsInsideArea = true;
+				}  else
+				{
+					//still in, no change
+				}
+			} else
+			{
+				if (g_bMouseIsInsideArea)
+				{
+					//LogMsg("We left the window area with  mouse");
+					g_bMouseIsInsideArea = false;
+					GetBaseApp()->ResetTouches();
+				} else
+				{
+					//still out, no change
+				}
+			}
+		}
+}
+
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLine, int nCmdShow)
 {
 	
@@ -1219,6 +1272,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 
 		if (g_bHasFocus)
 		{
+
+			CheckIfMouseLeftWindowArea();
 			GetBaseApp()->Update();
 			if (!g_bIsMinimized)
 				GetBaseApp()->Draw();
