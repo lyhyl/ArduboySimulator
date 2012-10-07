@@ -197,7 +197,8 @@ int MySQLManager::AddSelectResults(vector<VariantDB> &vdb)
 
 					//first we'll get the size of the data in here
 					string &s = db.GetVar(fieldNames[i])->GetString();
-				
+					db.GetVar(fieldNames[i])->Set(string()); //we need to register it as a string, the mega hack we do in a
+					//second won't do it..
 					if (maxLength[i] > 0)
 					{
 						//now put it into the string, keeping things like nulls and such.  (up to you to pull it out right though)

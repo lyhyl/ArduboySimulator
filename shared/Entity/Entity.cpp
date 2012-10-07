@@ -99,6 +99,7 @@ EntityComponent * Entity::AddComponent(EntityComponent *pComp)
 
 Entity * Entity::GetEntityByName(const string &name)
 {
+	if (m_bTaggedForDeletion) return NULL;
 	if (name == m_name) return this;
 
 	EntityListItor itor = m_children.begin();
@@ -362,7 +363,10 @@ EntityComponent * Entity::GetComponentByName( string const &name, bool bAlsoChec
 	ComponentListItor itor = m_components.begin();
 	for (;itor != m_components.end(); itor++)
 	{
-		if (name == (*itor)->GetName()) return *itor;
+		if (name == (*itor)->GetName()) 
+		{
+			return *itor;
+		}
 	}
 	if (!bAlsoCheckParents || !GetParent()) return NULL;
 
