@@ -7,6 +7,9 @@ ScrollComponent::ScrollComponent()
 	SetName("Scroll");
 	m_activeFinger = -1;
 	m_bIsScrolling = false;
+	m_vTotalDisplacementOnCurrentSwipe = CL_Vec2f(0,0);
+	m_lastTouchPos = CL_Vec2f(-100,-100);
+	m_vecDisplacement = CL_Vec2f(0,0);
 }
 
 ScrollComponent::~ScrollComponent()
