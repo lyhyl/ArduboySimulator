@@ -122,6 +122,10 @@ int MySQLManager::AddSelectResults(vector<VariantDB> &vdb)
 				db.GetVar(fieldNames[i])->Set((int32)atoi(row[i]));
 				break;
 
+			case FIELD_TYPE_LONGLONG:
+				db.GetVar(fieldNames[i])->Set((int32)atoi(row[i]));
+				break;
+
 			case FIELD_TYPE_DATETIME:
 				{
 						uint	y, m, d, h, mn, s;
@@ -213,7 +217,8 @@ int MySQLManager::AddSelectResults(vector<VariantDB> &vdb)
 			break;
 			default:;
 				assert(!"Unknown mysql type");
-				
+				db.GetVar(fieldNames[i])->Set(string(row[i]));
+
 			}
 
 		}
