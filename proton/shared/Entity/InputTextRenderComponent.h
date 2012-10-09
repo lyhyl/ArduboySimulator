@@ -41,6 +41,8 @@ if (pEnt)
 	pEnt->GetComponentByName("InputTextRender")->GetFunction("CloseKeyboard")->sig_function(NULL);
 }
 
+Calling function "ActivateKeyboard" can be used to give it focus and bring up the touch keyboard (if applicable)
+
 */
 
 class InputTextRenderComponent: public EntityComponent

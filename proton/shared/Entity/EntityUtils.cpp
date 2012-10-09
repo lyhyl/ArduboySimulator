@@ -1998,3 +1998,31 @@ void ShowTextMessage(string msg, int timeMS, int delayBeforeStartingMS)
 	VariantList vList(msg, (uint32)timeMS);
 	GetMessageManager()->CallStaticFunction(OnShowTextMessage, delayBeforeStartingMS, &vList, TIMER_SYSTEM);
 }
+
+
+void SetupEntityToEatInput(Entity *pEnt)
+{
+	if (!pEnt->GetComponentByName("TouchHandler"))
+	{
+		pEnt->AddComponent(new TouchHandlerComponent);
+	}
+
+	assert(pEnt->GetComponentByName("Button2D") == 0 && "This won't work, it's already a button!");
+	
+	pEnt->AddComponent(new Button2DComponent);
+
+	SetButtonStyleEntity(pEnt, Button2DComponent::BUTTON_STYLE_CLICK_ON_TOUCH);
+	SetButtonClickSound(pEnt, ""); //don't make a sound!
+	SetButtonVisualStyleEntity(pEnt, Button2DComponent::STYLE_NONE);
+}
+
+void ActivateTextInputEntity(Entity *pEnt)
+{
+	if (!pEnt) return;
+
+	EntityComponent *pInputComp = pEnt->GetComponentByName("InputTextRender");
+	if (pEnt)
+	{
+		pInputComp->GetFunction("ActivateKeyboard")->sig_function(NULL);
+	}
+}
