@@ -296,6 +296,7 @@ CL_Rectf MeasureEntityAndChildren(Entity *pEnt, CL_Vec2f *pVStartingPos = NULL, 
 //simple helpers to set parameters
 void SetupTextEntity(Entity *pEnt, eFont fontID, float scale=0); //0 means no change
 void SetAlignmentEntity(Entity *pEnt, eAlignment align);
+eAlignment GetAlignmentEntity(Entity *pEnt);
 void SetTouchPaddingEntity(Entity *pEnt, CL_Rectf padding);
 EntityComponent * SetButtonVisualStyleEntity(Entity *pEnt, Button2DComponent::eVisualStyle style);
 EntityComponent * SetButtonStyleEntity(Entity *pEnt, Button2DComponent::eButtonStyle style);
