@@ -69,6 +69,6 @@ void MemorySerialize( myType &num, uint8 *pMem, int &offsetInOut, bool bWriteToM
 }
 
 //specialized version, not done as a template for compatibility with older compilers
-void MemorySerialize( std::string &num, uint8 *pMem, int &offsetInOut, bool bSave);
+void MemorySerialize( std::string &num, uint8 *pMem, int &offsetInOut, bool bWriteToMem);
 
 #endif // ResourceUtils_h__
