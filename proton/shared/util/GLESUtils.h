@@ -6,6 +6,8 @@
 
 class SurfaceAnim;
 
+const float C_MINIMUM_BMP_RECT_SIZE = 21.0f;
+
 void GenerateSetPerspectiveFOV(float fovy, float aspect, float zNear, float zFar);
 void DrawFilledSquare(float x, float y, float size=10, uint32 color = MAKE_RGBA(255,255,255,255), bool bCentered = false); //it just calls GenerateFillRect
 void DrawFilledRect(float x, float y, float sizeX, float sizeY, uint32 color  = MAKE_RGBA(255,255,255,255));
