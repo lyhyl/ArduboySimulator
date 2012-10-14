@@ -162,6 +162,11 @@ float RandomRangeFloat(float rangeMin, float rangeMax)
 	return rangeMin + r;
 }
 	
+//randomize a number slightly, by allowing up to modAmount to be removed or added
+int GiveOrTake(int baseNum, int modAmount)
+{
+	return baseNum + (-modAmount +Random(modAmount*2));
+}
 
 float LerpFloat(float f_origin, float f_target, float f_percent)
 {
