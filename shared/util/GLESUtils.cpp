@@ -223,12 +223,12 @@ void DrawRect(const CL_Rectf &r, uint32 color, float lineWidth)
 	DrawRect(r.left, r.top, r.get_width(), r.get_height(), color, lineWidth);
 }
 
-void DrawFilledBitmapRect(rtRect &r, uint32 middleColor,  uint32 borderColor, SurfaceAnim *pSurf )
+void DrawFilledBitmapRect(rtRect &r, uint32 middleColor,  uint32 borderColor, SurfaceAnim *pSurf, bool bFillMiddleCloserToEdges)
 {
-	DrawFilledBitmapRect( CL_Rectf((float)r.left,(float) r.top,(float) r.right, (float)r.bottom), middleColor, borderColor, pSurf);
+	DrawFilledBitmapRect( CL_Rectf((float)r.left,(float) r.top,(float) r.right, (float)r.bottom), middleColor, borderColor, pSurf, bFillMiddleCloserToEdges);
 }
 
-void DrawFilledBitmapRect(const CL_Rectf &r, uint32 middleColor, uint32 borderColor, SurfaceAnim *pSurf )
+void DrawFilledBitmapRect(const CL_Rectf &r, uint32 middleColor, uint32 borderColor, SurfaceAnim *pSurf, bool bFillMiddleCloserToEdges )
 {
 	assert(r.get_width()>=C_MINIMUM_BMP_RECT_SIZE && "GUIBox rect too small to work!");
 	assert(r.get_height()>=C_MINIMUM_BMP_RECT_SIZE && "GUIBox rect too small to work!");
@@ -252,7 +252,13 @@ void DrawFilledBitmapRect(const CL_Rectf &r, uint32 middleColor, uint32 borderCo
 	pSurf->BlitScaledAnim(r.right-10,r.top+10,2,1,scale,ALIGNMENT_UPPER_LEFT, borderColor);
 
 	// fill middle
-	DrawFilledRect(r.left+10,r.top+10,r.get_width()-20,r.get_height()-20,middleColor);
+	if (bFillMiddleCloserToEdges)
+	{
+		DrawFilledRect(r.left+7,r.top+8,r.get_width()-15,r.get_height()-16,middleColor);
+	} else
+	{
+		DrawFilledRect(r.left+10,r.top+10,r.get_width()-20,r.get_height()-20,middleColor);
+	}
 }
 
 void DrawRect(const rtRect &r, uint32 color, float lineWidth)
