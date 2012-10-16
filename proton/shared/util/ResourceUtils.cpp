@@ -615,3 +615,18 @@ void MemorySerialize( std::string &num, uint8 *pMem, int &offsetInOut, bool bWri
 
 }
 
+
+void MemorySerializeRaw(uint8* pVar, uint8 *pMem, int sizeBytes, int &offsetInOut, bool bWriteToMem )
+{
+	if (sizeBytes == 0) return;
+
+	if (bWriteToMem)
+	{
+		memcpy(pMem, pVar, sizeBytes);
+	} else
+	{
+		memcpy(pVar, pMem, sizeBytes);
+	}
+
+	offsetInOut += sizeBytes;
+}

@@ -1883,7 +1883,7 @@ Entity * CreateCheckbox(Entity *pBG, string name, string text, float x, float y,
 
 	//add the text off to the right
 	CL_Vec2f vImageSize = pEnt->GetVar("size2d")->GetVector2();
-	Entity *pTextEnt = CreateTextLabelEntity(pEnt, name+"_text", vImageSize.x+iPhoneMapX(8), iPhoneMapY(3), text);
+	Entity *pTextEnt = CreateTextLabelEntity(pEnt, "_text"+name, vImageSize.x+iPhoneMapX(8), iPhoneMapY(3), text);
 	pTextEnt->GetVar("scale2d")->Set(CL_Vec2f(fontScale, fontScale));
 
 	pEnt->GetVar("scale2d")->Set(pEnt->GetVar("scale2d")->GetVector2()*fontScale);
