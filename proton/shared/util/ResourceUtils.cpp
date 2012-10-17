@@ -622,10 +622,10 @@ void MemorySerializeRaw(uint8* pVar, uint8 *pMem, int sizeBytes, int &offsetInOu
 
 	if (bWriteToMem)
 	{
-		memcpy(pMem, pVar, sizeBytes);
+		memcpy(&pMem[offsetInOut], pVar, sizeBytes);
 	} else
 	{
-		memcpy(pVar, pMem, sizeBytes);
+		memcpy(pVar, &pMem[offsetInOut], sizeBytes);
 	}
 
 	offsetInOut += sizeBytes;
