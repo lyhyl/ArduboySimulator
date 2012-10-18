@@ -92,7 +92,7 @@ void RectRenderComponent::OnRender(VariantList *pVList)
 			
 			int borderColor = MAKE_RGBA( GET_RED(*m_pBorderColor), GET_GREEN(*m_pBorderColor), GET_BLUE(*m_pBorderColor),
 				255**m_pAlpha);
-			DrawFilledBitmapRect(r, color, borderColor,  m_pSurf);
+			DrawFilledBitmapRect(r, color, borderColor,  m_pSurf, true);
 		} else
 		{
 			CL_Rectf r = CL_Rectf(vFinalPos.x, vFinalPos.y, vFinalPos.x+ m_pSize2d->x, vFinalPos.y+m_pSize2d->y); 
