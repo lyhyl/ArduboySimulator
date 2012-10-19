@@ -266,6 +266,9 @@ void RTFont::MeasureText( rtRectf *pRectOut, const char *pText, int len, float s
 
 void RTFont::DrawScaled( float x, float y, const string &text, float scale /*= 1.0f*/, unsigned int color/*=MAKE_RGBA(255,255,255,255)*/, FontStateStack *pState, RenderBatcher *pBatcher )
 {
+	// TODO remove this, I was just testing and having fun!
+	DrawScaledSolidColor(x+2,y+2,text,1.0f,MAKE_RGBA(0,0,0,128));
+
 	if (!pBatcher) pBatcher = &g_globalBatcher;
 	SetupOrtho();
 	//assert(IsLoaded() && "No font loaded");
@@ -405,6 +408,140 @@ void RTFont::DrawScaled( float x, float y, const string &text, float scale /*= 1
 		g_globalBatcher.Flush();
 	}
 
+}
+
+void RTFont::DrawScaledSolidColor( float x, float y, const string &text, float scale /*= 1.0f*/, unsigned int color/*=MAKE_RGBA(255,255,255,255)*/, FontStateStack *pState, RenderBatcher *pBatcher )
+{
+	if (!pBatcher) pBatcher = &g_globalBatcher;
+	SetupOrtho();
+	//assert(IsLoaded() && "No font loaded");
+		
+	if (!m_surf.IsLoaded())
+	{
+		ReloadFontTextureOnly();
+	}
+	
+	rtRectf dst, src;
+	rtfont_charData *pCharData, *pLastCharData;
+	
+	float xStart = x;
+	FontStateStack myState;
+	if (!pState)
+	{
+		pState = &myState;
+	}
+
+	if (m_fontStates.empty())
+	{
+		//abort crash, no font is loaded
+		return;
+	}
+	if (pState->empty())
+	{
+		if (color == MAKE_RGBA(255,255,255,0)) //alpha has been stripped, don't forget
+		{
+			pState->push_front(m_fontStates[0]);
+		} else
+		{
+			pState->push_front(FontState('0', color));
+		}
+	}
+	
+	pLastCharData = NULL;
+	pCharData = NULL;
+
+	for (unsigned int i=0; i < text.length(); i++)
+	{
+		if (IsFontCode(&text.c_str()[i], pState))
+		{
+			if (text[i+1] != 0) i++; //also advance past the color control code
+			continue;
+		}
+
+		if (text[i] == '\n')
+		{
+			y += GetLineHeight(scale);
+			x = xStart;
+			pLastCharData = NULL;
+			continue;
+		}
+		if (!m_hasSpaceChar && text[i] == ' ')
+		{
+			x += scale * m_header.blankCharWidth;
+			pLastCharData = NULL;
+			continue;
+		}
+		
+		if (byte(text[i])-m_header.firstChar < 0)
+		{
+			pLastCharData = NULL;
+			continue;
+		}
+	
+		if (pLastCharData)
+		{
+			x += (GetKerningData(byte(text[i-1]), text[i])*scale);
+		}
+
+		pLastCharData = pCharData;
+		pCharData = &m_chars[byte(text[i])-m_header.firstChar].data;
+
+		dst.left = x;
+		dst.top = y;
+		dst.right = dst.left + pCharData->charSizeX;
+		dst.bottom = dst.top + pCharData->charSizeY;
+
+		if (scale != 1)
+		{
+			//also scale the offset, as this is affected
+			dst.Scale(ALIGNMENT_UPPER_LEFT, CL_Vec2f(scale, scale));
+			
+			dst.top += float(pCharData->charBmpOffsetY+m_yOffset)*scale;
+			dst.bottom += float(pCharData->charBmpOffsetY+m_yOffset)*scale;
+			dst.left += float(pCharData->charBmpOffsetX)*scale;
+			dst.right += float(pCharData->charBmpOffsetX)*scale;
+
+		} else
+		{
+			dst.top += pCharData->charBmpOffsetY+m_yOffset;
+			dst.bottom += pCharData->charBmpOffsetY+m_yOffset;
+			dst.left += float(pCharData->charBmpOffsetX);
+			dst.right += float(pCharData->charBmpOffsetX);
+		}
+
+		src.left = pCharData->bmpPosX;
+		src.top = pCharData->bmpPosY;
+		src.right = src.left + pCharData->charSizeX;
+		src.bottom = src.top + pCharData->charSizeY;
+
+		if (pBatcher)
+		{
+			pBatcher->BlitEx(&m_surf, dst, src, color);
+		} else
+		{
+			g_globalBatcher.BlitEx(&m_surf, dst, src, color);
+		}
+
+		//instead of using the batcher, here is another way, albeit slow
+		//m_surf.BlitEx(dst, src, pState->front().m_color + curAlpha);
+
+	
+		//add some space between the letters, too
+		
+		if (pCharData->xadvance != 0)
+		{
+			x += float(pCharData->xadvance) * scale;
+
+		} else
+		{
+			x += float(pCharData->charSizeX) * scale;
+		}
+	}
+
+	if (!pBatcher)
+	{
+		g_globalBatcher.Flush();
+	}
 }
 
 void RTFont::DrawAligned( float x, float y, const string &text, eAlignment alignment/*= ALIGNMENT_UPPER_LEFT*/, float scale /*= 1.0f*/, unsigned int color/*=MAKE_RGBA(255,255,255,255)*/, FontStateStack *pState /*= NULL*/, RenderBatcher *pBatcher /*= NULL*/ )
