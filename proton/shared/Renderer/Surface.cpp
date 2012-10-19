@@ -568,7 +568,7 @@ void Surface::ApplyBlendingMode(uint32 rgba)
 			const int alpha = GET_ALPHA(rgba);
 			glColor4x( GET_RED(rgba) * alpha, GET_GREEN(rgba) * alpha, GET_BLUE(rgba) * alpha, alpha << 8);
 										   }
-										   break;
+			break;
 
 		case BLENDING_MULTIPLY:
 			glBlendFunc(GL_DST_COLOR, GL_ZERO);

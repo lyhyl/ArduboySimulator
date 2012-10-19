@@ -44,12 +44,23 @@ void RenderBatcher::BlitEx(Surface *pSurf, rtRectf dst, rtRectf src, unsigned in
 	}
 
 	glColorBytes color;
-
+	
 	color.a = GET_ALPHA(rgba);
-	color.r = GET_RED(rgba);
-	color.g = GET_GREEN(rgba);
-	color.b = GET_BLUE(rgba);
+	
+	if (pSurf->GetBlendingMode() == Surface::BLENDING_PREMULTIPLIED_ALPHA)
+	{
+		float alphaPercent = float(color.a) /255.0f;
+		color.r = GET_RED(rgba)*alphaPercent;
+		color.g = GET_GREEN(rgba)*alphaPercent;
+		color.b = GET_BLUE(rgba)*alphaPercent;
+	} else
+	{
+		color.r = GET_RED(rgba);
+		color.g = GET_GREEN(rgba);
+		color.b = GET_BLUE(rgba);
 
+	}
+	
 	if (!pSurf->IsLoaded()) return;
 	m_pSurf = pSurf;
 	m_verts.resize(m_verts.size()+6);
@@ -126,6 +137,7 @@ void RenderBatcher::Flush(eFlushMode mode)
 		glColorPointer(4, GL_UNSIGNED_BYTE,  sizeof(BatchVert), &m_verts[0].color);
 		glEnableClientState(GL_COLOR_ARRAY);
 		glColor4x(1 << 16, 1 << 16, 1 << 16, 1 << 16);
+		//glColor4f(1,1,1,0);
 	}
 
 	if (mode == FLUSH_RENDER || mode == FLUSH_SETUP_RENDER_UNSETUP)
@@ -141,16 +153,21 @@ void RenderBatcher::Flush(eFlushMode mode)
 			event = m_batchEvents.front();
 		//	LogMsg("Rendering event, %d prims", event.m_vertCount);
 
+			uint32 color;
 			m_batchEvents.pop_front();
 			if (event.m_pSurf) 
 			{
 				event.m_pSurf->Bind();
-				event.m_pSurf->ApplyBlendingMode(MAKE_RGBA(255,255,255,255));
+				color = MAKE_RGBA(m_verts[curPrim].color.r, m_verts[curPrim].color.g, m_verts[curPrim].color.b, m_verts[curPrim].color.a);
+				event.m_pSurf->ApplyBlendingMode(color);
+
+				//glBlendFunc( GL_ONE, GL_ONE_MINUS_SRC_ALPHA );
+				//glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 			}
 			::glDrawArrays(GL_TRIANGLES,curPrim,event.m_vertCount);
 			if (event.m_pSurf)
 			{
-				event.m_pSurf->RemoveBlendingMode(MAKE_RGBA(255,255,255,255));
+				event.m_pSurf->RemoveBlendingMode(color);
 			}
 
 			curPrim += event.m_vertCount;
