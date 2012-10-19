@@ -41,7 +41,6 @@ void RenderBatcher::BlitEx(Surface *pSurf, rtRectf dst, rtRectf src, unsigned in
 		event.m_pSurf = pSurf;
 		event.m_vertCount = 6;
 		m_batchEvents.push_back(event);
-
 	}
 
 	glColorBytes color;
@@ -143,8 +142,17 @@ void RenderBatcher::Flush(eFlushMode mode)
 		//	LogMsg("Rendering event, %d prims", event.m_vertCount);
 
 			m_batchEvents.pop_front();
-			if (event.m_pSurf) event.m_pSurf->Bind();
+			if (event.m_pSurf) 
+			{
+				event.m_pSurf->Bind();
+				event.m_pSurf->ApplyBlendingMode(MAKE_RGBA(255,255,255,255));
+			}
 			::glDrawArrays(GL_TRIANGLES,curPrim,event.m_vertCount);
+			if (event.m_pSurf)
+			{
+				event.m_pSurf->RemoveBlendingMode(MAKE_RGBA(255,255,255,255));
+			}
+
 			curPrim += event.m_vertCount;
 			CHECK_GL_ERROR();
 		}

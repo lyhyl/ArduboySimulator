@@ -123,7 +123,7 @@ bool RTFont::Load( string fileName )
 
 	//now load the actual bmp, which this pointer should be sitting at
 	m_surf.SetTextureType(Surface::TYPE_GUI);
-
+	
 	if (!m_surf.LoadFileFromMemory(pSrcBytes))
 	{
 		return false;

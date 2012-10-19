@@ -112,6 +112,8 @@ public:
 
 	void SetupForRender(const float rotationDegrees = 0, const CL_Vec2f &vRotatePt = CL_Vec2f(0,0), const uint32 rgba = MAKE_RGBA(255,255,255,255)); //setup texture states, rotation if needed
 	void EndRender(const float rotationDegrees = 0, const uint32 rgba = MAKE_RGBA(255,255,255,255)); //put stuff back to how it was
+	void ApplyBlendingMode(uint32 rgba); //does the GL blending states on the active texture, used in renderbatcher
+	void RemoveBlendingMode(uint32 rgba); //undoes the above, used in renderbatcher
 
 protected:
 
@@ -125,6 +127,7 @@ protected:
 		TEXTURE_CREATION_MEMORY, //we'll lose it, but not restore it
 		TEXTURE_CREATION_BLANK //we'll reinitialize the texture as blank, up to you to redraw it
 	};
+
 
 private:
 
