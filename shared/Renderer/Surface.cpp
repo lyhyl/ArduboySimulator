@@ -545,19 +545,8 @@ struct Verts
 	float x,y,z;
 };
 
-
-void Surface::SetupForRender(const float rotationDegrees, const CL_Vec2f &vRotatePt, const uint32 rgba)
+void Surface::ApplyBlendingMode(uint32 rgba)
 {
-	SetupOrtho(); //upside down, makes this easier to do
-	g_globalBatcher.Flush();
-	Bind();
-	
-	//LogMsg("Rendering tex %d at %s at %d", m_glTextureID, PrintRect(dst).c_str(), GetTick(TIMER_GAME));
-
-	if (rotationDegrees != 0)
-	{
-		PushRotationMatrix(rotationDegrees, vRotatePt);
-	}
 
 	if (UsesAlpha() || rgba != PURE_WHITE || m_blendingMode != BLENDING_NORMAL)
 	{
@@ -578,8 +567,8 @@ void Surface::SetupForRender(const float rotationDegrees, const CL_Vec2f &vRotat
 			glBlendFunc( GL_ONE, GL_ONE_MINUS_SRC_ALPHA );
 			const int alpha = GET_ALPHA(rgba);
 			glColor4x( GET_RED(rgba) * alpha, GET_GREEN(rgba) * alpha, GET_BLUE(rgba) * alpha, alpha << 8);
-		}
-		break;
+										   }
+										   break;
 
 		case BLENDING_MULTIPLY:
 			glBlendFunc(GL_DST_COLOR, GL_ZERO);
@@ -592,8 +581,22 @@ void Surface::SetupForRender(const float rotationDegrees, const CL_Vec2f &vRotat
 		}
 	}
 }
+void Surface::SetupForRender(const float rotationDegrees, const CL_Vec2f &vRotatePt, const uint32 rgba)
+{
+	SetupOrtho(); //upside down, makes this easier to do
+	g_globalBatcher.Flush();
+	Bind();
+	
+	//LogMsg("Rendering tex %d at %s at %d", m_glTextureID, PrintRect(dst).c_str(), GetTick(TIMER_GAME));
 
-void Surface::EndRender(const float rotationDegrees,  const uint32 rgba)
+	if (rotationDegrees != 0)
+	{
+		PushRotationMatrix(rotationDegrees, vRotatePt);
+	}
+	ApplyBlendingMode(rgba);
+}
+
+void Surface::RemoveBlendingMode(uint32 rgba)
 {
 
 	if (UsesAlpha() || rgba != PURE_WHITE || m_blendingMode != BLENDING_NORMAL)
@@ -607,6 +610,12 @@ void Surface::EndRender(const float rotationDegrees,  const uint32 rgba)
 			glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 		}
 	}
+
+}
+void Surface::EndRender(const float rotationDegrees,  const uint32 rgba)
+{
+
+	RemoveBlendingMode(rgba);
 
 	if (rotationDegrees != 0)
 	{

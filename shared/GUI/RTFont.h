@@ -39,6 +39,7 @@ public:
 	bool IsLoaded() {return m_surf.IsLoaded();}
 
 	unsigned int GetColorFromString(const char *pText);
+	Surface * GetSurface() {return &m_surf;}
 
 protected:
 	
