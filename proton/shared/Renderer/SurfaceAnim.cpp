@@ -20,11 +20,11 @@ void SurfaceAnim::SetupAnim( int framesX, int framesY )
 	m_framesX = framesX;
 	m_framesY = framesY;
 
-	assert(! (GetWidth() % m_framesX) && "image Doesn't evenly divide by frame count");
-	assert(! (GetHeight() % m_framesY) && "image Doesn't evenly divide by frame count");
+	//assert(! (GetWidth() % m_framesX) && "image Doesn't evenly divide by frame count");
+	//assert(! (GetHeight() % m_framesY) && "image Doesn't evenly divide by frame count");
 
-	m_frameWidth = (float)GetWidth()/framesX;
-	m_frameHeight = (float)GetHeight()/framesY;
+	m_frameWidth = (float)(int(GetWidth()/framesX));
+	m_frameHeight = (float)(int(GetHeight()/framesY));
 }
 
 void SurfaceAnim::SetupAnimBySize( int frameWid,int frameHei )
