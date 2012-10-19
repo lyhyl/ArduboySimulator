@@ -58,7 +58,6 @@ void RenderBatcher::BlitEx(Surface *pSurf, rtRectf dst, rtRectf src, unsigned in
 		color.r = GET_RED(rgba);
 		color.g = GET_GREEN(rgba);
 		color.b = GET_BLUE(rgba);
-
 	}
 	
 	if (!pSurf->IsLoaded()) return;

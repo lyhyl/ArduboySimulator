@@ -117,7 +117,7 @@ public:
 
 	//to get each var in our db manually, do this:
 	void ResetNext(); //call before starting a search
-	Variant * GetNext(string &keyOut); //call this in a loop until it returns NULL to signal the finish
+	Variant * GetNext(string &keyOut); //call this in a loop until it returns NULL to signal the finish, callResetNext() before using!
 	int AddVarPointersToVector(vector<pair<const string*, Variant*> > *varListOut, const string keyMustStartWithThisText="");
 
 
