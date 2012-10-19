@@ -31,6 +31,7 @@ public:
 	void MeasureTextAndAddByLinesIntoDeque(const CL_Vec2f &textBounds, const string &text, deque<string> *pLines, float scale, CL_Vec2f &vEnclosingSizeOut);
 	int CountCharsThatFitX(float sizeX, const string &text, float scale = 1.0f);
 	void DrawScaled( float x, float y, const string &text, float scale = 1.0f, unsigned int color=MAKE_RGBA(255,255,255,255),  FontStateStack *pState = NULL, RenderBatcher *pBatcher = NULL);
+	void DrawScaledSolidColor( float x, float y, const string &text, float scale=1.0f, unsigned int color=MAKE_RGBA(255,255,255,255), FontStateStack *pState = NULL, RenderBatcher *pBatcher = NULL);
 	CL_Vec2f DrawWrapped(rtRect &r, const string &txt, bool centerX=false, bool centerY=false, unsigned int color=MAKE_RGBA(255,255,255,255), float scale=1.0f, bool bMeasureOnly = false, uint32 bgColor = MAKE_RGBA(0,0,0,0));
 	void DrawAligned(float x, float y, const string &text, eAlignment alignment = ALIGNMENT_UPPER_LEFT, float scale = 1.0f, unsigned int color=MAKE_RGBA(255,255,255,255), FontStateStack *pState = NULL, RenderBatcher *pBatcher = NULL);
 	void SetSmoothing(bool bSmoothing); //false would disable linear texture filting
