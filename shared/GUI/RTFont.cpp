@@ -267,7 +267,7 @@ void RTFont::MeasureText( rtRectf *pRectOut, const char *pText, int len, float s
 void RTFont::DrawScaled( float x, float y, const string &text, float scale /*= 1.0f*/, unsigned int color/*=MAKE_RGBA(255,255,255,255)*/, FontStateStack *pState, RenderBatcher *pBatcher )
 {
 	// TODO remove this, I was just testing and having fun!
-	DrawScaledSolidColor(x+2,y+2,text,1.0f,MAKE_RGBA(0,0,0,128));
+	//DrawScaledSolidColor(x+2,y+2,text,1.0f,MAKE_RGBA(0,0,0,128));
 
 	if (!pBatcher) pBatcher = &g_globalBatcher;
 	SetupOrtho();
