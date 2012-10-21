@@ -52,6 +52,7 @@ private:
 	float *m_pRotation; //in degrees
 	uint32 *m_pVisible;
 	uint32 *m_pDisabled;
+	uint32 *m_pShadowColor; //if not 0,0,0,0, will render a shadow behind the text
 };
 
 #endif // TextRenderComponent_h__

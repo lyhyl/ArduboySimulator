@@ -376,4 +376,5 @@ void ShowTextMessage(string msg, int timeMS=1500, int delayBeforeStartingMS = 0)
 bool EntityHasInputFocus(Entity *pEnt); //returns true if this entity can currently receive input
 void SetupEntityToEatInput(Entity *pEnt); //assign to a background, and no clicks will live past it
 void ActivateTextInputEntity(Entity *pEnt); //gives focus to an entity that has an InputTextRender component in it
+void SetTextShadowColor(Entity *pEnt, uint32 color);
 #endif // EntityUtils_h__

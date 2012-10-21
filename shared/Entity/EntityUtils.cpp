@@ -1051,6 +1051,34 @@ void SetupTextEntity(Entity *pEnt, eFont fontID, float scale)
 }
 
 
+void SetTextShadowColor(Entity *pEnt, uint32 color)
+{
+	EntityComponent *pComp = pEnt->GetComponentByName("TextRender");
+
+	if (!pComp && ( (pComp = pEnt->GetComponentByName("TextBoxRender"))  != 0))
+	{
+
+	} 
+
+	if (!pComp && ( (pComp = pEnt->GetComponentByName("LogDisplay")) != 0))
+	{
+	
+	} 
+
+	if (!pComp && ( (pComp = pEnt->GetComponentByName("InputTextRender")) != 0))
+	{
+	
+	} 
+
+	if (!pComp)
+	{
+		assert(!"Huh?");
+		return;
+	}
+
+	pComp->GetVar("shadowColor")->Set(uint32(color));
+}
+
 //if you have a giant font that you are afraid is going to be too big on some phone
 //sizes, this is a way to auto-scale it so it works out
 //Example: float fontScale = EnforceMinimumFontLineToScreenRatio(FONT_LARGE, 1.0f, 6.6f);
