@@ -47,6 +47,7 @@ void TextRenderComponent::OnAdd(Entity *pEnt)
 	m_pAlpha = &GetParent()->GetVarWithDefault("alpha", Variant(1.0f))->GetFloat();
 	m_pVisible = &GetParent()->GetVarWithDefault("visible", uint32(1))->GetUINT32();
 	m_pDisabled = &GetVarWithDefault("disabled", uint32(0))->GetUINT32();
+	m_pShadowColor = &GetVarWithDefault("shadowColor", Variant(MAKE_RGBA(0,0,0,0)))->GetUINT32();
 
 	//our own stuff
 
@@ -134,6 +135,11 @@ void TextRenderComponent::OnRender(VariantList *pVList)
 	switch(*m_pStyle)
 	{
 	case STYLE_NORMAL:
+		
+		if (m_pShadowColor != 0)
+		{
+			GetBaseApp()->GetFont(eFont(*m_pFontID))->DrawScaledSolidColor(vFinalPos.x+2, vFinalPos.y+2, *m_pText, m_pScale2d->x, ColorCombine(*m_pShadowColor, MAKE_RGBA(255,255,255,255), alpha));
+		}
 		GetBaseApp()->GetFont(eFont(*m_pFontID))->DrawScaled(vFinalPos.x, vFinalPos.y, *m_pText, m_pScale2d->x, color);
 		break;
 	

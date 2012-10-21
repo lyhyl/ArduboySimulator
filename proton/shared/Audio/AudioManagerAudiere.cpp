@@ -186,7 +186,13 @@ AudioHandle AudioManagerAudiere::Play( string fName, bool bLooping /*= false*/, 
 		return 0;
 	}
 
-	if(bIsMusic){
+	if (bIsMusic && m_bLastMusicLooping == bLooping && m_lastMusicFileName == fName && m_bLastMusicLooping)
+	{
+		return (AudioHandle) 0;
+	}
+	
+	if(bIsMusic)
+	{
 		StopMusic();
 		m_bLastMusicLooping = bLooping;
 		m_lastMusicFileName = fName;
