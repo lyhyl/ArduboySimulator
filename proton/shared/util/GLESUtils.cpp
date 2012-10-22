@@ -230,8 +230,8 @@ void DrawFilledBitmapRect(rtRect &r, uint32 middleColor,  uint32 borderColor, Su
 
 void DrawFilledBitmapRect(const CL_Rectf &r, uint32 middleColor, uint32 borderColor, SurfaceAnim *pSurf, bool bFillMiddleCloserToEdges )
 {
-	assert(r.get_width()>=C_MINIMUM_BMP_RECT_SIZE && "GUIBox rect too small to work!");
-	assert(r.get_height()>=C_MINIMUM_BMP_RECT_SIZE && "GUIBox rect too small to work!");
+	//assert(r.get_width()>=C_MINIMUM_BMP_RECT_SIZE && "GUIBox rect too small to work!");
+	//assert(r.get_height()>=C_MINIMUM_BMP_RECT_SIZE && "GUIBox rect too small to work!");
 	assert(pSurf->GetFramesX() >= 3 && pSurf->GetFramesY() >= 3 && "The surf needs to be setup as a 3x3 (or larger) first");
 	// draw corners
 	pSurf->BlitAnim(r.left,r.top,0,0, borderColor);

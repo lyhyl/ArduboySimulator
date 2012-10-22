@@ -295,6 +295,8 @@ void AudioManagerAudiere::SetMusicEnabled( bool bNew ){
 
 void AudioManagerAudiere::StopMusic()
 {
+	m_lastMusicFileName = "";
+	
 	list<SoundObject*>::iterator itor = m_soundList.begin();
 
 	while (itor != m_soundList.end())
