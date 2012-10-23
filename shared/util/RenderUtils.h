@@ -98,6 +98,9 @@ void SetLockedLandscape(bool bNew);
 bool GetLockedLandscape();
 void  ScreenToWorld(CL_Vec2f pt, CL_Vec3f *pReturnA, float dist);
 
+float GetProtonPixelScaleFactor(); //for iOS's weird scale factor thing, so we can convert the rez to normal pixels right
+void SetProtonPixelScaleFactor(float scale);
+
 //if you send in a NULL projection matrix, then Proton will guess, which is usually right unless you've setup your own somewhere when
 //doing the 3D
 CL_Vec3f GetOGLPos(int x, int y, float z, CL_Vec3f *pNormalOut, CL_Mat4f *pModelMatrix, CL_Mat4f *pModelProjectionMatrix = NULL);

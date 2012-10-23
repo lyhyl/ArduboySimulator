@@ -129,14 +129,15 @@ void RotateGLIfNeeded()
 		float degrees = OrientationToDegrees(GetOrientation());
 		glRotatef(degrees, 0.0f, 0.0f, 1.0f);
 
-		if (g_extraScreenRotation != 0)
-		{
-			glRotatef(-g_extraScreenRotation, 0,0,1);
-		}
+		
 	}
+    
+    if (g_extraScreenRotation != 0)
+    {
+        glRotatef(-g_extraScreenRotation, 0,0,1);
+    }
 
 }
-
 
 void RotateGLIfNeeded(CL_Mat4f &mat)
 {
@@ -145,12 +146,11 @@ void RotateGLIfNeeded(CL_Mat4f &mat)
 	{
 		float degrees = OrientationToDegrees(GetOrientation());
 		mat = mat.rotate(CL_Angle(degrees, cl_degrees), 0,0,1.0f);
-
-		if (g_extraScreenRotation != 0)
-		{
-			mat = mat.rotate(CL_Angle(-g_extraScreenRotation, cl_degrees), 0,0,1.0f);
-		
-		}
+	}
+    
+    if (g_extraScreenRotation != 0)
+    {
+        mat = mat.rotate(CL_Angle(-g_extraScreenRotation, cl_degrees), 0,0,1.0f);
 	}
 
 }

@@ -19,12 +19,24 @@ int g_fakePrimaryScreenSizeY = 0;
 int g_originalScreenSizeX = 0;
 int g_originalScreenSizeY = 0;
 
+float g_protonPixelScaleFactor = 1.0f; //only used by iOS
+
 eOrientationMode g_forcedOrientation = ORIENTATION_DONT_CARE;
 int g_orientation = ORIENTATION_PORTRAIT;
 bool g_lockedLandscape = false;
 
 eOrientationMode GetForcedOrientation() {return g_forcedOrientation;}
 void SetForcedOrientation(eOrientationMode orientation) {g_forcedOrientation = orientation;}
+
+void SetProtonPixelScaleFactor(float scale)
+{
+    g_protonPixelScaleFactor = scale;
+}
+
+float GetProtonPixelScaleFactor()
+{
+    return g_protonPixelScaleFactor;
+}
 
 void InitBaseScreenSizeFromPrimary()
 {
@@ -75,7 +87,8 @@ void RenderSpinningTriangle()
 {
 
 	glPushMatrix();
-	glLoadIdentity();
+	
+    glLoadIdentity();
 	glTranslatef(0,0,-2);
 	glRotatef(float( (GetBaseApp()->GetGameTick()/10) %360) , 0, 1, 0); //rotate it
 	glDisable(GL_CULL_FACE); //so we can see the back of the triangle too
@@ -90,8 +103,8 @@ void RenderTexturedGLTriangle()
 
 
 	glPushMatrix();
-	glLoadIdentity();
-	glTranslatef(0,0,-2);
+	//glLoadIdentity();
+	//glTranslatef(0,0,-2);
 	glRotatef(float( (GetBaseApp()->GetGameTick()/10) %360) , 0, 1, 0); //rotate it
 	glDisable(GL_CULL_FACE); //so we can see the back of the triangle too
 
@@ -397,9 +410,18 @@ void SetLockedLandscape(bool bNew)
 	if (g_lockedLandscape != bNew)
 	{
 		g_lockedLandscape = bNew;
-		if (GetOrientation() == ORIENTATION_PORTRAIT || GetOrientation() == ORIENTATION_PORTRAIT_UPSIDE_DOWN)
+		
+        
+        if (!GetBaseApp()->GetManualRotationMode())
+        {
+            //the system handles rotation, we don't need to get fancy here
+            return;
+        }
+        
+        if (GetOrientation() == ORIENTATION_PORTRAIT || GetOrientation() == ORIENTATION_PORTRAIT_UPSIDE_DOWN)
 		{
 
+            if (GetPrimaryGLX() == 0) return; //not initted yet
 			if (GetForcedOrientation() != ORIENTATION_DONT_CARE)
 			{
 				if (GetForcedOrientation() == ORIENTATION_PORTRAIT || GetForcedOrientation() == ORIENTATION_PORTRAIT_UPSIDE_DOWN )
@@ -535,15 +557,8 @@ void ConvertCoordinatesIfRequired(float &xPos, float &yPos)
 {
 //	LogMsg("Before converting, coords are %d, %d", int(xPos), int(yPos));	
 
-#ifdef __APPLE__
-
-	if (IsIphone4())
-	{
-		//TODO: Change to use actual scaling value returned by device, who knows when Apple will introduce new scaling values
-		xPos *= 2;
-		yPos *= 2;
-	}
-#endif	
+	xPos *= GetProtonPixelScaleFactor();
+	yPos *= GetProtonPixelScaleFactor();
 
 	if (GetBaseApp()->GetManualRotationMode())
 	{
@@ -579,10 +594,13 @@ void ConvertCoordinatesIfRequired(float &xPos, float &yPos)
 		float OriginalX = (float)GetOriginalScreenSizeX();
 		float OriginalY = (float)GetOriginalScreenSizeY();
 		
-		if (InLandscapeGUIMode()) 
-		{
-			swap(OriginalX, OriginalY);
-		}
+		if (GetBaseApp()->GetManualRotationMode())
+        {
+            if (InLandscapeGUIMode())
+            {
+                swap(OriginalX, OriginalY);
+            }
+        }
 		
 		xPos = (float(xPos) * (GetScreenSizeXf()/OriginalX));
 		yPos = (float(yPos) * (GetScreenSizeYf()/OriginalY));
@@ -939,11 +957,12 @@ rtRectf ConvertFakeScreenRectToReal(rtRectf r)
 	float fakeX = (float)GetFakePrimaryScreenSizeX();
 	float fakeY = (float)GetFakePrimaryScreenSizeY();
 
-	if(InLandscapeGUIMode())
+	if(GetBaseApp()->GetManualRotationMode() && InLandscapeGUIMode())
 	{
 		swap(primaryX , primaryY);
 	}
-	float ratiox = (primaryX/fakeX);
+	
+    float ratiox = (primaryX/fakeX);
 	float ratioy = (primaryY/fakeY);
 
 	float widthHold = r.GetWidth();

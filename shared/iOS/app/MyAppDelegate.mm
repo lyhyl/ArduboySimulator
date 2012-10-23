@@ -49,11 +49,18 @@
     CGRect bounds = [[UIScreen mainScreen] bounds];
     CGPoint center = CGPointMake(bounds.size.width/2, bounds.size.height/2);
 
+    self.window.frame = CGRectMake(0, 0, [[UIScreen mainScreen]bounds].size.width, [[UIScreen mainScreen]bounds].size.height);
+    
     //without doing this, an iPhone-only app won't display on an iPad correctly, starting around iOS 4 or 5?
     [viewController.view setFrame:bounds];
     [viewController.view setCenter:center];
     
-	[window addSubview:viewController.view];
+    //old way
+	//[window addSubview:viewController.view];
+    
+    //new way
+    [self.window setRootViewController:viewController];
+    
 	[window makeKeyAndVisible];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];

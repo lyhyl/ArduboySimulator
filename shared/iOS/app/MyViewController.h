@@ -13,7 +13,7 @@
 @interface MyViewController : UIViewController {
 IBOutlet EAGLView *glView;
 IBOutlet UIWindow *window;
-	bool m_bIgnoredFirst4;
+
 }
 
 @property (nonatomic, retain) EAGLView *glView;

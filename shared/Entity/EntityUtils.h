@@ -335,8 +335,9 @@ bool EntityRetinaRemapIfNeeded(Entity *pEnt, bool bAdjustPosition = true, bool b
  * it's tall <b>or it's square</b> \a vDestSize.x is ignored and the resulting
  * height of \a pEnt will be \a vDestSize.y. The width of \a pEnt will be whatever
  * it needs to be to preserve the aspect ratio.
+ * To respect the the opposite axis, bPreserveOtherAxis can be set to true.
  */
-void EntitySetScaleBySize(Entity *pEnt, CL_Vec2f vDestSize, bool bPreserveAspectRatio = false);
+void EntitySetScaleBySize(Entity *pEnt, CL_Vec2f vDestSize, bool bPreserveAspectRatio = false, bool bPreserveOtherAxis = false);
 void EntityScaleiPad(Entity *pEnt, bool bPerserveAspectRatio); //on ipad size does nothing, on anything else it scales to fit the same screen ratio.
 EntityComponent * AddHotKeyToButton(Entity *pEnt, uint32 keycode);
 EntityComponent * MakeButtonEmitVirtualGameKey(Entity *pEnt, uint32 keycode);

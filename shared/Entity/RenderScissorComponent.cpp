@@ -135,12 +135,15 @@ void RenderScissorComponent::FilterOnRender(VariantList *pVList)
 		float primaryX = (float)GetPrimaryGLX();
 		float primaryY = (float)GetPrimaryGLY();
 		
-		if (InLandscapeGUIMode())
-		{
-			swap(primaryX, primaryY);
-		}
+        if (GetBaseApp()->GetManualRotationMode())
+        {
+            if (InLandscapeGUIMode())
+            {
+                swap(primaryX, primaryY);
+            }
+            clipRect = RotateRect(clipRect, angle, CL_Vec2f(primaryX, primaryY));
+        }
 		
-		clipRect = RotateRect(clipRect, angle, CL_Vec2f(primaryX, primaryY));
 	}
 
 	//remember, glScissors x/y is the LOWER LEFT of the rect, not upper left. (and lower left is 0,0)

@@ -7,6 +7,7 @@
 
 #import "MyViewController.h"
 #import "EAGLView.h"
+#import "iOSUtils.h"
 
 @implementation MyViewController
 
@@ -16,7 +17,6 @@
 // Implement viewDidLoad to do additional setup after loading the view.
 - (void)viewDidLoad 
 {
-	m_bIgnoredFirst4 = false;
 	[glView startAnimation];
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self
@@ -24,26 +24,33 @@
 												 name:UIDeviceOrientationDidChangeNotification
 											   object:nil];
 	
-	[super viewDidLoad];
+	self.view.backgroundColor = [UIColor blackColor];
+    [super viewDidLoad];
 	
 }
 
+
+
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)myinterfaceOrientation
 {
+    if (!GetBaseApp()->GetManualRotationMode())
+    {
+        //Let our view controller handle our rotations for us
+        
+        if (!CanRotateTo(myinterfaceOrientation))
+        {
+			LogMsg("Auto, but refusing orientation %d", myinterfaceOrientation);
+			return false;
+        }
+
+        return true;
+    }
     // Return YES for supported orientations
 	//No matter what, we tell it to do portrait mode
 	/*
-	if (!m_bIgnoredFirst4 && myinterfaceOrientation == 4)
-	{
-		m_bIgnoredFirst4 = true;
-		return false; //ignore this, it sends it on startup incorrectly?
-	}
-	if (!CanRotateTo(myinterfaceOrientation))
-	{
-			LogMsg("Refusing orientation %d", myinterfaceOrientation);
-			
-			return false;
-	}
+	
+	
 	//LogMsg("Setting orientation to interfaceOrientation %d", myinterfaceOrientation);
 	[[UIApplication sharedApplication] setStatusBarOrientation: myinterfaceOrientation animated:NO];
 	SetupScreenInfoIPhone(myinterfaceOrientation); 
@@ -51,34 +58,123 @@
 	return false;
 }
 
--(void)didRotate:(NSNotification *)theNotification 
+- (BOOL)shouldAutorotate
+{
+    
+    if (!GetBaseApp()->GetManualRotationMode())
+    {
+        //Let our view controller handle our rotations for us
+        return true;
+    }
+   	return false;
+}
+
+- (NSUInteger)supportedInterfaceOrientations
+{
+    
+    if (!GetBaseApp()->GetManualRotationMode())
+    {
+        if (GetLockedLandscape())
+        {
+			return UIInterfaceOrientationMaskLandscape;
+        }
+        
+        return UIInterfaceOrientationMaskAll;
+    }
+    
+    return 0;
+}
+
+-(void)didRotate:(NSNotification *)theNotification
 {
 	UIDeviceOrientation interfaceOrientation = [[UIDevice currentDevice] orientation];
-	//NSLog(@"Got didRotate: %d", interfaceOrientation);
+	NSLog(@"Got didRotate: %d", interfaceOrientation);
 	if (!UIDeviceOrientationIsValidInterfaceOrientation(interfaceOrientation))
 	{
 		//it's probably like a face up/down message.  Ignore it
 		return;
 	}
 
-	// custom rotation code based on interfaceOrientation here...
+    //when in manual rotation mode, this gets hit before a valid SetProtonPixelScaleFactor is set, so we need to set it here
+    //to be safe
+    CGFloat pixelScale = [[UIScreen mainScreen] scale];
+    //LogMsg("Scale: %.2f", pixelScale);
+    SetProtonPixelScaleFactor(pixelScale);
+    
 
+    
+	UIScreen *pScreen = [UIScreen mainScreen];
+    CGRect fullScreenRect = pScreen.bounds;
+    LogMsg("Rotated to orientation %d (%.2f, %.2f)", interfaceOrientation, fullScreenRect.size.width* GetProtonPixelScaleFactor(), fullScreenRect.size.height* GetProtonPixelScaleFactor());
+
+      
+    
+    if (GetBaseApp()->GetManualRotationMode())
+    {
+        SetPrimaryScreenSize(fullScreenRect.size.width* GetProtonPixelScaleFactor(), fullScreenRect.size.height* GetProtonPixelScaleFactor());
+        
+        LogMsg("Forcing status bar orientation to interfaceOrientation %d", interfaceOrientation);
+        [[UIApplication sharedApplication] setStatusBarOrientation: (UIInterfaceOrientation) interfaceOrientation animated:NO];
+        
+        if (GetLockedLandscape())
+        {
+            if (interfaceOrientation == UIInterfaceOrientationPortrait)
+            {
+                interfaceOrientation = UIInterfaceOrientationLandscapeLeft;
+            }
+            if (interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown)
+            {
+                interfaceOrientation = UIInterfaceOrientationLandscapeRight;
+            }
+        }
+     
+        
+        if (interfaceOrientation == UIInterfaceOrientationLandscapeRight ||
+            interfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+        {
+            SetupScreenInfo( GetPrimaryGLY(), GetPrimaryGLX(), interfaceOrientation);
+            
+        } else
+        {
+            SetupScreenInfo( GetPrimaryGLX(), GetPrimaryGLY(), interfaceOrientation);
+            
+        }
+        
+        return;
+	}
+    
 	if (!CanRotateTo(interfaceOrientation))
 	{
 		LogMsg("Refusing orientation %d",interfaceOrientation);
 		
-		return ;
+		return;
 	}
-	//LogMsg("Setting orientation to interfaceOrientation %d", interfaceOrientation);
-	[[UIApplication sharedApplication] setStatusBarOrientation: (UIInterfaceOrientation) interfaceOrientation animated:NO];
-	SetupScreenInfoIPhone(interfaceOrientation); 
+    
+    
+    if (!GetBaseApp()->GetManualRotationMode())
+    {
+    
+       if (interfaceOrientation == UIInterfaceOrientationLandscapeRight ||
+           interfaceOrientation == UIInterfaceOrientationLandscapeLeft)
+       {
+           //must be reversed
+           SetPrimaryScreenSize(fullScreenRect.size.height * GetProtonPixelScaleFactor(), fullScreenRect.size.width* GetProtonPixelScaleFactor());
+            
+       } else
+       {
+           SetPrimaryScreenSize(fullScreenRect.size.width* GetProtonPixelScaleFactor(), fullScreenRect.size.height* GetProtonPixelScaleFactor());
+       }
+    }
+   
+    
+    
+    SetupScreenInfo( GetPrimaryGLX(), GetPrimaryGLY(), interfaceOrientation);
 	
 }
 
  
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
-	//this should never actually be called.  Why the hell are we even using a ViewController?  Do we really need to?
 	LogMsg("DidRotateFromInterface: Got %d, App orientation is %d", fromInterfaceOrientation, GetOrientation());
 	return;
 }

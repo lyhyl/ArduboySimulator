@@ -44,7 +44,6 @@
 	if ((self = [super initWithCoder:coder]))
 	{
 		
-		InitDeviceScreenInfo();
 		// Get the layer
 		CAEAGLLayer *eaglLayer = (CAEAGLLayer *)self.layer;
 		
@@ -72,6 +71,9 @@
 		[self release];
 		return nil;
 	}
+    
+    GetBaseApp()->OnScreenSizeChange();
+    
 	return self;
 }
 
@@ -88,15 +90,7 @@
 	[EAGLContext setCurrentContext:context];
 
 	glBindFramebufferOES(GL_FRAMEBUFFER_OES, viewFramebuffer);
-	if (GetBaseApp()->GetManualRotationMode())
-	{
-		glViewport(0, 0, GetPrimaryGLX(), GetPrimaryGLY()); //a trick for extra speed
-
-	} else
-	{
-		glViewport(0, 0, GetScreenSizeX(), GetScreenSizeY());
-		
-	}
+	glViewport(0, 0, GetPrimaryGLX(), GetPrimaryGLY()); //a trick for extra speed
 		
 	GetBaseApp()->Update();
 	GetBaseApp()->Draw();
@@ -128,19 +122,16 @@
 
 - (BOOL)createFramebuffer 
 {
-	if (IsIPAD())
-	{
-		
-		NSLog(@"iPad detected");	
-	}
-	
-	if (IsIphone4())
-	{
-		NSLog(@"iPhone4 detected");
-		[self setContentScaleFactor: 2.0];
-	}
-	
-	glGenFramebuffersOES(1, &viewFramebuffer);
+    
+    CGFloat pixelScale = [[UIScreen mainScreen] scale];
+    UIScreen *pScreen = [UIScreen mainScreen];
+    
+    //LogMsg("Scale: %.2f", pixelScale);
+    SetProtonPixelScaleFactor(pixelScale);
+
+    [self setContentScaleFactor: GetProtonPixelScaleFactor()];
+
+    glGenFramebuffersOES(1, &viewFramebuffer);
     glBindFramebufferOES(GL_FRAMEBUFFER_OES, viewFramebuffer);
 
 	glGenRenderbuffersOES(1, &viewRenderbuffer);
@@ -164,7 +155,8 @@
 		NSLog(@"failed to make complete framebuffer object %x", glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES));
 		return NO;
 	}
-	
+
+    
 	return YES;
 }
 
