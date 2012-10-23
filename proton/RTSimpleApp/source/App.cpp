@@ -123,7 +123,7 @@ bool App::Init()
 {
 	//SetDefaultAudioClickSound("audio/enter.wav");
 	SetDefaultButtonStyle(Button2DComponent::BUTTON_STYLE_CLICK_ON_TOUCH_RELEASE);
-	SetManualRotationMode(true);
+	//SetManualRotationMode(true); //commented out, so iOS will handle rotations, plays better with 3rd party libs and looks cool
 
     bool bScaleScreenActive = true; //if true, we'll stretch every screen to the coords below
     int scaleToX = 480;
@@ -232,6 +232,7 @@ void App::Update()
 		MainMenuCreate(pGUIEnt);
 		
 	}
+    
 }
 
 void App::Draw()

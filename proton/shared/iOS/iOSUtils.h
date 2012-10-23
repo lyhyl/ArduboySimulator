@@ -11,6 +11,8 @@
 #error Uh oh, we are compiling this as C, why?!
 #endif
 
+void SetPrimaryScreenSize(int width, int height);
+
 #include "../PlatformEnums.h"
 
 

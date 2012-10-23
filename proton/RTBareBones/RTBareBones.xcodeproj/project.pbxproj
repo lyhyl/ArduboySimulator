@@ -68,6 +68,10 @@
 		5DC6D63F0EA47C0E001482E0 /* interface in Resources */ = {isa = PBXBuildFile; fileRef = 5DC6D63B0EA47C0E001482E0 /* interface */; };
 		5DC6D77D0EA4B397001482E0 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 5DC6D77B0EA4B397001482E0 /* Default.png */; };
 		5DC6D77E0EA4B397001482E0 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 5DC6D77C0EA4B397001482E0 /* icon.png */; };
+		5DD0A2C21636A7D40021A30D /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5DD0A2BE1636A7D40021A30D /* Default-568h@2x.png */; };
+		5DD0A2C31636A7D40021A30D /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5DD0A2BF1636A7D40021A30D /* Default@2x.png */; };
+		5DD0A2C41636A7D40021A30D /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5DD0A2C01636A7D40021A30D /* Icon-72@2x.png */; };
+		5DD0A2C51636A7D40021A30D /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5DD0A2C11636A7D40021A30D /* icon@2x.png */; };
 		5DE84C090FB9469A00DDAE64 /* angle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84C060FB9469A00DDAE64 /* angle.cpp */; };
 		5DE84C0A0FB9469A00DDAE64 /* vec2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84C070FB9469A00DDAE64 /* vec2.cpp */; };
 		5DE84C0B0FB9469A00DDAE64 /* vec3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84C080FB9469A00DDAE64 /* vec3.cpp */; };
@@ -197,6 +201,10 @@
 		5DC6D63B0EA47C0E001482E0 /* interface */ = {isa = PBXFileReference; lastKnownFileType = folder; name = interface; path = bin/interface; sourceTree = "<group>"; };
 		5DC6D77B0EA4B397001482E0 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = media/Default.png; sourceTree = "<group>"; };
 		5DC6D77C0EA4B397001482E0 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon.png; path = media/icon.png; sourceTree = "<group>"; };
+		5DD0A2BE1636A7D40021A30D /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "media/Default-568h@2x.png"; sourceTree = "<group>"; };
+		5DD0A2BF1636A7D40021A30D /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "media/Default@2x.png"; sourceTree = "<group>"; };
+		5DD0A2C01636A7D40021A30D /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-72@2x.png"; path = "media/Icon-72@2x.png"; sourceTree = "<group>"; };
+		5DD0A2C11636A7D40021A30D /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon@2x.png"; path = "media/icon@2x.png"; sourceTree = "<group>"; };
 		5DD9544D0E960962004E403D /* PlatformSetup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlatformSetup.h; sourceTree = "<group>"; };
 		5DE84C060FB9469A00DDAE64 /* angle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = angle.cpp; path = "ClanLib-2.0/Sources/Core/Math/angle.cpp"; sourceTree = "<group>"; };
 		5DE84C070FB9469A00DDAE64 /* vec2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = vec2.cpp; path = "ClanLib-2.0/Sources/Core/Math/vec2.cpp"; sourceTree = "<group>"; };
@@ -268,6 +276,10 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				5DD0A2BE1636A7D40021A30D /* Default-568h@2x.png */,
+				5DD0A2BF1636A7D40021A30D /* Default@2x.png */,
+				5DD0A2C01636A7D40021A30D /* Icon-72@2x.png */,
+				5DD0A2C11636A7D40021A30D /* icon@2x.png */,
 				5DC6D77B0EA4B397001482E0 /* Default.png */,
 				5DC6D77C0EA4B397001482E0 /* icon.png */,
 				5DC6D63B0EA47C0E001482E0 /* interface */,
@@ -595,6 +607,10 @@
 				5DC6D77E0EA4B397001482E0 /* icon.png in Resources */,
 				5D8272910FA9DEE00097DE6A /* Entitlements.plist in Resources */,
 				5D7C711E118FF795007F9604 /* MainWindow-iPad.xib in Resources */,
+				5DD0A2C21636A7D40021A30D /* Default-568h@2x.png in Resources */,
+				5DD0A2C31636A7D40021A30D /* Default@2x.png in Resources */,
+				5DD0A2C41636A7D40021A30D /* Icon-72@2x.png in Resources */,
+				5DD0A2C51636A7D40021A30D /* icon@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -669,7 +685,7 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 3.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				PRODUCT_NAME = RTBareBones;
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -681,7 +697,7 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
-				CODE_SIGN_IDENTITY = "iPhone Distribution:";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Robinson Technologies";
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -703,10 +719,10 @@
 					"../shared/ClanLib-2.0/Sources",
 					../shared/FliteTTS/include,
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 3.1.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "A9769FB0-936A-4638-82CB-786D2F37D0EB";
 				SDKROOT = iphoneos;
 				SYMROOT = "~/build";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -723,7 +739,7 @@
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_THUMB_SUPPORT = NO;
 				INFOPLIST_FILE = Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 3.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				PRODUCT_NAME = RTBareBones;
 				STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -753,7 +769,7 @@
 					"../shared/ClanLib-2.0/Sources",
 					../shared/FliteTTS/include,
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 3.1.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "";
 				PROVISIONING_PROFILE = "";

@@ -13,12 +13,12 @@
 // #define RT_TAPJOY_SUPPORT
 // #define RT_CHARTBOOST_SUPPORT
 // #define RT_FLURRY_SUPPORT
+//#define RT_MOGA_SUPPORT
 //**********************************************
 
 package ${PACKAGE_NAME};
 import ${PACKAGE_NAME}.SharedActivity;
 import android.os.Bundle;
-
 //#if defined(RT_TAPJOY_SUPPORT)
 import com.tapjoy.TapjoyConnect;
 import com.tapjoy.TapjoyConstants;
@@ -30,8 +30,20 @@ import com.tapjoy.TapjoyDisplayAdSize;
 import com.hookedmediagroup.wasabi.WasabiApi;
 //#endif
 
+//#if defined(RT_MOGA_SUPPORT)
+// ADB Controller
+import android.os.Handler;
+import com.bda.controller.Controller;
+import com.bda.controller.ControllerListener;
+//#endif
+
 public class Main extends SharedActivity
 {
+
+//#if defined(RT_MOGA_SUPPORT)
+	Controller mController = null;
+//#endif
+
 	@Override
     protected void onCreate(Bundle savedInstanceState) 
 	{
@@ -77,6 +89,77 @@ public class Main extends SharedActivity
 				WasabiApi.init(this.getApplicationContext()); 
 			//#endif
 		}
+		
+		//#if defined(RT_MOGA_SUPPORT)
+		mController = Controller.getInstance(this);
+		mController.init();
+		mController.setListener(new ExampleControllerListener(), new Handler());
+  
+		//#endif
     }
+   
+   //#if defined(RT_MOGA_SUPPORT) 
+    	@Override
+	protected void onDestroy()
+    {
+	    super.onDestroy();
+		
+		if(mController != null)
+		{
+			mController.exit();
+		}
+	}
+	
+	@Override
+    protected synchronized void onPause()
+	{
+		super.onPause();
+		if(mController != null)
+		{
+			mController.onPause();
+		}
+	}
+	
+	@Override
+	protected synchronized void onResume()
+	{
+		super.onResume();
+		if(mController != null)
+		{
+			mController.onResume();
+		}
+	}
+
+	class ExampleControllerListener implements com.bda.controller.ControllerListener
+	{
+		public void onKeyEvent(com.bda.controller.KeyEvent event)
+		{
+			nativeOnJoyPadButtons(event.getKeyCode(), event.getAction());
+		}
+		
+		public void onMotionEvent(com.bda.controller.MotionEvent event)
+		{
+			// read left analog stick
+			float lX = event.getAxisValue(com.bda.controller.MotionEvent.AXIS_X);
+			float lY = event.getAxisValue(com.bda.controller.MotionEvent.AXIS_Y);
+			float rX = event.getAxisValue(com.bda.controller.MotionEvent.AXIS_Z);
+			float rY = event.getAxisValue(com.bda.controller.MotionEvent.AXIS_RZ);
+			nativeOnJoyPad(lX, lY, rX, rY);
+		}
+		
+		public void onStateEvent(com.bda.controller.StateEvent event)
+		{
+			switch(event.getState())
+			{
+			case com.bda.controller.StateEvent.STATE_CONNECTION:
+				nativeOnJoyPadConnection(event.getAction());
+				break;
+			}
+		}
+	}
+	public static native void nativeOnJoyPad(float xL, float yL, float xR, float yR);
+	public static native void nativeOnJoyPadButtons(int key, int value);
+	public static native void nativeOnJoyPadConnection(int connect);
+//#endif
 }
 	

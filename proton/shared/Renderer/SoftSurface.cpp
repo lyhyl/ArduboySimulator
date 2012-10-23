@@ -982,7 +982,7 @@ void SoftSurface::BlitFromScreen(int dstX, int dstY, int srcX /*= 0*/, int srcY 
 	
 	SoftSurface temp;
 
-	if (InLandscapeGUIMode())
+	if (GetBaseApp()->GetManualRotationMode() && InLandscapeGUIMode())
 	{
 		swap(srcWidth, srcHeight);
 	}

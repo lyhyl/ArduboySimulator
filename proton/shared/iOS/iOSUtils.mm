@@ -255,36 +255,11 @@ bool IsIphone4()
 int g_primaryGLX = 0;
 int g_primaryGLY = 0;
 
-void InitDeviceScreenInfo()
+void SetPrimaryScreenSize(int width, int height)
 {
-
-	if (IsIPAD())
-	{
-		g_primaryGLX = 768;
-		g_primaryGLY = 1024;
-		
-	} else
-	{
-	
-		if (IsIphone4())
-		{
-			g_primaryGLX = 320*2;
-			g_primaryGLY = 480*2;
-			
-		} else
-		{
-			g_primaryGLX = 320;
-			g_primaryGLY = 480;
-			LogMsg("Old iphone size detected");
-		}
-	}
-	
-	InitBaseScreenSizeFromPrimary();
-    SetupScreenInfoIPhone(GetOrientation());
-	
-
+    g_primaryGLX = width;
+    g_primaryGLY = height;
 }
-
 
 
 //this doesn't change even if you rotate, for speed

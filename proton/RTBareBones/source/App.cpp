@@ -61,8 +61,8 @@ bool App::Init()
 	
 	if (GetEmulatedPlatformID() == PLATFORM_ID_IOS || GetEmulatedPlatformID() == PLATFORM_ID_WEBOS)
 	{
-		//SetLockedLandscape(true); //if we don't allow portrait mode for this game
-		SetManualRotationMode(true);
+		//SetLockedLandscape( true); //if we don't allow portrait mode for this game
+		//SetManualRotationMode(true); //don't use manual, it may be faster (33% on a 3GS) but we want iOS's smooth rotations
 	}
 
 	LogMsg("The Save path is %s", GetSavePath().c_str());
@@ -287,6 +287,7 @@ void App::Draw()
 	glClearColor(0,0,0,1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
+    
 	//draw our game stuff
 	DrawFilledRect(10,10,GetScreenSizeX()/3,GetScreenSizeY()/3, MAKE_RGBA(255,255,0,255));
 	DrawFilledRect(0,0,64,64, MAKE_RGBA(0,255,0,100));
@@ -294,7 +295,7 @@ void App::Draw()
 	//after our 2d rect call above, we need to prepare for raw GL again. (it keeps it in ortho mode if we don't for speed)
 	PrepareForGL();
 	RenderSpinningTriangle();
-	
+//	RenderGLTriangle();
 	//let's blit a bmp, but first load it if needed
 	if (!m_surf.IsLoaded())
 	{

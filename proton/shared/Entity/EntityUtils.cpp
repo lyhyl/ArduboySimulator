@@ -1651,7 +1651,7 @@ bool EntityRetinaRemapIfNeeded(Entity *pEnt, bool bAdjustPosition, bool bAdjustS
 	return true;
 }
 
-void EntitySetScaleBySize(Entity *pEnt, CL_Vec2f vDestSize, bool bPreserveAspectRatio)
+void EntitySetScaleBySize(Entity *pEnt, CL_Vec2f vDestSize, bool bPreserveAspectRatio, bool bPreserveOtherAxis)
 {
 	CL_Vec2f vSize = pEnt->GetVar("size2d")->GetVector2();
 	assert(vSize.x != 0 && vSize.y != 0);
@@ -1666,16 +1666,32 @@ void EntitySetScaleBySize(Entity *pEnt, CL_Vec2f vDestSize, bool bPreserveAspect
 	{
 		float aspectRatio = vSize.x /vSize.y;
 		
-		//knock the X setting out and replace with aspect correct size
-		if (aspectRatio <  1.0)	
-		{
-			//actually, lets do it the other way
-			vDestSize.y = vDestSize.x * (1/aspectRatio);
+		//this is strange, but it's legacy, don't change
+
+		if (bPreserveOtherAxis)
+		{		//knock the X setting out and replace with aspect correct size
+			if (aspectRatio >  1.0)	
+			{
+				//actually, lets do it the other way
+				vDestSize.y = vDestSize.x * (1/aspectRatio);
+			} else
+			{
+				vDestSize.x = vDestSize.y * aspectRatio;
+			}
 
 		} else
 		{
-			vDestSize.x = vDestSize.y * aspectRatio;
+			//knock the X setting out and replace with aspect correct size
+			if (aspectRatio <  1.0)	
+			{
+				//actually, lets do it the other way
+				vDestSize.y = vDestSize.x * (1/aspectRatio);
+			} else
+			{
+				vDestSize.x = vDestSize.y * aspectRatio;
+			}
 		}
+
 	}
 
 	pEnt->GetVar("scale2d")->Set(CL_Vec2f( vDestSize.x / vSize.x, vDestSize.y / vSize.y));
