@@ -18,6 +18,8 @@ int g_fakePrimaryScreenSizeX = 0;
 int g_fakePrimaryScreenSizeY = 0;
 int g_originalScreenSizeX = 0;
 int g_originalScreenSizeY = 0;
+float g_deviceDiagonalSizeInInches = 0;
+
 
 float g_protonPixelScaleFactor = 1.0f; //only used by iOS
 
@@ -43,6 +45,58 @@ void InitBaseScreenSizeFromPrimary()
     //to be called after GetPrimaryGLY() is valid (Only needed on iOS?)
     g_screenSizeY = GetPrimaryGLY();
     g_screenSizeX = GetPrimaryGLX();
+}
+
+float GetDeviceSizeDiagonalInInches()
+{
+	return g_deviceDiagonalSizeInInches;
+}
+
+void SetDeviceSizeDiagonalInInches(float sizeInInches)
+{
+	g_deviceDiagonalSizeInInches = sizeInInches;
+}
+
+int GetDevicePixelsPerInchDiagonal()
+{
+	static int cachedPixelsPerInch = 0;
+
+	if (cachedPixelsPerInch == 0)
+	{
+			//one time look up
+		if (g_deviceDiagonalSizeInInches == 0)
+		{
+			//guess.
+			if (IsIphone4Size || IsIphone5Size) cachedPixelsPerInch = 326;
+			if (IsIPADSize)	cachedPixelsPerInch = 132;
+			if (IsIPADRetinaSize) cachedPixelsPerInch = 264;
+			if (IsIphoneSize) cachedPixelsPerInch = 163;
+			if (IsXoomSize) cachedPixelsPerInch = 149;
+			if (IsDroidSize) cachedPixelsPerInch = 265;
+			if (IsNexusOneSize) cachedPixelsPerInch = 235;
+			if (IsPlaybookSize) cachedPixelsPerInch = 169;
+
+			if (cachedPixelsPerInch == 0)
+			{
+				if (!IsLargeScreen())
+				{
+					cachedPixelsPerInch = 163;
+				} else
+				{
+					if (IsTabletSize())
+					{
+						cachedPixelsPerInch = 163;
+					}
+				}
+				cachedPixelsPerInch = 265;
+				}
+		} else
+		{
+			cachedPixelsPerInch = (int) (GetScreenSize().length() / g_deviceDiagonalSizeInInches);
+		}
+	}
+
+	return cachedPixelsPerInch;	
 }
 
 void RenderGLTriangle()
@@ -395,9 +449,21 @@ bool IsLargeScreen()
 {
 	return g_screenSizeX>480 || g_screenSizeY > 480;
 }
+
 bool IsTabletSize()
 {
-	return g_screenSizeX>=1024 || g_screenSizeY >= 1024;
+	if (g_screenSizeX>=1024 || g_screenSizeY >= 1024)
+	{
+		//it's big, but if the pixel density is high enough, it still counts
+		//as small
+		if (GetDevicePixelsPerInchDiagonal() > 270) //comon, even the ipad3 doesn't have that, must be a phone
+		{
+			return false;
+		}
+		return true;
+	}
+	return false;
+
 }
 
 int GetOrientation() {return g_orientation;}

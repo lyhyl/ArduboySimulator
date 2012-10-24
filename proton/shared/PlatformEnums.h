@@ -19,6 +19,9 @@
 #define IsIPADSize ((GetScreenSizeX() == 1024 && GetScreenSizeY() ==  768)|| (GetScreenSizeY() == 1024 && GetScreenSizeX() ==  768))
 #define IsXoomSize ((GetScreenSizeX() == 1280 && GetScreenSizeY() ==  800)|| (GetScreenSizeX() == 800 && GetScreenSizeY() ==  1280))
 #define IsPlaybookSize ((GetScreenSizeX() == 1024 && GetScreenSizeY() ==  600)|| (GetScreenSizeX() == 600 && GetScreenSizeY() ==  1024))
+#define IsIphone5Size ((GetScreenSizeX() == 1136 && GetScreenSizeY() ==  640)|| (GetScreenSizeX() == 640 && GetScreenSizeY() ==  1136))
+#define IsIPADRetinaSize ((GetScreenSizeX() == 2048 && GetScreenSizeY() ==  1536)|| (GetScreenSizeY() == 1536 && GetScreenSizeX() ==  2048))
+#define IsOptimusHDSize ((GetScreenSizeX() == 1280 && GetScreenSizeY() ==  720)|| (GetScreenSizeY() == 720 && GetScreenSizeX() ==  1280))
 
 //here we test for the REAL dimensions, ignoring any screen stretching we have enabled
 #define IsPrimaryPlaybookSize ((GetPrimaryGLX() == 1024 && GetPrimaryGLY() ==  600)|| (GetPrimaryGLX() == 600 && GetPrimaryGLY() ==  1024))

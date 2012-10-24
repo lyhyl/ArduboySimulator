@@ -5,7 +5,7 @@
 #include "BaseApp.h"
 
 
-void MoveButtonState::OnPress(int timeToAddMS, boost::signal<void (VariantList*)> *pCustomSignal)
+void MoveButtonState::OnPress(int timeToAddMS, boost::signal<void (VariantList*)> *pCustomSignal, bool bSendChange)
 {
 	VariantList v;
 
@@ -14,13 +14,17 @@ void MoveButtonState::OnPress(int timeToAddMS, boost::signal<void (VariantList*)
 		m_bIsDown = true;
 		v.Get(0).Set(uint32(m_keyType));
 		v.Get(1).Set(uint32(VIRTUAL_KEY_PRESS)); 
-		if (pCustomSignal)
-		{
-			(*pCustomSignal)(&v);
-		} else
-		{
-			GetBaseApp()->m_sig_arcade_input(&v);
-		}	
+		
+        if (bSendChange)
+        {
+            if (pCustomSignal)
+            {
+                (*pCustomSignal)(&v);
+            } else
+            {
+                GetBaseApp()->m_sig_arcade_input(&v);
+            }
+        }
 
 	}
 	
@@ -28,7 +32,7 @@ void MoveButtonState::OnPress(int timeToAddMS, boost::signal<void (VariantList*)
 	m_releaseTimer += timeToAddMS;
 }
 
-void MoveButtonState::OnPressToggle(bool bDown, boost::signal<void (VariantList*)> *pCustomSignal)
+void MoveButtonState::OnPressToggle(bool bDown, boost::signal<void (VariantList*)> *pCustomSignal, bool bSendChange)
 {
 	VariantList v;
 
@@ -41,20 +45,24 @@ void MoveButtonState::OnPressToggle(bool bDown, boost::signal<void (VariantList*
 
 		v.Get(0).Set(uint32(m_keyType));
 		v.Get(1).Set(uint32(VIRTUAL_KEY_PRESS)); 
-		if (pCustomSignal)
-		{
-			(*pCustomSignal)(&v);
-		} else
-		{
-			GetBaseApp()->m_sig_arcade_input(&v);
-		}	
+		
+        if (bSendChange)
+        {
+            if (pCustomSignal)
+            {
+                (*pCustomSignal)(&v);
+            } else
+            {
+                GetBaseApp()->m_sig_arcade_input(&v);
+            }
+        }
 	}
 
 	m_releaseTimer = rt_max(GetTick(TIMER_SYSTEM), m_releaseTimer);
 	m_releaseTimer += 1000*60;
 	} else
 	{
-		ReleaseIfNeeded(pCustomSignal);
+		ReleaseIfNeeded(pCustomSignal, bSendChange);
 	}
 }
 void MoveButtonState::Update(boost::signal<void (VariantList*)> *pCustomSignal)
@@ -66,7 +74,7 @@ void MoveButtonState::Update(boost::signal<void (VariantList*)> *pCustomSignal)
 	}
 }
 
-void MoveButtonState::ReleaseIfNeeded(boost::signal<void (VariantList*)> *pCustomSignal)
+void MoveButtonState::ReleaseIfNeeded(boost::signal<void (VariantList*)> *pCustomSignal, bool bSendChange)
 {
 	if (m_bIsDown)
 	{
@@ -76,14 +84,17 @@ void MoveButtonState::ReleaseIfNeeded(boost::signal<void (VariantList*)> *pCusto
 		v.Get(0).Set(uint32(m_keyType));
 		v.Get(1).Set(uint32(VIRTUAL_KEY_RELEASE)); 
 	
-		if (pCustomSignal)
-		{
-			(*pCustomSignal)(&v);
-		} else
-		{
-			GetBaseApp()->m_sig_arcade_input(&v);
-		}	
-	}
+        if (bSendChange)
+        {
+            if (pCustomSignal)
+            {
+                (*pCustomSignal)(&v);
+            } else
+            {
+                GetBaseApp()->m_sig_arcade_input(&v);
+            }
+        }
+    }
 }
 
 ArcadeInputComponent::ArcadeInputComponent()
@@ -396,9 +407,9 @@ bool ArcadeInputComponent::GetDirectionKeys( bool &bLeftOut, bool &bRightOut, bo
 	return (bLeftOut || bRightOut || bUpOut || bDownOut);
 }
 
-void ArcadeInputComponent::SetDirectionKey(eMoveButtonDir moveDir, bool bPressed )
+void ArcadeInputComponent::SetDirectionKey(eMoveButtonDir moveDir, bool bPressed, bool bSendChange )
 {
-	m_buttons[moveDir].OnPressToggle(bPressed, m_customSignal);
+	m_buttons[moveDir].OnPressToggle(bPressed, m_customSignal, bSendChange);
 }
 
 void ArcadeInputComponent::RemoveKeyBindingsStartingWith( VariantList *pVList )

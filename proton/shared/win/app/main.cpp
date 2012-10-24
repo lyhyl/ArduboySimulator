@@ -69,7 +69,10 @@ void InitVideoSize()
 	AddVideoMode("iPad Landscape", 1024, 768, PLATFORM_ID_IOS, ORIENTATION_PORTRAIT); //force orientation for emulation so it's not sideways);
 	AddVideoMode("iPhone4", 640, 960, PLATFORM_ID_IOS);
 	AddVideoMode("iPhone4 Landscape", 960,640, PLATFORM_ID_IOS, ORIENTATION_PORTRAIT); //force orientation for emulation so it's not sideways););
+	AddVideoMode("iPhone5", 640, 1136, PLATFORM_ID_IOS);
+	AddVideoMode("iPhone5 Landscape", 1136,640, PLATFORM_ID_IOS, ORIENTATION_PORTRAIT); //force orientation for emulation so it's not sideways););
 	AddVideoMode("iPad HD", 768*2, 1024*2, PLATFORM_ID_IOS);
+	AddVideoMode("iPad HD Landscape", 1024*2,768*2 , PLATFORM_ID_IOS,  ORIENTATION_PORTRAIT);
 	
 	//Palm er, I mean HP. These should use the Debug WebOS build config in MSVC for the best results, it will
 	//use their funky SDL version

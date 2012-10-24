@@ -31,6 +31,9 @@
 #include "Entity/EmitVirtualKeyComponent.h"
 #include "Entity/RenderScissorComponent.h"
 
+const int C_IPAD_PPI = 132;
+
+
 Entity * CreateTextLabelEntity(Entity *pParentEnt, string name, float x, float y, string text);
 Entity * CreateTextButtonEntity(Entity *pParentEnt, string name, float x, float y, string text, bool bUnderline = true);
 /**
@@ -339,6 +342,7 @@ bool EntityRetinaRemapIfNeeded(Entity *pEnt, bool bAdjustPosition = true, bool b
  */
 void EntitySetScaleBySize(Entity *pEnt, CL_Vec2f vDestSize, bool bPreserveAspectRatio = false, bool bPreserveOtherAxis = false);
 void EntityScaleiPad(Entity *pEnt, bool bPerserveAspectRatio); //on ipad size does nothing, on anything else it scales to fit the same screen ratio.
+void EntityAdjustScaleSoPhysicalSizeMatches(Entity *pEnt, int ppiToMatch = C_IPAD_PPI, float powerMult = 1.0f); //so a 1 inch button on ipad1 is also 1 inch on a retina iphone or anything else.  powerMult 0.5 means weaken the changes by half
 EntityComponent * AddHotKeyToButton(Entity *pEnt, uint32 keycode);
 EntityComponent * MakeButtonEmitVirtualGameKey(Entity *pEnt, uint32 keycode);
 EntityComponent * CreateSlider(Entity *pBG, float x, float y, float sizeX, string buttonFileName, string left, string middle, string right);
@@ -378,4 +382,5 @@ bool EntityHasInputFocus(Entity *pEnt); //returns true if this entity can curren
 void SetupEntityToEatInput(Entity *pEnt); //assign to a background, and no clicks will live past it
 void ActivateTextInputEntity(Entity *pEnt); //gives focus to an entity that has an InputTextRender component in it
 void SetTextShadowColor(Entity *pEnt, uint32 color);
+float GetFontScaleToFitThisManyLinesOnScreen(eFont fontID, float minLineToScreenRatio);
 #endif // EntityUtils_h__

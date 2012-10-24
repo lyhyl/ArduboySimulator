@@ -146,4 +146,8 @@ CL_Rectf GetScreenRect();
 float SinPulseByCustomTimerMS(int ms, unsigned int timerMS);
 void RenderTexturedGLTriangleWithDrawElements();
 float GetFadeAlphaFromTime(int curTimeMS, int totalTimeMS, int fadeInMS, int fadeOutMS);
+float GetDeviceSizeDiagonalInInches(); //returns 0 if unknown
+void SetDeviceSizeDiagonalInInches(float sizeInInches); //guesses if unknown.  If GetDeviceSizeDiagonalInInches() == 0, it guessed.
+int GetDevicePixelsPerInchDiagonal();
+
 #endif // RenderUtils_h__

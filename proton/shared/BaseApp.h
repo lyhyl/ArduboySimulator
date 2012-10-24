@@ -147,17 +147,24 @@ enum eInputMode
 class TouchTrackInfo
 {
 public:
+
 	TouchTrackInfo()
 	{
 		m_bHandled = false;
 		m_bIsDown = false;
 		m_vPos = m_vLastPos = CL_Vec2f(-1,-1);
 		m_pEntityThatHandledIt = NULL;
+		m_bPreHandled = false;
+		m_pEntityThatPreHandledIt = NULL;
 	}
 	
 	bool WasHandled() {return m_bHandled;}
 	CL_Vec2f GetPos() {return m_vPos;}
 	CL_Vec2f GetLastPos() {return m_vLastPos;}  //normally you wouldn't care, but this helps if you need to emulate the way iOS gives touch data
+
+	bool WasPreHandled() {return m_bPreHandled;}
+	Entity *GetEntityThatPreHandledIt() {return m_pEntityThatPreHandledIt;}
+	void SetWasPreHandled(bool bNew, Entity *pEntity = NULL);
 
 	bool IsDown() {return m_bIsDown;}
 	Entity *GetEntityThatHandledIt() {return m_pEntityThatHandledIt;} //NULL if we don't know, or the click wasn't claimed as "handled"
@@ -171,10 +178,11 @@ public:
 	void SetWasHandled(bool bNew, Entity *pEntity = NULL); //pEntity should be null if not applicable
 
 private:
-	bool m_bHandled;
+
+	bool m_bHandled, m_bPreHandled;
 	bool m_bIsDown;
 	CL_Vec2f m_vPos, m_vLastPos;
-	Entity *m_pEntityThatHandledIt;
+	Entity *m_pEntityThatHandledIt, *m_pEntityThatPreHandledIt;
 };
 
 

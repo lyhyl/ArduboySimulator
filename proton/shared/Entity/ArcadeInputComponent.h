@@ -83,11 +83,11 @@ public:
 		m_keyType = type;
 	}
 
-	void ReleaseIfNeeded(boost::signal<void (VariantList*)> *pCustomSignal);
-	void OnPress(int releaseTime, boost::signal<void (VariantList*)> *pCustomSignal);
+	void ReleaseIfNeeded(boost::signal<void (VariantList*)> *pCustomSignal, bool bSendChange = true);
+	void OnPress(int releaseTime, boost::signal<void (VariantList*)> *pCustomSignal, bool bSendChange = true);
 
 	void Update(boost::signal<void (VariantList*)> *pCustomSignal);
-	void OnPressToggle(bool bDown, boost::signal<void (VariantList*)> *pCustomSignal);
+	void OnPressToggle(bool bDown, boost::signal<void (VariantList*)> *pCustomSignal, bool bSendChange = true);
 	bool m_bIsDown;
 	unsigned int m_releaseTimer;
 	eVirtualKeys m_keyType;
@@ -131,7 +131,7 @@ public:
 	bool GetDirectionKeysAsVector(CL_Vec2f *pVecOut);
 	bool GetDirectionKeys(bool &bLeftOut, bool &bRightOut, bool &bUpOut, bool &bDownOut);
 
-	void SetDirectionKey(eMoveButtonDir moveDir, bool bPressed);
+	void SetDirectionKey(eMoveButtonDir moveDir, bool bPressed, bool bBroadcastKeyIfChanged = true);
 
 	enum TrackballMode
 	{

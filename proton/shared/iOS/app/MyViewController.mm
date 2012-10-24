@@ -88,7 +88,7 @@
 -(void)didRotate:(NSNotification *)theNotification
 {
 	UIDeviceOrientation interfaceOrientation = [[UIDevice currentDevice] orientation];
-	NSLog(@"Got didRotate: %d", interfaceOrientation);
+	//NSLog(@"Got didRotate: %d", interfaceOrientation);
 	if (!UIDeviceOrientationIsValidInterfaceOrientation(interfaceOrientation))
 	{
 		//it's probably like a face up/down message.  Ignore it
