@@ -102,17 +102,18 @@ void ScrollComponent::OnOverStart(VariantList *pVList)
 	uint32 fingerID = pVList->Get(2).GetUINT32();
 	if (!isInterestingFinger(fingerID)) return;
 
+	TouchTrackInfo *pTouch = GetBaseApp()->GetTouch(fingerID);
 
 	if (*m_pEnforceFingerTracking && m_activeFinger == -1 && *m_pDontScrollUntilSwipeDetected == 0 && *m_pEatAllInput != 0)
 	{
-		TouchTrackInfo *pTouch = GetBaseApp()->GetTouch(fingerID);
 		if (pTouch->WasHandled()) return;
 		pTouch->SetWasHandled(true, GetParent());
 		m_activeFinger = fingerID;
 	}
 
-
-
+	pTouch->SetWasPreHandled(true, GetParent());
+	
+	
 	SetIsScrolling(false); 
 	m_lastTouchPos = pVList->m_variant[0].GetVector2();
 }
@@ -121,6 +122,9 @@ void ScrollComponent::OnOverEnd(VariantList *pVList)
 {
 	uint32 fingerID = pVList->Get(2).GetUINT32();
 	if (!isInterestingFinger(fingerID)) return;
+
+	TouchTrackInfo *pTouch = GetBaseApp()->GetTouch(fingerID);
+	pTouch->SetWasPreHandled(false, GetParent());
 
 	SetIsScrolling(false); 
 	m_activeFinger = -1;

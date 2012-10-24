@@ -240,6 +240,7 @@ void BaseApp::OnMessage(Message &m)
 						m_touchTracker[m.GetParm3()].SetIsDown(true);
 						m_touchTracker[m.GetParm3()].SetPos(v.Get(1).GetVector2());
 						m_touchTracker[m.GetParm3()].SetWasHandled(false);
+						m_touchTracker[m.GetParm3()].SetWasPreHandled(false);
 					} else
 					{
 					//	LogMsg("Released finger %d, down is %d", m.GetParm3(), (int)m_touchTracker[m.GetParm3()].IsDown());
@@ -705,5 +706,11 @@ void TouchTrackInfo::SetWasHandled( bool bNew, Entity *pEntity )
 {
 	m_pEntityThatHandledIt = pEntity;
 	m_bHandled = bNew;
+}
+
+void TouchTrackInfo::SetWasPreHandled( bool bNew, Entity *pEntity /*= NULL*/ )
+{
+	m_bPreHandled = bNew;
+	m_pEntityThatPreHandledIt = pEntity;
 }
 

@@ -143,7 +143,7 @@ AudioHandle AudioManagerDenshion::PlayWithAVPlayer( string fName)
 AudioHandle AudioManagerDenshion::Play( string fName, bool bLooping /*= false*/, bool bIsMusic /*= false*/, bool bAddBasePath, bool bForceStreaming )
 {
 #ifdef _DEBUG
-	LogMsg("Playing %s", fName.c_str());
+	//LogMsg("Playing %s", fName.c_str());
 #endif
 
 	if (!GetSoundEnabled() && !bIsMusic) return AUDIO_HANDLE_BLANK;

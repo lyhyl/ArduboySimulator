@@ -283,6 +283,7 @@ void MessageManager::Deliver(Message *m)
 
 						//fake out our touch tracker, will override the 11th finger touch..
 						GetBaseApp()->GetTouch(C_MAX_TOUCHES_AT_ONCE-1)->SetWasHandled(false);
+						GetBaseApp()->GetTouch(C_MAX_TOUCHES_AT_ONCE-1)->SetWasPreHandled(false);
 						GetBaseApp()->GetTouch(C_MAX_TOUCHES_AT_ONCE-1)->SetIsDown(true);
 						GetBaseApp()->GetTouch(C_MAX_TOUCHES_AT_ONCE-1)->SetPos(m->GetVariantList().Get(1).GetVector2());
 					}

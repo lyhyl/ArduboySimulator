@@ -1096,6 +1096,13 @@ float EnforceMinimumFontLineToScreenRatio(eFont fontID, float fontScale, float m
 	return fontScale;
 }
 
+
+float GetFontScaleToFitThisManyLinesOnScreen(eFont fontID, float minLineToScreenRatio)
+{
+	float fontSizeRating = GetScreenSizeYf() / GetBaseApp()->GetFont(fontID)->GetLineHeight(1.0f);
+	return fontSizeRating/minLineToScreenRatio;
+}
+
 void SetAlignmentEntity(Entity *pEnt, eAlignment align)
 {
 	pEnt->GetVar("alignment")->Set(uint32(align));
@@ -1649,6 +1656,27 @@ bool EntityRetinaRemapIfNeeded(Entity *pEnt, bool bAdjustPosition, bool bAdjustS
 
 	}
 	return true;
+}
+
+void EntityAdjustScaleSoPhysicalSizeMatches(Entity *pEnt, int ppiToMatch, float powerMult)
+{
+	
+	int pixelsPerInch = GetDevicePixelsPerInchDiagonal();
+	if (pixelsPerInch == ppiToMatch) return; //no change needed
+
+	CL_Vec2f vScale = GetScale2DEntity(pEnt);
+
+	float scaleMod = float(pixelsPerInch) / float(ppiToMatch);
+	
+	CL_Vec2f vOldScale = vScale;
+
+	vScale.x = scaleMod*vScale.x;
+	vScale.y = scaleMod*vScale.y;
+
+	//weaken the effect if needed
+	vScale = vOldScale + ((vScale-vOldScale)*powerMult);
+
+	SetScale2DEntity(pEnt, vScale);
 }
 
 void EntitySetScaleBySize(Entity *pEnt, CL_Vec2f vDestSize, bool bPreserveAspectRatio, bool bPreserveOtherAxis)

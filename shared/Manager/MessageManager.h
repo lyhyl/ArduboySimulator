@@ -58,7 +58,7 @@ enum eVirtualKeys
 	VIRTUAL_KEY_ALT, //doesn't work yet
 	VIRTUAL_KEY_CONTROL,
 
-	//useful for games, used by ArcadeInputComponent
+	//useful for games when used by ArcadeInputComponent
 	VIRTUAL_KEY_GAME_FIRE,
 	VIRTUAL_KEY_GAME_TALK,
 	VIRTUAL_KEY_GAME_MAGIC,
@@ -110,6 +110,8 @@ enum eVirtualKeys
 	VIRTUAL_KEY_ADB_RIGHT_JOY_VERTICAL,
 	VIRTUAL_KEY_ADB_LEFT_SHOULDER,
 	VIRTUAL_KEY_ADB_RIGHT_SHOULDER,
+
+	VIRTUAL_KEY_GAME_JUMP, //useful for games when used by ArcadeInputComponent
 
 	VIRTUAL_KEY_CUSTOM_START = 510000, //if you add your own at the app specific level, do it after this
 };
