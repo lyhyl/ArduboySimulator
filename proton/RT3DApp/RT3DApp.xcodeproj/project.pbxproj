@@ -278,6 +278,7 @@
 		5DA1FD030F01EF07001E9C1B /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DA1FD020F01EF07001E9C1B /* CoreAudio.framework */; };
 		5DADFF4C0EA2F561007ADD60 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DADFF4B0EA2F561007ADD60 /* CoreGraphics.framework */; };
 		5DB488DB10B1313300B84589 /* RenderBatcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB488D910B1313300B84589 /* RenderBatcher.cpp */; };
+		5DC1EF181638C89500D682A6 /* RenderScissorComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DC1EF161638C89500D682A6 /* RenderScissorComponent.cpp */; };
 		5DC44E0A10C3D8C000F67CC5 /* Map3Menu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DC44E0710C3D8C000F67CC5 /* Map3Menu.cpp */; };
 		5DC692B20E94852F00E5AC44 /* App.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DC692B10E94852F00E5AC44 /* App.cpp */; };
 		5DC6D63F0EA47C0E001482E0 /* interface in Resources */ = {isa = PBXBuildFile; fileRef = 5DC6D63B0EA47C0E001482E0 /* interface */; };
@@ -978,6 +979,8 @@
 		5DADFF4B0EA2F561007ADD60 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		5DB488D910B1313300B84589 /* RenderBatcher.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RenderBatcher.cpp; path = ../shared/Renderer/RenderBatcher.cpp; sourceTree = SOURCE_ROOT; };
 		5DB488DA10B1313300B84589 /* RenderBatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RenderBatcher.h; path = ../shared/Renderer/RenderBatcher.h; sourceTree = SOURCE_ROOT; };
+		5DC1EF161638C89500D682A6 /* RenderScissorComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RenderScissorComponent.cpp; path = Entity/RenderScissorComponent.cpp; sourceTree = "<group>"; };
+		5DC1EF171638C89500D682A6 /* RenderScissorComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RenderScissorComponent.h; path = Entity/RenderScissorComponent.h; sourceTree = "<group>"; };
 		5DC44E0710C3D8C000F67CC5 /* Map3Menu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Map3Menu.cpp; path = source/GUI/Map3Menu.cpp; sourceTree = "<group>"; };
 		5DC44E0810C3D8C000F67CC5 /* Map3Menu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Map3Menu.h; path = source/GUI/Map3Menu.h; sourceTree = "<group>"; };
 		5DC692B00E94852F00E5AC44 /* App.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = App.h; path = source/App.h; sourceTree = "<group>"; };
@@ -1761,7 +1764,13 @@
 		5D82C88E0FF4BB660082EBE7 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				5DC1EF161638C89500D682A6 /* RenderScissorComponent.cpp */,
+				5DC1EF171638C89500D682A6 /* RenderScissorComponent.h */,
 				5DE36731129DCF1500BAF390 /* SliderComponent.h */,
+				5DD3289812C99DD50009B0F3 /* EmitVirtualKeyComponent.h */,
+				5DD3289912C99DD50009B0F3 /* EmitVirtualKeyComponent.cpp */,
+				5DD3289A12C99DD50009B0F3 /* ArcadeInputComponent.h */,
+				5DD3289B12C99DD50009B0F3 /* ArcadeInputComponent.cpp */,
 				5DE36732129DCF1500BAF390 /* SliderComponent.cpp */,
 				5D5C11E31279878B00A4E4E3 /* SelectButtonWithCustomInputComponent.h */,
 				5D5C11E41279878B00A4E4E3 /* SelectButtonWithCustomInputComponent.cpp */,
@@ -1818,10 +1827,6 @@
 		5D8483DC0F923D40007338A2 /* Entity */ = {
 			isa = PBXGroup;
 			children = (
-				5DD3289812C99DD50009B0F3 /* EmitVirtualKeyComponent.h */,
-				5DD3289912C99DD50009B0F3 /* EmitVirtualKeyComponent.cpp */,
-				5DD3289A12C99DD50009B0F3 /* ArcadeInputComponent.h */,
-				5DD3289B12C99DD50009B0F3 /* ArcadeInputComponent.cpp */,
 				5D82C88E0FF4BB660082EBE7 /* Components */,
 				5D47607C0FBB1CE0008400E3 /* EntityUtils.cpp */,
 				5D47607D0FBB1CE0008400E3 /* EntityUtils.h */,
@@ -2384,6 +2389,7 @@
 				5DD3289C12C99DD50009B0F3 /* EmitVirtualKeyComponent.cpp in Sources */,
 				5DD3289D12C99DD50009B0F3 /* ArcadeInputComponent.cpp in Sources */,
 				5D8F8F5C12D6D69300E9B3B8 /* CProtonReader.cpp in Sources */,
+				5DC1EF181638C89500D682A6 /* RenderScissorComponent.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

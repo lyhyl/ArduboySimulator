@@ -89,7 +89,12 @@
 {
 	UIDeviceOrientation interfaceOrientation = [[UIDevice currentDevice] orientation];
 	//NSLog(@"Got didRotate: %d", interfaceOrientation);
-	if (!UIDeviceOrientationIsValidInterfaceOrientation(interfaceOrientation))
+	
+    CGFloat pixelScale = [[UIScreen mainScreen] scale];
+    LogMsg("Learned Scale: %.2f", pixelScale);
+    SetProtonPixelScaleFactor(pixelScale);
+    
+    if (!UIDeviceOrientationIsValidInterfaceOrientation(interfaceOrientation))
 	{
 		//it's probably like a face up/down message.  Ignore it
 		return;
@@ -97,10 +102,7 @@
 
     //when in manual rotation mode, this gets hit before a valid SetProtonPixelScaleFactor is set, so we need to set it here
     //to be safe
-    CGFloat pixelScale = [[UIScreen mainScreen] scale];
-    //LogMsg("Scale: %.2f", pixelScale);
-    SetProtonPixelScaleFactor(pixelScale);
-    
+     
 
     
 	UIScreen *pScreen = [UIScreen mainScreen];

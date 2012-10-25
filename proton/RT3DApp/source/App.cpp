@@ -114,7 +114,7 @@ bool App::Init()
 	
 	if (!BaseApp::Init()) return false;
 
-	SetManualRotationMode(true);
+	//SetManualRotationMode(true);
 
 	LogMsg("Save path is %s", GetSavePath().c_str());
 

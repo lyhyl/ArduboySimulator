@@ -131,19 +131,16 @@
     
     CGFloat pixelScale = [[UIScreen mainScreen] scale];
     UIScreen *pScreen = [UIScreen mainScreen];
+    CGRect fullScreenRect = pScreen.bounds;
     
-    //LogMsg("Scale: %.2f", pixelScale);
+    
+    LogMsg("Scale: %.2f", pixelScale);
     SetProtonPixelScaleFactor(pixelScale);
 
     [self setContentScaleFactor: GetProtonPixelScaleFactor()];
 
-    CGRect fullScreenRect = pScreen.bounds;
     
-    if (GetPrimaryGLX() == 0)
-    {
-        SetPrimaryScreenSize(fullScreenRect.size.width* GetProtonPixelScaleFactor(), fullScreenRect.size.height* GetProtonPixelScaleFactor());
-    }
-    
+       
     
     glGenFramebuffersOES(1, &viewFramebuffer);
     glBindFramebufferOES(GL_FRAMEBUFFER_OES, viewFramebuffer);
@@ -157,6 +154,8 @@
  	glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_WIDTH_OES, &backingWidth);
 	glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_HEIGHT_OES, &backingHeight);
 		
+    
+    
 	if (USE_DEPTH_BUFFER) 
 	{
 		glGenRenderbuffersOES(1, &depthRenderbuffer);
@@ -169,6 +168,12 @@
 		NSLog(@"failed to make complete framebuffer object %x", glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES));
 		return NO;
 	}
+
+    if (GetPrimaryGLX() == 0)
+    {
+        SetPrimaryScreenSize(backingWidth, backingHeight);
+        SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(), 0);
+    }
 
     
 	return YES;
