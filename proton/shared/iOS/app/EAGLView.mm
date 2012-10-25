@@ -90,10 +90,16 @@
 	[EAGLContext setCurrentContext:context];
 
 	glBindFramebufferOES(GL_FRAMEBUFFER_OES, viewFramebuffer);
-	glViewport(0, 0, GetPrimaryGLX(), GetPrimaryGLY()); //a trick for extra speed
-		
-	GetBaseApp()->Update();
-	GetBaseApp()->Draw();
+	glViewport(0, 0, GetPrimaryGLX(), GetPrimaryGLY());
+	
+	if (GetScreenSizeX() != 0)
+    {
+        GetBaseApp()->Update();
+        GetBaseApp()->Draw();
+    } else
+    {
+        //not quite ready
+    }
 
 	while (!GetBaseApp()->GetOSMessages()->empty())
 	{
@@ -131,6 +137,14 @@
 
     [self setContentScaleFactor: GetProtonPixelScaleFactor()];
 
+    CGRect fullScreenRect = pScreen.bounds;
+    
+    if (GetPrimaryGLX() == 0)
+    {
+        SetPrimaryScreenSize(fullScreenRect.size.width* GetProtonPixelScaleFactor(), fullScreenRect.size.height* GetProtonPixelScaleFactor());
+    }
+    
+    
     glGenFramebuffersOES(1, &viewFramebuffer);
     glBindFramebufferOES(GL_FRAMEBUFFER_OES, viewFramebuffer);
 

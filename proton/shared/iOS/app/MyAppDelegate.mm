@@ -109,7 +109,6 @@
 	
 	//LogMsg("Text is %s, len is %d.  x is %.2f, y is %.2f", pMsg->m_string.c_str(), pMsg->m_parm1, xPos, yPos);
 		
-	//Create and editable text field. This is used only when the user successfully lands the rocket.
 	_textField = [[UITextField alloc] initWithFrame:CGRectMake( pMsg->m_x,  pMsg->m_y, pMsg->m_sizeX, pMsg->m_sizeY)];
 	[_textField setDelegate:self];
 	[_textField setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.5]];
@@ -159,7 +158,7 @@
 - (void) keyboardWillShow:(NSNotification *) notification
 {
    
-   LogMsg("Keyboarding showing");
+   LogMsg("Keyboard showing");
   
     
     /*
