@@ -38,8 +38,7 @@ private:
 	CL_Vec2f *m_pPos2d;
 	CL_Rectf *m_pTouchPadding;
 	uint32 *m_pAlignment;
-	uint32 *m_pIgnoreTouchesOutsideRect; //if this is set to 1, we will ignore "Touch end" messages that don't happen in our rect+padding
-
+	uint32 *m_pAllowSlideOns; //if false/0, will only respond to clicks that originate on us (good for backgrounds, bad for buttons)
 	void UpdateTouchArea(Variant *v);
 	CL_Rectf m_touchArea;
 	int m_activeFinger;

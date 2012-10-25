@@ -105,6 +105,9 @@ float OrientationToDegrees(int orientation)
 {
 	switch (GetOrientation())
 	{
+        case ORIENTATION_DONT_CARE:
+            return 0;
+            
 	case ORIENTATION_PORTRAIT:
 		return 0;
 		break;

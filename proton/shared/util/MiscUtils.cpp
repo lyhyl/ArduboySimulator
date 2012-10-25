@@ -557,14 +557,14 @@ string IntToTime(int ms, bool bTextFormat)
 	minutes -= hours*60;
 
 	int days = hours/24;
-	minutes -= hours*24;
+	hours -= days*24;
 
-	assert(days == 0 && hours == 0 && "Fix this to work with these higher values.  When I wrote this I only tested up to 5 mins for my game -Seth");
 
 	string r;
 
 	if (!bTextFormat)
 	{
+		assert(days == 0 && hours == 0 && "Fix this to work with these higher values.  When I wrote this I only tested up to 5 mins for my game -Seth");
 		char temp[24];
 		sprintf(temp, "%d:%02d", minutes, seconds);
 		return string(temp);
@@ -596,6 +596,40 @@ string IntToTime(int ms, bool bTextFormat)
 
 		r = toString(minutes) +mins+r;
 		
+	}
+
+	if (hours > 0)
+	{
+		if (!r.empty())
+		{
+			r = ", "+r;
+		}
+
+		string stHours = " hours";
+
+		if (hours == 1)
+		{
+			stHours = " hour";
+		}
+
+		r = toString(hours) +stHours+r;
+	}
+
+	if (days > 0)
+	{
+		if (!r.empty())
+		{
+			r = ", "+r;
+		}
+
+		string stDays = " days";
+
+		if (days == 1)
+		{
+			stDays = " day";
+		}
+
+		r = toString(days) +stDays+r;
 	}
 
 	if (r.empty()) return "Now!";

@@ -32,6 +32,7 @@
 #include "Entity/RenderScissorComponent.h"
 
 const int C_IPAD_PPI = 132;
+const int C_IPHONE_PPI = 163;
 
 
 Entity * CreateTextLabelEntity(Entity *pParentEnt, string name, float x, float y, string text);
