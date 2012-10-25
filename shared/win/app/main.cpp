@@ -103,7 +103,7 @@ void InitVideoSize()
 	AddVideoMode("Flash", 640, 480, PLATFORM_ID_FLASH);
 
 	//WORK: Change device emulation here
-	string desiredVideoMode = "iPhone Landscape"; //name needs to match one of the ones defined above
+	string desiredVideoMode = "iPhone5 Landscape"; //name needs to match one of the ones defined above
  	SetVideoModeByName(desiredVideoMode);
 	GetBaseApp()->OnPreInitVideo(); //gives the app level code a chance to override any of these parms if it wants to
 }

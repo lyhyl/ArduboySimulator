@@ -34,7 +34,7 @@ void TouchHandlerArcadeComponent::OnAdd(Entity *pEnt)
 	m_pSize2d = &GetParent()->GetVar("size2d")->GetVector2();
 	m_pAlignment = &GetParent()->GetVar("alignment")->GetUINT32();
 	m_pTouchPadding = &GetParent()->GetVarWithDefault(string("touchPadding"), Variant(CL_Rectf(20.0f, 5.0f, 20.0f, 15.0f)))->GetRect();
-	m_pIgnoreTouchesOutsideRect = &GetParent()->GetVar("ignoreTouchesOutsideRect")->GetUINT32();
+	m_pAllowSlideOns = &GetVarWithDefault("allowSlideOns", uint32(1))->GetUINT32();
 
 	GetParent()->GetFunction("OnInput")->sig_function.connect(1, boost::bind(&TouchHandlerArcadeComponent::OnInput, this, _1));
 	//GetFunction("EndClick")->sig_function.connect(1, boost::bind(&TouchHandlerArcadeComponent::EndClick, this, _1));
@@ -60,7 +60,6 @@ void TouchHandlerArcadeComponent::HandleClickStart(CL_Vec2f &pt, uint32 fingerID
 		LogMsg("Ignoring click start because we're already 'down'.  Shouldn't be possible really.")	;
 		return;
 	}
-
 
 	//first, determine if the click is on our area
 	if (m_touchArea.contains(pt))
@@ -106,14 +105,16 @@ void TouchHandlerArcadeComponent::HandleClickMove( CL_Vec2f &pt, uint32 fingerID
 	} else
 	{
 		//currently not over, but did we move onto it?
-		if (m_touchArea.contains(pt))
+		if (*m_pAllowSlideOns != 0 && m_touchArea.contains(pt))
 		{
 			m_pTouchOver->Set(uint32(1));
 			VariantList vList(pt, GetParent(), fingerID, uint32(true));
 			pTouch->SetWasHandled(true, GetParent());
 			m_activeFinger = fingerID;
+			GetParent()->GetFunction("OnTouchStart")->sig_function(&vList);
 			GetParent()->GetFunction("OnOverStart")->sig_function(&vList);
-		} else
+	
+} else
 		{
 			//not on it, do nothing
 		}
