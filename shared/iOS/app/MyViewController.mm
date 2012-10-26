@@ -91,7 +91,7 @@
 	//NSLog(@"Got didRotate: %d", interfaceOrientation);
 	
     CGFloat pixelScale = [[UIScreen mainScreen] scale];
-    LogMsg("Learned Scale: %.2f", pixelScale);
+    //LogMsg("Learned Scale: %.2f", pixelScale);
     SetProtonPixelScaleFactor(pixelScale);
     
     if (!UIDeviceOrientationIsValidInterfaceOrientation(interfaceOrientation))
