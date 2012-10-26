@@ -63,7 +63,19 @@
 		animationInterval = animationIntervalSave;
 	}
 	
-	
+    CGFloat pixelScale = [[UIScreen mainScreen] scale];
+    UIScreen *pScreen = [UIScreen mainScreen];
+    CGRect fullScreenRect = pScreen.bounds;
+    
+    bool bUseSizeGuess = false;
+    
+	if (GetPrimaryGLX() == 0)
+    {
+        bUseSizeGuess = true;
+        SetPrimaryScreenSize(fullScreenRect.size.width, fullScreenRect.size.height);
+        SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(), 0);
+    }
+    
 	if (!GetBaseApp()->Init())
 	{
 		
@@ -71,6 +83,12 @@
 		[self release];
 		return nil;
 	}
+  
+    if (bUseSizeGuess)
+    {
+        //put it back, otherwise we may not fix it later
+        SetPrimaryScreenSize(0,0);
+    }
     
     GetBaseApp()->OnScreenSizeChange();
     
@@ -139,8 +157,6 @@
 
     [self setContentScaleFactor: GetProtonPixelScaleFactor()];
 
-    
-       
     
     glGenFramebuffersOES(1, &viewFramebuffer);
     glBindFramebufferOES(GL_FRAMEBUFFER_OES, viewFramebuffer);

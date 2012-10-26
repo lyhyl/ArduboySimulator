@@ -5,11 +5,15 @@
 #include "util/MiscUtils.h"
 #include "BaseApp.h"
 
+const float C_PERCENT_OF_PINCH_TO_DETECT_IT = 0.1f;
+
 TouchHandlerArcadeComponent::TouchHandlerArcadeComponent()
 {
 	m_activeFinger = -1;
-
+	m_secondFinger = -1;
+	m_pDontClaimOwnership = NULL;
 	SetName("TouchHandlerArcade");
+	m_bIsPinching = false;
 }
 
 TouchHandlerArcadeComponent::~TouchHandlerArcadeComponent()
@@ -18,10 +22,14 @@ TouchHandlerArcadeComponent::~TouchHandlerArcadeComponent()
 	{
 		//mark the touch we were using as unhandled now, so if we're recreated right at the same place controls don't
 		//go dead until they release and touch again
-		TouchTrackInfo *pTouch = GetBaseApp()->GetTouch(m_activeFinger);
-		if (pTouch)
+		if (m_pDontClaimOwnership && *m_pDontClaimOwnership == 0)
 		{
-			pTouch->SetWasHandled(false);
+			TouchTrackInfo *pTouch = GetBaseApp()->GetTouch(m_activeFinger);
+
+			if (pTouch)
+			{
+				pTouch->SetWasHandled(false);
+			}
 		}
 	}
 }
@@ -35,6 +43,7 @@ void TouchHandlerArcadeComponent::OnAdd(Entity *pEnt)
 	m_pAlignment = &GetParent()->GetVar("alignment")->GetUINT32();
 	m_pTouchPadding = &GetParent()->GetVarWithDefault(string("touchPadding"), Variant(CL_Rectf(20.0f, 5.0f, 20.0f, 15.0f)))->GetRect();
 	m_pAllowSlideOns = &GetVarWithDefault("allowSlideOns", uint32(1))->GetUINT32();
+	m_pDontClaimOwnership = &GetVarWithDefault("dontClaimOwnerShip", uint32(0))->GetUINT32();
 
 	GetParent()->GetFunction("OnInput")->sig_function.connect(1, boost::bind(&TouchHandlerArcadeComponent::OnInput, this, _1));
 	//GetFunction("EndClick")->sig_function.connect(1, boost::bind(&TouchHandlerArcadeComponent::EndClick, this, _1));
@@ -65,7 +74,20 @@ void TouchHandlerArcadeComponent::HandleClickStart(CL_Vec2f &pt, uint32 fingerID
 	if (m_touchArea.contains(pt))
 	{
 		TouchTrackInfo *pTouch = GetBaseApp()->GetTouch(fingerID);
-		pTouch->SetWasHandled(true, GetParent());
+		
+			if (*m_pDontClaimOwnership == 1)
+			{
+				if (m_activeFinger == fingerID)
+				{
+					ReleaseClick(pt, fingerID);
+				}
+			}
+		
+		if (*m_pDontClaimOwnership == 0)
+		{
+			pTouch->SetWasHandled(true, GetParent());
+		}
+		
 		m_activeFinger = fingerID;
 		m_pTouchOver->Set(uint32(1));
 		VariantList vList(pt, GetParent(), fingerID, uint32(true));
@@ -79,7 +101,7 @@ void TouchHandlerArcadeComponent::HandleClickMove( CL_Vec2f &pt, uint32 fingerID
 {
 	TouchTrackInfo *pTouch = GetBaseApp()->GetTouch(fingerID);
 	
-	if (pTouch->GetEntityThatHandledIt() == GetParent())
+	if (fingerID == m_activeFinger)
 	{
 		//currently over, did we move off?
 		if (m_touchArea.contains(pt))
@@ -100,7 +122,13 @@ void TouchHandlerArcadeComponent::HandleClickMove( CL_Vec2f &pt, uint32 fingerID
 			VariantList vList(pt, GetParent(), fingerID, uint32(false));
 			GetParent()->GetFunction("OnOverEnd")->sig_function(&vList);
 			m_activeFinger = -1;
-			pTouch->SetWasHandled(false);
+			m_secondFinger = -1;
+			m_bIsPinching = false;
+
+			if (*m_pDontClaimOwnership == 0)
+			{
+				pTouch->SetWasHandled(false);
+			}
 		}
 	} else
 	{
@@ -109,7 +137,11 @@ void TouchHandlerArcadeComponent::HandleClickMove( CL_Vec2f &pt, uint32 fingerID
 		{
 			m_pTouchOver->Set(uint32(1));
 			VariantList vList(pt, GetParent(), fingerID, uint32(true));
-			pTouch->SetWasHandled(true, GetParent());
+			
+			if (*m_pDontClaimOwnership == 0)
+			{
+				pTouch->SetWasHandled(true, GetParent());
+			}
 			m_activeFinger = fingerID;
 			GetParent()->GetFunction("OnTouchStart")->sig_function(&vList);
 			GetParent()->GetFunction("OnOverStart")->sig_function(&vList);
@@ -126,7 +158,7 @@ void TouchHandlerArcadeComponent::HandleClickEnd( CL_Vec2f &pt, uint32 fingerID 
 {
 	TouchTrackInfo *pTouch = GetBaseApp()->GetTouch(fingerID);
 
-	if (pTouch->GetEntityThatHandledIt() != GetParent())
+	if (m_activeFinger != fingerID)
 	{
 		return;
 	}
@@ -142,9 +174,26 @@ void TouchHandlerArcadeComponent::HandleClickEnd( CL_Vec2f &pt, uint32 fingerID 
 	{
 		GetParent()->GetFunction("OnTouchEnd")->sig_function(&vList);
 	}
+	m_secondFinger = -1;
 	m_activeFinger = -1;
-	pTouch->SetWasHandled(false);
+	m_bIsPinching = false;
+	
+	if (*m_pDontClaimOwnership == 0)
+	{
+		pTouch->SetWasHandled(false);
+	}
 
+}
+
+void TouchHandlerArcadeComponent::ReleaseClick(CL_Vec2f vPt, uint32 fingerID)
+{
+	//um, we were tracking this and someone else claimed ownship?!  Ok, release it.
+	m_pTouchOver->Set(uint32(0));
+	VariantList vList(vPt, GetParent(), fingerID, uint32(false));
+	GetParent()->GetFunction("OnOverEnd")->sig_function(&vList);
+	m_activeFinger = -1;
+	m_secondFinger = -1;
+	m_bIsPinching = false;
 }
 
 void TouchHandlerArcadeComponent::OnInput( VariantList *pVList )
@@ -162,14 +211,8 @@ void TouchHandlerArcadeComponent::OnInput( VariantList *pVList )
 		return;
 	}
 
-	if (m_activeFinger != -1 && m_activeFinger != fingerID)
-	{
-		//don't care, we're tracking something else right now
-		return;
-	}
+	TouchTrackInfo *pTouch;
 
-    TouchTrackInfo *pTouch;
-    
 	switch (eMessageType( int(pVList->Get(0).GetFloat())))
 	{
 
@@ -178,15 +221,64 @@ void TouchHandlerArcadeComponent::OnInput( VariantList *pVList )
 	case MESSAGE_TYPE_GUI_CLICK_MOVE:
 
 		pTouch = GetBaseApp()->GetTouch(fingerID);
-		if (pTouch->WasHandled() && pTouch->GetEntityThatHandledIt() != GetParent()) return;
+		
+		if (pTouch->WasHandled() && pTouch->GetEntityThatHandledIt() != GetParent())
+		{
+			if (*m_pDontClaimOwnership == 1)
+			{
+				if (m_activeFinger == fingerID)
+				{
+					ReleaseClick(pt, fingerID);
+				}
+			}
+			return;
+		}
 
-		if (pTouch->WasPreHandled()) return; //a scroll box marks if this way, if a scroller is in front of us,
+		if (pTouch->WasPreHandled())
+		{
+			if (*m_pDontClaimOwnership == 1)
+			{
+				if (m_activeFinger == fingerID)
+				{
+					ReleaseClick(pt, fingerID);
+				}
+			}
+			return; //a scroll box marks if this way, if a scroller is in front of us,
+		}
 		//we don't want to claim ownership of this
 		break;
 
 	default:;
 		return;
 	}
+
+	if (m_activeFinger != -1 && m_activeFinger != fingerID)
+	{
+		//don't care, we're tracking something else right now
+		
+		//just kidding, we do, because it's a second finger that could be used for pinching
+		switch (eMessageType( int(pVList->Get(0).GetFloat())))
+		{
+		case MESSAGE_TYPE_GUI_CLICK_START:
+
+			HandleClickStartSecond(pt, fingerID);
+			break;
+
+		case MESSAGE_TYPE_GUI_CLICK_END:
+
+			HandleClickEndSecond(pt, fingerID);
+			break;
+
+		case MESSAGE_TYPE_GUI_CLICK_MOVE:
+
+			HandleClickMoveSecond(pt, fingerID);
+			break;
+
+		default:;
+		}	
+		return;
+	}
+
 
 	switch (eMessageType( int(pVList->Get(0).GetFloat())))
 	{
@@ -216,4 +308,64 @@ void TouchHandlerArcadeComponent::UpdateTouchArea(Variant *v)
 	m_touchArea.set_top_left(*m_pPos2d);
 	m_touchArea.set_size(CL_Sizef(m_pSize2d->x, m_pSize2d->y));
 	ApplyPadding(&m_touchArea, *m_pTouchPadding);
+}
+
+
+//a second finger has touched
+void TouchHandlerArcadeComponent::HandleClickStartSecond(CL_Vec2f &pt, uint32 fingerID)
+{
+
+	if (m_secondFinger != -1)
+	{
+		//we're already tracking a second finger though
+		LogMsg("Ignoring finger, already tracking two");
+		return;
+	}
+
+	//first, determine if the click is on our area
+	if (m_touchArea.contains(pt))
+	{
+		TouchTrackInfo *pTouch = GetBaseApp()->GetTouch(fingerID);
+		
+		m_secondFinger = fingerID;
+
+		//remember locations of the two fingers
+		m_secondFingerStartPos = pTouch->GetPos();
+		m_fingerStartPos = GetBaseApp()->GetTouch(m_activeFinger)->GetPos();
+	}
+}
+
+void TouchHandlerArcadeComponent::HandleClickMoveSecond( CL_Vec2f &pt, uint32 fingerID )
+{
+	if (m_secondFinger != fingerID) return; //not us
+
+	TouchTrackInfo *pTouch = GetBaseApp()->GetTouch(fingerID);
+	
+	float originalDist = (m_fingerStartPos-m_secondFingerStartPos).length();
+	float newDist = (GetBaseApp()->GetTouch(m_activeFinger)->GetPos() - pTouch->GetPos()).length();
+
+	float finalMod = (originalDist-newDist)/ GetScreenSize().length();
+
+	//LogMsg("Pinch Offset is %.2f (pinch mod: %.2f)", originalDist-newDist, finalMod );
+
+
+	if (m_bIsPinching || fabs(finalMod) > C_PERCENT_OF_PINCH_TO_DETECT_IT)
+	{
+		m_bIsPinching = true;
+		
+		VariantList vList(GetParent(), -finalMod);
+		GetParent()->GetFunction("OnPinchMod")->sig_function(&vList);
+
+		//reset last pos
+		m_secondFingerStartPos = pTouch->GetPos();
+		m_fingerStartPos = GetBaseApp()->GetTouch(m_activeFinger)->GetPos();
+	}
+    
+}
+
+void TouchHandlerArcadeComponent::HandleClickEndSecond( CL_Vec2f &pt, uint32 fingerID )
+{
+	if (m_secondFinger != fingerID) return; //not us
+	m_secondFinger = -1;
+	m_bIsPinching = false;
 }

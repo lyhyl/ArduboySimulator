@@ -16,6 +16,9 @@
 //Like a normal touch HandlerArcade, but with better multi-touch support, and marks its buttons as "handled", better for
 //say, arrow buttons for an arcade button 
 
+//Also, it detects pinches, calls OnPinchMod on parent with the parms being parent entity, pinch % change. (0.5 would mean pinched half the screens worth)
+//If dontClaimOwnerShip is set to 1, it will never mark touches as handled, good for a bg that has buttons in front of it
+
 class TouchHandlerArcadeComponent: public EntityComponent
 {
 public:
@@ -39,10 +42,21 @@ private:
 	CL_Rectf *m_pTouchPadding;
 	uint32 *m_pAlignment;
 	uint32 *m_pAllowSlideOns; //if false/0, will only respond to clicks that originate on us (good for backgrounds, bad for buttons)
+	uint32 *m_pDontClaimOwnership; //if 1, we'll never mark touches as owned by us, and stop tracking touches that suddenly get marked.  Good for backgrounds
+
 	void UpdateTouchArea(Variant *v);
+	void HandleClickStartSecond(CL_Vec2f &pt, uint32 fingerID);
+	void HandleClickMoveSecond( CL_Vec2f &pt, uint32 fingerID );
+	void HandleClickEndSecond( CL_Vec2f &pt, uint32 fingerID );
+	void ReleaseClick(CL_Vec2f vPt, uint32 fingerID);
 	CL_Rectf m_touchArea;
-	int m_activeFinger;
 	
+	int m_activeFinger;
+	int m_secondFinger; //we monitor this for noticing pinch zooming
+	
+	CL_Vec2f m_fingerStartPos;
+	CL_Vec2f m_secondFingerStartPos;
+	bool m_bIsPinching;
 
 };
 
