@@ -6,6 +6,31 @@
 #include <string.h>
 #include "enet/enet.h"
 
+unsigned int g_enetTotalBytesSent = 0;
+unsigned int g_enetTotalBytesReceived = 0;
+
+
+unsigned int g_enetTotalBytesSentDecompressed = 0;
+unsigned int g_enetTotalBytesReceivedDecompressed = 0;
+
+size_t enet_get_total_bytes_sent (void)
+{
+	return g_enetTotalBytesSent;
+}
+size_t enet_get_total_bytes_received (void)
+{
+	return g_enetTotalBytesReceived;
+}
+
+size_t enet_get_total_bytes_sent_decompressed (void)
+{
+	return g_enetTotalBytesSentDecompressed;
+}
+size_t enet_get_total_bytes_received_decompressed (void)
+{
+	return g_enetTotalBytesReceivedDecompressed;
+}
+
 typedef struct _ENetSymbol
 {
     /* binary indexed tree of symbols */
@@ -251,7 +276,8 @@ enet_range_coder_compress (void * context, const ENetBuffer * inBuffers, size_t 
 //	char stCrap[256];
 //	int inBuff = inLimit;
 #endif
-    ENetRangeCoder * rangeCoder = (ENetRangeCoder *) context;
+    
+	ENetRangeCoder * rangeCoder = (ENetRangeCoder *) context;
     enet_uint8 * outStart = outData, * outEnd = & outData [outLimit];
     const enet_uint8 * inData, * inEnd;
     enet_uint32 encodeLow = 0, encodeRange = ~0;
@@ -347,7 +373,12 @@ enet_range_coder_compress (void * context, const ENetBuffer * inBuffers, size_t 
 //	sprintf(stCrap, "in buffer count %d, compressed to %d\r\n", inBuff, (outData - outStart));
 //	OutputDebugString(stCrap);
 #endif
-    return (size_t) (outData - outStart);
+	g_enetTotalBytesSentDecompressed += inLimit;
+
+	g_enetTotalBytesSent += outData - outStart;
+
+
+	return (size_t) (outData - outStart);
 }
 
 #define ENET_RANGE_CODER_SEED \
@@ -519,6 +550,8 @@ enet_range_coder_decompress (void * context, const enet_uint8 * inData, size_t i
     ENetExclude * nextExclude = excludes;
 #endif
   
+	g_enetTotalBytesReceived += inLimit;
+
     if (rangeCoder == NULL || inLimit <= 0)
       return 0;
 
@@ -631,7 +664,9 @@ enet_range_coder_decompress (void * context, const enet_uint8 * inData, size_t i
           order ++;
         ENET_RANGE_CODER_FREE_SYMBOLS;
     }
-                        
+                  
+	g_enetTotalBytesReceivedDecompressed += (outData - outStart);
+
     return (size_t) (outData - outStart);
 }
 
