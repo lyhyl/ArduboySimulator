@@ -44,6 +44,7 @@ public:
 
 	void ModLastPos( CL_Vec2d vPos );
 	void SetLastPos(CL_Vec2d vLastPos); //for a hack I had to do on a project..
+	void ResetLastPos();
 
 private:
 

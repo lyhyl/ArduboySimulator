@@ -34,6 +34,7 @@ void TouchDragComponent::OnAdd(Entity *pEnt)
 	m_pSwapXAndY = &GetVar("swapXAndY")->GetUINT32();
 	m_pReverseX = &GetVar("reverseX")->GetUINT32();
 	m_pReverseY = &GetVar("reverseY")->GetUINT32();
+	m_pDisabled = &GetVarWithDefault("disabled", uint32(0))->GetUINT32();
 
 	m_pTouchPadding = &GetParent()->GetVarWithDefault(string("touchPadding"), Variant(CL_Rectf()))->GetRect();
 
@@ -95,6 +96,9 @@ void TouchDragComponent::OnInput( VariantList *pVList )
 	case MESSAGE_TYPE_GUI_CLICK_START:
 		//first, determine if the click is on our area
 		{
+
+			if (*m_pDisabled != 0) return;
+
 			CL_Rectf r(*m_pPos2d, CL_Sizef(m_pSize2d->x, m_pSize2d->y));
 
 			ApplyPadding(&r, *m_pTouchPadding);
@@ -152,4 +156,14 @@ void TouchDragComponent::SetLastPos( CL_Vec2d vLastPos )
 void TouchDragComponent::ModLastPos( CL_Vec2d vPos )
 {
 	m_lastPos += vPos;
+}
+
+void TouchDragComponent::ResetLastPos()
+{
+	if (m_activeFingerID != -1)
+	{
+		TouchTrackInfo *pTouch = GetBaseApp()->GetTouch(m_activeFingerID);
+
+		m_lastPos = pTouch->GetPos();
+	}
 }

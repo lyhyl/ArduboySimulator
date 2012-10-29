@@ -495,6 +495,7 @@ EntityComponent * PulsateColorEntity(Entity *pEnt, bool bRecursive, unsigned int
 bool IsDisabledEntity(Entity *pEnt)
 {
 	EntityComponent * pComp = pEnt->GetComponentByName("Button2D");
+	if (!pComp) pComp = pEnt->GetComponentByName("TouchDrag");
 
 	if (pComp)
 	{
@@ -511,19 +512,24 @@ Entity * DisableEntityButtonByName(const string &entityName, Entity *pRootEntity
 	if (!pEnt) return NULL;
 
 	EntityComponent * pComp = pEnt->GetComponentByName("Button2D");
+	if (!pComp) pComp = pEnt->GetComponentByName("TouchDrag");
 
 	if (pComp)
 	{
 		pComp->GetVar("disabled")->Set(uint32(1));
 	}
-	
+
+
 	return pEnt;
 
 }
 
+
+
 void DisableAllButtonsEntity(Entity *pEnt, bool bRecursive)
 {
 	EntityComponent * pComp = pEnt->GetComponentByName("Button2D");
+	if (!pComp) pComp = pEnt->GetComponentByName("TouchDrag");
 
 	if (pComp)
 	{
@@ -546,6 +552,7 @@ void DisableAllButtonsEntity(Entity *pEnt, bool bRecursive)
 void EnableAllButtonsEntity(Entity *pEnt, bool bRecursive, int delayBeforeActionMS, eTimingSystem timing)
 {
 	EntityComponent * pComp = pEnt->GetComponentByName("Button2D");
+	if (!pComp) pComp = pEnt->GetComponentByName("TouchDrag");
 
 	if (pComp)
 	{
@@ -1139,6 +1146,12 @@ EntityComponent * SetTextEntity(Entity *pEntWithTextComponent, const string &tex
 	{
 		pComp = pEntWithTextComponent->GetComponentByName("TextBoxRender");
 	}
+	
+	if (!pComp)
+	{
+		pComp = pEntWithTextComponent->GetComponentByName("InputTextRender");
+	}
+
 	if (!pComp)
 	{
 		assert(!"SetTextEntity failed - Send an entity with a TextBoxRender or TextRender component for crissake!");
