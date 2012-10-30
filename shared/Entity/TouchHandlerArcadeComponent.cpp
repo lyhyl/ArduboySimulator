@@ -5,7 +5,7 @@
 #include "util/MiscUtils.h"
 #include "BaseApp.h"
 
-const float C_PERCENT_OF_PINCH_TO_DETECT_IT = 0.1f;
+const float C_PERCENT_OF_PINCH_TO_DETECT_IT = 0.05f;
 
 TouchHandlerArcadeComponent::TouchHandlerArcadeComponent()
 {

@@ -100,7 +100,7 @@ std::string RemoveTrailingBackslash(std::string st);
 std::string GetFileExtension(std::string fileName);
 std::string ModifyFileExtension(std::string fileName, std::string extension);
 void TruncateString(std::string &input, size_t len);
-bool IsInString(std::string &s, const char *search);
+bool IsInString(const std::string &s, const char *search);
 void RotationToXYMod(float rotation, float *pXMod ,float *pYMod); //given a rotation in degrees, tells you what to flip
 void SetFloatWithTarget(float *p_out_dest, float r_target, float r_amount);
 std::string FilterToValidAscii(const std::string &input, bool bStrict);
