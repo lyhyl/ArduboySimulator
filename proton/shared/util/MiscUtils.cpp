@@ -452,7 +452,7 @@ void TruncateString(string &input, size_t len)
 	}
 }
 
-bool IsInString(string &s, const char *search)
+bool IsInString(const string &s, const char *search)
 {
 	if (s.find(search) != string::npos) return true;
 	return false;

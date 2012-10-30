@@ -410,7 +410,7 @@ void InputTextRenderComponent::OnRender(VariantList *pVList)
 	
 	uint32 color = ColorCombine(*m_pColor, *m_pColorMod, alpha);
 
-	string *pTextToDraw = m_pText;
+	string *pTextToDraw = &m_displayText;
 
 	if (!*m_pHasFocus && !m_pPlaceHolderText->empty())
 	{
