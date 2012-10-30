@@ -416,16 +416,21 @@ void ArcadeInputComponent::RemoveKeyBindingsStartingWith( VariantList *pVList )
 {
 	ArcadeBindList::iterator itor = m_bindings.begin();
 
-	for (;itor != m_bindings.end(); itor++)
+
+	for (;itor != m_bindings.end();)
 	{
 		if (StringFromStartMatches(itor->m_name, pVList->Get(0).GetString()))
 		{
 #ifdef _DEBUG
-			LogMsg("Removing binding %s", itor->m_name.c_str());
+			LogMsg("Removing binding %s (%d left)", itor->m_name.c_str(), m_bindings.size());
 #endif
-			ArcadeBindList::iterator itorTemp = itor;
-			itor++;
-			m_bindings.erase(itorTemp);
+			//ArcadeBindList::iterator itorTemp = itor;
+			//itor++;
+			m_bindings.erase(itor++);
+			if (m_bindings.empty()) return;
+		} else
+		{
+			 itor++;
 		}
 	}
 }
