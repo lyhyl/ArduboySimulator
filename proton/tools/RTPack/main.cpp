@@ -143,6 +143,7 @@ void ShowHelp()
 	LogMsg("Help and examples\n");
 	LogMsg("RTPack <any file> (Compresses it as an rtpack without changing the name)");
 	LogMsg("RTPack -make_font <filename.txt> (Create a .rtfont)");
+	LogMsg("RTPack -add_hash_to_text_file <any file> hashlist_to_add_it_to.txt");
 	
 	LogMsg("");
 	LogMsg("More options/flags for making textures:\n");
@@ -168,7 +169,7 @@ void ShowHelp()
 
 int main(int argc, char* argv[])
 {
-	LogMsg("\nRTPack V1.3 by Seth A. Robinson.  /h for help\n");
+	LogMsg("\nRTPack V1.4 by Seth A. Robinson.  /h for help\n");
 	
 #ifdef _DEBUG
 	//printf("Got %d parms:", argc-1);
@@ -293,7 +294,6 @@ int main(int argc, char* argv[])
 			GetApp()->SetPixelType(pvrtexlib::OGL_RGBA_8888);
 		}
 
-
 		if (GetApp()->GetPixelType() != 0)
 		{
 			if (GetApp()->m_parms.size() < 2)
@@ -305,7 +305,6 @@ int main(int argc, char* argv[])
 				packer.SetCompressionType(GetApp()->GetPixelType());
 				packer.ProcessTexture(GetApp()->GetLastParm());
 			}
-
 		}
 
 			if (GetApp()->ParmExists("-make_font"))
@@ -320,7 +319,27 @@ int main(int argc, char* argv[])
 				}
 			}
 
-	
+			if (GetApp()->ParmExists("-add_hash_to_text_file"))
+			{
+				if (GetApp()->m_parms.size() < 3)
+				{
+					LogError("Aren't you missing some parms to use -add_hash_to_text_file?");
+				} else
+				{
+					string fileToHash = GetApp()->m_parms[1];
+					string fileToAddTo = GetApp()->m_parms[2];
+					
+					if (StringFromStartMatches(fileToHash, GetBaseAppPath()))
+					{
+						//remove this part of the path, it's probably C:\PROTON\CRAP\YOURMOM\ or something
+						fileToHash = fileToHash.substr(GetBaseAppPath().size(), fileToHash.size()-GetBaseAppPath().size());
+					}
+					StringReplace("\\", "/", fileToHash); //more portable
+					string msg = fileToHash+"|"+toString(GetHashOfFile(fileToHash, false));
+					AppendStringToFile(fileToAddTo, msg+"\r\n");
+					LogMsg("Added '%s' to %s", msg.c_str(), fileToAddTo.c_str());
+				}
+			}
 
 #ifdef _DEBUG
 	WaitForKey();
