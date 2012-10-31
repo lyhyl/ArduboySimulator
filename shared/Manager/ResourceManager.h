@@ -44,7 +44,7 @@ public:
 	 *
 	 * \see GetSurfaceResource()
 	 */
-	SurfaceAnim * GetSurfaceAnim(const string &fileName);
+	SurfaceAnim * GetSurfaceAnim(const string &fileName, bool bAddBasePath = false);
 
 	/**
 	 * Gets a resource of any class that is or is inherited from \c Surface.
@@ -57,7 +57,9 @@ public:
 	 * argument however only has effect if the \c Surface has not been previously loaded.
 	 */
 	template<class T>
-	T * GetSurfaceResource(const string &fileName, Surface::eTextureType textureType = Surface::TYPE_DEFAULT) {
+	T * GetSurfaceResource(const string &fileName, Surface::eTextureType textureType = Surface::TYPE_DEFAULT,
+		bool bAddBasePath = false)
+	{
 		if (fileName.empty()) return NULL;
 
 		Resource *pData = FindDataByKey(fileName);
@@ -67,7 +69,7 @@ public:
 
 			pSurf->SetTextureType(textureType);
 
-			if (!pSurf->LoadFile(fileName))
+			if (!pSurf->LoadFile(fileName, bAddBasePath))
 			{
 				delete pSurf;
 

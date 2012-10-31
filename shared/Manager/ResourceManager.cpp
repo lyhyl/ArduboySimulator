@@ -27,9 +27,9 @@ ResourceManager::Resource * ResourceManager::FindDataByKey(const string &keyName
 	return NULL; //fail
 }
 
-SurfaceAnim * ResourceManager::GetSurfaceAnim(const string &fileName)
+SurfaceAnim * ResourceManager::GetSurfaceAnim(const string &fileName, bool bAddBasePath)
 {
-	return GetSurfaceResource<SurfaceAnim>(fileName, Surface::TYPE_GUI);
+	return GetSurfaceResource<SurfaceAnim>(fileName, Surface::TYPE_GUI, bAddBasePath);
 }
 
 #ifdef RT_SPRITEANIMATION

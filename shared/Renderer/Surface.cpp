@@ -503,7 +503,7 @@ void Surface::Bind()
 
 }
 
-bool Surface::LoadFile( string fName )
+bool Surface::LoadFile( string fName, bool bAddBasePath )
 {
 	if (fName.empty())
 	{
@@ -515,7 +515,7 @@ bool Surface::LoadFile( string fName )
 	LogMsg("Loading texture %s", fName.c_str());
 #endif
 
-	FileInstance f(fName);
+	FileInstance f(fName, bAddBasePath);
 	if (!f.IsLoaded()) 
 	{
 		LogMsg("Couldn't load surface %s", fName.c_str());

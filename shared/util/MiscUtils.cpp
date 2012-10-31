@@ -1,5 +1,6 @@
 #include "PlatformPrecomp.h"
 #include "MiscUtils.h"
+#include "ResourceUtils.h"
 
 //taken from Gamedeveloper magazine's InnerProduct (Sean Barrett 2005-03-15)
 
@@ -26,6 +27,23 @@ unsigned int HashString(const char *str, int len)
 		}
 	}
 	return acc;
+}
+
+unsigned int GetHashOfFile(string fName, bool bAddBasePath)
+{
+	unsigned int hash;
+	int size;
+	uint8 *pData;
+
+	unsigned int lsize;
+	//we use basic so it won't automatically decompress an .rttex for us
+	pData = LoadFileIntoMemoryBasic(fName, &lsize, false, bAddBasePath);
+	size = lsize;
+
+		if (!pData) return 0; //no file, no hash
+	hash = HashString((char*)pData, size);
+	SAFE_DELETE_ARRAY(pData);
+	return hash;
 }
 
 bool IsEven(int number)
