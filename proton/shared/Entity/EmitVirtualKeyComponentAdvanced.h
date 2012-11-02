@@ -36,7 +36,9 @@ private:
 
 	void OnOverStart(VariantList *pVList);
 	void OnOverEnd(VariantList *pVList);
+	void OnDisabledChanged(Variant *pDataObject);
 
+	uint32 *m_pDisabled;
 	uint32 *m_pKeyCode;
 };
 

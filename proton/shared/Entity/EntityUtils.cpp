@@ -530,6 +530,7 @@ void DisableAllButtonsEntity(Entity *pEnt, bool bRecursive)
 {
 	EntityComponent * pComp = pEnt->GetComponentByName("Button2D");
 	if (!pComp) pComp = pEnt->GetComponentByName("TouchDrag");
+	if (!pComp) pComp = pEnt->GetComponentByName("EmitVirtualKey");
 
 	if (pComp)
 	{
@@ -553,7 +554,8 @@ void EnableAllButtonsEntity(Entity *pEnt, bool bRecursive, int delayBeforeAction
 {
 	EntityComponent * pComp = pEnt->GetComponentByName("Button2D");
 	if (!pComp) pComp = pEnt->GetComponentByName("TouchDrag");
-
+	if (!pComp) pComp = pEnt->GetComponentByName("EmitVirtualKey");
+	
 	if (pComp)
 	{
 		if (delayBeforeActionMS == 0)
