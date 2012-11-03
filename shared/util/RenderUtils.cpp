@@ -63,7 +63,11 @@ int GetDevicePixelsPerInchDiagonal()
 
 	if (cachedPixelsPerInch == 0)
 	{
-			//one time look up
+		//one time look up
+		
+		//First, if SetDeviceSizeDiagonalInInches() was used earlier by the native side, we're good to go.  If not, we'll
+		//guess.
+
 		if (g_deviceDiagonalSizeInInches == 0)
 		{
 			//guess.
@@ -78,18 +82,9 @@ int GetDevicePixelsPerInchDiagonal()
 
 			if (cachedPixelsPerInch == 0)
 			{
-				if (!IsLargeScreen())
-				{
-					cachedPixelsPerInch = 163;
-				} else
-				{
-					if (IsTabletSize())
-					{
-						cachedPixelsPerInch = 163;
-					}
-				}
-				cachedPixelsPerInch = 265;
-				}
+				//we really have no clue
+				cachedPixelsPerInch = 163;
+			}
 		} else
 		{
 			cachedPixelsPerInch = (int) (GetScreenSize().length() / g_deviceDiagonalSizeInInches);
