@@ -139,6 +139,9 @@ void InputTextRenderComponent::OnTextChanged(Variant *pDataObject)
 	{
 		SetLastStringInput(*m_pText);
 	}
+
+	//oh, fix the border around us to fit if needed
+	m_pSize2d->y = GetBaseApp()->GetFont(eFont(*m_pFontID))->GetLineHeight(m_pScale2d->y)+6.0f;
 }
 
 void InputTextRenderComponent::OnScaleChanged(Variant *pDataObject)
