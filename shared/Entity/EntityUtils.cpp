@@ -1088,6 +1088,24 @@ void SetTextShadowColor(Entity *pEnt, uint32 color)
 	pComp->GetVar("shadowColor")->Set(uint32(color));
 }
 
+//Gets a good font and scale so the text will match this ratio of the screen height
+void GetFontAndScaleToFitThisLinesPerScreenY(eFont *pFontIDOut, float *pFontScaleOut, float desiredLinesPerScreenY)
+{
+	*pFontIDOut = FONT_SMALL;
+	float sizeY = GetBaseApp()->GetFont(*pFontIDOut)->GetLineHeight(1.0f);
+
+	*pFontScaleOut = (GetScreenSizeYf()/desiredLinesPerScreenY)/sizeY;
+
+	if (*pFontScaleOut <= 1.0f) return;
+
+	//let's use the bigger font instead
+	*pFontIDOut = FONT_LARGE;
+	sizeY = GetBaseApp()->GetFont(*pFontIDOut)->GetLineHeight(1.0f);
+	*pFontScaleOut = (GetScreenSizeYf()/desiredLinesPerScreenY)/sizeY;
+
+}
+
+
 //if you have a giant font that you are afraid is going to be too big on some phone
 //sizes, this is a way to auto-scale it so it works out
 //Example: float fontScale = EnforceMinimumFontLineToScreenRatio(FONT_LARGE, 1.0f, 6.6f);
@@ -1105,12 +1123,6 @@ float EnforceMinimumFontLineToScreenRatio(eFont fontID, float fontScale, float m
 	return fontScale;
 }
 
-
-float GetFontScaleToFitThisManyLinesOnScreen(eFont fontID, float minLineToScreenRatio)
-{
-	float fontSizeRating = GetScreenSizeYf() / GetBaseApp()->GetFont(fontID)->GetLineHeight(1.0f);
-	return fontSizeRating/minLineToScreenRatio;
-}
 
 void SetAlignmentEntity(Entity *pEnt, eAlignment align)
 {
@@ -1971,8 +1983,7 @@ Entity * CreateCheckbox(Entity *pBG, string name, string text, float x, float y,
 	//add the text off to the right
 	CL_Vec2f vImageSize = pEnt->GetVar("size2d")->GetVector2();
 	Entity *pTextEnt = CreateTextLabelEntity(pEnt, "_text"+name, vImageSize.x+iPhoneMapX(8), iPhoneMapY(3), text);
-	pTextEnt->GetVar("scale2d")->Set(CL_Vec2f(fontScale, fontScale));
-
+	SetupTextEntity(pTextEnt, fontID, fontScale);
 	pEnt->GetVar("scale2d")->Set(pEnt->GetVar("scale2d")->GetVector2()*fontScale);
 	return pEnt;
 }
