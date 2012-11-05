@@ -91,7 +91,7 @@ StreamingInstance * FileManager::GetStreaming( string fileName, int *pSizeOut, b
 
 }
 
-byte * FileManager::Get( string fileName, int *pSizeOut, bool bAddBasePath )
+byte * FileManager::Get( string fileName, int *pSizeOut, bool bAddBasePath, bool bAutoDecompress)
 {
 	
 		byte * pData = NULL;
@@ -144,7 +144,7 @@ byte * FileManager::Get( string fileName, int *pSizeOut, bool bAddBasePath )
 		}
 
 		//also detect and perform any decompression here by checking the header..
-		if (IsAPackedFile(pData))
+		if (bAutoDecompress && IsAPackedFile(pData))
 		{
 			//let's decompress it to memory before passing it back
 			unsigned int decompressedSize;
