@@ -36,9 +36,13 @@ unsigned int GetHashOfFile(string fName, bool bAddBasePath)
 	uint8 *pData;
 
 	unsigned int lsize;
+#ifdef _CONSOLE
 	//we use basic so it won't automatically decompress an .rttex for us
 	pData = LoadFileIntoMemoryBasic(fName, &lsize, false, bAddBasePath);
 	size = lsize;
+#else 
+	pData = GetFileManager()->Get(fName, &size, false, false);
+#endif
 
 		if (!pData) return 0; //no file, no hash
 	hash = HashString((char*)pData, size);
