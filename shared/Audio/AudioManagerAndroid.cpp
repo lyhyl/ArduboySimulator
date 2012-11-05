@@ -145,6 +145,7 @@ void AudioManagerAndroid::Preload( string fName, bool bLooping /*= false*/, bool
 		if (GetFileExtension(fName) == "mp3")
 		{
 			fName = ModifyFileExtension(fName, "ogg");
+			StringReplace("/mp3", "/ogg", fName);
 		} else
 		if (GetFileExtension(fName) == "wav")
 		{
@@ -233,6 +234,9 @@ AudioHandle AudioManagerAndroid::Play( string fName, bool bLooping /*= false*/, 
 		if (GetFileExtension(fName) == "mp3")
 		{
 			fName = ModifyFileExtension(fName, "ogg");
+			StringReplace("/mp3", "/ogg", fName);
+
+			fName = ModifyFileExtension(fName, "ogg");
 		} else
 		if (GetFileExtension(fName) == "wav")
 		{
@@ -292,6 +296,7 @@ AudioHandle AudioManagerAndroid::Play( string fName, bool bLooping /*= false*/, 
 		{
 			//something is wrong... probably not loaded.  Reschedule
 			GetMessageManager()->SendGame(MESSAGE_TYPE_PLAY_SOUND, fName, 50, TIMER_SYSTEM);
+			return (AudioHandle) 0;
 		}
 
 		return (AudioHandle) streamID;
@@ -509,7 +514,6 @@ void AudioManagerAndroid::SetVol( AudioHandle soundID, float vol )
 		SetMusicVol(vol);
 		return;
 	}
-	assert(soundID);
 	
 	if (soundID == -1)
 	{
@@ -518,10 +522,13 @@ void AudioManagerAndroid::SetVol( AudioHandle soundID, float vol )
 		SetMusicVol(m_musicVol);
 		return;
 	}
+	if (soundID == 0) return;
 
 #ifdef _DEBUG
 	//LogMsg("Setting vol to %.2f", vol);
 #endif
+
+
 	JNIEnv *env = GetJavaEnv();
 	if (env)
 	{

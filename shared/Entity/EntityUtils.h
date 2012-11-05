@@ -292,7 +292,7 @@ void AnimateEntitySetMirrorMode(Entity *pEnt, bool flipX, bool flipY);
 void ScaleEntity(Entity *pEnt, float scaleStart, float scaleEnd, int timeMS, int delayBeforeStartingMS = 0, eInterpolateType interpolationType = INTERPOLATE_SMOOTHSTEP); //send -1 for scaleStart to use current scale as start
 
 void FadeEntity(Entity *pEnt, bool bRecursive, float alpha, int timeMS, int delayBeforeFadingMS = 0, bool bAllowMultipleFadesActiveAtOnce = false);
-void FadeScreen( Entity *pParent, float defaultStartAlpha, float targetAlpha, int fadeDurationMS, bool bDeleteWhenDone);
+Entity * FadeScreen( Entity *pParent, float defaultStartAlpha, float targetAlpha, int fadeDurationMS, bool bDeleteWhenDone);
 
 //if pVStartingPos isn't null, the position where the rect starts as compared to the 0,0 of the parent entity is returned in it
 CL_Rectf MeasureEntityAndChildren(Entity *pEnt, CL_Vec2f *pVStartingPos = NULL, bool bFirst = true);
