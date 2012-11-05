@@ -106,13 +106,14 @@ import com.chartboost.sdk.ChartBoost;
 import com.flurry.android.FlurryAgent;
 //#endif
 
-
+//#if defined(RT_IAP_SUPPORT)
 //Android in app billing
 
 import ${PACKAGE_NAME}.BillingService.RequestPurchase;
 import ${PACKAGE_NAME}.BillingService.RestoreTransactions;
 import ${PACKAGE_NAME}.Consts.PurchaseState;
 import ${PACKAGE_NAME}.Consts.ResponseCode;
+//#endif
 
 //#if defined(RT_HOOKED_SUPPORT)
 //for hooked/wasabi
@@ -172,7 +173,8 @@ import android.view.View.OnClickListener;
 	
 	public static boolean set_allow_dimming_asap = false;
 	public static boolean set_disallow_dimming_asap = false;
-	
+
+//#if defined(RT_IAP_SUPPORT)	
 	//GOOGLE IAB
 	public BillingService mBillingService;
 	//private Set<String> mOwnedItems = new HashSet<String>();
@@ -280,7 +282,7 @@ import android.view.View.OnClickListener;
             }
         }
     }
-
+//#endif
 	//
 	
     ////////////////////////////////////////////////////////////////////////////
@@ -414,34 +416,39 @@ import android.view.View.OnClickListener;
             doCheck();
         }
     ////////////////////////////////////////////////////////////////////////////
-
-
 	final Handler mMainThreadHandler = new Handler();
+//#if defined(RT_IAP_SUPPORT)
 	private Handler mHandler;
 	private RTPurchaseObserver mIABPurchaseObserver;
-	
+//#endif
 	@Override
 	protected void onDestroy()
      {
      	Log.d(PackageName, "Destroying...");
 		
         super.onDestroy();
+//#if defined(RT_IAP_SUPPORT)
         mBillingService.unbind();
+//#endif
     }
     
     @Override
     protected void onStart() 
     {
         super.onStart();
+//#if defined(RT_IAP_SUPPORT)
         ResponseHandler.register(mIABPurchaseObserver);
 		//initializeOwnedItems();
+//#endif
     }
 
     @Override
     protected void onStop()
     {
         super.onStop();
+//#if defined(RT_IAP_SUPPORT)
         ResponseHandler.unregister(mIABPurchaseObserver);
+//#endif
     }
 	
 	@Override
@@ -473,7 +480,7 @@ import android.view.View.OnClickListener;
 		update_display_ad = false;
 		run_hooked = false;
 		tapjoy_ad_show = 0;
-	  		
+//#if defined(RT_IAP_SUPPORT)	  		
 		if (IAPEnabled)	
 		{
 			mHandler = new Handler();
@@ -492,7 +499,7 @@ import android.view.View.OnClickListener;
              	//Log.d(PackageName, "onCreate> Ok so far");
 			}
 		}
-
+//#endif
 		sendVersionDetails();
     }
 
@@ -546,13 +553,13 @@ import android.view.View.OnClickListener;
 			{
 				//Log.d(PackageName, "Finished app in  main thread");
 				app.finish();
-				
+//#if defined(RT_IAP_SUPPORT)				
 				if (IAPEnabled)
 				{
 					mBillingService.unbind();
   					ResponseHandler.unregister(mIABPurchaseObserver);
   				}
-			
+//#endif			
 				android.os.Process.killProcess(android.os.Process.myPid());
 				
 				return;
@@ -1884,7 +1891,7 @@ class AppRenderer implements GLSurfaceView.Renderer
 					break;
 	
 //#endif
-			
+//#if defined(RT_IAP_SUPPORT)			
 				case MESSAGE_IAP_PURCHASE:
 					
 					String parm = nativeGetLastOSMessageString();
@@ -1900,7 +1907,7 @@ class AppRenderer implements GLSurfaceView.Renderer
 				case MESSAGE_IAP_GET_PURCHASED_LIST:
 					app.mBillingService.restoreTransactions();
 					break;
-			
+//#endif			
 				case MESSAGE_HOOKED_SHOW_RATE_DIALOG:
 					Log.v(app.PackageName, "Launching hooked");
 					app.run_hooked = true;
