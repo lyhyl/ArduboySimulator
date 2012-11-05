@@ -308,3 +308,16 @@ std::string MySQLManager::EscapeString( const string &input )
 
 	return ret;
 }
+
+int MySQLManager::GetTableRecordCount( string tableName )
+{
+	string sql = "SELECT COUNT(*) FROM "+tableName;
+	if (!Query(sql, true))
+	{
+		LogError("(Couldn't GetTableRecordCount)");
+		return 0;
+	}
+	vector<VariantDB> vdb;
+	AddSelectResults(vdb);
+	return vdb[0].GetVar("COUNT(*)")->GetINT32();
+}

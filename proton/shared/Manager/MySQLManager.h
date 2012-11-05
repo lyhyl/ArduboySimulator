@@ -36,6 +36,7 @@ public:
 	bool LostServerConnection() {return m_bLostServerConnection;}
 	string EscapeString(const string &input); //Let's you use ' and \ willy nilly without worrying about it screwing up your query
 	MYSQL * GetConnection() {return m_conn;}
+	int GetTableRecordCount(string tableName);
 
 protected:
 	

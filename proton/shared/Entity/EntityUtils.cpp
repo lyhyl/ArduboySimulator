@@ -918,7 +918,7 @@ void EnableRawMessageFocusInput(Entity *pEnt)
 }
 
 
-void FadeScreen( Entity *pParent, float defaultStartAlpha, float targetAlpha, int fadeDurationMS, bool bDeleteWhenDone )
+Entity * FadeScreen( Entity *pParent, float defaultStartAlpha, float targetAlpha, int fadeDurationMS, bool bDeleteWhenDone )
 {
 	
 	Entity *pEnt = pParent->GetEntityByName("black_overlay");
@@ -930,6 +930,7 @@ void FadeScreen( Entity *pParent, float defaultStartAlpha, float targetAlpha, in
 		pEnt->GetVar("size2d")->Set(CL_Vec2f(GetScreenSizeXf(), GetScreenSizeYf()));
 		pEnt->GetVar("color")->Set(MAKE_RGBA(0,0,0,255));
 		pEnt->GetVar("alpha")->Set(defaultStartAlpha);
+
 	}
 
 	FadeEntity(pEnt, false, targetAlpha, fadeDurationMS, 0);
@@ -939,6 +940,8 @@ void FadeScreen( Entity *pParent, float defaultStartAlpha, float targetAlpha, in
 		pEnt->SetName("ic_delete"); //safety measure so if they call FadeScreen again fast this soon to be deleted versuion won't confuse it
 		KillEntity(pEnt, fadeDurationMS);
 	}
+
+	return pEnt;
 }
 
 void FadeScreenUp( Entity *pParent, float targetAlpha, int fadeDurationMS, bool bDeleteWhenDone )
