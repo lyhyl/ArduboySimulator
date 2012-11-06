@@ -76,7 +76,7 @@ void rtRectf::Scale( eAlignment alignment, CL_Vec2f vScale )
 		break;
 
 		case ALIGNMENT_UPPER_RIGHT:
-			right -= changeX;
+			left -= changeX;
 			bottom += changeY;
 			break;
 
@@ -97,7 +97,7 @@ void rtRectf::Scale( eAlignment alignment, CL_Vec2f vScale )
 			break;
 		
 		case ALIGNMENT_DOWN_RIGHT:
-			right -= changeX;
+			left -= changeX;
 			top -= changeY;
 			break;
 
