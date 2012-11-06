@@ -106,7 +106,8 @@ import com.chartboost.sdk.ChartBoost;
 import com.flurry.android.FlurryAgent;
 //#endif
 
-//#if defined(RT_IAP_SUPPORT)
+//#if defined(RT_DISABLE_IAP_SUPPORT)
+//#else
 //Android in app billing
 
 import ${PACKAGE_NAME}.BillingService.RequestPurchase;
@@ -174,7 +175,8 @@ import android.view.View.OnClickListener;
 	public static boolean set_allow_dimming_asap = false;
 	public static boolean set_disallow_dimming_asap = false;
 
-//#if defined(RT_IAP_SUPPORT)	
+//#if defined(RT_DISABLE_IAP_SUPPORT)
+//#else	
 	//GOOGLE IAB
 	public BillingService mBillingService;
 	//private Set<String> mOwnedItems = new HashSet<String>();
@@ -417,7 +419,8 @@ import android.view.View.OnClickListener;
         }
     ////////////////////////////////////////////////////////////////////////////
 	final Handler mMainThreadHandler = new Handler();
-//#if defined(RT_IAP_SUPPORT)
+//#if defined(RT_DISABLE_IAP_SUPPORT)
+//#else
 	private Handler mHandler;
 	private RTPurchaseObserver mIABPurchaseObserver;
 //#endif
@@ -427,7 +430,8 @@ import android.view.View.OnClickListener;
      	Log.d(PackageName, "Destroying...");
 		
         super.onDestroy();
-//#if defined(RT_IAP_SUPPORT)
+//#if defined(RT_DISABLE_IAP_SUPPORT)
+//#else
         mBillingService.unbind();
 //#endif
     }
@@ -436,7 +440,8 @@ import android.view.View.OnClickListener;
     protected void onStart() 
     {
         super.onStart();
-//#if defined(RT_IAP_SUPPORT)
+//#if defined(RT_DISABLE_IAP_SUPPORT)
+//#else
         ResponseHandler.register(mIABPurchaseObserver);
 		//initializeOwnedItems();
 //#endif
@@ -446,7 +451,8 @@ import android.view.View.OnClickListener;
     protected void onStop()
     {
         super.onStop();
-//#if defined(RT_IAP_SUPPORT)
+//#if defined(RT_DISABLE_IAP_SUPPORT)
+//#else
         ResponseHandler.unregister(mIABPurchaseObserver);
 //#endif
     }
@@ -480,7 +486,8 @@ import android.view.View.OnClickListener;
 		update_display_ad = false;
 		run_hooked = false;
 		tapjoy_ad_show = 0;
-//#if defined(RT_IAP_SUPPORT)	  		
+//#if defined(RT_DISABLE_IAP_SUPPORT)
+//#else	  		
 		if (IAPEnabled)	
 		{
 			mHandler = new Handler();
@@ -553,7 +560,8 @@ import android.view.View.OnClickListener;
 			{
 				//Log.d(PackageName, "Finished app in  main thread");
 				app.finish();
-//#if defined(RT_IAP_SUPPORT)				
+//#if defined(RT_DISABLE_IAP_SUPPORT)
+//#else				
 				if (IAPEnabled)
 				{
 					mBillingService.unbind();
@@ -1891,7 +1899,8 @@ class AppRenderer implements GLSurfaceView.Renderer
 					break;
 	
 //#endif
-//#if defined(RT_IAP_SUPPORT)			
+//#if defined(RT_DISABLE_IAP_SUPPORT)
+//#else			
 				case MESSAGE_IAP_PURCHASE:
 					
 					String parm = nativeGetLastOSMessageString();
