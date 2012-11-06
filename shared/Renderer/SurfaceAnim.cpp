@@ -71,7 +71,8 @@ bool SurfaceAnim::LoadFileFromMemory( byte *pMem, int inputSize )
 void SurfaceAnim::BlitScaledAnim( float x, float y, int frameX , int frameY, CL_Vec2f vScale, eAlignment alignment /*= ALIGNMENT_CENTER*/,
 								 unsigned int rgba /*= MAKE_RGBA(255,255,255,255)*/, float rotation, CL_Vec2f vRotationPt, bool flipX, bool flipY)
 {
-	assert(vScale.x != 0 && vScale.y != 0 && "Dahell?");
+	if (vScale.x == 0 && vScale.y == 0) return;
+
 	if (GetFrameWidth() == GetWidth() && GetFrameHeight() == GetHeight() && !flipX && !flipY) 
 	{
 		BlitScaledWithRotatePoint(x,y, vScale, alignment, rgba, rotation, vRotationPt); //don't need the anim code
