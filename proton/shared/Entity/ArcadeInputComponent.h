@@ -133,6 +133,8 @@ public:
 
 	void SetDirectionKey(eMoveButtonDir moveDir, bool bPressed, bool bBroadcastKeyIfChanged = true);
 
+	void ResetDirectionKeys(bool bBroadcastKeyIfChanged);
+
 	enum TrackballMode
 	{
 		TRACKBALL_MODE_WALKING, //default, suitable for moving around a character, sends up/down notifications to mimic arrow key directions

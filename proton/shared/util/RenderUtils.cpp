@@ -530,15 +530,11 @@ bool GetIsUsingNativeUI() {return g_usingNativeUI;}
 void SetIsUsingNativeUI(bool bNew) 
 {
 	if (bNew == g_usingNativeUI) return;
-
-	if (bNew)
-	{
-	
-	} else
-	{
-
-	}
 	g_usingNativeUI = bNew;
+
+	//broadcast it via a signal incase anybody cares
+	VariantList v((uint32)bNew);
+	GetBaseApp()->m_sig_native_input_state_changed(&v);
 }
 
 
