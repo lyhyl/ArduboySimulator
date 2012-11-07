@@ -407,10 +407,19 @@ bool ArcadeInputComponent::GetDirectionKeys( bool &bLeftOut, bool &bRightOut, bo
 	return (bLeftOut || bRightOut || bUpOut || bDownOut);
 }
 
-void ArcadeInputComponent::SetDirectionKey(eMoveButtonDir moveDir, bool bPressed, bool bSendChange )
+void ArcadeInputComponent::SetDirectionKey(eMoveButtonDir moveDir, bool bPressed, bool bBroadcastKeyIfChanged )
 {
-	m_buttons[moveDir].OnPressToggle(bPressed, m_customSignal, bSendChange);
+	m_buttons[moveDir].OnPressToggle(bPressed, m_customSignal, bBroadcastKeyIfChanged);
 }
+
+void ArcadeInputComponent::ResetDirectionKeys(bool bBroadcastKeyIfChanged )
+{
+	for (int i=0; i < MOVE_BUTTON_DIR_COUNT; i++)
+	{
+		m_buttons[i].OnPressToggle(false, m_customSignal, bBroadcastKeyIfChanged);
+	}
+}
+
 
 void ArcadeInputComponent::RemoveKeyBindingsStartingWith( VariantList *pVList )
 {
