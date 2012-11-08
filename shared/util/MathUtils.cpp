@@ -283,6 +283,44 @@ float GetAngleBetweenTwoAnglesRadians(float a, float b)
 	return ModNearestInt(a-b, M_PI*2);
 }
 
+void TurnAngleToward_Degrees(float *angle,float target,float amount)
+{
+	float diff;
+	diff=fabs(target-(*angle));
+	if(diff<amount)
+		amount=diff;
+	if(diff<180)
+	{
+		if(target>(*angle))
+		{
+			(*angle)+=amount;
+			//if((*angle)>target)
+			//	(*angle)=target;
+		}
+		else
+		{
+			(*angle)-=amount;
+			//if((*angle)<target)
+			//	(*angle)=target;
+		}
+	}
+	else
+	{
+		if(target<(*angle))
+		{
+			(*angle)+=amount;
+			while((*angle)>=360)
+				(*angle)-=360;
+		}
+		else
+		{
+			(*angle)-=amount;
+			if((*angle)<0)
+				(*angle)+=360;
+		}
+	}
+}
+
 
 CL_Rectf RotateGUIRect(CL_Rectf vRect, CL_Rectf inputRect, float angle, CL_Vec2f destRectSize)
 {
