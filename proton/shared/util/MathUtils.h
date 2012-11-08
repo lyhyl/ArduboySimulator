@@ -42,6 +42,7 @@ float ModNearestInt(float a, float b);
 bool AnglesAreClose(float a, float b, float angleTolerance);
 float GetAngleBetweenTwoAnglesRadians(float a, float b);
 
+void TurnAngleToward_Degrees(float *angle,float target,float amount);	// rotates angle towards target by amount, taking the shortest route
 
 CL_Vec3f LerpVector(const CL_Vec3f &vOriginal, const CL_Vec3f &Target, float f_percent);
 CL_Vec2f RotateGUIPoint(CL_Vec2f vPos, CL_Rectf r, float rotation, CL_Vec2f destRectSize = CL_Vec2f(0,0)); //used for calculating screen positions for a splitscreen mode
