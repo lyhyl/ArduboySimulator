@@ -667,15 +667,20 @@ void FadeOutAndKillChildrenEntities(Entity *pEnt, int timeMS, int delayBeforeFad
 
 void ScaleEntity(Entity *pEnt, float scaleStart, float scaleEnd, int timeMS, int delayBeforeStartingMS, eInterpolateType interpolationType)
 {
+	ScaleEntity(pEnt, CL_Vec2f(scaleStart, scaleStart), CL_Vec2f(scaleEnd, scaleEnd), timeMS, delayBeforeStartingMS, interpolationType);
+}
+
+void ScaleEntity(Entity *pEnt, CL_Vec2f vScaleStart, CL_Vec2f vScaleEnd, int timeMS, int delayBeforeStartingMS, eInterpolateType interpolationType)
+{
 	pEnt->RemoveComponentByName("ic_scale");
 
-	EntityComponent * pComp = SetupInterpolateComponent(pEnt, "", "scale2d", CL_Vec2f(scaleEnd, scaleEnd), timeMS, delayBeforeStartingMS, interpolationType);
-	pComp->SetName("ic_scale");
-
-	if (scaleStart != -1)
+	if (vScaleStart != CL_Vec2f(-1,-1))
 	{
-		pEnt->GetVar("scale2d")->Set(CL_Vec2f(scaleStart, scaleStart));
+		pEnt->GetVar("scale2d")->Set(vScaleStart);
 	}
+
+	EntityComponent * pComp = SetupInterpolateComponent(pEnt, "", "scale2d", vScaleEnd, timeMS, delayBeforeStartingMS, interpolationType);
+	pComp->SetName("ic_scale");
 }
 
 void KillEntity(Entity *pEnt, int timeMS, eTimingSystem timingSystem)
@@ -1711,6 +1716,8 @@ void EntityAdjustScaleSoPhysicalSizeMatches(Entity *pEnt, int ppiToMatch, float 
 
 void EntitySetScaleBySize(Entity *pEnt, CL_Vec2f vDestSize, bool bPreserveAspectRatio, bool bPreserveOtherAxis)
 {
+	CL_Vec2f vOriginalScale = GetScale2DEntity(pEnt);
+
 	CL_Vec2f vSize = pEnt->GetVar("size2d")->GetVector2();
 	assert(vSize.x != 0 && vSize.y != 0);
 
@@ -1752,7 +1759,11 @@ void EntitySetScaleBySize(Entity *pEnt, CL_Vec2f vDestSize, bool bPreserveAspect
 
 	}
 
-	pEnt->GetVar("scale2d")->Set(CL_Vec2f( vDestSize.x / vSize.x, vDestSize.y / vSize.y));
+	CL_Vec2f vFinalScale = CL_Vec2f( vDestSize.x / vSize.x, vDestSize.y / vSize.y);
+	vFinalScale.x *= vOriginalScale.x;
+	vFinalScale.y *= vOriginalScale.y;
+
+	pEnt->GetVar("scale2d")->Set(vFinalScale);
 }
 
 //On an ipad sized device it does nothing, on anything else it resizes the entity to match the device size
@@ -1838,7 +1849,7 @@ EntityComponent * CreateSlider(Entity *pBG, float x, float y, float sizeX, strin
 	EntityComponent * pSliderComp = pSliderEnt->AddComponent(new SliderComponent);
 
 	//the button we move around to slide
-	Entity *pSliderButton = CreateOverlayButtonEntity(pSliderEnt, "sliderButton",  buttonFileName, 0, 6);
+	Entity *pSliderButton = CreateOverlayButtonEntity(pSliderEnt, "sliderButton",  buttonFileName, 0, 0);
 
 	CL_Vec2f vButtonScale = CL_Vec2f(0.7f, 0.7f);
 
@@ -1848,6 +1859,8 @@ EntityComponent * CreateSlider(Entity *pBG, float x, float y, float sizeX, strin
 	}
 	
 	SetButtonStyleEntity(pSliderButton, Button2DComponent::BUTTON_STYLE_CLICK_ON_TOUCH);
+	SetButtonVisualStyleEntity(pSliderButton, Button2DComponent::STYLE_NONE); //sliders are not really buttons, and the
+	//default "alpha when hovering until clicked" effect doesn't look right, so we shut it off
 
 	pSliderButton->GetVar("scale2d")->Set(vButtonScale);
 	pSliderButton->GetComponentByName("Button2D")->GetVar("onClickAudioFile")->Set("");

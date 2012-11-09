@@ -290,6 +290,7 @@ void AnimateStopEntityAndSetFrame(Entity *pEnt, int delayToStartMS, int frameX, 
 void AnimateEntitySetMirrorMode(Entity *pEnt, bool flipX, bool flipY);
 
 void ScaleEntity(Entity *pEnt, float scaleStart, float scaleEnd, int timeMS, int delayBeforeStartingMS = 0, eInterpolateType interpolationType = INTERPOLATE_SMOOTHSTEP); //send -1 for scaleStart to use current scale as start
+void ScaleEntity(Entity *pEnt, CL_Vec2f vScaleStart, CL_Vec2f vScaleEnd, int timeMS, int delayBeforeStartingMS = 0, eInterpolateType interpolationType = INTERPOLATE_SMOOTHSTEP); //send -1 for scaleStart to use current scale as start
 
 void FadeEntity(Entity *pEnt, bool bRecursive, float alpha, int timeMS, int delayBeforeFadingMS = 0, bool bAllowMultipleFadesActiveAtOnce = false);
 Entity * FadeScreen( Entity *pParent, float defaultStartAlpha, float targetAlpha, int fadeDurationMS, bool bDeleteWhenDone);
