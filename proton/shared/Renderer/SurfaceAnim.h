@@ -36,6 +36,7 @@ public:
 	virtual bool LoadFileFromMemory( byte *pMem, int inputSize =0 ); //override it so we can set the frame size
 	virtual bool InitBlankSurface( int x, int y); //override it so we can set the frame size
 	virtual bool InitFromSoftSurface(SoftSurface *pSurf); //override it so we can set the frame size
+	float GetAspectRatio();
 
 protected:
 	
