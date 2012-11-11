@@ -144,3 +144,14 @@ void SurfaceAnim::BlitRotatedAnim( float x, float y, int frameX, int frameY, CL_
 {
 	BlitScaledAnim(x,y,frameX,frameY, vScale, alignment, rgba, rotation, CL_Vec2f(x,y)+vRotationPt, flipX, flipY);
 }
+
+float SurfaceAnim::GetAspectRatio()
+{
+	if (m_frameHeight == 0)
+	{
+		assert(!"bad aspect ratio, image is blank, returning crap");
+		return 1.0f;
+	}
+
+	return m_frameWidth/m_frameHeight;
+}
