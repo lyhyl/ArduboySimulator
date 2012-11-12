@@ -90,7 +90,7 @@ void Button2DComponent::UpdateButtonVisuals(Variant *pVariant)
 
 void Button2DComponent::OnOverStart(VariantList *pVList)
 {
-	
+
 	switch (*m_pVisualStyle)
 	{
 	case STYLE_FADE_ALPHA_ON_HOVER:
@@ -108,6 +108,9 @@ void Button2DComponent::OnOverStart(VariantList *pVList)
 	}
 
 	UpdateButtonVisuals(NULL);
+
+	TouchTrackInfo *pTouch = GetBaseApp()->GetTouch(pVList->Get(2).GetUINT32());
+	if (pTouch->WasHandled()) return;
 
 	if (*m_pDisabled == 0 && *m_pVisible != 0 && m_repeatTimer < GetBaseApp()->GetTick())
 	{

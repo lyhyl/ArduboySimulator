@@ -9,6 +9,7 @@ const float C_PERCENT_OF_PINCH_TO_DETECT_IT = 0.05f;
 
 TouchHandlerArcadeComponent::TouchHandlerArcadeComponent()
 {
+	m_pDisabled = NULL;
 	m_activeFinger = -1;
 	m_secondFinger = -1;
 	m_pDontClaimOwnership = NULL;
@@ -17,6 +18,11 @@ TouchHandlerArcadeComponent::TouchHandlerArcadeComponent()
 }
 
 TouchHandlerArcadeComponent::~TouchHandlerArcadeComponent()
+{
+	ReleaseTouchIfNeeded();
+}
+
+void TouchHandlerArcadeComponent::ReleaseTouchIfNeeded()
 {
 	if (m_activeFinger != -1)
 	{
@@ -33,7 +39,6 @@ TouchHandlerArcadeComponent::~TouchHandlerArcadeComponent()
 		}
 	}
 }
-
 void TouchHandlerArcadeComponent::OnAdd(Entity *pEnt)
 {
 	EntityComponent::OnAdd(pEnt);
@@ -51,6 +56,7 @@ void TouchHandlerArcadeComponent::OnAdd(Entity *pEnt)
 	GetParent()->GetVar("pos2d")->GetSigOnChanged()->connect(boost::bind(&TouchHandlerArcadeComponent::UpdateTouchArea, this, _1));
 	GetParent()->GetVar("size2d")->GetSigOnChanged()->connect(boost::bind(&TouchHandlerArcadeComponent::UpdateTouchArea, this, _1));
 	GetParent()->GetVar("touchPadding")->GetSigOnChanged()->connect(boost::bind(&TouchHandlerArcadeComponent::UpdateTouchArea, this, _1));
+	m_pDisabled = &GetVarWithDefault("disabled", uint32(0))->GetUINT32();
 
 	UpdateTouchArea(NULL);
 
@@ -100,7 +106,7 @@ void TouchHandlerArcadeComponent::HandleClickStart(CL_Vec2f &pt, uint32 fingerID
 void TouchHandlerArcadeComponent::HandleClickMove( CL_Vec2f &pt, uint32 fingerID )
 {
 	TouchTrackInfo *pTouch = GetBaseApp()->GetTouch(fingerID);
-	
+
 	if (fingerID == m_activeFinger)
 	{
 		//currently over, did we move off?
@@ -260,18 +266,18 @@ void TouchHandlerArcadeComponent::OnInput( VariantList *pVList )
 		switch (eMessageType( int(pVList->Get(0).GetFloat())))
 		{
 		case MESSAGE_TYPE_GUI_CLICK_START:
-
+			if (*m_pDisabled != 0) return;
 			HandleClickStartSecond(pt, fingerID);
+			break;
+
+		case MESSAGE_TYPE_GUI_CLICK_MOVE:
+			if (*m_pDisabled != 0) return;
+			HandleClickMoveSecond(pt, fingerID);
 			break;
 
 		case MESSAGE_TYPE_GUI_CLICK_END:
 
 			HandleClickEndSecond(pt, fingerID);
-			break;
-
-		case MESSAGE_TYPE_GUI_CLICK_MOVE:
-
-			HandleClickMoveSecond(pt, fingerID);
 			break;
 
 		default:;
@@ -284,19 +290,18 @@ void TouchHandlerArcadeComponent::OnInput( VariantList *pVList )
 	{
             
 	case MESSAGE_TYPE_GUI_CLICK_START:
-
+			if (*m_pDisabled != 0) return;
             HandleClickStart(pt, fingerID);
             break;
-
-        case MESSAGE_TYPE_GUI_CLICK_END:
-
-           HandleClickEnd(pt, fingerID);
-            break;
-
+    
         case MESSAGE_TYPE_GUI_CLICK_MOVE:
-
+			if (*m_pDisabled != 0) return;
             HandleClickMove(pt, fingerID);
             break;
+
+		case MESSAGE_TYPE_GUI_CLICK_END:
+			HandleClickEnd(pt, fingerID);
+			break;
 
         default:;
 	}	
