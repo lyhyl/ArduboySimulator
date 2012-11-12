@@ -61,7 +61,7 @@ public:
 	Surface (string fName, eTextureType type); //load in an image right away
 	virtual ~Surface();
 	
-	bool LoadFile(string fName, bool bAddBasePath = false); //will autodetect what kind of file it is
+	bool LoadFile(string fName, bool bAddBasePath = true); //will autodetect what kind of file it is
 	virtual bool LoadFileFromMemory( byte *pMem, int inputSize=0 ); //will autodetect what kind of file it is
 	void Bind();
 	bool IsLoaded() {return m_glTextureID != NO_TEXTURE_LOADED || !m_textureLoaded.empty();}
