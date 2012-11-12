@@ -45,6 +45,13 @@ Entity * CreateOverlayButtonEntity(Entity *pParentEnt, string name, string fileN
  */
 EntityComponent* SetupInterpolateComponent(Entity *pEnt, const string& componentName, const string& varName, const Variant& targetValue, int durationMS, int delayBeforeStartMS, eInterpolateType interpolationType = INTERPOLATE_SMOOTHSTEP, InterpolateComponent::eOnFinish onFinish = InterpolateComponent::ON_FINISH_DIE, eTimingSystem timing = GetTiming())
 {
+
+	if (!pEnt->GetShared()->GetVarIfExists(varName))
+	{
+		//no point, var doesn't exist
+		return NULL;
+	}
+
 	EntityComponent *pComp = NULL;
 
 	if (!componentName.empty())
@@ -62,6 +69,9 @@ EntityComponent* SetupInterpolateComponent(Entity *pEnt, const string& component
 	}
 
 #ifdef _DEBUG
+	
+	//too picky I guess
+	/*
 	if (!pComp->GetParent()->GetShared()->GetVarIfExists(varName))
 	{
 
@@ -69,7 +79,10 @@ EntityComponent* SetupInterpolateComponent(Entity *pEnt, const string& component
 			pComp->GetParent()->GetName().c_str());
 		assert(!"See log output for warning");
 	}
+	*/
 #endif
+
+	
 
 	pComp->GetVar("var_name")->Set(varName);
 	
@@ -519,12 +532,15 @@ Entity * DisableEntityButtonByName(const string &entityName, Entity *pRootEntity
 		pComp->GetVar("disabled")->Set(uint32(1));
 	}
 
-
+	//also, check for a specific type of touch handler that should also be disabled, so it doesn't mark taps as owned
+	pComp = pEnt->GetComponentByName("TouchHandlerArcade");
+	if (pComp)
+	{
+		pComp->GetVar("disabled")->Set(uint32(1));
+	}
 	return pEnt;
 
 }
-
-
 
 void DisableAllButtonsEntity(Entity *pEnt, bool bRecursive)
 {
@@ -532,6 +548,13 @@ void DisableAllButtonsEntity(Entity *pEnt, bool bRecursive)
 	if (!pComp) pComp = pEnt->GetComponentByName("TouchDrag");
 	if (!pComp) pComp = pEnt->GetComponentByName("EmitVirtualKey");
 
+	if (pComp)
+	{
+		pComp->GetVar("disabled")->Set(uint32(1));
+	}
+
+	//also, check for a specific type of touch handler that should also be disabled, so it doesn't mark taps as owned
+	pComp = pEnt->GetComponentByName("TouchHandlerArcade");
 	if (pComp)
 	{
 		pComp->GetVar("disabled")->Set(uint32(1));
@@ -556,6 +579,21 @@ void EnableAllButtonsEntity(Entity *pEnt, bool bRecursive, int delayBeforeAction
 	if (!pComp) pComp = pEnt->GetComponentByName("TouchDrag");
 	if (!pComp) pComp = pEnt->GetComponentByName("EmitVirtualKey");
 	
+	if (pComp)
+	{
+		if (delayBeforeActionMS == 0)
+		{
+			//do it now
+			pComp->GetVar("disabled")->Set(uint32(0));
+		} else
+		{
+			//schedule it instead
+			GetMessageManager()->SetComponentVariable(pComp, delayBeforeActionMS,"disabled",uint32(0), timing);
+		}
+	}
+
+	//also, check for a specific type of touch handler that should also be disabled, so it doesn't mark taps as owned
+	pComp = pEnt->GetComponentByName("TouchHandlerArcade");
 	if (pComp)
 	{
 		if (delayBeforeActionMS == 0)

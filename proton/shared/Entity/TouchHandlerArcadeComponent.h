@@ -49,6 +49,8 @@ private:
 	void HandleClickMoveSecond( CL_Vec2f &pt, uint32 fingerID );
 	void HandleClickEndSecond( CL_Vec2f &pt, uint32 fingerID );
 	void ReleaseClick(CL_Vec2f vPt, uint32 fingerID);
+	void ReleaseTouchIfNeeded();
+
 	CL_Rectf m_touchArea;
 	
 	int m_activeFinger;
@@ -57,6 +59,8 @@ private:
 	CL_Vec2f m_fingerStartPos;
 	CL_Vec2f m_secondFingerStartPos;
 	bool m_bIsPinching;
+	uint32 *m_pDisabled;
+
 
 };
 

@@ -5,6 +5,7 @@
 TouchDragComponent::TouchDragComponent()
 {
 	m_activeFingerID = -1;
+	m_pDisabled = NULL;
 	SetName("TouchDrag");
 }
 
