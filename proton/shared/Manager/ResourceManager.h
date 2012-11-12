@@ -44,7 +44,7 @@ public:
 	 *
 	 * \see GetSurfaceResource()
 	 */
-	SurfaceAnim * GetSurfaceAnim(const string &fileName, bool bAddBasePath = false);
+	SurfaceAnim * GetSurfaceAnim(const string &fileName, bool bAddBasePath = true);
 
 	/**
 	 * Gets a resource of any class that is or is inherited from \c Surface.
