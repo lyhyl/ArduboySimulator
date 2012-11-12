@@ -58,7 +58,7 @@ public:
 	 */
 	template<class T>
 	T * GetSurfaceResource(const string &fileName, Surface::eTextureType textureType = Surface::TYPE_DEFAULT,
-		bool bAddBasePath = false)
+		bool bAddBasePath = true)
 	{
 		if (fileName.empty()) return NULL;
 
