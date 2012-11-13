@@ -1148,6 +1148,22 @@ void GetFontAndScaleToFitThisLinesPerScreenY(eFont *pFontIDOut, float *pFontScal
 	*pFontIDOut = FONT_LARGE;
 	sizeY = GetBaseApp()->GetFont(*pFontIDOut)->GetLineHeight(1.0f);
 	*pFontScaleOut = (GetScreenSizeYf()/desiredLinesPerScreenY)/sizeY;
+}
+
+//Gets a good font and scale so the text will match this height, in pixels
+void GetFontAndScaleToFitThisPixelHeight(eFont *pFontIDOut, float *pFontScaleOut, float heightPixels)
+{
+	*pFontIDOut = FONT_SMALL;
+	float sizeY = GetBaseApp()->GetFont(*pFontIDOut)->GetLineHeight(1.0f);
+
+	*pFontScaleOut = heightPixels/sizeY;
+
+	if (*pFontScaleOut <= 1.0f) return;
+
+	//let's use the bigger font instead
+	*pFontIDOut = FONT_LARGE;
+	sizeY = GetBaseApp()->GetFont(*pFontIDOut)->GetLineHeight(1.0f);
+	*pFontScaleOut = heightPixels/sizeY;
 
 }
 
@@ -2055,8 +2071,6 @@ Entity * SetTextEntityByName(const string &entityName, string text, Entity *pRoo
 		//also try for another kind of component
 		pTextComp = pEnt->GetComponentByName("TextBoxRender");
 	}
-	
-	
 	
 	if (!pTextComp)
 	{
