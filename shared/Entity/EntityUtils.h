@@ -385,4 +385,5 @@ void SetupEntityToEatInput(Entity *pEnt); //assign to a background, and no click
 void ActivateTextInputEntity(Entity *pEnt); //gives focus to an entity that has an InputTextRender component in it
 void SetTextShadowColor(Entity *pEnt, uint32 color);
 void GetFontAndScaleToFitThisLinesPerScreenY(eFont *pFontIDOut, float *pFontScaleOut, float desiredLinesPerScreenY);
+void GetFontAndScaleToFitThisPixelHeight(eFont *pFontIDOut, float *pFontScaleOut, float heightPixels);
 #endif // EntityUtils_h__
