@@ -386,4 +386,5 @@ void ActivateTextInputEntity(Entity *pEnt); //gives focus to an entity that has 
 void SetTextShadowColor(Entity *pEnt, uint32 color);
 void GetFontAndScaleToFitThisLinesPerScreenY(eFont *pFontIDOut, float *pFontScaleOut, float desiredLinesPerScreenY);
 void GetFontAndScaleToFitThisPixelHeight(eFont *pFontIDOut, float *pFontScaleOut, float heightPixels);
+void GetFontAndScaleToFitThisStringInWidthPixels(eFont *pFontIDOut, float *pFontScaleOut, string text, float desiredWidth);
 #endif // EntityUtils_h__

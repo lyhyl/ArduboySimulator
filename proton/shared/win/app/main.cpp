@@ -31,7 +31,12 @@
 //#define RT_RUNS_IN_BACKGROUND
 
 bool g_winAllowFullscreenToggle = true;
+
+#ifdef C_DONT_ALLOW_WINDOW_RESIZE
+bool g_winAllowWindowResize = false;
+#else
 bool g_winAllowWindowResize = true;
+#endif
 bool g_bMouseIsInsideArea = true;
 vector<VideoModeEntry> g_videoModes;
 void AddVideoMode(string name, int x, int y, ePlatformID platformID, eOrientationMode forceOrientation = ORIENTATION_DONT_CARE);

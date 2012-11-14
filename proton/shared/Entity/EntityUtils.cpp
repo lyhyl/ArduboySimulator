@@ -1134,6 +1134,29 @@ void SetTextShadowColor(Entity *pEnt, uint32 color)
 	pComp->GetVar("shadowColor")->Set(uint32(color));
 }
 
+
+void GetFontAndScaleToFitThisStringInWidthPixels(eFont *pFontIDOut, float *pFontScaleOut, string text, float desiredWidth)
+{
+	*pFontIDOut = FONT_SMALL;
+	float sizeY = GetBaseApp()->GetFont(*pFontIDOut)->GetLineHeight(1.0f);
+
+	*pFontScaleOut = 1.0f;
+
+	CL_Vec2f vSize = GetBaseApp()->GetFont(*pFontIDOut)->MeasureText(text, *pFontScaleOut);
+
+	*pFontScaleOut = desiredWidth/vSize.x;
+
+	if (*pFontScaleOut <= 1.0f) return;
+
+	*pFontScaleOut = 1.0f;
+
+	//let's use the bigger font instead
+	*pFontIDOut = FONT_LARGE;
+
+	vSize = GetBaseApp()->GetFont(*pFontIDOut)->MeasureText(text, *pFontScaleOut);
+	*pFontScaleOut = desiredWidth/vSize.x;
+}
+
 //Gets a good font and scale so the text will match this ratio of the screen height
 void GetFontAndScaleToFitThisLinesPerScreenY(eFont *pFontIDOut, float *pFontScaleOut, float desiredLinesPerScreenY)
 {
