@@ -27,6 +27,8 @@ void RenderBatcher::BlitEx(Surface *pSurf, rtRectf dst, rtRectf src, unsigned in
 		//fix issue for cracks when scaling when 2d tile blits
 		dst.bottom = ceil(dst.bottom);
 		dst.right = ceil(dst.right);
+		dst.bottom = ceil(dst.bottom);
+		dst.right = ceil(dst.right);
 	}
 
 	if (m_batchEvents.size() > 0 && m_batchEvents.back().m_pSurf == pSurf)
