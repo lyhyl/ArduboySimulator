@@ -32,6 +32,13 @@ void SetForcedOrientation(eOrientationMode orientation) {g_forcedOrientation = o
 
 void SetProtonPixelScaleFactor(float scale)
 {
+	#ifdef RT_DISABLE_RETINA_ON_IPAD
+		if (IsIPAD() && scale == 2.0f)
+		{
+			//it's an ipad3 actually.  Do we want retina or not?
+			scale = 1.0f;
+		}
+	#endif
     g_protonPixelScaleFactor = scale;
 }
 
