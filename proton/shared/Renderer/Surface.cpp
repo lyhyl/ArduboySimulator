@@ -8,6 +8,8 @@
 
 #define GL_RGBA8 0x8058
 
+const float C_TEXEL_HACK_AMOUNT= (0); //something I was experimenting around with but didn't need
+
 GLuint g_lastBound = 0;
 
 Surface::Surface()
@@ -640,10 +642,10 @@ if (GetBaseApp()->GetDisableSubPixelBlits())
 {
 	//fix issue for cracks when scaling when 2d tile blits
 
-	dst.left = ceil(dst.left);
-	dst.top = ceil(dst.top);
-	dst.bottom = ceil(dst.bottom);
-	dst.right = ceil(dst.right);
+	dst.left = ceil(dst.left)+C_TEXEL_HACK_AMOUNT;
+	dst.top = ceil(dst.top)+C_TEXEL_HACK_AMOUNT;
+	dst.bottom = ceil(dst.bottom)-C_TEXEL_HACK_AMOUNT;
+	dst.right = ceil(dst.right)-C_TEXEL_HACK_AMOUNT;;
 }
 
 
