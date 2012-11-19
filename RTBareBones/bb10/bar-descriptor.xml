@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <qnx xmlns="http://www.qnx.com/schemas/application/1.0">
 
-<!-- BlackBerry Tablet OS application descriptor file.
+<!-- BlackBerry® 10 application descriptor file.
 
-    Specifies parameters for identifying, installing, and launching native applications on BlackBerry Tablet OS.
-
+    Specifies parameters for identifying, installing, and launching native applications on BlackBerry® 10 OS.
 -->
 
-    <!-- A universally unique application identifier. Must be unique across all BlackBerry Tablet OS applications.
+    <!-- A universally unique application identifier. Must be unique across all BlackBerry applications.
          Using a reverse DNS-style name as the id is recommended. (Eg. com.example.ExampleApplication.) Required. -->
     <id>com.example.RTBareBones</id>
 
-    <!-- The name that is displayed in the BlackBerry Tablet OS application installer. 
+    <!-- The name that is displayed in the BlackBerry application installer. 
          May have multiple values for each language. See samples or xsd schema file. Optional. -->
     <name>RTBareBones</name>
     
@@ -24,18 +23,12 @@
          <versionNumber> element.  Must be an integer from 0 to 2^16-1 -->
     <buildId>1</buildId>
                  
-    <!-- A string value (such as "v1", "2.5", or "Alpha 1") that represents the version of the application, as it should be shown to users. Optional. -->
-    <!-- <versionLabel></versionLabel> -->
-
-    <!-- Description, displayed in the BlackBerry Tablet OS application installer.
+    <!-- Description, displayed in the BlackBerry application installer.
          May have multiple values for each language. See samples or xsd schema file. Optional. -->
     <description>The RTBareBones application</description>
 
-    <!-- Copyright information. Optional. -->
-    <!-- <copyright></copyright> -->
-
     <!--  Name of author which is used for signing. Must match the developer name of your development certificate. -->
-    <author>Robinson Technologies</author>
+    <author>Example Inc.</author>
     
     <!--  Unique author ID assigned by signing authority. Required if using debug tokens. -->
     <!-- <authorId>ABC1234YjsnUk235h</authorId> -->
@@ -48,60 +41,60 @@
     <!--  The category where the application appears. Either core.games or core.media. -->
     <category>core.games</category>
     <asset path="icon.png">icon.png</asset>
-   <asset path="${QNX_TARGET}/../target-override/${CPUVARDIR}/usr/lib/libbps.so" type="Qnx/Elf">lib/libbps.so.1</asset>
-    <asset path="${QNX_TARGET}/../target-override/${CPUVARDIR}/usr/lib/libOpenAL.so" type="Qnx/Elf">lib/libOpenAL.so.1</asset>
-    <asset path="${QNX_TARGET}/../target-override/${CPUVARDIR}/usr/lib/libalut.so" type="Qnx/Elf">lib/libalut.so.1</asset>
-     <asset path="../bin/interface">interface</asset>
-    <configuration id="com.qnx.qcc.configuration.exe.debug.1758458556" name="Device-Debug">
+    <asset path="../bin/interface">interface</asset>
+    <configuration id="com.qnx.qcc.configuration.exe.debug.1405256433" name="Device-Debug">
        <platformArchitecture>armle-v7</platformArchitecture>
        <asset path="Device-Debug/RTBareBones" entry="true" type="Qnx/Elf">RTBareBones</asset>
     </configuration>
-    <configuration id="com.qnx.qcc.configuration.exe.release.1153117490" name="Device-Release">
+    <configuration id="com.qnx.qcc.configuration.exe.release.279961368" name="Device-Release">
        <platformArchitecture>armle-v7</platformArchitecture>
        <asset path="Device-Release/RTBareBones" entry="true" type="Qnx/Elf">RTBareBones</asset>
     </configuration>
-    <configuration id="com.qnx.qcc.configuration.exe.profile.153457935" name="Device-Profile">
+    <configuration id="com.qnx.qcc.configuration.exe.profile.1255429742" name="Device-Profile">
        <platformArchitecture>armle-v7</platformArchitecture>
        <asset path="Device-Profile/RTBareBones" entry="true" type="Qnx/Elf">RTBareBones</asset>
     </configuration>
-    <configuration id="com.qnx.qcc.configuration.exe.profile.coverage.1413247082" name="Device-Coverage">
+    <configuration id="com.qnx.qcc.configuration.exe.profile.coverage.1568629298" name="Device-Coverage">
        <platformArchitecture>armle-v7</platformArchitecture>
        <asset path="Device-Coverage/RTBareBones" entry="true" type="Qnx/Elf">RTBareBones</asset>
     </configuration>
-    <configuration id="com.qnx.qcc.configuration.exe.debug.644521581" name="SimulatorDebug">
+    <configuration id="com.qnx.qcc.configuration.exe.debug.625501418" name="Simulator-Debug">
        <platformArchitecture>x86</platformArchitecture>
-       <asset path="SimulatorDebug/RTBareBones" entry="true" type="Qnx/Elf">RTBareBones</asset>
+       <asset path="Simulator-Debug/RTBareBones" entry="true" type="Qnx/Elf">RTBareBones</asset>
     </configuration>
-    <configuration id="com.qnx.qcc.configuration.exe.profile.31872386" name="Simulator-Profile">
+    <configuration id="com.qnx.qcc.configuration.exe.profile.1142168545" name="Simulator-Profile">
        <platformArchitecture>x86</platformArchitecture>
        <asset path="Simulator-Profile/RTBareBones" entry="true" type="Qnx/Elf">RTBareBones</asset>
     </configuration>
-    <configuration id="com.qnx.qcc.configuration.exe.profile.coverage.435483706" name="Simulator-Coverage">
+    <configuration id="com.qnx.qcc.configuration.exe.profile.coverage.1975841906" name="Simulator-Coverage">
        <platformArchitecture>x86</platformArchitecture>
        <asset path="Simulator-Coverage/RTBareBones" entry="true" type="Qnx/Elf">RTBareBones</asset>
     </configuration>
     
     <!--  The icon for the application, which should be 86x86. -->
     <icon>
-        <image>icon.png</image>
+       <image>icon.png</image>
     </icon>
     
     <!--  The splash screen that will appear when your application is launching. Should be 1024x600. -->
     <!-- <splashscreen></splashscreen> -->
 
     <!-- Request permission to execute native code.  Required for native applications. -->
-    <action system="true">run_native</action>
+    <permission system="true">run_native</permission>
     
     <!--  The permissions requested by your application. -->
-    <!--  <action>access_shared</action> -->
-    <!--  <action>record_audio</action> -->
-    <!--  <action>read_geolocation</action> -->
-    <!--  <action>use_camera</action> -->
-    <!--  <action>access_internet</action> -->
-    <!--  <action>play_audio</action> -->
-    <!--  <action>post_notification</action> -->
-    <!--  <action>set_audio_volume</action> -->
-    <!--  <action>read_device_identifying_information</action> -->
+    <!--  <permission>access_shared</permission> -->
+    <!--  <permission>record_audio</permission> -->
+    <!--  <permission>read_geolocation</permission> -->
+    <!--  <permission>use_camera</permission> -->
+    <!--  <permission>access_internet</permission> -->
+    <!--  <permission>play_audio</permission> -->
+    <!--  <permission>post_notification</permission> -->
+    <!--  <permission>set_audio_volume</permission> -->
+    <!--  <permission>read_device_identifying_information</permission> -->
+    <!--  <permission>access_led_control</permission> -->
+    <!--  <action>run_when_backgrounded</action> -->
+    
 
     <!-- Ensure that shared libraries in the package are found at run-time. -->
     <env var="LD_LIBRARY_PATH" value="app/native/lib"/>

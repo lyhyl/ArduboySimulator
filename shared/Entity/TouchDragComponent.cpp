@@ -20,9 +20,19 @@ TouchDragComponent::~TouchDragComponent()
 		{
 			pTouch->SetWasHandled(false);
 		}
+
 	}
 }
 
+void TouchDragComponent::EndDrag(int fingerID, CL_Vec2f pt)
+{
+	if (m_activeFingerID == fingerID)
+	{
+		VariantList vList(pt, GetParent(), uint32(fingerID));
+		GetParent()->GetFunction("OnOverEnd")->sig_function(&vList);
+		m_activeFingerID = -1;
+	}
+}
 void TouchDragComponent::OnAdd(Entity *pEnt)
 {
 	EntityComponent::OnAdd(pEnt);
@@ -128,17 +138,19 @@ void TouchDragComponent::OnInput( VariantList *pVList )
 
 	case MESSAGE_TYPE_GUI_CLICK_END:
 		
-		if (m_activeFingerID == fingerID)
-		{
-            VariantList vList(pt, GetParent(), uint32(fingerID));
-			GetParent()->GetFunction("OnOverEnd")->sig_function(&vList);
-			m_activeFingerID = -1;
-		}
+		EndDrag(fingerID, pt);
 	
 		break;
 	
 	case MESSAGE_TYPE_GUI_CLICK_MOVE:
 		
+
+		if (*m_pDisabled != 0)
+		{
+			EndDrag(fingerID, pt);
+			return;
+		}
+
 		if (m_activeFingerID == fingerID)
 		{
 			SetPosition(pt);

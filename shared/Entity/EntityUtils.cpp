@@ -573,6 +573,29 @@ void DisableAllButtonsEntity(Entity *pEnt, bool bRecursive)
 	}
 }
 
+Entity * EnableEntityButtonByName(const string &entityName, Entity *pRootEntity)
+{
+	Entity *pEnt = pRootEntity->GetEntityByName(entityName);
+
+	if (!pEnt) return NULL;
+
+	EntityComponent * pComp = pEnt->GetComponentByName("Button2D");
+	if (!pComp) pComp = pEnt->GetComponentByName("TouchDrag");
+
+	if (pComp)
+	{
+		pComp->GetVar("disabled")->Set(uint32(0));
+	}
+
+	//also, check for a specific type of touch handler that should also be disabled, so it doesn't mark taps as owned
+	pComp = pEnt->GetComponentByName("TouchHandlerArcade");
+	if (pComp)
+	{
+		pComp->GetVar("disabled")->Set(uint32(0));
+	}
+	return pEnt;
+
+}
 void EnableAllButtonsEntity(Entity *pEnt, bool bRecursive, int delayBeforeActionMS, eTimingSystem timing)
 {
 	EntityComponent * pComp = pEnt->GetComponentByName("Button2D");
@@ -1661,7 +1684,7 @@ CL_Vec2f ConvertEntityClickToScreenCoords(CL_Vec2f pt, Entity *pEnt)
 	}
 
 	//also add parents positions?
-	assert(pEnt->GetParent()->GetVar("pos2d")->GetVector2() == CL_Vec2f(0,0) && "Shouldn't you take this into account too?");
+	//assert(pEnt->GetParent()->GetVar("pos2d")->GetVector2() == CL_Vec2f(0,0) && "Shouldn't you take this into account too?");
 
 	return pt;
 }
@@ -2108,6 +2131,7 @@ Entity * SetTextEntityByName(const string &entityName, string text, Entity *pRoo
 
 bool EntityIsOnScreen(Entity *pEnt)
 {
+	//NOTE:  Doesn't take parents position into account, //todo?
 	CL_Rectf r = GetScreenRect();
 	CL_Rectf er(pEnt->GetVar("pos2d")->GetVector2(), pEnt->GetVar("size2d")->GetVector2());
 	return r.is_overlapped(er);
@@ -2219,4 +2243,19 @@ void ActivateTextInputEntity(Entity *pEnt)
 	{
 		pInputComp->GetFunction("ActivateKeyboard")->sig_function(NULL);
 	}
+}
+
+CL_Vec2f GetScreenPos2DEntity( Entity *pEnt, CL_Vec2f vRecursivePosToAdd )
+{
+	CL_Vec2f vPos = ConvertEntityClickToScreenCoords(GetPos2DEntity(pEnt), pEnt)+vRecursivePosToAdd;
+
+	Entity *pParent = pEnt->GetParent();
+
+	if (!pParent)
+	{
+		//we're done
+		return vPos;
+	}
+
+	return GetScreenPos2DEntity(pParent, vPos);
 }

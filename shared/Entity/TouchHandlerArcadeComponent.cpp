@@ -129,7 +129,7 @@ void TouchHandlerArcadeComponent::HandleClickMove( CL_Vec2f &pt, uint32 fingerID
 			GetParent()->GetFunction("OnOverEnd")->sig_function(&vList);
 			m_activeFinger = -1;
 			m_secondFinger = -1;
-			m_bIsPinching = false;
+			EndPinchIfNeeded();
 
 			if (*m_pDontClaimOwnership == 0)
 			{
@@ -170,7 +170,6 @@ void TouchHandlerArcadeComponent::HandleClickEnd( CL_Vec2f &pt, uint32 fingerID 
 	}
 	
 	const bool touchAreaContainsTouchPoint = m_touchArea.contains(pt);
-	
 	m_pTouchOver->Set(uint32(0));
 	VariantList vList(pt, GetParent(), fingerID, uint32(touchAreaContainsTouchPoint));
 
@@ -180,15 +179,26 @@ void TouchHandlerArcadeComponent::HandleClickEnd( CL_Vec2f &pt, uint32 fingerID 
 	{
 		GetParent()->GetFunction("OnTouchEnd")->sig_function(&vList);
 	}
+
 	m_secondFinger = -1;
 	m_activeFinger = -1;
-	m_bIsPinching = false;
-	
+	EndPinchIfNeeded();
+
 	if (*m_pDontClaimOwnership == 0)
 	{
 		pTouch->SetWasHandled(false);
 	}
 
+}
+
+
+void TouchHandlerArcadeComponent::EndPinchIfNeeded()
+{
+	if (m_bIsPinching)
+	{
+		m_bIsPinching = false;
+		GetParent()->GetFunction("OnPinchEnd")->sig_function(NULL);
+	}
 }
 
 void TouchHandlerArcadeComponent::ReleaseClick(CL_Vec2f vPt, uint32 fingerID)
@@ -199,7 +209,9 @@ void TouchHandlerArcadeComponent::ReleaseClick(CL_Vec2f vPt, uint32 fingerID)
 	GetParent()->GetFunction("OnOverEnd")->sig_function(&vList);
 	m_activeFinger = -1;
 	m_secondFinger = -1;
-	m_bIsPinching = false;
+	
+	EndPinchIfNeeded();
+
 }
 
 void TouchHandlerArcadeComponent::OnInput( VariantList *pVList )
@@ -261,7 +273,6 @@ void TouchHandlerArcadeComponent::OnInput( VariantList *pVList )
 	if (m_activeFinger != -1 && m_activeFinger != fingerID)
 	{
 		//don't care, we're tracking something else right now
-		
 		//just kidding, we do, because it's a second finger that could be used for pinching
 		switch (eMessageType( int(pVList->Get(0).GetFloat())))
 		{
@@ -356,7 +367,11 @@ void TouchHandlerArcadeComponent::HandleClickMoveSecond( CL_Vec2f &pt, uint32 fi
 
 	if (m_bIsPinching || fabs(finalMod) > C_PERCENT_OF_PINCH_TO_DETECT_IT)
 	{
-		m_bIsPinching = true;
+		if (!m_bIsPinching)
+		{
+			m_bIsPinching = true;
+			GetParent()->GetFunction("OnPinchStart")->sig_function(NULL);
+		}
 		
 		VariantList vList(GetParent(), -finalMod);
 		GetParent()->GetFunction("OnPinchMod")->sig_function(&vList);
@@ -372,5 +387,5 @@ void TouchHandlerArcadeComponent::HandleClickEndSecond( CL_Vec2f &pt, uint32 fin
 {
 	if (m_secondFinger != fingerID) return; //not us
 	m_secondFinger = -1;
-	m_bIsPinching = false;
+	EndPinchIfNeeded();
 }
