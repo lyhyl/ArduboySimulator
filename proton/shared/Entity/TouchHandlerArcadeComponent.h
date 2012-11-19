@@ -17,6 +17,7 @@
 //say, arrow buttons for an arcade button 
 
 //Also, it detects pinches, calls OnPinchMod on parent with the parms being parent entity, pinch % change. (0.5 would mean pinched half the screens worth)
+//Calls OnPinchStart and OnPinchEnd as well (on the parent entity)
 //If dontClaimOwnerShip is set to 1, it will never mark touches as handled, good for a bg that has buttons in front of it
 
 class TouchHandlerArcadeComponent: public EntityComponent
@@ -50,7 +51,7 @@ private:
 	void HandleClickEndSecond( CL_Vec2f &pt, uint32 fingerID );
 	void ReleaseClick(CL_Vec2f vPt, uint32 fingerID);
 	void ReleaseTouchIfNeeded();
-
+	void EndPinchIfNeeded();
 	CL_Rectf m_touchArea;
 	
 	int m_activeFinger;

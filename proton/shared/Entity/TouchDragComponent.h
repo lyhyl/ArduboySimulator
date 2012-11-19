@@ -49,6 +49,7 @@ public:
 private:
 
 	void SetPosition(CL_Vec2f vInputPos);
+	void EndDrag(int fingerID, CL_Vec2f pt);
 	uint32 *m_pDisabled;
 	uint32 * m_pVisualStyle;
 	CL_Vec2f *m_pPos2d;

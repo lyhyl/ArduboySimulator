@@ -101,6 +101,8 @@ void SetCheckBoxChecked(Entity *pEnt, bool bChecked, bool bShowAnim = true); //a
 
 void DisableAllButtonsEntity(Entity *pEnt, bool bRecursive = true);
 void EnableAllButtonsEntity(Entity *pEnt, bool bRecursive = true, int delayBeforeActionMS = 0, eTimingSystem timing = GetTiming());
+
+Entity * EnableEntityButtonByName(const string &entityName, Entity *pRootEntity = GetEntityRoot()); //TODO: Too much duplicated code with below
 Entity * DisableEntityButtonByName(const string &entityName, Entity *pRootEntity = GetEntityRoot());
 EntityComponent * SlideScreen(Entity *pEnt, bool bIn, int speedMS = 500, int delayToStartMS = 0);
 EntityComponent * SlideScreenVertical(Entity *pEnt, bool bIn, int speedMS = 500, int delayToStartMS = 0);
@@ -360,7 +362,6 @@ EntityComponent * SetTextEntity(Entity *pEntWithTextComponent, const string &tex
 //will locate (by name) and modify text on an entity created with CreateTextLabelEntity() (or any entity with a TextRenderer component in it)
 Entity * SetTextEntityByName(const string &entityName, string text, Entity *pRootEntity = GetEntityRoot());
 
-
 //helpers for the lazy.. the reason I don't return a const pointer to the value is I tend to want to operate on the return vars right away.. -Seth
 CL_Vec2f GetSize2DEntity(Entity *pEnt);
 void SetSize2DEntity(Entity *pEnt, const CL_Vec2f &vSize);
@@ -368,8 +369,8 @@ CL_Vec2f GetPos2DEntity(Entity *pEnt);
 void SetPos2DEntity(Entity *pEnt, const CL_Vec2f &vPos);
 CL_Vec2f GetScale2DEntity(Entity *pEnt);
 void SetScale2DEntity(Entity *pEnt, const CL_Vec2f &vScale);
-
 void SetVisibleEntity(Entity *pEnt, bool bVisible);
+CL_Vec2f GetScreenPos2DEntity(Entity *pEnt, CL_Vec2f vRecursivePosToAdd = CL_Vec2f(0,0)); //the post transformed position, it recursively adds all parent positions to figure it out, slow
 
 void SetProgressBarPercent(Entity *pEnt, float progressPercent);
 float EnforceMinimumFontLineToScreenRatio(eFont fontID, float fontScale, float minLineToScreenRatio);
