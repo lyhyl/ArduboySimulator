@@ -11,6 +11,7 @@
 	bool LoadFromFile(CL_Rectf &num, FILE *fp);
 #endif
 
+//NOTE: Use must SAFE_DELETE_ARRAY() the return from this..
 byte * LoadFileIntoMemory(std::string fileName, unsigned int *p_ui_size, bool bUseSavePath = false); //automatically decompresses if needed
 byte * LoadFileIntoMemoryBasic(std::string fileName, unsigned int *length, bool bUseSavePath = false, bool bAddBasePath = true); //won't try to automatically decompress
 
