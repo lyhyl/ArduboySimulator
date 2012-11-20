@@ -112,6 +112,8 @@ typedef  signed char        int8;        /* Signed 8  bit value */
 #endif
 
 #define stricmp strcasecmp
+#define strnicmp strncasecmp
+#define _strnicmp strncasecmp
 
 #ifndef _INT64_DEFINED
 typedef  __int64            int64;       /* Signed 64 bit value */
