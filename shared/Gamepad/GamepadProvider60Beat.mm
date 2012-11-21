@@ -1,4 +1,7 @@
 #include "PlatformPrecomp.h"
+
+#ifdef RT_IOS_60BEAT_GAMEPAD_SUPPORT
+
 #include "GamepadProvider60Beat.h"
 #include "Gamepad60Beat.h"
 #include "GamepadManager.h"
@@ -77,3 +80,5 @@ void GamepadProvider60Beat::OnEnterForeground(VariantList *PVList)
 {
     [[SBJoystick sharedInstance] endInterruption];
 }
+
+#endif

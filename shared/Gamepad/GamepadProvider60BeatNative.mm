@@ -1,3 +1,4 @@
+
 //
 //  60BeatPadNative.m
 //  
@@ -7,6 +8,9 @@
 //
 
 #include "PlatformPrecomp.h"
+
+#ifdef RT_IOS_60BEAT_GAMEPAD_SUPPORT
+
 #import "GamepadProvider60BeatNative.h"
 #include "GamepadProvider60Beat.h"
 #include "Gamepad60Beat.h"
@@ -167,3 +171,5 @@ bool PadButtonStates::WasReleased()
     return m_right;
 }
 @end
+
+#endif

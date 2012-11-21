@@ -1,4 +1,7 @@
 #include "PlatformPrecomp.h"
+
+#ifdef RT_IOS_60BEAT_GAMEPAD_SUPPORT
+
 #include "Gamepad60Beat.h"
 #include "GamepadProvider60BeatNative.h"
 
@@ -66,3 +69,5 @@ void Gamepad60Beat::Update()
 
     Gamepad::Update();
 }
+
+#endif

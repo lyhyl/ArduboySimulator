@@ -59,6 +59,7 @@ void Surface::Kill()
 	if (m_glTextureID != NO_TEXTURE_LOADED)
 	{
 		glDeleteTextures( 1, &m_glTextureID );
+		
 #ifdef _DEBUG
 		//LogMsg("Killing texture %s", m_textureLoaded.c_str());
 #endif

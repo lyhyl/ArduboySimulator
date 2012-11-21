@@ -6,6 +6,8 @@
 //  Copyright (c) 2012 Robinson Technologies. All rights reserved.
 //
 
+#ifdef RT_IOS_60BEAT_GAMEPAD_SUPPORT
+
 #import <Foundation/Foundation.h>
 #import "SBJoystick.h"
 
@@ -75,3 +77,4 @@ private:
 - (void) SendDirIfNeeded: (Gamepad60Beat*) pPad buttonID: (int) buttonID down:(Boolean) bDown;
 
 @end
+#endif

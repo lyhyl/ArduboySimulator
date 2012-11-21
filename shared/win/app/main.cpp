@@ -678,6 +678,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			g_bIsMinimized = false;
 		
 		}
+
+
+		if ((wParam & 0xFFF0) == SC_CLOSE)
+		{
+			LogMsg("App shutting down from getting the X clicked");
+		}
 		break;
 
 	case WM_MOUSEWHEEL:
@@ -1171,6 +1177,8 @@ void CheckIfMouseLeftWindowArea()
 			}
 		}
 }
+
+
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLine, int nCmdShow)
 {
