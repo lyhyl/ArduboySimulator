@@ -45,6 +45,7 @@ void Surface::SetDefaults()
 	m_originalWidth = 0;
 	m_textureCreationMethod = TEXTURE_CREATION_NONE;
 	m_bCreateMipMapsIfNeeded = false;
+	m_bAddBasePath = true;
 	
 }
 
@@ -517,7 +518,9 @@ bool Surface::LoadFile( string fName, bool bAddBasePath )
 	LogMsg("Loading texture %s", fName.c_str());
 #endif
 
-	FileInstance f(fName, bAddBasePath);
+	m_bAddBasePath = bAddBasePath;
+	
+	FileInstance f(fName, m_bAddBasePath);
 	if (!f.IsLoaded()) 
 	{
 		LogMsg("Couldn't load surface %s", fName.c_str());
@@ -1054,7 +1057,7 @@ if (bClearFirst)
 
 void Surface::ReloadImage()
 {
-	LoadFile(m_textureLoaded);
+	LoadFile(m_textureLoaded, m_bAddBasePath);
 }
 
 void Surface::OnLoadSurfaces()

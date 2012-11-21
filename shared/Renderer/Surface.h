@@ -153,6 +153,7 @@ private:
 	bool m_bCreateMipMapsIfNeeded;
 	eTextureCreationMethod m_textureCreationMethod;
 	bool m_bSmoothing;
+	bool m_bAddBasePath;
 	
 };
 
