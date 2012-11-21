@@ -12,6 +12,8 @@
 #ifndef Gamepad60Beat_h__
 #define Gamepad60Beat_h__
 
+#ifdef RT_IOS_60BEAT_GAMEPAD_SUPPORT
+
 #include "Gamepad.h"
 #include "GamepadProvider60Beat.h"
 
@@ -39,3 +41,5 @@ private:
 };
 
 #endif // Gamepad60Beat_h__
+
+#endif

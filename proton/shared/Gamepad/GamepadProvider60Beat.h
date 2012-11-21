@@ -23,6 +23,9 @@
  
  */
 
+#ifdef RT_IOS_60BEAT_GAMEPAD_SUPPORT
+
+
 #ifndef GamepadProvider60Beat_h__
 #define GamepadProvider60Beat_h__
 
@@ -59,3 +62,4 @@ private:
 };
 
 #endif // GamepadProvider60Beat_h__
+#endif
