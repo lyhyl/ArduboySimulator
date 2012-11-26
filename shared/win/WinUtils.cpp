@@ -13,6 +13,7 @@
 #include <io.h>
 #include <sys/stat.h>
 #include "errno.h"
+#include "util/MiscUtils.h"
 
 using namespace std;
 
@@ -312,6 +313,17 @@ string GetDeviceID()
 
 string GetRegionString()
 {
+	char  countryCode[12];
+	GetLocaleInfo(LOCALE_SYSTEM_DEFAULT,LOCALE_SISO3166CTRYNAME,countryCode,12);
+
+	char  languageCode[12];
+	GetLocaleInfo(LOCALE_SYSTEM_DEFAULT,LOCALE_SISO639LANGNAME,languageCode,12);
+
+	string s = ToLowerCaseString(string(languageCode)+"_"+countryCode);
+	if (s.size() == 5) return s;
+	
+	
+	//um... something is wrong.  Return default
 	return "en_us";
 }
 
