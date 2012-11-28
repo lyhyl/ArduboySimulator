@@ -59,7 +59,14 @@ void OverlayRenderComponent::OnFileNameChanged(Variant *pDataObject)
 		SAFE_DELETE(m_pTex);
 	}
 	
-	m_pTex = GetResourceManager()->GetSurfaceAnim(pDataObject->GetString());
+	bool bAddBasePath = true;
+
+	if (GetVar("dontAddBasePath")->GetUINT32() != 0)
+	{
+		bAddBasePath = false;
+	}
+
+	m_pTex = GetResourceManager()->GetSurfaceAnim(pDataObject->GetString(), bAddBasePath);
 	
 	UpdateSizeVar();
 	UpdateFrameSizeVar();

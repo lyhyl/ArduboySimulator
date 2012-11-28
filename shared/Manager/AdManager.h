@@ -81,7 +81,7 @@ public:
 	void OpenTapjoyOfferWall();
 	void SetUsingTapPoints(bool bNew);
 	void ModifyTapPoints(int mod);
-	void GetTapPointsFromServer();
+	void GetTapPointsFromServer(); //calling this also causes any "hey, you got tapjoy points" notifications to be sent
 	void SetupBanner(CL_Vec2f vBannerSize, eAlignment alignment = ALIGNMENT_DOWN_CENTER); //alignment is ignored from now, always bottom centered
 	
 	boost::signal<void (VariantList*)> m_sig_tappoints_awarded; //called when awarded tap points
