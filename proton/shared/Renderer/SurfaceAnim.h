@@ -30,6 +30,10 @@ public:
 
 	int GetFramesX() {return m_framesX;}
 	int GetFramesY() {return m_framesY;}
+	int GetFrameXByInt(int frame) {return frame%m_framesX;}
+	int GetFrameYByInt(int frame) {return (frame/m_framesX);}
+	int GetFrameNumFromXY(int frameX,int frameY) {return frameX+frameY*m_framesX;}
+
 	float GetFrameWidth() {return m_frameWidth;}
 	float GetFrameHeight() {return m_frameHeight;}
 	CL_Vec2f GetFrameSize() {return CL_Vec2f(GetFrameWidth(), GetFrameHeight());}

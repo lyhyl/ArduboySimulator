@@ -599,7 +599,7 @@ void L_Particle::rotating_process(void)
 		//rotating_type = 3
 		else if(rotating_type == 3)
 		{
-			current_radian = L_RAND_REAL_2() * L_2PI;
+			current_radian = (float)(L_RAND_REAL_2() * L_2PI);
 		}
 
 		//rotating_type = 4
@@ -662,7 +662,7 @@ void L_Particle::run(int time_elapesed_t)
 {
 
 	
-	time_elapsed = time_elapesed_t;
+	time_elapsed = (float)time_elapesed_t;
 	
 	assert( (!motion_controller)
 		|| (motion_controller->motion_type >= 0 && motion_controller->motion_type < 10 && "Too many particles in use!  Raise pool count."));
@@ -685,7 +685,7 @@ void L_Particle::draw(int x_shift, int y_shift, float x_size_mod, float y_size_m
 {
 
 	surface->BlitScaled(x_pos+x_shift, y_pos+y_shift, CL_Vec2f(current_size*x_size_mod,current_size*y_size_mod), ALIGNMENT_CENTER, 
-		MAKE_RGBA(current_color.r, current_color.g,current_color.b,current_color.a), L_RADIAN_TO_DEGREE(current_radian),
+		MAKE_RGBA(current_color.r, current_color.g,current_color.b,current_color.a), (float)L_RADIAN_TO_DEGREE(current_radian),
 		&g_globalBatcher);
 /*
 	//non render batch way (slow)
