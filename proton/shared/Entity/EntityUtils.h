@@ -270,7 +270,7 @@ void FlashOnceEntity(Entity *pEnt, int flashSpeedMS);
  *
  * \return the \c OverlayRenderComponent that got modified.
  */
-EntityComponent * SetOverlayImageEntity(Entity *pEntWithOverlayComponent, string imageFileName, uint32 delayBeforeActionMS = 0);
+EntityComponent * SetOverlayImageEntity(Entity *pEntWithOverlayComponent, string imageFileName, uint32 delayBeforeActionMS = 0, bool bAddBasePath = true);
 /**
  * Gets the filename of an \c OverlayRenderComponent found from \a pEntWithOverlayComponent.
  *

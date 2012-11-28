@@ -323,7 +323,7 @@ void AnimateEntity(Entity *pEnt, int startFrame, int endFrame, int animSpeedMS, 
 	}
 }
 
-EntityComponent * SetOverlayImageEntity(Entity *pEntWithOverlayComponent, string imageFileName, uint32 delayBeforeActionMS)
+EntityComponent * SetOverlayImageEntity(Entity *pEntWithOverlayComponent, string imageFileName, uint32 delayBeforeActionMS, bool bAddBasePath)
 {
 	if (!pEntWithOverlayComponent)
 	{
@@ -340,6 +340,7 @@ EntityComponent * SetOverlayImageEntity(Entity *pEntWithOverlayComponent, string
 	if (delayBeforeActionMS == 0)
 	{
 		//change it now
+		pComp->GetVar("dontAddBasePath")->Set((uint32)!bAddBasePath);
 		pComp->GetVar("fileName")->Set(imageFileName);
 	} else
 	{
