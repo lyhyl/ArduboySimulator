@@ -222,9 +222,15 @@ AudioHandle AudioManagerAudiere::Play( string fName, bool bLooping /*= false*/, 
 
 	if (GetSoundEnabled()) pObject->m_pSound->play();
 	
-	if (m_globalVol != 1.0f)
+	if (bIsMusic)
 	{
-		SetVol( (AudioHandle)pObject, 1.0f);
+		SetMusicVol(m_musicVol);
+	} else
+	{
+		if (m_globalVol != 1.0f)
+		{
+			SetVol( (AudioHandle)pObject, 1.0f);
+		}
 	}
 	return (AudioHandle)pObject;
 }
@@ -358,6 +364,10 @@ void AudioManagerAudiere::SetVol( AudioHandle soundID, float vol )
 
 void AudioManagerAudiere::SetMusicVol(float vol )
 {
+	m_musicVol = vol;
+
+	//oh, if it's already playing, mod that
+
 	list<SoundObject*>::iterator itor = m_soundList.begin();
 
 	while (itor != m_soundList.end())
