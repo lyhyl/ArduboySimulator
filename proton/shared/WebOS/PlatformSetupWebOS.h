@@ -46,6 +46,10 @@ typedef int16_t sint16;
 typedef int8_t sint8;
 #define _SINT8
 #endif
+#ifndef _INT8
+typedef  signed char       int8;        /* Signed 8  bit value */
+#define _INT8
+#endif
 #ifndef _UINT32
 typedef uint32_t uint32;
 #define _UINT32

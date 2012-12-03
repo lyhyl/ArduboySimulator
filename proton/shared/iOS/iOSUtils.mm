@@ -391,12 +391,14 @@ const char* iPhoneVersion()
 	return [deviceType cStringUsingEncoding:NSUTF8StringEncoding];
 }
 
+#ifndef RT_NO_UDID
 string GetDeviceID()
 {
 	UIDevice *device = [UIDevice currentDevice];
 	NSString *uniqueIdentifier = [device uniqueIdentifier];
 	return string([uniqueIdentifier cStringUsingEncoding:NSUTF8StringEncoding]);
 }
+#endif
 
 //Code taken from http://www.mobiledev.nl/udid-usage-rejected-by-apple-for-ios-apps
 

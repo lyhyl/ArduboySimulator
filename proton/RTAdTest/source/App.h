@@ -4,7 +4,6 @@
  *  For license info, check the license.txt file that should have come with this.
  *
  
- 
  This example helps me test in app billing and the integration of various ad providers.
  */
 
