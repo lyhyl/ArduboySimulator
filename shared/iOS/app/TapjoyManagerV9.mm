@@ -1,7 +1,7 @@
 
 #ifdef RT_TAPJOY_ENABLED
 
-#import "TapjoyManager.h"
+#import "TapjoyManagerV9.h"
 #import <UIKit/UIKit.h>
 #import "MyAppDelegate.h"
 #import "EAGLView.h"
@@ -13,9 +13,6 @@
 	LogMsg("Initting tapjoy");
 
 	//Register tapjoy callbacks
-#ifdef _DEBUG
-    [TJCLog setLogThreshold:LOG_DEBUG];
-#endif
     m_viewController = viewController;
     
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tjcConnectSuccess:) name:TJC_CONNECT_SUCCESS object:nil];
@@ -27,19 +24,19 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getSpendPoints:) name:TJC_SPEND_TAP_POINTS_RESPONSE_NOTIFICATION object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getAwardPoints:) name:TJC_AWARD_TAP_POINTS_RESPONSE_NOTIFICATION object:nil];
 
+      
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getUpdatedPointsError:) name:TJC_TAP_POINTS_RESPONSE_NOTIFICATION_ERROR object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getSpendPointsError:) name:TJC_SPEND_TAP_POINTS_RESPONSE_NOTIFICATION_ERROR object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getAwardPointsError:) name:TJC_AWARD_TAP_POINTS_RESPONSE_NOTIFICATION_ERROR object:nil];
 
+    
     // Add an observer for when a user has successfully earned currency.
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(showEarnedCurrencyAlert:)
 												 name:TJC_TAPPOINTS_EARNED_NOTIFICATION
 											   object:nil];
+
     
-    
- 
- 
 	//virtual items hosted by tapjoy not yet not supported
 	/*
 	// Watch for virtual good notification indicating that items are ready to go.
@@ -67,10 +64,20 @@
         NSString* appID = [NSString stringWithUTF8String:pMsg->m_string.c_str()];
         NSString* secretKey = [NSString stringWithUTF8String:pMsg->m_string2.c_str()];
             
-		[TapjoyConnect requestTapjoyConnect:appID secretKey:secretKey];
-	
-		// This will set the display count to infinity effectively always showing the featured app.
-		[TapjoyConnect setFeaturedAppDisplayCount:TJC_FEATURED_COUNT_INF];
+
+            BOOL bDebugging = false;
+        #ifdef _DEBUG
+            bDebugging = true;
+        #endif
+        
+        [TapjoyConnect requestTapjoyConnect:appID secretKey:secretKey
+                                        options:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                 [NSNumber numberWithInt:TJCTransitionExpand], TJC_OPTION_TRANSITION_EFFECT,
+                                                 [NSNumber numberWithBool:bDebugging], TJC_OPTION_ENABLE_LOGGING,
+                                                 // If you are not using Tapjoy Managed currency, you would set your own user ID here.
+                                                 //@"A_UNIQUE_USER_ID", TJC_OPTION_USER_ID,
+                                                 nil]];
+
 
 		return true; //we handled it
         }
@@ -137,6 +144,9 @@
 		int showAd = (int)pMsg->m_x;
 		LogMsg("Showing tapjoy ad, parm is: %d" + showAd);
 		
+            //TODO, add the button to our view controller?
+            
+            /*
         if (m_adView)
         {
             if (showAd)
@@ -152,6 +162,8 @@
            LogMsg("Can't set status of ad, its view doesn't exist yet");
                 
         }
+             */
+            
 		//[TapjoyConnect getDisplayAdWithDelegate:self];
 		
 		//TapjoyConnect.getTapjoyConnectInstance().enableBannerAdAutoRefresh(app.tapjoy_ad_show != 0);
@@ -201,32 +213,18 @@
 		LogMsg("Got ad");
 		GetMessageManager()->SendGUIEx(MESSAGE_TYPE_TAPJOY_AD_READY, (int)1,0,0);
     
+    //TODO:
+   /*
     if (!m_adView)
     {
         //setup our view controller, we'll keep the same one for the rest of the app
+      
         m_adView = adView;
         [m_viewController.view addSubview:adView];
-   
-        
-//        transform = CGAffineTransformMakeRotation((float)(M_PI / 2));
-
-        //and move it
-        
-        //adView.transform = m_viewController.view.transform;
-       // transform = CGAffineTransformRotate(transform, (float)(-M_PI / 2));
-     
-      //  transform = CGAffineTransformTranslate(transform, - (GetScreenSizeXf()-GetScreenSizeY()),0);
-        
-        //CGFloat x = adView.bounds.size.width / 2.0f;
-        //CGFloat y = adView.bounds.size.height / 2.0f;
-       // CGPoint center = CGPointMake(x,y);
-        
-      //  m_adView.transform = transform;
-
-        
         m_adView.hidden = YES;
         
     }
+    */
 }
 
 // This method is called if an error has occurred while requesting Ad data.
@@ -300,14 +298,8 @@
 	NSLog(@"Tapjoy connect Succeeded");
 }
 
-
--(void)tjcConnectFail:(NSNotification*)notifyObj
-{
-	NSLog(@"Tapjoy connect Failed");	
-}
-
-
-            
+             
+             
 - (void)showEarnedCurrencyAlert:(NSNotification*)notifyObj
 {
     NSNumber *tapPointsEarned = notifyObj.object;
@@ -326,6 +318,13 @@
     
     GetMessageManager()->SendGUIStringEx(MESSAGE_TYPE_TAPJOY_EARNED_TAP_POINTS, earnedNum,0,0, "");
 }
+
+             
+-(void)tjcConnectFail:(NSNotification*)notifyObj
+{
+	NSLog(@"Tapjoy connect Failed");	
+}
+
 
 /*
 

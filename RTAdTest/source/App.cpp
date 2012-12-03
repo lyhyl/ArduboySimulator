@@ -17,7 +17,6 @@
 	#include "Ad/AdProviderChartBoost.h"
 #endif
 
-
 #ifdef RT_FLURRY_ENABLED
 #include "Ad/AdProviderFlurry.h"
 #endif
@@ -147,19 +146,6 @@ bool App::Init()
 	m_adManager.AddProvider(pFlurryProvider);
 
 #endif
-	
-#ifdef RT_TAPJOY_ENABLED
-
-    m_adManager.SetUsingTapPoints(true);
-    
-#ifdef PLATFORM_IOS
-	m_adManager.InitTapjoy("<tapjoy app id>", "<tapjoy secret key>");
-#else
-	//well, you probably have different keys for Android, so put them here
-	   m_adManager.InitTapjoy("<tapjoy app id>", "<tapjoy secret key>");
-#endif
-	
-#endif
 
 	return true;
 }
@@ -198,7 +184,21 @@ void App::Update()
 	{
 		//stuff I want loaded during the first "Update"
 		m_bDidPostInit = true;
-		
+
+#ifdef RT_TAPJOY_ENABLED
+        
+        m_adManager.SetUsingTapPoints(true);
+        
+        #ifdef PLATFORM_IOS
+            m_adManager.InitTapjoy("<tapjoy app id>", "<tapjoy secret key>");
+        #else
+            //well, you probably have different keys for Android, so put them here
+            m_adManager.InitTapjoy("<tapjoy app id>", "<tapjoy secret key>");
+    #endif
+        
+    #endif
+        
+        
 		//for android, so the back key (or escape on windows) will quit out of the game
 		Entity *pEnt = GetEntityRoot()->AddEntity(new Entity);
 		EntityComponent *pComp = pEnt->AddComponent(new CustomInputComponent);
@@ -215,7 +215,9 @@ void App::Update()
 		
 		pConsole->GetVar("pos2d")->Set(CL_Vec2f(0,GetScreenSizeYf()*.7f));
 		pConsole->GetVar("size2d")->Set(CL_Vec2f(GetScreenSizeXf(), GetScreenSizeYf()- (GetScreenSizeYf()*.7f)));
-		//pConsole->GetComponentByName("LogDisplay")->GetVar("fontScale")->Set(0.6f);
+
+        
+        //pConsole->GetComponentByName("LogDisplay")->GetVar("fontScale")->Set(0.6f);
 		MenuMainCreate(GetEntityRoot());
 
 		//let's get notified whenever they get tap points awarded from tapjoy

@@ -10,7 +10,13 @@
 #import "InAppPurchaseManager.h"
 
 #ifdef RT_TAPJOY_ENABLED
-#import "TapjoyManager.h"
+    #ifdef RT_TAPJOY_V9
+        //using the new SDK, but I don't support banner ads yet
+        #import "TapjoyManagerV9.h"
+    #else
+        //The older V8.X SDK, banner ads supported
+        #import "TapjoyManager.h"
+    #endif
 #endif
 
 @implementation MyAppDelegate
@@ -55,6 +61,14 @@
     [viewController.view setFrame:bounds];
     [viewController.view setCenter:center];
     
+    
+#ifdef RT_TAPJOY_ENABLED
+    //one time init, do it now
+    m_tapjoyManager = [[TapjoyManager alloc] init];
+    [m_tapjoyManager InitTapjoy:[UIApplication sharedApplication] viewController:viewController]; //viewController.view
+#endif
+    
+    
     //old way
 	//[window addSubview:viewController.view];
     
@@ -81,11 +95,7 @@
     m_IOSIAPManager = [[InAppPurchaseManager alloc] init];
     [m_IOSIAPManager InitIAP];
 #endif
-
-#ifdef RT_TAPJOY_ENABLED
-	m_tapjoyManager = [[TapjoyManager alloc] init];
-	[m_tapjoyManager InitTapjoy:application viewController:viewController]; //viewController.view
-#endif
+    
 
 	// pass in version
     NSString *versionString = [NSString stringWithFormat:@"Version %@",[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]];
@@ -301,8 +311,18 @@
 			Boolean bHandled = false;
 			
 			#ifdef RT_TAPJOY_ENABLED
-				//give our tapjoy manager a chance to handle it
-				if (!bHandled) bHandled = [m_tapjoyManager onOSMessage:pMsg];
+
+            if (!m_tapjoyManager)
+            {
+    
+                assert(!"Nope, Tapjoy isn't initted yet, because the window hasn't been created yet. You can fix this error by doign the InitTapjoy() call in your App.cpp a bit later, like wait a frame or two.");
+            }
+            
+                //give our tapjoy manager a chance to handle it
+				if (!bHandled)
+                {
+                 bHandled = [m_tapjoyManager onOSMessage:pMsg];   
+                }
 			#endif
 
 			if (!bHandled)
