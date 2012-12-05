@@ -202,6 +202,7 @@ void AdManager::OnMessage( Message &m )
 		break;
 
 	case MESSAGE_TYPE_TAPJOY_MOVIE_AD_READY:
+#ifdef _DEBUG
 		if (m.GetParm1() == 1)
 		{
 			LogMsg("Video ad is ready!");
@@ -209,7 +210,7 @@ void AdManager::OnMessage( Message &m )
 		{
 			LogMsg("Video ad failed %d - %s", m.GetParm2(), m.GetStringParm().c_str());
 		}
-
+#endif
 		break;
 		case MESSAGE_TYPE_TAPJOY_FEATURED_APP_READY:
 
@@ -228,8 +229,9 @@ void AdManager::OnMessage( Message &m )
 			{
 				m_errorCount++;
 				//error
+#ifdef _DEBUG
 				LogMsg("Error getting featured app: %s", m.GetStringParm().c_str());
-				
+#endif		
 				if (m.GetStringParm().find("exceeded display") != string::npos)
 				{
 					//LogMsg("Displayed all front page ads we can get, not showing any more.");
@@ -299,7 +301,9 @@ void AdManager::GetTapPointsFromServer()
 {
 	if (m_bUsingTapPoints)
 	{
+#ifdef _DEBUG
 		LogMsg("Requesting latest info from Tapjoy");
+#endif
 		OSMessage o;
 		o.m_type = OSMessage::MESSAGE_TAPJOY_GET_TAP_POINTS;
 		GetBaseApp()->AddOSMessage(o);
@@ -308,7 +312,9 @@ void AdManager::GetTapPointsFromServer()
 
 void AdManager::Init()
 {
+#ifdef _DEBUG
 	LogMsg("AdManager initted.");
+#endif
 }
 
 std::string AdManager::GetPointsString()

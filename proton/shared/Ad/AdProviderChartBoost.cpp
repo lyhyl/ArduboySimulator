@@ -26,8 +26,9 @@ bool AdProviderChartBoost::OnAddToManager( AdManager *pAdManager )
 #ifdef PLATFORM_IOS
 	ChartBoostIOS_StartSession(m_appID, m_appSignature);
 #endif
-
+#ifdef _DEBUG
 	LogMsg("AdProviderChartBoost - Initting");
+#endif
 
 	//Android listens for this, iOS version doesn't care
 	OSMessage o;
@@ -54,8 +55,9 @@ void AdProviderChartBoost::ShowInterstitial( std::string location /*= ""*/, std:
 #ifdef PLATFORM_IOS
 	ChartBoostIOS_ShowInterstitial(location);
 #endif
-
+#ifdef _DEBUG
 	LogMsg("AdProviderChartBoost::ShowInterstitial");
+#endif
 
 	OSMessage o;
 	o.m_type = OSMessage::MESSAGE_CHARTBOOST_SHOW_INTERSTITIAL;
@@ -70,7 +72,9 @@ void AdProviderChartBoost::CacheShowInterstitial( std::string location /*= ""*/,
 	ChartBoostIOS_CacheShowInterstitial(location);
 #endif
 
+#ifdef _DEBUG
 	LogMsg("AdProviderChartBoost::CacheShowInterstitial");
+#endif
 
 	OSMessage o;
 	o.m_type = OSMessage::MESSAGE_CHARTBOOST_CACHE_INTERSTITIAL;
