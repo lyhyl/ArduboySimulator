@@ -551,6 +551,7 @@ ENET_API size_t enet_get_total_bytes_sent (void);
 ENET_API size_t enet_get_total_bytes_received (void);
 ENET_API size_t enet_get_total_bytes_sent_decompressed (void);
 ENET_API size_t enet_get_total_bytes_received_decompressed (void);
+ENET_API void enet_reset_bandwidth_statistics (void);
 
 extern size_t enet_protocol_command_size (enet_uint8);
 
