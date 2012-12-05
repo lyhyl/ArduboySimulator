@@ -69,13 +69,13 @@ bool SurfaceAnim::LoadFileFromMemory( byte *pMem, int inputSize )
 
 
 void SurfaceAnim::BlitScaledAnim( float x, float y, int frameX , int frameY, CL_Vec2f vScale, eAlignment alignment /*= ALIGNMENT_CENTER*/,
-								 unsigned int rgba /*= MAKE_RGBA(255,255,255,255)*/, float rotation, CL_Vec2f vRotationPt, bool flipX, bool flipY)
+								 unsigned int rgba /*= MAKE_RGBA(255,255,255,255)*/, float rotation, CL_Vec2f vRotationPt, bool flipX, bool flipY, RenderBatcher *pBatcher)
 {
 	if (vScale.x == 0 && vScale.y == 0) return;
 
 	if (GetFrameWidth() == GetWidth() && GetFrameHeight() == GetHeight() && !flipX && !flipY) 
 	{
-		BlitScaledWithRotatePoint(x,y, vScale, alignment, rgba, rotation, vRotationPt); //don't need the anim code
+		BlitScaledWithRotatePoint(x,y, vScale, alignment, rgba, rotation, vRotationPt, pBatcher); //don't need the anim code
 		return;
 	}
 
@@ -105,7 +105,13 @@ void SurfaceAnim::BlitScaledAnim( float x, float y, int frameX , int frameY, CL_
 	dst.AdjustPosition(vStart.x, vStart.y);
 	dst.Scale(alignment, vScale);
 	
-	BlitEx(dst, src, rgba, rotation, vRotationPt);
+	if (pBatcher && rotation == 0)
+	{
+		pBatcher->BlitEx(this, dst, src, rgba);
+	} else
+	{
+		BlitEx(dst, src, rgba, rotation, vRotationPt);
+	}
 }
 
 void SurfaceAnim::ReloadImage()
@@ -140,9 +146,12 @@ bool SurfaceAnim::InitFromSoftSurface( SoftSurface *pSurf )
 	return true;
 }
 
-void SurfaceAnim::BlitRotatedAnim( float x, float y, int frameX, int frameY, CL_Vec2f vScale, eAlignment alignment /*= ALIGNMENT_CENTER*/, unsigned int rgba /*= MAKE_RGBA(255,255,255,255)*/, float rotation/*=0*/, CL_Vec2f vRotationPt /*= CL_Vec2f(x,y)*/, bool flipX /*= false*/, bool flipY /*= false*/ )
+void SurfaceAnim::BlitRotatedAnim( float x, float y, int frameX, int frameY, CL_Vec2f vScale, eAlignment alignment
+								  /*= ALIGNMENT_CENTER*/, unsigned int rgba /*= MAKE_RGBA(255,255,255,255)*/, float rotation/*=0*/,
+								  CL_Vec2f vRotationPt /*= CL_Vec2f(x,y)*/, bool flipX /*= false*/, bool flipY /*= false*/,
+								  RenderBatcher *pBatcher)
 {
-	BlitScaledAnim(x,y,frameX,frameY, vScale, alignment, rgba, rotation, CL_Vec2f(x,y)+vRotationPt, flipX, flipY);
+	BlitScaledAnim(x,y,frameX,frameY, vScale, alignment, rgba, rotation, CL_Vec2f(x,y)+vRotationPt, flipX, flipY, pBatcher);
 }
 
 float SurfaceAnim::GetAspectRatio()
