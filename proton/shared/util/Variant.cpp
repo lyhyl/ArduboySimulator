@@ -530,17 +530,11 @@ bool VariantList::SerializeFromMem(byte *pSrc, int bufferSize )
 			{
 				uint32 strLen;
 				memcpy(&strLen, pSrc, 4); pSrc += 4;
-				if (strLen > 1024*5 )
-				{
-					LogMsg("Bad str len!");
-					assert(0);
-					return false;
-				}
-		
-					string v;
-					v.resize(strLen );
-					memcpy(&v[0], pSrc, strLen ); pSrc += strLen;
-					m_variant[index].Set(v);
+				
+				string v;
+				v.resize(strLen );
+				memcpy(&v[0], pSrc, strLen ); pSrc += strLen;
+				m_variant[index].Set(v);
 				
 				break;
 			}

@@ -12,7 +12,6 @@
 
 #include "SurfaceAnim.h"
 
-
 class SoftSurface;
 
 struct BatchVert

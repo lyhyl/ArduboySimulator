@@ -3,6 +3,12 @@
 #include "SoftSurface.h"
 #include "util/GLESUtils.h"
 
+#ifdef _DEBUG
+
+	//#define RT_SHOW_BATCHER_STATS
+
+#endif
+
 RenderBatcher::RenderBatcher()
 {
 }
@@ -152,7 +158,10 @@ void RenderBatcher::Flush(eFlushMode mode)
 		while (!m_batchEvents.empty())
 		{
 			event = m_batchEvents.front();
-		//	LogMsg("Rendering event, %d prims", event.m_vertCount);
+		
+			#ifdef RT_SHOW_BATCHER_STATS
+			LogMsg("Rendering event, %d prims", event.m_vertCount);
+			#endif
 
 			uint32 color;
 			m_batchEvents.pop_front();
