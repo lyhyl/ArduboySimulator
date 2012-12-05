@@ -6,6 +6,9 @@
 #include <string.h>
 #include "enet/enet.h"
 
+
+//This bandwidth statistics stuff was added by Seth
+
 unsigned int g_enetTotalBytesSent = 0;
 unsigned int g_enetTotalBytesReceived = 0;
 
@@ -13,6 +16,14 @@ unsigned int g_enetTotalBytesReceived = 0;
 unsigned int g_enetTotalBytesSentDecompressed = 0;
 unsigned int g_enetTotalBytesReceivedDecompressed = 0;
 
+void enet_reset_bandwidth_statistics (void)
+{
+	g_enetTotalBytesSent = 0;
+	g_enetTotalBytesReceived = 0;
+	g_enetTotalBytesSentDecompressed = 0;
+	g_enetTotalBytesReceivedDecompressed = 0;
+
+}
 size_t enet_get_total_bytes_sent (void)
 {
 	return g_enetTotalBytesSent;
@@ -30,6 +41,7 @@ size_t enet_get_total_bytes_received_decompressed (void)
 {
 	return g_enetTotalBytesReceivedDecompressed;
 }
+
 
 typedef struct _ENetSymbol
 {
