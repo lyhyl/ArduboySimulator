@@ -45,6 +45,7 @@ private:
 	int m_curPos;
 	uint32 *m_pPaused;
 	string *m_pText;
+	int m_timerToAddMS;
 };
 
 #endif // TyperComponent_h__
