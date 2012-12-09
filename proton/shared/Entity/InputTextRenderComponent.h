@@ -33,7 +33,7 @@ pButtonEntity->GetComponentByName("InputTextRender")->GetVar("visualStyle")->Set
 //Truncate text to fit input box
 pButtonEntity->GetComponentByName("InputTextRender")->GetVar("truncateTextIfNeeded")->Set(uint32(1));
 
-To close the keyboard and un cause the current thing being edited to lose focus, you can do this:
+To close the keyboard and cause the current thing being edited to lose focus, you can do this:
 
 Entity *pEnt = GetEntityWithNativeUIFocus();
 if (pEnt)
