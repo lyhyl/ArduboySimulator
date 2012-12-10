@@ -553,6 +553,11 @@ ENET_API size_t enet_get_total_bytes_sent_decompressed (void);
 ENET_API size_t enet_get_total_bytes_received_decompressed (void);
 ENET_API void enet_reset_bandwidth_statistics (void);
 
+ENET_API void enet_set_total_bytes_sent(size_t bytes);
+ENET_API void enet_set_total_bytes_sent_decompressed(size_t bytes);
+ENET_API void enet_set_total_bytes_received(size_t bytes);
+ENET_API void enet_set_total_bytes_received_decompressed(size_t bytes);
+
 extern size_t enet_protocol_command_size (enet_uint8);
 
 #ifdef __cplusplus
