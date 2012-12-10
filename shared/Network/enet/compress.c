@@ -9,12 +9,12 @@
 
 //This bandwidth statistics stuff was added by Seth
 
-unsigned int g_enetTotalBytesSent = 0;
-unsigned int g_enetTotalBytesReceived = 0;
+size_t g_enetTotalBytesSent = 0;
+size_t g_enetTotalBytesReceived = 0;
 
 
-unsigned int g_enetTotalBytesSentDecompressed = 0;
-unsigned int g_enetTotalBytesReceivedDecompressed = 0;
+size_t g_enetTotalBytesSentDecompressed = 0;
+size_t g_enetTotalBytesReceivedDecompressed = 0;
 
 void enet_reset_bandwidth_statistics (void)
 {
@@ -40,6 +40,26 @@ size_t enet_get_total_bytes_sent_decompressed (void)
 size_t enet_get_total_bytes_received_decompressed (void)
 {
 	return g_enetTotalBytesReceivedDecompressed;
+}
+
+void enet_set_total_bytes_sent(size_t bytes)
+{
+	g_enetTotalBytesSent = bytes;
+}
+
+void enet_set_total_bytes_sent_decompressed(size_t bytes)
+{
+	g_enetTotalBytesSentDecompressed = bytes;
+}
+
+void enet_set_total_bytes_received(size_t bytes)
+{
+	g_enetTotalBytesReceived = bytes;
+}
+
+void enet_set_total_bytes_received_decompressed(size_t bytes)
+{
+	g_enetTotalBytesReceivedDecompressed = bytes;
 }
 
 
