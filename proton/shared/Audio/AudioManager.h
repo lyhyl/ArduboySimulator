@@ -64,7 +64,7 @@ public:
 	 * \return The audio handle for the playing sound if the playing started successfully.
 	 *         Returns \c AUDIO_HANDLE_BLANK if the playing of the audio didn't start.
 	 */
-	virtual AudioHandle Play(string fName, bool bLooping = false, bool bIsMusic = false, bool bAddBasePath = true, bool bForceStreaming = false)=0;
+	virtual AudioHandle Play(string fName, bool bLooping = false, bool bIsMusic = false, bool bAddBasePath = true, bool bForceStreaming = false);
 
 	virtual AudioHandle PlayWithAVPlayer(string fName) { return Play(fName, false, false); } //also doesn't cache and uses AV player, useful for the TTS system or oneshots
 
