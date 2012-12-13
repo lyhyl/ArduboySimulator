@@ -51,6 +51,28 @@ void LogError ( const char* traceStr, ... )
 	//WaitForKey();
 }
 
+
+#else
+
+
+void LogError ( const char* traceStr, ... )
+{
+	va_list argsVA;
+	const int logSize = 4096;
+	char buffer[logSize];
+	memset ( (void*)buffer, 0, logSize );
+
+	va_start ( argsVA, traceStr );
+	vsnprintf( buffer, logSize, traceStr, argsVA );
+	va_end( argsVA );
+
+	printf ((char*)buffer);
+	printf ("\r\n");
+	fflush(stdout);
+
+	AppendStringToFile( GetBaseAppPath()+"log.txt", GetDateAndTimeAsString()+": "+string(buffer)+"\r\n");
+}
+
 #endif
 
 
@@ -211,3 +233,16 @@ bool IsTabletSize()
 {
 	return false;
 }
+
+
+#ifdef RTLINUX
+
+/*
+void term(int signum)
+{
+	LogError("Sigterm %d receieved.  But why?!  Ignoring.", signum);
+}
+
+*/
+
+#endif

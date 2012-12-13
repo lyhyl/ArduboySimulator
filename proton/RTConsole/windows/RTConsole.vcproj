@@ -304,6 +304,14 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="linux"
+				>
+				<File
+					RelativePath="..\linux\CMakeLists.txt"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="shared"
