@@ -2,7 +2,7 @@
 #include "App.h"
 #include "util/MiscUtils.h"
 #include "util/ResourceUtils.h"
-#include "Util/Variant.h"
+#include "util/Variant.h"
 
 #include "FileSystem/FileManager.h"
 #include "util/TextScanner.h"
