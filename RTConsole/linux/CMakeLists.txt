@@ -19,7 +19,10 @@ include_directories(../../shared/util/boost ../../shared/ClanLib-2.0/Sources)
 include_directories(/usr/include/mysql)
 
 
-add_executable(buildoserver ../source/main.cpp
+add_executable(RTConsole 
+../source/main.cpp
+../source/App.cpp
+
 
  ../../shared/PlatformSetup.cpp
  ../../shared/util/MiscUtils.cpp
@@ -46,8 +49,8 @@ add_executable(buildoserver ../source/main.cpp
 ../../shared/FileSystem/FileManager.cpp
 ../../shared/FileSystem/StreamingInstance.cpp
 ../../shared/FileSystem/StreamingInstanceFile.cpp
-
  )
+
 link_directories(/usr/lib/mysql) 
 #target_link_libraries(RTConsole mysqlclient)
 target_link_libraries(RTConsole rt)
