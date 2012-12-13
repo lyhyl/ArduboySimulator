@@ -311,6 +311,10 @@
 					RelativePath="..\linux\CMakeLists.txt"
 					>
 				</File>
+				<File
+					RelativePath="..\linux\linux_compile.sh"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter
