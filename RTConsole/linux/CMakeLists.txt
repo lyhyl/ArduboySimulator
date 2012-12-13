@@ -19,8 +19,18 @@ include_directories(../../shared/util/boost ../../shared/ClanLib-2.0/Sources)
 include_directories(/usr/include/mysql)
 
 
-add_executable(buildoserver ../source/Server/main.cpp
+add_executable(buildoserver ../source/main.cpp
 
+ ../../shared/PlatformSetup.cpp
+ ../../shared/util/MiscUtils.cpp
+ ../../shared/util/ResourceUtils.cpp
+ ../../shared/util/CRandom.cpp
+ ../../shared/util/MathUtils.cpp
+ ../../shared/util/Variant.cpp
+  ../../shared/Math/WeightRand.cpp
+ ../../shared/Manager/VariantDB.cpp
+ ../../shared/linux/LinuxUtils.cpp
+ 
  ../../shared/ClanLib-2.0/Sources/Core/Math/angle.cpp
  ../../shared/ClanLib-2.0/Sources/Core/Math/vec2.cpp
  ../../shared/ClanLib-2.0/Sources/Core/Math/vec3.cpp
