@@ -729,6 +729,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\flash\build.sh"
+					>
+				</File>
+				<File
 					RelativePath="..\flash\build_prepare.bat"
 					>
 				</File>
@@ -737,7 +741,23 @@
 					>
 				</File>
 				<File
+					RelativePath="..\flash\BuildDebugQuick.bat"
+					>
+				</File>
+				<File
 					RelativePath="..\flash\BuildRelease.bat"
+					>
+				</File>
+				<File
+					RelativePath="..\flash\BuildReleaseQuick.bat"
+					>
+				</File>
+				<File
+					RelativePath="..\flash\Clean.bat"
+					>
+				</File>
+				<File
+					RelativePath="..\flash\CygwinPrompt.bat"
 					>
 				</File>
 				<File
@@ -749,11 +769,23 @@
 					>
 				</File>
 				<File
-					RelativePath="..\flash\test.html"
+					RelativePath="..\flash\test1.html"
 					>
 				</File>
 				<File
 					RelativePath="..\flash\upload.bat"
+					>
+				</File>
+				<File
+					RelativePath="..\flash\ViewInBrowser.bat"
+					>
+				</File>
+				<File
+					RelativePath="..\flash\ViewInBrowserRemote.bat"
+					>
+				</File>
+				<File
+					RelativePath="..\flash\ViewInProjector.bat"
 					>
 				</File>
 			</Filter>
@@ -2213,6 +2245,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\shared\FileSystem\FileSystem.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\FileSystem\FileSystem.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\shared\FileSystem\StreamingInstance.cpp"
 					>
 				</File>
@@ -2448,6 +2488,218 @@
 					RelativePath="..\..\shared\bbx\PlatformSetupBBX.h"
 					>
 				</File>
+			</Filter>
+			<Filter
+				Name="flash"
+				>
+				<File
+					RelativePath="..\..\shared\flash\FlashUtils.cpp"
+					>
+					<FileConfiguration
+						Name="Common Debug|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Common Release|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug GL|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release GL|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug WebOS|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Flash GLES Debug Test|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\shared\flash\FlashUtils.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\flash\PlatformSetupFlash.h"
+					>
+				</File>
+				<Filter
+					Name="app"
+					>
+					<Filter
+						Name="cpp"
+						>
+						<File
+							RelativePath="..\..\shared\flash\app\cpp\GLFlashAdaptor.cpp"
+							>
+							<FileConfiguration
+								Name="Common Debug|Win32"
+								ExcludedFromBuild="true"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Common Release|Win32"
+								ExcludedFromBuild="true"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Debug GL|Win32"
+								ExcludedFromBuild="true"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
+								ExcludedFromBuild="true"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Debug WebOS|Win32"
+								ExcludedFromBuild="true"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Flash GLES Debug Test|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
+						</File>
+						<File
+							RelativePath="..\..\shared\flash\app\cpp\GLFlashAdaptor.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\shared\flash\app\cpp\main.cpp"
+							>
+							<FileConfiguration
+								Name="Common Debug|Win32"
+								ExcludedFromBuild="true"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(InputName)1.obj"
+									XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Common Release|Win32"
+								ExcludedFromBuild="true"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(InputName)1.obj"
+									XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Debug GL|Win32"
+								ExcludedFromBuild="true"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(InputName)1.obj"
+									XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Release GL|Win32"
+								ExcludedFromBuild="true"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(InputName)1.obj"
+									XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Debug WebOS|Win32"
+								ExcludedFromBuild="true"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(InputName)1.obj"
+									XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Flash GLES Debug Test|Win32"
+								ExcludedFromBuild="true"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(InputName)1.obj"
+									XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								/>
+							</FileConfiguration>
+						</File>
+					</Filter>
+					<Filter
+						Name="flash"
+						>
+						<File
+							RelativePath="..\..\shared\flash\app\flash\Console.as"
+							>
+						</File>
+						<Filter
+							Name="rtsoft"
+							>
+							<File
+								RelativePath="..\..\shared\flash\app\flash\com\rtsoft\AudioManager.as"
+								>
+							</File>
+							<File
+								RelativePath="..\..\shared\flash\app\flash\com\rtsoft\GLES1Adaptor.as"
+								>
+							</File>
+						</Filter>
+					</Filter>
+				</Filter>
 			</Filter>
 		</Filter>
 		<File

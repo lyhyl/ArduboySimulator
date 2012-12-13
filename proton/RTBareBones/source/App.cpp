@@ -287,9 +287,8 @@ void App::Draw()
 	glClearColor(0,0,0,1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
-    
 	//draw our game stuff
-	DrawFilledRect(10,10,GetScreenSizeX()/3,GetScreenSizeY()/3, MAKE_RGBA(255,255,0,255));
+	DrawFilledRect(10.0f,10.0f,GetScreenSizeXf()/3,GetScreenSizeYf()/3, MAKE_RGBA(255,255,0,255));
 	DrawFilledRect(0,0,64,64, MAKE_RGBA(0,255,0,100));
 
 	//after our 2d rect call above, we need to prepare for raw GL again. (it keeps it in ortho mode if we don't for speed)
@@ -297,6 +296,8 @@ void App::Draw()
 	RenderSpinningTriangle();
 //	RenderGLTriangle();
 	//let's blit a bmp, but first load it if needed
+	
+	
 	if (!m_surf.IsLoaded())
 	{
 		m_surf.LoadFile("interface/test.bmp");
@@ -322,11 +323,11 @@ void App::Draw()
 
 	m_surf.BlitScaled(100, 200, CL_Vec2f(1,1), ALIGNMENT_CENTER, MAKE_RGBA(255,255,255,255), SinGamePulseByMS(3000)*360);
 
-	m_surf.BlitRotated(400, 200, CL_Vec2f(0.2,0.2), ALIGNMENT_CENTER, MAKE_RGBA(255,255,255,255), SinGamePulseByMS(4000)*360,
+	m_surf.BlitRotated(400, 200, CL_Vec2f(0.2f,0.2f), ALIGNMENT_CENTER, MAKE_RGBA(255,255,255,255), SinGamePulseByMS(4000)*360,
 		CL_Vec2f(20,-20), NULL);
 
 	//GetFont(FONT_SMALL)->Draw(0,0, "test");
-	GetFont(FONT_SMALL)->DrawScaled(0,GetScreenSizeYf()-50, "white `2Green `3Cyan `4Red `5Purp ",1+SinGamePulseByMS(3000)*0.7);
+	GetFont(FONT_SMALL)->DrawScaled(0,GetScreenSizeYf()-50, "white `2Green `3Cyan `4Red `5Purp ",1+SinGamePulseByMS(3000)*0.7f);
 	
 	//the base handles actually drawing the GUI stuff over everything else, if applicable, which in this case it isn't.
 	BaseApp::Draw();
