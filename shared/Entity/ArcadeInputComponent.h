@@ -56,6 +56,7 @@ GetEntityRoot()->GetComponentByName("ArcadeInput")>GetFunction("RemoveKeyBinding
 
 #include "Entity/Component.h"
 #include "Entity/Entity.h"
+#include "Manager/MessageManager.h"
 
 enum eMoveButtonDir
 {

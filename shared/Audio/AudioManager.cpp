@@ -30,3 +30,11 @@ void AudioManager::SetDLS(string fName)
 {
 	m_midiSoundBankFile = fName;
 }
+
+
+AudioHandle AudioManager::Play( string fName, bool bLooping , bool bIsMusic , bool bAddBasePath , bool bForceStreaming )
+{
+//	LogMsg("AudioManager::Play activated, not handled");
+	return AUDIO_HANDLE_BLANK;
+}
+

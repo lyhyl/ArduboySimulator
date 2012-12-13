@@ -1,5 +1,6 @@
 #include "PlatformPrecomp.h"
 #include "SurfaceAnim.h"
+#include "Renderer/RenderBatcher.h"
 
 SurfaceAnim::SurfaceAnim()
 {

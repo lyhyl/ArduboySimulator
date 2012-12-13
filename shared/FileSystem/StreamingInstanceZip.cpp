@@ -1,5 +1,6 @@
 #include "PlatformPrecomp.h"
 #include "StreamingInstanceZip.h"
+#include "util/MiscUtils.h"
 
 #define CASESENSITIVITY (0)
 

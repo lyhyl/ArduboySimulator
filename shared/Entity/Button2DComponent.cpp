@@ -4,7 +4,29 @@
 #include "BaseApp.h"
 #include "Entity/EntityUtils.h"
 
-string g_defaultButtonClickSound ="audio/click.wav";
+//Flascc didn't like a global string, but I can new() it without errors, so this is a hack to make sure it gets
+//deleted as well
+
+string *g_defaultButtonClickSound = NULL;
+
+
+class Button2DFlashHackInit
+{
+public:
+
+	Button2DFlashHackInit()
+	{
+		//uh, this didn't work to fix flash, will do it a different way, must instiate too early for it
+		//g_defaultButtonClickSound =  new string("audio/click.wav");
+	}
+
+	~Button2DFlashHackInit()
+	{
+		SAFE_DELETE(g_defaultButtonClickSound);
+	}
+
+} g_flashHackInit;
+
 
 Button2DComponent::eButtonStyle g_defaultButtonStyle = Button2DComponent::BUTTON_STYLE_CLICK_ON_TOUCH;
 
@@ -15,8 +37,10 @@ void SetDefaultButtonStyle(Button2DComponent::eButtonStyle style)
 
 void SetDefaultAudioClickSound(string fileName)
 {
-	g_defaultButtonClickSound = fileName;
+	SAFE_DELETE(g_defaultButtonClickSound);
+	g_defaultButtonClickSound = new string (fileName);
 }
+
 Button2DComponent::Button2DComponent() :
     m_pressed(false)
 {
@@ -32,7 +56,12 @@ void Button2DComponent::OnAdd(Entity *pEnt)
 	EntityComponent::OnAdd(pEnt);
 	//when area is clicked, OnButtonSelected is called on the parent entity
 
-	m_pOnClickAudioFile = &GetVarWithDefault("onClickAudioFile", Variant(g_defaultButtonClickSound))->GetString();
+	if (!g_defaultButtonClickSound)
+	{
+		g_defaultButtonClickSound =  new string("audio/click.wav");
+	}
+
+	m_pOnClickAudioFile = &GetVarWithDefault("onClickAudioFile", Variant(*g_defaultButtonClickSound))->GetString();
 	m_pDisabled = &GetVarWithDefault("disabled", uint32(0))->GetUINT32();
 	m_pRepeatDelayMS = &GetVarWithDefault("repeatDelayMS", uint32(250))->GetUINT32();
 	m_pVisualStyle = &GetVarWithDefault("visualStyle", uint32(STYLE_FADE_ALPHA_ON_HOVER))->GetUINT32();

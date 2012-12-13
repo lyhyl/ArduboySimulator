@@ -76,13 +76,10 @@ void ParticleTestComponent::OnRemove()
 void ParticleTestComponent::OnRender(VariantList *pVList)
 {
 	CL_Vec2f vFinalPos = pVList->m_variant[0].GetVector2()+*m_pPos2d;
-	m_dropper.draw(vFinalPos.x, vFinalPos.y);
-	m_explosion.draw(vFinalPos.x, vFinalPos.y);
-	m_emitter.draw(vFinalPos.x, vFinalPos.y);
-
+	m_dropper.draw((int)vFinalPos.x, (int)vFinalPos.y);
+	m_explosion.draw((int)vFinalPos.x, (int)vFinalPos.y);
+	m_emitter.draw((int)vFinalPos.x, (int)vFinalPos.y);
 }
-
-
 
 void ParticleTestComponent::OnUpdate(VariantList *pVList)
 {
@@ -96,8 +93,8 @@ void ParticleTestComponent::OnUpdate(VariantList *pVList)
 		rad -= L_2PI;
 
 	prev_pos = current_pos;
-	current_pos.x = 160*cos(rad)+240;
-	current_pos.y = 160*sin(rad)+160;
+	current_pos.x = 160*(float)cos(rad)+240;
+	current_pos.y = 160*(float)sin(rad)+160;
 
 	CL_Vec2f vel( (current_pos.x-prev_pos.x)/GetBaseApp()->GetGameDeltaTick(),
 		(current_pos.y-prev_pos.y)/GetBaseApp()->GetGameDeltaTick() );

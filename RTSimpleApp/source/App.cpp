@@ -58,8 +58,9 @@ AudioManagerBBX g_audioManager;
 #elif defined PLATFORM_FLASH
 //AudioManager g_audioManager; //to disable sound
 #include "Audio/AudioManagerFlash.h"
-AudioManagerFlash g_audioManager;
+AudioManagerFlash *g_audioManager = new AudioManagerFlash;
 #else
+
 
 //in windows
 //AudioManager g_audioManager; //to disable sound
@@ -78,8 +79,11 @@ AudioManagerAudiere g_audioManager;  //Use Audiere for audio
 #endif
 #endif
 
-
-AudioManager * GetAudioManager(){return &g_audioManager;}
+#if defined PLATFORM_FLASH
+	AudioManager * GetAudioManager(){return g_audioManager;}
+#else
+	AudioManager * GetAudioManager(){return &g_audioManager;}
+#endif
 
 App *g_pApp = NULL;
 BaseApp * GetBaseApp() 
@@ -108,6 +112,9 @@ App::App()
 App::~App()
 {
 	L_ParticleSystem::deinit();
+#ifdef PLATFORM_FLASH
+	SAFE_DELETE(g_audioManager);
+#endif
 }
 
 void App::OnExitApp(VariantList *pVarList)
@@ -201,7 +208,6 @@ else
 	//preload audio
 	GetAudioManager()->Preload("audio/click.wav");
 	//GetAudioManager()->Preload("audio/techno.mp3");
-
 	return true;
 }
 

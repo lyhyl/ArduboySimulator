@@ -787,7 +787,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\flash\test.html"
+					RelativePath="..\flash\test1.html"
 					>
 				</File>
 				<File
@@ -5883,13 +5883,45 @@
 							>
 						</File>
 						<File
-							RelativePath="..\..\shared\flash\app\flash\AlcConsole.as"
+							RelativePath="..\..\shared\flash\app\flash\Console.as"
 							>
 						</File>
-						<File
-							RelativePath="..\..\shared\flash\app\flash\com\adobe\utils\PerspectiveMatrix3D.as"
+						<Filter
+							Name="rtsoft"
 							>
-						</File>
+							<File
+								RelativePath="..\..\shared\flash\app\flash\com\rtsoft\AudioManager.as"
+								>
+							</File>
+							<File
+								RelativePath="..\..\shared\flash\app\flash\com\rtsoft\GLES1Adaptor.as"
+								>
+							</File>
+						</Filter>
+						<Filter
+							Name="audiofx"
+							>
+							<File
+								RelativePath="..\..\shared\flash\app\flash\org\audiofx\mp3\ByteArraySegment.as"
+								>
+							</File>
+							<File
+								RelativePath="..\..\shared\flash\app\flash\org\audiofx\mp3\MP3FileReferenceLoader.as"
+								>
+							</File>
+							<File
+								RelativePath="..\..\shared\flash\app\flash\org\audiofx\mp3\MP3Parser.as"
+								>
+							</File>
+							<File
+								RelativePath="..\..\shared\flash\app\flash\org\audiofx\mp3\MP3SoundEvent.as"
+								>
+							</File>
+							<File
+								RelativePath="..\..\shared\flash\app\flash\org\audiofx\mp3\SoundClassSwfByteCode.as"
+								>
+							</File>
+						</Filter>
 					</Filter>
 				</Filter>
 				<Filter

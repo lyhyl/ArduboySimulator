@@ -1,0 +1,25 @@
+_start1
+_Unwind_SjLj_Register
+_Unwind_SjLj_Resume
+_Unwind_SjLj_Unregister
+_Unwind_SjLj_RaiseException
+__muldi3
+__divdi3
+__udivdi3
+fakeioctl
+main
+malloc
+free
+memcpy
+memmove
+__hack_used
+Native_Update
+Native_Render
+Native_SendGUIEx
+Native_OnGotFocus
+Native_OnLostFocus
+flascc_uiTickProc
+_sync_synchronize
+
+# symbols specific to libVGL
+vglttyioctl

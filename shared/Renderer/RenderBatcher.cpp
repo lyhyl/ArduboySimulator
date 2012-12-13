@@ -2,6 +2,7 @@
 #include "RenderBatcher.h"
 #include "SoftSurface.h"
 #include "util/GLESUtils.h"
+#include "BaseApp.h"
 
 #ifdef _DEBUG
 
@@ -52,15 +53,14 @@ void RenderBatcher::BlitEx(Surface *pSurf, rtRectf dst, rtRectf src, unsigned in
 	}
 
 	glColorBytes color;
-	
 	color.a = GET_ALPHA(rgba);
 	
 	if (pSurf->GetBlendingMode() == Surface::BLENDING_PREMULTIPLIED_ALPHA)
 	{
 		float alphaPercent = float(color.a) /255.0f;
-		color.r = GET_RED(rgba)*alphaPercent;
-		color.g = GET_GREEN(rgba)*alphaPercent;
-		color.b = GET_BLUE(rgba)*alphaPercent;
+		color.r = (GLubyte) (GET_RED(rgba)*alphaPercent);
+		color.g = (GLubyte) (GET_GREEN(rgba)*alphaPercent);
+		color.b = (GLubyte) (GET_BLUE(rgba)*alphaPercent);
 	} else
 	{
 		color.r = GET_RED(rgba);
