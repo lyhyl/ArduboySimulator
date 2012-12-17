@@ -402,9 +402,10 @@
 
 - (void)applicationWillResignActive:(UIApplication *)application 
 {
+	GetBaseApp()->OnEnterBackground();
 	[glView stopAnimation];
 	//	glView.animationInterval = 1.0 / 5.0;
-	
+
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -416,6 +417,8 @@
 {
 	glView.animationInterval = glView.animationIntervalSave;
 	[glView startAnimation];
+	GetBaseApp()->OnEnterForeground();
+
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
