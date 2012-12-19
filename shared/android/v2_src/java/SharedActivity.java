@@ -1906,15 +1906,32 @@ class AppRenderer implements GLSurfaceView.Renderer
 					String parm = nativeGetLastOSMessageString();
 					//Log.v(app.PackageName, "Buying "+parm);
 					
+					if (!SharedActivity.IAPEnabled)
+					{
+						   Log.d(app.PackageName, "requestPurchase>> Um, you'll need to change IAPEnabled to true in Main.java!");
+				
+					} else
+					{
+					
 					if (!app.mBillingService.requestPurchase(parm, "")) 
 					{
 					   Log.d(app.PackageName, "requestPurchase>> Billing not supported?!");
 					   SharedActivity.nativeSendGUIEx(app.MESSAGE_TYPE_IAP_RESULT, ResponseCode.RESULT_BILLING_UNAVAILABLE.ordinal(),0,0);
 					}
+					}
 					break;
 				
 				case MESSAGE_IAP_GET_PURCHASED_LIST:
+					
+					if (!SharedActivity.IAPEnabled)
+					{
+						   Log.d(app.PackageName, "requestPurchase>> Um, you'll need to change IAPEnabled to true in Main.java!");
+				
+					} else
+					{
+					
 					app.mBillingService.restoreTransactions();
+					}
 					break;
 //#endif			
 				case MESSAGE_HOOKED_SHOW_RATE_DIALOG:
