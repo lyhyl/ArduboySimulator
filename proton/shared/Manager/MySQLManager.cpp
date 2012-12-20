@@ -92,22 +92,26 @@ int MySQLManager::AddSelectResults(vector<VariantDB> &vdb)
 	int curRow = (int)vdb.size();
 	vdb.resize(curRow+rows);
 
+	bool bGotFields = false;
+
 	while ((row = mysql_fetch_row(result)))
 	{
 	
 	  VariantDB &db = vdb[curRow++];
 
+	  if (!bGotFields) 
+	  {
+		  bGotFields = true;
+
+		  while(field = mysql_fetch_field(result)) 
+		  {
+			  fieldNames.push_back(field->name);
+			  fieldType.push_back(field->type);
+			  maxLength.push_back(field->max_length);
+		  }
+	  }
 	  for(int i = 0; i < num_fields; i++)
 		{
-			if (i == 0) 
-			{
-				while(field = mysql_fetch_field(result)) 
-				{
-					fieldNames.push_back(field->name);
-					fieldType.push_back(field->type);
-					maxLength.push_back(field->max_length);
-				}
-			}
 		
 			switch(fieldType[i])
 			{
@@ -200,14 +204,25 @@ int MySQLManager::AddSelectResults(vector<VariantDB> &vdb)
 				{
 
 					//first we'll get the size of the data in here
-					string &s = db.GetVar(fieldNames[i])->GetString();
 					db.GetVar(fieldNames[i])->Set(string()); //we need to register it as a string, the mega hack we do in a
+					string &s = db.GetVar(fieldNames[i])->GetString();
 					//second won't do it..
 					if (maxLength[i] > 0)
 					{
 						//now put it into the string, keeping things like nulls and such.  (up to you to pull it out right though)
 						s.resize(maxLength[i]);
-						memcpy((void*)s.c_str(), &row[i][0], maxLength[i]);
+
+						if (!row[i])
+						{
+							//it's null?!
+#ifdef _DEBUG
+							LogMsg("SQL Warning: Something is NULL?!");
+#endif
+						} else
+						{
+							memcpy((void*)s.c_str(), &row[i][0], maxLength[i]);
+
+						}
 					}
 				}
 				break;
