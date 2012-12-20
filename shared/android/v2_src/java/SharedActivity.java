@@ -98,8 +98,9 @@ import com.tapjoy.TapjoyVideoStatus;
 //#endif
 
 //#if defined(RT_CHARTBOOST_SUPPORT)
-import com.chartboost.sdk.CBDialogActivity;
-import com.chartboost.sdk.ChartBoost;
+import com.chartboost.sdk.Chartboost;
+import com.chartboost.sdk.ChartboostDelegate;
+import com.chartboost.sdk.Analytics.CBAnalytics;
 //#endif
 
 //#if defined(RT_FLURRY_SUPPORT)
@@ -170,6 +171,12 @@ import android.view.View.OnClickListener;
 //#if defined(RT_CHARTBOOST_SUPPORT)
 	public static boolean cb_cacheInterstitial = false;
 	public static boolean cb_showInterstitial = false;
+	// Create the Chartboost object
+    public static Chartboost cb;
+	public static String m_chartBoostAppID = "";	
+	public static String m_chartBoostAppSig = "";	
+	public static boolean cb_performLogon = false;
+
 //#endif
 	
 	public static boolean set_allow_dimming_asap = false;
@@ -445,6 +452,11 @@ import android.view.View.OnClickListener;
         ResponseHandler.register(mIABPurchaseObserver);
 		//initializeOwnedItems();
 //#endif
+
+
+//#if defined(RT_CHARTBOOST_SUPPORT)
+		this.cb.onStart(this);
+//#endif
     }
 
     @Override
@@ -455,7 +467,27 @@ import android.view.View.OnClickListener;
 //#else
         ResponseHandler.unregister(mIABPurchaseObserver);
 //#endif
+
+//#if defined(RT_CHARTBOOST_SUPPORT)
+	 this.cb.onStop(this);
+//#endif
     }
+	
+	
+	@Override
+	public void onBackPressed() 
+{
+	//#if defined(RT_CHARTBOOST_SUPPORT)
+    // If an interstitial is on screen, close it. Otherwise continue as normal.
+    
+    if (this.cb.onBackPressed())
+        return;
+    else
+    //#endif
+    
+        super.onBackPressed();
+}
+
 	
 	@Override
     protected void onCreate(Bundle savedInstanceState) 
@@ -473,6 +505,13 @@ import android.view.View.OnClickListener;
 		if (securityEnabled) 
 			this.license_init();
 		
+		//#if defined(RT_CHARTBOOST_SUPPORT)
+
+		this.cb = Chartboost.sharedChartboost();
+	
+		
+		//#endif
+
 //#if defined(RT_TAPJOY_SUPPORT)
 			
 		//Create dummy tapjoy view overlay we'll show ads on
@@ -537,9 +576,6 @@ import android.view.View.OnClickListener;
 		setup_accel(accelHzSave);
 		super.onResume();
 
-//#if defined(RT_CHARTBOOST_SUPPORT)
-		ChartBoost.getSharedChartBoost(this);
-//#endif
 		
 //#if defined(RT_FLURRY_SUPPORT)
 		if (!m_flurryAPIKey.isEmpty())
@@ -597,13 +633,21 @@ import android.view.View.OnClickListener;
 
 //#if defined(RT_CHARTBOOST_SUPPORT)
 
+
+	    if (cb_performLogon)
+	    {
+	    	Log.v(app.PackageName, "CB startSession");
+		
+			cb.onCreate(this, m_chartBoostAppID, m_chartBoostAppSig, null);
+			cb.startSession();
+			cb_performLogon = false; //don't want it to happen again					
+	    }
+	    
+	    
 		if (cb_cacheInterstitial)
 		{
 			Log.v(app.PackageName, "Caching CB interstitial");
-			//String location = nativeGetLastOSMessageString();
-					
-			ChartBoost _cb = ChartBoost.getSharedChartBoost(this);
-			_cb.cacheInterstitial();
+			this.cb.cacheInterstitial();
 			cb_cacheInterstitial = false;
 		}
 		
@@ -613,8 +657,8 @@ import android.view.View.OnClickListener;
 			Log.v(app.PackageName, "Showing CB interstitial");
 			//String location = nativeGetLastOSMessageString();
 			cb_showInterstitial = false;
-			ChartBoost _cb = ChartBoost.getSharedChartBoost(this);
-			_cb.showInterstitial();
+			//ChartBoost _cb = Chartboost.sharedChartboost();
+			this.cb.showInterstitial();
 		}
 		
 //#endif
@@ -997,7 +1041,16 @@ import android.view.View.OnClickListener;
 		{
 			case KeyEvent.KEYCODE_BACK:
 			{
-				//Log.v("onKeyDown","Sending virtual back");
+				//#if defined(RT_CHARTBOOST_SUPPORT)
+				// If an interstitial is on screen, close it. Otherwise continue as normal.
+					 Log.v("onKeyDown","Sending virtual back");
+				if (this.cb.onBackPressed())
+				{
+					 Log.v("onKeyDown","CB handling back");
+					 return true; //ignore the key
+				}
+				//#endif
+				
 				nativeOnKey(1, VIRTUAL_KEY_BACK, e.getUnicodeChar()); 
 				return true; //signal that we handled it
 			}
@@ -1015,7 +1068,7 @@ import android.view.View.OnClickListener;
        	if(e.isAltPressed() && keycode == KeyEvent.KEYCODE_BACK) 
 		{
 			//XPeria's O button, not the back button!
-			//Log.v("onKeyDown","Sending xperia back key");
+			//Log.v("onKeyUp","Sending xperia back key");
 			nativeOnKey(0, VIRTUAL_DPAD_BUTTON_RIGHT, e.getUnicodeChar()); 
 			return true; //signal that we handled it
 		}
@@ -1024,6 +1077,15 @@ import android.view.View.OnClickListener;
 		{
 			case KeyEvent.KEYCODE_BACK:
 			{
+				//#if defined(RT_CHARTBOOST_SUPPORT)
+				// If an interstitial is on screen, close it. Otherwise continue as normal.
+				if (this.cb.onBackPressed()) 
+				{
+				    Log.v("onKeyUp","CB handling back");
+					return true; //ignore the key
+				}
+				//#endif
+    
 				nativeOnKey(0, VIRTUAL_KEY_BACK, e.getUnicodeChar()); //0 is type keyup
 				return true; //signal that we handled it
 			}
@@ -1806,13 +1868,16 @@ class AppRenderer implements GLSurfaceView.Renderer
 				{				
 //#if defined(RT_CHARTBOOST_SUPPORT)
 
-					ChartBoost _cb = ChartBoost.getSharedChartBoost(app);
-					String appID = nativeGetLastOSMessageString();
-					String appSig = nativeGetLastOSMessageString2();
-					//Log.v(app.PackageName, "Setting up chartboost "+appID+" : "+appSig);
-			
-					_cb.setAppId(appID);
-					_cb.setAppSignature(appSig);
+
+
+
+					//ChartBoost stuff - we can't initialize it here, it must be done in the GUI thread.  So
+					//we'll sort of just set some flags, causing it to happen next pass, before any other CB
+					//stuff.
+
+					app.m_chartBoostAppID = nativeGetLastOSMessageString();
+					app.m_chartBoostAppSig = nativeGetLastOSMessageString2();
+					app.cb_performLogon = true; //so it triggers
 //#else
 					Log.v(app.PackageName, "ERROR: RT_CHARTBOOST_SUPPORT isn't defined in Main.java, you can't use it!");
 //#endif
