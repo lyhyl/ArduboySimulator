@@ -1607,6 +1607,20 @@ void SetScrollProgressEntity(Entity *pEnt, const CL_Vec2f &progress)
 	pComp->GetFunction("SetProgress")->sig_function(&scrollProgress);
 }
 
+
+CL_Vec2f GetScrollProgressEntity(Entity *pEnt)
+{
+	EntityComponent *pComp = pEnt->GetComponentByName("Scroll");
+	if (!pComp)
+	{
+		assert(!"This only works for an entity holding a ScrollComponent!");
+		return CL_Vec2f(0,0);
+	}
+
+	return pComp->GetVar("progress2d")->GetVector2();
+}
+
+
 void SetDisabledOnAllComponentsRecursively(Entity *pEnt, bool bDisabled)
 {
 
