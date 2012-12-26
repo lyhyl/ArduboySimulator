@@ -324,6 +324,8 @@ void DisableHorizontalScrolling(Entity *pEnt);
  */
 void SetScrollProgressEntity(Entity *pEnt, const CL_Vec2f &progress);
 
+CL_Vec2f GetScrollProgressEntity(Entity *pEnt);
+
 void SetDisabledOnAllComponentsRecursively(Entity *pEnt, bool bDisabled);
 EntityComponent * DisableComponentByName(Entity *pEnt, const string &compName, int delayBeforeActionMS=0); //applicable to components that check a var named "disabled", like Button2D or InputTextRender
 EntityComponent * EnableComponentByName(Entity *pEnt, const string &compName, int delayBeforeActionMS=0); //applicable to components that check a var named "disabled", like Button2D or InputTextRender
@@ -388,4 +390,5 @@ void SetTextShadowColor(Entity *pEnt, uint32 color);
 void GetFontAndScaleToFitThisLinesPerScreenY(eFont *pFontIDOut, float *pFontScaleOut, float desiredLinesPerScreenY);
 void GetFontAndScaleToFitThisPixelHeight(eFont *pFontIDOut, float *pFontScaleOut, float heightPixels);
 void GetFontAndScaleToFitThisStringInWidthPixels(eFont *pFontIDOut, float *pFontScaleOut, string text, float desiredWidth);
+
 #endif // EntityUtils_h__
