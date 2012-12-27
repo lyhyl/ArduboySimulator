@@ -2096,12 +2096,9 @@ Entity * CreateCheckbox(Entity *pBG, string name, string text, float x, float y,
 	RemovePaddingEntity(pEnt); //have to click exactly in the image to do anything
 	SetTouchPaddingEntity(pEnt, CL_Rectf(5, 5, 5, 5));
 
-	//only problem is it's too small and hard to click on an iPhone4..
-	if (IsIphone4() || IsLargeScreen() )
-	{
-		float size = 64;
-		EntitySetScaleBySize(pEnt, CL_Vec2f(size, size));
-	}
+	float letterHeight = GetBaseApp()->GetFont(fontID)->MeasureText("W", fontScale).y;
+	EntitySetScaleBySize(pEnt, CL_Vec2f(letterHeight*2.0f, letterHeight*2.0f));
+		
 
 	if (bChecked)
 	{
@@ -2115,7 +2112,7 @@ Entity * CreateCheckbox(Entity *pBG, string name, string text, float x, float y,
 	CL_Vec2f vImageSize = pEnt->GetVar("size2d")->GetVector2();
 	Entity *pTextEnt = CreateTextLabelEntity(pEnt, "_text"+name, vImageSize.x+iPhoneMapX(8), iPhoneMapY(3), text);
 	SetupTextEntity(pTextEnt, fontID, fontScale);
-	pEnt->GetVar("scale2d")->Set(pEnt->GetVar("scale2d")->GetVector2()*fontScale);
+	//pEnt->GetVar("scale2d")->Set(pEnt->GetVar("scale2d")->GetVector2()*fontScale);
 	return pEnt;
 }
 
