@@ -11,6 +11,15 @@ OverlayRenderComponent::OverlayRenderComponent()
 
 OverlayRenderComponent::~OverlayRenderComponent()
 {
+
+	if (GetVar("unloadImageAtOnKill")->GetUINT32() != 0)
+	{
+		if (m_pTex)
+		{
+			m_pTex->Kill();
+		}
+	}
+
 	if (m_bDeleteSurface)
 	{
 		m_bDeleteSurface = false;

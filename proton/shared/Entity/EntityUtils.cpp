@@ -2273,3 +2273,14 @@ CL_Vec2f GetScreenPos2DEntity( Entity *pEnt, CL_Vec2f vRecursivePosToAdd )
 
 	return GetScreenPos2DEntity(pParent, vPos);
 }
+
+void SetEntityOverlayToUnloadImageOnKill(Entity *pImage)
+{
+	if (!pImage) return;
+
+	EntityComponent *pComp = pImage->GetComponentByName("OverlayRender");
+	if (pComp)
+	{
+		pComp->GetVar("unloadImageAtOnKill")->Set(uint32(1));
+	}
+}
