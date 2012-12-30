@@ -2172,6 +2172,8 @@ void SetProgressBarPercent(Entity *pEnt, float progressPercent)
 
 void SetVisibleEntity(Entity *pEnt, bool bVisible)
 {
+	if (!pEnt) return;
+
 	pEnt->GetVar("visible")->Set(uint32(bVisible));
 }
 
