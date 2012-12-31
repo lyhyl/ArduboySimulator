@@ -148,7 +148,7 @@ private:
 	Entity *m_pParent;
 	bool m_bTaggedForDeletion;
 	int m_recursiveFilterReferences; //if > 0 then we also need to check for filters when recursive functions are called.  Useful for limiting who we repeat to intelligently
-	char r[10000];
+	
 	//some hacks for speed
 	Variant *m_pPosVarCache;
 	CL_Vec2f *m_pSizeCache;
