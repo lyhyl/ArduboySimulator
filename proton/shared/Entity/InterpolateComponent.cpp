@@ -129,11 +129,14 @@ void InterpolateComponent::OnUpdate(VariantList *pVList)
 
 		float fPercentDone = (float(GetBaseApp()->GetTickTimingSystem(eTimingSystem(*m_pTimingSystem))-m_startTimeMS)/ float(*m_pDuration));
 
+#ifdef _DEBUG
 		//LogMsg("%.2f percent done changing %s (is now %s)", fPercentDone, m_pVarName->c_str(), m_pVar->Print().c_str());
+#endif
 			if ( fPercentDone >= 1)
 			{
 				//we're finished
 				m_pVar->Set(*pB);
+				bool bReturnAfter = true;
 
 				switch (*m_pOnFinish)
 				{
@@ -154,8 +157,9 @@ void InterpolateComponent::OnUpdate(VariantList *pVList)
 				case ON_FINISH_BOUNCE:
 					m_bDirForward = !m_bDirForward;
 					m_startTimeMS = GetBaseApp()->GetTickTimingSystem(eTimingSystem(*m_pTimingSystem));
-					
+					bReturnAfter = false;
 					break;
+
 				case ON_FINISH_REPEAT:
 					m_startTimeMS = GetBaseApp()->GetTickTimingSystem(eTimingSystem(*m_pTimingSystem));
 					m_pVar->Set(m_pVarStartPoint);
@@ -167,7 +171,10 @@ void InterpolateComponent::OnUpdate(VariantList *pVList)
 				}
 				(*m_pPlayCount)++;
 
-				return;
+				if (bReturnAfter)
+				{
+					return;
+				}
 			}
 				
 			if (*m_pDeleteAfterPlayCount != 0 &&  *m_pPlayCount >= *m_pDeleteAfterPlayCount)

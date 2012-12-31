@@ -38,6 +38,7 @@ public:
 	};
 
 private:
+
 	void NullifyVarPointer(VariantList *pVList);
 	void SetEndValue();
 
