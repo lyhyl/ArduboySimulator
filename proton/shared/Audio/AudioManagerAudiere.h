@@ -51,7 +51,7 @@ public:
 
 	OutputStreamPtr m_pSound;
 	//FMOD::Sound *m_pSound;
-	string m_fileName;
+	std::string m_fileName;
 	bool   m_bIsLooping;
 	bool   m_bIsMusic;
 	//FMOD::Channel *m_pLastChannelToUse;
@@ -66,11 +66,11 @@ public:
 	virtual bool Init();
 	virtual void Kill();
 
-	virtual AudioHandle Play(string fName, bool bLooping = false, bool bIsMusic = false, bool bAddBasePath = true, bool bForceStreaming = false);
+	virtual AudioHandle Play(std::string fName, bool bLooping = false, bool bIsMusic = false, bool bAddBasePath = true, bool bForceStreaming = false);
 	
-	virtual void Preload(string fName, bool bLooping = false, bool bIsMusic = false, bool bAddBasePath = true, bool bForceStreaming = false);
+	virtual void Preload(std::string fName, bool bLooping = false, bool bIsMusic = false, bool bAddBasePath = true, bool bForceStreaming = false);
 
-	SoundObject * GetSoundObjectByFileName(string fName);
+	SoundObject * GetSoundObjectByFileName(std::string fName);
 	virtual void KillCachedSounds(bool bKillMusic, bool bKillLooping, int ignoreSoundsUsedInLastMS, int killSoundsLowerPriorityThanThis, bool bKillSoundsPlaying);
 	virtual void Update();
 	virtual void Stop(AudioHandle soundID);
@@ -79,7 +79,7 @@ public:
 	virtual void SetMusicEnabled(bool bNew);
 	virtual void StopMusic();
 	virtual int GetMemoryUsed();
-	bool DeleteSoundObjectByFileName(string fName);
+	bool DeleteSoundObjectByFileName(std::string fName);
 	virtual void SetFrequency(AudioHandle soundID, int freq);
 	virtual void SetPan(AudioHandle soundID, float pan); //0 is normal stereo, -1 is all left, +1 is all right
 	virtual void SetVol(AudioHandle soundID, float vol); //-1 for global vol
@@ -93,7 +93,7 @@ private:
 	
 	AudioDevicePtr	   m_pDevice;
 
-	list<SoundObject*>	m_soundList;
+	std::list<SoundObject*>	m_soundList;
 	float m_globalVol;
 
 protected:
