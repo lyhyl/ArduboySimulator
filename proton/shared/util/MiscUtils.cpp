@@ -566,21 +566,18 @@ bool CaseInsensitiveCompare( const char*a, const char*b )
 	return true;
 }
 
-
-string IntToTime(int ms, bool bTextFormat)
+string IntToTimeSeconds(uint32 seconds, bool bTextFormat) //converts 180 (seconds) to 3:00, suitable for a game "time left" display.  if bTextformat, it would say "3 min" instead.
 {
+	uint32 originalSeconds = seconds;
 
-	int seconds = ms/1000;
-
-	int minutes = seconds/60;
+	uint32 minutes = seconds/60;
 	seconds -= minutes*60;
 
-	int hours = minutes/60;
+	uint32 hours = minutes/60;
 	minutes -= hours*60;
 
-	int days = hours/24;
+	uint32 days = hours/24;
 	hours -= days*24;
-
 
 	string r;
 
@@ -593,7 +590,7 @@ string IntToTime(int ms, bool bTextFormat)
 	}
 
 
-	if (ms <= 0)
+	if (originalSeconds <= 0)
 	{
 		return "None";
 	}
@@ -617,7 +614,7 @@ string IntToTime(int ms, bool bTextFormat)
 		}
 
 		r = toString(minutes) +mins+r;
-		
+
 	}
 
 	if (hours > 0)
@@ -656,6 +653,11 @@ string IntToTime(int ms, bool bTextFormat)
 
 	if (r.empty()) return "Now!";
 	return r;
+}
+
+string IntToTime(uint32 ms, bool bTextFormat)
+{
+	return IntToTimeSeconds(ms/1000, bTextFormat);
 }
 
 int StringToInt( const string &s )
