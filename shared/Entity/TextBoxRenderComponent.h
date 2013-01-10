@@ -75,6 +75,7 @@ private:
 	uint32 m_lastLineRendered;
 	uint32 m_lastCharRendered;
 	uint32 *m_pTextAlignment;
+	uint32 *m_pShadowColor; //if not 0,0,0,0, will render a shadow behind the text
 
 };
 
