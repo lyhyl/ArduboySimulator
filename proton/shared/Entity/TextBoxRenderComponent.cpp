@@ -47,6 +47,9 @@ void TextBoxRenderComponent::OnAdd(Entity *pEnt)
 
 	//register ourselves to render if the parent does
 	pEnt->GetFunction("OnRender")->sig_function.connect(1, boost::bind(&TextBoxRenderComponent::OnRender, this, _1));
+
+	m_pShadowColor = &GetVarWithDefault("shadowColor", Variant(MAKE_RGBA(0,0,0,0)))->GetUINT32();
+
 }
 
 void TextBoxRenderComponent::OnRemove()
@@ -135,10 +138,24 @@ void TextBoxRenderComponent::DrawTextNormal(CL_Vec2f vPos)
 			//center the text on its line.  No reason why we couldn't cache this size data, but I suspect it's not a big hit compared to the
 			//actual rendering.
 			lineSizeX = GetBaseApp()->GetFont(eFont(*m_pFontID))->MeasureText(m_lines[i], *m_pFontScale).x;
+		
+			
+			if (*m_pShadowColor != 0)
+			{
+				GetBaseApp()->GetFont(eFont(*m_pFontID))->DrawScaledSolidColor( (vPos.x + ( (m_pSize2d->x-lineSizeX)/2))+2, vPos.y+2, m_lines[i], *m_pFontScale,ColorCombine(*m_pShadowColor, MAKE_RGBA(255,255,255,255), (float)GET_ALPHA(color)/255), &state, &g_globalBatcher);
+			}
+
+			
 			GetBaseApp()->GetFont(eFont(*m_pFontID))->DrawScaled(vPos.x + ( (m_pSize2d->x-lineSizeX)/2), vPos.y, m_lines[i], *m_pFontScale, color, &state, &g_globalBatcher);
 			break;
 
 		default:
+
+			if (*m_pShadowColor != 0)
+			{
+				GetBaseApp()->GetFont(eFont(*m_pFontID))->DrawScaledSolidColor(vPos.x+2, vPos.y+2, m_lines[i], *m_pFontScale, ColorCombine(*m_pShadowColor, MAKE_RGBA(255,255,255,255), (float)GET_ALPHA(color)/255), &state, &g_globalBatcher);
+		
+			}
 			GetBaseApp()->GetFont(eFont(*m_pFontID))->DrawScaled(vPos.x, vPos.y, m_lines[i], *m_pFontScale, color, &state, &g_globalBatcher);
 
 			break;
