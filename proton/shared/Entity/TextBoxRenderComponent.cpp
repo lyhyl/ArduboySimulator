@@ -142,7 +142,7 @@ void TextBoxRenderComponent::DrawTextNormal(CL_Vec2f vPos)
 			
 			if (*m_pShadowColor != 0)
 			{
-				GetBaseApp()->GetFont(eFont(*m_pFontID))->DrawScaledSolidColor( (vPos.x + ( (m_pSize2d->x-lineSizeX)/2))+2, vPos.y+2, m_lines[i], *m_pFontScale,ColorCombine(*m_pShadowColor, MAKE_RGBA(255,255,255,255), (float)GET_ALPHA(color)/255), &state, &g_globalBatcher);
+				GetBaseApp()->GetFont(eFont(*m_pFontID))->DrawScaledSolidColor( (vPos.x + ( (m_pSize2d->x-lineSizeX)/2))+2, vPos.y+2, m_lines[i], *m_pFontScale,ColorCombine(*m_pShadowColor, MAKE_RGBA(255,255,255,255), (float)GET_ALPHA(color)/255), NULL, &g_globalBatcher);
 			}
 
 			
@@ -153,7 +153,7 @@ void TextBoxRenderComponent::DrawTextNormal(CL_Vec2f vPos)
 
 			if (*m_pShadowColor != 0)
 			{
-				GetBaseApp()->GetFont(eFont(*m_pFontID))->DrawScaledSolidColor(vPos.x+2, vPos.y+2, m_lines[i], *m_pFontScale, ColorCombine(*m_pShadowColor, MAKE_RGBA(255,255,255,255), (float)GET_ALPHA(color)/255), &state, &g_globalBatcher);
+				GetBaseApp()->GetFont(eFont(*m_pFontID))->DrawScaledSolidColor(vPos.x+2, vPos.y+2, m_lines[i], *m_pFontScale, ColorCombine(*m_pShadowColor, MAKE_RGBA(255,255,255,255), (float)GET_ALPHA(color)/255), NULL, &g_globalBatcher);
 		
 			}
 			GetBaseApp()->GetFont(eFont(*m_pFontID))->DrawScaled(vPos.x, vPos.y, m_lines[i], *m_pFontScale, color, &state, &g_globalBatcher);
