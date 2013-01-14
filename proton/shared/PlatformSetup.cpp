@@ -30,6 +30,7 @@ string AddPlatformNameURL()
 	return "";
 }
 
+//these cannot be changed
 string PlatformIDAsString(ePlatformID platformID)
 {
 
@@ -49,6 +50,22 @@ string PlatformIDAsString(ePlatformID platformID)
 	}
 
 	return "";
+}
+
+//these cannot be changed
+ePlatformID PlatformStringAsID(string platform)
+{
+
+	if (platform == "iphone") return PLATFORM_ID_IOS;
+	if (platform == "android") return PLATFORM_ID_ANDROID;
+	if (platform == "windows") return PLATFORM_ID_WINDOWS;
+	if (platform == "osx") return PLATFORM_ID_OSX;
+	if (platform == "winmo") return PLATFORM_ID_WINDOWS_MOBILE;
+	if (platform == "webos") return PLATFORM_ID_WEBOS;
+	if (platform == "bbx") return PLATFORM_ID_BBX;
+	if (platform == "linux") return PLATFORM_ID_LINUX;
+
+	return PLATFORM_ID_UNKNOWN;
 }
 
 string PlatformIDAsStringDisplay(ePlatformID platformID)

@@ -134,6 +134,9 @@ std::string PlatformIDAsString(ePlatformID platformID);
  */
 std::string PlatformIDAsStringDisplay(ePlatformID platformID);
 
+ePlatformID PlatformStringAsID(std::string platform);
+
+
 /**
  * Returns a string representation of an orientation mode for display purposes.
  * This string can be used to display a textual representation of an orientation
@@ -141,6 +144,7 @@ std::string PlatformIDAsStringDisplay(ePlatformID platformID);
  * this method may change from Proton version to another.
  */
 std::string OrientationAsStringDisplay(eOrientationMode orientation);
+
 
 #endif
 
