@@ -42,7 +42,7 @@ public:
 	void ModChoice(int index, int mod);
 	bool Save(FILE *fp); //save to file stream
 	bool Load(FILE *fp); //load from file stream
-	unsigned int GetCount(){return a_odds.size();}
+	unsigned int GetCount(){return (unsigned int)a_odds.size();}
 
 private:
 
