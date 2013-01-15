@@ -102,7 +102,7 @@ bool NetSocket::Init( string url, int port )
 	sa.sin_family= hp->h_addrtype;
 	sa.sin_port= htons((u_short)port);
 
-	if ((m_socket= socket(hp->h_addrtype,SOCK_STREAM,0)) < 0)     /* get socket */
+	if ((m_socket= (int)socket(hp->h_addrtype,SOCK_STREAM,0)) < 0)     /* get socket */
 		return false;
 
 #ifdef WINAPI
@@ -140,7 +140,7 @@ bool NetSocket::InitHost( int port, int connections )
 	sa.sin_family = PF_INET;             
 	sa.sin_addr.s_addr = htonl(INADDR_ANY);
 	sa.sin_port = htons(port);          
-	m_socket = socket(AF_INET, SOCK_STREAM, 0);
+	m_socket = (int)socket(AF_INET, SOCK_STREAM, 0);
 	if (m_socket == INVALID_SOCKET )
 	{
 		LogMsg("socket command: INVALID_SOCKET");

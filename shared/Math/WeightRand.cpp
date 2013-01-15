@@ -24,7 +24,7 @@ void CWeightRand::Clear()
 bool CWeightRand::Save(FILE *fp)       
 {
 	//save our info out into a filestream
-	int i_elements = a_odds.size();
+	int i_elements = (int)a_odds.size();
 	fwrite(&i_elements, sizeof(i_elements), 1, fp);
 
 	//next write out the elements
