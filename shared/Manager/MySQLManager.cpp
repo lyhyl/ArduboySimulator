@@ -146,7 +146,7 @@ int MySQLManager::AddSelectResults(vector<VariantDB> &vdb)
 						myTm.tm_isdst = -1; // let the C runtime determine daylight adjustment
 						myTm.tm_wday = -1;
 						myTm.tm_yday = -1;
-						assert( sizeof(time_t) == 4 && "Uh oh.. define _USE_32BIT_TIME_T somewhere for MSVC");
+						//assert( sizeof(time_t) == 4 && "Uh oh.. define _USE_32BIT_TIME_T somewhere for MSVC");
 						uint32 t = (uint32)mktime(&myTm);
 						db.GetVar(fieldNames[i])->Set(t);
 					}
@@ -169,7 +169,7 @@ int MySQLManager::AddSelectResults(vector<VariantDB> &vdb)
 					myTm.tm_isdst = -1; 
 					myTm.tm_wday = -1;
 					myTm.tm_yday = -1;
-					assert( sizeof(time_t) == 4 && "Uh oh.. define _USE_32BIT_TIME_T somewhere for MSVC");
+					//assert( sizeof(time_t) == 4 && "Uh oh.. define _USE_32BIT_TIME_T somewhere for MSVC");
 					uint32 t = (uint32) mktime(&myTm);
 					db.GetVar(fieldNames[i])->Set(t);
 				}
@@ -192,7 +192,7 @@ int MySQLManager::AddSelectResults(vector<VariantDB> &vdb)
 						LogMsg("Error converting mysql timestamp");
 					}
 
-					assert( sizeof(time_t) == 4 && "Uh oh.. define _USE_32BIT_TIME_T somewhere for MSVC");
+					//assert( sizeof(time_t) == 4 && "Uh oh.. define _USE_32BIT_TIME_T somewhere for MSVC");
 
 
 					uint32 t = (uint32) mktime(&tm);
