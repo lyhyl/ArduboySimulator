@@ -743,6 +743,20 @@ import android.view.View.OnClickListener;
 		Locale l = java.util.Locale.getDefault();    
 		return (l.getLanguage()+"_"+l.getCountry()).toLowerCase();
 	}
+	
+		public static int is_app_installed(String packageName)
+	{
+		//will return 1 if the app is installed
+		try
+		{
+			 ApplicationInfo info = app.getPackageManager().getApplicationInfo(packageName, 0 );
+			return 1;
+		} catch( PackageManager.NameNotFoundException e )
+		{
+			return 0;
+		}
+		
+	}
 
 	public static String get_clipboard()
 	{

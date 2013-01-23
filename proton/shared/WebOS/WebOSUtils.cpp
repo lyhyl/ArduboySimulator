@@ -269,6 +269,13 @@ break;
 #endif
 
 }
+bool IsAppInstalled(string packageName)
+{
+#ifdef _DEBUG
+	LogMsg("IsAppInstalled not yet handled for this OS");
+#endif
+	return false;
+}
 
 string GetRegionString()
 {
