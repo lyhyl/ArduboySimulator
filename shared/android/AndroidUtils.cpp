@@ -550,6 +550,18 @@ string GetRegionString()
 	return string(s);
 }
 
+bool IsAppInstalled(string packageName)
+{
+	JNIEnv *env = GetJavaEnv();
+	
+	if (!env) return false;
+	jclass cls = env->FindClass(GetAndroidMainClassName());
+	jmethodID mid = env->GetStaticMethodID(cls,
+		"is_app_installed",
+		"(Ljava/lang/String;)I");
+	return env->CallStaticIntMethod(cls, mid, env->NewStringUTF(packageName.c_str())) != 0;
+}
+
 //month is 1-12 btw
 int GetDaysSinceDate(int month,int day, int year)
 {

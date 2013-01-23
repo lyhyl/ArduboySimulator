@@ -472,6 +472,14 @@ string GetRegionString()
 	return [[currentUsersLocale localeIdentifier] cStringUsingEncoding:NSUTF8StringEncoding];
 }
 
+bool IsAppInstalled(string packageName)
+{
+	#ifdef _DEBUG
+	  LogMsg("IsAppInstalled not yet handled for this OS");
+	#endif
+	return false;
+}
+
 #import <mach/mach.h>
 #import <mach/mach_host.h>
  

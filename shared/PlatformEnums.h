@@ -119,6 +119,7 @@ bool RemoveDirectoryRecursively(std::string path);
 std::vector<std::string> GetDirectoriesAtPath(std::string path);
 std::vector<std::string> GetFilesAtPath(std::string path);
 std::string GetRegionString();
+bool IsAppInstalled(std::string packageName); // implemented on Android only, send "com.cih.gamecih" to check for that hack tool, for instance
 bool IsIphone();
 bool IsIPAD();
 bool IsIphoneOriPad();
