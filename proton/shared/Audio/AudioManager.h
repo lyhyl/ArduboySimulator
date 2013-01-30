@@ -126,6 +126,7 @@ public:
 	virtual void SetPos( AudioHandle soundID, uint32 posMS ){}
 	virtual void SetDLS(string fName); //(fmod only) example, "dink/midi/TimGM6mbTiny.dls" - if not set, FMOD will try to use whatever the system has.
 	virtual void SetMusicVol(float vol){}
+	virtual float GetMusicVol() {return m_musicVol;}
 	/**
 	 * Checks if playing of sounds is currently enabled.
 	 */
