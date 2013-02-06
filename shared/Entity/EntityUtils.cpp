@@ -489,7 +489,7 @@ void MorphToColorEntity(Entity *pEnt, bool bRecursive, int timeMS, unsigned int 
 
 EntityComponent * PulsateColorEntity(Entity *pEnt, bool bRecursive, unsigned int color, unsigned int pulsateSpeedMS)
 {
-	EntityComponent* pComp = SetupInterpolateComponent(pEnt, "", "colorMod", uint32(color), pulsateSpeedMS, 0, INTERPOLATE_SMOOTHSTEP_AS_COLOR, InterpolateComponent::ON_FINISH_BOUNCE);
+	EntityComponent* pComp = SetupInterpolateComponent(pEnt, "ColorModIC", "colorMod", uint32(color), pulsateSpeedMS, 0, INTERPOLATE_SMOOTHSTEP_AS_COLOR, InterpolateComponent::ON_FINISH_BOUNCE);
 
 	if (!bRecursive) return pComp;
 
@@ -1274,6 +1274,7 @@ EntityComponent * SetTextEntity(Entity *pEntWithTextComponent, const string &tex
 	{
 		pComp = pEntWithTextComponent->GetComponentByName("InputTextRender");
 	}
+
 
 	if (!pComp)
 	{
