@@ -1051,10 +1051,14 @@ import android.view.View.OnClickListener;
 			nativeOnKey(1, VIRTUAL_DPAD_BUTTON_RIGHT, e.getUnicodeChar()); 
 			return true; //signal that we handled it
 		}
+		
+		//do we want this?  Read somewhere it helps with some issues relating to foreign keyboard input..
+		//if(keycode==KeyEvent.KEYCODE_ALT_LEFT || keycode==KeyEvent.KEYCODE_ALT_RIGHT || keycode==KeyEvent.KEYCODE_SHIFT_LEFT || keycode==KeyEvent.KEYCODE_SHIFT_RIGHT) return true;
+
         switch (keycode)
 		{
 			case KeyEvent.KEYCODE_BACK:
-			{
+		{
 				//#if defined(RT_CHARTBOOST_SUPPORT)
 				// If an interstitial is on screen, close it. Otherwise continue as normal.
 					 Log.v("onKeyDown","Sending virtual back");
@@ -1071,7 +1075,7 @@ import android.view.View.OnClickListener;
 		}
 		
 		int vKey = TranslateKeycodeToProtonVirtualKey(keycode);
-		nativeOnKey(1, vKey,e.getUnicodeChar()); //1  means keydown
+		nativeOnKey(1, vKey, (char)e.getUnicodeChar()); //1  means keydown
         return super.onKeyDown(keycode, e);
     }
 
@@ -1107,7 +1111,7 @@ import android.view.View.OnClickListener;
 
       	int vKey = TranslateKeycodeToProtonVirtualKey(keycode);
 	
-      	nativeOnKey(0, vKey,e.getUnicodeChar()); //0 is type keyup
+      	nativeOnKey(0, vKey,(char)e.getUnicodeChar()); //0 is type keyup
         return super.onKeyUp(keycode, e);
     }
 
