@@ -5,7 +5,7 @@
 
 #include "PlatformSetup.h"
 
-unsigned int HashString(const char *str, int len=0); //if 0, stops on null, like for a string
+uint32 HashString(const char *str, int32 len=0); //if 0, stops on null, like for a string
 unsigned int GetHashOfFile(std::string fName, bool bAddBasePath); //returns 0 if file doesn't exist
 
 bool IsEven(int number);
