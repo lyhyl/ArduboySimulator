@@ -33,14 +33,21 @@ CL_Rectf ScaleRect(const CL_Rectf &r, float scale);
 CL_Rectf ScaleRect2D(const CL_Rectf &r, CL_Vec2f vScale);
 
 #define SMOOTHSTEP(x) ((x) * (x) * (3 - 2 * (x))) //thanks to sol_hsa at http://sol.gfxile.net/interpolation/index.html
-#define EASE_TO(x) (1 - (1 - x) * (1 - x))
-#define EASE_FROM(x) (x*x)
-#define SMOOTHSTEP_INVERSE(x) pow( (x/0.5)-1,3)
+#define EASE_TO(x) (1 - (1 - (x)) * (1 - (x)))
+#define EASE_FROM(x) ((x)*(x))
+#define SMOOTHSTEP_INVERSE(x) pow( ((x)/0.5)-1,3)
+
+// converting degrees to radians and vice versa
+#define PI (3.14159265359f)
+#define TO_DEGREES(x) ((x)*180.0f/PI)
+#define TO_RADIANS(x) ((x)*PI/180.0f)
 
 bool CircleSegmentIntersect(CL_Vec2f C, float r, CL_Vec2f A, CL_Vec2f B, CL_Vec2f& P);
 float ModNearestInt(float a, float b);
 bool AnglesAreClose(float a, float b, float angleTolerance);
 float GetAngleBetweenTwoAnglesRadians(float a, float b);
+float AngleBetweenPoints(CL_Vec2f target,CL_Vec2f me);
+float AngleBetweenPointsInDegrees(CL_Vec2f target,CL_Vec2f me);
 
 void TurnAngleToward_Degrees(float *angle,float target,float amount);	// rotates angle towards target by amount, taking the shortest route
 
