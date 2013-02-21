@@ -409,6 +409,12 @@ CL_Vec2f RotateGUIPoint(CL_Vec2f vPos, CL_Rectf r, float angle, CL_Vec2f destRec
 #endif
 }
 
+float AngleBetweenPointsInDegrees(CL_Vec2f target,CL_Vec2f me)
+{
+	return TO_DEGREES(AngleBetweenPoints(target,me));
+}
 
-
-
+float AngleBetweenPoints(CL_Vec2f target,CL_Vec2f me)
+{
+	return atan2f((target.y-me.y),(target.x-me.x));
+}
