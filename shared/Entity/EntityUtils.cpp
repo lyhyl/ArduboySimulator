@@ -533,12 +533,20 @@ Entity * DisableEntityButtonByName(const string &entityName, Entity *pRootEntity
 		pComp->GetVar("disabled")->Set(uint32(1));
 	}
 
-	//also, check for a specific type of touch handler that should also be disabled, so it doesn't mark taps as owned
+	//also, check for a specific type of touch handlers that should also be disabled, so it doesn't mark taps as owned
 	pComp = pEnt->GetComponentByName("TouchHandlerArcade");
 	if (pComp)
 	{
 		pComp->GetVar("disabled")->Set(uint32(1));
 	}
+
+	pComp = pEnt->GetComponentByName("EmitVirtualKey");
+	if (pComp)
+	{
+		pComp->GetVar("disabled")->Set(uint32(1));
+	}
+
+	
 	return pEnt;
 
 }
