@@ -62,7 +62,7 @@ typedef uint64_t uint64;
 #endif
 
 #ifndef HAVE_UINT64
- //need this to avoid mysql trying to redine uint64
+ //need this to avoid mysql trying to redefine uint64
 #define HAVE_UINT64
 #endif
 
