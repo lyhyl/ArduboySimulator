@@ -13,8 +13,8 @@
 #include "Component.h"
 #include "Entity.h"
 
-//Like a normal touch HandlerArcade, but with better multi-touch support, and marks its buttons as "handled", better for
-//say, arrow buttons for an arcade button 
+//Like a normal TouchHandlerComponent, but with better multi-touch support, and marks its buttons as "handled", better for
+//say, arrow buttons for an arcade style button 
 
 //Also, it detects pinches, calls OnPinchMod on parent with the parms being parent entity, pinch % change. (0.5 would mean pinched half the screens worth)
 //Calls OnPinchStart and OnPinchEnd as well (on the parent entity)

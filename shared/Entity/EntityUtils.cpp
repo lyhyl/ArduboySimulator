@@ -569,6 +569,12 @@ void DisableAllButtonsEntity(Entity *pEnt, bool bRecursive)
 		pComp->GetVar("disabled")->Set(uint32(1));
 	}
 
+	pComp = pEnt->GetComponentByName("EmitVirtualKey");
+	if (pComp)
+	{
+		pComp->GetVar("disabled")->Set(uint32(1));
+	}
+
 	if (!bRecursive) return;
 
 	//also run this on all children
