@@ -436,7 +436,7 @@
 	
 	[self KillNetInit];
 	
-	m_HostRef = CFHostCreateWithName(nil, (CFStringRef)@"rtsoft.com");
+	m_HostRef = CFHostCreateWithName(nil, (CFStringRef)@"google.com");
 	CFStreamCreatePairWithSocketToCFHost(nil, m_HostRef, 80, &m_ReadRef, &m_WriteRef);
 	memset(&context, 0, sizeof(context));
 	context.version = 0;
