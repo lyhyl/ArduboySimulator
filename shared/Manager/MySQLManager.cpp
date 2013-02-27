@@ -40,6 +40,12 @@ int MySQLManager::ShowError()
 
 bool MySQLManager::DoesTableExist(string tableName, bool bShowErrors)
 {
+	if (!m_conn)
+	{
+		LogError("Why you trying toDoesTableExist when SQL isn't initted?");
+		return false;
+	}
+
 	assert(m_conn);
 	MYSQL_RES *result = NULL;
 
@@ -55,6 +61,13 @@ bool MySQLManager::DoesTableExist(string tableName, bool bShowErrors)
 
 bool MySQLManager::DoResultsExist()
 {
+
+	if (!m_conn)
+	{
+		LogError("Why you trying to DoResultsExist when SQL isn't initted?");
+		return false;
+	}
+
 	MYSQL_RES *result = NULL;
 	result = mysql_store_result(m_conn);
 
@@ -71,6 +84,12 @@ bool MySQLManager::DoResultsExist()
 
 int MySQLManager::AddSelectResults(vector<VariantDB> &vdb)
 {
+	if (!m_conn)
+	{
+		LogError("Why you trying to AddSelectResults when SQL isn't initted?");
+		return false;
+	}
+
 	MYSQL_RES *result = NULL;
 	result = mysql_store_result(m_conn);
 
@@ -247,9 +266,9 @@ int MySQLManager::AddSelectResults(vector<VariantDB> &vdb)
 
 bool MySQLManager::Init(string name, string password)
 {
+
 	LogMsg("MySQL client version: %s", mysql_get_client_info());
 	Kill();
-	m_bLostServerConnection = false;
 	//store these so we can re-connect ourselves if needed
 
 	m_conn = mysql_init(NULL);
@@ -268,6 +287,8 @@ bool MySQLManager::Init(string name, string password)
 		return false;
 	}
 
+	m_bLostServerConnection = false;
+
 	return true;
 }
 
@@ -276,6 +297,13 @@ bool MySQLManager::Query( string query, bool bShowError )
 #ifdef _DEBUG
 	//LogMsg("Queting %s", query.c_str() );
 #endif
+
+	if (!m_conn)
+	{
+		LogError("Why you trying to Query when SQL isn't initted?");
+		return false;
+	}
+
 	if (mysql_query(m_conn, query.c_str()))
 	{
 		if (bShowError)
@@ -283,7 +311,7 @@ bool MySQLManager::Query( string query, bool bShowError )
 			int error = ShowError();
 			if (error == 2006) //this should be CR_SERVER_GONE_ERROR, but I can't find the define..
 			{
-				//let our user know something is desparately wrong.  mysql service probably died, requiring a restart
+				//let our user know something is desperately wrong.  mysql service probably died, requiring a restart
 				m_bLostServerConnection = true;
 			}
 			
