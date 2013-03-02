@@ -356,6 +356,7 @@ void AppendStringToFile(const string filename, const string text)
 	{
 		//Uhh.... bad idea, could create infinite loop
 		//LogError("Unable to create/append to %s", text);
+		return;
 	}
 
 	fwrite(text.c_str(), text.size(), 1, fp);
