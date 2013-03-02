@@ -26,7 +26,8 @@ vector<string> StringTokenize (const  string  & theString,  const  string  & the
 string GetDateAndTimeAsString();
 void AppendStringToFile(string filename, string text);
 
-void LogMsg ( const char* traceStr, ... )
+#ifndef RT_CUSTOM_LOGMSG
+void LogMsg( const char* traceStr, ... )
 {
 	va_list argsVA;
 	const int logSize = 4096;
@@ -52,7 +53,7 @@ void LogMsg ( const char* traceStr, ... )
 	#endif
 }
 
-
+#endif
 string GetBaseAppPath()
 {
 	char szDir[1024];

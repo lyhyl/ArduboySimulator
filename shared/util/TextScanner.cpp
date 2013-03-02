@@ -214,3 +214,46 @@ vector<string> TextScanner::TokenizeLine( int lineNum, const string &theDelimite
 {
 	return StringTokenize(m_lines[lineNum], theDelimiter);
 }
+
+void TextScanner::AppendToFile( string fileName, bool bAddBasePath /*= true*/ )
+{
+	if (m_lines.empty()) return;
+
+	if (bAddBasePath)
+	{
+		fileName = GetBaseAppPath()+fileName;
+	}
+
+	FILE *fp = NULL;
+
+	if (GetPlatformID() == PLATFORM_ID_LINUX)
+	{
+		fp = fopen(fileName.c_str(), "a+");
+
+	} else
+	{
+		fp = fopen(fileName.c_str(), "ab");
+
+		if (!fp)
+		{
+			fp = fopen(fileName.c_str(), "wb");
+		}
+	}
+
+	if (!fp)
+	{
+		//Uhh.... bad idea, could create infinite loop
+		//LogError("Unable to create/append to %s", text);
+		return;
+	}
+
+	string temp;
+	for (uint32 i=0; i < m_lines.size(); i++)
+	{
+		temp = m_lines[i]+"\r\n";
+		fwrite(temp.c_str(), temp.size(), 1, fp);
+	}
+
+	fclose(fp);
+//	
+}
