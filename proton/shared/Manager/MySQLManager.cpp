@@ -32,6 +32,8 @@ void MySQLManager::Kill()
 
 int MySQLManager::ShowError()
 {
+	if (!m_conn) return 0;
+
 	int error = mysql_errno(m_conn);
 
 	LogError("MySQLManager error: %u: %s", error, mysql_error(m_conn));
@@ -284,6 +286,7 @@ bool MySQLManager::Init(string name, string password)
 	if (!mysql_real_connect(m_conn, "localhost", name.c_str(), password.c_str(), NULL, 0, NULL, 0))
 	{
 		ShowError();
+		Kill(); //this will make m_conn null again
 		return false;
 	}
 
