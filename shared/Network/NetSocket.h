@@ -29,6 +29,7 @@ public:
 	int GetIdleTimeMS();
 	void Kill();
 	void SetSocket(int socket);
+	bool WasDisconnected() {return m_bWasDisconnected;}
 
 protected:
 
@@ -39,6 +40,7 @@ protected:
 	std::vector<char> m_readBuffer;
 	std::vector<char> m_writeBuffer;
 	unsigned int m_idleTimer; //time of last communication
+	bool m_bWasDisconnected;
 
 private:
 };

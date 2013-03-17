@@ -54,6 +54,7 @@
 NetSocket::NetSocket()
 {
 	m_socket = INVALID_SOCKET;
+	m_bWasDisconnected = false;
 }
 
 NetSocket::~NetSocket()
@@ -65,6 +66,8 @@ NetSocket::~NetSocket()
 
 void NetSocket::Kill()
 {
+	m_bWasDisconnected = false;
+
 	if (m_socket != INVALID_SOCKET)
 	{
 		#ifdef _DEBUG
@@ -224,10 +227,24 @@ void NetSocket::UpdateRead()
 	{
 		bytesRead = ::recv (m_socket, &buff[0], buff.size(), 0);
 	
-		if (bytesRead <= 0)
+		if (bytesRead == 0)
 		{
 			//all done
+			
+			if (!m_bWasDisconnected)
+			{
+				#ifdef _DEBUG
+					LogMsg("Client disconnected");
+				#endif
+				m_bWasDisconnected = true;
+			}
 			return;
+		}
+
+		if (bytesRead == -1)
+		{
+			return;
+			//not ready
 		}
 
 		//copy it into our real lbuffer
