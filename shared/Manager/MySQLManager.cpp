@@ -7,6 +7,12 @@
 #include <my_global.h>
 #include <mysql.h>
 
+#ifdef _CONSOLE
+uint32 GetTick();
+#else
+#include "BaseApp.h"
+#endif
+
 #define C_MYSQL_PING_TIMER_MS (1000*60*60)*4
 
 MySQLManager::MySQLManager()
@@ -334,12 +340,12 @@ int MySQLManager::GetLastAutoIncrementInsertID()
 void MySQLManager::Update()
 {
 
-	if (m_conn && m_pingTimer < GetSystemTimeTick() || GetSystemTimeTick() > m_pingTimer+C_MYSQL_PING_TIMER_MS )
+	if (m_conn && m_pingTimer < GetTick() || GetTick() > m_pingTimer+C_MYSQL_PING_TIMER_MS )
 	{
 		//keep the DB connection alive, if there were no accesses it can time-out
 		//LogMsg("Ping! pingtimer is %u, system is %u.  Internval is %d", m_pingTimer, GetSystemTimeTick(), C_MYSQL_PING_TIMER_MS);
 		DoesTableExist("BogusTable", false);
-		m_pingTimer = GetSystemTimeTick()+uint32(C_MYSQL_PING_TIMER_MS);
+		m_pingTimer = GetTick()+uint32(C_MYSQL_PING_TIMER_MS);
 	}
 }
 
