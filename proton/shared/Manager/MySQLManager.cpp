@@ -57,7 +57,7 @@ bool MySQLManager::DoesTableExist(string tableName, bool bShowErrors)
 	assert(m_conn);
 	MYSQL_RES *result = NULL;
 
-	bool bSuccess = Query("SELECT * FROM "+tableName, bShowErrors);
+	bool bSuccess = Query("SELECT COUNT(*) FROM "+tableName, bShowErrors);
 
 	if (!bSuccess) return false;
 
