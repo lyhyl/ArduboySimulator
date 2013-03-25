@@ -294,7 +294,8 @@ public:
 	void CallStaticFunction( PtrFuncVarList pFunctionWithVList, int timeMS, const VariantList *v = NULL, eTimingSystem timing = GetTiming() );
 
 	void DeleteMessagesByFunctionCallName( const string &name, eTimingSystem timing = GetTiming());
-	void DeleteMessagesToComponent( EntityComponent *pComponent);
+	void DeleteMessagesToComponent( EntityComponent *pComponent); //kills messages on both timers
+	void DeleteMessagesToEntity( Entity *pComponent); //kills messages on both timers
 	void DeleteMessagesByType( eMessageType type, eTimingSystem timing = GetTiming());
 
 	void DumpMessages();

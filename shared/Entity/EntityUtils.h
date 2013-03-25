@@ -304,7 +304,7 @@ CL_Rectf MeasureEntityAndChildren(Entity *pEnt, CL_Vec2f *pVStartingPos = NULL, 
 void SetupTextEntity(Entity *pEnt, eFont fontID, float scale=0); //0 means no change
 void SetAlignmentEntity(Entity *pEnt, eAlignment align);
 eAlignment GetAlignmentEntity(Entity *pEnt);
-void SetTouchPaddingEntity(Entity *pEnt, CL_Rectf padding);
+void SetTouchPaddingEntity(Entity *pEnt, CL_Rectf padding); //left, top, right, bottom
 EntityComponent * SetButtonVisualStyleEntity(Entity *pEnt, Button2DComponent::eVisualStyle style);
 EntityComponent * SetButtonStyleEntity(Entity *pEnt, Button2DComponent::eButtonStyle style);
 void SetButtonClickSound(Entity *pEnt, string fileName);
