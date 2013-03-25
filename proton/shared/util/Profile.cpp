@@ -47,7 +47,7 @@ typedef struct
 sample_history_t;
 
 // The maximum number of supported sample points.
-#define MAX_SAMPLE_POINTS 150
+#define MAX_SAMPLE_POINTS 50
 
 static sample_point_t samples[MAX_SAMPLE_POINTS];
 static sample_history_t history[MAX_SAMPLE_POINTS];

@@ -506,6 +506,40 @@ void MessageManager::DeleteMessagesToComponent( EntityComponent *pComponent)
 
 }
 
+
+void MessageManager::DeleteMessagesToEntity( Entity *pEntity)
+{
+	list<Message*> *pList = &m_gameMessages;
+
+	list<Message*>::iterator itor = pList->begin();
+	while (itor != pList->end())
+	{
+		if ( (*itor)->GetTargetEntity() == pEntity)
+		{
+			delete (*itor);
+			itor = pList->erase(itor);
+			continue;
+		}
+		itor++;
+	}
+
+	//also messages using the system timer
+	pList = &m_systemMessages;
+
+	itor = pList->begin();
+	while (itor != pList->end())
+	{
+		if ( (*itor)->GetTargetEntity() == pEntity)
+		{
+			delete (*itor);
+			itor = pList->erase(itor);
+			continue;
+		}
+		itor++;
+	}
+
+}
+
 void MessageManager::DeleteMessagesByType( eMessageType type, eTimingSystem timing  )
 {
 	list<Message*> *pList = &m_gameMessages;
