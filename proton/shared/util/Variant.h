@@ -460,7 +460,7 @@ class VariantList
 		}
 
 		byte * SerializeToMem(uint32 *pSizeOut, byte *pDest); //pass in NULL for dest and it will new[] the memory itself
-		bool SerializeFromMem(byte *pSrc, int length );
+		bool SerializeFromMem(byte *pSrc, int length, int *pBytesReadOut = NULL); //length seems to be unused..
 		Variant m_variant[C_MAX_VARIANT_LIST_PARMS]; //non-dynamic for speed
 		void GetVariantListStartingAt(VariantList *pOut, int startIndex); //shift variables over to the right, deleting some.  0 based index
 		std::string GetContentsAsDebugString();
