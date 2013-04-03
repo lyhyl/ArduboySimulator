@@ -514,8 +514,9 @@ byte * VariantList::SerializeToMem( uint32 *pSizeOut, byte *pDest )
 
 
 
-bool VariantList::SerializeFromMem(byte *pSrc, int bufferSize )
+bool VariantList::SerializeFromMem(byte *pSrc, int bufferSize, int *pBytesReadOut )
 {
+	byte *pStartPos = pSrc;
 	byte count = pSrc[0]; pSrc++;
 
 	for (int i=0; i < count; i++)
@@ -596,11 +597,15 @@ bool VariantList::SerializeFromMem(byte *pSrc, int bufferSize )
 		default:
 			LogMsg("unknown var type");
 
+			if (pBytesReadOut)
+				*pBytesReadOut = 0;
 			assert(!"Unknown var type");
 			return false;
 		}
 	}
 
+	if (pBytesReadOut)
+		*pBytesReadOut = (int)(pSrc-pStartPos);
 
 	return true; //success
 }
