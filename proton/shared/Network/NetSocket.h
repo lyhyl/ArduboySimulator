@@ -19,17 +19,18 @@ class NetSocket
 public:
 	NetSocket();
 	virtual ~NetSocket();
-	bool Init(string url, int port); //for clients
+	bool Init(std::string url, int port); //for clients
 	bool InitHost(int port, int connections); //for host sockets
 	void Update();
 	void Write(char *pBuff, int len);
-	void Write(const string &msg);
+	void Write(const std::string &msg);
 	int GetSocket() {return m_socket;}
 	std::vector<char> & GetBuffer() {return m_readBuffer;}
 	int GetIdleTimeMS();
 	void Kill();
 	void SetSocket(int socket);
 	bool WasDisconnected() {return m_bWasDisconnected;}
+	std::string GetClientIPAsString();
 
 protected:
 

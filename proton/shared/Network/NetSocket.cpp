@@ -209,6 +209,20 @@ void NetSocket::SetSocket( int socket )
 
 }
 
+string NetSocket::GetClientIPAsString()
+{
+	if (m_socket == INVALID_SOCKET) return "NOT CONNECTED";
+
+	sockaddr_in addr;
+	int addrsize = sizeof(addr);
+	int result = getpeername(m_socket, (sockaddr*) &addr, &addrsize);
+	//printf("Result = %d\n", result);
+	char* ip = inet_ntoa(addr.sin_addr);
+	int port = addr.sin_port;
+	//printf("IP: %s ... PORT: %d\n", ip, port);
+	return ip;
+
+}
 void NetSocket::Update()
 {	
 	UpdateRead();
