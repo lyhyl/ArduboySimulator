@@ -136,6 +136,8 @@ bool NetSocket::Init( string url, int port )
 
 bool NetSocket::InitHost( int port, int connections )
 {
+	Kill();
+
 	sockaddr_in sa;
 
 	memset(&sa, 0, sizeof(sa));
