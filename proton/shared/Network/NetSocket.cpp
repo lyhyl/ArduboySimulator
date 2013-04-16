@@ -214,7 +214,14 @@ string NetSocket::GetClientIPAsString()
 	if (m_socket == INVALID_SOCKET) return "NOT CONNECTED";
 
 	sockaddr_in addr;
+#ifdef WIN32
+	//avoid needing ws2tcpip.h
 	int addrsize = sizeof(addr);
+#else
+	//linux
+	socklen_t addrsize = sizeof(addr);
+#endif
+
 	int result = getpeername(m_socket, (sockaddr*) &addr, &addrsize);
 	//printf("Result = %d\n", result);
 	char* ip = inet_ntoa(addr.sin_addr);
