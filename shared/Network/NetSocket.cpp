@@ -161,6 +161,7 @@ bool NetSocket::InitHost( int port, int connections )
 	if (::bind(m_socket, (sockaddr *)&sa, sizeof(sockaddr_in)) == SOCKET_ERROR) 
 	{
 		rt_closesocket(m_socket);
+		Kill();
 		LogMsg("bind: INVALID_SOCKET");
 		return false;
 	}
