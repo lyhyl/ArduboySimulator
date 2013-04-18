@@ -20,6 +20,7 @@ MySQLManager::MySQLManager()
 	m_conn = NULL;
 	m_pingTimer = 0;
 	m_bLostServerConnection = false;
+	m_opsDone = 0;
 }
 
 MySQLManager::~MySQLManager()
@@ -312,6 +313,8 @@ bool MySQLManager::Query( string query, bool bShowError )
 		LogError("Why you trying to Query when SQL isn't initted?");
 		return false;
 	}
+
+	m_opsDone++;
 
 	if (mysql_query(m_conn, query.c_str()))
 	{

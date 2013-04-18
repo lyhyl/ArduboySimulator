@@ -37,6 +37,7 @@ public:
 	string EscapeString(const string &input); //Let's you use ' and \ willy nilly without worrying about it screwing up your query
 	MYSQL * GetConnection() {return m_conn;}
 	int GetTableRecordCount(string tableName);
+	unsigned int GetOpsDone() {return m_opsDone;}
 
 protected:
 	
@@ -45,6 +46,7 @@ private:
 	MYSQL *m_conn;
 	uint32 m_pingTimer; //do a query every 4 hours to avoid being disconnected
 	bool m_bLostServerConnection;
+	unsigned int m_opsDone; //how many SQL things we've done so far
 };
 
 #endif // MySQLManager_h__
