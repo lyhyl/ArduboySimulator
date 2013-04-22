@@ -74,6 +74,7 @@ public:
 	void MoveEntityToTopByAddress(Entity *pEnt); //top of the stack, draws last
 	void MoveEntityToBottomByAddress(Entity *pEnt); //bottom of the stack, draws first
 	void RemoveAllEntities();
+	bool RemoveEntitiesByNameThatStartWith(const string &name, bool bRecursive = false);
 
 	EntityComponent * AddComponent(EntityComponent *pComp);
 	/**
