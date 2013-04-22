@@ -407,6 +407,39 @@ bool Entity::RemoveEntityByName(const string &name, bool bRecursive)
 }
 
 
+
+bool Entity::RemoveEntitiesByNameThatStartWith(const string &name, bool bRecursive)
+{
+	EntityListItor itor = m_children.begin();
+
+	bool bRemoved = false;
+
+	while (itor != m_children.end())
+	{
+		if ( StringFromStartMatches( (*itor)->GetName(), name) )
+		{
+			Entity *pTemp = (*itor);
+			itor = m_children.erase(itor);
+			delete (pTemp);
+			bRemoved = true;
+			continue;
+		} else
+		{
+			if (bRecursive)
+			{
+				if ((*itor)->RemoveEntitiesByNameThatStartWith(name, bRecursive))
+				{
+					bRemoved = true;
+				}
+			}
+		}
+
+		itor++;
+	}
+
+	return bRemoved;
+}
+
 bool Entity::RemoveEntityByNameSafe(const string &name, bool bRecursive)
 {
 	EntityListItor itor = m_children.begin();
