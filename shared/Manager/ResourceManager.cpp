@@ -120,6 +120,11 @@ void ResourceManager::RemoveTexturesNotInExclusionList( const vector<string> &ex
 	}
 }
 
+bool ResourceManager::IsResourceLoaded( string fName )
+{
+	return FindDataByKey(fName) != NULL;
+}
+
 ResourceManager::Resource::~Resource()
 {
 	switch (m_type)
