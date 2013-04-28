@@ -98,6 +98,8 @@ public:
 		}
 	}
 
+	bool IsResourceLoaded(string fName);
+
 #ifdef RT_SPRITEANIMATION
 	/**
 	 * Gets a \c SpriteAnimationSet resource loaded from file \a fileName.
