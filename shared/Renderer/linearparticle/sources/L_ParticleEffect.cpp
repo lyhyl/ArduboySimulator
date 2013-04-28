@@ -37,8 +37,8 @@
 
 void L_ParticleEffect::Setup(int period_t, int x, int y)
 {
-	x_pos = x;
-	y_pos = y;
+	x_pos = (float)x;
+	y_pos = (float)y;
 	x_pos_offset = 0; //SETH
 	y_pos_offset = 0; //SETH
 
@@ -314,7 +314,7 @@ void L_ParticleEffect::create_particle(L_REAL in_x, L_REAL in_y, CL_Vec2f* vec_t
 
 	else if(par_randrot_on)
 	{
-		par_new->set_rotation2(L_RAND_REAL_2()*L_2PI);
+		par_new->set_rotation2((float)(L_RAND_REAL_2()*L_2PI));
 	}
 
 	if(size_distortion != 0)
@@ -380,7 +380,7 @@ void L_ParticleEffect::creating_process(void)
 			}
 			//===================================
 
-			motion_process(loop_counter);
+			motion_process((float)loop_counter);
 			activate_particle(loop_counter);
 
 			if(counter >= period)
@@ -396,7 +396,7 @@ void L_ParticleEffect::creating_process(void)
 
 	else
 	{
-		motion_process(time_elapesed);
+		motion_process((float)time_elapesed);
 		activate_particle(time_elapesed);
 	}
 }

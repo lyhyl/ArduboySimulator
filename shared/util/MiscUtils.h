@@ -71,7 +71,7 @@ std::string IntToTimeSeconds(uint32 seconds, bool bTextFormat = false); //conver
  */
 std::vector<std::string> StringTokenize(const std::string& str, const std::string& delimiter);
 std::string PopFirstParmString(std::string *lineInOut, const std::string delimiter = "|"); //removes the first parm from the string sent in, and returns it
-
+std::string PeekFirstParmString(std::string *lineInOut, const std::string delimiter="|");	// returns the first parm from the string, but leaves it intact
 void ForceRange(float &a, const float min, const float max);
 
 #define rt_min(rangeMin,rangeMax)    (((rangeMin) < (rangeMax)) ? (rangeMin) : (rangeMax))

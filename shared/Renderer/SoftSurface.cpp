@@ -1301,7 +1301,7 @@ void SoftSurface::Scale( int newX, int newY )
 	{
 		for (int x=0; x < targetWidth; x++)
 		{
-			memcpy(&pTemp[ (y*targetPitch) + x*m_bytesPerPixel ],  GetPointerToPixel(x*ratioX, y*ratioY), m_bytesPerPixel);
+			memcpy(&pTemp[ (y*targetPitch) + x*m_bytesPerPixel ],  GetPointerToPixel((int)(x*ratioX), (int)(y*ratioY)), m_bytesPerPixel);
 		}
 	}
 
