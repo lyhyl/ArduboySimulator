@@ -86,7 +86,7 @@ void L_ExplosionEffect::howto_emit_particle(void)
 
 	for( j=0; j<num_particles; j++ )
 	{
-		radian = L_RAND_REAL_2()*L_2PI;
+		radian = (float)(L_RAND_REAL_2()*L_2PI);
 
 		static L_REAL current_speed_dis;
 

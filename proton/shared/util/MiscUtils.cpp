@@ -324,6 +324,15 @@ string PopFirstParmString(string *lineInOut, const string delimiter)
 	return pieces[0];
 }
 
+string PeekFirstParmString(string *lineInOut, const string delimiter)
+{
+	vector<string> pieces = StringTokenize(*lineInOut, delimiter);
+
+	if (pieces.size() == 0)
+		return "";
+
+	return pieces[0];
+}
 
 vector<string> StringTokenize (const  string  & theString,  const  string  & theDelimiter )
 {
