@@ -72,6 +72,7 @@ public:
 	//Tapjoy specific, supported on Android and iOS
 
 	void InitTapjoy(string tapjoyID, string tapjoyAppSecretKey);
+	void SetUserID(string userID); //if using un-managed currency, you need to send this so it knows who to give gems to on the callback
 	void SetTapjoyAdVisible(bool bVisible); //will load an ad if not cached, so it might not display right away
 	void SetTapjoyFeatureAppVisible(bool bVisible); //will load an ad if not cached, so it might not display right away
 	void CacheTapjoyAd();
