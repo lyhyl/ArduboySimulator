@@ -466,3 +466,19 @@ void AdManager::InitTapjoy( string tapjoyID, string tapjoyAppSecretKey )
 	GetBaseApp()->AddOSMessage(o);
 
 }
+
+
+void AdManager::SetUserID( string userID)
+{
+
+	//Let the individual platform handle it.  The android side will ignore if it is already initted via Main.java, which was the old way.  (So old apps don't need to be changed)
+#ifdef _DEBUG
+	LogMsg("Sending Tapjoy user id message");
+#endif
+	OSMessage o;
+	o.m_type = OSMessage::MESSAGE_TAPJOY_SET_USERID;
+	o.m_string = userID;
+	GetBaseApp()->AddOSMessage(o);
+
+}
+

@@ -80,21 +80,24 @@ import android.widget.RelativeLayout;
 
 //#if defined(RT_TAPJOY_SUPPORT)
 	
-//tapjoy publisher
-
+//tapjoy publisher V9.01 supported, the new .jar format, not the old raw source version
 import com.tapjoy.TapjoyAwardPointsNotifier;
 import com.tapjoy.TapjoyConnect;
+import com.tapjoy.TapjoyConnectFlag;
 import com.tapjoy.TapjoyConstants;
+import com.tapjoy.TapjoyDailyRewardAdNotifier;
+import com.tapjoy.TapjoyDailyRewardAdStatus;
 import com.tapjoy.TapjoyDisplayAdNotifier;
-import com.tapjoy.TapjoyDisplayAdSize;
 import com.tapjoy.TapjoyEarnedPointsNotifier;
-import com.tapjoy.TapjoyFeaturedAppObject;
-import com.tapjoy.TapjoyFeaturedAppNotifier;
+import com.tapjoy.TapjoyFullScreenAdNotifier;
 import com.tapjoy.TapjoyLog;
 import com.tapjoy.TapjoyNotifier;
 import com.tapjoy.TapjoySpendPointsNotifier;
 import com.tapjoy.TapjoyVideoNotifier;
 import com.tapjoy.TapjoyVideoStatus;
+import com.tapjoy.TapjoyViewNotifier;
+import com.tapjoy.TapjoyViewType;
+
 //#endif
 
 //#if defined(RT_CHARTBOOST_SUPPORT)
@@ -125,7 +128,7 @@ import ${PACKAGE_NAME}.Consts.ResponseCode;
 import android.view.View.OnClickListener;
 
 //#if defined(RT_TAPJOY_SUPPORT)
-	public class SharedActivity extends Activity implements SensorEventListener,  TapjoyNotifier, TapjoyFeaturedAppNotifier, TapjoySpendPointsNotifier, TapjoyDisplayAdNotifier, TapjoyAwardPointsNotifier, TapjoyEarnedPointsNotifier, TapjoyVideoNotifier
+	public class SharedActivity extends Activity implements SensorEventListener,  TapjoyNotifier, TapjoyFullScreenAdNotifier, TapjoySpendPointsNotifier, TapjoyDisplayAdNotifier, TapjoyAwardPointsNotifier, TapjoyEarnedPointsNotifier, TapjoyVideoNotifier 
 //#else
 	public class SharedActivity extends Activity implements SensorEventListener
 //#endif
@@ -1135,19 +1138,26 @@ import android.view.View.OnClickListener;
   
 	//TAPJOY
 //#if defined(RT_TAPJOY_SUPPORT)
-    // Notifier for receiving the featured app data on a successful connect.
-	public void getFeaturedAppResponse(TapjoyFeaturedAppObject featuredApObject)
+   
+   	// Notifier when a TapjoyConnect.getFullScreenAd is successful.
+	public void getFullScreenAdResponse() 
 	{
-		Log.v(app.PackageName, "Tapjoy loaded featured App..");
-		nativeSendGUIEx(MESSAGE_TYPE_TAPJOY_FEATURED_APP_READY, 1,0,0);
+		Log.i(app.PackageName, "Displaying Full Screen Ad..");
+		TapjoyConnect.getTapjoyConnectInstance().showFullScreenAd();
 	}
 
-	// Notifier for when there is an error or no featured app to display.
-	public void getFeaturedAppResponseFailed(String error)
+	// Notifier when a TapjoyConnect.getFullScreenAd request fails.
+	public void getFullScreenAdResponseFailed(int error) 
 	{
-		Log.v(app.PackageName, "Displaying Featured App error: "+ error);
-		nativeSendGUIStringEx(MESSAGE_TYPE_TAPJOY_FEATURED_APP_READY, 0,0,0, error);
+		Log.i(app.PackageName, "No Full Screen Ad to display: " + error);
+		
+		//update_text = true;
+		//displayText = "No Full Screen Ad to display.";
+		
+		// We must use a handler since we cannot update UI elements from a different thread.
+		//mHandler.post(mUpdateResults);
 	}
+	
 
 	public void getDisplayAdResponse(View view)
 	{
@@ -1227,35 +1237,36 @@ import android.view.View.OnClickListener;
 		nativeSendGUIStringEx(MESSAGE_TYPE_TAPJOY_SPEND_TAP_POINTS_RETURN_ERROR, 0,0,0, error);
 	}
 	
-	@Override
 	public void getAwardPointsResponse(String currencyName, int pointTotal)
 	{
 		//Log.i("${SMALL_PACKAGE_NAME}", "getAwardPointsResponse: " + currencyName);
 		nativeSendGUIStringEx(MESSAGE_TYPE_TAPJOY_AWARD_TAP_POINTS_RETURN, pointTotal,0,0, currencyName);
 	}
 
-	@Override
 	public void getAwardPointsResponseFailed(String error)
 	{
 		Log.i("${SMALL_PACKAGE_NAME}", "getAwardPointsResponseFailed: " + error);
 		nativeSendGUIStringEx(MESSAGE_TYPE_TAPJOY_AWARD_TAP_POINTS_RETURN_ERROR, 0,0,0, error);
 	}
 
-	@Override
 	public void earnedTapPoints(int amount)
 	{
 		//Log.i("${SMALL_PACKAGE_NAME}", "earnedTapPoints: " + amount);
 		nativeSendGUIStringEx(MESSAGE_TYPE_TAPJOY_EARNED_TAP_POINTS, amount,0,0, "");
 	}
 	
-	@Override
 	public void videoReady()
 	{
 		Log.i("${SMALL_PACKAGE_NAME}", "VIDEO READY");
 		nativeSendGUIStringEx(MESSAGE_TYPE_TAPJOY_MOVIE_AD_READY, 1,0,0, "");
 	}
 	
-	@Override
+		// Notifier when a video ad starts.
+	public void videoStart()
+	{
+		Log.i("${SMALL_PACKAGE_NAME}", "VIDEO START");
+	}
+
 	public void videoError(int statusCode)
 	{
 		String displayText = "Error";
@@ -1735,6 +1746,10 @@ class AppRenderer implements GLSurfaceView.Renderer
 	
 	final static int MESSAGE_SUSPEND_TO_HOME_SCREEN = 34;
 
+	final static int MESSAGE_TAPJOY_INIT_MAIN = 35;
+	final static int MESSAGE_TAPJOY_INIT_PAID_APP_WITH_ACTIONID = 36;
+	final static int MESSAGE_TAPJOY_SET_USERID = 37;
+
 	static long m_gameTimer = 0;
 	static int m_timerLoopMS = 0; //every this MS, the loop runs.  0 for no fps limit
 
@@ -1928,9 +1943,15 @@ class AppRenderer implements GLSurfaceView.Renderer
 
 //#if defined(RT_TAPJOY_SUPPORT)
 	
+				case MESSAGE_TAPJOY_SET_USERID:
+					Log.v(app.PackageName, "Setting userID: " +nativeGetLastOSMessageString());
+					TapjoyConnect.getTapjoyConnectInstance().setUserID(nativeGetLastOSMessageString());
+					break;
+		
+		
 				case MESSAGE_TAPJOY_GET_FEATURED_APP:
-					//Log.v(app.PackageName, "Getting tapjoy feature");
-					TapjoyConnect.getTapjoyConnectInstance().getFeaturedApp(app);
+					Log.v(app.PackageName, "Get featured app was removed from Tapjoy in V9, wasn't it? Wasn't in the example...");
+					//TapjoyConnect.getTapjoyConnectInstance().getFeaturedApp(app);
 					break;
 
 				case MESSAGE_TAPJOY_SHOW_FEATURED_APP:
