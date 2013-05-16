@@ -83,6 +83,14 @@
         }
 	break;
 
+	case OSMessage::MESSAGE_TAPJOY_SET_USERID:
+	{
+	  NSString* userID = [NSString stringWithUTF8String:pMsg->m_string.c_str()];
+      [TapjoyConnect setUserID: userID];
+	  return true; //we handled it
+	}
+	break;
+	
 	case OSMessage::MESSAGE_TAPJOY_GET_AD: 
 
         LogMsg("Getting tapjoy ad");

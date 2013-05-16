@@ -92,6 +92,7 @@
 		return true; //we handled it
 	break;
 
+
 	case OSMessage::MESSAGE_TAPJOY_SHOW_FEATURED_APP:
 		LogMsg("show tapjoy feature");
 		[TapjoyConnect showFeaturedAppFullScreenAd]; 
