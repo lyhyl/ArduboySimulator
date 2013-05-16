@@ -46,14 +46,14 @@ android:launchMode="singleTop" >
 
     <!-- TAPJOY START -->
     <activity android:name="com.tapjoy.TJCOffersWebView" android:configChanges="keyboardHidden|orientation" />
-    <activity android:name="com.tapjoy.TapjoyFeaturedAppWebView" android:configChanges="keyboardHidden|orientation" />
+    <activity android:name="com.tapjoy.TapjoyFullScreenAdWebView" android:configChanges="keyboardHidden|orientation" />
+    <activity android:name="com.tapjoy.TapjoyDailyRewardAdWebView" android:configChanges="keyboardHidden|orientation" />
     <activity android:name="com.tapjoy.TapjoyVideoView" android:configChanges="keyboardHidden|orientation" />
-   
-    <receiver android:name="com.tapjoy.TapjoyReferralTracker" android:exported="true">
-	   <intent-filter>
+    <!-- 		<meta-data android:name="tapjoy.disable_video_offers" android:value="true" /> -->
+
+    <intent-filter>
         <action android:name="com.android.vending.INSTALL_REFERRER" />
      </intent-filter>
-    </receiver>
     <!-- TAPJOY END -->
 
     <!-- GOOGLE BILLING START -->

@@ -21,10 +21,25 @@ import ${PACKAGE_NAME}.SharedActivity;
 import android.os.Bundle;
 
 //#if defined(RT_TAPJOY_SUPPORT)
+
+import com.tapjoy.TapjoyAwardPointsNotifier;
 import com.tapjoy.TapjoyConnect;
+import com.tapjoy.TapjoyConnectFlag;
 import com.tapjoy.TapjoyConstants;
+import com.tapjoy.TapjoyDailyRewardAdNotifier;
+import com.tapjoy.TapjoyDailyRewardAdStatus;
+import com.tapjoy.TapjoyDisplayAdNotifier;
+import com.tapjoy.TapjoyEarnedPointsNotifier;
+import com.tapjoy.TapjoyFullScreenAdNotifier;
 import com.tapjoy.TapjoyLog;
-import com.tapjoy.TapjoyDisplayAdSize;
+import com.tapjoy.TapjoyNotifier;
+import com.tapjoy.TapjoySpendPointsNotifier;
+import com.tapjoy.TapjoyVideoNotifier;
+import com.tapjoy.TapjoyVideoStatus;
+import com.tapjoy.TapjoyViewNotifier;
+import com.tapjoy.TapjoyViewType;
+
+
 //#endif
 
 //#if defined(RT_HOOKED_SUPPORT)
@@ -38,7 +53,7 @@ public class Main extends SharedActivity
 	{
 		//*************** EDIT THESE TO MATCH YOUR PROJECT STUFF ****************
 		dllname= "RTAdTest";
-		BASE64_PUBLIC_KEY = "public key from android market";
+		BASE64_PUBLIC_KEY = "<enter your android public key>";
 		securityEnabled = false; 
    		IAPEnabled = true;
 
@@ -54,21 +69,22 @@ public class Main extends SharedActivity
 		System.loadLibrary(dllname);
 	
 	//#if defined(RT_TAPJOY_SUPPORT)
-		TapjoyLog.enableLogging(false);
+		TapjoyLog.enableLogging(true);
 	
 		// Connect with the Tapjoy server.  Call this when the application first starts.
-		  TapjoyConnect.requestTapjoyConnect(getApplicationContext(), "replace with tapjoy app id", "replace with tapjoy app secret key");
+		  TapjoyConnect.requestTapjoyConnect(getApplicationContext(), "<enter your tapjoy app id>", "<enter your tapjoy secret key>");
 		
 		  // For PAID APPS ONLY.  Replace your Paid App Pay-Per-Action ID as the parameter.
 		  //TapjoyConnect.getTapjoyConnectInstance().enablePaidAppWithActionID("<replace this part>");
-    
+   
+   	    // Init video.
+	    TapjoyConnect.getTapjoyConnectInstance().initVideoAd(this);
+ 
    		//if we have tapjoy  managed currency, we need this
    		TapjoyConnect.getTapjoyConnectInstance().setEarnedPointsNotifier(this);
 	
-	    // Init video.
-	    TapjoyConnect.getTapjoyConnectInstance().initVideoAd(this);
 	
-		tapBannerSize = TapjoyDisplayAdSize.TJC_AD_BANNERSIZE_640X100;
+		//tapBannerSize = TapjoyDisplayAdSize.TJC_AD_BANNERSIZE_640X100;
 	//#endif
 		
 		super.onCreate(savedInstanceState);
