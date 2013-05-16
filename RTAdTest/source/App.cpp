@@ -193,8 +193,11 @@ void App::Update()
             m_adManager.InitTapjoy("<tapjoy app id>", "<tapjoy secret key>");
         #else
             //well, you probably have different keys for Android, so put them here
-            m_adManager.InitTapjoy("<tapjoy app id>", "<tapjoy secret key>");
+           // m_adManager.InitTapjoy("<tapjoy app id>", "<tapjoy secret key>");
+		//Actually you have to edit main.java and put them in there
     #endif
+
+		m_adManager.SetUserID("1TESTID1");
         
     #endif
         
