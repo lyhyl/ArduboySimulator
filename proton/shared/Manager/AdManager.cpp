@@ -191,6 +191,16 @@ void AdManager::OnMessage( Message &m )
 
 		break;
 
+	case MESSAGE_TYPE_TAPJOY_OFFERWALL_CLOSED:
+		{
+	#ifdef _DEBUG
+				LogMsg("Offer wall was closed by user. (iOS only right now)");
+	#endif
+			m_sig_offer_wall_closed(NULL); //called when awarded tap points
+		}
+
+		break;
+
 	case MESSAGE_TYPE_TAPJOY_TAP_POINTS_RETURN:
 		
 		m_tapPoints = (int32)m.GetParm1();
