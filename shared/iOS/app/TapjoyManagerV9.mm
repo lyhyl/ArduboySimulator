@@ -36,6 +36,12 @@
 												 name:TJC_TAPPOINTS_EARNED_NOTIFICATION
 											   object:nil];
 
+	//Listen for when they close the offerwall
+	[[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(offerwallClosed:)
+                                                 name:TJC_VIEW_CLOSED_NOTIFICATION
+                                               object:nil];
+
     
 	//virtual items hosted by tapjoy not yet not supported
 	/*
@@ -306,6 +312,12 @@
 	NSLog(@"Tapjoy connect Succeeded");
 }
 
+-(void)offerwallClosed:(NSNotification*)notifyObj
+{
+	NSLog(@"Offerwall closed");
+    GetMessageManager()->SendGUIStringEx(MESSAGE_TYPE_TAPJOY_OFFERWALL_CLOSED, 0,0,0, "");
+
+}
              
              
 - (void)showEarnedCurrencyAlert:(NSNotification*)notifyObj

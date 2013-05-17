@@ -86,6 +86,7 @@ public:
 	void SetupBanner(CL_Vec2f vBannerSize, eAlignment alignment = ALIGNMENT_DOWN_CENTER); //alignment is ignored from now, always bottom centered
 	
 	boost::signal<void (VariantList*)> m_sig_tappoints_awarded; //called when awarded tap points
+	boost::signal<void (VariantList*)> m_sig_offer_wall_closed; //ios only
 
 private:
 
