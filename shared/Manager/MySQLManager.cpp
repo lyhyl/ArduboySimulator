@@ -265,6 +265,18 @@ int MySQLManager::AddSelectResults(vector<VariantDB> &vdb)
 					db.GetVar(fieldNames[i])->Set(string(row[i]));
 				}
 			break;
+
+			case FIELD_TYPE_BLOB:
+				if (!row[i])
+				{
+					//well, it's null.  Just pretend it's a blank string
+					db.GetVar(fieldNames[i])->Set("");
+				} else
+				{
+					db.GetVar(fieldNames[i])->Set(string(row[i]));
+				}
+				break;
+
 			default:;
 				assert(!"Unknown mysql type");
 				db.GetVar(fieldNames[i])->Set(string(row[i]));
