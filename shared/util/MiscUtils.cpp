@@ -452,7 +452,7 @@ string GetPathFromString(const string &path)
 }
 
 //send the desired new extension without the peroid, like "zip", not ".zip"
-string ModifyFileExtension(string fileName, string extension)
+string ModifyFileExtension(const string fileName, const string extension)
 {
 	size_t index = fileName.find_last_of('.');
 	if (index == string::npos)
@@ -672,4 +672,27 @@ string IntToTime(uint32 ms, bool bTextFormat)
 int StringToInt( const string &s )
 {
 	return atoi(s.c_str());
+}
+
+bool DateIsOlder(int month, int day, int year, int hour, int min, int sec,
+				 int monthB, int dayB, int yearB, int hourB, int minB, int secB)
+{
+
+	if (year < yearB) return true;
+	if (year > yearB) return false;
+
+	if (month < monthB) return true;
+	if (month > monthB) return false;
+
+	if (day < dayB) return true;
+	if (day > dayB) return false;
+	if (hour < hourB) return true;
+	if (hour > hourB) return false;
+	if (min < minB) return true;
+	if (min > minB) return false;
+	if (sec < secB) return true;
+	if (sec > secB) return false;
+
+	//er, they are the same;
+	return false;
 }

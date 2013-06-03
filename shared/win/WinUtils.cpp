@@ -645,4 +645,34 @@ void CreateAppCacheDirIfNeeded()
 	//only applicable to iOS
 }
 
+bool GetLastWriteDateOfFile(int *monthOut, int *dayOut, int *yearOut, int *hourOut, int *minOut, int *secOut, std::string fileName, bool bAddSavePath)
+{
+	if (bAddSavePath)
+	{
+		fileName = GetSavePath()+fileName;
+	}
+
+	WIN32_FILE_ATTRIBUTE_DATA  wfad;
+	if (!GetFileAttributesEx(fileName.c_str(), GetFileExInfoStandard, &wfad))
+	{
+		return false;
+	}
+	
+	SYSTEMTIME stime;
+	if (!FileTimeToSystemTime(&wfad.ftLastWriteTime, &stime))
+	{
+		return false;
+	}
+
+	*monthOut = stime.wMonth;
+	*dayOut = stime.wDay;
+	*yearOut = stime.wYear;
+	*hourOut = stime.wHour;
+	*minOut = stime.wMinute;
+	*secOut = stime.wSecond;
+
+	return true;
+}
+
+
 #endif

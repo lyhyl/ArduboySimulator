@@ -114,6 +114,7 @@ void LogMsg(const char *lpFormat, ...);
 void LogError (const char* traceStr, ... );
 void SetLastStringInput(std::string s);
 std::string GetLastStringInput();
+bool GetLastWriteDateOfFile(int *monthOut, int *dayOut, int *yearOut, int *hourOut, int *minOut, int *secOut, std::string fileName, bool bAddSavePath = true);
 void RemoveFile(std::string fileName, bool bAddSavePath = true);
 void CreateDirectoryRecursively(std::string basePath, std::string path);
 bool RemoveDirectoryRecursively(std::string path);
