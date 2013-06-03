@@ -249,7 +249,7 @@ void NetSocket::UpdateRead()
 
 	do
 	{
-		bytesRead = ::recv (m_socket, &buff[0], buff.size(), 0);
+		bytesRead = ::recv (m_socket, &buff[0], (int)buff.size(), 0);
 	
 		if (bytesRead == 0)
 		{
@@ -292,7 +292,7 @@ void NetSocket::UpdateWrite()
 	
 	if (m_socket == INVALID_SOCKET || m_writeBuffer.empty()) return;
 
-	int bytesWritten = ::send (m_socket, &m_writeBuffer[0], m_writeBuffer.size(), 0);
+	int bytesWritten = ::send (m_socket, &m_writeBuffer[0], (int)m_writeBuffer.size(), 0);
 
 	if (bytesWritten <= 0)
 	{
