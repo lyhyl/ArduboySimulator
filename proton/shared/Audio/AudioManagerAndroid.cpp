@@ -216,7 +216,7 @@ AudioHandle AudioManagerAndroid::Play( string fName, bool bLooping /*= false*/, 
 		StopMusic();
 	}
 
-	if (fName.empty()) return; //can't play a blank, now can we
+	if (fName.empty()) return AUDIO_HANDLE_BLANK; //can't play a blank, now can we
 
 	int loops = 0;
 	if (bLooping) loops = -1;

@@ -48,6 +48,10 @@ import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.content.pm.PackageInfo;
 
+// Wifi
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+
 // Licensing Server
 import com.android.vending.licensing.AESObfuscator;
 import com.android.vending.licensing.LicenseChecker;
@@ -780,6 +784,7 @@ import android.view.View.OnClickListener;
 		}
 		return data;
 	}
+	
 	public static String get_deviceID()
 	{
 		String m_szDevIDShort = "35" + //we make this look like a valid IMEI
@@ -805,6 +810,18 @@ import android.view.View.OnClickListener;
 		}
 	}
 
+public static String get_macAddress()
+	{
+	 WifiManager wimanager = (WifiManager) app.getSystemService(Context.WIFI_SERVICE);
+     String macAddress = wimanager.getConnectionInfo().getMacAddress();
+     
+     if (macAddress == null) 
+		{
+		    macAddress = ""; //blank to signal we couldn't get it
+	    }
+    
+    return macAddress;
+	}
   @Override
 	public void onSensorChanged(SensorEvent event) 
 	{
