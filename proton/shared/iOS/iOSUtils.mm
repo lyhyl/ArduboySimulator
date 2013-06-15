@@ -18,6 +18,7 @@
 #include <netinet/in.h>
 #include <net/if.h>
 #include <net/if_dl.h>
+#import <AdSupport/ASIdentifierManager.h>
 
 using namespace std;
 
@@ -405,7 +406,7 @@ string GetIdentiferForVender()
 
 	if ([[UIDevice currentDevice] respondsToSelector:@selector(identifierForVendor)]) {
 		// This is will run if it is iOS6
-		return  string(  [[[[UIDevice currentDevice] identifierForVendor] UUIDString] cStringUsingEncoding:NSUTF8StringEncoding];
+		return  string(  [[[[UIDevice currentDevice] identifierForVendor] UUIDString] cStringUsingEncoding:NSUTF8StringEncoding]);
 	} else {
 	   // This is will run before iOS6 and you can use openUDID or other 
 	   // method to generate an identifier
@@ -422,7 +423,7 @@ string GetAdvertisingIdentifier()
     }
     
     //note: This might return 00000000-0000-0000-0000-000000000000 in iOS 6.0, this is an Apple bug that was fixed later I guess
-    return [[[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString] cStringUsingEncoding:NSUTF8StringEncoding];
+    return string ([[[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString] cStringUsingEncoding:NSUTF8StringEncoding]);
 }
 
 
