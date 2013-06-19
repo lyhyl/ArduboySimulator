@@ -6,7 +6,6 @@
   <property name="PACKAGE_NAME_WITH_UNDERSCORES" value="com_rtsoft_rt3dapp" />
 
 
-
   <!-- The local.properties file is created and updated by the 'android' tool.
          It contains the path to the SDK. It should *NOT* be checked into
          Version Control Systems. -->
@@ -107,6 +106,7 @@ Here is where Seth setups a customized packaging so we can tell it to not compre
               nocrunch="${build.packaging.nocrunch}"
               resourcefilename="${resource.package.file.name}"
               resourcefilter="${aapt.resource.filter}"
+              libraryRFileRefid="project.library.bin.r.file.path"
               libraryResFolderPathRefid="project.libraries.res"
               libraryPackagesRefid="project.libraries.package"
               previousBuildType="${build.last.target}"

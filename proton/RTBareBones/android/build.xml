@@ -106,6 +106,7 @@ Here is where Seth setups a customized packaging so we can tell it to not compre
               nocrunch="${build.packaging.nocrunch}"
               resourcefilename="${resource.package.file.name}"
               resourcefilter="${aapt.resource.filter}"
+              libraryRFileRefid="project.library.bin.r.file.path"
               libraryResFolderPathRefid="project.libraries.res"
               libraryPackagesRefid="project.libraries.package"
               previousBuildType="${build.last.target}"
@@ -140,8 +141,8 @@ Here is where Seth setups a customized packaging so we can tell it to not compre
         <isset property="tested.project.absolute.dir" />
       </condition>
       <path id="project.javac.classpath">
-      <path refid="tested.project.classpath" />
-      <path refid="project.all.jars.path" />
+        <path refid="tested.project.classpath" />
+        <path refid="project.all.jars.path" />
       </path>
       <javac encoding="${java.encoding}"
               source="${java.source}" target="${java.target}"
