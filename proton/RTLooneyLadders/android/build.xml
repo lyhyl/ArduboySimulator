@@ -101,13 +101,13 @@ Here is where Seth setups a customized packaging so we can tell it to not compre
               debug="${build.is.packaging.debug}"
               manifest="AndroidManifest.xml"
               assets="${asset.absolute.dir}"
-              androidjar="${android.jar}"
+              androidjar="${project.target.android.jar}"
               apkfolder="${out.absolute.dir}"
               nocrunch="${build.packaging.nocrunch}"
               resourcefilename="${resource.package.file.name}"
               resourcefilter="${aapt.resource.filter}"
-              projectLibrariesResName="project.libraries.res"
-              projectLibrariesPackageName="project.libraries.package"
+              libraryResFolderPathRefid="project.libraries.res"
+              libraryPackagesRefid="project.libraries.package"
               previousBuildType="${build.last.target}"
               buildType="${build.target}">
         <res path="${out.res.absolute.dir}" />
@@ -139,14 +139,19 @@ Here is where Seth setups a customized packaging so we can tell it to not compre
               else="${jar.libs.dir}">
         <isset property="tested.project.absolute.dir" />
       </condition>
+      <path id="project.javac.classpath">
+        <path refid="tested.project.classpath" />
+        <path refid="project.all.jars.path" />
+      </path>
       <javac encoding="${java.encoding}"
               source="${java.source}" target="${java.target}"
               debug="true" extdirs=""
               destdir="${out.classes.absolute.dir}"
-              bootclasspathref="android.target.classpath"
               verbose="${verbose}"
               classpath="${extensible.classpath}"
-              classpathref="project.libraries.jars">
+              bootclasspathref="project.target.class.path"
+              classpathref="project.javac.classpath"
+              >
         <src path="${source.absolute.dir}" />
         <!--  <src path="../../shared/android/src" /> -->
         <src path="${gen.absolute.dir}" />
