@@ -117,11 +117,10 @@ import com.flurry.android.FlurryAgent;
 //#if defined(RT_DISABLE_IAP_SUPPORT)
 //#else
 //Android in app billing
-
-import ${PACKAGE_NAME}.BillingService.RequestPurchase;
-import ${PACKAGE_NAME}.BillingService.RestoreTransactions;
-import ${PACKAGE_NAME}.Consts.PurchaseState;
-import ${PACKAGE_NAME}.Consts.ResponseCode;
+import ${PACKAGE_NAME}.util.IabHelper;
+import ${PACKAGE_NAME}.util.IabResult;
+import ${PACKAGE_NAME}.util.Inventory;
+import ${PACKAGE_NAME}.util.Purchase;
 //#endif
 
 //#if defined(RT_HOOKED_SUPPORT)
@@ -149,6 +148,11 @@ import android.view.View.OnClickListener;
 	public static int adBannerWidth = 0;
 	public static int adBannerHeight = 0;
 	
+	public static String m_iap_asap = "";
+	public static String m_iap_sync_purchases_asap = "";
+	public static String m_iap_consume_asap = "";
+	public static String m_iap_developerdata = "";
+	public static Inventory m_iap_inventory = null;
 	
 //#if defined(RT_FLURRY_SUPPORT)
 	public static String m_flurryAPIKey = "";	
@@ -156,6 +160,7 @@ import android.view.View.OnClickListener;
 
 	public static boolean HookedEnabled = false;
 	//************************************************************************
+    static final int RC_REQUEST = 10001;
 
 
 	public static SharedActivity app = null; //a global to use in static functions with JNI
@@ -192,114 +197,10 @@ import android.view.View.OnClickListener;
 //#if defined(RT_DISABLE_IAP_SUPPORT)
 //#else	
 	//GOOGLE IAB
-	public BillingService mBillingService;
-	//private Set<String> mOwnedItems = new HashSet<String>();
-	
-	private String mPayloadContents = null;
-	private static final int DIALOG_CANNOT_CONNECT_ID = 1;
-    private static final int DIALOG_BILLING_NOT_SUPPORTED_ID = 2;
-
-	private enum Managed { MANAGED, UNMANAGED }
-
-
-    /**
-     * A {@link PurchaseObserver} is used to get callbacks when Android Market sends
-     * messages to this application so that we can update the UI.
-     */
-     
-    private class RTPurchaseObserver extends PurchaseObserver 
-    {
-        public RTPurchaseObserver(Handler handler) {
-            super(SharedActivity.this, handler);
-        }
-
-        @Override
-        public void onBillingSupported(boolean supported) 
-        {
-            Log.d(PackageName, "supported: " + supported);
-            
-            if (supported)
-            {
-				//   restoreDatabase();
-				//  mBuyButton.setEnabled(true);
-				//  mEditPayloadButton.setEnabled(true);
-         		Log.d(PackageName, "RTPurchaseObserver> Billing supported");
-		
-            } 
-			else
-            {
-		       	Log.d(PackageName, "RTPurchaseObserver> Billing not supported");
-		        //showDialog(DIALOG_BILLING_NOT_SUPPORTED_ID);
-            }
-        }
-
-        @Override
-        public void onPurchaseStateChange(PurchaseState purchaseState, String itemId, int quantity, long purchaseTime, String developerPayload)
-         {
-			Log.d(PackageName, "onPurchaseStateChange() itemId: " + itemId + " " + purchaseState);
-        
-            if (developerPayload == null) {
-				//logProductActivity(itemId, purchaseState.toString());
-            } 
-			else {
-				//logProductActivity(itemId, purchaseState + "\n\t" + developerPayload);
-            }
-
-            if (purchaseState == PurchaseState.PURCHASED)
-            {
-				//mOwnedItems.add(itemId);
-            }
-			//mCatalogAdapter.setOwnedItems(mOwnedItems);
-			//mOwnedItemsCursor.requery();
-		 }
-
-        @Override
-        public void onRequestPurchaseResponse(RequestPurchase request,ResponseCode responseCode)
-         {
-            Log.d(PackageName,  request.mProductId + ": " + responseCode);
-          
-            if (responseCode == ResponseCode.RESULT_OK) 
-            {
-				//don't get exited, it was sent, but it doesn't mean it was accepted yet.
-                Log.d(PackageName,  "purchase was successfully sent to server");
-				//logProductActivity(request.mProductId, "sending purchase request");
-            }
-			else if (responseCode == ResponseCode.RESULT_USER_CANCELED) 
-            {
-				nativeSendGUIEx(MESSAGE_TYPE_IAP_RESULT,  ResponseCode.RESULT_USER_CANCELED.ordinal(),0,0);
-				Log.d(PackageName, "user canceled purchase");
-   				//logProductActivity(request.mProductId, "dismissed purchase dialog");
-            } 
-			else 
-            {
-				nativeSendGUIEx(MESSAGE_TYPE_IAP_RESULT,  ResponseCode.RESULT_ERROR.ordinal(),0,0);
-				Log.d(PackageName,"purchase failed");
-				//logProductActivity(request.mProductId, "request purchase returned " + responseCode);
-            }
-        }
-
-        @Override
-        public void onRestoreTransactionsResponse(RestoreTransactions request, ResponseCode responseCode)
-         {
-            if (responseCode == ResponseCode.RESULT_OK)
-             {
-                  Log.d(PackageName, "completed RestoreTransactions request");
-               
-                // Update the shared preferences so that we don't perform
-                // a RestoreTransactions again.
-              
-            } else {
-                if (Consts.DEBUG) 
-                {
-					//let it know nothing else is coming
-                    Log.d(TAG, "RestoreTransactions error: " + responseCode);
-           			SharedActivity.nativeSendGUIEx(SharedActivity.app.MESSAGE_TYPE_IAP_ITEM_STATE, -1,0,0);
-	            }
-            }
-        }
-    }
-//#endif
-	//
+   // The helper object
+   IabHelper mHelper;
+   
+ 
 	
     ////////////////////////////////////////////////////////////////////////////
     // Licensing Server code
@@ -433,11 +334,7 @@ import android.view.View.OnClickListener;
         }
     ////////////////////////////////////////////////////////////////////////////
 	final Handler mMainThreadHandler = new Handler();
-//#if defined(RT_DISABLE_IAP_SUPPORT)
-//#else
-	private Handler mHandler;
-	private RTPurchaseObserver mIABPurchaseObserver;
-//#endif
+
 	@Override
 	protected void onDestroy()
      {
@@ -446,21 +343,18 @@ import android.view.View.OnClickListener;
         super.onDestroy();
 //#if defined(RT_DISABLE_IAP_SUPPORT)
 //#else
-        mBillingService.unbind();
+         Log.d(PackageName, "Destroying helper.");
+        if (mHelper != null) mHelper.dispose();
+        mHelper = null;
 //#endif
     }
+
+
     
     @Override
     protected void onStart() 
     {
         super.onStart();
-//#if defined(RT_DISABLE_IAP_SUPPORT)
-//#else
-        ResponseHandler.register(mIABPurchaseObserver);
-		//initializeOwnedItems();
-//#endif
-
-
 //#if defined(RT_CHARTBOOST_SUPPORT)
 		this.cb.onStart(this);
 //#endif
@@ -470,10 +364,6 @@ import android.view.View.OnClickListener;
     protected void onStop()
     {
         super.onStop();
-//#if defined(RT_DISABLE_IAP_SUPPORT)
-//#else
-        ResponseHandler.unregister(mIABPurchaseObserver);
-//#endif
 
 //#if defined(RT_CHARTBOOST_SUPPORT)
 	 this.cb.onStop(this);
@@ -495,13 +385,27 @@ import android.view.View.OnClickListener;
         super.onBackPressed();
 }
 
-	
+    void alert(String message)
+     {
+        AlertDialog.Builder bld = new AlertDialog.Builder(this);
+        bld.setMessage(message);
+        bld.setNeutralButton("OK", null);
+        Log.d(PackageName, "Showing alert dialog: " + message);
+        bld.create().show();
+    }
+	 void complain(String message)
+	 {
+        Log.e(PackageName, "Initialization error: " + message);
+        alert("Error: " + message);
+     }
+    
 	@Override
     protected void onCreate(Bundle savedInstanceState) 
 	{
         app = this;
 		apiVersion = Build.VERSION.SDK_INT;
-		
+		   Log.d(PackageName, "***********************************************************************");
+			
 		Log.d(PackageName, "SDK version: " + apiVersion);
 				
 		super.onCreate(savedInstanceState);
@@ -536,25 +440,161 @@ import android.view.View.OnClickListener;
 //#else	  		
 		if (IAPEnabled)	
 		{
-			mHandler = new Handler();
-			mIABPurchaseObserver = new RTPurchaseObserver(mHandler);
-			mBillingService = new BillingService();
-			mBillingService.setContext(this);
-	        
-			 // Check if billing is supported.
-			ResponseHandler.register(mIABPurchaseObserver);
-	       
-			if (!mBillingService.checkBillingSupported()) 
-			{
-             	Log.d(PackageName, "onCreate> Billing not supported? Early error");
-			} else
-			{
-             	//Log.d(PackageName, "onCreate> Ok so far");
-			}
+			 Log.d(PackageName, "Creating IAB helper.");
+			 mHelper = new IabHelper(this, BASE64_PUBLIC_KEY);
+        
+			 // enable debug logging (for a production application, you should set this to false).
+			 mHelper.enableDebugLogging(true);
+				
+			 Log.d(PackageName, "Setting up IAB helper");
+			 mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() 
+			 {
+				 public void onIabSetupFinished(IabResult result) 
+				 {
+					Log.d(PackageName, "Setup finished.");
+
+					if (!result.isSuccess()) 
+					{
+						// Oh noes, there was a problem.
+						complain("Problem setting up in-app billing (do you have the latest version of the market installed?) : " + result);
+						return;
+					}
+
+					// Hooray, IAB is fully set up. Now, let's get an inventory of stuff we own.
+					Log.d(PackageName, "Setup successful.");
+					//mHelper.queryInventoryAsync(mGotInventoryListener);
+				}
+           });
+
 		}
 //#endif
 		sendVersionDetails();
     }
+
+
+    // Listener that's called when we finish querying the items and subscriptions we own
+    IabHelper.QueryInventoryFinishedListener mGotInventoryListener = new IabHelper.QueryInventoryFinishedListener()
+     {
+        public void onQueryInventoryFinished(IabResult result, Inventory inventory)
+         {
+            Log.d(PackageName, "Query inventory finished.");
+            
+            // Have we been disposed of in the meantime? If so, quit.
+            if (mHelper == null) return;
+
+
+            if (result.isFailure())
+             {
+                complain("Failed to query inventory: " + result);
+     		    SharedActivity.nativeSendGUIEx(SharedActivity.app.MESSAGE_TYPE_IAP_PURCHASED_LIST_STATE, -1,0,0);
+	            return;
+            }
+
+			SharedActivity.app.m_iap_inventory = inventory; //cache for later
+			
+            Log.d(PackageName, "Query inventory was successful.");
+            
+            /*
+             * Check for items we own. Notice that for each purchase, we check
+             * the developer payload to see if it's correct! See
+             * verifyDeveloperPayload().
+             */
+           
+  
+			   for(Purchase purchase : inventory.getAllPurchases())
+				{
+					//Log.d(PackageName, "Purchase: " + purchase.getSku());
+					//Log.d(PackageName, "json: " + purchase.getOriginalJson());
+					nativeSendGUIStringEx(SharedActivity.app.MESSAGE_TYPE_IAP_PURCHASED_LIST_STATE, 0,0,0, purchase.getSku()); //0 means PURCHASED
+				}
+    
+            Log.d(PackageName, "Initial inventory query finished; enabling main UI.");
+      	    SharedActivity.nativeSendGUIEx(SharedActivity.app.MESSAGE_TYPE_IAP_PURCHASED_LIST_STATE, -1,0,0); //-1 means END OF LIST
+	  
+        }
+    };
+ 					
+					
+   IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener = new IabHelper.OnIabPurchaseFinishedListener()
+     {
+        public void onIabPurchaseFinished(IabResult result, Purchase purchase) 
+        {
+            Log.d(PackageName, "Purchase finished: " + result + ", purchase: " + purchase);
+            
+                // if we were disposed of in the meantime, quit.
+            if (mHelper == null) return;
+
+            if (result.isFailure()) 
+            {
+				if (result.getResponse() == IabHelper.BILLING_RESPONSE_RESULT_ITEM_ALREADY_OWNED)
+				{
+				// mHelper.consumeAsync(purchase, mConsumeFinishedListener);
+				}
+				
+               nativeSendGUIEx(MESSAGE_TYPE_IAP_RESULT, result.getResponse() ,0,0);
+		       return;
+            }
+           
+            Log.d(PackageName, "Purchase successful: "+purchase.getOriginalJson());
+
+			nativeSendGUIStringEx(MESSAGE_TYPE_IAP_RESULT, result.getResponse(),0,0, purchase.getOriginalJson());
+		
+            //mHelper.consumeAsync(purchase, mConsumeFinishedListener);
+        }
+    };
+    
+    
+    // Called when consumption is complete
+    IabHelper.OnConsumeFinishedListener mConsumeFinishedListener = new IabHelper.OnConsumeFinishedListener() 
+    {
+        public void onConsumeFinished(Purchase purchase, IabResult result) 
+        {
+            Log.d(PackageName, "Consumption finished. Purchase: " + purchase + ", result: " + result);
+            // if we were disposed of in the meantime, quit.
+            if (mHelper == null) return;
+
+            if (result.isSuccess()) 
+            {
+                // successfully consumed, so we apply the effects of the item in our
+                // game world's logic, which in our case means filling the gas tank a bit
+                Log.d(PackageName, "Consumption successful. Provisioning.");
+				if (m_iap_inventory != null)
+				{
+					m_iap_inventory.erasePurchase(purchase.getSku());
+				}
+            }
+            else 
+            {
+                complain("Error while consuming: " + result);
+            }
+          
+            Log.d(PackageName, "End consumption flow.");
+        }
+    };
+
+
+      @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+     {
+        Log.d(PackageName, "****");
+
+        Log.d(PackageName, "onActivityResult(" + requestCode + "," + resultCode + "," + data);
+
+        // Pass on the activity result to the helper for handling
+        if (!mHelper.handleActivityResult(requestCode, resultCode, data)) 
+        {
+            // not handled, so handle it ourselves (here's where you'd
+            // perform any handling of activity results not related to in-app
+            // billing...
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+        else 
+        {
+            Log.d(PackageName, "onActivityResult handled by IABUtil.");
+        }
+    }
+    
+//#endif
 
     @Override
     protected synchronized void onPause()
@@ -567,7 +607,7 @@ import android.view.View.OnClickListener;
 		//_sounds.autoPause();
 		
 //#if defined(RT_FLURRY_SUPPORT)
-		Log.v(app.PackageName, "Flurry finishing session");
+		Log.d(app.PackageName, "Flurry finishing session");
 		FlurryAgent.onEndSession(app);
 //#endif
 	
@@ -587,7 +627,7 @@ import android.view.View.OnClickListener;
 //#if defined(RT_FLURRY_SUPPORT)
 		if (!m_flurryAPIKey.isEmpty())
 		{
-			Log.v(app.PackageName, "Flurry re-starting session");
+			Log.d(app.PackageName, "Flurry re-starting session");
 			FlurryAgent.onStartSession(app, m_flurryAPIKey);
 		}
 //#endif	
@@ -607,12 +647,12 @@ import android.view.View.OnClickListener;
 //#else				
 				if (IAPEnabled)
 				{
-					mBillingService.unbind();
-  					ResponseHandler.unregister(mIABPurchaseObserver);
+					  //this happens in the destroy(), right?
+					 //if (mHelper != null) mHelper.dispose();
+					 //mHelper = null;
   				}
 //#endif			
 				android.os.Process.killProcess(android.os.Process.myPid());
-				
 				return;
 			}
 			updateResultsInUi();
@@ -627,23 +667,90 @@ import android.view.View.OnClickListener;
 		if (set_allow_dimming_asap)
 		{
 			set_allow_dimming_asap = false;
-			Log.v(app.PackageName, "Allowing screen dimming.");
+			Log.d(app.PackageName, "Allowing screen dimming.");
 			mGLView.setKeepScreenOn(false);
 		}
 
 		if (set_disallow_dimming_asap)
 		{
 			set_allow_dimming_asap = false;
-			Log.v(app.PackageName, "Disabling screen dimming.");
+			Log.d(app.PackageName, "Disabling screen dimming.");
 			mGLView.setKeepScreenOn(true);
 		}
+
+//#if defined(RT_DISABLE_IAP_SUPPORT)
+//#else	
+
+	boolean bWaiting = false;
+
+	if (!m_iap_sync_purchases_asap.equals(""))
+	{
+		if (!mHelper.isBusy())
+		{
+			mHelper.queryInventoryAsync(mGotInventoryListener);
+			m_iap_sync_purchases_asap = ""; //clear it so we don't do it again
+		} else
+		{
+				bWaiting = true;
+		}
+	}
+	
+	if (!m_iap_asap.equals(""))
+	{
+		if (!mHelper.isBusy())
+		{
+			mHelper.launchPurchaseFlow(app, m_iap_asap, RC_REQUEST, mPurchaseFinishedListener, m_iap_developerdata);
+			m_iap_asap = ""; //clear it so we don't do it again
+			m_iap_developerdata = "";
+		} else
+		{
+			bWaiting = true;
+		}
+	}
+
+	if (!m_iap_consume_asap.equals(""))
+	{
+		if (!mHelper.isBusy())
+		{
+
+			if (m_iap_inventory != null)
+			{
+	  			Log.d(app.PackageName, "Initiating consume of"+m_iap_consume_asap);
+		
+				if (m_iap_inventory.getPurchase(m_iap_consume_asap) == null)
+				{
+					Log.d(app.PackageName, "Ignoring consume, customer hasn't bought "+m_iap_consume_asap);
+				} else
+				{
+					mHelper.consumeAsync(m_iap_inventory.getPurchase(m_iap_consume_asap), mConsumeFinishedListener);
+				}
+			} else
+			{
+		  			Log.d(app.PackageName, "IAP inventory null, can't consume");
+			}
+			m_iap_consume_asap = ""; //clear it so we don't do it again
+		} else
+		{
+			bWaiting = true;
+		}
+	} 
+
+	if (bWaiting)
+	{
+		//I have no idea what I'm doing
+		SharedActivity.app.mMainThreadHandler.post(SharedActivity.app.mUpdateMainThread);
+	}
+
+
+
+//#endif	
 
 //#if defined(RT_CHARTBOOST_SUPPORT)
 
 
 	    if (cb_performLogon)
 	    {
-	    	Log.v(app.PackageName, "CB startSession");
+	    	Log.d(app.PackageName, "CB startSession");
 		
 			cb.onCreate(this, m_chartBoostAppID, m_chartBoostAppSig, null);
 			cb.startSession();
@@ -653,7 +760,7 @@ import android.view.View.OnClickListener;
 	    
 		if (cb_cacheInterstitial)
 		{
-			Log.v(app.PackageName, "Caching CB interstitial");
+			Log.d(app.PackageName, "Caching CB interstitial");
 			this.cb.cacheInterstitial();
 			cb_cacheInterstitial = false;
 		}
@@ -661,7 +768,7 @@ import android.view.View.OnClickListener;
 		if (cb_showInterstitial)
 		{
 
-			Log.v(app.PackageName, "Showing CB interstitial");
+			Log.d(app.PackageName, "Showing CB interstitial");
 			//String location = nativeGetLastOSMessageString();
 			cb_showInterstitial = false;
 			//ChartBoost _cb = Chartboost.sharedChartboost();
@@ -900,7 +1007,7 @@ public static String get_macAddress()
         mgr.hideSoftInputFromWindow (mGLView.getWindowToken(),0);
         if (show) 
 		{
-            Log.v("Msg","Enabling keyboard");
+            Log.d("Msg","Enabling keyboard");
 			mgr.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
             // On the Nexus One, SHOW_FORCED makes it impossible
             // to manually dismiss the keyboard.
@@ -908,7 +1015,7 @@ public static String get_macAddress()
         } 
 		else
         {
-			Log.v("Msg", "Disabling keyboard");
+			Log.d("Msg", "Disabling keyboard");
 	    }
     }
 
@@ -987,7 +1094,7 @@ public static String get_macAddress()
 	final static int MESSAGE_TYPE_HW_TOUCH_KEYBOARD_WILL_SHOW = 39; //ios only, when not using external keyboard
 	final static int MESSAGE_TYPE_HW_TOUCH_KEYBOARD_WILL_HIDE = 40; //ios only, when not using external keyboard
 	final static int MESSAGE_TYPE_HW_KEYBOARD_INPUT_ENDING = 41; //proton is done with input and requesting that the keyboard hid
-	final static int ESSAGE_TYPE_HW_KEYBOARD_INPUT_STARTING = 42; //proton is asking for the keyboard to open
+	final static int MESSAGE_TYPE_HW_KEYBOARD_INPUT_STARTING = 42; //proton is asking for the keyboard to open
    
 	//GOOGLE BILLING again
 	final static int MESSAGE_TYPE_IAP_PURCHASED_LIST_STATE = 43; //for sending back lists of items we've already purchased
@@ -998,6 +1105,16 @@ public static String get_macAddress()
 	final static int MESSAGE_TYPE_APP_VERSION = 45;
 
 	final static int MESSAGE_USER = 1000; //send your own messages after this #
+	
+	//IAP RESPONSE CODES for Proton
+	final static int RESULT_OK = 0;
+	final static int RESULT_USER_CANCELED = 1;
+	final static int RESULT_SERVICE_UNAVAILABLE = 2;
+	final static int RESULT_BILLING_UNAVAILABLE = 3;
+	final static int RESULT_ITEM_UNAVAILABLE = 4;
+	final static int RESULT_DEVELOPER_ERROR = 5;
+	final static int RESULT_ERROR = 6;
+    final static int RESULT_OK_ALREADY_PURCHASED = 7;
 	
 	public int TranslateKeycodeToProtonVirtualKey(int keycode)
 	{
@@ -1081,10 +1198,10 @@ public static String get_macAddress()
 		{
 				//#if defined(RT_CHARTBOOST_SUPPORT)
 				// If an interstitial is on screen, close it. Otherwise continue as normal.
-					 Log.v("onKeyDown","Sending virtual back");
+					 Log.d("onKeyDown","Sending virtual back");
 				if (this.cb.onBackPressed())
 				{
-					 Log.v("onKeyDown","CB handling back");
+					 Log.d("onKeyDown","CB handling back");
 					 return true; //ignore the key
 				}
 				//#endif
@@ -1119,7 +1236,7 @@ public static String get_macAddress()
 				// If an interstitial is on screen, close it. Otherwise continue as normal.
 				if (this.cb.onBackPressed()) 
 				{
-				    Log.v("onKeyUp","CB handling back");
+				    Log.d("onKeyUp","CB handling back");
 					return true; //ignore the key
 				}
 				//#endif
@@ -1148,7 +1265,7 @@ public static String get_macAddress()
 		catch (NameNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			Log.v(app.PackageName, "Cannot load App Version!");
+			Log.d(app.PackageName, "Cannot load App Version!");
 		}
 	}
   
@@ -1188,10 +1305,10 @@ public static String get_macAddress()
 		if (ad_height == 0) 
 			ad_height = app.adView.getLayoutParams().height;
 		
-		Log.v(app.PackageName,  "adView dimensions: " + ad_width + "x" + ad_height);
+		Log.d(app.PackageName,  "adView dimensions: " + ad_width + "x" + ad_height);
 		
 		int desired_width = app.mGLView.getMeasuredWidth();
-		Log.v(app.PackageName,  "mGLView width is " + desired_width);
+		Log.d(app.PackageName,  "mGLView width is " + desired_width);
 				
 		if (desired_width > ad_width)
 			desired_width = ad_width;
@@ -1210,7 +1327,7 @@ public static String get_macAddress()
 
 	public void getDisplayAdResponseFailed(String error)
 	{
-		Log.v(app.PackageName, "getDisplayAd error: " + error);
+		Log.d(app.PackageName, "getDisplayAd error: " + error);
 		
 		//update_text = true;
 		//displayText = "Display Ads: " + error;
@@ -1388,11 +1505,11 @@ public static String get_macAddress()
 			} 
 			catch(IOException e) 
 			{ 
-				Log.v("Can't load music (raw)", fname, e);
+				Log.d("Can't load music (raw)", fname, e);
 			}
 			catch(IllegalStateException e) 
 			{ 
-				Log.v("Can't load music (raw), illegal state", fname);
+				Log.d("Can't load music (raw), illegal state", fname);
 				app._music.reset();
 			}
 			return;
@@ -1410,11 +1527,11 @@ public static String get_macAddress()
 		} 
 		catch(IOException e) 
 		{ 
-			Log.v("Can't load music", fname);
+			Log.d("Can't load music", fname);
 		}
 		catch(IllegalStateException e) 
 		{ 
-			Log.v("Can't load music, illegal state", fname);
+			Log.d("Can't load music, illegal state", fname);
 			app._music.reset();
 		}
 	}
@@ -1492,7 +1609,7 @@ public static String get_macAddress()
 	{
         if (app._music == null) 
 		{
-			Log.v("warning: music_set_position:", "no music playing, can't set position");
+			Log.d("warning: music_set_position:", "no music playing, can't set position");
 			return; 
 		}
 		app._music.seekTo(positionMS);
@@ -1537,7 +1654,7 @@ public static String get_macAddress()
         } 
 		catch(IOException e)
 		{
-			Log.v("Can't load sound", fname);
+			Log.d("Can't load sound", fname);
 		}
         return 0;
     }
@@ -1763,9 +1880,13 @@ class AppRenderer implements GLSurfaceView.Renderer
 	
 	final static int MESSAGE_SUSPEND_TO_HOME_SCREEN = 34;
 
+	//TJ AGAIN
 	final static int MESSAGE_TAPJOY_INIT_MAIN = 35;
 	final static int MESSAGE_TAPJOY_INIT_PAID_APP_WITH_ACTIONID = 36;
 	final static int MESSAGE_TAPJOY_SET_USERID = 37;
+
+	//IAP again
+	final static int MESSAGE_IAP_CONSUME_ITEM = 38;
 
 	static long m_gameTimer = 0;
 	static int m_timerLoopMS = 0; //every this MS, the loop runs.  0 for no fps limit
@@ -2025,7 +2146,9 @@ class AppRenderer implements GLSurfaceView.Renderer
 				case MESSAGE_IAP_PURCHASE:
 					
 					String parm = nativeGetLastOSMessageString();
-					//Log.v(app.PackageName, "Buying "+parm);
+					String payload =  nativeGetLastOSMessageString2();
+					
+					Log.v(app.PackageName, "Buying "+parm);
 					
 					if (!SharedActivity.IAPEnabled)
 					{
@@ -2033,12 +2156,19 @@ class AppRenderer implements GLSurfaceView.Renderer
 				
 					} else
 					{
+					app.m_iap_asap = parm;
+					app.m_iap_developerdata = payload;
 					
-					if (!app.mBillingService.requestPurchase(parm, "")) 
-					{
-					   Log.d(app.PackageName, "requestPurchase>> Billing not supported?!");
-					   SharedActivity.nativeSendGUIEx(app.MESSAGE_TYPE_IAP_RESULT, ResponseCode.RESULT_BILLING_UNAVAILABLE.ordinal(),0,0);
-					}
+					app.mMainThreadHandler.post(app.mUpdateMainThread);
+
+                
+						/*
+						if (!app.mBillingService.requestPurchase(parm, "")) 
+						{
+						   Log.d(app.PackageName, "requestPurchase>> Billing not supported?!");
+						}
+						*/
+						   //SharedActivity.nativeSendGUIEx(app.MESSAGE_TYPE_IAP_RESULT, ResponseCode.RESULT_BILLING_UNAVAILABLE.ordinal(),0,0);
 					}
 					break;
 				
@@ -2050,9 +2180,18 @@ class AppRenderer implements GLSurfaceView.Renderer
 				
 					} else
 					{
-					
-					app.mBillingService.restoreTransactions();
+					   Log.d(app.PackageName, "Get purchased list");
+					   app.m_iap_sync_purchases_asap = "true";
+						app.mMainThreadHandler.post(app.mUpdateMainThread);
+
 					}
+					break;
+					
+				case MESSAGE_IAP_CONSUME_ITEM:
+				   Log.d(app.PackageName, "Consume");
+				   app.m_iap_consume_asap = nativeGetLastOSMessageString();
+					app.mMainThreadHandler.post(app.mUpdateMainThread);
+					
 					break;
 //#endif			
 				case MESSAGE_HOOKED_SHOW_RATE_DIALOG:

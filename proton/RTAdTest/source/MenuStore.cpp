@@ -46,6 +46,17 @@ void MenuStoreOnSelect(VariantList *pVList) //0=vec2 point of click, 1=entity se
 		GetApp()->m_IAPManager.BuyItem("com.rtsoft.rtadtest.points");
 	}
 	
+	if (pEntClicked->GetName() == "BuyGas")
+	{
+		GetApp()->m_IAPManager.BuyItem("gas", "developer data we want to embed for android");
+	}
+
+	if (pEntClicked->GetName() == "ConsumeGas")
+	{
+		GetApp()->m_IAPManager.ConsumeItem("gas");
+		return;
+	}
+
 	if (pEntClicked->GetName() == "sync")
 	{
 		GetApp()->m_IAPManager.SyncPurchases();
@@ -94,13 +105,17 @@ Entity * MenuStoreCreate(Entity *pParentEnt)
     pButtonEntity = CreateTextButtonEntity(pBG, "BuySword", 10, y+=ySpacer, "Buy com.rtsoft.rtadtest.sword"); 
     pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MenuStoreOnSelect);
    
-	pButtonEntity = CreateTextButtonEntity(pBG, "BuyShield", 10, y+=ySpacer, "Buy com.rtsoft.rtadtest.shield"); 
+	//pButtonEntity = CreateTextButtonEntity(pBG, "BuyShield", 10, y+=ySpacer, "Buy com.rtsoft.rtadtest.shield"); 
+	//pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MenuStoreOnSelect);
+
+  //  pButtonEntity = CreateTextButtonEntity(pBG, "BuyPoints", 10, y+=ySpacer, "Buy com.rtsoft.rtadtest.points (consumable/unmanaged)"); 
+  //  pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MenuStoreOnSelect);
+    
+	pButtonEntity = CreateTextButtonEntity(pBG, "BuyGas", 10, y+=ySpacer, "Buy gas (consumable/unmanaged)"); 
 	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MenuStoreOnSelect);
 
-    pButtonEntity = CreateTextButtonEntity(pBG, "BuyPoints", 10, y+=ySpacer, "Buy com.rtsoft.rtadtest.points (consumable/unmanaged)"); 
-    pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MenuStoreOnSelect);
-    
-
+	pButtonEntity = CreateTextButtonEntity(pBG, "ConsumeGas", 10, y+=ySpacer, "Consume gas (how android does consumables)"); 
+	pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MenuStoreOnSelect);
 
 	//pButtonEntity = CreateTextButtonEntity(pBG, "BuyLife", 10, y+=ySpacer, "Buy com.rtsoft.rtadtest.life"); 
 	//pButtonEntity->GetShared()->GetFunction("OnButtonSelected")->sig_function.connect(&MenuStoreOnSelect);

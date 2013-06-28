@@ -159,7 +159,7 @@ void App::OnExitApp(VariantList *pVarList)
 {
 	LogMsg("Exiting the app");
 	OSMessage o;
-	o.m_type = OSMessage::MESSAGE_SUSPEND_TO_HOME_SCREEN;
+	o.m_type = OSMessage::MESSAGE_FINISH_APP;
 	GetBaseApp()->AddOSMessage(o);
 }
 

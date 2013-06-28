@@ -56,7 +56,7 @@ const string extraData("extraData");
 void sendIAPResultMessageToIAPManager(IAPManager::ResponseCode responseCode)
 {
 	Message msg(MESSAGE_CLASS_GUI, TIMER_SYSTEM, MESSAGE_TYPE_IAP_RESULT);
-	msg.SetParm1(responseCode);
+	msg.SetParm1((float)responseCode);
 	msg.SetStringParm(extraData);
 	GetApp()->m_IAPManager.OnMessage(msg);
 }
@@ -73,7 +73,7 @@ enum ItemStateCode
 void sendIAPItemStateMessageToIAPManager(ItemStateCode itemStateCode)
 {
 	Message msg(MESSAGE_CLASS_GUI, TIMER_SYSTEM, MESSAGE_TYPE_IAP_ITEM_STATE);
-	msg.SetParm1(itemStateCode);
+	msg.SetParm1((float)itemStateCode);
 	if (itemStateCode == PURCHASED)
 	{
 		msg.SetStringParm(testItem);

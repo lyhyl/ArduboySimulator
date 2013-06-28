@@ -112,6 +112,7 @@ struct OSMessage
 		MESSAGE_TAPJOY_INIT_MAIN,
 		MESSAGE_TAPJOY_INIT_PAID_APP_WITH_ACTIONID, 
 		MESSAGE_TAPJOY_SET_USERID, //used with un-managed currency, this is what it will send on  the cb to server
+		MESSAGE_IAP_CONSUME_ITEM, //used with android's IAB by IAPManager
 
 		MESSAGE_USER = 1000
 	};

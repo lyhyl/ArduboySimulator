@@ -55,6 +55,9 @@ xcopy ..\..\shared\android\v2_src\java temp_src\com\%COMPANY_PACKAGE_NAME%\%SMAL
 :for IAP (must include, even if you don't use it)
 echo d | xcopy ..\..\shared\android\optional_src\com\android temp_final_src\com\android /E /F /Y
 
+:New file needed for v3 in app billing that google gives us
+copy ..\..\shared\android\optional_src\libs\android libs
+
 :there is a single .cpp file that we need to preprocess as well (to modify the jni function names to match our class path), C++ macros just can't do it
 rmdir temp_final_cpp_src  /S /Q
 call ant preprocess_cpp

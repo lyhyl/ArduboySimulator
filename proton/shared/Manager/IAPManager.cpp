@@ -25,7 +25,6 @@ IAPManager::IAPManager()
 	m_failureReason = FAILURE_REASON_NONE;
 	m_timer = 0;
 	m_bWaitingForReply = false;
-	m_bGettingItemList = false;
 
 	//This gives us a way to schedule calls to m_sig_item_unexpected_purchase_result, used with TestDelayedIAP
 	m_entity.GetFunction("OnUnexpectedPurchase")->sig_function.connect(m_sig_item_unexpected_purchase_result);
@@ -65,6 +64,7 @@ void IAPManager::HandlePurchaseListReply(Message &m)
 					//just fake a yes to the purchase request now
 					endPurchaseProcessWithResult(RETURN_STATE_ALREADY_PURCHASED);
 					m_itemToBuy.clear();
+					m_itemDeveloperData.clear();
 					break;
 				}
 				
@@ -73,6 +73,11 @@ void IAPManager::HandlePurchaseListReply(Message &m)
 #endif
 				sendPurchaseMessage();
 			} 
+
+			if (!m_itemToConsume.empty())
+			{
+				sendConsumeMessage();
+			}
 			break;
 		}
 
@@ -135,6 +140,7 @@ void IAPManager::HandleIAPBuyResult(Message &m)
 	}
 
 	m_itemToBuy.clear();
+	m_itemDeveloperData.clear();
 }
 
 void IAPManager::HandleItemUpdateState(Message &m)
@@ -271,12 +277,13 @@ void IAPManager::Update()
 #endif
 }
 
-void IAPManager::BuyItem(const string &itemName)
+void IAPManager::BuyItem(const string &itemName, const string &developerData)
 {
 	Reset();
 
 	m_lastItemID = itemName;
 	m_itemToBuy = itemName;
+	m_itemDeveloperData = developerData;
 
 #ifdef SHOW_DEBUG_IAP_MESSAGES
 	LogMsg("Planning to buy %s", itemName.c_str());
@@ -326,14 +333,18 @@ void IAPManager::sendPurchaseMessage()
 	OSMessage o;
 	o.m_type = OSMessage::MESSAGE_IAP_PURCHASE;
 	o.m_string = m_itemToBuy;
+	o.m_string2 = m_itemDeveloperData;
+
 	GetBaseApp()->AddOSMessage(o);
 	#endif
 
 	m_itemToBuy.clear();
+	m_itemDeveloperData.clear();
 	m_timer = GetTick(TIMER_SYSTEM);
 	m_bWaitingForReply = true;
 	m_state = STATE_WAITING;
 }
+
 
 void IAPManager::endPurchaseProcessWithResult(eReturnState returnState)
 {
@@ -357,4 +368,26 @@ void IAPManager::TestDelayedIAP( string itemID, string receipt, int delayMS, eRe
 {
 	VariantList vList( (uint32)returnState, receipt, itemID);
 	GetMessageManager()->CallEntityFunction(&m_entity, delayMS, "OnUnexpectedPurchase", &vList, TIMER_SYSTEM);
+}
+
+
+void IAPManager::sendConsumeMessage()
+{
+	OSMessage o;
+	o.m_type = OSMessage::MESSAGE_IAP_CONSUME_ITEM;
+	o.m_string = m_itemToConsume;
+	GetBaseApp()->AddOSMessage(o);
+	m_itemToConsume.clear();
+	//m_timer = GetTick(TIMER_SYSTEM);
+	//m_bWaitingForReply = true;
+	//m_state = STATE_WAITING;
+}
+
+
+void IAPManager::ConsumeItem( string itemID )
+{
+	m_itemToConsume = itemID; //reall command will happen after the sync completes
+	//the android side will start the sync, and not do the consume until the sync is finished.  You hope.
+	SyncPurchases();
+	
 }
