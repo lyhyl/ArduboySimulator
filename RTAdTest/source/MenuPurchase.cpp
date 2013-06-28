@@ -41,10 +41,26 @@ void MenuPurchaseUpdate(VariantList *pVList)
 		{
 		case IAPManager::RETURN_STATE_ALREADY_PURCHASED:
 			LogMsg("** ITEM %s BOUGHT - (Was already purchased, so free)", GetApp()->m_IAPManager.GetItemID().c_str());
+			LogMsg("** Receipt data: %s", GetApp()->m_IAPManager.GetExtraData().c_str());
+			
+			if (GetApp()->m_IAPManager.GetItemID() == "gas")
+			{
+				//let's go ahead and unbuy it, this could happen if a network connectiond died and we couldn't properly consume
+				//it later
+				GetApp()->m_IAPManager.ConsumeItem("gas");
+			}
 			break;
 
 		case IAPManager::RETURN_STATE_PURCHASED:
 			LogMsg("** ITEM %s BOUGHT", GetApp()->m_IAPManager.GetItemID().c_str());
+			LogMsg("** Receipt data: %s", GetApp()->m_IAPManager.GetExtraData().c_str());
+		
+			if (GetApp()->m_IAPManager.GetItemID() == "gas")
+			{
+				//let's go ahead and unbuy it
+				GetApp()->m_IAPManager.ConsumeItem("gas");
+			}
+
 			break;
 
 		case IAPManager::RETURN_STATE_FAILED:

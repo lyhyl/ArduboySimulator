@@ -2041,30 +2041,6 @@
 						Name="java"
 						>
 						<File
-							RelativePath="..\..\shared\android\v2_src\java\BillingReceiver.java"
-							>
-						</File>
-						<File
-							RelativePath="..\..\shared\android\v2_src\java\BillingService.java"
-							>
-						</File>
-						<File
-							RelativePath="..\..\shared\android\v2_src\java\Consts.java"
-							>
-						</File>
-						<File
-							RelativePath="..\..\shared\android\v2_src\java\PurchaseObserver.java"
-							>
-						</File>
-						<File
-							RelativePath="..\..\shared\android\v2_src\java\ResponseHandler.java"
-							>
-						</File>
-						<File
-							RelativePath="..\..\shared\android\v2_src\java\Security.java"
-							>
-						</File>
-						<File
 							RelativePath="..\..\shared\android\v2_src\java\SharedActivity.java"
 							>
 						</File>
@@ -2081,6 +2057,34 @@
 							</File>
 							<File
 								RelativePath="..\..\shared\android\v2_src\java\util\Base64DecoderException.java"
+								>
+							</File>
+							<File
+								RelativePath="..\..\shared\android\v2_src\java\util\IabException.java"
+								>
+							</File>
+							<File
+								RelativePath="..\..\shared\android\v2_src\java\util\IabHelper.java"
+								>
+							</File>
+							<File
+								RelativePath="..\..\shared\android\v2_src\java\util\IabResult.java"
+								>
+							</File>
+							<File
+								RelativePath="..\..\shared\android\v2_src\java\util\Inventory.java"
+								>
+							</File>
+							<File
+								RelativePath="..\..\shared\android\v2_src\java\util\Purchase.java"
+								>
+							</File>
+							<File
+								RelativePath="..\..\shared\android\v2_src\java\util\Security.java"
+								>
+							</File>
+							<File
+								RelativePath="..\..\shared\android\v2_src\java\util\SkuDetails.java"
 								>
 							</File>
 						</Filter>

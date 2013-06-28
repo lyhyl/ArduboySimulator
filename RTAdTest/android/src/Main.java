@@ -53,7 +53,7 @@ public class Main extends SharedActivity
 	{
 		//*************** EDIT THESE TO MATCH YOUR PROJECT STUFF ****************
 		dllname= "RTAdTest";
-		BASE64_PUBLIC_KEY = "<enter your android public key>";
+		BASE64_PUBLIC_KEY = "Enter your google app public key here";
 		securityEnabled = false; 
    		IAPEnabled = true;
 

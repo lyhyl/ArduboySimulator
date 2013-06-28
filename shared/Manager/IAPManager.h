@@ -80,7 +80,7 @@ public:
 	/**
 	 * Starts a purchasing process for the given \a itemName.
 	 */
-	void BuyItem(const std::string &itemName);
+	void BuyItem(const std::string &itemName, const std::string &developerData = "");
 	bool IsItemPurchased(const std::string &item) const;
 
 	/**
@@ -174,6 +174,8 @@ public:
 	 */
 	void TestDelayedIAP(string itemID, string receipt, int delayMS, eReturnState returnState = RETURN_STATE_PURCHASED );
 
+	void ConsumeItem(string itemID); //"consumes" a previously bought item, only applicable to Android IAB, this is how their v3 billing stuff works
+
 protected:
 	enum eState
 	{
@@ -191,6 +193,7 @@ protected:
 	void HandleIAPBuyResult(Message &m);
 	void HandleItemUpdateState(Message &m);
 	void SendUnexpectedPurchaseSignal(eReturnState returnState, string itemID, string extra);
+	void sendConsumeMessage();
 
 	eState m_state;
 	eReturnState m_returnState;
@@ -202,11 +205,9 @@ protected:
 	std::string m_extraData;
 	bool m_bWaitingForReply;
 	std::string m_lastItemID;
-	
-	bool m_bGettingItemList;
-
+	std::string m_itemToConsume; //used by android
 	Entity m_entity; //used for scheduling
-	
+	std::string m_itemDeveloperData;
 };
 
 #endif // IAPManager_h__
