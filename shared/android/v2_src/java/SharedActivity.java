@@ -440,28 +440,28 @@ import android.view.View.OnClickListener;
 //#else	  		
 		if (IAPEnabled)	
 		{
-			 Log.d(PackageName, "Creating IAB helper.");
+			// Log.d(PackageName, "Creating IAB helper.");
 			 mHelper = new IabHelper(this, BASE64_PUBLIC_KEY);
         
 			 // enable debug logging (for a production application, you should set this to false).
-			 mHelper.enableDebugLogging(true);
+			 //mHelper.enableDebugLogging(true);
 				
-			 Log.d(PackageName, "Setting up IAB helper");
+			 //Log.d(PackageName, "Setting up IAB helper");
 			 mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() 
 			 {
 				 public void onIabSetupFinished(IabResult result) 
 				 {
-					Log.d(PackageName, "Setup finished.");
+				//	Log.d(PackageName, "Setup finished.");
 
 					if (!result.isSuccess()) 
 					{
 						// Oh noes, there was a problem.
 						complain("Problem setting up in-app billing (do you have the latest version of the market installed?) : " + result);
-						return;
+						//return;
 					}
 
 					// Hooray, IAB is fully set up. Now, let's get an inventory of stuff we own.
-					Log.d(PackageName, "Setup successful.");
+					//Log.d(PackageName, "Setup successful.");
 					//mHelper.queryInventoryAsync(mGotInventoryListener);
 				}
            });
@@ -477,7 +477,7 @@ import android.view.View.OnClickListener;
      {
         public void onQueryInventoryFinished(IabResult result, Inventory inventory)
          {
-            Log.d(PackageName, "Query inventory finished.");
+           // Log.d(PackageName, "Query inventory finished.");
             
             // Have we been disposed of in the meantime? If so, quit.
             if (mHelper == null) return;
@@ -492,7 +492,7 @@ import android.view.View.OnClickListener;
 
 			SharedActivity.app.m_iap_inventory = inventory; //cache for later
 			
-            Log.d(PackageName, "Query inventory was successful.");
+           // Log.d(PackageName, "Query inventory was successful.");
             
             /*
              * Check for items we own. Notice that for each purchase, we check
@@ -508,7 +508,7 @@ import android.view.View.OnClickListener;
 					nativeSendGUIStringEx(SharedActivity.app.MESSAGE_TYPE_IAP_PURCHASED_LIST_STATE, 0,0,0, purchase.getSku()); //0 means PURCHASED
 				}
     
-            Log.d(PackageName, "Initial inventory query finished; enabling main UI.");
+            //Log.d(PackageName, "Initial inventory query finished; enabling main UI.");
       	    SharedActivity.nativeSendGUIEx(SharedActivity.app.MESSAGE_TYPE_IAP_PURCHASED_LIST_STATE, -1,0,0); //-1 means END OF LIST
 	  
         }
@@ -519,27 +519,20 @@ import android.view.View.OnClickListener;
      {
         public void onIabPurchaseFinished(IabResult result, Purchase purchase) 
         {
-            Log.d(PackageName, "Purchase finished: " + result + ", purchase: " + purchase);
+           // Log.d(PackageName, "Purchase finished: " + result + ", purchase: " + purchase);
             
                 // if we were disposed of in the meantime, quit.
             if (mHelper == null) return;
 
             if (result.isFailure()) 
             {
-				if (result.getResponse() == IabHelper.BILLING_RESPONSE_RESULT_ITEM_ALREADY_OWNED)
-				{
-				// mHelper.consumeAsync(purchase, mConsumeFinishedListener);
-				}
-				
                nativeSendGUIEx(MESSAGE_TYPE_IAP_RESULT, result.getResponse() ,0,0);
 		       return;
             }
            
-            Log.d(PackageName, "Purchase successful: "+purchase.getOriginalJson());
+           // Log.d(PackageName, "Purchase successful: "+purchase.getOriginalJson());
 
 			nativeSendGUIStringEx(MESSAGE_TYPE_IAP_RESULT, result.getResponse(),0,0, purchase.getOriginalJson());
-		
-            //mHelper.consumeAsync(purchase, mConsumeFinishedListener);
         }
     };
     
@@ -549,7 +542,7 @@ import android.view.View.OnClickListener;
     {
         public void onConsumeFinished(Purchase purchase, IabResult result) 
         {
-            Log.d(PackageName, "Consumption finished. Purchase: " + purchase + ", result: " + result);
+           // Log.d(PackageName, "Consumption finished. Purchase: " + purchase + ", result: " + result);
             // if we were disposed of in the meantime, quit.
             if (mHelper == null) return;
 
@@ -568,7 +561,7 @@ import android.view.View.OnClickListener;
                 complain("Error while consuming: " + result);
             }
           
-            Log.d(PackageName, "End consumption flow.");
+           // Log.d(PackageName, "End consumption flow.");
         }
     };
 
@@ -576,9 +569,9 @@ import android.view.View.OnClickListener;
       @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
      {
-        Log.d(PackageName, "****");
+       // Log.d(PackageName, "****");
 
-        Log.d(PackageName, "onActivityResult(" + requestCode + "," + resultCode + "," + data);
+       // Log.d(PackageName, "onActivityResult(" + requestCode + "," + resultCode + "," + data);
 
         // Pass on the activity result to the helper for handling
         if (!mHelper.handleActivityResult(requestCode, resultCode, data)) 
@@ -590,7 +583,7 @@ import android.view.View.OnClickListener;
         }
         else 
         {
-            Log.d(PackageName, "onActivityResult handled by IABUtil.");
+       //     Log.d(PackageName, "onActivityResult handled by IABUtil.");
         }
     }
     
@@ -2039,9 +2032,6 @@ class AppRenderer implements GLSurfaceView.Renderer
 				{				
 //#if defined(RT_CHARTBOOST_SUPPORT)
 
-
-
-
 					//ChartBoost stuff - we can't initialize it here, it must be done in the GUI thread.  So
 					//we'll sort of just set some flags, causing it to happen next pass, before any other CB
 					//stuff.
@@ -2148,7 +2138,7 @@ class AppRenderer implements GLSurfaceView.Renderer
 					String parm = nativeGetLastOSMessageString();
 					String payload =  nativeGetLastOSMessageString2();
 					
-					Log.v(app.PackageName, "Buying "+parm);
+					//Log.v(app.PackageName, "Buying "+parm);
 					
 					if (!SharedActivity.IAPEnabled)
 					{
@@ -2180,7 +2170,7 @@ class AppRenderer implements GLSurfaceView.Renderer
 				
 					} else
 					{
-					   Log.d(app.PackageName, "Get purchased list");
+					  // Log.d(app.PackageName, "Get purchased list");
 					   app.m_iap_sync_purchases_asap = "true";
 						app.mMainThreadHandler.post(app.mUpdateMainThread);
 
