@@ -14,6 +14,7 @@
 #include <sys/stat.h>
 #include "errno.h"
 #include "util/MiscUtils.h"
+#include <shlobj.h>
 
 using namespace std;
 
@@ -67,8 +68,19 @@ string GetBaseAppPath()
 
 	return string(szDrive) + string(szDir); 
 }
+
+const char * GetAppName();
+
 string GetSavePath()
 {
+#ifdef RT_WIN_USE_APPDATA_SAVE_PATH
+	char path[ MAX_PATH ];
+	if (SHGetFolderPathA( NULL, CSIDL_LOCAL_APPDATA, NULL, 0, path ) == S_OK)
+	{
+		return string(path)+"\\"+GetAppName()+"\\";
+	}
+#endif
+	
 	return "";
 }
 
