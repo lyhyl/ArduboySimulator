@@ -696,3 +696,25 @@ bool DateIsOlder(int month, int day, int year, int hour, int min, int sec,
 	//er, they are the same;
 	return false;
 }
+
+
+string HexToString(string hexString)
+{
+	if (hexString.empty()) return "";
+
+	const unsigned char * pin = (const unsigned char*)hexString.c_str();
+	const char * hex = "0123456789ABCDEF";
+	char temp[64];
+	char * pout = temp;
+	uint32 i = 0;
+	for(; i < hexString.size()-1; ++i){
+		*pout++ = hex[(*pin>>4)&0xF];
+		*pout++ = hex[(*pin++)&0xF];
+		//*pout++ = ':';
+	}
+	*pout++ = hex[(*pin>>4)&0xF];
+	*pout++ = hex[(*pin)&0xF];
+	*pout = 0;
+
+	return string(temp);
+}
