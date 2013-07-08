@@ -697,6 +697,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 			LogMsg("App shutting down from getting the X clicked");
 		}
+	
+		if ((wParam & 0xFFF0) == SC_SIZE)
+		{
+			LogMsg("SC_SIZE");
+		}
+
+		if ((wParam & 0xFFF0) == SC_MOVE)
+		{
+			LogMsg("SC_MOVE");
+			return 0;
+		}
+
 		break;
 
 	case WM_MOUSEWHEEL:
@@ -784,15 +796,46 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 		break;
 
-	case WM_ENTERSIZEMOVE:
-		LogMsg("Entersize move");
-		g_timerID = SetTimer(NULL, 0, 33, (TIMERPROC) TimerProc);
+	case WM_NCLBUTTONDOWN:
+		LogMsg("WM_NCLBUTTONDOWN");
+		//bizarre, but if you are holding down a key while you move a window, you won't get the below message until you let go of
+		//the key, so we'll start the timer on this message instead if needed.
+		
+		/*
+		if (g_timerID == 0)
+		{
+			LogMsg("Setting timer.");
+			g_timerID = SetTimer(NULL, 0, 33, (TIMERPROC) TimerProc);
+		}
+		*/
+
+		break;
+	
+	case WM_NCLBUTTONUP:
+		if (g_timerID)
+		{
+			KillTimer(NULL, g_timerID);
+			g_timerID = 0;
+		}
+
 		break;
 
+	case WM_ENTERSIZEMOVE:
+		LogMsg("Entersize move");
+		if (g_timerID == 0)
+			g_timerID = SetTimer(NULL, 0, 33, (TIMERPROC) TimerProc);
+		break;
+
+	case WM_WINDOWPOSCHANGING:
+		LogMsg("Window size changing..");
+		break;
 	case WM_EXITSIZEMOVE:
 		LogMsg("Exit size move");
-		KillTimer(NULL, g_timerID);
-		g_timerID = 0;
+		if (g_timerID)
+		{
+			KillTimer(NULL, g_timerID);
+			g_timerID = 0;
+		}
 		GetBaseApp()->OnScreenSizeChange();
 		break;
 
