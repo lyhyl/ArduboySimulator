@@ -30,6 +30,7 @@
 //(You should probably add it up as a preprocessor compiler define if you need it, instead of uncommenting it here)
 //#define RT_RUNS_IN_BACKGROUND
 
+uint32 g_timerID = 0;
 bool g_winAllowFullscreenToggle = true;
 
 #ifdef C_DONT_ALLOW_WINDOW_RESIZE
@@ -267,6 +268,17 @@ void ChangeEmulationOrientationIfPossible(int desiredX, int desiredY, eOrientati
 #endif
 }
 
+
+void CALLBACK TimerProc(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime)
+{
+	LogMsg("Waiting for window move...");
+	if (IsBaseAppInitted())
+	{
+		GetBaseApp()->Update();
+		SwapBuffers(g_hDC);
+		GetBaseApp()->Draw();
+	}
+}
 
 //0 signals bad key
 int VKeyToWMCharKey(int vKey)
@@ -770,6 +782,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		}
 		//sreturn true;
 
+		break;
+
+	case WM_ENTERSIZEMOVE:
+		LogMsg("Entersize move");
+		g_timerID = SetTimer(NULL, 0, 33, (TIMERPROC) TimerProc);
+		break;
+
+	case WM_EXITSIZEMOVE:
+		LogMsg("Exit size move");
+		KillTimer(NULL, g_timerID);
+		g_timerID = 0;
+		GetBaseApp()->OnScreenSizeChange();
 		break;
 
 	case WM_MOUSELEAVE:
@@ -1335,8 +1359,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 			
 			case OSMessage::MESSAGE_SET_FPS_LIMIT:
 				g_fpsLimit = int(m.m_x);
-				
 				break;
+			
 			case OSMessage::MESSAGE_SET_VIDEO_MODE:
 			
 				SwapBuffers(g_hDC);
