@@ -33,6 +33,8 @@
 uint32 g_timerID = 0;
 bool g_winAllowFullscreenToggle = true;
 
+uint32 g_windowLagTimer = 0; //if not 0, contains a reading
+
 #ifdef C_DONT_ALLOW_WINDOW_RESIZE
 bool g_winAllowWindowResize = false;
 #else
@@ -268,10 +270,28 @@ void ChangeEmulationOrientationIfPossible(int desiredX, int desiredY, eOrientati
 #endif
 }
 
+//this is to detect a trick where the game can be paused due to win32 weirdness, most games wouldn't care but I do in one specific game
+#define RT_WINDOW_MOVE_MAX_LAG_MS 300
+
+void CheckWindowLagTimer()
+{
+	if (g_windowLagTimer == 0) return;
+
+	if (g_windowLagTimer + RT_WINDOW_MOVE_MAX_LAG_MS < GetSystemTimeTick())
+	{
+		//LogMsg("LAG DETECTED");
+		if (IsBaseAppInitted())
+		{
+			GetMessageManager()->SendGame(MESSAGE_TYPE_MOVE_WINDOW_LAG_TRIGGERED,GetSystemTimeTick()-g_windowLagTimer, 0, TIMER_SYSTEM);
+		}
+	}
+	g_windowLagTimer = 0;
+}
 
 void CALLBACK TimerProc(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 {
-	LogMsg("Waiting for window move...");
+	CheckWindowLagTimer();
+	//LogMsg("Waiting for window move...");
 	if (IsBaseAppInitted())
 	{
 		GetBaseApp()->Update();
@@ -706,7 +726,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		if ((wParam & 0xFFF0) == SC_MOVE)
 		{
 			LogMsg("SC_MOVE");
-			return 0;
+			g_windowLagTimer = GetSystemTimeTick();
+		//	return 0;
 		}
 
 		break;
@@ -797,7 +818,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 
 	case WM_NCLBUTTONDOWN:
-		LogMsg("WM_NCLBUTTONDOWN");
+		//LogMsg("WM_NCLBUTTONDOWN");
 		//bizarre, but if you are holding down a key while you move a window, you won't get the below message until you let go of
 		//the key, so we'll start the timer on this message instead if needed.
 		
@@ -821,16 +842,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 
 	case WM_ENTERSIZEMOVE:
-		LogMsg("Entersize move");
+		//LogMsg("Entersize move");
 		if (g_timerID == 0)
 			g_timerID = SetTimer(NULL, 0, 33, (TIMERPROC) TimerProc);
 		break;
 
 	case WM_WINDOWPOSCHANGING:
-		LogMsg("Window size changing..");
+		CheckWindowLagTimer();
+	
 		break;
 	case WM_EXITSIZEMOVE:
-		LogMsg("Exit size move");
+		//LogMsg("Exit size move");
+		CheckWindowLagTimer();
 		if (g_timerID)
 		{
 			KillTimer(NULL, g_timerID);
@@ -840,7 +863,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 
 	case WM_MOUSELEAVE:
-		LogMsg("Mouse leaving window");
+	//	LogMsg("Mouse leaving window");
 		break;
 
 	case WM_CANCELMODE:

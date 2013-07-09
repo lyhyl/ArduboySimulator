@@ -191,7 +191,9 @@ enum eMessageType
 	MESSAGE_TYPE_GUI_MOUSEWHEEL, //mouse wheel delta movement, desktops only.  Only works on Win right now
 
 	MESSAGE_TYPE_TAPJOY_OFFERWALL_CLOSED, //user has closed the tapjoy offerwall.  Useful to know when to unmute the game, if you've muted it
-    MESSAGE_USER = 1000, //users can add their own messages starting here
+	
+	MESSAGE_TYPE_MOVE_WINDOW_LAG_TRIGGERED, //user tried to move his window but ended up taking too long, special case for Seth's win32 stuff  
+	MESSAGE_USER = 1000, //users can add their own messages starting here
 
 };
 
