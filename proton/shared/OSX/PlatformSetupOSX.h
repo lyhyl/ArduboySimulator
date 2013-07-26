@@ -57,6 +57,10 @@ typedef uint8_t uint8;
 #define _UINT8
 #endif
 
+#ifndef _INT8
+typedef int8_t int8;
+#define _INT8
+#endif
 #ifndef _INT32
 typedef int32_t int32;
 #define _INT32

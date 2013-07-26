@@ -280,6 +280,12 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	// [controller mouseDown:theEvent];
 }
 
+- (void)scrollWheel:(NSEvent *)theEvent
+{
+    int deltaY = [theEvent deltaY];
+    GetMessageManager()->SendGUIEx2(MESSAGE_TYPE_GUI_MOUSEWHEEL, (float)deltaY, 0, 0, 0);
+}
+
 - (void)mouseDragged:(NSEvent *)theEvent
 {
     // Delegate to the controller object for handling mouse events
@@ -313,6 +319,8 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 		//if it's not a key repeat, also send here for the more arcade-like key up/down messages
 		c =  [[[NSString stringWithCharacters:&c length:1] uppercaseString] characterAtIndex: 0]; //make it uppercase, same as Win
 
+       // LogMsg("Sending key %d as DOWN: converted: %d", c,  ConvertOSXKeycodeToProtonVirtualKey(c));
+        
 		GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW,   (float)ConvertOSXKeycodeToProtonVirtualKey(c), 1.0f);  
 	}
 }
@@ -320,7 +328,10 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 - (void)keyUp:(NSEvent *)theEvent
 {
 	unichar c = [[theEvent charactersIgnoringModifiers] characterAtIndex:0];
-	GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW,   (float)ConvertOSXKeycodeToProtonVirtualKey(c), 0.0f);  
+	
+    c =  [[[NSString stringWithCharacters:&c length:1] uppercaseString] characterAtIndex: 0]; //make it uppercase, same
+    //LogMsg("Sending key %d as UP: converted: %d", c,  ConvertOSXKeycodeToProtonVirtualKey(c));
+   	GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW,   (float)ConvertOSXKeycodeToProtonVirtualKey(c), 0.0f);
 }
 
 - (void) startAnimation

@@ -22,10 +22,10 @@ bool g_controlDown = false;
 {
 	if (!GetBaseApp()->IsInitted()) return;
 	
-//	LogMsg("Sending key %d as %d", key, int(keyDown));
+	//LogMsg("Sending key %d as %d", key, int(keyDown));
 	if ( keyDown)
 	{
-		GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW,   (float)key, 1.0f);  	
+		GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR_RAW,   (float)key, 1.0f);
 		GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_CHAR,   (float)key, 0.0f);  	
 		
 	} else
