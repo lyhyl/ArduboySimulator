@@ -18,8 +18,10 @@
 #include <netinet/in.h>
 #include <net/if.h>
 #include <net/if_dl.h>
-#import <AdSupport/ASIdentifierManager.h>
-
+#ifdef RT_IAP_SUPPORT
+    //otherwise we have to add the lib even if we don't use it
+    #import <AdSupport/ASIdentifierManager.h>
+#endif
 using namespace std;
 
 void LogMsg(const char *lpFormat, ...)
@@ -423,7 +425,14 @@ string GetAdvertisingIdentifier()
     }
     
     //note: This might return 00000000-0000-0000-0000-000000000000 in iOS 6.0, this is an Apple bug that was fixed later I guess
+    
+    #ifdef RT_IAP_SUPPORT
+    
     return string ([[[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString] cStringUsingEncoding:NSUTF8StringEncoding]);
+    #else
+    
+    return "ERROR: Compile with RT_IAP_SUPPORT defined and the AdSupport.framework added";
+    #endif
 }
 
 
