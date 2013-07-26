@@ -45,6 +45,7 @@ vector<VideoModeEntry> g_videoModes;
 void AddVideoMode(string name, int x, int y, ePlatformID platformID, eOrientationMode forceOrientation = ORIENTATION_DONT_CARE);
 void SetVideoModeByName(string name);
 
+
 void InitVideoSize()
 {
 #ifdef RT_WEBOS_ARM
@@ -112,7 +113,7 @@ void InitVideoSize()
 	AddVideoMode("Flash", 640, 480, PLATFORM_ID_FLASH);
 
 	//WORK: Change device emulation here
-	string desiredVideoMode = "Galaxy Tab 10.1 Landscape"; //name needs to match one of the ones defined above
+	string desiredVideoMode = "iPhone Landscape"; //name needs to match one of the ones defined above
  	SetVideoModeByName(desiredVideoMode);
 	GetBaseApp()->OnPreInitVideo(); //gives the app level code a chance to override any of these parms if it wants to
 }
@@ -207,6 +208,119 @@ HDC					g_hDC		= 0;
 HINSTANCE g_hInstance = 0;
 
 #define KEY_DOWN  0x8000
+
+
+#ifdef RT_WIN_MULTITOUCH_SUPPORT
+//we do it this way so we can still run on XP too.
+
+//Note:  If you get errors compiling, you probably need to install the Win 7 (or newer) SDK:  http://www.microsoft.com/en-us/download/details.aspx?id=3138
+
+//After installing, you add the include and lib dirs at the TOP in Tools->Options->Projects and Solutions->VC++ Directories for the appropriate dirs.
+
+typedef bool (WINAPI *GetTouchInputInfoType)(HTOUCHINPUT,UINT,PTOUCHINPUT,int);
+GetTouchInputInfoType GetTouchInputInfoFunc = NULL;
+
+typedef bool (WINAPI *CloseTouchInputHandleType)(HTOUCHINPUT);
+CloseTouchInputHandleType CloseTouchInputHandleFunc = NULL;
+
+typedef bool (WINAPI *RegisterTouchWindowType)(HWND, ULONG);
+RegisterTouchWindowType RegisterTouchWindowFunc = NULL;
+
+#define MOUSEEVENTF_FROMTOUCH 0xFF515700
+
+const int MAX_TOUCHES= 11; //Oops, it can handle 11, not 10.  Thanks @Bob_at_BH
+
+class TouchTrack
+{
+public:
+
+	TouchTrack()
+	{
+		m_touchID = -1;
+	}
+
+	int m_touchID;
+};
+
+TouchTrack g_touchTracker[MAX_TOUCHES];
+
+int GetFingerTrackIDByTouch(int touch)
+{
+	for (int i=0; i < MAX_TOUCHES; i++)
+	{
+		if (g_touchTracker[i].m_touchID == touch)
+		{
+			return i;
+		}
+	}
+
+	//LogMsg("Can't locate fingerID by touch %d", touch);
+	return -1;
+}
+
+int AddNewTouch(int touch)
+{
+	for (int i=0; i < MAX_TOUCHES; i++)
+	{
+		if (g_touchTracker[i].m_touchID == -1)
+		{
+			//hey, an empty slot, yay
+			g_touchTracker[i].m_touchID = touch;
+			return i;
+		}
+	}
+
+	LogMsg("Can't add new fingerID");
+	return -1;
+}
+
+int GetTouchesActive()
+{
+	int count = 0;
+
+	for (int i=0; i < MAX_TOUCHES; i++)
+	{
+		if (g_touchTracker[i].m_touchID)
+		{
+			count++;
+		}
+	}
+	return count;
+}
+
+
+void InitMultiTouch()
+{
+#ifdef RT_WIN_MULTITOUCH_SUPPORT
+
+	assert(g_hWnd);
+
+	GetTouchInputInfoFunc = (GetTouchInputInfoType) GetProcAddress(GetModuleHandle(TEXT("user32")), "GetTouchInputInfo");
+	//set to null if we're on XP or something else that doesn't have this function
+
+	if (GetTouchInputInfoFunc)
+	{
+		CloseTouchInputHandleFunc = (CloseTouchInputHandleType) GetProcAddress(GetModuleHandle(TEXT("user32")), "CloseTouchInputHandle");
+		RegisterTouchWindowFunc = (RegisterTouchWindowType) GetProcAddress(GetModuleHandle(TEXT("user32")), "RegisterTouchWindow");
+
+		if (!CloseTouchInputHandleFunc || !RegisterTouchWindowFunc)
+		{
+			//something wrong
+			GetTouchInputInfoFunc = NULL;
+			LogError("Error finding multitouch functions, weird, because GetTouchInputInfo was there");
+		} else
+		{
+			//looks good, continue
+			if (!RegisterTouchWindowFunc(g_hWnd, 0))
+			{
+				MessageBox(g_hWnd, "ERROR", "Error registering for multitouch events", TWF_FINETOUCH | TWF_WANTPALM);
+			}
+		}
+	}
+#endif
+}
+
+#endif
 
 uint32 GetWinkeyModifiers()
 {
@@ -330,6 +444,21 @@ int VKeyToWMCharKey(int vKey)
 	}
 
 	return vKey;
+}
+
+bool ShouldIgnoreMouseButtonMessage()
+{
+	if (!g_bHasFocus) return true;
+	#ifdef RT_WIN_MULTITOUCH_SUPPORT
+		if ((GetMessageExtraInfo() & MOUSEEVENTF_FROMTOUCH) 
+			== MOUSEEVENTF_FROMTOUCH)
+		{ 
+			// Skip message
+			return true;
+		}
+	#endif
+
+	return false;
 }
 
 HGLRC		g_hRC=NULL;		// Permanent Rendering Context
@@ -720,12 +849,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	
 		if ((wParam & 0xFFF0) == SC_SIZE)
 		{
-			LogMsg("SC_SIZE");
+			//LogMsg("SC_SIZE");
 		}
 
 		if ((wParam & 0xFFF0) == SC_MOVE)
 		{
-			LogMsg("SC_MOVE");
+			//LogMsg("SC_MOVE");
 			g_windowLagTimer = GetSystemTimeTick();
 		//	return 0;
 		}
@@ -743,7 +872,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_LBUTTONDOWN:
 	case WM_LBUTTONDBLCLK:
 		{
-			if (!g_bHasFocus) break;
+			if (ShouldIgnoreMouseButtonMessage())
+			{
+				break;
+			}
 
 			g_leftMouseButtonDown = true;
 			int xPos = GET_X_LPARAM(lParam);
@@ -756,22 +888,29 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	case WM_LBUTTONUP:
 		{
-			if (!g_bHasFocus) break;
-			
+			if (ShouldIgnoreMouseButtonMessage())
+			{
+				break;
+			}
+
 			int xPos = GET_X_LPARAM(lParam);
 			int yPos = GET_Y_LPARAM(lParam);
 			ConvertCoordinatesIfRequired(xPos, yPos);
 			GetMessageManager()->SendGUIEx2(MESSAGE_TYPE_GUI_CLICK_END, (float)xPos, (float)yPos, 0, GetWinkeyModifiers());
 			g_leftMouseButtonDown = false;
 		}
-		return true;
+		//return true;
 		break;
 
 
 	case WM_RBUTTONDOWN:
 	case WM_RBUTTONDBLCLK:
 		{
-			if (!g_bHasFocus) break;
+			if (ShouldIgnoreMouseButtonMessage())
+			{
+				break;
+			}
+
 			g_rightMouseButtonDown = true;
 			int xPos = GET_X_LPARAM(lParam);
 			int yPos = GET_Y_LPARAM(lParam);
@@ -783,20 +922,28 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	case WM_RBUTTONUP:
 		{
-			if (!g_bHasFocus) break;
+			if (ShouldIgnoreMouseButtonMessage())
+			{
+				break;
+			}
+
+		
 			int xPos = GET_X_LPARAM(lParam);
 			int yPos = GET_Y_LPARAM(lParam);
 			ConvertCoordinatesIfRequired(xPos, yPos);
 			GetMessageManager()->SendGUIEx2(MESSAGE_TYPE_GUI_CLICK_END, (float)xPos, (float)yPos, 1, GetWinkeyModifiers());
 			g_rightMouseButtonDown = false;
 		}
-		return true;
+		//return true;
 		break;
 	
 	case WM_MOUSEMOVE:
 		{
-			if (!g_bHasFocus) break;
-		
+			if (ShouldIgnoreMouseButtonMessage())
+			{
+				break;
+			}
+
 			float xPos = (float)GET_X_LPARAM(lParam);
 			float yPos = (float)GET_Y_LPARAM(lParam);
 			ConvertCoordinatesIfRequired(xPos, yPos);
@@ -868,9 +1015,156 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	case WM_CANCELMODE:
 
-		LogMsg("Got WM cancel mode");
+		//LogMsg("Got WM cancel mode");
 		break;
 	
+#ifdef RT_WIN_MULTITOUCH_SUPPORT
+	case WM_TOUCH:
+		
+		{
+		
+			//LogMsg("Got touch event");
+
+			if (GetTouchInputInfoFunc)
+			{
+				UINT cInputs = LOWORD(wParam);
+				PTOUCHINPUT pInputs = new TOUCHINPUT[cInputs];
+				
+				bool bHandled = false;
+
+				if (NULL != pInputs)
+				{
+
+					if (GetTouchInputInfoFunc((HTOUCHINPUT)lParam,
+						cInputs,
+						pInputs,
+						sizeof(TOUCHINPUT)))
+					{
+
+						// process pInputs
+						//figure out the input and send the messages
+						for (uint32 i=0; i < cInputs; i++)
+						{
+							int touchID = pInputs[i].dwID;
+
+							int eventStyle = -1;
+							if (pInputs[i].dwFlags & TOUCHEVENTF_MOVE) eventStyle = MESSAGE_TYPE_GUI_CLICK_MOVE;
+							if (pInputs[i].dwFlags & TOUCHEVENTF_DOWN) eventStyle = MESSAGE_TYPE_GUI_CLICK_START;
+							if (pInputs[i].dwFlags & TOUCHEVENTF_UP) eventStyle = MESSAGE_TYPE_GUI_CLICK_END;
+
+							if (eventStyle != -1)
+							{
+								bHandled = true;
+								
+								POINT pt;
+								pt.x = TOUCH_COORD_TO_PIXEL(pInputs[i].x);
+								pt.y = TOUCH_COORD_TO_PIXEL(pInputs[i].y);
+								ScreenToClient(g_hWnd, &pt);
+								
+								float xPos = (float)pt.x;
+								float yPos = (float)pt.y;
+						
+								ConvertCoordinatesIfRequired(xPos, yPos);
+								
+								//for whatever reason, windows sends 100+ for the touchID.  For safety, I remap them to start
+								//at touchID 0
+								int fingerID = -1;
+							
+								if (eventStyle == MESSAGE_TYPE_GUI_CLICK_START)
+								{
+								
+									//found a touch.  Is it already on our list?
+									fingerID = GetFingerTrackIDByTouch(touchID);
+
+									if (fingerID == -1)
+									{
+										//add it to our list
+										fingerID = AddNewTouch(touchID);
+									} else
+									{
+										//already on the list.  Don't send this
+										//LogMsg("Ignoring touch %d", fingerID);
+										continue;
+									}
+									//LogMsg("TOUCH ID %d - DOWN FingerID: %d at %.2f, %.2f", touchID,fingerID, xPos, yPos);
+
+								}
+
+
+								if (eventStyle == MESSAGE_TYPE_GUI_CLICK_END)
+								{
+									//found a touch.  Is it already on our list?
+									fingerID = GetFingerTrackIDByTouch(touchID);
+									if (fingerID != -1)
+									{
+										g_touchTracker[fingerID].m_touchID = -1; //clear it
+									} else
+									{
+										//wasn't on our list
+										continue;
+									}
+									//LogMsg("TOUCHID %d UP FingerID: %d at %.2f, %.2f", touchID,fingerID, xPos, yPos);
+								}
+
+								if (eventStyle == MESSAGE_TYPE_GUI_CLICK_MOVE)
+								{
+									//found a touch.  Is it already on our list?
+									fingerID = GetFingerTrackIDByTouch(touchID);
+									if (fingerID != -1)
+									{
+										//found it
+										TouchTrackInfo *pTouch = GetBaseApp()->GetTouch(fingerID);
+
+										if (pTouch)
+										{
+											if (pTouch->IsDown() && pTouch->GetPos() == CL_Vec2f(xPos,yPos))
+											{
+												//LogMsg("ignoring dupe message");
+												continue;
+											}
+										}
+									} else
+									{
+										//wasn't on our list?!
+										continue;
+									}
+									//LogMsg("TOUCH %d MOVE FingerID: %d at %.2f, %.2f", touchID,fingerID, xPos, yPos);
+								}
+
+								if (fingerID != -1)
+								{
+									GetMessageManager()->SendGUIEx2((eMessageType)eventStyle, xPos, yPos, fingerID, GetWinkeyModifiers());
+								}
+							}
+						}
+						
+						//only close if not handled by defproc
+
+						
+						if (!CloseTouchInputHandleFunc((HTOUCHINPUT)lParam))
+						{
+							LogMsg("Error closing..");
+						}
+						return 0;
+					}
+					else
+					{
+						// GetLastError() and error handling
+					}
+					SAFE_DELETE_ARRAY(pInputs);
+					break;
+				}
+				else
+				{
+					// error handling, presumably out of memory
+				}
+				break;
+
+			}
+		}
+		break;
+#endif
+
 	default:
 
 	
@@ -1144,7 +1438,9 @@ assert(!g_hDC);
 		CenterWindow(g_hWnd);
 	}
 	ShowWindow(g_hWnd, SW_SHOW);
-	
+
+	InitMultiTouch();
+
 	SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(), GetOrientation());
 
 	//UpdateWindow(g_hWnd);
@@ -1270,7 +1566,6 @@ void CheckIfMouseLeftWindowArea()
 }
 
 
-
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLine, int nCmdShow)
 {
 	
@@ -1296,9 +1591,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 			GetBaseApp()->AddCommandLineParm(parms[i]);
 		}
 	}
-	
-	InitVideoSize();
 
+	InitVideoSize();
+	
 	WSADATA wsaData;
 	WSAStartup(MAKEWORD(2, 2), &wsaData);
 
@@ -1334,8 +1629,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 		goto cleanup;
 	}
 
-
-
+	
 	if (!GetBaseApp()->Init())
 	{
 		assert(!"Unable to init - did you run media/update_media.bat to build the resources?");
