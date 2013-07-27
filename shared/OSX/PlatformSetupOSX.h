@@ -22,6 +22,9 @@
 #define glOrthof glOrtho
 #define glColor4x(r,g,b,a) glColor4f( (float(r)/65536.0f),  (float(g)/65536.0f) , (float(b)/65536.0f), (float(a)/65536.0f));
 
+#ifndef PLATFORM_OSX
+    #define PLATFORM_OSX
+#endif
 
 
 #ifndef _SINT64
