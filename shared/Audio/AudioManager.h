@@ -137,6 +137,7 @@ public:
 	virtual void SetSoundEnabled(bool bNew) {m_bSoundEnabled = bNew;}
 	virtual void Suspend(){} //stop all audio, app when into background or something
 	virtual void Resume(){} //restore audio that was stopped
+	void SetMusicStreaming(bool bStreaming);  //default to TRUE, if false, we'll cache entire songs instead of streaming from disk (setting to false may be better for desktops, more mem)
 
 protected:
 	
@@ -148,6 +149,7 @@ protected:
 	string m_midiSoundBankFile; //only used by FMOD currently
 	float m_musicVol; // 0 means none, 1 means full blast
 	bool m_bSoundEnabled;
+	bool m_bStreamMusic;
 };
 
 bool CheckIfOtherAudioIsPlaying(); //are they playing ipod stuff before the app was run?  Should call this before playing your own.

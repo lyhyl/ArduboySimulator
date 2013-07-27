@@ -132,7 +132,8 @@ void AudioManagerAudiere::Preload( string fName, bool bLooping /*= false*/, bool
 	{
 	
 		m_lastMusicFileName = fName;
-		bForceStreaming = true;
+		if (m_bStreamMusic)
+			bForceStreaming = true;
 	}
 
 	string basePath;

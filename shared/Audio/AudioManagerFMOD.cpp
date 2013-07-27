@@ -209,7 +209,9 @@ void AudioManagerFMOD::Preload( string fName, bool bLooping /*= false*/, bool bI
 	{
 	
 		m_lastMusicFileName = fName;
-		bForceStreaming = true;
+		
+		if (m_bStreamMusic)
+			bForceStreaming = true;
 	}
 
 	FMOD_RESULT  result;
@@ -433,7 +435,8 @@ void AudioManagerFMOD::SetMusicEnabled( bool bNew )
 
 void AudioManagerFMOD::StopMusic()
 {
-	DeleteSoundObjectByFileName(m_lastMusicFileName);
+    if (m_bStreamMusic)
+        DeleteSoundObjectByFileName(m_lastMusicFileName);
 	Stop(GetMusicChannel());
 }
 

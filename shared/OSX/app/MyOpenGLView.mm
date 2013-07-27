@@ -283,7 +283,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 
 - (void)scrollWheel:(NSEvent *)theEvent
 {
-    int deltaY = [theEvent deltaY];
+    float deltaY = [theEvent deltaY];
     GetMessageManager()->SendGUIEx2(MESSAGE_TYPE_GUI_MOUSEWHEEL, (float)deltaY, 0, 0, 0);
 }
 
