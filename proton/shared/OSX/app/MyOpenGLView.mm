@@ -176,6 +176,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 			break;
 			
 		case OSMessage::MESSAGE_CLOSE_TEXT_BOX:
+            SetIsUsingNativeUI(false);
 			break;
 		case OSMessage::MESSAGE_SET_FPS_LIMIT:
 			//glView.animationIntervalSave = 1.0/pMsg->m_x;

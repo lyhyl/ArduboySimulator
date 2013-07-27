@@ -9,161 +9,6 @@
 {
 	isInFullScreenMode = YES;
 	
-	/*
-	// Pause the non-fullscreen view
-	[openGLView stopAnimation];
-	
-	NSRect mainDisplayRect, viewRect;
-	mainDisplayRect = [[NSScreen mainScreen] frame];
-	// Mac OS X 10.6 and later offer a simplified mechanism to create full-screen contexts
-#if MAC_OS_X_VERSION_MIN_REQUIRED > MAC_OS_X_VERSION_10_5
-	
-	
-	
-	// Create a screen-sized window on the display you want to take over
-	// Note, mainDisplayRect has a non-zero origin if the key window is on a secondary display
-	
-	fullScreenWindow = [[NSWindow alloc] initWithContentRect:mainDisplayRect styleMask:NSBorderlessWindowMask 
-													 backing:NSBackingStoreBuffered defer:YES];
-	
-	// Set the window level to be above the menu bar
-	[fullScreenWindow setLevel:NSMainMenuWindowLevel+1];
-	
-	// Perform any other window configuration you desire
-	[fullScreenWindow setOpaque:YES];
-	[fullScreenWindow setHidesOnDeactivate:YES];
-	
-	// Create a view with a double-buffered OpenGL context and attach it to the window
-	// By specifying the non-fullscreen context as the shareContext, we automatically inherit the OpenGL objects (textures, etc) it has defined
-	viewRect = NSMakeRect(0.0, 0.0, mainDisplayRect.size.width, mainDisplayRect.size.height);
-	fullScreenView = [[MyOpenGLView alloc] initWithFrame:viewRect shareContext:[openGLView openGLContext]];
-	[fullScreenWindow setContentView:fullScreenView];
-	
-	// Show the window
-	[fullScreenWindow makeKeyAndOrderFront:self];
-	
-	// Set the scene with the full-screen viewport and viewing transformation
-	//[scene setViewportRect:viewRect];
-	
-	// Assign the view's MainController to self
-	[fullScreenView setMainController:self];
-	
-	if (!isAnimating) {
-		// Mark the view as needing drawing to initalize its contents
-		[fullScreenView setNeedsDisplay:YES];
-	}
-	else {
-		// Start playing the animation
-		[fullScreenView startAnimation];
-	}
-	InitDeviceScreenInfoEx(mainDisplayRect.size.width, mainDisplayRect.size.height, ORIENTATION_LANDSCAPE_LEFT);
-
-#else
-	// Mac OS X 10.5 and eariler require additional work to capture the display and set up a special context
-	// This demo uses CGL for full-screen rendering on pre-10.6 systems. You may also use NSOpenGL to achieve this.
-	
-	CGLPixelFormatObj pixelFormatObj;
-	GLint numPixelFormats;
-	
-	// Capture the main display
-	CGDisplayCapture(kCGDirectMainDisplay);
-	
-	// Set up an array of attributes
-	CGLPixelFormatAttribute attribs[] = {
-		
-		// The full-screen attribute
-		kCGLPFAFullScreen,
-		
-		// The display mask associated with the captured display
-		// We may be on a multi-display system (and each screen may be driven by a different renderer), so we need to specify which screen we want to take over. For this demo, we'll specify the main screen.
-		kCGLPFADisplayMask, CGDisplayIDToOpenGLDisplayMask(kCGDirectMainDisplay),
-		
-		// Attributes common to full-screen and non-fullscreen
-		kCGLPFAAccelerated,
-		kCGLPFANoRecovery,
-		kCGLPFADoubleBuffer,
-		kCGLPFAColorSize, 24,
-		kCGLPFADepthSize, 16,
-        0
-    };
-	
-	// Create the full-screen context with the attributes listed above
-	// By specifying the non-fullscreen context as the shareContext, we automatically inherit the OpenGL objects (textures, etc) it has defined
-	CGLChoosePixelFormat(attribs, &pixelFormatObj, &numPixelFormats);
-	CGLCreateContext(pixelFormatObj, (_CGLContextObject*)[[openGLView openGLContext] CGLContextObj], &fullScreenContextObj);
-	CGLDestroyPixelFormat(pixelFormatObj);
-	
-	if (!fullScreenContextObj) {
-        NSLog(@"Failed to create full-screen context");
-		CGReleaseAllDisplays();
-		[self goWindow];
-        return;
-    }
-	
-	// Set the current context to the one to use for full-screen drawing
-	CGLSetCurrentContext(fullScreenContextObj);
-	
-	// Attach a full-screen drawable object to the current context
-	CGLSetFullScreen(fullScreenContextObj);
-	
-    // Lock us to the display's refresh rate
-    GLint newSwapInterval = 1;
-    CGLSetParameter(fullScreenContextObj, kCGLCPSwapInterval, &newSwapInterval);
-	
-	// Tell the scene the dimensions of the area it's going to render to, so it can set up an appropriate viewport and viewing transformation
-//    [scene setViewportRect:NSMakeRect(0, 0, CGDisplayPixelsWide(kCGDirectMainDisplay), CGDisplayPixelsHigh(kCGDirectMainDisplay))];
-	
-	// Perform the application's main loop until exiting full-screen
-	// The shift here is from a model in which we passively receive events handed to us by the AppKit (in window mode)
-	// to one in which we are actively driving event processing (in full-screen mode)
-	InitDeviceScreenInfoEx(mainDisplayRect.size.width, mainDisplayRect.size.height, ORIENTATION_LANDSCAPE_LEFT);
-
-	while (isInFullScreenMode)
-	{
-	
-		
-		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-		
-		// Check for and process input events
-        NSEvent *event;
-        while (event = [NSApp nextEventMatchingMask:NSAnyEventMask untilDate:[NSDate distantPast] inMode:NSDefaultRunLoopMode dequeue:YES])
-		{
-            switch ([event type])
-			{
-                case NSLeftMouseDown:
-                    [self mouseDown:event];
-                    break;
-					
-                case NSLeftMouseUp:
-                    [self mouseUp:event];
-                    break;
-					
-                case NSLeftMouseDragged:
-                    [self mouseDragged:event];
-                    break;
-					
-                case NSKeyDown:
-                    [self keyDown:event];
-                    break;
-					
-                default:
-                    break;
-            }
-        }
-		
-		// Update our animation
-        CFAbsoluteTime currentTime = CFAbsoluteTimeGetCurrent();
-
-        renderTime = currentTime;
-		
-		// Delegate to the scene object for rendering
-		CGLFlushDrawable(fullScreenContextObj);
-		
-		[pool release];
-	}
-	
-#endif
-	 */
 }
 
 - (void) goWindow
@@ -357,7 +202,9 @@
 - (void) applicationDidResignActive: (NSNotification *) aNotification
 {
 	CGLLockContext( (_CGLContextObject*)[[openGLView openGLContext] CGLContextObj]);
-	GetBaseApp()->OnEnterBackground();
+#ifndef RT_RUNS_IN_BACKGROUND
+    GetBaseApp()->OnEnterBackground();
+#endif
 	CGLUnlockContext( (_CGLContextObject*) [[openGLView openGLContext] CGLContextObj]);
 	
 }
@@ -365,7 +212,9 @@
 - (void) applicationDidBecomeActive: (NSNotification *) aNotification
 {
 	CGLLockContext( (_CGLContextObject*)[[openGLView openGLContext] CGLContextObj]);
+#ifndef RT_RUNS_IN_BACKGROUND
 	GetBaseApp()->OnEnterForeground();
+#endif
 	CGLUnlockContext( (_CGLContextObject*) [[openGLView openGLContext] CGLContextObj]);
 
 }
