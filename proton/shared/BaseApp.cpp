@@ -403,6 +403,13 @@ void BaseApp::OnMessage(Message &m)
 				GetAudioManager()->Play(ReplaceMP3(m.GetVarName()), true, true);
 			}
 			break;
+		
+		case MESSAGE_TYPE_PLAY_MUSIC_FORCE_STREAMING:
+			if (GetAudioManager())
+			{
+				GetAudioManager()->Play(ReplaceMP3(m.GetVarName()), true, true, true, true);
+			}
+			break;
 
 		case MESSAGE_TYPE_VIBRATE:
 

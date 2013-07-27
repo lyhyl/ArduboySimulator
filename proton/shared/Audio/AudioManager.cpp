@@ -9,6 +9,7 @@ AudioManager::AudioManager()
 	m_lastMusicID = AUDIO_HANDLE_BLANK;
 	m_bVibrationDisabled = false;
 	m_musicVol = 1.0f;
+	m_bStreamMusic = true;
 }
 
 AudioManager::~AudioManager()
@@ -38,3 +39,7 @@ AudioHandle AudioManager::Play( string fName, bool bLooping , bool bIsMusic , bo
 	return AUDIO_HANDLE_BLANK;
 }
 
+void AudioManager::SetMusicStreaming( bool bStreaming )
+{
+	m_bStreamMusic = bStreaming;
+}
