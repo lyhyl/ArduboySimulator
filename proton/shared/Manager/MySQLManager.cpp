@@ -148,6 +148,9 @@ int MySQLManager::AddSelectResults(vector<VariantDB> &vdb)
 			case FIELD_TYPE_FLOAT:
 				db.GetVar(fieldNames[i])->Set((float)atof(row[i]));
 				break;
+			case FIELD_TYPE_DOUBLE:
+				db.GetVar(fieldNames[i])->Set((float)atof(row[i]));
+				break;
 
 			case FIELD_TYPE_SHORT:
 			case FIELD_TYPE_LONG:
