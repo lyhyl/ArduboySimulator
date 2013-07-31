@@ -303,7 +303,7 @@ int MySQLManager::AddSelectResults(vector<VariantDB> &vdb)
   return rows;
 }
 
-bool MySQLManager::Init(string name, string password)
+bool MySQLManager::Init(string name, string password, string host)
 {
 
 	LogMsg("MySQL client version: %s", mysql_get_client_info());
@@ -320,7 +320,7 @@ bool MySQLManager::Init(string name, string password)
 
 	//actually connect?
 
-	if (!mysql_real_connect(m_conn, "localhost", name.c_str(), password.c_str(), NULL, 0, NULL, 0))
+	if (!mysql_real_connect(m_conn, host.c_str(), name.c_str(), password.c_str(), NULL, 0, NULL, 0))
 	{
 		ShowError();
 		Kill(); //this will make m_conn null again
