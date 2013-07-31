@@ -24,7 +24,7 @@ class MySQLManager
 public:
 	MySQLManager();
 	virtual ~MySQLManager();
-	bool Init(string name, string password);
+	bool Init(string name, string password, string host = "localhost");
 	void Kill();
 	int ShowError(); //also returns the error number
 	bool Query(string query, bool bShowError = true);
