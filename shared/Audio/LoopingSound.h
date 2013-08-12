@@ -29,11 +29,12 @@ public:
 	LoopingSound();
 	virtual ~LoopingSound();
 
-	void Init(string loopingMove, string moveStart = "", string moveEnd = "", string loopingIdle = "");
+	void Init(string loopingMove, string moveStart = "", string moveEnd = "", string loopingIdle = "", bool bAddBasePath = true);
 	void SetMoving(bool bNew);
 	void SetTransitionTimings(int transitionStartMS, int transitionStopMS);
 	void Update(); //needs to be called each frame
 	void SetDisabled(bool bDisabled);
+	void SetVolume(float vol); //0 to 1
 
 private:
 
@@ -56,7 +57,8 @@ private:
 	uint32 m_waitTimer;
 	eState m_state;
 	bool m_bDisabled;
-	
+	bool m_bAddBasePath;
+	float m_volume;
 
 };
 

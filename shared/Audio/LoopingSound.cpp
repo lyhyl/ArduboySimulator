@@ -10,6 +10,7 @@ LoopingSound::LoopingSound()
 	m_bMoving = false;
 	m_state = STATE_IDLE;
 	m_bDisabled = false;
+	m_volume = 1.0f;
 }
 
 LoopingSound::~LoopingSound()
@@ -42,7 +43,8 @@ void LoopingSound::PlayIdleSound()
 {
 	if (!m_loopingIdle.empty())
 	{
-		m_loopingSoundHandle = GetAudioManager()->Play(m_loopingIdle, true, false);
+		m_loopingSoundHandle = GetAudioManager()->Play(m_loopingIdle, true, false, m_bAddBasePath);
+		GetAudioManager()->SetVol(m_loopingSoundHandle, m_volume);
 	} else
 	{
 		m_loopingSoundHandle = NULL;
@@ -51,7 +53,7 @@ void LoopingSound::PlayIdleSound()
 	
 	m_state = STATE_IDLE;
 }
-void LoopingSound::Init( string loopingMove, string moveStart /*= ""*/, string moveEnd /*= ""*/, string loopingIdle /*= ""*/ )
+void LoopingSound::Init( string loopingMove, string moveStart /*= ""*/, string moveEnd /*= ""*/, string loopingIdle /*= ""*/, bool bAddBasePath )
 {
 
 	m_loopingIdle = loopingIdle;
@@ -59,10 +61,11 @@ void LoopingSound::Init( string loopingMove, string moveStart /*= ""*/, string m
 	m_moveStart = moveStart;
 	m_moveEnd = moveEnd;
 
+	m_bAddBasePath = bAddBasePath;
 	//preload as needed
 	
-	if (!m_moveStart.empty()) GetAudioManager()->Preload(m_moveStart);
-	if (!m_moveEnd.empty()) GetAudioManager()->Preload(m_moveEnd);
+	if (!m_moveStart.empty()) GetAudioManager()->Preload(m_moveStart, false, false, bAddBasePath);
+	if (!m_moveEnd.empty()) GetAudioManager()->Preload(m_moveEnd, false, false, bAddBasePath);
 
 	PlayIdleSound();
 	
@@ -72,7 +75,9 @@ void LoopingSound::PlayMoveSound()
 {
 	if (!m_loopingMove.empty())
 	{
-		m_loopingSoundHandle = GetAudioManager()->Play(m_loopingMove, true, false);
+		m_loopingSoundHandle = GetAudioManager()->Play(m_loopingMove, true, false, m_bAddBasePath);
+		GetAudioManager()->SetVol(m_loopingSoundHandle, m_volume);
+
 	} else
 	{
 		m_loopingSoundHandle = NULL;
@@ -101,7 +106,9 @@ void LoopingSound::SetMoving( bool bNew )
 		} else
 		{
 			//play a starting sound first
-			m_transitionSoundHandle =  GetAudioManager()->Play(m_moveStart);
+			m_transitionSoundHandle =  GetAudioManager()->Play(m_moveStart, false, false, m_bAddBasePath);
+			GetAudioManager()->SetVol(m_transitionSoundHandle, m_volume);
+
 			m_waitTimer = GetTick(TIMER_SYSTEM)+m_moveStartTimeMS;
 			m_state = STATE_MOVE_START;
 		}
@@ -115,7 +122,9 @@ void LoopingSound::SetMoving( bool bNew )
 		} else
 		{
 			//play a stopping sound first
-			m_transitionSoundHandle =  GetAudioManager()->Play(m_moveEnd);
+			m_transitionSoundHandle =  GetAudioManager()->Play(m_moveEnd, false, false, m_bAddBasePath);
+			GetAudioManager()->SetVol(m_transitionSoundHandle, m_volume);
+
 			m_waitTimer = GetTick(TIMER_SYSTEM)+m_moveEndTimeMS;
 			m_state = STATE_MOVE_END;
 
@@ -200,4 +209,25 @@ void LoopingSound::SetDisabled( bool bDisabled )
 	m_bDisabled = bDisabled;
 
 
+}
+
+void LoopingSound::SetVolume( float vol )
+{
+	if (vol == m_volume) return;
+
+	m_volume = vol;
+
+	if (m_bDisabled) return;
+
+	switch (m_state)
+	{
+	case STATE_IDLE:
+	case STATE_MOVING:
+
+		if (m_loopingSoundHandle != AUDIO_HANDLE_BLANK)
+		{
+			GetAudioManager()->SetVol(m_loopingSoundHandle, vol);
+		}
+		break;
+	}
 }

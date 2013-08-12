@@ -334,7 +334,7 @@
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
-	NSLog(string);
+	//NSLog(string);
 	
     if ([string length] == 0)
     {
