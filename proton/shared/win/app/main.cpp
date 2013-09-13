@@ -105,6 +105,7 @@ void InitVideoSize()
 	AddVideoMode("Galaxy Tab 10.1 Landscape", 1280,800, PLATFORM_ID_ANDROID);
 	AddVideoMode("Xperia Play Landscape", 854, 480, PLATFORM_ID_ANDROID);
 	AddVideoMode("LG Optimus G Landscape", 1280, 768, PLATFORM_ID_ANDROID);
+	AddVideoMode("Nexus 4 Visible", 1200, 768, PLATFORM_ID_ANDROID);
 
 	//RIM Playbook OS/BBX/BB10/Whatever they name it to next week
 	AddVideoMode("Playbook", 600,1024, PLATFORM_ID_BBX);
@@ -291,8 +292,6 @@ int GetTouchesActive()
 
 void InitMultiTouch()
 {
-#ifdef RT_WIN_MULTITOUCH_SUPPORT
-
 	assert(g_hWnd);
 
 	GetTouchInputInfoFunc = (GetTouchInputInfoType) GetProcAddress(GetModuleHandle(TEXT("user32")), "GetTouchInputInfo");
@@ -317,7 +316,6 @@ void InitMultiTouch()
 			}
 		}
 	}
-#endif
 }
 
 #endif
@@ -1439,8 +1437,9 @@ assert(!g_hDC);
 	}
 	ShowWindow(g_hWnd, SW_SHOW);
 
+#ifdef RT_WIN_MULTITOUCH_SUPPORT
 	InitMultiTouch();
-
+#endif
 	SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(), GetOrientation());
 
 	//UpdateWindow(g_hWnd);
