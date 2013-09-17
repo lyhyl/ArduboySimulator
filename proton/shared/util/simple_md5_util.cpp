@@ -4,6 +4,8 @@
 
 std::string GetMD5CheckSumAsString(std::string inputData)
 {
+	return "";
+
 	if (inputData.empty())
 		return ""; //uhh... how can we get the md5 of a blank string?
 
