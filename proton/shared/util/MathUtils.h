@@ -38,9 +38,9 @@ CL_Rectf ScaleRect2D(const CL_Rectf &r, CL_Vec2f vScale);
 #define SMOOTHSTEP_INVERSE(x) pow( ((x)/0.5)-1,3)
 
 // converting degrees to radians and vice versa
-#define PI (3.14159265359f)
-#define TO_DEGREES(x) ((x)*180.0f/PI)
-#define TO_RADIANS(x) ((x)*PI/180.0f)
+#define RT_PI (3.14159265359f)
+#define TO_DEGREES(x) ((x)*180.0f/RT_PI)
+#define TO_RADIANS(x) ((x)*RT_PI/180.0f)
 
 bool CircleSegmentIntersect(CL_Vec2f C, float r, CL_Vec2f A, CL_Vec2f B, CL_Vec2f& P);
 float ModNearestInt(float a, float b);
