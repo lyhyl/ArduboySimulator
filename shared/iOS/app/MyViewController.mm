@@ -174,6 +174,10 @@
 	
 }
 
+- (BOOL) prefersStatusBarHidden
+{
+    return YES;
+}
  
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
