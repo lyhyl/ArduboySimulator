@@ -592,9 +592,17 @@ string IntToTimeSeconds(uint32 seconds, bool bTextFormat) //converts 180 (second
 
 	if (!bTextFormat)
 	{
-		assert(days == 0 && hours == 0 && "Fix this to work with these higher values.  When I wrote this I only tested up to 5 mins for my game -Seth");
 		char temp[24];
-		sprintf(temp, "%d:%02d", minutes, seconds);
+		
+		if (hours > 0 || days > 0)
+		{
+			sprintf(temp, "%d:%d:%02d", hours+(days*24), minutes, seconds);
+
+		} else
+		{
+			sprintf(temp, "%d:%02d", minutes, seconds);
+		}
+		
 		return string(temp);
 	}
 
