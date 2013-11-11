@@ -705,10 +705,12 @@ void RTFont::MeasureTextAndAddByLinesIntoDeque(const CL_Vec2f &textBounds, const
 	}
 
 #ifdef _DEBUG
-if (pLines)
+/*
+	if (pLines)
 {
 	assert(lineCount == pLines->size());
 }
+*/
 #endif
 	vEnclosingSizeOut.y = float(lineCount)*GetLineHeight(scale);
 

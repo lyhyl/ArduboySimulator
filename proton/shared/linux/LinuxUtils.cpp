@@ -54,6 +54,8 @@ void LogMsg( const char* traceStr, ... )
 }
 
 #endif
+
+
 string GetBaseAppPath()
 {
 	char szDir[1024];

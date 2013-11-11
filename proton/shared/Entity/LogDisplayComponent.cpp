@@ -7,6 +7,7 @@
 #include "TouchDragComponent.h"
 #include "RenderScissorComponent.h"
 
+#define C_SCROLL_SPEED_NEEDED_TO_PAUSE_UPDATES 1.0f
 LogDisplayComponent::LogDisplayComponent()
 {
 	SetName("LogDisplay");
@@ -102,15 +103,9 @@ void LogDisplayComponent::AddLine(VariantList *pVList)
 	InitInternalConsoleIfNeeded();
 
 	//word wrap it into lines if needed
-	deque<string> lines;
 	CL_Vec2f enclosedSize2d;
-	GetBaseApp()->GetFont(eFont(*m_pFontID))->MeasureTextAndAddByLinesIntoDeque(*m_pSize2d, pVList->Get(0).GetString(), &lines, *m_pFontScale, enclosedSize2d);
+	GetBaseApp()->GetFont(eFont(*m_pFontID))->MeasureTextAndAddByLinesIntoDeque(*m_pSize2d, pVList->Get(0).GetString(), &m_queuedLines, *m_pFontScale, enclosedSize2d);
 
-	for (;lines.size();)
-	{
-		m_pActiveConsole->AddLine(lines.front());
-		lines.pop_front();
-	}
 }
 
 void LogDisplayComponent::OnTextAdded()
@@ -181,6 +176,16 @@ void LogDisplayComponent::OnUpdate(VariantList *pVList)
 		//handle update for momentum movement of the scroller
 		ModByDistance(-(m_vecDisplacement.y*GetBaseApp()->GetDelta()));
 		m_vecDisplacement *= (1- (*m_pFriction*GetBaseApp()->GetDelta()));
+	}
+
+	if (!m_bIsDraggingLook &&
+		(!m_pScrollBarComp || m_vecDisplacement.length() < C_SCROLL_SPEED_NEEDED_TO_PAUSE_UPDATES))
+	{
+		for (;m_queuedLines.size();)
+		{
+			m_pActiveConsole->AddLine(m_queuedLines.front());
+			m_queuedLines.pop_front();
+		}
 	}
 }
 
