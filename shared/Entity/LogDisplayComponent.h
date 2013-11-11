@@ -93,6 +93,8 @@ private:
 	CL_Vec2f m_vecDisplacement;
 	float * m_pFriction, *m_pMaxScrollSpeed, *m_pPowerMod;
 
+	deque<string> m_queuedLines; //if a user is scrolling around, we don't want to add the new lines added right away as it's visually jarring
+
 };
 
 //misc helpers
