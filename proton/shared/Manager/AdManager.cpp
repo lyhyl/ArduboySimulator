@@ -135,9 +135,10 @@ void AdManager::CacheTapjoyAd()
 	m_bSendTapjoyAdRequestASAP = false;
 }
 
-void AdManager::CacheTapjoyFeaturedApp()
+void AdManager::CacheTapjoyFeaturedApp(string currencyID) //or blank for default
 {
 	OSMessage o;
+	o.m_string = currencyID;
 	o.m_type = OSMessage::MESSAGE_TAPJOY_GET_FEATURED_APP;
 	GetBaseApp()->AddOSMessage(o);
 	m_bSendTapjoyFeaturedAppRequestASAP = false;

@@ -43,6 +43,8 @@
                                                object:nil];
 
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showFullscreenAd:) name:TJC_FULL_SCREEN_AD_RESPONSE_NOTIFICATION object:nil];
+
 	//virtual items hosted by tapjoy not yet not supported
 	/*
 	// Watch for virtual good notification indicating that items are ready to go.
@@ -76,7 +78,7 @@
             bDebugging = true;
         #endif
         
-        [TapjoyConnect requestTapjoyConnect:appID secretKey:secretKey
+        [Tapjoy requestTapjoyConnect:appID secretKey:secretKey
                                         options:[NSDictionary dictionaryWithObjectsAndKeys:
                                                  [NSNumber numberWithInt:TJCTransitionExpand], TJC_OPTION_TRANSITION_EFFECT,
                                                  [NSNumber numberWithBool:bDebugging], TJC_OPTION_ENABLE_LOGGING,
@@ -92,7 +94,7 @@
 	case OSMessage::MESSAGE_TAPJOY_SET_USERID:
 	{
 	  NSString* userID = [NSString stringWithUTF8String:pMsg->m_string.c_str()];
-      [TapjoyConnect setUserID: userID];
+      [Tapjoy setUserID: userID];
 	  return true; //we handled it
 	}
 	break;
@@ -102,44 +104,58 @@
         LogMsg("Getting tapjoy ad");
         //TODO: Set banner size?
         
-        [TapjoyConnect getDisplayAdWithDelegate:self];
+        [Tapjoy getDisplayAdWithDelegate:self];
 		return true; //we handled it
 	break;
 	
 	case OSMessage::MESSAGE_TAPJOY_GET_FEATURED_APP:
-		LogMsg("Getting tapjoy feature");
 				
-		[TapjoyConnect getFeaturedApp];
+		//[TapjoyConnect getFeaturedApp];
+      	
+		if (pMsg->m_string.empty())
+		{
+			[Tapjoy getFullScreenAd];
+		} else
+		{
+			//LogMsg("Getting tapjoy feature (really, fullScreenAd): %s", pMsg->m_string.c_str());
+            
+            NSString* currencyID = [NSString stringWithUTF8String:pMsg->m_string.c_str()];
+			[Tapjoy getFullScreenAdWithCurrencyID: currencyID];
+            //show ad this way:
+          //  [Tapjoy showFullScreenAd];
+		}
+		
 		return true; //we handled it
 	break;
 
 	case OSMessage::MESSAGE_TAPJOY_SHOW_FEATURED_APP:
 		LogMsg("show tapjoy feature");
-		[TapjoyConnect showFeaturedAppFullScreenAd]; 
-		return true; //we handled it
+		//[TapjoyConnect showFeaturedAppFullScreenAd];
+		[Tapjoy showFullScreenAd];
+            return true; //we handled it
 	break;
 	
 	case OSMessage::MESSAGE_TAPJOY_GET_TAP_POINTS:
 		LogMsg("Getting tapjoy points");
-		[TapjoyConnect getTapPoints];
+		[Tapjoy getTapPoints];
 		return true; //we handled it
 	break;
 
 	case OSMessage::MESSAGE_TAPJOY_SPEND_TAP_POINTS:
-		LogMsg("Spending tappoints: " + pMsg->m_parm1);
-		[TapjoyConnect spendTapPoints:pMsg->m_parm1];
+		//LogMsg("Spending tappoints: %d" , pMsg->m_parm1);
+		[Tapjoy spendTapPoints:pMsg->m_parm1];
 		return true; //we handled it
 	break;	
 	
 	case OSMessage::MESSAGE_TAPJOY_AWARD_TAP_POINTS:
 		// This method call will award 10 virtual currencies to the users total
-		[TapjoyConnect awardTapPoints:pMsg->m_parm1];
+		[Tapjoy awardTapPoints:pMsg->m_parm1];
 		return true; //we handled it
 	break;
 
 	case OSMessage::MESSAGE_TAPJOY_SHOW_OFFERS:
 		// This method returns the offers view that you can add it in your required view. Initialize its bounds depending on the main window bounds.
-		[TapjoyConnect showOffers];
+		[Tapjoy showOffers];
 
 		// This method takes a view controller and sets its bounds according to viewController's and depend on the orientation of the view controller sent as an argument
 		//[TapjoyConnect showOffersWithViewController:vController];
@@ -156,7 +172,7 @@
         {
 		
 		int showAd = (int)pMsg->m_x;
-		LogMsg("Showing tapjoy ad, parm is: %d" + showAd);
+	//	LogMsg("Showing tapjoy ad, parm is: %d" + showAd);
 		
             //TODO, add the button to our view controller?
             
@@ -255,10 +271,21 @@
 	return TJC_AD_BANNERSIZE_640X100;
 }
 
+- (void)showFullscreenAd:(NSNotification*)notifyObj
+{
+    LogMsg("Got fullscreen ad, showing");
+    [TapjoyConnect showFullScreenAd];
+}
+
 // This method must return a boolean indicating whether the Ad will automatically refresh itself.
 - (BOOL)shouldRefreshAd
 {
 	return NO;
+}
+
+- (void)showFullscreenAdError:(NSNotification*)notifyObj
+{
+    NSLog(@"There is no Ad available!");
 }
 
 - (void)getUpdatedPoints:(NSNotification*)notifyObj

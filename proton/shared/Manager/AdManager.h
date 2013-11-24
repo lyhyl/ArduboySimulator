@@ -76,7 +76,7 @@ public:
 	void SetTapjoyAdVisible(bool bVisible); //will load an ad if not cached, so it might not display right away
 	void SetTapjoyFeatureAppVisible(bool bVisible); //will load an ad if not cached, so it might not display right away
 	void CacheTapjoyAd();
-	void CacheTapjoyFeaturedApp();
+	void CacheTapjoyFeaturedApp(string currencyID = string()); //this was actually retrofitted to work for the TJ video offers
 	bool IsTapJoyAdReady() {return m_bTapjoyAdReady;}
 	string GetPointsString();
 	void OpenTapjoyOfferWall();
@@ -84,7 +84,7 @@ public:
 	void ModifyTapPoints(int mod);
 	void GetTapPointsFromServer(); //calling this also causes any "hey, you got tapjoy points" notifications to be sent
 	void SetupBanner(CL_Vec2f vBannerSize, eAlignment alignment = ALIGNMENT_DOWN_CENTER); //alignment is ignored from now, always bottom centered
-	
+
 	boost::signal<void (VariantList*)> m_sig_tappoints_awarded; //called when awarded tap points
 	boost::signal<void (VariantList*)> m_sig_offer_wall_closed; //ios only
 

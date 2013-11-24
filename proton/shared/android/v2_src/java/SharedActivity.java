@@ -1981,6 +1981,8 @@ class AppRenderer implements GLSurfaceView.Renderer
 //#endif
 					break;
 	
+	
+	
 				case MESSAGE_FLURRY_SETUP:
 				{
 //#if defined(RT_FLURRY_SUPPORT)
@@ -2078,13 +2080,21 @@ class AppRenderer implements GLSurfaceView.Renderer
 		
 		
 				case MESSAGE_TAPJOY_GET_FEATURED_APP:
-					Log.v(app.PackageName, "Get featured app was removed from Tapjoy in V9, wasn't it? Wasn't in the example...");
+					//re-purposing to show videos
+					Log.v(app.PackageName, "Asking tj for fullscreen ad");
 					//TapjoyConnect.getTapjoyConnectInstance().getFeaturedApp(app);
+					if (nativeGetLastOSMessageString().length() > 0)
+					{
+						TapjoyConnect.getTapjoyConnectInstance().getFullScreenAdWithCurrencyID(nativeGetLastOSMessageString(), app); 
+					} else
+					{
+						TapjoyConnect.getTapjoyConnectInstance().getFullScreenAd(app); 
+					}
 					break;
 
 				case MESSAGE_TAPJOY_SHOW_FEATURED_APP:
-					//Log.v(app.PackageName, "show tapjoy feature");
-					TapjoyConnect.getTapjoyConnectInstance().showFeaturedAppFullScreenAd();
+					//Log.v(app.PackageName, "show tapjoy ap");
+					TapjoyConnect.getTapjoyConnectInstance().showFullScreenAd();
 					break;
 		
 				case MESSAGE_TAPJOY_GET_TAP_POINTS:
