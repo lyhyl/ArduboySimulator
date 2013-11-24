@@ -7,9 +7,10 @@
 
 #ifdef RT_TAPJOY_ENABLED
 
-#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import "TapjoyConnect.h"
+#import <Tapjoy/Tapjoy.h>
+//#import <Foundation/Foundation.h>
+
 #import "MyViewController.h"
 
 @interface TapjoyManager : NSObject <TJCAdDelegate>
