@@ -154,17 +154,22 @@
 	break;
 
 	case OSMessage::MESSAGE_TAPJOY_SHOW_OFFERS:
-		// This method returns the offers view that you can add it in your required view. Initialize its bounds depending on the main window bounds.
-		[Tapjoy showOffers];
+		{
+            // This method returns the offers view that you can add it in your required view. Initialize its bounds depending on the main window bounds.
+		//[Tapjoy showOffers];
 
 		// This method takes a view controller and sets its bounds according to viewController's and depend on the orientation of the view controller sent as an argument
-		//[TapjoyConnect showOffersWithViewController:vController];
+            MyAppDelegate * appDelegate = [[UIApplication sharedApplication] delegate];
+            
+          
+            [Tapjoy showOffersWithViewController:appDelegate.viewController];
 
 		// OR
 
 		// This method adds the offers view without the library's Navigation Bar, so you can add this view into your view which already has a navigation bar
 		//[TapjoyConnect showOffersWithViewController:vController withInternalNavBar:NO];			break;
-		return true; //we handled it
+		}
+            return true; //we handled it
 	
 		break;
 		
@@ -274,7 +279,11 @@
 - (void)showFullscreenAd:(NSNotification*)notifyObj
 {
     LogMsg("Got fullscreen ad, showing");
-    [TapjoyConnect showFullScreenAd];
+    //[TapjoyConnect showFullScreenAd];
+    MyAppDelegate * appDelegate = [[UIApplication sharedApplication] delegate];
+    
+    [Tapjoy showFullScreenAdWithViewController: appDelegate.viewController];
+    
 }
 
 // This method must return a boolean indicating whether the Ad will automatically refresh itself.
