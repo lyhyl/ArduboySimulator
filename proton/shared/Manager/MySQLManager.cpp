@@ -146,10 +146,6 @@ int MySQLManager::AddSelectResults(vector<VariantDB> &vdb)
 
 			case FIELD_TYPE_DECIMAL:
 			case FIELD_TYPE_FLOAT:
-				
-				db.GetVar(fieldNames[i])->Set((float)atof(row[i]));
-				break;
-
 			case FIELD_TYPE_DOUBLE:
 				if (!row[i])
 				{
@@ -162,11 +158,14 @@ int MySQLManager::AddSelectResults(vector<VariantDB> &vdb)
 
 			case FIELD_TYPE_SHORT:
 			case FIELD_TYPE_LONG:
-				db.GetVar(fieldNames[i])->Set((int32)atoi(row[i]));
-				break;
-
 			case FIELD_TYPE_LONGLONG:
-				db.GetVar(fieldNames[i])->Set((int32)atoi(row[i]));
+				if (!row[i])
+				{
+					db.GetVar(fieldNames[i])->Set((int32)0);
+				} else
+				{
+					db.GetVar(fieldNames[i])->Set((int32)atoi(row[i]));
+				}
 				break;
 
 			case FIELD_TYPE_DATETIME:
