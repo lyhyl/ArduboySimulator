@@ -86,7 +86,8 @@ int GetDevicePixelsPerInchDiagonal()
 			if (IsDroidSize) cachedPixelsPerInch = 265;
 			if (IsNexusOneSize) cachedPixelsPerInch = 235;
 			if (IsPlaybookSize) cachedPixelsPerInch = 169;
-
+			if (IsNexus7B || IsNexus7BActual) cachedPixelsPerInch = 273;
+			if (IsNexus7) cachedPixelsPerInch = 216;
 			if (cachedPixelsPerInch == 0)
 			{
 				//we really have no clue
@@ -458,7 +459,7 @@ bool IsTabletSize()
 	{
 		//it's big, but if the pixel density is high enough, it still counts
 		//as small
-		if (GetDevicePixelsPerInchDiagonal() > 270) //comon, even the ipad3 doesn't have that, must be a phone
+		if (GetDevicePixelsPerInchDiagonal() > 273) //comon, even the ipad3 doesn't have that, must be a phone
 		{
 			return false;
 		}
