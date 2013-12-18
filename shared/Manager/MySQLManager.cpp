@@ -140,7 +140,7 @@ int MySQLManager::AddSelectResults(vector<VariantDB> &vdb)
 	  }
 	  for(int i = 0; i < num_fields; i++)
 		{
-		
+
 			switch(fieldType[i])
 			{
 
@@ -250,17 +250,8 @@ int MySQLManager::AddSelectResults(vector<VariantDB> &vdb)
 						//now put it into the string, keeping things like nulls and such.  (up to you to pull it out right though)
 						s.resize(maxLength[i]);
 
-						if (!row[i])
-						{
-							//it's null?!
-#ifdef _DEBUG
-							LogMsg("SQL Warning: Something is NULL?!");
-#endif
-						} else
-						{
+						if (row[i])
 							memcpy((void*)s.c_str(), &row[i][0], maxLength[i]);
-
-						}
 					}
 				}
 				break;
@@ -272,7 +263,24 @@ int MySQLManager::AddSelectResults(vector<VariantDB> &vdb)
 					db.GetVar(fieldNames[i])->Set("");
 				} else
 				{
-					db.GetVar(fieldNames[i])->Set(string(row[i]));
+					if (maxLength[i] == 16 && fieldNames[i][0] == 'U')
+					{
+						//why does FIELD_TYPE_STRING trigger for BINARY(16) data?!  We can't get our data right without
+						//this hack.  I'm sorry to the world for this as it's pretty much the worst hack I've ever done - Unsigned
+						db.GetVar(fieldNames[i])->Set(string()); //we need to register it as a string, the mega hack we do in a
+						string &s = db.GetVar(fieldNames[i])->GetString();
+						if (maxLength[i] > 0)
+						{
+							//now put it into the string, keeping things like nulls and such.  (up to you to pull it out right though)
+							s.resize(maxLength[i]);
+
+							if (row[i])
+								memcpy((void*)s.c_str(), &row[i][0], maxLength[i]);
+						}
+					} else
+					{
+						db.GetVar(fieldNames[i])->Set(string(row[i]));
+					}
 				}
 			break;
 
