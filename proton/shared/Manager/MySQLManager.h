@@ -38,6 +38,7 @@ public:
 	MYSQL * GetConnection() {return m_conn;}
 	int GetTableRecordCount(string tableName);
 	unsigned int GetOpsDone() {return m_opsDone;}
+	void ResetOpsDone() {m_opsDone = 0;}
 
 protected:
 	
