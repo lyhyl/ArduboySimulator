@@ -532,7 +532,7 @@ import android.view.View.OnClickListener;
            
            // Log.d(PackageName, "Purchase successful: "+purchase.getOriginalJson());
 
-			nativeSendGUIStringEx(MESSAGE_TYPE_IAP_RESULT, result.getResponse(),0,0, purchase.getOriginalJson());
+			nativeSendGUIStringEx(MESSAGE_TYPE_IAP_RESULT, result.getResponse(),0,0, purchase.getOriginalJson()+"|"+purchase.getSignature());
         }
     };
     
