@@ -46,11 +46,13 @@ void FocusInputComponent::OnRemove()
 void FocusInputComponent::OnInput(VariantList *pVList)
 {
 	//the 1 is because the pt we need modified is index 1 of the VariantList
-	//GetParent()->CallFunctionRecursivelyWithUpdatedVar("OnInput", pVList, string("pos2d"), 1, Entity::RECURSIVE_VAR_OP_SUBTRACTION_PLUS_ALIGNMENT_OFFSET);
-
+	
+#ifdef RT_FORCE_LEGACY_INPUT_HANDLING
+	GetParent()->CallFunctionRecursivelyWithUpdatedVar("OnInput", pVList, string("pos2d"), 1, Entity::RECURSIVE_VAR_OP_SUBTRACTION_PLUS_ALIGNMENT_OFFSET);
+#else
 	//new way, which calls things in reverse order
 	GetParent()->CallFunctionRecursivelyWithUpdatedVarBackwards("OnInput", pVList, string("pos2d"), 1, Entity::RECURSIVE_VAR_OP_SUBTRACTION_PLUS_ALIGNMENT_OFFSET);
-
+#endif
 }
 
 void FocusInputComponent::OnInputRaw(VariantList *pVList)
