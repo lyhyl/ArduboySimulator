@@ -401,6 +401,11 @@ string GetDeviceID()
 	NSString *uniqueIdentifier = [device uniqueIdentifier];
 	return string([uniqueIdentifier cStringUsingEncoding:NSUTF8StringEncoding]);
 }
+#else
+string GetDeviceID()
+{
+	return GetMacAddress();
+}
 #endif
 
 string GetIdentiferForVender()

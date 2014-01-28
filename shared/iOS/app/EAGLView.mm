@@ -9,6 +9,7 @@
 #import <OpenGLES/EAGLDrawable.h>
 #import "EAGLView.h"
 #import "MyAppDelegate.h"
+#import "util/RenderUtils.h"
 
 #define USE_DEPTH_BUFFER 1
 
@@ -68,11 +69,12 @@
     CGRect fullScreenRect = pScreen.bounds;
     
     bool bUseSizeGuess = false;
+    SetProtonPixelScaleFactor(pixelScale);
     
 	if (GetPrimaryGLX() == 0)
     {
         bUseSizeGuess = true;
-        SetPrimaryScreenSize(fullScreenRect.size.width, fullScreenRect.size.height);
+        SetPrimaryScreenSize(fullScreenRect.size.width*GetProtonPixelScaleFactor(), fullScreenRect.size.height*GetProtonPixelScaleFactor());
         SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(), 0);
     }
     
@@ -232,7 +234,7 @@
 }
 
 
-- (void)setAnimationInterval:(NSTimeInterval)interval 
+- (void)setAnimationInterval:(NSTimeInterval)interval
 {
 	
 	animationInterval = interval;
