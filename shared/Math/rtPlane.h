@@ -5,7 +5,7 @@
 #include "ClanLib-2.0/Sources/API/Core/Math/vec3.h"
 
 #ifdef _CONSOLE
-#ifndef GLdouble
+#ifndef GLAPI
 	typedef float GLdouble;
 	#endif
 #endif
