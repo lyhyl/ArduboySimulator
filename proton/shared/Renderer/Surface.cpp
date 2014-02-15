@@ -722,7 +722,6 @@ void Surface::BlitScaled( float x, float y, CL_Vec2f vScale, eAlignment alignmen
 
 void Surface::BlitScaledWithRotatePoint( float x, float y, CL_Vec2f vScale, eAlignment alignment, unsigned int rgba, float rotation, CL_Vec2f vScreenRotationPt, RenderBatcher *pRenderBatcher)
 {
-	
 	assert(vScale.x != 0 && vScale.y != 0 && "Dahell?");
 
 	CL_Vec2f vStart = CL_Vec2f(x,y);

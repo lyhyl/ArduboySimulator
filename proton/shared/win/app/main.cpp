@@ -19,7 +19,7 @@
 #ifndef RT_WEBOS
 	#include <direct.h>
 #endif
- 
+
 //uncomment below and so you can use alt print-screen to take screenshots easier (no border)
 //#define C_BORDERLESS_WINDOW_MODE_FOR_SCREENSHOT_EASE 
 
