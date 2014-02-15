@@ -15,12 +15,22 @@
 
 #ifndef _CONSOLE
 
-#ifdef C_GL_MODE
+	#ifdef C_GL_MODE
+		#include "Renderer/GL/gl.h"
+	#else
 
-#include "Renderer/GL/gl.h"
+	#endif  // #ifdef C_GL_MODE
+
+#else 
+
+#ifdef RT_USING_OSMESA
+	#include <osmesa.h>
+#endif
+#endif // #ifndef _CONSOLE
+
 
 #ifdef _IRR_STATIC_LIB_
-#include "Irrlicht/source/Irrlicht/glext.h"
+#include "Irrlicht/source/Irrlicht/gles-ext.h"
 #endif
 
 //help with compatibility so I can use the GL ES calls with normal GL
@@ -31,16 +41,6 @@
 #define glColor4x(r,g,b,a) glColor4f( (float(r)/65536.0f),  (float(g)/65536.0f) , (float(b)/65536.0f), (float(a)/65536.0f));
 #define glActiveTexture glActiveTextureARB
 #define glClientActiveTexture glClientActiveTextureARB
-
-#else
-
-#ifdef _IRR_STATIC_LIB_
-#include "Irrlicht/source/Irrlicht/gles-ext.h"
-#endif
-
-#endif  // #ifdef C_GL_MODE
-
-#endif  // #ifndef _CONSOLE
 
 #ifndef PLATFORM_LINUX
 #define PLATFORM_LINUX
