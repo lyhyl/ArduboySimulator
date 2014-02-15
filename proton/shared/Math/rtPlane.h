@@ -5,7 +5,9 @@
 #include "ClanLib-2.0/Sources/API/Core/Math/vec3.h"
 
 #ifdef _CONSOLE
-typedef float GLdouble;
+#ifndef GLdouble
+	typedef float GLdouble;
+	#endif
 #endif
 struct rtPlane
 {
