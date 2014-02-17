@@ -1,6 +1,6 @@
 #include "simple_md5_util.h"
 #include "MiscUtils.h"
-
+using namespace std;
 
 std::string GetMD5CheckSumAsString(std::string inputData)
 {

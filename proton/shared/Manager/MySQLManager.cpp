@@ -7,7 +7,7 @@
 #include <my_global.h>
 #include <mysql.h>
 
-#ifdef _CONSOLE
+#if defined _CONSOLE
 uint32 GetTick();
 #else
 #include "BaseApp.h"

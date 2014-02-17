@@ -131,7 +131,7 @@ std::string GetMacAddress()
 {
 	//TODO
 #ifdef _DEBUG
-	return "02:00:00:00:00:00"; //fake iOS's invalid mac address of iOS 7
+//	return "02:00:00:00:00:00"; //fake iOS's invalid mac address of iOS 7
 #endif
 	return ""; //unimplemented
 }
