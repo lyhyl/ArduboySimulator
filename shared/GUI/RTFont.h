@@ -23,7 +23,7 @@ public:
 
 	virtual ~RTFont();
 	void Draw(float x, float y, string text, unsigned int color=MAKE_RGBA(255,255,255,255));
-	bool Load(string fileName);
+	bool Load(string fileName, bool bAddBasePath = true);
 
 	void MeasureText( rtRectf *pRectOut, const string &text, float scale = 1.0f);
 	void MeasureText( rtRectf *pRectOut, const char *pText, int len, float scale /*= 1.0f*/ );
