@@ -16,7 +16,11 @@
 #ifndef _CONSOLE
 
 	#ifdef C_GL_MODE
+	#ifdef RT_USING_OSMESA
+	#include <osmesa.h>
+	#else
 		#include "Renderer/GL/gl.h"
+		#endif
 	#else
 
 	#endif  // #ifdef C_GL_MODE
