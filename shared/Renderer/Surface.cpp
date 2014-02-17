@@ -388,7 +388,7 @@ bool Surface::LoadRTTexture(byte *pMem)
 			} else
 			{
 
-#if defined(C_GL_MODE) || defined(RT_GLES_ADAPTOR_MODE)
+#if defined(C_GL_MODE) || defined(RT_GLES_ADAPTOR_MODE) || defined(RT_USING_OSMESA)
 
 				assert(!"You cannot use PVR compressed textures in GL mode!");
 #else

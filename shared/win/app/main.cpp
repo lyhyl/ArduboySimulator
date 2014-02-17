@@ -106,6 +106,10 @@ void InitVideoSize()
 	AddVideoMode("Xperia Play Landscape", 854, 480, PLATFORM_ID_ANDROID);
 	AddVideoMode("LG Optimus G Landscape", 1280, 768, PLATFORM_ID_ANDROID);
 	AddVideoMode("Nexus 4 Visible", 1200, 768, PLATFORM_ID_ANDROID);
+	AddVideoMode("Nexus 7", 1200, 800, PLATFORM_ID_ANDROID);
+	AddVideoMode("Nexus 7B Visible", 1200, 800-96, PLATFORM_ID_ANDROID);
+	AddVideoMode("Nexus 7B", 1920, 1200, PLATFORM_ID_ANDROID);
+	AddVideoMode("Nexus 7B Visible", 1920, 1104, PLATFORM_ID_ANDROID);
 
 	//RIM Playbook OS/BBX/BB10/Whatever they name it to next week
 	AddVideoMode("Playbook", 600,1024, PLATFORM_ID_BBX);
@@ -114,7 +118,7 @@ void InitVideoSize()
 	AddVideoMode("Flash", 640, 480, PLATFORM_ID_FLASH);
 
 	//WORK: Change device emulation here
-	string desiredVideoMode = "iPhone Landscape"; //name needs to match one of the ones defined above
+	string desiredVideoMode = "iPad Landscape"; //name needs to match one of the ones defined above
  	SetVideoModeByName(desiredVideoMode);
 	GetBaseApp()->OnPreInitVideo(); //gives the app level code a chance to override any of these parms if it wants to
 }

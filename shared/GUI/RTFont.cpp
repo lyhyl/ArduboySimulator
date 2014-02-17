@@ -669,7 +669,7 @@ string RTFont::GetNextLine(const CL_Vec2f &textBounds, char **pCur, float scale,
 
 			if ((*pCur)[text.length()] == ' ')
 			{
-				lastWrapPoint = text.length(); 
+				lastWrapPoint = (int)text.length(); 
 				
 			}
 		}
@@ -915,5 +915,5 @@ int RTFont::CountCharsThatFitX( float sizeX, const string &text, float scale /*=
 	{
 		return lastGood;
 	}
-	return text.size(); //they all fit
+	return (int)text.size(); //they all fit
 }

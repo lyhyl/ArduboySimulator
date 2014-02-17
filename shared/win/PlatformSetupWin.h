@@ -65,7 +65,25 @@ typedef GLfloat GLdouble;
 #define glClipPlane glClipPlanef
 #endif
 
+#else
+//CONSOLE mode
+#ifdef RT_USING_OSMESA 
+//ogl in console mode... useful for testing linux headless glrendering in windows
+#include "Renderer/GL/gl.h"
+
+	//help with compatibility so I can use the GL ES calls with normal GL
+
+	#define glTexParameterx glTexParameteri
+	#define glFrustumf glFrustum
+	#define glOrthof glOrtho
+	#define glColor4x(r,g,b,a) glColor4f( (float(r)/65536.0f),  (float(g)/65536.0f) , (float(b)/65536.0f), (float(a)/65536.0f));
+	#define glActiveTexture glActiveTextureARB
+	#define glClientActiveTexture glClientActiveTextureARB
+
 #endif
+
+#endif
+
 #ifndef M_PI
 #define M_PI 3.141592f
 #endif
