@@ -57,13 +57,13 @@ return;
 	}
 }
 
-bool RTFont::Load( string fileName )
+bool RTFont::Load( string fileName, bool bAddBasePath)
 {
 	m_kerningMap.clear();
 	m_chars.clear();
 	m_fontStates.clear();
 
-	FileInstance f(fileName);
+	FileInstance f(fileName, bAddBasePath);
 	if (!f.IsLoaded())
 	{
 		LogMsg("Unable to load font %s", fileName.c_str());
