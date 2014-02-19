@@ -1003,6 +1003,38 @@ void SoftSurface::BlitFromScreen(int dstX, int dstY, int srcX /*= 0*/, int srcY 
 	SetUsesAlpha(false);
 }
 
+
+//Noticed a bug and fixed it, but afraid to change the old one in case a game relied upon the incorrect behavior
+void SoftSurface::BlitFromScreenFixed(int dstX, int dstY, int srcX /*= 0*/, int srcY /*= 0*/, int srcWidth /*= 0*/, int srcHeight /*= 0*/)
+{
+	//LogMsg("Blitting from screen");
+
+	SoftSurface temp;
+
+	if (GetBaseApp()->GetManualRotationMode() && InLandscapeGUIMode())
+	{
+		swap(srcWidth, srcHeight);
+	}
+
+	if (!temp.Init(srcWidth, srcHeight, SURFACE_RGBA))
+	{
+		assert(!"Low mem");
+		return;
+	}
+
+	//fix
+	srcY = GetScreenSizeY()-srcHeight;
+
+	glReadPixels(srcX, srcY, srcWidth, srcHeight, GL_RGBA, GL_UNSIGNED_BYTE, temp.GetPixelData());
+	temp.SetUsesAlpha(false);
+	CHECK_GL_ERROR();
+	//temp.FillColor(glColorBytes(255,0,0,255));
+
+	Blit(dstX, (GetHeight()-srcHeight)-dstY, &temp);
+	//FlipY();
+	SetUsesAlpha(false);
+}
+
 void SoftSurface::Blit( int dstX, int dstY, SoftSurface *pSrc, int srcX /*= 0*/, int srcY /*= 0*/, int srcWidth /*= 0*/, int srcHeight /*= 0*/ )
 {
 	if (srcWidth == 0) srcWidth = pSrc->GetWidth();
