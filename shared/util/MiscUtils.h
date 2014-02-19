@@ -111,4 +111,6 @@ bool isOrdinaryChar(char c, bool bStrict);
 int GiveOrTake(int baseNum, int modAmount); //Let's you slightly randomize a #. (5, 2) would return between 3 and 7. (5, give or take 2)
 bool DateIsOlder(int month, int day, int year, int hour, int min, int sec, int monthB, int dayB, int yearB, int hourB, int minB, int secB);
 std::string HexToString(std::string hexString);
+int PopFirstParmStringAsInt(std::string *lineInOut, const std::string delimiter);
+float PopFirstParmStringAsFloat(std::string *lineInOut, const std::string delimiter);
 #endif
