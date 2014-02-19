@@ -324,6 +324,52 @@ string PopFirstParmString(string *lineInOut, const string delimiter)
 	return pieces[0];
 }
 
+
+int PopFirstParmStringAsInt(string *lineInOut, const string delimiter)
+{
+	vector<string> pieces = StringTokenize(*lineInOut, delimiter);
+
+	*lineInOut = "";
+
+	if (pieces.size() == 0)
+		return 0;
+
+
+	for (uint32 i=1; i < pieces.size(); i++)
+	{
+		if ( !lineInOut->empty())
+		{
+			*lineInOut += delimiter;
+		}
+		*lineInOut += pieces[i];
+	}
+
+	return atoi(pieces[0].c_str());
+}
+
+
+float PopFirstParmStringAsFloat(string *lineInOut, const string delimiter)
+{
+	vector<string> pieces = StringTokenize(*lineInOut, delimiter);
+
+	*lineInOut = "";
+
+	if (pieces.size() == 0)
+		return 0;
+
+
+	for (uint32 i=1; i < pieces.size(); i++)
+	{
+		if ( !lineInOut->empty())
+		{
+			*lineInOut += delimiter;
+		}
+		*lineInOut += pieces[i];
+	}
+
+	return (float)atof(pieces[0].c_str());
+}
+
 string PeekFirstParmString(string *lineInOut, const string delimiter)
 {
 	vector<string> pieces = StringTokenize(*lineInOut, delimiter);
