@@ -118,7 +118,8 @@ public:
 	void SetModified(bool bNew) {m_bModified = bNew;}
 	void FlipY();
 	void Rotate90Degrees(bool bRotateLeft);
-	void BlitFromScreen(int dstX, int dstY, int srcX /*= 0*/, int srcY /*= 0*/, int srcWidth /*= 0*/, int srcHeight /*= 0*/);
+	void BlitFromScreen(int dstX, int dstY, int srcX /*= 0*/, int srcY /*= 0*/, int srcWidth /*= 0*/, int srcHeight /*= 0*/); //deprecated
+	void BlitFromScreenFixed(int dstX, int dstY, int srcX /*= 0*/, int srcY /*= 0*/, int srcWidth /*= 0*/, int srcHeight /*= 0*/);
 	void WriteRawDataOut(string fileName);
 	void WriteBMPOut(string fileName);
 	void FillAlphaBit(unsigned char alpha);
@@ -165,6 +166,7 @@ private:
 	bool LoadRTTexture(byte *pMem);
 	void BlitRGBFromRGBA( int dstX, int dstY, SoftSurface *pSrc, int srcX /*= 0*/, int srcY /*= 0*/, int srcWidth /*= 0*/, int srcHeight /*= 0*/ );
 	void BlitRGBFromRGB( int dstX, int dstY, SoftSurface *pSrc, int srcX /*= 0*/, int srcY /*= 0*/, int srcWidth /*= 0*/, int srcHeight /*= 0*/ );
+
 	eSurfaceType m_surfaceType;
 	int m_width, m_height;
 	byte *m_pPixels;
