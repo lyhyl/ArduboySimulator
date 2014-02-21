@@ -1008,6 +1008,21 @@ void SoftSurface::BlitFromScreen(int dstX, int dstY, int srcX /*= 0*/, int srcY 
 void SoftSurface::BlitFromScreenFixed(int dstX, int dstY, int srcX /*= 0*/, int srcY /*= 0*/, int srcWidth /*= 0*/, int srcHeight /*= 0*/)
 {
 	//LogMsg("Blitting from screen");
+	if (dstX >= GetWidth() || dstY >= GetHeight()) return;
+
+	if (dstX+srcWidth > GetWidth())
+	{
+		//too much to blit
+		srcWidth = GetWidth()-dstX;
+	}
+	if (dstY+srcHeight > GetHeight())
+	{
+		//too much to blit
+		srcHeight = GetHeight()-dstY;
+	}
+
+
+
 
 	SoftSurface temp;
 
