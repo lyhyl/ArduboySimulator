@@ -1262,6 +1262,7 @@ void SoftSurface::WriteBMPOut( string fileName )
 	bmpImageInfo.Width = m_width;
 	bmpImageInfo.Height = m_height;
 	bmpImageInfo.BitCount = m_bytesPerPixel*8;
+	bmpImageInfo.Planes = 1;
 	bmpImageInfo.Compression = BMP_COMPRESSION_NONE;
 	
 	fwrite(&bmpImageInfo, sizeof(BMPImageHeader), 1, fp);
