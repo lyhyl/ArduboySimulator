@@ -114,6 +114,7 @@ public:
 	string DumpAsString();
 	void Print(); //same as above, but sends to LogMsg()
 	void DeleteAll();
+	int GetVarCount() {return (int) m_data.size();}
 
 	//to get each var in our db manually, do this:
 	void ResetNext(); //call before starting a search
