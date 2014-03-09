@@ -617,6 +617,35 @@ void MemorySerialize( std::string &num, uint8 *pMem, int &offsetInOut, bool bWri
 }
 
 
+void MemorySerializeStringLarge( std::string &num, uint8 *pMem, int &offsetInOut, bool bWriteToMem)
+{
+	uint32 len;
+	
+	if (bWriteToMem)
+	{
+		len = (uint32) num.length();
+
+		memcpy(&pMem[offsetInOut], &len, sizeof(len));
+		offsetInOut += sizeof(len);
+
+		//now copy the actual content
+		memcpy(&pMem[offsetInOut], num.c_str(), len);
+
+	} else
+	{
+		memcpy(&len, &pMem[offsetInOut], sizeof(len));
+		offsetInOut += sizeof(len);
+
+		num.resize(len);
+
+		//trust me.
+		memcpy((void*)num.c_str(), &pMem[offsetInOut], len);
+	}
+	offsetInOut += len;
+
+}
+
+
 void MemorySerializeRaw(uint8* pVar, uint8 *pMem, int sizeBytes, int &offsetInOut, bool bWriteToMem )
 {
 	if (sizeBytes == 0) return;

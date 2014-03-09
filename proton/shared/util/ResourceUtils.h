@@ -72,5 +72,5 @@ void MemorySerialize( myType &num, uint8 *pMem, int &offsetInOut, bool bWriteToM
 //specialized version, not done as a template for compatibility with older compilers
 void MemorySerialize( std::string &num, uint8 *pMem, int &offsetInOut, bool bWriteToMem);
 void MemorySerializeRaw(uint8* pVar, uint8 *pMem, int sizeBytes, int &offsetInOut, bool bWriteToMem ); //for pure data read/writes
-
+void MemorySerializeStringLarge( std::string &num, uint8 *pMem, int &offsetInOut, bool bWriteToMem);
 #endif // ResourceUtils_h__
