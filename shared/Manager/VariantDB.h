@@ -116,6 +116,7 @@ public:
 	void DeleteAll();
 	int GetVarCount() {return (int) m_data.size();}
 
+	void Clear();
 	//to get each var in our db manually, do this:
 	void ResetNext(); //call before starting a search
 	Variant * GetNext(string &keyOut); //call this in a loop until it returns NULL to signal the finish, callResetNext() before using!

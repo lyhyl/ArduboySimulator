@@ -430,3 +430,10 @@ int VariantDB::AddVarPointersToVector( vector<pair<const string*, Variant*> > *v
 
 	return count;
 }
+
+void VariantDB::Clear()
+{
+	m_data.clear();
+	m_functionData.clear();
+	ResetNext();
+}
