@@ -50,6 +50,7 @@ bool TextScanner::SetupFromMemoryAddress(const char *pCharArray)
 	return true;
 }
 
+
 std::string TextScanner::GetParmString( string label, int index,  string token)
 {
 	if (m_lines.empty())
@@ -256,4 +257,17 @@ void TextScanner::AppendToFile( string fileName, bool bAddBasePath /*= true*/ )
 
 	fclose(fp);
 //	
+}
+
+bool TextScanner::AppendFromMemoryAddress(const char *pCharArray)
+{
+	vector<string> tempVec= StringTokenize(pCharArray, "\n");
+
+	for (unsigned int i=0; i < tempVec.size(); i++)
+	{
+		StringReplace("\r", "", tempVec[i]);
+		m_lines.push_back(tempVec[i]);
+
+	}
+	return true;
 }

@@ -73,6 +73,7 @@ public:
 	void DumpToLog(); //sends the entire contents to the log via LogMsg(), helpful when debugging
 	vector<string> TokenizeLine(int lineNum, const string &theDelimiter = "|");
 	void AppendToFile(string fileName, bool bAddBasePath = true);
+	bool AppendFromMemoryAddress(const char *pCharArray);
 	vector<string> m_lines;
 
 private:
