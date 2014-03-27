@@ -134,6 +134,18 @@ string TextScanner::GetAll()
 	return s;
 }
 
+string TextScanner::GetAllRaw()
+{
+	string s;
+
+	for (unsigned int i=0; i < m_lines.size(); i++)
+	{
+		s +=m_lines[i]+"\n";
+	}
+
+	return s;
+}
+
 std::string TextScanner::GetParmStringFromLine( int lineNum, int index, string token /*= "|"*/ )
 {
 	assert(lineNum >= 0 && (uint32)lineNum < m_lines.size());
@@ -269,5 +281,18 @@ bool TextScanner::AppendFromMemoryAddress(const char *pCharArray)
 		m_lines.push_back(tempVec[i]);
 
 	}
+	return true;
+}
+
+bool TextScanner::AppendFromString( const string lines )
+{
+	vector<string> tempVec= StringTokenize(lines, "\n");
+
+	for (unsigned int i=0; i < tempVec.size(); i++)
+	{
+		StringReplace("\r", "", tempVec[i]);
+		m_lines.push_back(tempVec[i]);
+	}
+
 	return true;
 }
