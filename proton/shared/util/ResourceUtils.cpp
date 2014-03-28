@@ -236,6 +236,7 @@ bool CompressFile(string fName)
 	FILE *fp = fopen(finalFilename.c_str(), "wb");
 	fwrite(&header, sizeof(rtpack_header), 1, fp);
 	fwrite(pCompressedFile, compressedSize, 1, fp);
+	SAFE_DELETE_ARRAY(pCompressedFile);
 	fclose(fp);
 
 	int totalBytes = sizeof(rtpack_header) + compressedSize;
@@ -260,7 +261,7 @@ rtpack_header BuildRTPackHeader(int size, int compressedSize)
 #ifndef C_NO_ZLIB
 
 
-//you must SAFE_FREE what it returns
+//you must SAFE_DELETE_ARRAY what it returns
 byte * zlibDeflateToMemory(byte *pInput, int sizeBytes, int *pSizeCompressedOut)
 {
 	z_stream strm;
@@ -295,7 +296,7 @@ byte * zlibDeflateToMemory(byte *pInput, int sizeBytes, int *pSizeCompressedOut)
 
 }
 
-//you must SAFE_FREE what it returns
+//you must SAFE_DELETE_ARRAY what it returns
 byte * zLibInflateToMemory(byte *pInput, unsigned int compressedSize, unsigned int decompressedSize)
 {
 	int ret;
