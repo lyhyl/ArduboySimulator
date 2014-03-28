@@ -25,8 +25,8 @@ bool IsAPackedFile(byte *pFile);
 bool IsARTFile(byte *pFile); //not full proof, but helps with catching errors
 rtpack_header BuildRTPackHeader(int size, int compressedSize);
 
-byte * zlibDeflateToMemory(byte *pInput, int sizeBytes, int *pSizeCompressedOut);
-byte * zLibInflateToMemory(byte *pInput, unsigned int compressedSize, unsigned int decompressedSize);
+byte * zlibDeflateToMemory(byte *pInput, int sizeBytes, int *pSizeCompressedOut); //you must SAFE_DELETE_ARRAY what it returns
+byte * zLibInflateToMemory(byte *pInput, unsigned int compressedSize, unsigned int decompressedSize); //you must SAFE_DELETE_ARRAY what it returns
 
 //some helpers with file handling
 bool LoadFromFile(std::string &str, FILE *fp);
