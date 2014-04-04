@@ -50,6 +50,11 @@ bool TextScanner::SetupFromMemoryAddress(const char *pCharArray)
 	return true;
 }
 
+bool TextScanner::SetupFromMemoryAddressRaw( const char *pCharArray, int size )
+{
+	m_lines = StringTokenize(pCharArray, "\n");
+	return true;
+}
 
 std::string TextScanner::GetParmString( string label, int index,  string token)
 {
@@ -291,6 +296,18 @@ bool TextScanner::AppendFromString( const string lines )
 	for (unsigned int i=0; i < tempVec.size(); i++)
 	{
 		StringReplace("\r", "", tempVec[i]);
+		m_lines.push_back(tempVec[i]);
+	}
+
+	return true;
+}
+
+bool TextScanner::AppendFromMemoryAddressRaw( const char *pCharArray, int size )
+{
+	vector<string> tempVec= StringTokenize(pCharArray, "\n");
+
+	for (unsigned int i=0; i < tempVec.size(); i++)
+	{
 		m_lines.push_back(tempVec[i]);
 	}
 

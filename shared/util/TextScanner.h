@@ -66,6 +66,7 @@ public:
 	void Replace( const string &thisStr, const string &thatStr );
 	bool IsLoaded() {return !m_lines.empty();}
 	bool SetupFromMemoryAddress(const char *pCharArray);
+	bool SetupFromMemoryAddressRaw( const char *pCharArray, int size );
 	void DeleteLine(int lineNum);
 	void StripLeadingSpaces();
 	string GetAll(); //it does trim whitespace
@@ -75,6 +76,7 @@ public:
 	vector<string> TokenizeLine(int lineNum, const string &theDelimiter = "|");
 	void AppendToFile(string fileName, bool bAddBasePath = true);
 	bool AppendFromMemoryAddress(const char *pCharArray);
+	bool AppendFromMemoryAddressRaw( const char *pCharArray, int size );
 	bool AppendFromString(const string lines);
 	vector<string> m_lines;
 
