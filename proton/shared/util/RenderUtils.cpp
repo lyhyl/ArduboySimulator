@@ -88,6 +88,7 @@ int GetDevicePixelsPerInchDiagonal()
 			if (IsPlaybookSize) cachedPixelsPerInch = 169;
 			if (IsNexus7B || IsNexus7BActual) cachedPixelsPerInch = 273;
 			if (IsNexus7) cachedPixelsPerInch = 216;
+			if (IsNexus5Actual) cachedPixelsPerInch = 445;
 			if (cachedPixelsPerInch == 0)
 			{
 				//we really have no clue

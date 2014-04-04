@@ -110,6 +110,7 @@ void InitVideoSize()
 	AddVideoMode("Nexus 7B Visible", 1200, 800-96, PLATFORM_ID_ANDROID);
 	AddVideoMode("Nexus 7B", 1920, 1200, PLATFORM_ID_ANDROID);
 	AddVideoMode("Nexus 7B Visible", 1920, 1104, PLATFORM_ID_ANDROID);
+	AddVideoMode("Nexus 5 Visible Landscape", 1794, 1080, PLATFORM_ID_ANDROID); //also Experia Z
 
 	//RIM Playbook OS/BBX/BB10/Whatever they name it to next week
 	AddVideoMode("Playbook", 600,1024, PLATFORM_ID_BBX);
@@ -118,7 +119,7 @@ void InitVideoSize()
 	AddVideoMode("Flash", 640, 480, PLATFORM_ID_FLASH);
 
 	//WORK: Change device emulation here
-	string desiredVideoMode = "iPad Landscape"; //name needs to match one of the ones defined above
+	string desiredVideoMode = "Nexus 5 Visible Landscape"; //name needs to match one of the ones defined above
  	SetVideoModeByName(desiredVideoMode);
 	GetBaseApp()->OnPreInitVideo(); //gives the app level code a chance to override any of these parms if it wants to
 }
