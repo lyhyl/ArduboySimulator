@@ -618,7 +618,7 @@ void MemorySerialize( std::string &num, uint8 *pMem, int &offsetInOut, bool bWri
 }
 
 
-void MemorySerializeStringLarge( std::string &num, uint8 *pMem, int &offsetInOut, bool bWriteToMem)
+bool MemorySerializeStringLarge( std::string &num, uint8 *pMem, int &offsetInOut, bool bWriteToMem, uint32 maxBytesInPacket)
 {
 	uint32 len;
 	
@@ -626,9 +626,14 @@ void MemorySerializeStringLarge( std::string &num, uint8 *pMem, int &offsetInOut
 	{
 		len = (uint32) num.length();
 
+		if (maxBytesInPacket != 0 && len > (maxBytesInPacket-4))
+		{
+			//appears to be incorrect data, this string is bigger than the max bytes in our packet
+			return false;
+		}
 		memcpy(&pMem[offsetInOut], &len, sizeof(len));
 		offsetInOut += sizeof(len);
-
+ 
 		//now copy the actual content
 		memcpy(&pMem[offsetInOut], num.c_str(), len);
 
@@ -644,6 +649,7 @@ void MemorySerializeStringLarge( std::string &num, uint8 *pMem, int &offsetInOut
 	}
 	offsetInOut += len;
 
+	return true;
 }
 
 
