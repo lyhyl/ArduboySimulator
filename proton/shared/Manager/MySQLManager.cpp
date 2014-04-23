@@ -58,14 +58,19 @@ bool MySQLManager::DoesTableExist(string tableName, bool bShowErrors)
 	assert(m_conn);
 	MYSQL_RES *result = NULL;
 
-	bool bSuccess = Query("SELECT COUNT(*) FROM "+tableName, bShowErrors);
+	//old way
+	//bool bSuccess = Query("SELECT COUNT(*) FROM "+tableName, bShowErrors);
+	bool bSuccess = Query("SHOW TABLES LIKE '"+tableName+"'", bShowErrors);
 
 	if (!bSuccess) return false;
 
 	result = mysql_store_result(m_conn);
+	
 	int fields = mysql_num_fields(result);
+	int rows = (int)mysql_num_rows(result);
 	mysql_free_result(result);
-	return bSuccess;
+	
+	return rows > 0;
 }
 
 bool MySQLManager::DoResultsExist()
