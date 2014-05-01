@@ -615,12 +615,13 @@ void MemorySerialize( std::string &num, uint8 *pMem, int &offsetInOut, bool bWri
 	offsetInOut += len;
 }
 
-void MemorySerializeStringEncrypted( std::string &num, uint8 *pMem, int &offsetInOut, bool bWriteToMem,int cryptID)
+void MemorySerializeStringEncrypted( std::string &num, uint8 *pMem, int &offsetInOut, bool bWriteToMem,int cryptID,char *secretCode)
 {
 	uint16 len;
-	char secretCode[]="PBG892FXX982ABC*";
+	int codeLen=(int)strlen(secretCode);
+	assert(codeLen>0 && codeLen<256);
 
-	cryptID=cryptID%16;	// cryptID is which position in secretCode you start at
+	cryptID=cryptID%codeLen;	// cryptID is which position in secretCode you start at
 
 	assert(num.length() < 1024*64);
 
@@ -637,7 +638,7 @@ void MemorySerializeStringEncrypted( std::string &num, uint8 *pMem, int &offsetI
 		{
 			uint8 b=(uint8)num.c_str()[i];
 			b=b^secretCode[cryptID++];
-			if(cryptID>15)
+			if(cryptID>=codeLen)
 				cryptID=0;
 			pMem[offsetInOut++]=b;
 		}
@@ -653,7 +654,7 @@ void MemorySerializeStringEncrypted( std::string &num, uint8 *pMem, int &offsetI
 		{
 			uint8 b=pMem[offsetInOut++];
 			num[i]=b^secretCode[cryptID++];
-			if(cryptID>15)
+			if(cryptID>=codeLen)
 				cryptID=0;
 		}
 	}
