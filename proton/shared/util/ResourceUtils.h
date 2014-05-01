@@ -73,7 +73,7 @@ void MemorySerialize( myType &num, uint8 *pMem, int &offsetInOut, bool bWriteToM
 void MemorySerialize( std::string &num, uint8 *pMem, int &offsetInOut, bool bWriteToMem);
 void MemorySerializeRaw(uint8* pVar, uint8 *pMem, int sizeBytes, int &offsetInOut, bool bWriteToMem ); //for pure data read/writes
 bool MemorySerializeStringLarge( std::string &num, uint8 *pMem, int &offsetInOut, bool bWriteToMem, uint32 maxBytesInPacket = 0); //like above but uses an int32 for length instead of int16
-void MemorySerializeStringEncrypted( std::string &num, uint8 *pMem, int &offsetInOut, bool bWriteToMem,int cryptID);	
+void MemorySerializeStringEncrypted( std::string &num, uint8 *pMem, int &offsetInOut, bool bWriteToMem,int cryptID, char *secretCode);	
 // normal string serialize, but it encrypts/decrypts with a simple XOR encryption - as long as you use the same cryptID when loading as you did when saving
 #endif // ResourceUtils_h__
  
