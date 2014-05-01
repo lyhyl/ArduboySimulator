@@ -586,7 +586,6 @@ bool StringFromEndMatches(const std::string &line, const std::string textToMatch
 	return false;
 }
 
-
 void MemorySerialize( std::string &num, uint8 *pMem, int &offsetInOut, bool bWriteToMem)
 {
 	uint16 len;
@@ -614,9 +613,51 @@ void MemorySerialize( std::string &num, uint8 *pMem, int &offsetInOut, bool bWri
 		memcpy((void*)num.c_str(), &pMem[offsetInOut], len);
 	}
 	offsetInOut += len;
-
 }
 
+void MemorySerializeStringEncrypted( std::string &num, uint8 *pMem, int &offsetInOut, bool bWriteToMem,int cryptID)
+{
+	uint16 len;
+	char secretCode[]="PBG892FXX982ABC*";
+
+	cryptID=cryptID%16;	// cryptID is which position in secretCode you start at
+
+	assert(num.length() < 1024*64);
+
+	if (bWriteToMem)
+	{
+		len = (uint16) num.length();
+
+		//copy how the len, up to 64k
+		memcpy(&pMem[offsetInOut], &len, sizeof(len));
+		offsetInOut += sizeof(len);
+
+		//now copy the actual content, encrypted
+		for(int i=0;i<len;i++)
+		{
+			uint8 b=(uint8)num.c_str()[i];
+			b=b^secretCode[cryptID++];
+			if(cryptID>15)
+				cryptID=0;
+			pMem[offsetInOut++]=b;
+		}
+	} 
+	else
+	{
+		memcpy(&len, &pMem[offsetInOut], sizeof(len));
+		offsetInOut += sizeof(len);
+
+		num.resize(len);
+
+		for(int i=0;i<len;i++)
+		{
+			uint8 b=pMem[offsetInOut++];
+			num[i]=b^secretCode[cryptID++];
+			if(cryptID>15)
+				cryptID=0;
+		}
+	}
+}
 
 bool MemorySerializeStringLarge( std::string &num, uint8 *pMem, int &offsetInOut, bool bWriteToMem, uint32 maxBytesInPacket)
 {
