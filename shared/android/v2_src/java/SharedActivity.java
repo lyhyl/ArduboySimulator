@@ -84,13 +84,11 @@ import android.widget.RelativeLayout;
 
 //#if defined(RT_TAPJOY_SUPPORT)
 	
-//tapjoy publisher V9.01 supported, the new .jar format, not the old raw source version
+//tapjoy publisher V10.02 supported, the new .jar format, not the old raw source version
 import com.tapjoy.TapjoyAwardPointsNotifier;
 import com.tapjoy.TapjoyConnect;
 import com.tapjoy.TapjoyConnectFlag;
 import com.tapjoy.TapjoyConstants;
-import com.tapjoy.TapjoyDailyRewardAdNotifier;
-import com.tapjoy.TapjoyDailyRewardAdStatus;
 import com.tapjoy.TapjoyDisplayAdNotifier;
 import com.tapjoy.TapjoyEarnedPointsNotifier;
 import com.tapjoy.TapjoyFullScreenAdNotifier;
@@ -1973,8 +1971,8 @@ class AppRenderer implements GLSurfaceView.Renderer
 
 				case MESSAGE_TAPJOY_GET_AD: 
 //#if defined(RT_TAPJOY_SUPPORT)
-						Log.v(app.PackageName, "Getting tapjoy ad");
-						TapjoyConnect.getTapjoyConnectInstance().setBannerAdSize(app.tapBannerSize);
+						Log.v(app.PackageName, "banner ads no longer supported in TJ 10");
+						//TapjoyConnect.getTapjoyConnectInstance().setBannerAdSize(app.tapBannerSize);
 						TapjoyConnect.getTapjoyConnectInstance().getDisplayAd(app);
 //#else
 						Log.v(app.PackageName, "ERROR: RT_TAPJOY_SUPPORT isn't defined in Java project, you can't use it!");
@@ -2121,8 +2119,8 @@ class AppRenderer implements GLSurfaceView.Renderer
 				case MESSAGE_TAPJOY_SHOW_AD:
 					
 					app.tapjoy_ad_show = (int)nativeGetLastOSMessageX();
-					Log.v(app.PackageName, "Showing tapjoy ad, parm is: " + app.tapjoy_ad_show);
-					TapjoyConnect.getTapjoyConnectInstance().enableBannerAdAutoRefresh(app.tapjoy_ad_show != 0);
+					Log.v(app.PackageName, "Tapjoy banner ads no longer supported in SDK 10, parm is: " + app.tapjoy_ad_show);
+					//TapjoyConnect.getTapjoyConnectInstance().enableBannerAdAutoRefresh(app.tapjoy_ad_show != 0);
 				
 					app.update_display_ad = true;
 					// We must use a handler since we cannot update UI elements from a different thread.
