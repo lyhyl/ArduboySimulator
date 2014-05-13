@@ -630,6 +630,9 @@ public:
 	}
 };
 
+#ifndef BTCOMPARE_CRAP
+#define BTCOMPARE_CRAP
+//Fix so .h files won't screw up the unity build -Seth
 
 //! Compairison of transformation objects
 SIMD_FORCE_INLINE bool btCompareTransformsEqual(const btTransform & t1,const btTransform & t2)
@@ -641,7 +644,7 @@ SIMD_FORCE_INLINE bool btCompareTransformsEqual(const btTransform & t1,const btT
 	if(!(t1.getBasis().getRow(2) == t2.getBasis().getRow(2)) ) return false;
 	return true;
 }
-
+#endif
 
 
 #endif // GIM_BOX_COLLISION_H_INCLUDED
