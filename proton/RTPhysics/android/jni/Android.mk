@@ -2,7 +2,7 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-LOCAL_MODULE := RTPhysics
+LOCAL_MODULE := rtphysics
 SHARED := ../../../shared
 APP := ../../source
 APPCOMP := ../../source/Component
@@ -39,7 +39,7 @@ LOCAL_C_INCLUDES := $(LOCAL_PATH)/$(SHARED) $(LOCAL_PATH)/$(SHARED)/Irrlicht/inc
                 
 
 LOCAL_SRC_FILES := \
-$(SHARED)/PlatformSetup.cpp $(SHARED)/android/AndroidUtils.cpp $(SHARED)/android/AndroidApp.cpp $(SHARED)/Audio/AudioManager.cpp $(SHARED)/Audio/AudioManagerAndroid.cpp\
+$(SHARED)/PlatformSetup.cpp $(SHARED)/android/AndroidUtils.cpp ../temp_final_cpp_src/AndroidApp.cpp $(SHARED)/Audio/AudioManager.cpp $(SHARED)/Audio/AudioManagerAndroid.cpp\
 $(CLANMATH)/angle.cpp $(CLANMATH)/mat3.cpp $(CLANMATH)/mat4.cpp $(CLANMATH)/rect.cpp $(CLANMATH)/vec2.cpp $(CLANMATH)/vec3.cpp $(CLANMATH)/vec4.cpp \
 $(SHARED)/Entity/Entity.cpp $(SHARED)/Entity/Component.cpp $(SHARED)/GUI/RTFont.cpp $(SHARED)/Manager/Console.cpp \
 $(SHARED)/Manager/GameTimer.cpp $(SHARED)/Manager/MessageManager.cpp $(SHARED)/Manager/ResourceManager.cpp $(SHARED)/Manager/VariantDB.cpp $(SHARED)/Math/rtPlane.cpp \
@@ -58,7 +58,7 @@ $(COMPPATH)/HTTPComponent.cpp $(COMPPATH)/InputTextRenderComponent.cpp $(COMPPAT
 $(COMPPATH)/RectRenderComponent.cpp $(COMPPATH)/ScrollBarRenderComponent.cpp $(COMPPATH)/ScrollComponent.cpp $(COMPPATH)/TapSequenceDetectComponent.cpp $(COMPPATH)/TextBoxRenderComponent.cpp \
 $(COMPPATH)/TextRenderComponent.cpp $(COMPPATH)/TouchStripComponent.cpp $(COMPPATH)/TrailRenderComponent.cpp $(COMPPATH)/TyperComponent.cpp $(COMPPATH)/UnderlineRenderComponent.cpp \
 $(COMPPATH)/TouchHandlerComponent.cpp $(COMPPATH)/SelectButtonWithCustomInputComponent.cpp $(COMPPATH)/CustomInputComponent.cpp $(COMPPATH)/SliderComponent.cpp $(COMPPATH)/EmitVirtualKeyComponent.cpp\
-$(COMPPATH)/FilterComponent.cpp\
+$(COMPPATH)/FilterComponent.cpp $(COMPPATH)/RenderScissorComponent.cpp \
 \
 \
 $(SHARED)/Irrlicht/IrrlichtManager.cpp $(IRRSRC)/UnityBuild_IrrlichtMain.cpp \
@@ -89,129 +89,9 @@ $(IRRSRC)/CSkyBoxSceneNode.cpp $(IRRSRC)/CSkyDomeSceneNode.cpp $(IRRSRC)/CSphere
 $(IRRSRC)/COGLESDriver.cpp $(IRRSRC)/COGLESExtensionHandler.cpp $(IRRSRC)/COGLESTexture.cpp $(IRRSRC)/CNullDriver.cpp \
 \
 \
-    $(BULLET)/BulletCollision/BroadphaseCollision/btAxisSweep3.cpp \
-	$(BULLET)/BulletCollision/BroadphaseCollision/btBroadphaseProxy.cpp \
-	$(BULLET)/BulletCollision/BroadphaseCollision/btCollisionAlgorithm.cpp \
-	$(BULLET)/BulletCollision/BroadphaseCollision/btDbvt.cpp \
-	$(BULLET)/BulletCollision/BroadphaseCollision/btDbvtBroadphase.cpp \
-	$(BULLET)/BulletCollision/BroadphaseCollision/btDispatcher.cpp \
-	$(BULLET)/BulletCollision/BroadphaseCollision/btMultiSapBroadphase.cpp \
-	$(BULLET)/BulletCollision/BroadphaseCollision/btOverlappingPairCache.cpp \
-	$(BULLET)/BulletCollision/BroadphaseCollision/btQuantizedBvh.cpp \
-	$(BULLET)/BulletCollision/BroadphaseCollision/btSimpleBroadphase.cpp \
-	$(BULLET)/BulletCollision/CollisionDispatch/btActivatingCollisionAlgorithm.cpp \
-	$(BULLET)/BulletCollision/CollisionDispatch/btBoxBoxCollisionAlgorithm.cpp \
-	$(BULLET)/BulletCollision/CollisionDispatch/btBox2dBox2dCollisionAlgorithm.cpp \
-	$(BULLET)/BulletCollision/CollisionDispatch/btBoxBoxDetector.cpp \
-	$(BULLET)/BulletCollision/CollisionDispatch/btCollisionDispatcher.cpp \
-	$(BULLET)/BulletCollision/CollisionDispatch/btCollisionObject.cpp \
-	$(BULLET)/BulletCollision/CollisionDispatch/btCollisionWorld.cpp \
-	$(BULLET)/BulletCollision/CollisionDispatch/btCompoundCollisionAlgorithm.cpp \
-	$(BULLET)/BulletCollision/CollisionDispatch/btConvexConcaveCollisionAlgorithm.cpp \
-	$(BULLET)/BulletCollision/CollisionDispatch/btConvexConvexAlgorithm.cpp \
-	$(BULLET)/BulletCollision/CollisionDispatch/btConvexPlaneCollisionAlgorithm.cpp \
-	$(BULLET)/BulletCollision/CollisionDispatch/btConvex2dConvex2dAlgorithm.cpp \
-	$(BULLET)/BulletCollision/CollisionDispatch/btDefaultCollisionConfiguration.cpp \
-	$(BULLET)/BulletCollision/CollisionDispatch/btEmptyCollisionAlgorithm.cpp \
-	$(BULLET)/BulletCollision/CollisionDispatch/btGhostObject.cpp \
-	$(BULLET)/BulletCollision/CollisionDispatch/btInternalEdgeUtility.cpp \
-	$(BULLET)/BulletCollision/CollisionDispatch/btManifoldResult.cpp \
-	$(BULLET)/BulletCollision/CollisionDispatch/btSimulationIslandManager.cpp \
-	$(BULLET)/BulletCollision/CollisionDispatch/btSphereBoxCollisionAlgorithm.cpp \
-	$(BULLET)/BulletCollision/CollisionDispatch/btSphereSphereCollisionAlgorithm.cpp \
-	$(BULLET)/BulletCollision/CollisionDispatch/btSphereTriangleCollisionAlgorithm.cpp \
-	$(BULLET)/BulletCollision/CollisionDispatch/btUnionFind.cpp \
-	$(BULLET)/BulletCollision/CollisionDispatch/SphereTriangleDetector.cpp \
-	$(BULLET)/BulletCollision/CollisionShapes/btBoxShape.cpp \
-	$(BULLET)/BulletCollision/CollisionShapes/btBox2dShape.cpp \
-	$(BULLET)/BulletCollision/CollisionShapes/btBvhTriangleMeshShape.cpp \
-	$(BULLET)/BulletCollision/CollisionShapes/btCapsuleShape.cpp \
-	$(BULLET)/BulletCollision/CollisionShapes/btCollisionShape.cpp \
-	$(BULLET)/BulletCollision/CollisionShapes/btCompoundShape.cpp \
-	$(BULLET)/BulletCollision/CollisionShapes/btConcaveShape.cpp \
-	$(BULLET)/BulletCollision/CollisionShapes/btConeShape.cpp \
-	$(BULLET)/BulletCollision/CollisionShapes/btConvexHullShape.cpp \
-	$(BULLET)/BulletCollision/CollisionShapes/btConvexInternalShape.cpp \
-	$(BULLET)/BulletCollision/CollisionShapes/btConvexPointCloudShape.cpp \
-	$(BULLET)/BulletCollision/CollisionShapes/btConvexShape.cpp \
-	$(BULLET)/BulletCollision/CollisionShapes/btConvex2dShape.cpp \
-	$(BULLET)/BulletCollision/CollisionShapes/btConvexTriangleMeshShape.cpp \
-	$(BULLET)/BulletCollision/CollisionShapes/btCylinderShape.cpp \
-	$(BULLET)/BulletCollision/CollisionShapes/btEmptyShape.cpp \
-	$(BULLET)/BulletCollision/CollisionShapes/btHeightfieldTerrainShape.cpp \
-	$(BULLET)/BulletCollision/CollisionShapes/btMinkowskiSumShape.cpp \
-	$(BULLET)/BulletCollision/CollisionShapes/btMultimaterialTriangleMeshShape.cpp \
-	$(BULLET)/BulletCollision/CollisionShapes/btMultiSphereShape.cpp \
-	$(BULLET)/BulletCollision/CollisionShapes/btOptimizedBvh.cpp \
-	$(BULLET)/BulletCollision/CollisionShapes/btPolyhedralConvexShape.cpp \
-	$(BULLET)/BulletCollision/CollisionShapes/btScaledBvhTriangleMeshShape.cpp \
-	$(BULLET)/BulletCollision/CollisionShapes/btShapeHull.cpp \
-	$(BULLET)/BulletCollision/CollisionShapes/btSphereShape.cpp \
-	$(BULLET)/BulletCollision/CollisionShapes/btStaticPlaneShape.cpp \
-	$(BULLET)/BulletCollision/CollisionShapes/btStridingMeshInterface.cpp \
-	$(BULLET)/BulletCollision/CollisionShapes/btTetrahedronShape.cpp \
-	$(BULLET)/BulletCollision/CollisionShapes/btTriangleBuffer.cpp \
-	$(BULLET)/BulletCollision/CollisionShapes/btTriangleCallback.cpp \
-	$(BULLET)/BulletCollision/CollisionShapes/btTriangleIndexVertexArray.cpp \
-	$(BULLET)/BulletCollision/CollisionShapes/btTriangleIndexVertexMaterialArray.cpp \
-	$(BULLET)/BulletCollision/CollisionShapes/btTriangleMesh.cpp \
-	$(BULLET)/BulletCollision/CollisionShapes/btTriangleMeshShape.cpp \
-	$(BULLET)/BulletCollision/CollisionShapes/btUniformScalingShape.cpp \
-	$(BULLET)/BulletCollision/Gimpact/btContactProcessing.cpp \
-	$(BULLET)/BulletCollision/Gimpact/btGenericPoolAllocator.cpp \
-	$(BULLET)/BulletCollision/Gimpact/btGImpactBvh.cpp \
-	$(BULLET)/BulletCollision/Gimpact/btGImpactCollisionAlgorithm.cpp \
-	$(BULLET)/BulletCollision/Gimpact/btGImpactQuantizedBvh.cpp \
-	$(BULLET)/BulletCollision/Gimpact/btGImpactShape.cpp \
-	$(BULLET)/BulletCollision/Gimpact/btTriangleShapeEx.cpp \
-	$(BULLET)/BulletCollision/Gimpact/gim_box_set.cpp \
-	$(BULLET)/BulletCollision/Gimpact/gim_contact.cpp \
-	$(BULLET)/BulletCollision/Gimpact/gim_memory.cpp \
-	$(BULLET)/BulletCollision/Gimpact/gim_tri_collision.cpp \
-	$(BULLET)/BulletCollision/NarrowPhaseCollision/btContinuousConvexCollision.cpp \
-	$(BULLET)/BulletCollision/NarrowPhaseCollision/btConvexCast.cpp \
-	$(BULLET)/BulletCollision/NarrowPhaseCollision/btGjkConvexCast.cpp \
-	$(BULLET)/BulletCollision/NarrowPhaseCollision/btGjkEpa2.cpp \
-	$(BULLET)/BulletCollision/NarrowPhaseCollision/btGjkEpaPenetrationDepthSolver.cpp \
-	$(BULLET)/BulletCollision/NarrowPhaseCollision/btGjkPairDetector.cpp \
-	$(BULLET)/BulletCollision/NarrowPhaseCollision/btMinkowskiPenetrationDepthSolver.cpp \
-	$(BULLET)/BulletCollision/NarrowPhaseCollision/btPersistentManifold.cpp \
-	$(BULLET)/BulletCollision/NarrowPhaseCollision/btRaycastCallback.cpp \
-	$(BULLET)/BulletCollision/NarrowPhaseCollision/btSubSimplexConvexCast.cpp \
-	$(BULLET)/BulletCollision/NarrowPhaseCollision/btVoronoiSimplexSolver.cpp \
-	$(BULLET)/BulletDynamics/Character/btKinematicCharacterController.cpp \
-	$(BULLET)/BulletDynamics/ConstraintSolver/btConeTwistConstraint.cpp \
-	$(BULLET)/BulletDynamics/ConstraintSolver/btContactConstraint.cpp \
-	$(BULLET)/BulletDynamics/ConstraintSolver/btGeneric6DofConstraint.cpp \
-	$(BULLET)/BulletDynamics/ConstraintSolver/btGeneric6DofSpringConstraint.cpp \
-	$(BULLET)/BulletDynamics/ConstraintSolver/btHinge2Constraint.cpp \
-	$(BULLET)/BulletDynamics/ConstraintSolver/btHingeConstraint.cpp \
-	$(BULLET)/BulletDynamics/ConstraintSolver/btPoint2PointConstraint.cpp \
-	$(BULLET)/BulletDynamics/ConstraintSolver/btSequentialImpulseConstraintSolver.cpp \
-	$(BULLET)/BulletDynamics/ConstraintSolver/btSliderConstraint.cpp \
-	$(BULLET)/BulletDynamics/ConstraintSolver/btSolve2LinearConstraint.cpp \
-	$(BULLET)/BulletDynamics/ConstraintSolver/btTypedConstraint.cpp \
-	$(BULLET)/BulletDynamics/ConstraintSolver/btUniversalConstraint.cpp \
-	$(BULLET)/BulletDynamics/Dynamics/btContinuousDynamicsWorld.cpp \
-	$(BULLET)/BulletDynamics/Dynamics/btDiscreteDynamicsWorld.cpp \
-	$(BULLET)/BulletDynamics/Dynamics/btRigidBody.cpp \
-	$(BULLET)/BulletDynamics/Dynamics/btSimpleDynamicsWorld.cpp \
-	$(BULLET)/BulletDynamics/Dynamics/Bullet-C-API.cpp \
-	$(BULLET)/BulletDynamics/Vehicle/btRaycastVehicle.cpp \
-	$(BULLET)/BulletDynamics/Vehicle/btWheelInfo.cpp \
-	$(BULLET)/LinearMath/btAlignedAllocator.cpp \
-	$(BULLET)/LinearMath/btConvexHull.cpp \
-	$(BULLET)/LinearMath/btGeometryUtil.cpp \
-	$(BULLET)/LinearMath/btQuickprof.cpp \
-	$(BULLET)/LinearMath/btSerializer.cpp \
-        $(BULLET)/BulletSoftBody/btDefaultSoftBodySolver.cpp \
-        $(BULLET)/BulletSoftBody/btSoftBody.cpp \
-        $(BULLET)/BulletSoftBody/btSoftBodyConcaveCollisionAlgorithm.cpp \
-        $(BULLET)/BulletSoftBody/btSoftBodyHelpers.cpp \
-        $(BULLET)/BulletSoftBody/btSoftBodyRigidBodyCollisionConfiguration.cpp \
-        $(BULLET)/BulletSoftBody/btSoftRigidCollisionAlgorithm.cpp \
-        $(BULLET)/BulletSoftBody/btSoftRigidDynamicsWorld.cpp \
-        $(BULLET)/BulletSoftBody/btSoftSoftCollisionAlgorithm.cpp \
+$(BULLET)/UnityBuild_Bullet.cpp \
+$(BULLET)/UnityBuild_BulletGImpact.cpp \
+$(BULLET)/BulletCollision/Gimpact/gim_contact.cpp \
 \
 \
 $(IRRBULLET)/boxshape.cpp \
@@ -235,7 +115,6 @@ $(IRRBULLET)/rigidbody.cpp \
 $(IRRBULLET)/softbody.cpp \
 $(IRRBULLET)/sphereshape.cpp \
 $(IRRBULLET)/trianglemeshshape.cpp \
-\
 \
 $(APP)/App.cpp $(APP)/GUI/DebugMenu.cpp $(APP)/GUI/MainMenu.cpp $(APP)/GUI/PhysicsHelloMenu.cpp \
 \
