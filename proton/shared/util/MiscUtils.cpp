@@ -728,6 +728,11 @@ int StringToInt( const string &s )
 	return atoi(s.c_str());
 }
 
+float StringToFloat( const string &s )
+{
+	return (float)atof(s.c_str());
+}
+
 bool DateIsOlder(int month, int day, int year, int hour, int min, int sec,
 				 int monthB, int dayB, int yearB, int hourB, int minB, int secB)
 {
