@@ -118,6 +118,9 @@ CL_Vec2f GetAlignmentOffset(const CL_Vec2f &vSize, eAlignment alignment)
 	case ALIGNMENT_LEFT_CENTER:
 		return CL_Vec2f(0,vSize.y/2);
 		break;
+	case ALIGNMENT_RIGHT_CENTER:
+		return CL_Vec2f(vSize.x,vSize.y/2);
+		break;
 }
 
 	assert(!"Unhandled alignment");
