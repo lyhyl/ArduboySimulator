@@ -107,6 +107,12 @@ void rtRectf::Scale( eAlignment alignment, CL_Vec2f vScale )
 			bottom += changeY/2;
 			break;
 
+		case ALIGNMENT_RIGHT_CENTER:
+			left -= changeX;
+			top -= changeY/2;
+			bottom += changeY/2;
+			break;
+
 		default:
 
 			LogError("Unknown alignment");
