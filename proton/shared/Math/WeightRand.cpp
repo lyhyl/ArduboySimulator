@@ -131,7 +131,7 @@ int CWeightRand::GetRandom()
 
 	if (m_b_needs_computation) this->ComputeOdds();
 
-	float f_rand = (float)rand();
+	float f_rand = (float)rand() / (float)RT_RAND_MAX);
 
 	//LogMsg("Odds: %.6f", f_rand);
 	return CalcNumber(f_rand);
