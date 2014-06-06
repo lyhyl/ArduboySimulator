@@ -121,7 +121,7 @@ int CWeightRand::GetRandom(CRandom &rng)
 
 	if (m_b_needs_computation) this->ComputeOdds();
 
-	float f_rand = ((float)rng.rand() / RT_RAND_MAX);
+	float f_rand = ((float)rng.rand() / (float)RT_RAND_MAX);
 
 	return CalcNumber(f_rand);
 }
@@ -131,7 +131,7 @@ int CWeightRand::GetRandom()
 
 	if (m_b_needs_computation) this->ComputeOdds();
 
-	float f_rand = ((float)rand() / RT_RAND_MAX);
+	float f_rand = ((float)rand() / (float)RT_RAND_MAX);
 
 	return CalcNumber(f_rand);
 }
