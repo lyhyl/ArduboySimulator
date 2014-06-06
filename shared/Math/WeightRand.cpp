@@ -133,6 +133,7 @@ int CWeightRand::GetRandom()
 
 	float f_rand = ((float)rand() / (float)RT_RAND_MAX);
 
+	LogMsg("Odds: %.6f", f_rand);
 	return CalcNumber(f_rand);
 }
 
