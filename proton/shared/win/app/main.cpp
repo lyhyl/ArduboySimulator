@@ -111,6 +111,7 @@ void InitVideoSize()
 	AddVideoMode("Nexus 7B", 1920, 1200, PLATFORM_ID_ANDROID);
 	AddVideoMode("Nexus 7B Visible", 1920, 1104, PLATFORM_ID_ANDROID);
 	AddVideoMode("Nexus 5 Visible Landscape", 1794, 1080, PLATFORM_ID_ANDROID); //also Experia Z
+	AddVideoMode("Android HD", 1920, 1080, PLATFORM_ID_ANDROID); //Not sure which device, but some are this
 
 	//RIM Playbook OS/BBX/BB10/Whatever they name it to next week
 	AddVideoMode("Playbook", 600,1024, PLATFORM_ID_BBX);
@@ -119,7 +120,7 @@ void InitVideoSize()
 	AddVideoMode("Flash", 640, 480, PLATFORM_ID_FLASH);
 
 	//WORK: Change device emulation here
-	string desiredVideoMode = "iPad Landscape"; //name needs to match one of the ones defined above
+	string desiredVideoMode = "iPhone5 Landscape"; //name needs to match one of the ones defined above
  	SetVideoModeByName(desiredVideoMode);
 	GetBaseApp()->OnPreInitVideo(); //gives the app level code a chance to override any of these parms if it wants to
 }
@@ -1657,10 +1658,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 	while(1)
 	{
 		
+		/*
 		if (GetAsyncKeyState('Q') && GetAsyncKeyState(VK_MENU))
 		{
 			SendMessage(g_hWnd, WM_CLOSE, 0, 0);
 		}
+		*/
 
 		if (g_winAllowFullscreenToggle)
 		{
