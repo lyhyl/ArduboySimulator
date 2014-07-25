@@ -642,7 +642,7 @@ string IntToTimeSeconds(uint32 seconds, bool bTextFormat) //converts 180 (second
 		
 		if (hours > 0 || days > 0)
 		{
-			sprintf(temp, "%d:%d:%02d", hours+(days*24), minutes, seconds);
+			sprintf(temp, "%d:%02d:%02d", hours+(days*24), minutes, seconds);
 
 		} else
 		{
