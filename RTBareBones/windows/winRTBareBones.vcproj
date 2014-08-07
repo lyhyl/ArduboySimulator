@@ -510,6 +510,172 @@
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
+		<Configuration
+			Name="Software GL|Win32"
+			OutputDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="1"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="..\source;..\..\shared;..\..\shared\win\;..\..\shared\win\powerVR\OGLES\Include;..\..\shared\win\powerVR\OGLES\Windows\Include;..\..\shared\win\include;..\..\shared\util\boost;&quot;..\..\shared\ClanLib-2.0\Sources&quot;;..\..\shared\FliteTTS\include;..\..\shared\Irrlicht\include"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;BOOST_ALL_NO_LIB;_USE_32BIT_TIME_T;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0;_NO_DEBUG_HEAP=1;C_NO_NETWORK"
+				MinimalRebuild="true"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="1"
+				BufferSecurityCheck="true"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="PlatformPrecomp.h"
+				WarningLevel="3"
+				Detect64BitPortabilityProblems="false"
+				DebugInformationFormat="4"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="zdll.lib wsock32.lib"
+				OutputFile="../bin/winRTBareBones.exe"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="..\..\shared\win\lib;..\..\shared\win\fmod"
+				GenerateDebugInformation="true"
+				ProgramDatabaseFile="$(OutDir)/RTBareBones.pdb"
+				SubSystem="2"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Debug Mesa GL|Win32"
+			OutputDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="1"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="..\source;..\..\shared;..\..\shared\util\boost;&quot;..\..\shared\ClanLib-2.0\Sources&quot;;..\..\shared\win\include;..\..\shared\win\"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;BOOST_ALL_NO_LIB;_USE_32BIT_TIME_T;C_GL_MODE;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0;_NO_DEBUG_HEAP=1"
+				MinimalRebuild="true"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="1"
+				BufferSecurityCheck="true"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="PlatformPrecomp.h"
+				WarningLevel="3"
+				Detect64BitPortabilityProblems="false"
+				DebugInformationFormat="4"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="opengl32.lib zdll.lib wsock32.lib"
+				OutputFile="../bin/winRTBareBones.exe"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="..\..\shared\win\mesa;..\..\shared\win\lib"
+				GenerateDebugInformation="true"
+				ProgramDatabaseFile="$(OutDir)/RTBareBones.pdb"
+				SubSystem="2"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
 	</Configurations>
 	<References>
 	</References>
@@ -578,6 +744,20 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Flash GLES Debug Test|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Software GL|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug Mesa GL|Win32"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -856,6 +1036,22 @@
 						UsePrecompiledHeader="1"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="Software GL|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug Mesa GL|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\shared\PlatformPrecomp.h"
@@ -923,6 +1119,22 @@
 							Name="VCCLCompilerTool"
 						/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="Software GL|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug Mesa GL|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\shared\win\MemMgr.h"
@@ -977,6 +1189,22 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Flash GLES Debug Test|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Software GL|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug Mesa GL|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1126,6 +1354,22 @@
 								UsePrecompiledHeader="0"
 							/>
 						</FileConfiguration>
+						<FileConfiguration
+							Name="Software GL|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug Mesa GL|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
 					</File>
 					<File
 						RelativePath="..\..\shared\util\boost\libs\signals\src\named_slot_map.cpp"
@@ -1172,6 +1416,22 @@
 						</FileConfiguration>
 						<FileConfiguration
 							Name="Flash GLES Debug Test|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Software GL|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug Mesa GL|Win32"
 							>
 							<Tool
 								Name="VCCLCompilerTool"
@@ -1230,6 +1490,22 @@
 								UsePrecompiledHeader="0"
 							/>
 						</FileConfiguration>
+						<FileConfiguration
+							Name="Software GL|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug Mesa GL|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
 					</File>
 					<File
 						RelativePath="..\..\shared\util\boost\libs\signals\src\slot.cpp"
@@ -1282,6 +1558,22 @@
 								UsePrecompiledHeader="0"
 							/>
 						</FileConfiguration>
+						<FileConfiguration
+							Name="Software GL|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug Mesa GL|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
 					</File>
 					<File
 						RelativePath="..\..\shared\util\boost\libs\signals\src\trackable.cpp"
@@ -1328,6 +1620,22 @@
 						</FileConfiguration>
 						<FileConfiguration
 							Name="Flash GLES Debug Test|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Software GL|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug Mesa GL|Win32"
 							>
 							<Tool
 								Name="VCCLCompilerTool"
@@ -1617,6 +1925,22 @@
 									UsePrecompiledHeader="0"
 								/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="Software GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Debug Mesa GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\..\shared\ClanLib-2.0\Sources\Core\Math\mat3.cpp"
@@ -1663,6 +1987,22 @@
 							</FileConfiguration>
 							<FileConfiguration
 								Name="Flash GLES Debug Test|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Software GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Debug Mesa GL|Win32"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -1721,6 +2061,22 @@
 									UsePrecompiledHeader="0"
 								/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="Software GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Debug Mesa GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\..\shared\ClanLib-2.0\Sources\Core\Math\rect.cpp"
@@ -1767,6 +2123,22 @@
 							</FileConfiguration>
 							<FileConfiguration
 								Name="Flash GLES Debug Test|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Software GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Debug Mesa GL|Win32"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -1825,6 +2197,22 @@
 									UsePrecompiledHeader="0"
 								/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="Software GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Debug Mesa GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\..\shared\ClanLib-2.0\Sources\Core\Math\vec3.cpp"
@@ -1877,6 +2265,22 @@
 									UsePrecompiledHeader="0"
 								/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="Software GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Debug Mesa GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\..\shared\ClanLib-2.0\Sources\Core\Math\vec4.cpp"
@@ -1923,6 +2327,22 @@
 							</FileConfiguration>
 							<FileConfiguration
 								Name="Flash GLES Debug Test|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Software GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Debug Mesa GL|Win32"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -2059,6 +2479,22 @@
 							UsePrecompiledHeader="0"
 						/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="Software GL|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug Mesa GL|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\shared\WebOS\WebOSUtils.h"
@@ -2113,6 +2549,22 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Flash GLES Debug Test|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Software GL|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug Mesa GL|Win32"
 						ExcludedFromBuild="true"
 						>
 						<Tool
@@ -2176,6 +2628,22 @@
 						</FileConfiguration>
 						<FileConfiguration
 							Name="Flash GLES Debug Test|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Software GL|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug Mesa GL|Win32"
 							ExcludedFromBuild="true"
 							>
 							<Tool
@@ -2371,6 +2839,22 @@
 							Name="VCCLCompilerTool"
 						/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="Software GL|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug Mesa GL|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\shared\bbx\bbutil.h"
@@ -2427,6 +2911,22 @@
 							Name="VCCLCompilerTool"
 						/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="Software GL|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug Mesa GL|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\shared\bbx\BBXUtils.cpp"
@@ -2473,6 +2973,22 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Flash GLES Debug Test|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Software GL|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug Mesa GL|Win32"
 						ExcludedFromBuild="true"
 						>
 						<Tool
@@ -2537,6 +3053,22 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Flash GLES Debug Test|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Software GL|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug Mesa GL|Win32"
 						ExcludedFromBuild="true"
 						>
 						<Tool
@@ -2609,6 +3141,22 @@
 									UsePrecompiledHeader="0"
 								/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="Software GL|Win32"
+								ExcludedFromBuild="true"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Debug Mesa GL|Win32"
+								ExcludedFromBuild="true"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+								/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\..\shared\flash\app\cpp\GLFlashAdaptor.h"
@@ -2669,6 +3217,26 @@
 							</FileConfiguration>
 							<FileConfiguration
 								Name="Flash GLES Debug Test|Win32"
+								ExcludedFromBuild="true"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(InputName)1.obj"
+									XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Software GL|Win32"
+								ExcludedFromBuild="true"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(InputName)1.obj"
+									XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="Debug Mesa GL|Win32"
 								ExcludedFromBuild="true"
 								>
 								<Tool

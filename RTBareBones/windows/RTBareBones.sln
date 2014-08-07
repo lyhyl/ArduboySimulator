@@ -7,6 +7,7 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Common Debug|Win32 = Common Debug|Win32
 		Debug GL|Win32 = Debug GL|Win32
+		Debug Mesa GL|Win32 = Debug Mesa GL|Win32
 		Debug WebOS|Win32 = Debug WebOS|Win32
 		Flash GLES Debug Test|Win32 = Flash GLES Debug Test|Win32
 		Release GL|Win32 = Release GL|Win32
@@ -17,6 +18,8 @@ Global
 		{B4AF0729-C4C8-470F-A075-2D37021ACC6D}.Common Debug|Win32.Build.0 = Common Debug|Win32
 		{B4AF0729-C4C8-470F-A075-2D37021ACC6D}.Debug GL|Win32.ActiveCfg = Debug GL|Win32
 		{B4AF0729-C4C8-470F-A075-2D37021ACC6D}.Debug GL|Win32.Build.0 = Debug GL|Win32
+		{B4AF0729-C4C8-470F-A075-2D37021ACC6D}.Debug Mesa GL|Win32.ActiveCfg = Debug Mesa GL|Win32
+		{B4AF0729-C4C8-470F-A075-2D37021ACC6D}.Debug Mesa GL|Win32.Build.0 = Debug Mesa GL|Win32
 		{B4AF0729-C4C8-470F-A075-2D37021ACC6D}.Debug WebOS|Win32.ActiveCfg = Debug WebOS|Win32
 		{B4AF0729-C4C8-470F-A075-2D37021ACC6D}.Debug WebOS|Win32.Build.0 = Debug WebOS|Win32
 		{B4AF0729-C4C8-470F-A075-2D37021ACC6D}.Flash GLES Debug Test|Win32.ActiveCfg = Flash GLES Debug Test|Win32

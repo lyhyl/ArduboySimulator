@@ -48,6 +48,15 @@ import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.content.pm.PackageInfo;
 
+
+//#if defined(RT_GOOGLE_SERVICES_SUPPORT)
+import com.google.android.gms.ads.identifier.AdvertisingIdClient;
+import com.google.android.gms.ads.identifier.AdvertisingIdClient.Info;
+import com.google.android.gms.auth.GooglePlayServicesAvailabilityException;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+//#endif
+
 // Wifi
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -140,7 +149,7 @@ import android.view.View.OnClickListener;
 	public static String dllname= "rtsomething";
 	public static boolean securityEnabled = false; //if false, it won't try to use the online license stuff
 	public static boolean bIsShuttingDown = false;
-	public static boolean IAPEnabled = false; //if false, IAB won't be initted.  I call it IAP because I'm used it from iOS land
+	public static boolean IAPEnabled = false; //if false, IAB won't be initted.  I call it IAP because I'm used to it from iOS land
 	
 	public static String tapBannerSize = ""; //tapjoy banner size text, set in Main.cpp, or by AdManager calls
 	public static int adBannerWidth = 0;
@@ -150,6 +159,11 @@ import android.view.View.OnClickListener;
 	public static String m_iap_sync_purchases_asap = "";
 	public static String m_iap_consume_asap = "";
 	public static String m_iap_developerdata = "";
+	
+	public static String m_advertiserID = ""; //only will be set it Google Services is added to the project.   This is a big hassle for Proton projects,
+	//I ended up just copying over the res and jar manually because android.library.reference.1= in project.properties didn't seem to let the manifest access the .res and.. argh.
+	public static boolean m_limitAdTracking = false;
+
 	public static Inventory m_iap_inventory = null;
 	
 //#if defined(RT_FLURRY_SUPPORT)
@@ -356,7 +370,10 @@ import android.view.View.OnClickListener;
 //#if defined(RT_CHARTBOOST_SUPPORT)
 		this.cb.onStart(this);
 //#endif
+
     }
+
+
 
     @Override
     protected void onStop()
@@ -467,8 +484,10 @@ import android.view.View.OnClickListener;
 		}
 //#endif
 		sendVersionDetails();
+		
+		
+		
     }
-
 
     // Listener that's called when we finish querying the items and subscriptions we own
     IabHelper.QueryInventoryFinishedListener mGotInventoryListener = new IabHelper.QueryInventoryFinishedListener()
@@ -920,6 +939,14 @@ public static String get_macAddress()
     
     return macAddress;
 	}
+	
+	
+	
+public static String get_advertisingIdentifier()
+	{
+		return app.m_advertiserID;
+	}
+	
   @Override
 	public void onSensorChanged(SensorEvent event) 
 	{
@@ -1698,6 +1725,7 @@ public static String get_macAddress()
     }
 }
 
+
 class AppGLSurfaceView extends GLSurfaceView
 {
     public AppGLSurfaceView(Context context, SharedActivity _app) 
@@ -1813,6 +1841,59 @@ class AppRenderer implements GLSurfaceView.Renderer
 
 	public void onSurfaceCreated(GL10 gl, EGLConfig config)
     {
+	 
+	 if (app.m_advertiserID == "")
+	 {
+	 
+//#if defined(RT_GOOGLE_SERVICES_SUPPORT)
+	 
+//Stuff to get the advertiserID
+Thread thr = new Thread(new Runnable() {
+        @Override
+        public void run()
+         {
+                   AdvertisingIdClient.Info adInfo = null;
+        try {
+                  Context ctx = SharedActivity.app;
+			      adInfo = AdvertisingIdClient.getAdvertisingIdInfo(ctx);
+               
+            } catch (IllegalStateException e) 
+            {
+			// Unrecoverable error connecting to Google Play services (e.g.,
+			// the old version of the service doesn't support getting AdvertisingId).
+			Log.d(app.PackageName, "IllegalStateException: Unrecoverable error connecting to Google Play services");
+			 } catch (GooglePlayServicesNotAvailableException e) 
+			{
+  			Log.d(app.PackageName, "Google Play services is not available entirely.");
+			// Google Play services is not available entirely.
+		    }  catch (GooglePlayServicesRepairableException e) 
+			{
+  			Log.d(app.PackageName, "GooglePlayServicesRepairableException");
+		    } catch (IOException e) 
+            {
+			// Unrecoverable error connecting to Google Play services (e.g.,
+			Log.d(app.PackageName, "Getting AID: IOException");
+			 } 
+
+           if (adInfo != null)
+           {
+             app.m_advertiserID = adInfo.getId();
+			 app.m_limitAdTracking = adInfo.isLimitAdTrackingEnabled();
+		   	Log.d(app.PackageName, "------------ Got A-ID: "+app.m_advertiserID+" Tracking: "+app.m_limitAdTracking);
+		
+           } else
+           {
+             	Log.d(app.PackageName, "---------- Unable to get A-ID info");
+				app.m_advertiserID = "";
+           }
+        }
+    });
+
+    thr.start();
+    //#endif
+    }
+
+
     }
 
     public void onSurfaceChanged(GL10 gl, int w, int h) 
