@@ -147,7 +147,7 @@ void SetClipboardText(std::string);
 float GetDeviceOSVersion(); //0 if unknown/unimplemented.  Should return 1.00 for version 1, etc.  (webos returns 3.05 for instance, instead of 305)
 std::string GetMacAddress(); //blank ("") if not implemented or unable to read.  Works on iOS/Android
 std::string GetIdentiferForVender(); //a unique identifier we're supposed to use on iOS. Returns "" on older iOS versions that don't support it
-std::string GetAdvertisingIdentifier(); //unique id (unless the user resets it), iOS.  Returns "" on pre ioS 6.0
+std::string GetAdvertisingIdentifier(); //unique id (unless the user resets it), iOS and Android (if google play services exist).  Returns "" on pre ioS 6.0
 /**
  * Checks if the currently emulated platform is a desktop platform.
  */
