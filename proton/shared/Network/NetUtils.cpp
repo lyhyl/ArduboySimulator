@@ -2,7 +2,8 @@
 
 #include "NetUtils.h"
 #include "util/ResourceUtils.h"
-
+#include "util/CRandom.h"
+#include "util/MiscUtils.h"
 
 //************ for base64 encoding, needed for http auth stuff *********
 
@@ -261,4 +262,44 @@ void BreakDownURLIntoPieces(string url, string &domainOut, string &requestOut, i
 	if (domainOut.empty()) return;
 	if (url.size() == domainOut.size()) return; //something wrong
 	requestOut = url.substr(domainOut.size()+1, url.size()- ( domainOut.size()+1 )  );
+}
+
+
+
+void GetSimpleGUID(uint32 *guid)
+{
+	int nowyear, nowmonth, nowday, nowhour, nowmin, nowsec;
+	GetDateAndTime(&nowmonth, &nowday, &nowyear, &nowhour, &nowmin, &nowsec);
+
+	CRandom r;
+
+
+	guid[0] =  ((nowmonth+( (nowyear-2014)*12)) *(259200))+ (nowday*86400)+ (nowhour*3600)+nowsec;
+	guid[1] = (uint32)Random(RT_RAND_MAX)*(uint32)Random(RT_RAND_MAX)+(uint32)Random(RT_RAND_MAX);
+
+	r.SetRandomSeed(guid[0]+Random(RT_RAND_MAX)+nowyear);
+
+	guid[2] = r.Random(200000000); // +Random(RT_RAND_MAX);
+	guid[3] = (uint32)Random(RT_RAND_MAX)*(uint32)Random(RT_RAND_MAX)+(uint32)Random(RT_RAND_MAX);;
+};
+
+string GetSimpleGUIDAsString()
+{
+
+	uint32 guid[4];
+	GetSimpleGUID((uint32*)&guid);
+
+	char temp[32];
+
+	string final;
+	//convert to string
+	for (int i=0; i < 4; i++)
+	{
+		memset(temp, 0, 32);
+		DecToHexString(guid[i], (byte*)temp, 8);
+		final += string(temp);
+	}
+
+
+	return final;
 }
