@@ -157,7 +157,7 @@ std::string GetDeviceID(); //returns a string that is probably unique to the dev
 void ForceVideoUpdate(); //force an early gl flip or whatever, sometimes useful.  Not implemented on ever platform
 
 std::string GetDateAndTimeAsString(); //only supported on linux and win
-void GetDateAndTime(int *monthOut, int *dayOut, int *yearOut, int *hourOut, int *minOut, int *secOut); //only supported on linux and win
+void GetDateAndTime(int *monthOut, int *dayOut, int *yearOut, int *hourOut, int *minOut, int *secOut); 
 
 #endif // platformenums_h__
 #endif

@@ -23,6 +23,7 @@ private:
 void BreakDownURLIntoPieces(string url, string &domainOut, string &requestOut, int &port);
 string GetDomainFromURL(string url);
 char *Base64Encode(const char *data, size_t input_length,size_t *output_length); //up to you to free what it gives ya
-
-
+void DecToHexString ( uint32 value, byte * pOut, int16 charArrayMaxSize);
+void GetSimpleGUID(uint32 *guid); //makes GUID by using date and whatever current rand() seed is, along with some weird stuff
+string GetSimpleGUIDAsString(); //makes GUID by using date and whatever current rand() seed is, along with some weird stuff
 #endif // NetUtils_h__
