@@ -533,3 +533,18 @@ int ConvertOSXKeycodeToProtonVirtualKey(int c)
 	}
 	return c;
 }
+
+
+void GetDateAndTime(int *monthOut, int *dayOut, int *yearOut, int *hourOut, int *minOut, int *secOut)
+{
+	time_t ltime;
+	time( &ltime );
+	tm today = *localtime( &ltime );
+
+	*monthOut = today.tm_mon+1;
+	*dayOut = today.tm_mday;
+	*yearOut = today.tm_year+1900;
+	*hourOut = today.tm_hour;
+	*minOut = today.tm_min;
+	*secOut = today.tm_sec;
+}
