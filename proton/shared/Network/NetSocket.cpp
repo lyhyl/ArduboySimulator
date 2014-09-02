@@ -86,7 +86,8 @@ bool NetSocket::Init( string url, int port )
 	Kill();
 	//connect to another one
 
-	m_idleTimer = GetSystemTimeTick();
+	m_idleTimer = m_idleReadTimer = GetSystemTimeTick();
+
 	struct sockaddr_in sa;
 	struct hostent     *hp;
 	
@@ -281,7 +282,7 @@ void NetSocket::UpdateRead()
 		//OutputDebugString("\n");
 #endif
 		#endif
-		m_idleTimer = GetSystemTimeTick();
+		m_idleTimer = m_idleReadTimer = GetSystemTimeTick();
 
 	} while (bytesRead >= int(buff.size()));
 
@@ -328,4 +329,10 @@ void NetSocket::Write( char *pBuff, int len )
 int NetSocket::GetIdleTimeMS()
 {
 	return GetSystemTimeTick()-m_idleTimer;
+}
+
+
+int NetSocket::GetIdleReadTimeMS()
+{
+	return GetSystemTimeTick()-m_idleReadTimer;
 }
