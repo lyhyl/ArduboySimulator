@@ -26,7 +26,9 @@ public:
 	void Write(const std::string &msg);
 	int GetSocket() {return m_socket;}
 	std::vector<char> & GetBuffer() {return m_readBuffer;}
-	int GetIdleTimeMS();
+	int GetIdleTimeMS(); //includes both reading and writing
+	int GetIdleReadTimeMS();
+
 	void Kill();
 	void SetSocket(int socket);
 	bool WasDisconnected() {return m_bWasDisconnected;}
@@ -36,11 +38,12 @@ protected:
 
 	void UpdateRead();
 	void UpdateWrite();
+
 	int m_socket;
 	
 	std::vector<char> m_readBuffer;
 	std::vector<char> m_writeBuffer;
-	unsigned int m_idleTimer; //time of last communication
+	unsigned int m_idleTimer, m_idleReadTimer; //time of last communication
 	bool m_bWasDisconnected;
 
 private:
