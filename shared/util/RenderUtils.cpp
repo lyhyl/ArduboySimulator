@@ -87,6 +87,7 @@ int GetDevicePixelsPerInchDiagonal()
 			if (IsNexusOneSize) cachedPixelsPerInch = 235;
 			if (IsPlaybookSize) cachedPixelsPerInch = 169;
 			if (IsNexus7B || IsNexus7BActual) cachedPixelsPerInch = 273;
+			if (IsOptimusHDSize)  cachedPixelsPerInch = 326;
 			if (IsNexus7) cachedPixelsPerInch = 216;
 			if (IsNexus5Actual) cachedPixelsPerInch = 445;
 			if (IsHDSize && !IsDesktop()) cachedPixelsPerInch = 445; //guessing
