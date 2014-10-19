@@ -264,6 +264,16 @@ void SetPrimaryScreenSize(int width, int height)
     g_primaryGLY = height;
 }
 
+//Below snippet by Joe Booth - http://stackoverflow.com/questions/24150359/is-uiscreen-mainscreen-bounds-size-becoming-orientation-dependent-in-ios8
+CGRect iOS7StyleScreenBounds()
+{
+    CGRect bounds = [UIScreen mainScreen].bounds;
+    if (([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0) && UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation))
+    {
+        bounds.size = CGSizeMake(bounds.size.height, bounds.size.width);
+    }
+    return bounds;
+}
 
 //this doesn't change even if you rotate, for speed
 int GetPrimaryGLX() {return g_primaryGLX;}

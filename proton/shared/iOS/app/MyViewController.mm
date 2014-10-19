@@ -9,6 +9,8 @@
 #import "EAGLView.h"
 #import "iOSUtils.h"
 
+CGRect iOS7StyleScreenBounds();
+
 @implementation MyViewController
 
 @synthesize glView;
@@ -106,7 +108,9 @@
 
     
 	UIScreen *pScreen = [UIScreen mainScreen];
-    CGRect fullScreenRect = pScreen.bounds;
+//    CGRect fullScreenRect = pScreen.bounds;
+    CGRect fullScreenRect = iOS7StyleScreenBounds();
+
     LogMsg("Rotated to orientation %d (%.2f, %.2f)", interfaceOrientation, fullScreenRect.size.width* GetProtonPixelScaleFactor(), fullScreenRect.size.height* GetProtonPixelScaleFactor());
 
       

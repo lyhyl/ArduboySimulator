@@ -11,6 +11,8 @@
 #import "MyAppDelegate.h"
 #import "util/RenderUtils.h"
 
+CGRect iOS7StyleScreenBounds();
+
 #define USE_DEPTH_BUFFER 1
 
 // A class extension to declare private methods
@@ -66,8 +68,9 @@
 	
     CGFloat pixelScale = [[UIScreen mainScreen] scale];
     UIScreen *pScreen = [UIScreen mainScreen];
-    CGRect fullScreenRect = pScreen.bounds;
-    
+    //CGRect fullScreenRect = pScreen.bounds;
+    CGRect fullScreenRect = iOS7StyleScreenBounds();
+   
     bool bUseSizeGuess = false;
     SetProtonPixelScaleFactor(pixelScale);
     
@@ -146,12 +149,15 @@
 	[self drawView];
 }
 
-- (BOOL)createFramebuffer 
+
+
+- (BOOL)createFramebuffer
 {
     
     CGFloat pixelScale = [[UIScreen mainScreen] scale];
     UIScreen *pScreen = [UIScreen mainScreen];
-    CGRect fullScreenRect = pScreen.bounds;
+//    CGRect fullScreenRect = pScreen.bounds;
+    CGRect fullScreenRect = iOS7StyleScreenBounds();
     
     
     LogMsg("Scale: %.2f", pixelScale);
