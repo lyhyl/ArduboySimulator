@@ -69,6 +69,7 @@ CGRect iOS7StyleScreenBounds();
     CGFloat pixelScale = [[UIScreen mainScreen] scale];
     UIScreen *pScreen = [UIScreen mainScreen];
     //CGRect fullScreenRect = pScreen.bounds;
+    //Fix for iOS 8
     CGRect fullScreenRect = iOS7StyleScreenBounds();
    
     bool bUseSizeGuess = false;
