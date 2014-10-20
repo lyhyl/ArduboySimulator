@@ -14,6 +14,7 @@ uint32 GetTick();
 #endif
 
 #define C_MYSQL_PING_TIMER_MS (1000*60*60)*4
+#include "util/MiscUtils.h"
 
 MySQLManager::MySQLManager()
 {
@@ -35,6 +36,18 @@ void MySQLManager::Kill()
 		mysql_close(m_conn);
 		m_conn = NULL;
 	}
+}
+
+
+
+
+std::string MySQLManager::GetLastError()
+{
+	if (!m_conn) return "(not connected to mysql)";
+
+	int error = mysql_errno(m_conn);
+
+	return string(" SQL Error: ")+toString(error)+": "+string(mysql_error(m_conn));
 }
 
 int MySQLManager::ShowError()
