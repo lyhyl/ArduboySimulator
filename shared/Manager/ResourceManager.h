@@ -114,6 +114,7 @@ public:
 	 */
 	void KillAllResources();
 	void RemoveTexturesNotInExclusionList(const vector<string> &exclusionList);
+	bool RemoveResource(const string &fileName);
 
 private:
 	class Resource
@@ -142,7 +143,6 @@ private:
 	};
 
 	Resource * FindDataByKey(const string &keyName);
-
 	typedef std::map<string, Resource*> ResourceMap;
 	ResourceMap m_data;
 };

@@ -105,6 +105,7 @@ void InitVideoSize()
 	AddVideoMode("Galaxy Tab 10.1 Landscape", 1280,800, PLATFORM_ID_ANDROID);
 	AddVideoMode("Xperia Play Landscape", 854, 480, PLATFORM_ID_ANDROID);
 	AddVideoMode("LG Optimus G Landscape", 1280, 768, PLATFORM_ID_ANDROID);
+	AddVideoMode("Cubot", 1280, 720, PLATFORM_ID_ANDROID);
 	AddVideoMode("Nexus 4 Visible", 1200, 768, PLATFORM_ID_ANDROID);
 	AddVideoMode("Nexus 7", 1200, 800, PLATFORM_ID_ANDROID);
 	AddVideoMode("Nexus 7B Visible", 1200, 800-96, PLATFORM_ID_ANDROID);
@@ -112,6 +113,7 @@ void InitVideoSize()
 	AddVideoMode("Nexus 7B Visible", 1920, 1104, PLATFORM_ID_ANDROID);
 	AddVideoMode("Nexus 5 Visible Landscape", 1794, 1080, PLATFORM_ID_ANDROID); //also Experia Z
 	AddVideoMode("Android HD", 1920, 1080, PLATFORM_ID_ANDROID); //Not sure which device, but some are this
+	AddVideoMode("Galaxy Note 4", 2560, 1440, PLATFORM_ID_ANDROID); //Not sure which device, but some are this
 
 	//RIM Playbook OS/BBX/BB10/Whatever they name it to next week
 	AddVideoMode("Playbook", 600,1024, PLATFORM_ID_BBX);
@@ -121,7 +123,7 @@ void InitVideoSize()
 
 	//WORK: Change device emulation here
 	//string desiredVideoMode = "iPhone5 Landscape"; //name needs to match one of the ones defined above
-	string desiredVideoMode = "G1 Landscape"; //teeny tiny rez for testing
+	string desiredVideoMode = "Galaxy Note 4"; //teeny tiny rez for testing
  	SetVideoModeByName(desiredVideoMode);
 	GetBaseApp()->OnPreInitVideo(); //gives the app level code a chance to override any of these parms if it wants to
 }
@@ -1586,7 +1588,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 	 _chdir(GetExePath().c_str());
 	
 	g_hInstance = hInstance;
-	RemoveFile("log.txt", false);
+	RemoveFile("log.txt", true);
 
 	if (lpCmdLine[0])
 	{
@@ -1808,7 +1810,7 @@ cleanup:
 }
 
 
-void AddText(const char *tex ,char *filename)
+void AddText(const char *tex ,const char *filename)
 {
 	FILE *          fp;
 	if (strlen(tex) < 1) return;
@@ -1816,14 +1818,14 @@ void AddText(const char *tex ,char *filename)
 	if (FileExists(filename) == false)
 	{
 
-		fp = fopen( (GetBaseAppPath()+filename).c_str(), "wb");
+		fp = fopen( filename, "wb");
 		if (!fp) return;
 		fwrite( tex, strlen(tex), 1, fp);      
 		fclose(fp);
 		return;
 	} else
 	{
-		fp = fopen( (GetBaseAppPath()+filename).c_str(), "ab");
+		fp = fopen(filename, "ab");
 		if (!fp) return;
 		fwrite( tex, strlen(tex), 1, fp);      
 		fclose(fp);
@@ -1849,7 +1851,8 @@ void LogMsg ( const char* traceStr, ... )
 	{
 		GetBaseApp()->GetConsole()->AddLine(buffer);
 		strcat(buffer, "\r\n");
-		AddText(buffer, "log.txt");
+		OutputDebugString( (string("writing to ")+GetSavePath()+"log.txt\n").c_str());
+		AddText(buffer, (GetSavePath()+"log.txt").c_str());
 	}
 
 }
