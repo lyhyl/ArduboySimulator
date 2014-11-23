@@ -91,11 +91,16 @@ int GetDevicePixelsPerInchDiagonal()
 			if (IsNexus7) cachedPixelsPerInch = 216;
 			if (IsNexus5Actual) cachedPixelsPerInch = 445;
 			if (IsHDSize && !IsDesktop()) cachedPixelsPerInch = 445; //guessing
-
+			
 			if (cachedPixelsPerInch == 0)
 			{
 				//we really have no clue
 				cachedPixelsPerInch = 163;
+
+				if (!IsDesktop() && GetScreenSizeXf() >= 1920)
+				{
+					cachedPixelsPerInch = 445;
+				}
 			}
 		} else
 		{

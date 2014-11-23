@@ -27,6 +27,20 @@ ResourceManager::Resource * ResourceManager::FindDataByKey(const string &keyName
 	return NULL; //fail
 }
 
+bool ResourceManager::RemoveResource(const string &fileName)
+{
+	ResourceMap::iterator itor = m_data.find(fileName);
+	if (itor != m_data.end())
+	{
+		delete itor->second;
+		m_data.erase(itor);
+	    //LogMsg("Removing %s from memory", fileName.c_str());
+		return true;
+	}
+	
+	return false;
+}
+
 SurfaceAnim * ResourceManager::GetSurfaceAnim(const string &fileName, bool bAddBasePath)
 {
 	return GetSurfaceResource<SurfaceAnim>(fileName, Surface::TYPE_GUI, bAddBasePath);
