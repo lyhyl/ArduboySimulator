@@ -830,6 +830,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_SYSCOMMAND:
 		// Do not allow screensaver to start. - wait, why would I want to disable the screensaver?!
 		//if (wParam == SC_SCREENSAVE) return true;
+		
+		
+		
 		if ((wParam & 0xFFF0) == SC_MINIMIZE)
 		{
 			// shrink the application to the notification area
@@ -1781,7 +1784,22 @@ skipRender:
 		MSG msg;
 		while (PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE) == TRUE)
 		{
+		
 			int ret = GetMessage(&msg, NULL, 0, 0);
+		
+#ifdef RT_DISABLE_WINDOWS_MENU
+			//if we don't like it when hitting alt or F10 pauses things.  It's a windows thing
+
+			if(msg.message == WM_SYSKEYDOWN && ! (msg.wParam == VK_F4))
+			{
+
+			if(msg.message == WM_SYSKEYDOWN && msg.wParam == VK_F10)
+				continue;
+			if(msg.message == WM_SYSKEYDOWN  )
+				continue;
+			}
+#endif
+
 			if (ret > 0)
 			{
 				TranslateMessage(&msg);
@@ -1851,7 +1869,7 @@ void LogMsg ( const char* traceStr, ... )
 	{
 		GetBaseApp()->GetConsole()->AddLine(buffer);
 		strcat(buffer, "\r\n");
-		OutputDebugString( (string("writing to ")+GetSavePath()+"log.txt\n").c_str());
+		//OutputDebugString( (string("writing to ")+GetSavePath()+"log.txt\n").c_str());
 		AddText(buffer, (GetSavePath()+"log.txt").c_str());
 	}
 
