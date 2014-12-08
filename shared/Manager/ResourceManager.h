@@ -114,7 +114,7 @@ public:
 	 */
 	void KillAllResources();
 	void RemoveTexturesNotInExclusionList(const vector<string> &exclusionList);
-	bool RemoveResource(const string &fileName);
+	bool RemoveResource(const string &fileName, bool bUnloadFileButDontDelete);
 
 private:
 	class Resource
