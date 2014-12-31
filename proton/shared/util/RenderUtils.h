@@ -67,6 +67,7 @@ bool SetupScreenInfoIPhone(int interfaceOrientation);
 
 void ConvertCoordinatesIfRequired(int &xPos, int &yPos);
 void ConvertCoordinatesIfRequired(float &xPos, float &yPos);
+void ConvertCoordinatesIfRequired(double &xPos, double &yPos); //needed for 64 bit iOS builds
 bool NeedsOrthoSet();
 void ResetOrthoFlag();
 void SetOrthoModeFlag();

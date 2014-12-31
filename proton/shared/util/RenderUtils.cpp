@@ -627,6 +627,15 @@ void ConvertCoordinatesIfRequired(int &xPos, int &yPos)
 	yPos = (int)y;
 }
 
+void ConvertCoordinatesIfRequired(double &xPos, double &yPos)
+{
+    float x = (float)xPos;
+    float y = (float)yPos;
+    ConvertCoordinatesIfRequired(x, y);
+    xPos = (int)x;
+    yPos = (int)y;
+}
+
 void ConvertCoordinatesIfRequired(float &xPos, float &yPos)
 {
 //	LogMsg("Before converting, coords are %d, %d", int(xPos), int(yPos));	

@@ -9,8 +9,15 @@ BOOL CALLBACK EnumWindowProc(HWND hwnd, LPARAM lParam)
 {
 	HINSTANCE hinst=(HINSTANCE)GetModuleHandle(NULL);
 
+
+#ifdef _WIN64
+
+if((HINSTANCE)GetWindowLongPtr(hwnd, GWLP_HINSTANCE)==hinst &&
+   IsWindowVisible(hwnd))
+#else
 	if((HINSTANCE)GetWindowLongPtr(hwnd, GWL_HINSTANCE)==hinst &&
 		IsWindowVisible(hwnd))
+#endif
 	{
 		hwndMain=hwnd;
 		return FALSE;
