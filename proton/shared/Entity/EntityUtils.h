@@ -98,6 +98,7 @@ Entity * CreateInputTextEntity(Entity *pParentEnt, string name, float x, float y
 Entity * CreateCheckbox(Entity *pBG, string name, string text, float x, float y, bool bChecked, eFont fontID = FONT_SMALL, float fontScale = 1.0f);
 bool IsCheckboxChecked(Entity *pEnt); //used with
 void SetCheckBoxChecked(Entity *pEnt, bool bChecked, bool bShowAnim = true); //anim means that little bob thing
+void OnCheckboxToggle(VariantList *pVList);
 
 void DisableAllButtonsEntity(Entity *pEnt, bool bRecursive = true);
 void EnableAllButtonsEntity(Entity *pEnt, bool bRecursive = true, int delayBeforeActionMS = 0, eTimingSystem timing = GetTiming());

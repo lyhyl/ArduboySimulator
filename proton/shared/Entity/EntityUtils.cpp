@@ -2068,22 +2068,71 @@ bool IsCheckboxChecked(Entity *pEnt)
 
 void SetCheckBoxChecked(Entity *pEnt, bool bChecked, bool bShowAnim)
 {
-
+	OneTimeBobEntity(pEnt);
 	if (!bChecked)
 	{
+		if(pEnt->GetParent() && pEnt->GetParent()->GetVar("min_checks"))
+		{
+			uint32 minCheck=pEnt->GetParent()->GetVar("min_checks")->GetUINT32();
+			if(minCheck>0)
+			{	// don't let them check more than maxChecks items
+				EntityList *kids=pEnt->GetParent()->GetChildren();
+				uint32 checked=0;
+				EntityList::iterator itor=kids->begin();
+				while(itor!=kids->end())
+				{
+					if (StringFromStartMatches((*itor)->GetName(), "input_checkicon|") ||
+						StringFromStartMatches((*itor)->GetName(), "input_checkbox|"))
+					{
+						if((*itor)->GetVar("checked")->GetUINT32()!=0)
+							checked++;
+					}
+					itor++;
+				}
+				if(checked<=minCheck)
+					return;	// bobbed already, but don't actually uncheck it
+			}
+		}
 		//uncheck it
 		pEnt->GetVar("checked")->Set(uint32(0));
 		//the image too
-		AnimateStopEntityAndSetFrame(pEnt, 0, 0, 0);
-	} else
+		if (StringFromStartMatches(pEnt->GetName(), "input_checkicon|"))
+			pEnt->GetVar("alpha")->Set(0.3f);
+		else
+			AnimateStopEntityAndSetFrame(pEnt, 0, 0, 0);
+	} 
+	else
 	{
+		if(pEnt->GetParent() && pEnt->GetParent()->GetVar("max_checks"))
+		{
+			uint32 maxCheck=pEnt->GetParent()->GetVar("max_checks")->GetUINT32();
+			if(maxCheck>0)
+			{	// don't let them check more than maxChecks items
+				EntityList *kids=pEnt->GetParent()->GetChildren();
+				uint32 checked=0;
+				EntityList::iterator itor=kids->begin();
+				while(itor!=kids->end())
+				{
+					if (StringFromStartMatches((*itor)->GetName(), "input_checkicon|") ||
+						StringFromStartMatches((*itor)->GetName(), "input_checkbox|"))
+					{
+						if((*itor)->GetVar("checked")->GetUINT32()!=0)
+							checked++;
+					}
+					itor++;
+				}
+				if(checked>=maxCheck)
+					return;	// bobbed already, but don't actually check it
+			}
+		}
 		//check it
 		pEnt->GetVar("checked")->Set(uint32(1));
 		//the image too
-		AnimateStopEntityAndSetFrame(pEnt, 0, 1, 0);
+		if (StringFromStartMatches(pEnt->GetName(), "input_checkicon|"))
+			pEnt->GetVar("alpha")->Set(1.0f);
+		else
+			AnimateStopEntityAndSetFrame(pEnt, 0, 1, 0);
 	}
-	
-	OneTimeBobEntity(pEnt);
 }
 
 void OnCheckboxToggle(VariantList *pVList)
@@ -2114,7 +2163,6 @@ Entity * CreateCheckbox(Entity *pBG, string name, string text, float x, float y,
 	float letterHeight = GetBaseApp()->GetFont(fontID)->MeasureText("W", fontScale).y;
 	EntitySetScaleBySize(pEnt, CL_Vec2f(letterHeight*2.0f, letterHeight*2.0f));
 		
-
 	if (bChecked)
 	{
 		AnimateStopEntityAndSetFrame(pEnt, 0, 1, 0);
