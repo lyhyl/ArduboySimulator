@@ -77,5 +77,5 @@ void CRandom::Randomize(void)
 
 int CRandom::RandomRange( int min, int max )
 {
-	return Random( (max+1)-min)+min;
+	return Random(max-min)+min;
 }
