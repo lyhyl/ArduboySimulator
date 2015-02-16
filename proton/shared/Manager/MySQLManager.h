@@ -40,11 +40,11 @@ public:
 	unsigned int GetOpsDone() {return m_opsDone;}
 	void ResetOpsDone() {m_opsDone = 0;}
 	string GetLastError();
-
-protected:
-	
+	int GetTableRecordCountFast( string tableName ); //table must have sequential ID member with no missing #s for this to work
 
 private:
+
+	bool DoesTableRecordExistFast(string tableName, int record);  //table must have sequential ID member with no missing #s for this to work
 	MYSQL *m_conn;
 	uint32 m_pingTimer; //do a query every 4 hours to avoid being disconnected
 	bool m_bLostServerConnection;

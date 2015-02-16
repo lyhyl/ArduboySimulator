@@ -431,3 +431,59 @@ int MySQLManager::GetTableRecordCount( string tableName )
 	AddSelectResults(vdb);
 	return vdb[0].GetVar("COUNT(*)")->GetINT32();
 }
+
+bool MySQLManager::DoesTableRecordExistFast(string tableName, int record)
+{
+	string sql = "SELECT COUNT(ID) FROM "+tableName+" where ID = "+toString(record)+" LIMIT 1";
+	if (!Query(sql, true))
+	{
+		LogError("(Couldn't DoesTableRecordExist, it must have an indexed ID member for this to work!");
+		return 0;
+	}
+	vector<VariantDB> vdb;
+	AddSelectResults(vdb);
+	return vdb[0].GetVar("COUNT(ID)")->GetINT32() > 0;
+}
+
+int MySQLManager::GetTableRecordCountFast( string tableName )
+{
+	//it takes 1.2 seconds for SELECT COUNT(*) to work on a 6.5 million size player database.  Let seth do his own way for better speed
+	
+	int min = 0;
+	int max = 1;
+
+	while (DoesTableRecordExistFast(tableName, max))
+	{
+		min = max;
+		max *= 2;
+	}
+
+	if (min <= 2) return max; //it's empty, 1, or 2
+
+	max--; //actually one less
+
+	//LogMsg("Well, we know the correct number is between %d and %d at least.", min, max);
+	
+	int lastMin = 0;
+	int lastMax = 0;
+
+	while (max != min+1 && !(lastMin == min && lastMax == max)) //the lastmin/max stuff is probably not needed, but it avoids a full freeze if I made a mistake
+	{
+		//LogMsg("Checking %d and %d", min, max);
+		lastMin = min;
+		lastMax = max;
+
+		if (DoesTableRecordExistFast(tableName, min+ ( (max-min)/2)))
+		{
+			//higher
+			min = min+ ((max-min)/2);
+		} else
+		{
+			//lower
+			max = (min+ ((max-min)/2))-1;
+		}
+		
+	}
+	
+	return min;
+}
