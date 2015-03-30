@@ -26,9 +26,6 @@ int i_choice = rand.GetRandom();
 #ifndef WeightRand_h__
 #define WeightRand_h__
 
-
-
-
 class CWeightRand
 {
 public:
@@ -43,6 +40,7 @@ public:
 	bool Save(FILE *fp); //save to file stream
 	bool Load(FILE *fp); //load from file stream
 	unsigned int GetCount(){return (unsigned int)a_odds.size();}
+	std::string TestRun(int runs=100000);
 
 private:
 

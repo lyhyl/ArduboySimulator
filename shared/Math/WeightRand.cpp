@@ -1,6 +1,7 @@
 #include "PlatformPrecomp.h"
 #include "WeightRand.h"
 #include <cassert>
+#include "../MiscUtils.h"
 
 CWeightRand::CWeightRand()
 {
@@ -137,4 +138,24 @@ int CWeightRand::GetRandom()
 	return CalcNumber(f_rand);
 }
 
+string CWeightRand::TestRun(int runs)
+{
+	int i;
 
+	vector<int> times;
+	times.resize(a_odds.size());
+	for(i=0;i<runs;i++)
+	{
+		int p=GetRandom();
+		times[p]++;
+	}
+	string result="Did "+toString(runs)+" runs, results:\n";
+	for(i=0;i<(int)a_odds.size();i++)
+	{
+		if(a_odds[i]>0)	// this one exists
+		{
+			result+="Item #"+toString(i)+": "+FloatToMoney(((float)times[i]/(float)runs)*100.0f,5)+"% ("+toString(times[i])+" times)\n";
+		}
+	}
+	return result;
+}
