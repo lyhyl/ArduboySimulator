@@ -263,7 +263,7 @@ void App::Update()
 
 		TextScanner t;
 		t.m_lines.push_back("Testing 123");
-		t.m_lines.push_back("Fuck ya'll!");
+		t.m_lines.push_back("Heck yeah!");
 		t.m_lines.push_back("Whoopsopsop!");
 
 		LogMsg("Saving file...");
@@ -283,10 +283,13 @@ void App::Draw()
 {
 	//Use this to prepare for raw GL calls
 	PrepareForGL();
-	
+#ifdef _DEBUG
+	//LogMsg("Doing draw");
+#endif
 	glClearColor(0,0,0,1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
+	CLEAR_GL_ERRORS() //honestly I don't know why I get a 0x0502 GL error when doing the FIRST gl action that requires a context with emscripten only
+
 	//draw our game stuff
 	DrawFilledRect(10.0f,10.0f,GetScreenSizeXf()/3,GetScreenSizeYf()/3, MAKE_RGBA(255,255,0,255));
 	DrawFilledRect(0,0,64,64, MAKE_RGBA(0,255,0,100));
@@ -296,7 +299,7 @@ void App::Draw()
 	RenderSpinningTriangle();
 //	RenderGLTriangle();
 	//let's blit a bmp, but first load it if needed
-	
+
 	
 	if (!m_surf.IsLoaded())
 	{

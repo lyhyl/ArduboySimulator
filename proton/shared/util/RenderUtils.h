@@ -15,6 +15,10 @@
 class Surface;
 class Entity;
 
+
+#define CLEAR_GL_ERRORS() while (glGetError());
+
+
 #ifdef _DEBUG
 #define CALL_THE_QGL_VERSION_OF_glGetError glGetError
 #define CHECK_GL_ERROR() \
@@ -24,8 +28,10 @@ class Entity;
 		LogError("OpenGL error 0x%04X (%d) in %s file %s:%d\n", __error,__error, __FUNCTION__, __FILE__, __LINE__); \
 	} \
 }
+
 #else
 #define CHECK_GL_ERROR() 
+
 #endif
 
 

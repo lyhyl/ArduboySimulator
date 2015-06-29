@@ -91,6 +91,8 @@ named_slot_map::insert(const stored_group& name, const connection& con,
   return it;
 }
 
+
+
 void named_slot_map::disconnect(const stored_group& name)
 {
   group_iterator group = groups.find(name);
@@ -102,7 +104,9 @@ void named_slot_map::disconnect(const stored_group& name)
       i->first.disconnect();
       i = next;
     }
-    groups.erase(group);
+	
+	//groups.erase(group); //original
+	groups.erase(static_cast<const_group_iterator>(group)); //SETH fixed to work with C++11
   }
 }
 
@@ -125,7 +129,8 @@ void named_slot_map::remove_disconnected_slots()
     }
 
     // Clear out empty groups
-    if (empty(g)) groups.erase(g++);
+    //if (empty(g)) groups.erase(g++); //old way
+	  if (empty(g)) groups.erase(static_cast<const_group_iterator>(g++)); //SETH fixed to work with C++11
     else ++g;
   }
 }

@@ -4,7 +4,7 @@
 
 #if defined RT_WEBOS || defined RT_USE_SDL_AUDIO
 
-#include "SDL.h"
+#include "SDL_mixer.h"
 
 #define NUM_CHANNELS 16
 
@@ -40,6 +40,10 @@ static bool g_MusicHasFinished = false;
 
 void musicFinishedCallback()
 {
+
+#ifdef _DEBUG
+	LogMsg("Got musicfinished callback");
+#endif
 	g_MusicHasFinished = true;
 }
 
@@ -63,6 +67,12 @@ AudioHandle AudioManagerSDL::Play( const string fileName )
 
 bool AudioManagerSDL::Init()
 {
+
+	//these two lines were added for HTML5, but don't seem to be needed for other stuff?
+	//SDL_Init(SDL_INIT_AUDIO);
+	Mix_Init(MIX_INIT_OGG);
+	Mix_ReserveChannels(1);
+
 	// we'll use SDL_Mixer to do all our sound playback. 
 	// It's a simple system that's easy to use. The most 
 	// complicated part about using SLD_Mixer is initting it. So 
@@ -88,6 +98,12 @@ bool AudioManagerSDL::Init()
 	int channels = 2;
 	int bufferSize = 1024;
 	
+#ifdef PLATFORM_HTML5
+	int ret = Mix_OpenAudio(0, 0, 0, 0); // we ignore all these..
+	assert(ret == 0);
+#else
+
+
 	if ( Mix_OpenAudio(rate, format, channels, bufferSize) )
 	{
 		// we had an error opening the audio
@@ -95,7 +111,7 @@ bool AudioManagerSDL::Init()
 		return false;
 
 	}
-
+#endif
 	// SDL mixer requires that you specify the maximum number of simultaneous
 	// sounds you will have. This is done through the function Mix_AllocateChannels. 
 	// We'll need an answer for that. A channel has very little overhead,
@@ -219,8 +235,8 @@ void AudioManagerSDL::Preload( string fName, bool bLooping /*= false*/, bool bIs
 		pObject = new SoundObject;
 		pObject->m_fileName = fName;
 
-		assert(! (GetFileExtension(fName) == "mp3") && "SDL mixer doesn't support mp3 for non music playback though");
-
+		assert(! (GetFileExtension(fName) == "mp3" || GetFileExtension(fName) == "ogg") && "SDL mixer doesn't support mp3 for non music playback though");
+	
 		string basePath;
 		if (bAddBasePath)
 		{
@@ -278,6 +294,7 @@ AudioHandle AudioManagerSDL::Play( string fName, bool bLooping /*= false*/, bool
 			basePath = GetBaseAppPath();
 		}
 
+
 		m_lastMusicFileName = fName;
 
 		StopMusic();
@@ -294,18 +311,17 @@ AudioHandle AudioManagerSDL::Play( string fName, bool bLooping /*= false*/, bool
 
 		if (!m_pMusicChannel)
 		{
-			LogError("Unable to load music file %s. Missing?", (basePath+fName).c_str());
+			LogError("Unable to load music file %s. Missing? (%s)", (basePath+fName).c_str(), Mix_GetError());
 			return AUDIO_HANDLE_BLANK;
 		}
 		m_lastMusicID = (AudioHandle) m_pMusicChannel;
 		m_bLastMusicLooping = bLooping;
 		
-		SetMusicVol(m_musicVol);
-
 		int ret = Mix_PlayMusic(m_pMusicChannel, loops);
+		
 		if (ret == -1)
 		{
-			LogError("Unable to play music file %s.", (GetBaseAppPath()+fName).c_str());
+			LogError("Unable to play music file %s. %s", (GetBaseAppPath()+fName).c_str(), Mix_GetError());
 		}
 
 		return (AudioHandle) m_pMusicChannel;
@@ -423,8 +439,11 @@ void AudioManagerSDL::SetMusicEnabled( bool bNew )
 void AudioManagerSDL::StopMusic()
 {
 	DeleteSoundObjectByFileName(m_lastMusicFileName);
-	Mix_HaltMusic();
-	Mix_FreeMusic(m_pMusicChannel);
+	if (m_pMusicChannel)
+	{
+		Mix_HaltMusic();
+		Mix_FreeMusic(m_pMusicChannel);
+	}
 	m_pMusicChannel = NULL;
 	m_lastMusicID = AUDIO_HANDLE_BLANK;
 }

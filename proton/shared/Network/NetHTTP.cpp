@@ -1,5 +1,9 @@
 #include "PlatformPrecomp.h"
 
+#if defined PLATFORM_HTML5
+#include "../html5/NetHTTP_HTML5.cpp"
+#else
+
 #include "NetHTTP.h"
 #include "NetUtils.h"
 #include "BaseApp.h"
@@ -35,6 +39,7 @@ void NetHTTP::Reset(bool bClearPostdata)
 		m_pFile = NULL;
 	}
 
+	m_endOfDataSignal = END_OF_DATA_SIGNAL_RTSOFT_MARKER; //don't change the default, Seth's software relies on it
 	m_state = STATE_IDLE;
 	m_error = ERROR_NONE;
 	m_timer = 0;
@@ -50,8 +55,9 @@ void NetHTTP::Reset(bool bClearPostdata)
 	m_bytesWrittenToFile = 0;
 }
 
-void NetHTTP::Setup( string serverName, int port, string query )
+void NetHTTP::Setup( string serverName, int port, string query, eEndOfDataSignal eodSignal )
 {
+	m_endOfDataSignal = eodSignal;
 	m_serverName = serverName;
 	m_port = port;
 	m_query = query;
@@ -161,6 +167,10 @@ bool NetHTTP::Start()
 	//LogMsg(header.c_str());
 #endif
 	//take on the post data if applicable
+	
+#ifdef _DEBUG
+LogMsg("Opening %s on port %d", m_serverName.c_str(), m_port);
+#endif
 	if (!m_netSocket.Init(m_serverName, m_port))
 	{
 		OnError(ERROR_CANT_RESOLVE_URL);
@@ -233,7 +243,7 @@ int NetHTTP::ScanDownloadedHeader()
 			{
 				SetFileOutput(fNameTemp);
 			}
-			Setup(domain, port, request);
+			Setup(domain, port, request, m_endOfDataSignal);
 			Start();
 		}
 		
@@ -291,12 +301,36 @@ void NetHTTP::Update()
 			
 			if (m_expectedFileBytes == 0)
 			{
-				bool bFoundMarker = CheckCharVectorForString(m_netSocket.GetBuffer(), C_END_DOWNLOAD_MARKER_STRING);
-				if (bFoundMarker)
+
+				//if we know it's a .html file we can look for the double CR to know if it's done
+
+				switch (m_endOfDataSignal)
 				{
-						FinishDownload();
-						return;
+					case END_OF_DATA_SIGNAL_HTTP:
+					{
+						bool bFoundMarker = CheckCharVectorForString(m_netSocket.GetBuffer(), "\n\n");
+						if (bFoundMarker)
+						{
+							FinishDownload();
+							return;
+						}
+					}
+					break;
+					
+					case END_OF_DATA_SIGNAL_RTSOFT_MARKER:
+						{
+							bool bFoundMarker = CheckCharVectorForString(m_netSocket.GetBuffer(), C_END_DOWNLOAD_MARKER_STRING);
+							if (bFoundMarker)
+							{
+								FinishDownload();
+								return;
+							}
+
+						}
+						break;
+
 				}
+			
 			} else
 			{
 				
@@ -328,6 +362,8 @@ void NetHTTP::Update()
 						FinishDownload();
 						return;
 					}
+
+					
 				}
 				
 			}
@@ -369,7 +405,16 @@ void NetHTTP::FinishDownload()
 
 	if (m_expectedFileBytes == 0)
 	{
-		m_downloadData.insert(m_downloadData.begin(), s.begin()+m_downloadHeader.length(), s.end()-strlen(C_END_DOWNLOAD_MARKER_STRING));
+		switch(m_endOfDataSignal)
+		{
+		case END_OF_DATA_SIGNAL_HTTP:
+			m_downloadData.insert(m_downloadData.begin(), s.begin()+m_downloadHeader.length(), s.end()-strlen("\n\n"));
+			break;
+
+		case END_OF_DATA_SIGNAL_RTSOFT_MARKER:
+			m_downloadData.insert(m_downloadData.begin(), s.begin()+m_downloadHeader.length(), s.end()-strlen(C_END_DOWNLOAD_MARKER_STRING));
+			break;
+		}
 	} else
 	{
 		m_downloadData.insert(m_downloadData.begin(), s.begin()+m_downloadHeader.length(), s.end());
@@ -398,3 +443,5 @@ int NetHTTP::GetDownloadedBytes()
 	if (m_downloadData.size() == 0) return 0;
 	return m_downloadData.size()-1; //the -1 is for the null we added
 }
+
+#endif

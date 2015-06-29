@@ -534,7 +534,7 @@ string ReplaceWithLargeInFileNameAndOSSpecific(const string &fName)
 
 string ReplaceMP3( const string &fName)
 {
-	if (GetEmulatedPlatformID() != PLATFORM_ID_ANDROID)
+	if (GetEmulatedPlatformID() != PLATFORM_ID_ANDROID && GetEmulatedPlatformID() != PLATFORM_ID_HTML5)
 	{
 		return fName; //leave it as mp3
 	}

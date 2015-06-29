@@ -60,6 +60,7 @@ enum ePlatformID
 	PLATFORM_ID_WEBOS,
 	PLATFORM_ID_BBX, //RIM Playbook
 	PLATFORM_ID_FLASH,
+	PLATFORM_ID_HTML5, //javascript output via emscripten for web
 	
 	//new platforms will be added above here.  Don't count on PLATFORM_ID_COUNT not changing!
 	PLATFORM_ID_COUNT

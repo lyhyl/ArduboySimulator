@@ -71,21 +71,44 @@ void Surface::Kill()
 
 bool Surface::LoadBMPTexture(byte *pMem)
 {
-	BMPImageHeader *pBmpImageInfo = (BMPImageHeader*)&pMem[14];
+	
+	BMPImageHeader *pBmpImageInfo = new BMPImageHeader;
+
+		
+	memcpy(pBmpImageInfo, &pMem[14], sizeof(BMPImageHeader)-14);
+
 
 	unsigned short offsetToImageData;
 	
 	memcpy(&offsetToImageData, &pMem[10], 2);
 	byte *pPixelData = &pMem[offsetToImageData];
 	
-	if (!IsPowerOf2(pBmpImageInfo->Width) || !IsPowerOf2(pBmpImageInfo->Height))
+#ifdef _DEBUG
+LogMsg("Checking pixel data..");
+#endif
+
+//get around alignment issues on PLATFORM_HTML5	
+	uint32 tempWidth, tempHeight;
+	memcpy(&tempWidth, &pBmpImageInfo->Width, sizeof(uint32));
+	memcpy(&tempHeight, &pBmpImageInfo->Height, sizeof(uint32));
+
+#ifdef _DEBUG
+	LogMsg("Did memcpy, width is %d", tempWidth);
+#endif
+	if (!IsPowerOf2(tempWidth) || !IsPowerOf2(tempHeight))
 	{
 		LogError("Bitmap dimensions needs to be of a power of 2, use RTPack on it first, this way it can still be used as if it was its original size");
 		LogError("Or, use SoftSurface which can do this and has a better bmp loader in it.");
+		SAFE_DELETE(pBmpImageInfo);
 		return false;
 	}
-	m_texWidth = pBmpImageInfo->Width;
-	m_texHeight = pBmpImageInfo->Height;
+
+#ifdef _DEBUG
+	LogMsg("It's power of 2...");
+#endif
+
+	m_texWidth = tempWidth;
+	m_texHeight = tempHeight;
 
 	m_originalWidth = m_texWidth;
 	m_originalHeight = m_texHeight;
@@ -131,16 +154,26 @@ bool Surface::LoadBMPTexture(byte *pMem)
 	 else
 	{
 		LogError("Don't handle %d bit bmps yet", pBmpImageInfo->BitCount);
+		SAFE_DELETE(pBmpImageInfo);
+	
 		return false;
 	}
 	
 	PrepareGLForNewTexture();	
 	m_bUsesAlpha = (colorFormat == GL_RGBA);
+	
+#ifdef _DEBUG
+LogMsg("Loading BMP texture of size %d by %d", m_texWidth, m_texHeight);
+#endif
 	glTexImage2D( GL_TEXTURE_2D, 0, colorFormat, m_texWidth, m_texHeight, 0, colorFormat, pixelFormat, pPixelDataToUse );
+	CHECK_GL_ERROR();
+	
 	IncreaseMemCounter(m_texWidth*m_texHeight* (pBmpImageInfo->BitCount/8));
 	SetTextureStates();
 	CHECK_GL_ERROR();
 	SAFE_DELETE_ARRAY(pFinal);
+	SAFE_DELETE(pBmpImageInfo);
+
 	return true;
 }
 
@@ -257,6 +290,7 @@ void Surface::PreMultiplyAlpha(byte *pBytes, int width, int height, int format)
 
 bool Surface::LoadRTTexture(byte *pMem)
 {
+	CHECK_GL_ERROR();
 	rttex_header *pTexHeader = (rttex_header*)pMem;
 	rttex_mip_header *pMipSection;
 
@@ -289,7 +323,7 @@ bool Surface::LoadRTTexture(byte *pMem)
 			glTexParameteri( GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_FALSE );
 		}
 	}
-
+CHECK_GL_ERROR();
 	for (int nMipLevel=0; nMipLevel < pTexHeader->mipmapCount; nMipLevel++)
 	{
 		pMipSection = (rttex_mip_header*)pCurPos;
@@ -327,7 +361,7 @@ bool Surface::LoadRTTexture(byte *pMem)
 				
 					
 					glTexImage2D( GL_TEXTURE_2D, nMipLevel, internalColorFormat, width, height, 0, colorType, GL_UNSIGNED_BYTE, pTextureData );
-
+					CHECK_GL_ERROR();
 			} else
 			{
 			
@@ -360,9 +394,14 @@ bool Surface::LoadRTTexture(byte *pMem)
 				{
 					colorType = GL_RGB;
 				}
-				//LogMsg("Loading surface: miplevel %d, internal color type:0x%02lX  colortype 0x%02lX, x%d y%d, format type: 0x%02lX", nMipLevel, colorTypeSource, colorType, pMipSection->width, pMipSection->height, pTexHeader->format );
+				
+#ifdef _DEBUG
+				LogMsg("Loading surface: miplevel %d, colortype 0x%02lX, x%d y%d, format type: 0x%02lX", nMipLevel, colorType, pMipSection->width, pMipSection->height, pTexHeader->format );
+#endif
+				
 				int internalColorFormat = colorType;
-#ifdef C_GL_MODE
+#if defined(C_GL_MODE) && !defined(PLATFORM_HTML5)
+
 				if (internalColorFormat == GL_RGBA) internalColorFormat = GL_RGBA8;
 				if (internalColorFormat == GL_RGB) internalColorFormat = GL_RGB8;
 #endif
@@ -381,8 +420,9 @@ bool Surface::LoadRTTexture(byte *pMem)
 				}
 
 				glTexImage2D( GL_TEXTURE_2D, nMipLevel, internalColorFormat, width, height, 0, colorType, format, pTextureData );
-				#ifdef _DEBUG
-				//if (nMipLevel == 0) LogMsg("Surface::LoadRTTexture: Loading surface: %d, %d -  internalFormat: %d, format: %d color type: %d", width, height, internalColorFormat, format, colorType);
+CHECK_GL_ERROR();				
+#ifdef _DEBUG
+				if (nMipLevel == 0) LogMsg("Surface::LoadRTTexture: Loading surface: %d, %d -  internalFormat: %d, format: %d color type: %d", width, height, internalColorFormat, format, colorType);
 			
 				#endif
 			} else
@@ -416,8 +456,11 @@ bool Surface::LoadRTTexture(byte *pMem)
 
 	IncreaseMemCounter(memUsed);
 	SetTextureStates();
+#ifndef PLATFORM_HTML5
 	glTexParameteri( GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_FALSE );
-
+	//unknown parm in emscripten's emulated GL1 support
+#endif
+	CHECK_GL_ERROR();
 	return true;
 }
 
@@ -430,7 +473,7 @@ bool Surface::LoadFileFromMemory( byte *pMem, int inputSize )
 		assert(!"LoadFileFromMemory sent a null pointer?  AW HELL NAW");
 		return false;
 	}
-	
+	CHECK_GL_ERROR();
 	bool bReturn = false;
 
 	if (m_texWidth == 0)
@@ -449,6 +492,8 @@ bool Surface::LoadFileFromMemory( byte *pMem, int inputSize )
 #ifdef WINAPI
 		GetBaseApp()->m_sig_enterforeground.connect(1, boost::bind(&Surface::OnEnterForeground, this, _1));
 #endif
+
+		CHECK_GL_ERROR();
 	}
 
 	if (*((uint16*)pMem) == C_JPG_HEADER_MARKER)
@@ -466,9 +511,13 @@ bool Surface::LoadFileFromMemory( byte *pMem, int inputSize )
 	{
 		//we've got a bitmap on our hands it looks like
 		bReturn = LoadBMPTexture(pMem);
+		CHECK_GL_ERROR();
+
 	} else if (strncmp((char*)pMem, C_RTFILE_TEXTURE_HEADER, 6) == 0)
 	{
 		bReturn = LoadRTTexture(pMem);
+		CHECK_GL_ERROR();
+
 	} else
 	{
 		LogError("Surface: Unknown file type");
@@ -476,7 +525,7 @@ bool Surface::LoadFileFromMemory( byte *pMem, int inputSize )
 		return false; 
 	}
 
-	
+	CHECK_GL_ERROR();
 	if (bReturn)
 	{
 		SetSmoothing(m_bSmoothing);
@@ -590,7 +639,9 @@ void Surface::ApplyBlendingMode(uint32 rgba)
 void Surface::SetupForRender(const float rotationDegrees, const CL_Vec2f &vRotatePt, const uint32 rgba)
 {
 	SetupOrtho(); //upside down, makes this easier to do
+	CHECK_GL_ERROR();
 	g_globalBatcher.Flush();
+	CHECK_GL_ERROR();
 	Bind();
 	
 	//LogMsg("Rendering tex %d at %s at %d", m_glTextureID, PrintRect(dst).c_str(), GetTick(TIMER_GAME));
@@ -600,6 +651,7 @@ void Surface::SetupForRender(const float rotationDegrees, const CL_Vec2f &vRotat
 		PushRotationMatrix(rotationDegrees, vRotatePt);
 	}
 	ApplyBlendingMode(rgba);
+	CHECK_GL_ERROR();
 }
 
 void Surface::RemoveBlendingMode(uint32 rgba)
@@ -815,8 +867,9 @@ void Surface::SetSmoothing( bool bSmoothing )
 			glTexParameterx( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 			glTexParameterx( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
 		}
+		CHECK_GL_ERROR();
 	}
-
+	
 	m_bSmoothing = bSmoothing; //remember for later if we have to restore surfaces
 }
 
@@ -941,7 +994,7 @@ void Surface::UpdateSurfaceRect(rtRect dstRect, byte *pPixelData, bool bUpsideDo
 
 void Surface::SetTextureStates()
 {
-
+CHECK_GL_ERROR();
 	switch(m_texType)
 	{
 	case TYPE_DEFAULT:
@@ -975,6 +1028,8 @@ void Surface::SetTextureStates()
         default: ;
 
 	}
+
+	CHECK_GL_ERROR();
 }
 
 
