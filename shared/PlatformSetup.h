@@ -26,9 +26,13 @@
 		#include "OSX/PlatformSetupOSX.h"
 	#endif
 #endif
-#ifdef RTLINUX
+#if defined(RTLINUX) || defined(PLATFORM_LINUX)
 #include "linux/PlatformSetupLinux.h"
 
+#endif
+
+#ifdef PLATFORM_HTML5
+	#include "HTML5/PlatformSetupHTML5.h"
 #endif
 
 #ifdef RT_WEBOS_ARM

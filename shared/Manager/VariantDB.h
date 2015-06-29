@@ -36,30 +36,41 @@ public:
 
 #else
 
-#if defined( __APPLE__) || defined(RTLINUX)|| ANDROID_NDK || defined(PLATFORM_FLASH)
+#if defined( __APPLE__) || defined(RTLINUX)|| defined(PLATFORM_LINUX)||ANDROID_NDK || defined(PLATFORM_FLASH) || defined(PLATFORM_HTML5)
 
-#define _GLIBCXX_PERMIT_BACKWARD_HASH
-
-#include <ext/hash_map>
-
-namespace __gnu_cxx {
-	/**
-	Explicit template specialization of hash of a string class,
-	which just uses the internal char* representation as a wrapper.
-	*/
-	template <>
-	struct hash<std::string> {
-		size_t operator() (const std::string& x) const {
-			return hash<const char*>()(x.c_str());
-			// hash<const char*> already exists
-		}
-	};
-}
+#ifdef PLATFORM_HTML5
 
 
-typedef  __gnu_cxx::hash_map<string, Variant*> dataList;
-typedef  __gnu_cxx::hash_map<string, FunctionObject*> functionList;
+	#include <unordered_map>
+	typedef unordered_map<string, Variant*> dataList;
+	typedef unordered_map<string, FunctionObject*> functionList;
 
+
+#else
+	 
+
+	#define _GLIBCXX_PERMIT_BACKWARD_HASH
+
+	#include <ext/hash_map>
+
+	namespace __gnu_cxx {
+		/**
+		Explicit template specialization of hash of a string class,
+		which just uses the internal char* representation as a wrapper.
+		*/
+		template <>
+		struct hash<std::string> {
+			size_t operator() (const std::string& x) const {
+				return hash<const char*>()(x.c_str());
+				// hash<const char*> already exists
+			}
+		};
+	}
+
+
+	typedef  __gnu_cxx::hash_map<string, Variant*> dataList;
+	typedef  __gnu_cxx::hash_map<string, FunctionObject*> functionList;
+#endif
 #else
 	#include <hash_map>
 

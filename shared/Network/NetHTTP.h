@@ -26,18 +26,25 @@ myNet.Start();
 
 while (1)
 {
-	if (myNet.GetError() != ERROR_NONE) 
+	myNet.Update();
+
+
+	if (myNet.GetError() != NetHTTP::ERROR_NONE) 
 	{
 		//Big error, show message
 	}
 
-	if (myNet.GetState() == STATE_FINISHED)
+	if (myNet.GetState() == NetHTTP::STATE_FINISHED)
 	{
 		//transaction is finished
-		LogMsg("%s", GetDownloadedData()); //assuming it's a string.  Note that myNet will automatically add a null at the end.
+		LogMsg("%s", myNet.GetDownloadedData()); //assuming it's a string.  Note that myNet will automatically add a null at the end.
 	}
 
 }
+
+Note:  html5 builds automatically use NetHTTP_HTML5.cpp instead of NetHTTP.cpp.  The usage is the same but internally they use
+emscripten_async_wget2_data.  Due to javascript security issues, you can only download files on website the .html is hosted on, unless
+cross scripting privileges are setup.
 */
 
 #ifndef NetHTTP_h__
@@ -61,6 +68,13 @@ public:
 		STATE_ABORT
 	};
 
+	enum eEndOfDataSignal
+	{
+		END_OF_DATA_SIGNAL_RTSOFT_MARKER = 0, //sort of legacy, but if the characters in C_END_DOWNLOAD_MARKER_STRING are detected, 
+											  //the connection is ended. If content-length is sent by the server, that is used also.
+		END_OF_DATA_SIGNAL_HTTP //standard way, double linefeeds will end the connection. If content-length is sent by the server,
+								//that is also used.
+	};
 	enum eError
 	{
 		ERROR_NONE,
@@ -70,8 +84,7 @@ public:
 		ERROR_404_FILE_NOT_FOUND
 	};
 
-
-	void Setup(string serverName, int port, string query);
+	void Setup(string serverName, int port, string query, eEndOfDataSignal eodSignal = END_OF_DATA_SIGNAL_RTSOFT_MARKER);
 	bool AddPostData(const string &name, const byte *pData, int len=-1);
 	bool SetFileOutput(const string &fName); //call this before Start, allows you to save to a file instead of memory
 
@@ -85,8 +98,21 @@ public:
 	const byte * GetDownloadedData();
 	void Update();
 	void Reset(bool bClearPostData=true); //completely clears it out so it can be used again
-	
+
 private:
+
+#ifdef PLATFORM_HTML5
+
+	static void onLoaded( unsigned int handle, void* parent, void * file, unsigned int byteSize);
+	static void onError(unsigned int handle, void* parent, int statuserror, const char *message);
+	static void onProgress(unsigned int handle, void* parent, int bytesDownloaded, int totalBytes);
+
+	void SetBuffer(const char *pData, int byteSize);
+	void SetProgress(int bytesDownloaded, int totalBytes);
+	void KillConnectionIfNeeded();
+
+	int m_emscriptenWgetHandle;
+#endif
 
 	string BuildHTTPHeader();
 	void FinishDownload();
@@ -97,6 +123,7 @@ private:
 	string m_query;  //eg, "crap/index.html"
 	string m_replyHeader; //store what the server sends us
 	int m_port;
+	eEndOfDataSignal m_endOfDataSignal;
 	NetSocket m_netSocket;
 	eState m_state;
 	eError m_error;

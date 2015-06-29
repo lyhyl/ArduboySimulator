@@ -44,9 +44,9 @@ FileManager * GetFileManager() {return &g_fileManager;}
 	
 #else
 
-#if defined RT_WEBOS || defined RTLINUX
+#if defined RT_WEBOS || defined RTLINUX || defined PLATFORM_HTML5
 #include "Audio/AudioManagerSDL.h"
-AudioManagerSDL g_audioManager; //sound in windows and WebOS
+AudioManagerSDL g_audioManager; //sound in windows/WebOS/Linux/html5
 //AudioManager g_audioManager; //to disable sound
 #elif defined ANDROID_NDK
 #include "Audio/AudioManagerAndroid.h"
@@ -65,11 +65,14 @@ AudioManagerFlash *g_audioManager = new AudioManagerFlash;
 //in windows
 //AudioManager g_audioManager; //to disable sound
 
-#ifdef RT_FLASH_TEST
+#ifdef RT_USE_SDL_AUDIO
+#include "Audio/AudioManagerSDL.h"
+AudioManagerSDL g_audioManager; //sound in windows and WebOS
+
+#elif defined RT_FLASH_TEST
 #include "Audio/AudioManagerFlash.h"
 AudioManagerFlash g_audioManager;
 #else
-
 #include "Audio/AudioManagerAudiere.h"
 AudioManagerAudiere g_audioManager;  //Use Audiere for audio
 #endif
@@ -246,7 +249,8 @@ void App::Draw()
 	PrepareForGL();
 //	glClearColor(0.6,0.6,0.6,1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
+	CLEAR_GL_ERRORS(); //needed for html5
+
 	BaseApp::Draw();
 }
 

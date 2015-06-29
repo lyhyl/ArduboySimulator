@@ -25,7 +25,7 @@
 #define INVALID_SOCKET  (~0)
 #define rt_closesocket(x) close(x)
 
-#if defined(RT_WEBOS_ARM) || defined(ANDROID_NDK) || defined (RTLINUX)
+#if defined(RT_WEBOS_ARM) || defined(ANDROID_NDK) || defined (RTLINUX) 
 	#include <linux/sockios.h>
 	#include <errno.h>
 
@@ -34,8 +34,10 @@
 #include <sys/sockio.h>
 #include <sys/errno.h>
 
+#elif defined (PLATFORM_HTML5)
+#include <sys/errno.h>
 #else
-	
+	//default
 	#include <sys/sockio.h>
 #endif
 
@@ -259,7 +261,7 @@ void NetSocket::UpdateRead()
 			if (!m_bWasDisconnected)
 			{
 				#ifdef _DEBUG
-					LogMsg("Client disconnected");
+					LogMsg("Client disconnected.  Buffer size is %d", m_readBuffer.size());
 				#endif
 				m_bWasDisconnected = true;
 			}

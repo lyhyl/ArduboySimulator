@@ -187,6 +187,7 @@ float RandomRangeFloat(float rangeMin, float rangeMax)
 //randomize a number slightly, by allowing up to modAmount to be removed or added
 int GiveOrTake(int baseNum, int modAmount)
 {
+	if (modAmount == 0) return baseNum; //avoid divide by zero
 	return baseNum +  (Random(modAmount*2) - modAmount);
 }
 

@@ -30,7 +30,7 @@ add_executable(RTConsole
  ../../shared/util/CRandom.cpp
  ../../shared/util/MathUtils.cpp
  ../../shared/util/Variant.cpp
-  ../../shared/Math/WeightRand.cpp
+
  ../../shared/Manager/VariantDB.cpp
  ../../shared/linux/LinuxUtils.cpp
  

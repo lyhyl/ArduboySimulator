@@ -147,6 +147,8 @@ void RenderBatcher::Flush(eFlushMode mode)
 		//glColor4f(1,1,1,0);
 	}
 
+	CHECK_GL_ERROR();
+
 	if (mode == FLUSH_RENDER || mode == FLUSH_SETUP_RENDER_UNSETUP)
 	{
 
@@ -325,7 +327,7 @@ void RenderBatcher::Flush3D( bool bUseNormals, bool bUseTextures, bool bUseColor
 	CHECK_GL_ERROR();
 	if (m_verts.empty()) return;
 	glVertexPointer(3, GL_FLOAT, sizeof(BatchVert), &m_verts[0].vPos.x);
-	
+	CHECK_GL_ERROR();
 	if (bUseTextures)
 	{
 		m_pSurf->Bind();
