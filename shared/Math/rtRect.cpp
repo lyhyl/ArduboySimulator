@@ -125,3 +125,14 @@ rtRectf rtRectf::operator+ (const rtRectf &r) const
 
 	return rtRectf(left+r.left, top+r.top, right+r.right, bottom+r.bottom);
 }
+
+
+bool rtRectf::IsInside( float x, float y )
+{
+	if (x >= left && x < right && y >= top && y < bottom)
+	{
+		return true;
+	}
+
+	return false;
+}

@@ -53,7 +53,7 @@ struct rtRectf
 	void Scale(eAlignment alignment,  CL_Vec2f vScale );
 
 	rtRectf operator+ (const rtRectf &r) const;
-
+	bool IsInside( float x, float y );
 };
 
 #endif // rtRect_h__
