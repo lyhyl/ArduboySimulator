@@ -542,7 +542,7 @@ if (particle_list.size() == 0) return;
 
 	int count = 0;
 	glPushMatrix();
-	glTranslatef(x_shift, y_shift, 0);
+	glTranslatef((GLfloat)x_shift, (GLfloat)y_shift, 0);
 
 	while( iter != particle_list.end() )
 	{
