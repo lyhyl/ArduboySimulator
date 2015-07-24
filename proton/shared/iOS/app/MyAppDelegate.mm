@@ -9,6 +9,11 @@
 #import "EAGLView.h"
 #import "InAppPurchaseManager.h"
 
+
+#ifdef RT_FLURRY_ENABLED
+#import "Flurry.h"
+#endif
+
 #ifdef RT_TAPJOY_ENABLED
     #ifdef RT_TAPJOY_V9
         //using the new SDK, but I don't support banner ads yet
@@ -49,6 +54,7 @@
 	
 }
 
+
 - (void)applicationDidFinishLaunching:(UIApplication *)application
 {
     
@@ -68,6 +74,14 @@
     [m_tapjoyManager InitTapjoy:[UIApplication sharedApplication] viewController:viewController]; //viewController.view
 #endif
     
+#ifdef RT_FLURRY_ENABLED
+    
+        //if you get an error here, it's because you need to define RT_FLURRY_KEY="your flurry key" in your compile build systems, or even the top of this file.
+        string flurryKey = RT_FLURRY_KEY;
+        //LogMsg("Flurry Key is %s", RT_FLURRY_KEY); //uncomment to make sure your stuff is set right
+        NSString *flurryStr =  [NSString stringWithCString: flurryKey.c_str() encoding: [NSString defaultCStringEncoding]];
+        [Flurry startSession:flurryStr];
+#endif
     
     //old way
 	//[window addSubview:viewController.view];

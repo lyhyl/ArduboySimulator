@@ -437,6 +437,16 @@ import android.view.View.OnClickListener;
 	
 		
 		//#endif
+		
+		//#if defined(RT_FLURRY_SUPPORT)
+		Log.d(app.PackageName, "Flurry initializing");
+		// configure Flurry
+        FlurryAgent.setLogEnabled(false);
+ 
+        // init Flurry
+        FlurryAgent.init(this, m_flurryAPIKey);
+		//#endif
+
 
 //#if defined(RT_TAPJOY_SUPPORT)
 			
