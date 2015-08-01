@@ -172,7 +172,7 @@ bool NetHTTP::Start()
 
 	
 #ifdef _DEBUG
-LogMsg("Opening %s on port %d with postdata of %s", m_serverName.c_str(), m_port);
+LogMsg("Opening %s on port %d with postdata of %s", m_serverName.c_str(), m_port, m_postData.c_str());
 #endif
 
 	string header, stCommand;
@@ -319,6 +319,24 @@ void NetHTTP::SetBuffer(const char *pData, int byteSize)
 	m_downloadData.resize(byteSize+1); //1 extra so we can add a null
 	memcpy((char*)&m_downloadData[0], pData, byteSize); //never do this at home, kids
 	m_downloadData[byteSize]=0; //set the NULL too
+
+	if (m_endOfDataSignal == END_OF_DATA_SIGNAL_RTSOFT_MARKER)
+	{
+		//er.. there has to be a better way then this, but whatever, I don't use rtsoft markers much and when I do it's tiny strings
+		
+		string temp = (char*)&m_downloadData[0];
+		//remove the marker
+		StringReplace(C_END_DOWNLOAD_MARKER_STRING, "",temp);
+		//move it back
+		string crap;
+		m_downloadData = vector<char>(temp.begin(), temp.end());
+		if (m_downloadData[m_downloadData.size()-1] != 0)
+		{
+			m_downloadData.push_back(char(0)); //add the null
+		}
+	}
+	
+	
 }
 
 void NetHTTP::onLoaded( unsigned int handle, void* parent, void * file, unsigned int byteSize) 
