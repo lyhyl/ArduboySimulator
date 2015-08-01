@@ -83,6 +83,9 @@ StreamingInstance * FileManager::GetStreaming( string fileName, int *pSizeOut, b
 	StreamingInstanceFile *pStreamingFile = new StreamingInstanceFile();
 	if (!pStreamingFile->Open(fileName))
 	{
+#ifdef _DEBUG
+LogMsg("Failed to stream %s, it won't open", fileName.c_str());
+#endif
 		delete pStreamingFile;
 		return NULL;
 	}
