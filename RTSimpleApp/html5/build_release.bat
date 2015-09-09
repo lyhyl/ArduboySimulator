@@ -81,9 +81,24 @@ SET CUSTOM_FLAGS=%CUSTOM_FLAGS% -D_DEBUG -s GL_UNSAFE_OPTS=0 -s WARN_ON_UNDEFINE
 SET INCLUDE_DIRS=-I%SHARED% -I%APP% -I../../shared/util/boost -I../../shared/ClanLib-2.0/Sources -I../../shared/Network/enet/include ^
 -I%ZLIBPATH%
 
+:compile some libs into a separate thing, otherwise our list of files is too long and breaks stuff
+
+del %APP_NAME%.js
+del %APP_NAME%.html
+del temp.bc
 
 call emcc %CUSTOM_FLAGS% %INCLUDE_DIRS% ^
-%APP_SRC% %SRC% %COMPONENT_SRC% %ZLIB_SRC% %JPG_SRC% %PARTICLE_SRC% ^
+%ZLIB_SRC% %JPG_SRC% %PARTICLE_SRC% -o temp.bc
+
+
+call emcc %CUSTOM_FLAGS% %INCLUDE_DIRS% ^
+%APP_SRC% %SRC% %COMPONENT_SRC% %ZLIB_SRC% %JPG_SRC% %PARTICLE_SRC% temp.bc ^
 --embed-file ../bin/interface@interface/ --embed-file ../bin/audio@audio/ -o %APP_NAME%.html
 
+
+IF "%1" == "nopause" (
+echo no pause wanted
+) else (
+echo Compile complete.
 pause
+)

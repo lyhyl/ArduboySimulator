@@ -68,3 +68,12 @@ call emcc %CUSTOM_FLAGS% %INCLUDE_DIRS% ^
 REM Make sure the file compiled ok
 if not exist %APP_NAME%.js beeper.exe /p
 
+IF "%1" == "nopause" (
+echo no pause wanted
+) else (
+echo Compile complete.
+pause
+)
+
+
+

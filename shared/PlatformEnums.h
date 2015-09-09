@@ -28,6 +28,8 @@
 #define IsNexus7 ((GetScreenSizeX() == 1280 && GetScreenSizeY() == 800)|| (GetScreenSizeX() == 800 && GetScreenSizeY() ==  1280))
 #define IsHDSize ((GetScreenSizeX() == 1920 && GetScreenSizeY() ==  1080)|| (GetScreenSizeY() == 1080 && GetScreenSizeX() ==  1920))
 #define IsNexus5Actual ((GetScreenSizeX() == 1794 && GetScreenSizeY() == 1080)|| (GetScreenSizeX() == 1080 && GetScreenSizeY() ==  1794))
+#define IsGalaxyNoteActual ((GetScreenSizeX() == 2560 && GetScreenSizeY() == 1440)|| (GetScreenSizeX() == 1440 && GetScreenSizeY() ==  2560))
+#define IsLGG4Actual ((GetScreenSizeX() == 2392 && GetScreenSizeY() == 1440)|| (GetScreenSizeX() == 1440 && GetScreenSizeY() ==  2392))
 
 //here we test for the REAL dimensions, ignoring any screen stretching we have enabled
 #define IsPrimaryPlaybookSize ((GetPrimaryGLX() == 1024 && GetPrimaryGLY() ==  600)|| (GetPrimaryGLX() == 600 && GetPrimaryGLY() ==  1024))

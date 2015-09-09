@@ -760,6 +760,13 @@ bool DateIsOlder(int month, int day, int year, int hour, int min, int sec,
 
 string HexToString(string hexString)
 {
+	if (hexString.size() > 16)
+	{
+#ifdef _DEBUG
+LogMsg("This isn't hex data, it's probably already stringified, returning as such");
+return hexString;
+#endif
+	}
 	if (hexString.empty()) return "";
 
 	const unsigned char * pin = (const unsigned char*)hexString.c_str();
