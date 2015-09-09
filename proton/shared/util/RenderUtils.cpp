@@ -90,6 +90,9 @@ int GetDevicePixelsPerInchDiagonal()
 			if (IsOptimusHDSize)  cachedPixelsPerInch = 326;
 			if (IsNexus7) cachedPixelsPerInch = 216;
 			if (IsNexus5Actual) cachedPixelsPerInch = 445;
+			if (IsGalaxyNoteActual) cachedPixelsPerInch = 550;//guessing
+			if (IsLGG4Actual) cachedPixelsPerInch = 600;//guessing
+
 			if (IsHDSize && !IsDesktop()) cachedPixelsPerInch = 445; //guessing
 			
 			if (cachedPixelsPerInch == 0)
