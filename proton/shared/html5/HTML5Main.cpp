@@ -128,7 +128,13 @@ int initSDL_GLES()
 	*/
 
 	InitSDLScreen();
-	enterSoftFullscreen(EMSCRIPTEN_FULLSCREEN_SCALE_ASPECT, EMSCRIPTEN_FULLSCREEN_CANVAS_SCALE_NONE, EMSCRIPTEN_FULLSCREEN_FILTERING_NEAREST);
+
+	
+	//for full screen with buggy coordinates
+	//enterSoftFullscreen(EMSCRIPTEN_FULLSCREEN_SCALE_ASPECT, EMSCRIPTEN_FULLSCREEN_CANVAS_SCALE_NONE, EMSCRIPTEN_FULLSCREEN_FILTERING_NEAREST);
+
+	//another version without the zoom
+	//enterSoftFullscreen(EMSCRIPTEN_FULLSCREEN_SCALE_DEFAULT, EMSCRIPTEN_FULLSCREEN_CANVAS_SCALE_NONE, EMSCRIPTEN_FULLSCREEN_FILTERING_NEAREST);
 
 
 	//LogMsg((const char*)glGetString(GL_VERSION));
@@ -432,46 +438,42 @@ void MainEventLoop()
 
 		case OSMessage::MESSAGE_SET_VIDEO_MODE:
 			{
+				LogMsg("Got set video mode message");
+				GetBaseApp()->KillOSMessagesByType(OSMessage::MESSAGE_SET_VIDEO_MODE);
+				//GetBaseApp()->SetVideoMode(Width, Height, false, 0);
+				//int isInFullscreen = EM_ASM_INT_V(return !!(document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement));
+				int width, height, isFullscreen;
+				emscripten_get_canvas_size(&width, &height, &isFullscreen);
+				LogMsg("Is full screen is %d - Width: %d Height: %d", isFullscreen, width, height);
 
+				static bool bIsSoftFullscreen = false;
+
+				if (bIsSoftFullscreen)
+				{
+					LogMsg("Leaving fullscreen mode");
+					emscripten_exit_soft_fullscreen();
+					bIsSoftFullscreen = false;
+				} else
+				{
+					enterSoftFullscreen(EMSCRIPTEN_FULLSCREEN_SCALE_ASPECT, EMSCRIPTEN_FULLSCREEN_CANVAS_SCALE_STDDEF, EMSCRIPTEN_FULLSCREEN_FILTERING_NEAREST);
+					//emscripten_run_script("Module[\"requestFullScreen\"](false,false);"); for security reasons browsers won't let you do this from a non-button
+					bIsSoftFullscreen = true;
+				}
+
+				/*
+	#if SDL_VERSION_ATLEAST(2,0,0)
+				SDL_SetWindowFullscreen(g_screen, SDL_WINDOW_FULLSCREEN);
+	#else
+				SDL_WM_ToggleFullScreen(g_screen);
+	#endif
+				*/
 			
-			LogMsg("Got set video mode message");
-			GetBaseApp()->KillOSMessagesByType(OSMessage::MESSAGE_SET_VIDEO_MODE);
-			//GetBaseApp()->SetVideoMode(Width, Height, false, 0);
-			//int isInFullscreen = EM_ASM_INT_V(return !!(document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement));
-			int width, height, isFullscreen;
-			emscripten_get_canvas_size(&width, &height, &isFullscreen);
-			LogMsg("Is full screen is %d - Width: %d Height: %d", isFullscreen, width, height);
-//			enterSoftFullscreen(EMSCRIPTEN_FULLSCREEN_SCALE_STRETCH, EMSCRIPTEN_FULLSCREEN_CANVAS_SCALE_STDDEF, EMSCRIPTEN_FULLSCREEN_FILTERING_DEFAULT);
 
-			static bool bIsSoftFullscreen = false;
 
-			if (bIsSoftFullscreen)
-			{
-				LogMsg("Leaving fullscreen mode");
-				emscripten_exit_soft_fullscreen();
-				bIsSoftFullscreen = false;
-			} else
-			{
-				enterSoftFullscreen(EMSCRIPTEN_FULLSCREEN_SCALE_ASPECT, EMSCRIPTEN_FULLSCREEN_CANVAS_SCALE_STDDEF, EMSCRIPTEN_FULLSCREEN_FILTERING_NEAREST);
 				
-				//emscripten_run_script("Module[\"requestFullScreen\"](false,false);"); for security reasons browsers won't let you do this from a non-button
-				bIsSoftFullscreen = true;
-			}
+				LogMsg("Post setting: Is full screen is %d - Width: %d Height: %d", isFullscreen, width, height);
 
-			/*
-#if SDL_VERSION_ATLEAST(2,0,0)
-			SDL_SetWindowFullscreen(g_screen, SDL_WINDOW_FULLSCREEN);
-#else
-			SDL_WM_ToggleFullScreen(g_screen);
-#endif
-			*/
-		
-
-
-			
-			LogMsg("Post setting: Is full screen is %d - Width: %d Height: %d", isFullscreen, width, height);
-
-			}
+				}
 			break;
 		case OSMessage::MESSAGE_SET_ACCELEROMETER_UPDATE_HZ:
 			if( SDL_NumJoysticks() > 0 )
@@ -541,11 +543,7 @@ int main(int argc, char *argv[])
 	g_winVideoScreenY = 320;
 	
 	GetBaseApp()->OnPreInitVideo(); //gives the app level code a chance to override any of these parms if it wants to
-
-	//SetEmulatedPlatformID(PLATFORM_ID_LINUX);
-		SetForcedOrientation(ORIENTATION_DONT_CARE);
-	
-	GetBaseApp()->OnPreInitVideo(); //gives the app level code a chance to override any of these parms if it wants to
+	SetForcedOrientation(ORIENTATION_DONT_CARE);
 
 	if (!InitSDL())
 	{

@@ -138,6 +138,9 @@ public:
 	virtual void Suspend(){} //stop all audio, app when into background or something
 	virtual void Resume(){} //restore audio that was stopped
 	void SetMusicStreaming(bool bStreaming);  //default to TRUE, if false, we'll cache entire songs instead of streaming from disk (setting to false may be better for desktops, more mem)
+	
+	void ForceAudioExtension(const string extension); //ONLY implemented for FMOD and AudioSDL! if "ogg", all waves will actually be changed to oggs when finding the files.  Set to "" to disable
+	string ModifiedFileName(string fName);
 
 protected:
 	
@@ -150,6 +153,7 @@ protected:
 	float m_musicVol; // 0 means none, 1 means full blast
 	bool m_bSoundEnabled;
 	bool m_bStreamMusic;
+	string m_forcedAudioExtension;
 };
 
 bool CheckIfOtherAudioIsPlaying(); //are they playing ipod stuff before the app was run?  Should call this before playing your own.

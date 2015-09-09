@@ -166,6 +166,8 @@ void AudioManagerFMOD::Kill()
 
 bool AudioManagerFMOD::DeleteSoundObjectByFileName(string fName)
 {
+	fName = ModifiedFileName(fName);
+
 	list<SoundObject*>::iterator itor = m_soundList.begin();
 
 	while (itor != m_soundList.end())
@@ -184,6 +186,8 @@ bool AudioManagerFMOD::DeleteSoundObjectByFileName(string fName)
 
 SoundObject * AudioManagerFMOD::GetSoundObjectByFileName(string fName)
 {
+	fName = ModifiedFileName(fName);
+
 	list<SoundObject*>::iterator itor = m_soundList.begin();
 
 	while (itor != m_soundList.end())
@@ -200,10 +204,12 @@ SoundObject * AudioManagerFMOD::GetSoundObjectByFileName(string fName)
 
 void AudioManagerFMOD::Preload( string fName, bool bLooping /*= false*/, bool bIsMusic /*= false*/, bool bAddBasePath /*= true*/, bool bForceStreaming )
 {
+
 	if (!system) return;
 
 	if (bIsMusic && !GetMusicEnabled()) return; //ignoring because music is off right now
 
+	fName = ModifiedFileName(fName);
 	
 	if (bIsMusic) 
 	{
@@ -285,10 +291,13 @@ AudioHandle AudioManagerFMOD::Play( string fName, bool bLooping /*= false*/, boo
 		return 0;
 	}
 
+	fName = ModifiedFileName(fName);
+
 	if (bIsMusic && m_bLastMusicLooping == bLooping && m_lastMusicFileName == fName && m_bLastMusicLooping && m_pMusicChannel)
 	{
 		return (AudioHandle) m_pMusicChannel;
 	}
+
 	if (bIsMusic)
 	{
 		StopMusic();
@@ -354,6 +363,8 @@ AudioHandle AudioManagerFMOD::Play( string fName, bool bLooping /*= false*/, boo
 AudioHandle AudioManagerFMOD::Play( string fName, int vol, int pan /*= 0*/ )
 {	
 	if (!GetSoundEnabled()) return 0;
+
+	fName = ModifiedFileName(fName);
 
 	assert(system);
 	FMOD::Channel *pChannel = (FMOD::Channel*)Play(fName, false);

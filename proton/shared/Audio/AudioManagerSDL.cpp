@@ -190,6 +190,8 @@ void AudioManagerSDL::Kill()
 
 bool AudioManagerSDL::DeleteSoundObjectByFileName(string fName)
 {
+	fName = ModifiedFileName(fName);
+
 	list<SoundObject*>::iterator itor = m_soundList.begin();
 
 	while (itor != m_soundList.end())
@@ -208,6 +210,8 @@ bool AudioManagerSDL::DeleteSoundObjectByFileName(string fName)
 
 SoundObject * AudioManagerSDL::GetSoundObjectByFileName(string fName)
 {
+	fName = ModifiedFileName(fName);
+
 	list<SoundObject*>::iterator itor = m_soundList.begin();
 
 	while (itor != m_soundList.end())
@@ -226,6 +230,8 @@ void AudioManagerSDL::Preload( string fName, bool bLooping /*= false*/, bool bIs
 {
 
 	if (bIsMusic) return;//we don't preload music that way
+
+	fName = ModifiedFileName(fName);
 
 	SoundObject *pObject = GetSoundObjectByFileName( fName.c_str());
 
@@ -264,11 +270,15 @@ void AudioManagerSDL::Preload( string fName, bool bLooping /*= false*/, bool bIs
 AudioHandle AudioManagerSDL::Play( string fName, bool bLooping /*= false*/, bool bIsMusic, bool bAddBasePath, bool bForceStreaming)
 {
 
+
 #ifdef _DEBUG
 	//LogMsg("********** AudioSDL: Thinking of playing %s, music=%d", fName.c_str(), int(bIsMusic));
 #endif
 
 	if (!GetSoundEnabled() && !bIsMusic) return AUDIO_HANDLE_BLANK;
+	
+	fName = ModifiedFileName(fName);
+
 	if (!GetMusicEnabled() && bIsMusic)
 	{
 		m_bLastMusicLooping = bLooping;
