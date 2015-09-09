@@ -43,3 +43,16 @@ void AudioManager::SetMusicStreaming( bool bStreaming )
 {
 	m_bStreamMusic = bStreaming;
 }
+
+void AudioManager::ForceAudioExtension( const string extension )
+{
+	m_forcedAudioExtension = extension;
+}
+
+
+string AudioManager::ModifiedFileName(string fName)
+{
+	if (m_forcedAudioExtension.empty()) return fName;
+
+	return ModifyFileExtension(fName, m_forcedAudioExtension);
+}
