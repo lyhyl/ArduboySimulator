@@ -481,7 +481,7 @@ void SDLEventLoop()
 
 bool InitSDL()
 {
-	LogMsg("initting SDL");
+	LogMsg("Initting SDL bits for GL setup and input");
 	int result = initSDL_GLES(); 
 	if ( result != 0 )
 	{

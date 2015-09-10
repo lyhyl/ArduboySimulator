@@ -75,7 +75,6 @@ bool InitSDLScreen()
 	//Uint32 videoFlags = SDL_SWSURFACE;
 	Uint32 videoFlags = SDL_OPENGL;
 
-	LogMsg("Setting video mode");
 	g_screen = SDL_SetVideoMode(GetPrimaryGLX() , GetPrimaryGLY(), 32, videoFlags);
 
 	if (g_screen == NULL)
@@ -88,6 +87,7 @@ bool InitSDLScreen()
 	LogMsg("Setting up GLES to %d by %d.", g_screen->w, g_screen->h);
 	return true;
 }
+
 int initSDL_GLES()
 {
 	// used to get the result value of SDL operations
@@ -95,7 +95,7 @@ int initSDL_GLES()
 
 	// init SDL. This function is all it takes to init both
 	// the audio and video.
-	LogMsg("initting SDL video");
+	LogMsg("Initting SDL bits for emscripten GL/input to work");
 	
 	//requestFullscreen(EMSCRIPTEN_FULLSCREEN_SCALE_STRETCH, EMSCRIPTEN_FULLSCREEN_CANVAS_SCALE_STDDEF, EMSCRIPTEN_FULLSCREEN_FILTERING_DEFAULT);
     
@@ -151,7 +151,7 @@ int initSDL_GLES()
 
 bool InitSDL()
 {
-	LogMsg("initting SDL");
+	LogMsg("Initting Proton SDK by Robinson Technologies ( protonsdk.com )");
 
 	int result = initSDL_GLES(); 
 	if (result != 0)

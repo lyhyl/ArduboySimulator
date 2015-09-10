@@ -241,7 +241,7 @@ void AudioManagerSDL::Preload( string fName, bool bLooping /*= false*/, bool bIs
 		pObject = new SoundObject;
 		pObject->m_fileName = fName;
 
-		assert(! (GetFileExtension(fName) == "mp3" || GetFileExtension(fName) == "ogg") && "SDL mixer doesn't support mp3 for non music playback though");
+		//assert(! (GetFileExtension(fName) == "mp3" || GetFileExtension(fName) == "ogg") && "SDL mixer doesn't support mp3/ogg for non music playback though");
 	
 		string basePath;
 		if (bAddBasePath)
@@ -272,7 +272,7 @@ AudioHandle AudioManagerSDL::Play( string fName, bool bLooping /*= false*/, bool
 
 
 #ifdef _DEBUG
-	//LogMsg("********** AudioSDL: Thinking of playing %s, music=%d", fName.c_str(), int(bIsMusic));
+	LogMsg("********** AudioSDL: Thinking of playing %s, music=%d", fName.c_str(), int(bIsMusic));
 #endif
 
 	if (!GetSoundEnabled() && !bIsMusic) return AUDIO_HANDLE_BLANK;
@@ -287,9 +287,15 @@ AudioHandle AudioManagerSDL::Play( string fName, bool bLooping /*= false*/, bool
 		return AUDIO_HANDLE_BLANK;
 	}
 
-	if (bIsMusic && m_bLastMusicLooping == bLooping && m_lastMusicFileName == fName && m_bLastMusicLooping && IsPlaying((AudioHandle) m_pMusicChannel))
+	if (bIsMusic )
 	{
-		return (AudioHandle) m_pMusicChannel;
+		if (m_bLastMusicLooping == bLooping && m_lastMusicFileName == fName && m_bLastMusicLooping && IsPlaying((AudioHandle) m_pMusicChannel))
+		{
+			return (AudioHandle) m_pMusicChannel;
+		} else
+		{
+			StopMusic();
+		}
 	}
 
 	int loops = 0;
@@ -306,8 +312,11 @@ AudioHandle AudioManagerSDL::Play( string fName, bool bLooping /*= false*/, bool
 
 
 		m_lastMusicFileName = fName;
+	
+#ifdef _DEBUG
+		LogMsg("Stopped music, now playing as %s", (basePath+fName).c_str());
+#endif
 
-		StopMusic();
 		m_pMusicChannel = Mix_LoadMUS( (basePath+fName).c_str());
 
 		if (!m_pMusicChannel && !bAddBasePath)
@@ -326,7 +335,6 @@ AudioHandle AudioManagerSDL::Play( string fName, bool bLooping /*= false*/, bool
 		}
 		m_lastMusicID = (AudioHandle) m_pMusicChannel;
 		m_bLastMusicLooping = bLooping;
-		
 		int ret = Mix_PlayMusic(m_pMusicChannel, loops);
 		
 		if (ret == -1)
@@ -385,8 +393,9 @@ void AudioManagerSDL::Update()
 {
 	if (g_MusicHasFinished)
 	{
-		g_MusicHasFinished = false;
-		StopMusic();
+		//the problem is the callback is so slow, it comes after we've started new music already.
+		//g_MusicHasFinished = false;
+		//StopMusic();
 	}
 }
 
@@ -448,9 +457,16 @@ void AudioManagerSDL::SetMusicEnabled( bool bNew )
 
 void AudioManagerSDL::StopMusic()
 {
+#ifdef _DEBUG
+	LogMsg("Deleting music %s", m_lastMusicFileName.c_str());
+#endif
 	DeleteSoundObjectByFileName(m_lastMusicFileName);
 	if (m_pMusicChannel)
 	{
+#ifdef _DEBUG
+		LogMsg("Also halting the music channel");
+#endif
+
 		Mix_HaltMusic();
 		Mix_FreeMusic(m_pMusicChannel);
 	}
