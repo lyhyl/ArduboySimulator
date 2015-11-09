@@ -5,6 +5,13 @@
 #import <UIKit/UIKit.h>
 #import "MyAppDelegate.h"
 #import "EAGLView.h"
+#import <Tapjoy/TJPlacement.h>
+
+@interface TapjoyManager () <TJCViewDelegate, TJCVideoAdDelegate>
+@property (nonatomic, strong) TJDirectPlayPlacementDelegate *dpDelegate;
+@property (strong, nonatomic) TJPlacement *m_addPlacement;
+
+@end
 
 @implementation TapjoyManager
 
@@ -21,6 +28,8 @@
 	//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getFeaturedApp:) name:TJC_FEATURED_APP_RESPONSE_NOTIFICATION object:nil];
 
     //apparently the above doesn't exist in SDK 10
+    
+    /*
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getUpdatedPoints:) name:TJC_TAP_POINTS_RESPONSE_NOTIFICATION object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getSpendPoints:) name:TJC_SPEND_TAP_POINTS_RESPONSE_NOTIFICATION object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getAwardPoints:) name:TJC_AWARD_TAP_POINTS_RESPONSE_NOTIFICATION object:nil];
@@ -30,6 +39,7 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getSpendPointsError:) name:TJC_SPEND_TAP_POINTS_RESPONSE_NOTIFICATION_ERROR object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getAwardPointsError:) name:TJC_AWARD_TAP_POINTS_RESPONSE_NOTIFICATION_ERROR object:nil];
 
+    
     
     // Add an observer for when a user has successfully earned currency.
 	[[NSNotificationCenter defaultCenter] addObserver:self
@@ -44,7 +54,10 @@
                                                object:nil];
 
     
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showFullscreenAd:) name:TJC_FULL_SCREEN_AD_RESPONSE_NOTIFICATION object:nil];
+
+     */
 
 	//virtual items hosted by tapjoy not yet not supported
 	/*
@@ -56,6 +69,9 @@
 	// If you are not using Tapjoy Managed currency, you would set your own user ID here.
 	//[TapjoyConnect setUserID:@"A_UNIQUE_USER_ID"];
    
+    _dpDelegate = [[TJDirectPlayPlacementDelegate alloc] init];
+    _dpDelegate.tjManager = self;
+
     
 }
 
@@ -73,21 +89,14 @@
         NSString* appID = [NSString stringWithUTF8String:pMsg->m_string.c_str()];
         NSString* secretKey = [NSString stringWithUTF8String:pMsg->m_string2.c_str()];
             
-
-            BOOL bDebugging = false;
-        #ifdef _DEBUG
-            bDebugging = true;
+           //[Tapjoy setDebugEnabled: true];
+            
+         #ifdef _DEBUG
+             [Tapjoy setDebugEnabled: true];
         #endif
-        
-        [Tapjoy requestTapjoyConnect:appID secretKey:secretKey
-                                        options:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                 [NSNumber numberWithInt:TJCTransitionExpand], TJC_OPTION_TRANSITION_EFFECT,
-                                                 [NSNumber numberWithBool:bDebugging], TJC_OPTION_ENABLE_LOGGING,
-                                                 // If you are not using Tapjoy Managed currency, you would set your own user ID here.
-                                                 //@"A_UNIQUE_USER_ID", TJC_OPTION_USER_ID,
-                                                 nil]];
-
-
+            [Tapjoy connect:appID];
+            
+         
 		return true; //we handled it
         }
 	break;
@@ -96,6 +105,13 @@
 	{
 	  NSString* userID = [NSString stringWithUTF8String:pMsg->m_string.c_str()];
       [Tapjoy setUserID: userID];
+
+        LogMsg("Setting up TJ");
+        
+        _m_addPlacement = [TJPlacement placementWithName:@"WatchAd" delegate:_dpDelegate];
+        
+        [_m_addPlacement requestContent];
+
 	  return true; //we handled it
 	}
 	break;
@@ -105,52 +121,83 @@
         LogMsg("Getting tapjoy ad");
         //TODO: Set banner size?
         
-        [Tapjoy getDisplayAdWithDelegate:self];
+       // [Tapjoy getDisplayAdWithDelegate:self];
 		return true; //we handled it
 	break;
 	
 	case OSMessage::MESSAGE_TAPJOY_GET_FEATURED_APP:
-				
+        {
 		//[TapjoyConnect getFeaturedApp];
-      	
-		if (pMsg->m_string.empty())
-		{
-			[Tapjoy getFullScreenAd];
-		} else
-		{
-			//LogMsg("Getting tapjoy feature (really, fullScreenAd): %s", pMsg->m_string.c_str());
+
+            //note: ignoring currency ID, placement name must be setup in the Tapjoy V11 website portal for this work
             
-            NSString* currencyID = [NSString stringWithUTF8String:pMsg->m_string.c_str()];
-			[Tapjoy getFullScreenAdWithCurrencyID: currencyID];
-            //show ad this way:
-          //  [Tapjoy showFullScreenAd];
-		}
-		
-		return true; //we handled it
+            if (_m_addPlacement)
+            {
+                if(_m_addPlacement.isContentAvailable)
+                {
+                if (_m_addPlacement.isContentReady)
+                {
+                    LogMsg("Showing ad");
+                [_m_addPlacement showContentWithViewController:m_viewController];
+                } else
+                {
+                    LogMsg("No content to present");
+                    GetMessageManager()->SendGUIEx( MESSAGE_TYPE_TAPJOY_NO_CONTENT_TO_PRESENT, 1,0,0);
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No video ads to display"
+                                                                    message:@"Please try again later, there are no video ads to show you right now."
+                                                                   delegate:nil
+                                                          cancelButtonTitle:@"OK"
+                                                          otherButtonTitles:nil];
+                    [alert show];
+                    [alert release];
+
+                }
+                } else
+                {
+                    
+                    LogMsg("No content available");
+                    GetMessageManager()->SendGUIEx( MESSAGE_TYPE_TAPJOY_NO_CONTENT_AVAILABLE, 1,0,0);
+
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No video ads to display"
+                                                                   message:@"Please try again later, there are no video ads to show you right now."
+                                                                  delegate:nil
+                                                         cancelButtonTitle:@"OK"
+                                                         otherButtonTitles:nil];
+                    [alert show];
+                    [alert release];
+                }
+                
+            } else
+            {
+                LogMsg("Not ready to show another ad");
+            
+            }
+            return true; //we handled it
+        }
 	break;
 
 	case OSMessage::MESSAGE_TAPJOY_SHOW_FEATURED_APP:
 		LogMsg("show tapjoy feature");
 		//[TapjoyConnect showFeaturedAppFullScreenAd];
-		[Tapjoy showFullScreenAd];
+	//	[Tapjoy showFullScreenAd];
             return true; //we handled it
 	break;
 	
 	case OSMessage::MESSAGE_TAPJOY_GET_TAP_POINTS:
 		LogMsg("Getting tapjoy points");
-		[Tapjoy getTapPoints];
+	//	[Tapjoy getTapPoints];
 		return true; //we handled it
 	break;
 
 	case OSMessage::MESSAGE_TAPJOY_SPEND_TAP_POINTS:
 		//LogMsg("Spending tappoints: %d" , pMsg->m_parm1);
-		[Tapjoy spendTapPoints:pMsg->m_parm1];
+		[Tapjoy spendCurrency:pMsg->m_parm1];
 		return true; //we handled it
 	break;	
 	
 	case OSMessage::MESSAGE_TAPJOY_AWARD_TAP_POINTS:
 		// This method call will award 10 virtual currencies to the users total
-		[Tapjoy awardTapPoints:pMsg->m_parm1];
+		[Tapjoy awardCurrency:pMsg->m_parm1];
 		return true; //we handled it
 	break;
 
@@ -230,6 +277,19 @@
 
 //************* callback handlers for tapjoy
 
+- (void)contentDidDisappear:(TJPlacement *)placement
+{
+    
+  //  LogMsg("Caching another Tapjoy ad");
+   // m_addPlacement = [TJPlacement placementWithName:@"WatchAd" delegate:self];
+   // [m_addPlacement requestContent];
+  
+}
+
+- (void) requestDidFail:(TJPlacement *)placement error:(NSError *)error
+{
+    NSLog(@"Tapjoy request failed: %@", [error localizedDescription]);
+}
 
 - (void)getFeaturedApp:(NSNotification*)notifyObj
 {
@@ -281,11 +341,16 @@
 - (void)showFullscreenAd:(NSNotification*)notifyObj
 {
     LogMsg("Got fullscreen ad, showing");
+
+    //[TJPlacement placementWithName:@"WatchAd" delegate:nil];
     //[TapjoyConnect showFullScreenAd];
+   
+    /*
     MyAppDelegate * appDelegate = [[UIApplication sharedApplication] delegate];
     
     [Tapjoy showFullScreenAdWithViewController: appDelegate.viewController];
     
+     */
 }
 
 // This method must return a boolean indicating whether the Ad will automatically refresh itself.
@@ -432,6 +497,61 @@
 
 */
 
+@end
+
+
+@interface TJDirectPlayPlacementDelegate ()
+
+@end
+
+@implementation TJDirectPlayPlacementDelegate
+-(id)init
+{
+    self = [super init];
+    
+    if (self)
+    {}
+    
+    return self;
+}
+
+- (void)requestDidSucceed:(TJPlacement*)placement
+{
+    NSLog(@"Tapjoy request did succeed, contentIsAvailable:%d", placement.isContentAvailable);
+}
+
+- (void)contentIsReady:(TJPlacement*)placement
+{
+    NSLog(@"Tapjoy placement content is ready to display");
+}
+
+- (void)requestDidFail:(TJPlacement*)placement error:(NSError *)error
+{
+    NSLog(@"Tapjoy request failed with error: %@", [error localizedDescription]);
+}
+
+- (void)contentDidAppear:(TJPlacement*)placement
+{
+    NSLog(@"Content did appear for %@ placement", [placement placementName]);
+}
+
+- (void)contentDidDisappear:(TJPlacement*)placement
+{
+    //[_tjViewController enableButton:_tjViewController.getDirectPlayVideoAdButton enable:YES];
+    
+    LogMsg("Showed ad or thing, reinitting");
+    // Request next placement after the previous one is dismissed
+   // _tjManager.m_addPlacement = [TJPlacement placementWithName:@"WatchAd" delegate:self];
+   [_tjManager.m_addPlacement requestContent];
+   // [_tjManager retain];
+  //  LogMsg("retain count is %d", [_tjManager retainCount]);
+    //_tjManager.m_addPlacement = nil;
+    
+    // Best Practice: We recommend calling getCurrencyBalance as often as possible so the user’s balance is always up-to-date.
+     // [Tapjoy getCurrencyBalance];
+
+    NSLog(@"Content did disappear for %@ placement", [placement placementName]);
+}
 @end
 
 #endif

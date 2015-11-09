@@ -9,6 +9,7 @@
 #include <cassert>
 #include "PlatformSetup.h"
 #include <sys/stat.h> //for mkdir
+#include <emscripten/emscripten.h>
 
 #ifndef _CONSOLE 
 	//if console is defined, we might be a linux command line server or something, we don't know what GL/GLES stuff
@@ -87,6 +88,7 @@ void LaunchEmail(string subject, string content)
 void LaunchURL(string url)
 {
 	LogMsg("LaunchURL: %s", url.c_str());
+	emscripten_run_script(string("window.open(\""+url+"\", '_blank');").c_str());
 }
 
 string GetClipboardText()
@@ -357,7 +359,7 @@ vector<string> GetDirectoriesAtPath(string path)
 	dp = opendir(path.c_str());
 	if (!dp)
 	{
-		LogError("GetDirectoriesAtPath: opendir failed");
+		LogError("GetDirectoriesAtPath (%s): opendir failed", path.c_str());
 		return v;
 	}
 
@@ -393,7 +395,7 @@ vector<string> GetFilesAtPath(string path)
 	dp = opendir(path.c_str());
 	if (!dp)
 	{
-		LogError("GetDirectoriesAtPath: opendir failed");
+		LogError("GetFilesAtPath (%s): opendir failed", path.c_str());
 		return v;
 	}
 

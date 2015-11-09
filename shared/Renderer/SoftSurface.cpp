@@ -139,18 +139,26 @@ bool SoftSurface::SetPaletteFromBMP(const string fName, eColorKeyType colorKey)
 
 		}
 	}
-
+	/*
+	LogMsg("Setting bitmapimage type");
 	BMPImageHeader *pBmpImageInfo = (BMPImageHeader*)(f.GetAsBytes()+14);
-
 	byte *pPaletteData = (byte*)pBmpImageInfo+sizeof(BMPImageHeader);
+	*/
+
+	//new way
+
+	byte *pPaletteData = f.GetAsBytes()+14+sizeof(BMPImageHeader);
 
 	int colors = 256;
-	if (pBmpImageInfo->ColorsUsed != 0)
+	uint32 colorsUsed;
+	memcpy(&colorsUsed, f.GetAsBytes()+14+36, sizeof(uint32)); //instead of &pBmpImageInfo->ColorsUsed for alignment reasons
+
+	if (colorsUsed != 0)
 	{
 		//looks like they don't use all the colors available
-		colors = pBmpImageInfo->ColorsUsed;
+		colors = colorsUsed;
 	}
-
+	
 	LoadPaletteDataFromBMPMemory(pPaletteData, colors);
 	return true; //success
 }
@@ -178,16 +186,33 @@ bool SoftSurface::LoadBMPTexture(byte *pMem)
 {
 
 	//BMPFileHeader *pBmpHeader = (BMPFileHeader*)&pMem[0];
+//LogMsg("Loading bmp...");
+
 	BMPImageHeader *pBmpImageInfo = (BMPImageHeader*)&pMem[14];
+	//get around alignment issues
+	BMPImageHeader bmpImageInfoCopy;
+	memcpy(&bmpImageInfoCopy, &pMem[14], sizeof(BMPImageHeader) );
+
+	if ( sizeof(BMPImageHeader) != 40)
+	{
+		LogMsg("SERIOUS ERROR: BMPImageHeader structure should be 40 bytes.  Packing set wrong in this compiler.");
+	}
 
 	unsigned short offsetToImageData;
+	//LogMsg("mem cpy of image data pointer");
 
 	memcpy(&offsetToImageData, &pMem[10], 2);
 	byte *pPixelData = &pMem[offsetToImageData];
 
-	m_width = pBmpImageInfo->Width;
-	m_height = pBmpImageInfo->Height;
-	m_bytesPerPixel = pBmpImageInfo->BitCount/8;
+	m_width = bmpImageInfoCopy.Width;
+	m_height =  bmpImageInfoCopy.Height;
+
+	uint16 bitCount;
+	bitCount = bmpImageInfoCopy.BitCount;
+
+	//m_width = pBmpImageInfo->Width;
+	//m_height = pBmpImageInfo->Height;
+	m_bytesPerPixel = bitCount/8;
 	int srcBytesPerPixel = m_bytesPerPixel;
 
 	if (m_width == 0 || m_height == 0) return false;
@@ -230,7 +255,7 @@ bool SoftSurface::LoadBMPTexture(byte *pMem)
 
 	} 
 
-	switch (pBmpImageInfo->Compression)
+	switch (bmpImageInfoCopy.Compression)
 	{
 	case BMP_COMPRESSION_NONE:
 		break;
@@ -249,7 +274,6 @@ bool SoftSurface::LoadBMPTexture(byte *pMem)
 	m_usedPitch = m_width * m_bytesPerPixel;
 	m_pitchOffset = 0;
 
-
 	while ((m_usedPitch+m_pitchOffset)%4) {m_pitchOffset++;} //what's needed to pad it to a 32 byte boundry
 
 	int dataSize = (m_usedPitch+m_pitchOffset)*m_height;
@@ -266,16 +290,19 @@ bool SoftSurface::LoadBMPTexture(byte *pMem)
 	if (srcBytesPerPixel == 0)
 	{
 		//convert 1 bit to 32
+#ifdef _DEBUG
 
+		LogMsg("0 bit, or whatever");
+#endif
 		int colors = 2;
 
-		if (pBmpImageInfo->ColorsUsed != 0)
+		if (bmpImageInfoCopy.ColorsUsed != 0)
 		{
 			//looks like they don't use all the colors available
-			colors = pBmpImageInfo->ColorsUsed;
+			colors = bmpImageInfoCopy.ColorsUsed;
 		}
 
-		assert(pBmpImageInfo->Compression == BMP_COMPRESSION_NONE);
+		assert(bmpImageInfoCopy.Compression == BMP_COMPRESSION_NONE);
 
 		//load the palette info.  Note:  Bitmaps are BGR format
 		byte *pPaletteData = (byte*)pBmpImageInfo+sizeof(BMPImageHeader);
@@ -317,10 +344,14 @@ bool SoftSurface::LoadBMPTexture(byte *pMem)
 		//memset(pImg, 600, m_bytesPerPixel*GetWidth()*GetHeight());
 	} else if (srcBytesPerPixel == 1)
 	{
-
-		if (pBmpImageInfo->Compression == BMP_COMPRESSION_RLE8)
+	
+		if (bmpImageInfoCopy.Compression == BMP_COMPRESSION_RLE8)
 		{
-			if (!RLE8BitDecompress(m_pPixels, pPixelData, dataSize, pBmpImageInfo->Size))
+#ifdef _DEBUG
+			LogMsg("RLE");
+#endif
+
+			if (!RLE8BitDecompress(m_pPixels, pPixelData, dataSize,bmpImageInfoCopy.Size))
 			{
 				LogError("Error decompressing RLE bitmap");
 				SAFE_DELETE_ARRAY(m_pPixels);
@@ -333,10 +364,10 @@ bool SoftSurface::LoadBMPTexture(byte *pMem)
 		}
 
 		int colors = 256;
-		if (pBmpImageInfo->ColorsUsed != 0)
+		if (bmpImageInfoCopy.ColorsUsed != 0)
 		{
 			//looks like they don't use all the colors available
-			colors = pBmpImageInfo->ColorsUsed;
+			colors = bmpImageInfoCopy.ColorsUsed;
 		}
 
 		//load the palette info.  Note:  Bitmaps are BGR format
@@ -347,6 +378,7 @@ bool SoftSurface::LoadBMPTexture(byte *pMem)
 	}else if (srcBytesPerPixel == 2)
 	{
 		//convert 16 bit to 32
+		LogMsg("16 bit");
 
 		glColorBytes *pImg = (glColorBytes*)m_pPixels;
 
@@ -383,6 +415,9 @@ bool SoftSurface::LoadBMPTexture(byte *pMem)
 	} else if (srcBytesPerPixel == 3)
 	{
 		//convert 24 bit bmp to 32 bit rgba
+#ifdef _DEBUG
+LogMsg("24 bit");
+#endif
 
 		glColorBytes *pImg = (glColorBytes*)m_pPixels;
 
@@ -409,7 +444,10 @@ bool SoftSurface::LoadBMPTexture(byte *pMem)
 	} else if (srcBytesPerPixel == 4)
 	{
 		//convert 32 bit bmp to 32 bit rgba
-
+#ifdef _DEBUG
+	
+		LogMsg("32 bit");
+#endif
 		glColorBytes *pImg = (glColorBytes*)m_pPixels;
 
 		int srcUsedPitch = m_width * srcBytesPerPixel;
@@ -687,6 +725,7 @@ void SoftSurface::LoadPaletteDataFromBMPMemory(byte *pPaletteData, int colors)
 	SetUsesAlpha(false);
 	m_paletteColors = colors;
 	m_colorKeyPaletteIndex = -1;
+	
 	for (int i=0; i < colors; i++)
 	{
 		m_palette[i] = glColorBytes(pPaletteData[2],pPaletteData[1],pPaletteData[0], 255);
