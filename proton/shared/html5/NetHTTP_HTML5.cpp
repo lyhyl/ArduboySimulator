@@ -96,14 +96,13 @@ bool NetHTTP::SetFileOutput(const string &fName)
 {
 	assert(!m_pFile);
 
-	LogMsg("Unsupported, Seth just didn't do it yet!");
-	return false;
 	m_pFile = fopen(fName.c_str(), "wb");
 	
 	m_fileName = fName; //save for later so we can delete this file if anything goes wrong
 	
 	if (!m_pFile)
 	{
+		LogMsg("Unable to write to %s", m_fileName.c_str());
 		OnError(ERROR_WRITING_FILE);
 		return false;
 	}
@@ -335,8 +334,12 @@ void NetHTTP::SetBuffer(const char *pData, int byteSize)
 			m_downloadData.push_back(char(0)); //add the null
 		}
 	}
-	
-	
+
+	if (m_pFile)
+	{
+		fwrite(GetDownloadedData(), GetDownloadedBytes(), 1, m_pFile);
+	}
+
 }
 
 void NetHTTP::onLoaded( unsigned int handle, void* parent, void * file, unsigned int byteSize) 

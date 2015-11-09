@@ -243,6 +243,12 @@ void AudioManagerSDL::Preload( string fName, bool bLooping /*= false*/, bool bIs
 
 		//assert(! (GetFileExtension(fName) == "mp3" || GetFileExtension(fName) == "ogg") && "SDL mixer doesn't support mp3/ogg for non music playback though");
 	
+		if (GetFileExtension(fName) == "mp3")
+		{
+			fName = ModifyFileExtension(fName, "ogg");
+			StringReplace("/mp3", "/ogg", fName);
+		} 
+
 		string basePath;
 		if (bAddBasePath)
 		{

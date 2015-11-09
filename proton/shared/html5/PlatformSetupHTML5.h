@@ -44,6 +44,7 @@
 #define glColor4x(r,g,b,a) glColor4f( (float(r)/65536.0f),  (float(g)/65536.0f) , (float(b)/65536.0f), (float(a)/65536.0f));
 #define glActiveTexture glActiveTextureARB
 #define glClientActiveTexture glClientActiveTextureARB
+//#define glClipPlane glClipPlanef
 
 #ifndef PLATFORM_HTML5
 #define PLATFORM_HTML5

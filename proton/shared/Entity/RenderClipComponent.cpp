@@ -11,6 +11,12 @@ RenderClipComponent::RenderClipComponent()
 		LogError("ANDROID WARNING: using glclipplane KILLS your fps on the Nexus One, and isn't supported on the G1. You sure you want to use RenderClipComponent?!");
 		assert(0);
 	}
+
+	if (GetEmulatedPlatformID() == PLATFORM_ID_HTML5)
+	{
+		LogError("HTML5 warning:  RenderClipComponent disabled for HTML5, the legacy G1 emulation doesn't seem to find the function at all");
+		return;
+	}
 }
 
 RenderClipComponent::~RenderClipComponent()
@@ -44,6 +50,8 @@ void RenderClipComponent::OnRemove()
 void RenderClipComponent::FilterOnRender(VariantList *pVList)
 {
 
+#ifndef PLATFORM_HTML5
+
 	CL_Vec2f vFinalPos = pVList->m_variant[0].GetVector2()+*m_pPos2d;
 	//vFinalPos -= GetAlignmentOffset(*m_pSize2d, eAlignment(*m_pAlignment));	
 	glEnable(GL_CLIP_PLANE0);
@@ -72,11 +80,15 @@ void RenderClipComponent::FilterOnRender(VariantList *pVList)
 	}
 	
 	glClipPlane(GL_CLIP_PLANE0, (GLdouble*) planeA.plane);
+
+#endif
 }
 
 void RenderClipComponent::PostOnRender(VariantList *pVList)
 {
+	#ifndef PLATFORM_HTML5
 	g_globalBatcher.Flush();
 	glDisable(GL_CLIP_PLANE0);
+	#endif
 }
 

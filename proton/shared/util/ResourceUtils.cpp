@@ -520,7 +520,7 @@ string ReplaceWithLargeInFileNameAndOSSpecific(const string &fName)
 	string final = fName;
 	
 	if (GetEmulatedPlatformID() == PLATFORM_ID_WINDOWS
-		|| GetEmulatedPlatformID() == PLATFORM_ID_OSX)
+		|| GetEmulatedPlatformID() == PLATFORM_ID_OSX|| GetEmulatedPlatformID() == PLATFORM_ID_HTML5)
 	{
 		StringReplace("iphone", "win", final);
 

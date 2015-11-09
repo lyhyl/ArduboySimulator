@@ -195,6 +195,8 @@ enum eMessageType
 	MESSAGE_TYPE_MOVE_WINDOW_LAG_TRIGGERED, //user tried to move his window but ended up taking too long, special case for Seth's win32 stuff  
 	
 	MESSAGE_TYPE_PLAY_MUSIC_FORCE_STREAMING,
+    MESSAGE_TYPE_TAPJOY_NO_CONTENT_AVAILABLE, //none there
+    MESSAGE_TYPE_TAPJOY_NO_CONTENT_TO_PRESENT, //still loading so can't show?  Unsure
 
 	MESSAGE_USER = 1000, //users can add their own messages starting here
 

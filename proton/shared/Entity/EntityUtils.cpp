@@ -82,11 +82,7 @@ EntityComponent* SetupInterpolateComponent(Entity *pEnt, const string& component
 	*/
 #endif
 
-	
-
 	pComp->GetVar("var_name")->Set(varName);
-	
-
 	pComp->GetVar("timingSystem")->Set(uint32(timing));
 	pComp->GetVar("target")->Set(const_cast<Variant&>(targetValue));
 	pComp->GetVar("interpolation")->Set(uint32(interpolationType));
@@ -689,6 +685,12 @@ void FadeEntity(Entity *pEnt, bool bRecursive, float alpha, int timeMS, int dela
 	}
 
 	EntityComponent* pComp = SetupInterpolateComponent(pEnt, "", "alpha", alpha, timeMS, delayBeforeFadingMS);
+	if (!pComp)
+	{
+		//entity doesn't have an "alpha" variable, so it probably isn't something we can actually fade!
+		return;
+	}
+	
 	pComp->SetName("ic_fade");
 
 	if (!bRecursive) return;

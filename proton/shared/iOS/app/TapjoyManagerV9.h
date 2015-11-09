@@ -5,15 +5,19 @@
 //  Copyright (c) 2012 Robinson Technologies. All rights reserved.
 //
 
+//This is stupidly named, it's actually for TJ V11
+
 #ifdef RT_TAPJOY_ENABLED
 
 #import <UIKit/UIKit.h>
 #import <Tapjoy/Tapjoy.h>
 //#import <Foundation/Foundation.h>
-
+#import <Tapjoy/TJPlacement.h>
 #import "MyViewController.h"
 
-@interface TapjoyManager : NSObject <TJCAdDelegate>
+
+
+@interface TapjoyManager : NSObject <TJCViewDelegate, TJCVideoAdDelegate>
 {
     MyViewController *m_viewController;
    // TJCAdView* m_adView;
@@ -22,7 +26,7 @@
 
 	int m_adBannerWidth;
 	int m_adBannerHeight;
-} 
+     } 
 
 - (void) InitTapjoy: (UIApplication *)application viewController: (MyViewController*) viewController;
 - (Boolean) onOSMessage:(OSMessage *)pMsg;
@@ -38,6 +42,10 @@
 - (void)getSpendPoints:(NSNotification*)notifyObj;
 - (void)getAwardPoints:(NSNotification*)notifyObj;
 
+@end
+
+@interface TJDirectPlayPlacementDelegate : NSObject<TJPlacementDelegate>
+@property (nonatomic, strong) TapjoyManager *tjManager;
 @end
 
 #endif
