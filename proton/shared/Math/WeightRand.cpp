@@ -74,11 +74,25 @@ void CWeightRand::AddChoice(int i_index, int i_odds)
 	m_b_needs_computation = true;
 }
 
-
 void CWeightRand::ComputeOdds()
 {
 	//cycle through and figure out the percentages
 
+	long l_total = 0;    
+	int i;
+
+	l_total=GetTotalOdds();
+
+	for (i=0; i < int(a_odds.size()); i++)
+	{
+		a_computed_odds[i] = float(a_odds[i])/ float(l_total);
+	}
+
+	m_b_needs_computation = false; //all done, ready to compute crap
+}
+
+long CWeightRand::GetTotalOdds()
+{
 	long l_total = 0;    
 	int i;
 
@@ -87,15 +101,7 @@ void CWeightRand::ComputeOdds()
 		l_total += a_odds[i];
 	}
 
-	for (i=0; i < int(a_odds.size()); i++)
-	{
-		a_computed_odds[i] = float(a_odds[i])/ float(l_total);
-		float test = a_computed_odds[i];
-	}
-
-
-	m_b_needs_computation = false; //all done, ready to compute crap
-
+	return l_total;
 }
 
 int CWeightRand::CalcNumber(float f_rand)
