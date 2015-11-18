@@ -41,7 +41,7 @@ public:
 	bool Load(FILE *fp); //load from file stream
 	unsigned int GetCount(){return (unsigned int)a_odds.size();}
 	std::string TestRun(int runs=100000);
-
+	long GetTotalOdds();
 private:
 
 	void ComputeOdds();
