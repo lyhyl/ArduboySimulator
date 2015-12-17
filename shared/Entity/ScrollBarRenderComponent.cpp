@@ -90,7 +90,6 @@ void ScrollBarRenderComponent::OnUpdate(VariantList *pVList)
 
 void ScrollBarRenderComponent::OnRender(VariantList *pVList)
 {
-	//NOTE: We don't support drawing a horizontal scroll bar yet!
 	CHECK_GL_ERROR();
 	//LogMsg("Drawing progress bar: %.2f", progress);
 	if (*m_pAlpha <= 0.07)

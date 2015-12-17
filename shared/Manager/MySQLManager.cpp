@@ -360,7 +360,7 @@ bool MySQLManager::Init(string name, string password, string host)
 bool MySQLManager::Query( string query, bool bShowError )
 {
 #ifdef _DEBUG
-	//LogMsg("Queting %s", query.c_str() );
+	//LogMsg("Querying %s", query.c_str() );
 #endif
 
 	if (!m_conn)
@@ -421,6 +421,10 @@ std::string MySQLManager::EscapeString( const string &input )
 
 int MySQLManager::GetTableRecordCount( string tableName )
 {
+
+#ifdef _DEBUG
+	//LogMsg("GetTableRecordCount: %s", tableName.c_str() );
+#endif
 	string sql = "SELECT COUNT(*) FROM "+tableName;
 	if (!Query(sql, true))
 	{

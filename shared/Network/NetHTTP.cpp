@@ -6,7 +6,6 @@
 
 #include "NetHTTP.h"
 #include "NetUtils.h"
-#include "BaseApp.h"
 #include "util/TextScanner.h"
 
 #define NET_END_MARK_CHECK_DELAY_MS 333
@@ -50,7 +49,9 @@ void NetHTTP::Reset(bool bClearPostdata)
 	m_query.clear();
 	if (bClearPostdata)
 	{
+		m_contentType = "";
 		m_postData.clear();
+		
 	}
 	m_bytesWrittenToFile = 0;
 }
@@ -91,12 +92,21 @@ bool NetHTTP::AddPostData( const string &name, const byte *pData, int len/*=-1*/
 	//at this stage we need to encode it for safe html transfer, before we get the length
 	URLEncoder encoder;
 
-	encoder.encodeData((const byte*)name.c_str(), name.length(), m_postData);
-	m_postData += '=';
+	if (!name.empty())
+	{
+		encoder.encodeData((const byte*)name.c_str(), name.length(), m_postData);
+		m_postData += '=';
+		if (len == -1) len = strlen((const char*) pData);
 
-	if (len == -1) len = strlen((const char*) pData);
+		encoder.encodeData(pData, len, m_postData);
+	} else
+	{
+		//it's put data.  No name for it
+		m_contentType = "put";
+		m_postData = string((char*)pData);
+	}
 
-	encoder.encodeData(pData, len, m_postData);
+	
 #ifdef _DEBUG
 
 	/*
@@ -119,6 +129,11 @@ bool NetHTTP::AddPostData( const string &name, const byte *pData, int len/*=-1*/
 }
 
 
+bool NetHTTP::AddPutData( const string data )
+{
+	return AddPostData("",  (byte*)data.c_str(),data.size());
+}
+
 string NetHTTP::BuildHTTPHeader()
 {
 	string header, stCommand;
@@ -131,10 +146,12 @@ string NetHTTP::BuildHTTPHeader()
 		stCommand = "GET";
 	}
 
-	string queryEncoded;
+	if (!m_contentType.empty())
+	{
+		stCommand = "PUT";
+	}
 
-	//URLEncoder encoder;
-	//encoder.encodeData( (const byte*)m_query.c_str(), m_query.size(), queryEncoded);
+	string queryEncoded;
 	
 	queryEncoded = m_query;
 	StringReplace(" ", "+", queryEncoded);
@@ -164,7 +181,7 @@ bool NetHTTP::Start()
 	string header = BuildHTTPHeader();
 
 #ifdef _DEBUG
-	//LogMsg(header.c_str());
+//	LogMsg(header.c_str());
 #endif
 	//take on the post data if applicable
 	
@@ -250,7 +267,6 @@ int NetHTTP::ScanDownloadedHeader()
 	}
 
 	return resultCode;
-		
 }
 
 void NetHTTP::Update()
@@ -261,9 +277,9 @@ void NetHTTP::Update()
 	{
 		//we don't know how many bytes are coming in this case, so we'll look for a special marker.
 
-		if (m_timer < GetBaseApp()->GetTick())
+		if (m_timer < GetTick())
 		{
-			m_timer = GetBaseApp()->GetTick()+NET_END_MARK_CHECK_DELAY_MS;
+			m_timer = GetTick()+NET_END_MARK_CHECK_DELAY_MS;
 		
 			vector<char> &s = m_netSocket.GetBuffer();
 			
@@ -309,7 +325,7 @@ void NetHTTP::Update()
 					case END_OF_DATA_SIGNAL_HTTP:
 					{
 						bool bFoundMarker = CheckCharVectorForString(m_netSocket.GetBuffer(), "\n\n");
-						if (bFoundMarker)
+						if (bFoundMarker || m_netSocket.WasDisconnected())
 						{
 							FinishDownload();
 							return;
@@ -408,7 +424,7 @@ void NetHTTP::FinishDownload()
 		switch(m_endOfDataSignal)
 		{
 		case END_OF_DATA_SIGNAL_HTTP:
-			m_downloadData.insert(m_downloadData.begin(), s.begin()+m_downloadHeader.length(), s.end()-strlen("\n\n"));
+			m_downloadData.insert(m_downloadData.begin(), s.begin()+m_downloadHeader.length(), s.end());
 			break;
 
 		case END_OF_DATA_SIGNAL_RTSOFT_MARKER:
