@@ -22,6 +22,8 @@ string anyData = "somedata";
 
 myNet.AddPostData("name", &anyData.at[0], anyData.length();
 
+For a PUT, use AddPutData instead.
+
 myNet.Start();
 
 while (1)
@@ -86,6 +88,7 @@ public:
 
 	void Setup(string serverName, int port, string query, eEndOfDataSignal eodSignal = END_OF_DATA_SIGNAL_RTSOFT_MARKER);
 	bool AddPostData(const string &name, const byte *pData, int len=-1);
+	bool AddPutData(const string data); //can only be set once.  Can't be used with AddPostData
 	bool SetFileOutput(const string &fName); //call this before Start, allows you to save to a file instead of memory
 
 	bool Start();
@@ -136,6 +139,7 @@ private:
 	FILE *m_pFile; //if not null, we're putting out download into this
 	int m_bytesWrittenToFile;
 	string m_fileName;
+	string m_contentType;
 };
 
 bool CheckCharVectorForString(vector<char> &v, string marker, int *pIndexOfMarkerEndPosOut=NULL);
