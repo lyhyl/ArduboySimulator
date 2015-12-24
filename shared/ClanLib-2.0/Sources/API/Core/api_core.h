@@ -28,6 +28,8 @@
 
 #pragma once
 
+//Getting error: ÅememcpyÅf was not declared in this scope on raspi with mat3.h etc, so doing this -Seth
+#include <cstring>
 
 #if _MSC_VER > 1000
 #pragma once

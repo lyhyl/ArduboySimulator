@@ -32,8 +32,10 @@ set_directory_properties(PROPERTIES COMPILE_DEFINITIONS_DEBUG ${Defs})
 include_directories("${PROTON_SHARED}")
 include_directories("${PROTON_UTIL}/boost")
 include_directories("${PROTON_SHARED}/ClanLib-2.0/Sources")
+include_directories("/usr/local/include/SDL2")
 
-set(PROTON_SOURCES "${PROTON_SHARED}/BaseApp.cpp" "${PROTON_SHARED}/PlatformSetup.cpp" "${PROTON_SHARED}/linux/LinuxUtils.cpp" "${PROTON_SHARED}/linux/LinuxMain.cpp" "${PROTON_UTIL}/VideoModeSelector.cpp" "${PROTON_UTIL}/PassThroughPointerEventHandler.cpp" "${PROTON_UTIL}/TouchDeviceEmulatorPointerEventHandler.cpp"
+
+set(PROTON_SOURCES "${PROTON_SHARED}/BaseApp.cpp" "${PROTON_SHARED}/PlatformSetup.cpp" "${PROTON_SHARED}/linux/LinuxUtils.cpp" "${PROTON_SHARED}/SDL/SDL2Main.cpp" "${PROTON_UTIL}/VideoModeSelector.cpp" "${PROTON_UTIL}/PassThroughPointerEventHandler.cpp" "${PROTON_UTIL}/TouchDeviceEmulatorPointerEventHandler.cpp"
 	"${PROTON_UTIL}/Variant.cpp" "${PROTON_SHARED}/Manager/VariantDB.cpp"
 	"${PROTON_AUDIO}/AudioManager.cpp"
 	"${PROTON_FILESYSTEM}/FileManager.cpp" "${PROTON_FILESYSTEM}/StreamingInstance.cpp" "${PROTON_FILESYSTEM}/StreamingInstanceFile.cpp"
@@ -105,12 +107,14 @@ macro(proton_use_jpeg_support)
 	_proton_include_jpeg_sources()
 endmacro(proton_use_jpeg_support)
 
+#seth removed, want to use SDL2 mixer but many make installs don't have a macro for it yet
+
 # Enables the project to use the SDL audio system.
-macro(proton_use_sdl_audio)
-	add_definitions(-DRT_USE_SDL_AUDIO)
-	list(APPEND PROTON_SOURCES "${PROTON_AUDIO}/AudioManagerSDL.cpp")
-	set(PROTON_USE_SDL_AUDIO TRUE)
-endmacro(proton_use_sdl_audio)
+#macro(proton_use_sdl_audio)
+#	add_definitions(-DRT_USE_SDL_AUDIO)
+#	list(APPEND PROTON_SOURCES "${PROTON_AUDIO}/AudioManagerSDL.cpp")
+#	set(PROTON_USE_SDL_AUDIO TRUE)
+#endmacro(proton_use_sdl_audio)
 
 # Enables the project to use the linearparticles system.
 macro(proton_use_linearparticles)
@@ -233,21 +237,21 @@ function(proton_set_sources)
 		endif(ZLIB_FOUND)
 	endif(NOT PROTON_USE_INTERNAL_ZLIB)
 	
-	find_package(SDL REQUIRED)
-	if(SDL_FOUND)
-		include_directories(${SDL_INCLUDE_DIR})
-		target_link_libraries(${PROJECT_NAME} ${SDL_LIBRARY})
-	endif(SDL_FOUND)
+#	find_package(SDL REQUIRED)
+#	if(SDL_FOUND)
+#		include_directories(${SDL_INCLUDE_DIR})
+#		target_link_libraries(${PROJECT_NAME} ${SDL_LIBRARY})
+#	endif(SDL_FOUND)
 	
-	if(PROTON_USE_SDL_AUDIO)
-		find_package(SDL_mixer REQUIRED)
-		if(SDLMIXER_FOUND)
-			include_directories(${SDLMIXER_INCLUDE_DIR})
-			target_link_libraries(${PROJECT_NAME} ${SDLMIXER_LIBRARY})
-		else(SDLMIXER_FOUND)
-			message(FATAL_ERROR "Couldn't find SDL_mixer. Make sure the SDL_mixer development headers are installed.")
-		endif(SDLMIXER_FOUND)
-	endif(PROTON_USE_SDL_AUDIO)
+	#if(PROTON_USE_SDL_AUDIO)
+	#	find_package(SDL_mixer REQUIRED)
+	#	if(SDLMIXER_FOUND)
+	#		include_directories(${SDLMIXER_INCLUDE_DIR})
+	#		target_link_libraries(${PROJECT_NAME} ${SDLMIXER_LIBRARY})
+	#	else(SDLMIXER_FOUND)
+	#		message(FATAL_ERROR "Couldn't find SDL_mixer. Make sure the SDL_mixer development headers are installed.")
+	#	endif(SDLMIXER_FOUND)
+	#endif(PROTON_USE_SDL_AUDIO)
 
 	target_link_libraries(${PROJECT_NAME} rt GL)
 endfunction(proton_set_sources)

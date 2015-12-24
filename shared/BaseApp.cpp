@@ -119,6 +119,7 @@ bool BaseApp::Init()
 	{
 		GetAudioManager()->Init();
 	}
+	m_gameTimer.Reset(); //another one
 
 	return true;
 }
@@ -191,9 +192,18 @@ void BaseApp::Draw()
 	g_globalBatcher.Flush();
 }
 
+#ifdef RT_RUN_STATIC_UPDATE
+void RunStaticUpdateThing();
+#endif
+
 void BaseApp::Update()
 {
 	m_gameTimer.Update();
+#ifdef RT_RUN_STATIC_UPDATE
+//Don't ask, for Seth
+	RunStaticUpdateThing();
+#endif
+
 	if (GetMessageManager()) GetMessageManager()->Update();
 	if (GetAudioManager()) GetAudioManager()->Update();
 	m_sig_update(NULL);

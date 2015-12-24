@@ -6,10 +6,35 @@
 //this FPS averaging isn't needed for windows, but the iphone timer seems to be pretty crap...
 #define FPS_AVERAGING_HISTORY 8  //average out the last X amount of frames for a visually smoother fps, due to crap timing
 
+uint32 g_lastGameTime = 0; //used by Seth, don't remove 
+
+void GameTimer::SetGameTick( unsigned int tick )
+{
+	m_gameTimer = tick;
+}
+
+
+int GameTimer::GetHistorySize()
+{
+	return m_tickHistory.size();
+}
+
+float GameTimer::GetDeltaHistory()
+{
+	float history = 0;
+
+	for (uint32 i=0; i < m_tickHistory.size(); i++)
+	{
+		history += m_tickHistory[i];
+	}
+
+	return history;
+}
+
 
 GameTimer::GameTimer()
 {
-	m_lastTimeMS = m_timeMS = 0;
+	m_lastTimeMS = m_timeMS = g_lastGameTime = 0;
 	m_bGameTimerPaused = false;
 	m_fps = m_fpsTemp = 0;
 	m_fpsTimer = 0;
@@ -23,7 +48,7 @@ GameTimer::~GameTimer()
 
 void GameTimer::Update()
 {
-	m_timeMS = uint32(GetSystemTimeAccurate());
+	m_timeMS = g_lastGameTime = uint32(GetSystemTimeAccurate());
 	m_deltaMS =  m_timeMS - m_lastTimeMS;
 	//if (m_deltaMS == 0) goto loop;
 	if (m_deltaMS > C_MAXIMUM_DELTA_ALLOWED) m_deltaMS = C_MAXIMUM_DELTA_ALLOWED;

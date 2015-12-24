@@ -18,8 +18,10 @@ public:
 
 	unsigned int GetTick() {return m_timeMS;}
 	unsigned int GetGameTick() {return m_gameTimer;} //this timer can be paused with SetGameTimerPause(), use for all entity/object timing in the game
-	void SetGameTick(unsigned int tick) {m_gameTimer = tick;}
+	void SetGameTick(unsigned int tick);
+	int GetHistorySize();
 	int GetFPS() {return m_fps;}
+	float GetDeltaHistory();
 	GameTimer();
 	virtual ~GameTimer();
 	float GetDelta() {return m_deltaFloat;}
