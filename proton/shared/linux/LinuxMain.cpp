@@ -35,13 +35,30 @@ int initSDL_GLES()
 	// used to get the result value of SDL operations
 	int result;
 
+	    const SDL_VideoInfo* info = NULL;
+
 	// init SDL. This function is all it takes to init both
 	// the audio and video.
-	result = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_JOYSTICK);
+	result = SDL_Init(SDL_INIT_AUDIO | SDL_INIT_JOYSTICK);
 	if (result < 0)
 	{
 		return result;
 	}
+
+
+	/* Let's get some video information. */
+	info = SDL_GetVideoInfo( );
+	if (!info)
+	{
+
+		LogMsg("Error getting SDL video info: %s",  SDL_GetError( ));
+		return -1;
+	}
+
+	LogMsg("SDL reports screen is %d, %d, setting primaries to that.", info->current_w, info->current_h);
+	g_winVideoScreenX = info->current_w; //"win"? not the best naming! todo
+	g_winVideoScreenY =info->current_h;
+
 
 #if SDL_VERSION_ATLEAST(1, 3, 0)
 	// we need to set up OGL to be using the version of OGL we want. This
@@ -51,7 +68,9 @@ int initSDL_GLES()
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 1);	// Force this to be version 1
 #endif
 	
-	Uint32 videoFlags = SDL_OPENGL;
+
+
+	Uint32 videoFlags = SDL_OPENGL| SDL_FULLSCREEN;
 	g_screen = SDL_SetVideoMode(GetPrimaryGLX() , GetPrimaryGLY(), 0, videoFlags);
 
 	if (g_screen == NULL)
@@ -61,7 +80,10 @@ int initSDL_GLES()
 		return 1;
 	}
 
-	LogMsg("Setting up GLES to %d by %d.", g_screen->w, g_screen->h);
+	LogMsg("Setting up GLES to %d by %d", g_screen->w, g_screen->h);
+	
+	
+	
 	LogMsg((char*)glGetString(GL_VERSION));
 
 	// This sets the "caption" for whatever the window is. On windows, it's the window

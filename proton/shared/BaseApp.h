@@ -15,9 +15,10 @@
 #define C_MAX_TOUCHES_AT_ONCE 12
 
 
+#include "PlatformSetup.h"
+
 using namespace std;
 
-#include "PlatformSetup.h"
 #include "Manager/GameTimer.h"
 #include "Manager/Console.h"
 #include "util/MiscUtils.h"
