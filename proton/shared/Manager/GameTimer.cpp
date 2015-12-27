@@ -6,6 +6,8 @@
 //this FPS averaging isn't needed for windows, but the iphone timer seems to be pretty crap...
 #define FPS_AVERAGING_HISTORY 8  //average out the last X amount of frames for a visually smoother fps, due to crap timing
 
+#define C_SHADOW_OFFSET 3
+
 uint32 g_lastGameTime = 0; //used by Seth, don't remove 
 
 void GameTimer::SetGameTick( unsigned int tick )
@@ -34,7 +36,8 @@ float GameTimer::GetDeltaHistory()
 
 GameTimer::GameTimer()
 {
-	m_lastTimeMS = m_timeMS = g_lastGameTime = 0;
+	m_shadowOffset =0;
+	m_shadowGameTick = m_lastTimeMS = m_timeMS = g_lastGameTime = 0;
 	m_bGameTimerPaused = false;
 	m_fps = m_fpsTemp = 0;
 	m_fpsTimer = 0;
@@ -85,6 +88,11 @@ void GameTimer::Update()
 	{
 		//advance game timer 
 		m_gameTimer += m_deltaMS;
+		m_shadowGameTick += (m_deltaMS+C_SHADOW_OFFSET);
+		m_shadowOffset += C_SHADOW_OFFSET;
+	} else
+	{
+
 	}
 	
 	m_deltaFloat = float(m_deltaMS)/ (1000.0f/50.0f); //plan on 50 FPS being about average, which will return 1.0
@@ -99,6 +107,7 @@ void GameTimer::Update()
 		m_fpsTemp = 0;
 	}
 
+	//assert(m_timeMS == m_gameTimer);
 	m_fpsTemp++;
 }
 
@@ -109,6 +118,11 @@ void GameTimer::Reset()
 	m_fps = m_fpsTemp = 0;
 	m_fpsTimer = 0;
 	m_deltaFloat = 1;
+}
+
+bool GameTimer::IsKosher()
+{
+	return (m_gameTimer == (m_shadowGameTick-m_shadowOffset));
 }
 
 void GameTimer::SetGameTickPause( bool bNew )

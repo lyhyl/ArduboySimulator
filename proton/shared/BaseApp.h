@@ -217,14 +217,14 @@ public:
 	bool GetConsoleVisible() {return m_bConsoleVisible;}
 	bool GetFPSVisible() {return m_bFPSVisible;}
 	void SetFPSVisible(bool bNew) {m_bFPSVisible = bNew;}
-	unsigned int GetGameTick() {return m_gameTimer.GetGameTick();}
+	unsigned int GetGameTick();
 	void SetGameTick(unsigned int tick) {m_gameTimer.SetGameTick(tick);}
 	unsigned int GetTick() {return m_gameTimer.GetTick();}
 	eTimingSystem GetActiveTimingSystem();
 	unsigned int GetTickTimingSystem(eTimingSystem timingSystem);
 	float GetDelta() {return m_gameTimer.GetDelta();}
 	float GetGameDelta() {return m_gameTimer.GetGameDelta();}	
-	int GetDeltaTick() {return m_gameTimer.GetDeltaTick();}
+	int GetDeltaTick();
 	int GetGameDeltaTick() {return m_gameTimer.GetDeltaGameTick();} //elapsed time in milliseconds (1000=1 second)
 	float GetElapsedTime() {return (float)m_gameTimer.GetDeltaTick()/1000.0f;} //elapsed time in seconds (1 = 1 second)
 	float GetGameElapsedTime() {return (float)m_gameTimer.GetDeltaGameTick()/1000.0f;} //elapsed time in seconds (1 = 1 second)

@@ -460,6 +460,11 @@ void BaseApp::KillOSMessagesByType(OSMessage::eMessageType type)
 	m_OSMessages = temp;
 }
 
+unsigned int BaseApp::GetGameTick()
+{
+	return m_gameTimer.GetGameTick();
+}
+
 eTimingSystem BaseApp::GetActiveTimingSystem()
 {
 	if (GetGameTickPause()) return TIMER_SYSTEM;
@@ -472,6 +477,11 @@ unsigned int BaseApp::GetTickTimingSystem( eTimingSystem timingSystem )
 
 	assert(timingSystem == TIMER_GAME);
 	return m_gameTimer.GetGameTick();
+}
+
+int BaseApp::GetDeltaTick()
+{
+	return m_gameTimer.GetDeltaTick();
 }
 
 void LogError ( const char* traceStr, ... )
