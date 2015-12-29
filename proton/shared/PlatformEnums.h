@@ -27,7 +27,7 @@
 #define IsNexus7BActual ((GetScreenSizeX() == 1920 && GetScreenSizeY() == 1104)|| (GetScreenSizeX() == 1104 && GetScreenSizeY() ==  1920))
 #define IsNexus7 ((GetScreenSizeX() == 1280 && GetScreenSizeY() == 800)|| (GetScreenSizeX() == 800 && GetScreenSizeY() ==  1280))
 #define IsHDSize ((GetScreenSizeX() == 1920 && GetScreenSizeY() ==  1080)|| (GetScreenSizeY() == 1080 && GetScreenSizeX() ==  1920))
-#define IsNexus5Actual ((GetScreenSizeX() == 1794 && GetScreenSizeY() == 1080)|| (GetScreenSizeX() == 1080 && GetScreenSizeY() ==  1794))
+#define IsNexus5Actual ((  (GetScreenSizeX() == 1794 || GetScreenSizeX() == 1796) && GetScreenSizeY() == 1080)|| (GetScreenSizeX() == 1080 && (GetScreenSizeY() ==  1794 ||GetScreenSizeY() ==  1796 )  ) )
 #define IsGalaxyNoteActual ((GetScreenSizeX() == 2560 && GetScreenSizeY() == 1440)|| (GetScreenSizeX() == 1440 && GetScreenSizeY() ==  2560))
 #define IsLGG4Actual ((GetScreenSizeX() == 2392 && GetScreenSizeY() == 1440)|| (GetScreenSizeX() == 1440 && GetScreenSizeY() ==  2392))
 
