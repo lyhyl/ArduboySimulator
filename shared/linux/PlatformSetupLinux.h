@@ -25,6 +25,24 @@
 
 	#endif  // #ifdef C_GL_MODE
 
+
+//help with compatibility so I can use the GL ES calls with normal GL
+#ifdef C_GL_MODE
+
+#define glTexParameterx glTexParameteri
+#define glFrustumf glFrustum
+#define glOrthof glOrtho
+#define glColor4x(r,g,b,a) glColor4f( (float(r)/65536.0f),  (float(g)/65536.0f) , (float(b)/65536.0f), (float(a)/65536.0f));
+#define glActiveTexture glActiveTextureARB
+#define glClientActiveTexture glClientActiveTextureARB
+#else
+//GLES 1.1 mode, for raspberry pi mostly
+#include "GLES/gl.h"
+#include "GLES/glext.h"
+typedef GLfloat GLdouble;
+#define glClipPlane glClipPlanef
+#endif
+
 #else 
 
 #ifdef RT_USING_OSMESA
@@ -37,14 +55,6 @@
 #include "Irrlicht/source/Irrlicht/gles-ext.h"
 #endif
 
-//help with compatibility so I can use the GL ES calls with normal GL
-
-#define glTexParameterx glTexParameteri
-#define glFrustumf glFrustum
-#define glOrthof glOrtho
-#define glColor4x(r,g,b,a) glColor4f( (float(r)/65536.0f),  (float(g)/65536.0f) , (float(b)/65536.0f), (float(a)/65536.0f));
-#define glActiveTexture glActiveTextureARB
-#define glClientActiveTexture glClientActiveTextureARB
 
 #ifndef PLATFORM_LINUX
 #define PLATFORM_LINUX

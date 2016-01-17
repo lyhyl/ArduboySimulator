@@ -5,6 +5,19 @@ endif(${PROJECT_NOT_SET})
 
 string(REPLACE "/shared/linux/Proton.cmake" "" PROTON_ROOT "${CMAKE_CURRENT_LIST_FILE}")
 
+#for raspberry pi's gles1
+if(RASPBERRYPI_GLES11)
+	link_directories("/opt/vc/lib")
+	#don't why, but raspi needs this to include egl.h without errors
+	include_directories("/opt/vc/include")
+	include_directories("/opt/vc/include/interface/vcos/pthreads")
+	include_directories("/usr/include/interface/vmcs_host/linux")
+	include_directories("/opt/vc/include/interface/vmcs_host/linux")
+else(RASPBERRYPI_GLES11)
+#not gles1, so let's do full on GL
+add_definitions(-DC_GL_MODE)
+endif(RASPBERRYPI_GLES11)
+
 set(PROTON_SHARED "${PROTON_ROOT}/shared")
 set(PROTON_AD "${PROTON_SHARED}/Ad")
 set(PROTON_AUDIO "${PROTON_SHARED}/Audio")
@@ -22,17 +35,27 @@ set(PROTON_ZLIB "${PROTON_UTIL}/zlib")
 set(PROTON_BOOSTSIGNALS "${PROTON_UTIL}/boost/libs/signals/src")
 set(PROTON_CLANMATH "${PROTON_SHARED}/ClanLib-2.0/Sources/Core/Math")
 
-add_definitions(-DRTLINUX -DBOOST_ALL_NO_LIB -DC_GL_MODE)
+add_definitions(-DRTLINUX -DBOOST_ALL_NO_LIB -DPLATFORM_LINUX)
 
 # Adds the _DEBUG preprocessor definition to debug builds
 get_directory_property(Defs COMPILE_DEFINITIONS_DEBUG)
 list(APPEND Defs _DEBUG)
 set_directory_properties(PROPERTIES COMPILE_DEFINITIONS_DEBUG ${Defs})
 
+IF (CMAKE_BUILD_TYPE MATCHES "Debug")
+add_definitions(-ggdb -D_DEBUG)
+ENDIF(CMAKE_BUILD_TYPE MATCHES "Debug")
+
+IF (CMAKE_BUILD_TYPE MATCHES "Release")
+add_definitions(-O3 -DNDEBUG)
+ENDIF(CMAKE_BUILD_TYPE MATCHES "Release")
+
+
 include_directories("${PROTON_SHARED}")
 include_directories("${PROTON_UTIL}/boost")
 include_directories("${PROTON_SHARED}/ClanLib-2.0/Sources")
 include_directories("/usr/local/include/SDL2")
+
 
 
 set(PROTON_SOURCES "${PROTON_SHARED}/BaseApp.cpp" "${PROTON_SHARED}/PlatformSetup.cpp" "${PROTON_SHARED}/linux/LinuxUtils.cpp" "${PROTON_SHARED}/SDL/SDL2Main.cpp" "${PROTON_UTIL}/VideoModeSelector.cpp" "${PROTON_UTIL}/PassThroughPointerEventHandler.cpp" "${PROTON_UTIL}/TouchDeviceEmulatorPointerEventHandler.cpp"
@@ -110,11 +133,11 @@ endmacro(proton_use_jpeg_support)
 #seth removed, want to use SDL2 mixer but many make installs don't have a macro for it yet
 
 # Enables the project to use the SDL audio system.
-#macro(proton_use_sdl_audio)
-#	add_definitions(-DRT_USE_SDL_AUDIO)
-#	list(APPEND PROTON_SOURCES "${PROTON_AUDIO}/AudioManagerSDL.cpp")
-#	set(PROTON_USE_SDL_AUDIO TRUE)
-#endmacro(proton_use_sdl_audio)
+macro(proton_use_sdl_audio)
+	add_definitions(-DRT_USE_SDL_AUDIO)
+	list(APPEND PROTON_SOURCES "${PROTON_AUDIO}/AudioManagerSDL.cpp")
+	set(PROTON_USE_SDL_AUDIO TRUE)
+endmacro(proton_use_sdl_audio)
 
 # Enables the project to use the linearparticles system.
 macro(proton_use_linearparticles)
@@ -243,15 +266,29 @@ function(proton_set_sources)
 #		target_link_libraries(${PROJECT_NAME} ${SDL_LIBRARY})
 #	endif(SDL_FOUND)
 	
-	#if(PROTON_USE_SDL_AUDIO)
-	#	find_package(SDL_mixer REQUIRED)
-	#	if(SDLMIXER_FOUND)
-	#		include_directories(${SDLMIXER_INCLUDE_DIR})
-	#		target_link_libraries(${PROJECT_NAME} ${SDLMIXER_LIBRARY})
-	#	else(SDLMIXER_FOUND)
-	#		message(FATAL_ERROR "Couldn't find SDL_mixer. Make sure the SDL_mixer development headers are installed.")
-	#	endif(SDLMIXER_FOUND)
-	#endif(PROTON_USE_SDL_AUDIO)
+	if(PROTON_USE_SDL_AUDIO)
+		
+		if(RASPBERRYPI_GLES11)
+		#cmake doens't seem to have anything for sdl2_mixer finding, so just add it manually for the pi
+		target_link_libraries(${PROJECT_NAME} SDL2_mixer)
+		else(RASPBERRYPI_GLES11)
+			#old way
+			find_package(SDL_mixer REQUIRED)
+			if(SDLMIXER_FOUND)
+				include_directories(${SDLMIXER_INCLUDE_DIR})
+				target_link_libraries(${PROJECT_NAME} ${SDLMIXER_LIBRARY})
+			else(SDLMIXER_FOUND)
+				message(FATAL_ERROR "Couldn't find SDL_mixer. Make sure the SDL_mixer development headers are installed.")
+			endif(SDLMIXER_FOUND)
+		endif(RASPBERRYPI_GLES11)
+endif(PROTON_USE_SDL_AUDIO)
 
-	target_link_libraries(${PROJECT_NAME} rt GL)
+
+if(RASPBERRYPI_GLES11)
+	target_link_libraries(${PROJECT_NAME} GLESv1_CM EGL pthread bcm_host SDL2)
+else(RASPBERRYPI_GLES11)
+	target_link_libraries(${PROJECT_NAME} gl)
+endif(RASPBERRYPI_GLES11)
+
+target_link_libraries(${PROJECT_NAME} rt)
 endfunction(proton_set_sources)

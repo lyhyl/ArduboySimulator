@@ -12,6 +12,7 @@ Global
 		Flash GLES Debug Test|Win32 = Flash GLES Debug Test|Win32
 		Release GL|Win32 = Release GL|Win32
 		Release|Win32 = Release|Win32
+		SDL2 Debug GL|Win32 = SDL2 Debug GL|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{B4AF0729-C4C8-470F-A075-2D37021ACC6D}.Common Debug|Win32.ActiveCfg = Common Debug|Win32
@@ -28,6 +29,8 @@ Global
 		{B4AF0729-C4C8-470F-A075-2D37021ACC6D}.Release GL|Win32.Build.0 = Release GL|Win32
 		{B4AF0729-C4C8-470F-A075-2D37021ACC6D}.Release|Win32.ActiveCfg = Common Release|Win32
 		{B4AF0729-C4C8-470F-A075-2D37021ACC6D}.Release|Win32.Build.0 = Common Release|Win32
+		{B4AF0729-C4C8-470F-A075-2D37021ACC6D}.SDL2 Debug GL|Win32.ActiveCfg = SDL2 Debug GL|Win32
+		{B4AF0729-C4C8-470F-A075-2D37021ACC6D}.SDL2 Debug GL|Win32.Build.0 = SDL2 Debug GL|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

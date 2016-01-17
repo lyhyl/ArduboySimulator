@@ -206,7 +206,7 @@ void AppInput(VariantList *pVList)
 		LogMsg("Touch start: X: %.2f YL %.2f (Finger %d)", pt.x, pt.y, fingerID);
 		break;
 	case MESSAGE_TYPE_GUI_CLICK_MOVE:
-		LogMsg("Touch mode: X: %.2f YL %.2f (Finger %d)", pt.x, pt.y, fingerID);
+		LogMsg("Touch move: X: %.2f YL %.2f (Finger %d)", pt.x, pt.y, fingerID);
 		break;
 	case MESSAGE_TYPE_GUI_CLICK_END:
 		LogMsg("Touch end: X: %.2f YL %.2f (Finger %d)", pt.x, pt.y, fingerID);
@@ -372,4 +372,18 @@ const char * GetBundleName()
 {
 	const char * bundleName = "rtbarebones";
 	return bundleName;
+}
+
+bool App::OnPreInitVideo()
+{
+	//only called for desktop systems
+	//override in App.* if you want to do something here.  You'd have to
+	//extern these vars from main.cpp to change them...
+
+	//SetEmulatedPlatformID(PLATFORM_ID_WINDOWS);
+#if defined (_DEBUG) && defined(WINAPI)
+	SetupScreenInfo(1024, 768, ORIENTATION_DONT_CARE);
+#endif
+	//g_winVideoScreenY = 768;
+	return true; //no error
 }

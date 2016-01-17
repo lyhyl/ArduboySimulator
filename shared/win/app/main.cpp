@@ -115,6 +115,7 @@ void InitVideoSize()
 	AddVideoMode("Android HD", 1920, 1080, PLATFORM_ID_ANDROID); //Not sure which device, but some are this
 	AddVideoMode("Galaxy Note 4", 2560, 1440, PLATFORM_ID_ANDROID); //Not sure which device, but some are this
 	AddVideoMode("Galaxy Note 5", 3840, 2160, PLATFORM_ID_ANDROID); //Not sure which device, but some are this
+	AddVideoMode("LG G4 Visible Landscape",2392 , 1440, PLATFORM_ID_ANDROID); //Not sure which device, but some are this
 
 	//RIM Playbook OS/BBX/BB10/Whatever they name it to next week
 	AddVideoMode("Playbook", 600,1024, PLATFORM_ID_BBX);
@@ -124,7 +125,7 @@ void InitVideoSize()
 
 	//WORK: Change device emulation here
 	//string desiredVideoMode = "iPhone5 Landscape"; //name needs to match one of the ones defined above
-	string desiredVideoMode = "iPad Landscape"; //teeny tiny rez for testing
+	string desiredVideoMode = "iPad Landscape"; 
  	SetVideoModeByName(desiredVideoMode);
 	GetBaseApp()->OnPreInitVideo(); //gives the app level code a chance to override any of these parms if it wants to
 }

@@ -319,3 +319,19 @@ const char * GetBundleName()
 	const char * bundleName = "rtsimpleapp";
 	return bundleName;
 }
+
+
+
+bool App::OnPreInitVideo()
+{
+	//only called for desktop systems
+	//override in App.* if you want to do something here.  You'd have to
+	//extern these vars from main.cpp to change them...
+
+	//SetEmulatedPlatformID(PLATFORM_ID_WINDOWS);
+#if defined (_DEBUG) && defined(WINAPI)
+	SetPrimaryScreenSize(1024, 768);
+	SetupScreenInfo(1024, 768, ORIENTATION_DONT_CARE);
+#endif
+	return true; //no error
+}

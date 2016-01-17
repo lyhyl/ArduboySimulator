@@ -123,6 +123,7 @@ int GetScreenSizeX();
 float GetScreenSizeYf();
 float GetScreenSizeXf();
 bool IsLargeScreen();
+void SetPrimaryScreenSize(int width, int height); //implemented by each platform, must be called VERY early, mostly for win testing
 
 /**
  * Returns a string representation of a platform identifier.

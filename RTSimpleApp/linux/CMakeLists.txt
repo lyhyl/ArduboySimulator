@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 2.6)
-
+OPTION(RASPBERRYPI_GLES11 "Compile for Raspberry PI 2" ON)
+set(CMAKE_BUILD_TYPE "Release") #use Release or Debug
 project(rtsimpleapp)
 
 include(../../shared/linux/Proton.cmake)

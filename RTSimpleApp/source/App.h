@@ -22,6 +22,7 @@ public:
 	virtual void OnScreenSizeChange();
 	virtual void Update();
 	virtual void OnEnterBackground();
+	virtual bool OnPreInitVideo();
 
 	string GetVersionString();
 	float GetVersion();
