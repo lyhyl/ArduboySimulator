@@ -1,1 +1,1 @@
-SET UNITY_EXE=A:\pro\Unity\Unity.exe
+SET UNITY_EXE=C:\pro\unity5\Editor\Unity.exe

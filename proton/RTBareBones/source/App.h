@@ -22,6 +22,7 @@ public:
 	virtual void OnScreenSizeChange();
 	virtual void OnEnterBackground();
 	virtual void OnEnterForeground();
+	virtual bool OnPreInitVideo();
 	virtual void Update();
 	void OnExitApp(VariantList *pVarList);
 	

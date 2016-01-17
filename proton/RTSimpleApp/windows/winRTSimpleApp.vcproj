@@ -537,7 +537,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\source;..\..\shared;..\..\shared\win\;..\..\shared\util\boost;&quot;..\..\shared\ClanLib-2.0\Sources&quot;;..\..\shared\win\include;..\..\shared\FliteTTS\include;..\..\shared\Irrlicht\include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;BOOST_ALL_NO_LIB;_USE_32BIT_TIME_T;C_GL_MODE;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0;_NO_DEBUG_HEAP=1;RT_JPG_SUPPORT;RT_USE_SDL_AUDIO"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;BOOST_ALL_NO_LIB;_USE_32BIT_TIME_T;C_GL_MODE;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0;_NO_DEBUG_HEAP=1;RT_JPG_SUPPORT;RT_USE_SDL_AUDIO;RT_USE_SDL=1"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -559,10 +559,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opengl32.lib zdll.lib wsock32.lib SDL_mixer.lib SDLmain.lib SDL.lib"
+				AdditionalDependencies="opengl32.lib zdll.lib wsock32.lib SDL2_mixer.lib opengl32.lib zdll.lib wsock32.lib SDL2.lib SDL2main.lib"
 				OutputFile="../bin/winRTSimpleApp.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\shared\win\lib;..\..\shared\win\fmod\api\lib;..\..\shared\win\audiere\lib"
+				AdditionalLibraryDirectories="..\..\shared\win\lib;..\..\shared\win\lib\x86;..\..\shared\win\fmod\api\lib;..\..\shared\win\audiere\lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)/RTSimpleApp.pdb"
 				SubSystem="2"
@@ -613,6 +613,14 @@
 			<File
 				RelativePath="..\..\shared\win\app\main.cpp"
 				>
+				<FileConfiguration
+					Name="GL SDL Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\shared\win\app\main.h"
@@ -900,6 +908,18 @@
 							>
 						</File>
 					</Filter>
+				</Filter>
+				<Filter
+					Name="linux"
+					>
+					<File
+						RelativePath="..\linux\CMakeLists.txt"
+						>
+					</File>
+					<File
+						RelativePath="..\linux\linux_compile.sh"
+						>
+					</File>
 				</Filter>
 			</Filter>
 		</Filter>
@@ -5807,6 +5827,61 @@
 				<File
 					RelativePath="..\..\shared\Audio\AudioManagerSDL.cpp"
 					>
+					<FileConfiguration
+						Name="Common Debug|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Common Release|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug GL|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release GL|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug WebOS|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Flash GLES Debug Test|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="GL SDL Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\shared\Audio\AudioManagerSDL.h"
@@ -6670,7 +6745,7 @@
 				</Filter>
 			</Filter>
 			<Filter
-				Name="html"
+				Name="html5"
 				>
 				<File
 					RelativePath="..\..\shared\html5\HTML5Main.cpp"
@@ -6799,6 +6874,146 @@
 				<File
 					RelativePath="..\..\shared\html5\PlatformSetupHTML5.h"
 					>
+				</File>
+			</Filter>
+			<Filter
+				Name="linux"
+				>
+				<File
+					RelativePath="..\..\shared\linux\LinuxUtils.cpp"
+					>
+					<FileConfiguration
+						Name="Common Debug|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Common Release|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug GL|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release GL|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug WebOS|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Flash GLES Debug Test|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="GL SDL Debug|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\shared\linux\LinuxUtils.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\linux\PlatformSetupLinux.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\linux\Proton.cmake"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="SDL"
+				>
+				<File
+					RelativePath="..\..\shared\SDL\SDL2Main.cpp"
+					>
+					<FileConfiguration
+						Name="Common Debug|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Common Release|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug GL|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release GL|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug WebOS|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Flash GLES Debug Test|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="GL SDL Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 				</File>
 			</Filter>
 		</Filter>
