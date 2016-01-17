@@ -37,11 +37,6 @@ set(PROTON_CLANMATH "${PROTON_SHARED}/ClanLib-2.0/Sources/Core/Math")
 
 add_definitions(-DRTLINUX -DBOOST_ALL_NO_LIB -DPLATFORM_LINUX)
 
-# Adds the _DEBUG preprocessor definition to debug builds
-get_directory_property(Defs COMPILE_DEFINITIONS_DEBUG)
-list(APPEND Defs _DEBUG)
-set_directory_properties(PROPERTIES COMPILE_DEFINITIONS_DEBUG ${Defs})
-
 IF (CMAKE_BUILD_TYPE MATCHES "Debug")
 add_definitions(-ggdb -D_DEBUG)
 ENDIF(CMAKE_BUILD_TYPE MATCHES "Debug")
