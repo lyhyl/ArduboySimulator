@@ -96,14 +96,29 @@ void RenderBatcher::BlitEx(Surface *pSurf, rtRectf dst, rtRectf src, unsigned in
 	vertices[2].color = color;
 	vertices[5].color = color;
 
+	//old way which seems to have been backwards:
+
+	/*
+
 	float originalWidth = (float)m_pSurf->GetRawTextureWidth();
 	float originalHeight = (float)m_pSurf->GetRawTextureHeight();
-	 
+
 	//another step to convert the coordinates into ratios
 	static float texW;
 	texW = float(originalWidth)/float(m_pSurf->GetWidth());
 	static float texH;
 	texH = float(originalHeight)/float(m_pSurf->GetHeight());
+
+	*/
+
+	float originalWidth = (float)m_pSurf->GetWidth();
+	float originalHeight = (float)m_pSurf->GetHeight();
+	 
+	//another step to convert the coordinates into ratios
+	static float texW;
+	texW = float(originalWidth)/float(m_pSurf->GetRawTextureWidth());
+	static float texH;
+	texH = float(originalHeight)/float(m_pSurf->GetRawTextureHeight());
 	
 	vertices[0].vUv.x = src.left/float( originalWidth ) * texW;
 	vertices[0].vUv.y =  (1-texH) + texH*( (originalHeight-src.top) /float(originalHeight));
