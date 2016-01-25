@@ -97,6 +97,12 @@ bool GamepadDirectX::Init()
 
 
 	//hack for the xbox right stick.  Add real profiles later?
+	if (m_name.find("Xbox 360 Wireless") != string::npos)
+	{
+		//improve mappings
+		SetRightStickAxis(5, 6);
+		//LogMsg("XBOX Wireless pad detected");
+	} else
 	if (m_name.find("XBOX") != string::npos)
 	{
 		//improve mappings

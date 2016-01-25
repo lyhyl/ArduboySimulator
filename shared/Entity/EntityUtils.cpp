@@ -119,6 +119,26 @@ EntityComponent * SlideScreen(Entity *pEnt, bool bIn, int speedMS, int delayToSt
 	return SetupInterpolateComponent(pEnt, "", "pos2d", vEndPos, speedMS, delayToStartMS);
 }
 
+
+EntityComponent * SlideScreenBackwards(Entity *pEnt, bool bIn, int speedMS, int delayToStartMS)
+{
+
+	CL_Vec2f vEndPos;
+	CL_Vec2f vOrigPos = pEnt->GetVar("pos2d")->GetVector2();
+
+	if (bIn)
+	{
+		//move it off screen to start
+		pEnt->GetVar("pos2d")->Set(CL_Vec2f( float(GetScreenSizeX()+vOrigPos.x), vOrigPos.y));
+		vEndPos = CL_Vec2f(vOrigPos.x,vOrigPos.y);
+	} else
+	{
+		vEndPos = CL_Vec2f(-GetScreenSizeXf(),vOrigPos.y);
+	}
+
+	return SetupInterpolateComponent(pEnt, "", "pos2d", vEndPos, speedMS, delayToStartMS);
+}
+
 EntityComponent * SlideScreenVertical(Entity *pEnt, bool bIn, int speedMS, int delayToStartMS)
 {
 	CL_Vec2f vEndPos;

@@ -106,6 +106,7 @@ void EnableAllButtonsEntity(Entity *pEnt, bool bRecursive = true, int delayBefor
 Entity * EnableEntityButtonByName(const string &entityName, Entity *pRootEntity = GetEntityRoot()); //TODO: Too much duplicated code with below
 Entity * DisableEntityButtonByName(const string &entityName, Entity *pRootEntity = GetEntityRoot());
 EntityComponent * SlideScreen(Entity *pEnt, bool bIn, int speedMS = 500, int delayToStartMS = 0);
+EntityComponent * SlideScreenBackwards(Entity *pEnt, bool bIn, int speedMS = 500, int delayToStartMS = 0);
 EntityComponent * SlideScreenVertical(Entity *pEnt, bool bIn, int speedMS = 500, int delayToStartMS = 0);
 
 bool IsEntityBobbing(Entity *pEnt); //returns true if BobEntity or OneTimeBobEntity is active on this entity
