@@ -1637,7 +1637,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 	GLFlashAdaptor_Initialize();
 #endif
 
-	if (!InitVideo(GetPrimaryGLX(), GetPrimaryGLY(), false, 0))
+	if (!InitVideo(GetPrimaryGLX(), GetPrimaryGLY(), g_bIsFullScreen, 0))
 	{
 		goto cleanup;
 	}
