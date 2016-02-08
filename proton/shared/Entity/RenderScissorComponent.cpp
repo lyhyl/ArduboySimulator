@@ -98,7 +98,10 @@ void RenderScissorComponent::FilterOnRender(VariantList *pVList)
 	//clear the error out so it doesn't flood our log
 	glGetError();
 #endif
-	m_bOldScissorEnabled = b != 0;
+	//m_bOldScissorEnabled = b != 0;
+	
+	m_bOldScissorEnabled = 1; //force scissors to work regardless of what the above check says, fixes Nexus 7
+
 	CHECK_GL_ERROR()
 	if (m_bOldScissorEnabled)
 	{
