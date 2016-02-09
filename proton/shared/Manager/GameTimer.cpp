@@ -10,6 +10,28 @@
 
 uint32 g_lastGameTime = 0; //used by Seth, don't remove 
 
+
+#define MAX_MS_TICKS_PER_FRAME 100
+
+uint32 GetSystemTimeAccurateRangeChecked()
+{
+
+	static uint32 tick = uint32(0);
+	static uint32 lasttick = uint32(GetSystemTimeAccurate());
+
+	uint32 thisTick = uint32(GetSystemTimeAccurate());
+	uint32 change = thisTick-lasttick;
+	
+	lasttick = thisTick;
+	
+	if (change > MAX_MS_TICKS_PER_FRAME)
+	{
+		change = MAX_MS_TICKS_PER_FRAME;
+	}
+	tick += change;
+	return tick;
+}
+
 void GameTimer::SetGameTick( unsigned int tick )
 {
 	m_gameTimer = tick;
@@ -51,7 +73,9 @@ GameTimer::~GameTimer()
 
 void GameTimer::Update()
 {
-	m_timeMS = g_lastGameTime = uint32(GetSystemTimeAccurate());
+
+	m_timeMS = g_lastGameTime = uint32(GetSystemTimeAccurateRangeChecked());
+	
 	m_deltaMS =  m_timeMS - m_lastTimeMS;
 	//if (m_deltaMS == 0) goto loop;
 	if (m_deltaMS > C_MAXIMUM_DELTA_ALLOWED) m_deltaMS = C_MAXIMUM_DELTA_ALLOWED;
@@ -113,7 +137,7 @@ void GameTimer::Update()
 
 void GameTimer::Reset()
 {
-	m_lastTimeMS = m_timeMS = uint32(GetSystemTimeAccurate()); //make sure this is valid now
+	m_lastTimeMS = m_timeMS = g_lastGameTime = uint32(GetSystemTimeAccurateRangeChecked()); //make sure this is valid now
 	m_bGameTimerPaused = false;
 	m_fps = m_fpsTemp = 0;
 	m_fpsTimer = 0;
