@@ -34,7 +34,7 @@ public:
 	bool IsKosher(); //false if timer issues noticed
 
 private:
-	
+
 	unsigned int m_lastTimeMS;
 	unsigned int m_timeMS;
 	unsigned int m_fpsTimer;

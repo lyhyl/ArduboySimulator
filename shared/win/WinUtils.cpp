@@ -33,6 +33,21 @@ public:
 	{
 		QueryPerformanceCounter((LARGE_INTEGER*)&end);
 
+		/*
+//uncoment to fake timing errors
+#if defined(_DEBUG) && defined (WIN32)
+		if (GetAsyncKeyState('F'))
+		{
+
+			float r = (float)Random(100)*100000000.0f;
+
+			LogMsg(string("Modified game timer by "+toString(r)).c_str());
+			return r;
+		}
+
+#endif
+		*/
+
 		diff = ((end - start) * 1000) / freq;
 		return (unsigned int)(diff & 0xffffffff);
 	}
