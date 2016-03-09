@@ -98,9 +98,18 @@ void RenderScissorComponent::FilterOnRender(VariantList *pVList)
 	//clear the error out so it doesn't flood our log
 	glGetError();
 #endif
-	//m_bOldScissorEnabled = b != 0;
 	
-	m_bOldScissorEnabled = 1; //force scissors to work regardless of what the above check says, fixes Nexus 7
+	
+#ifdef PLATFORM_ANDROID
+//	m_bOldScissorEnabled = 1; //force scissors to work regardless of what the above check says, fixes Nexus 7.
+	//might break other stuff though, who knows
+	//update: hmm, it does break stuff on some devices with Growtopia.  So we better not do this
+
+	m_bOldScissorEnabled = b != 0;
+#else
+	m_bOldScissorEnabled = b != 0;
+#endif
+	
 
 	CHECK_GL_ERROR()
 	if (m_bOldScissorEnabled)

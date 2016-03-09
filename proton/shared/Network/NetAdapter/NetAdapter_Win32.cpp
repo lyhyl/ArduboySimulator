@@ -175,7 +175,10 @@ const NetAdapterInfo* get_primary_pNetAdapterInfo( const pNetAdapterInfo* Adapte
 	if ( Adapters ) {
 		size_t Index = 0;
 		
-		while ( Adapters[Index] != 0 ) {
+		while ( Adapters[Index] != 0 ) 
+		{
+
+			NetAdapterInfo* pTemp = Adapters[Index];
 			if ( strcmp( Adapters[Index]->DNS, "" ) != 0 )
 				return Adapters[Index];
 			

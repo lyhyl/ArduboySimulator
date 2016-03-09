@@ -951,10 +951,40 @@ public static String get_macAddress()
 	}
 	
 	
-	
+  private static boolean hasSuperuserApk()
+  {
+    return new File("/system/app/Superuser.apk").exists();
+  }
+  private static int isTestKeyBuild()
+  {
+    String str = Build.TAGS;
+    if ((str != null) && (str.contains("test-keys")));
+    for (int i = 1; ; i = 0)
+      return i;
+  }
+  
 public static String get_advertisingIdentifier()
 	{
 		return app.m_advertiserID;
+	}
+	
+	public static String get_cantSupportTrees()
+	{
+		if (
+		hasSuperuserApk() ||
+		is_app_installed("com.noshufou.android.su") == 1 ||
+		is_app_installed("com.thirdparty.superuser") == 1 ||
+		is_app_installed("eu.chainfire.supersu") == 1 ||
+		is_app_installed("com.koushikdutta.superuser") == 1 ||
+		is_app_installed("com.zachspong.temprootremovejb") == 1 ||
+		is_app_installed("com.ramdroid.appquarantine") == 1 ||
+		is_app_installed("cyanogenmod.superuser") == 1 ||
+		is_app_installed("com.devadvance.rootcloakplus") == 1
+		
+		
+		
+		) return "0";
+		return "4322";
 	}
 	
   @Override
