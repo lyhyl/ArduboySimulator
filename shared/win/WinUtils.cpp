@@ -667,6 +667,17 @@ bool HasVibration()
 }
 
 
+string GetAdvertisingIdentifier()
+{
+
+#ifndef _DEBUG
+return ""; //not valid on windows
+#endif
+
+return "fa39ed5c-0c5d-4de2-96d7-ebf40f2d65e1"; //for testing, it's an ANDROID gid
+}
+
+
 void CreateAppCacheDirIfNeeded()
 {
 	//only applicable to iOS

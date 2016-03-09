@@ -729,6 +729,17 @@ int StringToInt( const string &s )
 	return atoi(s.c_str());
 }
 
+/*
+//oops, this is C++11, can't use for crossplatform stuff yet
+unsigned int StringToUInt32(const string& s)
+{
+	unsigned long lresult = std::stoul(s, 0, 10);
+	unsigned int result = lresult;
+	assert(result == lresult && "That's weird...");
+	return result;
+}
+*/
+
 float StringToFloat( const string &s )
 {
 	return (float)atof(s.c_str());

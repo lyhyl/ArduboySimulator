@@ -10,9 +10,10 @@
 //RAND_MAX is different on android? whatevs, we'll use our own
 #ifdef PLATFORM_ANDROID
 
-#define RT_RAND_MAX 0x7FFF
+#define RT_RAND_MAX (0x7fffffff) // 0x7FFF
 
 #else
+
 #define RT_RAND_MAX RAND_MAX
 #endif
 
