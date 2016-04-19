@@ -126,7 +126,7 @@ bool URLEncoder::isOrdinaryChar(char c)
 
 string URLDecoder::decode(string str) 
 {
-	int len = str.length();
+	int len = (int)str.length();
 	char* buff = new char[len + 1];
 	strcpy(buff,str.c_str());
 	string ret = "";
@@ -155,7 +155,7 @@ string URLDecoder::decode(string str)
 
 vector<byte> URLDecoder::decodeData(const string str) 
 {
-	int len = str.length();
+	int len = (int)str.length();
 	vector<byte> outBuff;
 	outBuff.reserve(len);
 	char hex[4];			
@@ -185,7 +185,7 @@ int URLDecoder::convertToDec(const char* hex)
 	char buff[12];
 	sprintf(buff,"%s",hex);
 	int ret = 0;
-	int len = strlen(buff);
+	int len = (int)strlen(buff);
 	for(int i=0;i<len;i++) 
 	{
 		char tmp[4];
@@ -226,7 +226,7 @@ void URLDecoder::getAsDec(char* hex) {
 
 string GetDomainFromURL(string url)
 {
-	int pos = url.find("/");
+	int pos = (int)url.find("/");
 
 	if (pos != string::npos)
 	{
@@ -249,7 +249,7 @@ void BreakDownURLIntoPieces(string url, string &domainOut, string &requestOut, i
 		StringReplace("www.", "", url); //don't want that part
 	}
 
-	int pos = url.find(":");
+	int pos = (int)url.find(":");
 	if (pos != string::npos)
 	{
 		port = atol( url.substr(pos+1, url.size()- (pos+1)).c_str());
