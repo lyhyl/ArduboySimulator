@@ -88,6 +88,7 @@ std::string toString(C value)
 
 int StringToInt(const std::string &s);
 float StringToFloat(const std::string &s);
+bool IsVowel(char c);
 
 std::string PrefixLeading(const std::string input, unsigned int leadingCount, std::string leadingChar, std::string insertAfterPrefix = "");
 std::string PostfixLeading(const std::string input, unsigned int leadingCount, std::string leadingChar, std::string insertAfterPrefix = "");
