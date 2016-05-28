@@ -1,7 +1,7 @@
 /*
  *  App.h
- *  Created by Seth Robinson on 3/6/09.
- *  For license info, check the license.txt file that should have come with this.
+ *  Created by Seth Robinson
+ *  
  *
  */
 
