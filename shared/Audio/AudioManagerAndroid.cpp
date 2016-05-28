@@ -445,7 +445,7 @@ void AudioManagerAndroid::SetFrequency( AudioHandle soundID, int freq )
 		jmethodID mid = env->GetStaticMethodID(cls,
 			"sound_set_rate",
 			"(IF)V");
-		env->CallStaticIntMethod(cls, mid, jint(soundID), jfloat(rate));
+		env->CallStaticVoidMethod(cls, mid, jint(soundID), jfloat(rate));
 	}
 
 }
@@ -466,7 +466,7 @@ void AudioManagerAndroid::SetPan( AudioHandle soundID, float pan )
 		float volRight = rt_max(1, 1- (-pan));
 
 		//LogMsg("%.2f converted to l %.2f, r %.2f");
-		env->CallStaticIntMethod(cls, mid, jint(soundID), jfloat(volLeft*m_globalVol), jfloat(volRight*m_globalVol));
+		env->CallStaticVoidMethod(cls, mid, jint(soundID), jfloat(volLeft*m_globalVol), jfloat(volRight*m_globalVol));
 	}
 }
 
@@ -539,7 +539,7 @@ void AudioManagerAndroid::SetVol( AudioHandle soundID, float vol )
 		jmethodID mid = env->GetStaticMethodID(cls,
 			"sound_set_vol",
 			"(IFF)V");
-		env->CallStaticIntMethod(cls, mid, jint(soundID), jfloat(vol*m_globalVol), jfloat(vol*m_globalVol));
+		env->CallStaticVoidMethod(cls, mid, jint(soundID), jfloat(vol*m_globalVol), jfloat(vol*m_globalVol));
 	}
 
 }

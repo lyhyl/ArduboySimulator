@@ -415,6 +415,7 @@ void CALLBACK TimerProc(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 {
 	CheckWindowLagTimer();
 	//LogMsg("Waiting for window move...");
+	
 	if (IsBaseAppInitted())
 	{
 		GetBaseApp()->Update();
@@ -474,6 +475,13 @@ HGLRC		g_hRC=NULL;		// Permanent Rendering Context
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+
+#ifdef _DEBUG
+	//LogMsg("Got WM message %d, %d, %d", message, wParam, lParam);
+#endif
+
+	
+	
 	switch (message)
 	{
 		// Handles the close message when a user clicks the quit icon of the window
@@ -857,6 +865,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		if ((wParam & 0xFFF0) == SC_CLOSE)
 		{
 			LogMsg("App shutting down from getting the X clicked");
+			g_bAppFinished = true;
 		}
 	
 		if ((wParam & 0xFFF0) == SC_SIZE)
@@ -866,7 +875,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 		if ((wParam & 0xFFF0) == SC_MOVE)
 		{
-			//LogMsg("SC_MOVE");
 			g_windowLagTimer = GetSystemTimeTick();
 		//	return 0;
 		}
@@ -981,13 +989,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		//bizarre, but if you are holding down a key while you move a window, you won't get the below message until you let go of
 		//the key, so we'll start the timer on this message instead if needed.
 		
-		/*
+#ifndef RT_DONT_DO_MOVE_TIMER_TRICK
 		if (g_timerID == 0)
 		{
 			LogMsg("Setting timer.");
 			g_timerID = SetTimer(NULL, 0, 33, (TIMERPROC) TimerProc);
 		}
-		*/
+#endif
+		
 
 		break;
 	
@@ -1002,8 +1011,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	case WM_ENTERSIZEMOVE:
 		//LogMsg("Entersize move");
-		if (g_timerID == 0)
-			g_timerID = SetTimer(NULL, 0, 33, (TIMERPROC) TimerProc);
+		
+		
+		//if (g_timerID == 0)
+		//	g_timerID = SetTimer(NULL, 0, 33, (TIMERPROC) TimerProc);
 		break;
 
 	case WM_WINDOWPOSCHANGING:
@@ -1578,6 +1589,138 @@ void CheckIfMouseLeftWindowArea()
 		}
 }
 
+bool MainUpdate(bool bNormalUpdate)
+{
+	static float fpsTimer=0;
+
+		/*
+		if (GetAsyncKeyState('Q') && GetAsyncKeyState(VK_MENU))
+		{
+			SendMessage(g_hWnd, WM_CLOSE, 0, 0);
+		}
+		*/
+
+		if (g_winAllowFullscreenToggle)
+		{
+			if (GetAsyncKeyState(VK_RETURN) && GetAsyncKeyState(VK_MENU))
+			{
+				LogMsg("Toggle fullscreen");
+				GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_TOGGLE_FULLSCREEN, 0, 0);  //lParam holds a lot of random data about the press, look it up if
+				//return true;
+			}
+
+		}
+
+		if (g_bAppFinished) return true;
+
+		if (g_bHasFocus)
+		{
+
+			CheckIfMouseLeftWindowArea();
+			if (bNormalUpdate)
+			{
+				GetBaseApp()->Update();
+			
+				if (!g_bIsMinimized)
+				GetBaseApp()->Draw();
+			} else
+			{
+				//GetBaseApp()->Update();
+			}
+		} else
+		{
+			//LogMsg("Sleeping");
+			Sleep(50);
+		}
+
+		if (g_fpsLimit != 0)
+		{
+			while (fpsTimer > GetSystemTimeAccurate())
+			{
+				Sleep(0);
+			}
+			fpsTimer = float(GetSystemTimeAccurate())+(1000.0f/ (float(g_fpsLimit)));
+		}
+
+		while (!GetBaseApp()->GetOSMessages()->empty())
+		{
+			OSMessage m = GetBaseApp()->GetOSMessages()->front();
+			GetBaseApp()->GetOSMessages()->pop_front();
+			//LogMsg("Got OS message %d, %s", m.m_type, m.m_string.c_str());
+
+			switch (m.m_type)
+			{
+			case OSMessage::MESSAGE_CHECK_CONNECTION:
+				//pretend we did it
+				GetMessageManager()->SendGUI(MESSAGE_TYPE_OS_CONNECTION_CHECKED, RT_kCFStreamEventOpenCompleted, 0);	
+				break;
+			case OSMessage::MESSAGE_OPEN_TEXT_BOX:
+				break;
+			case OSMessage::MESSAGE_CLOSE_TEXT_BOX:
+				SetIsUsingNativeUI(false);
+				break;
+			
+			case OSMessage::MESSAGE_FINISH_APP:
+			case OSMessage::MESSAGE_SUSPEND_TO_HOME_SCREEN:
+
+				PostMessage(g_hWnd, WM_CLOSE, 0, 0);
+				break;
+			
+			case OSMessage::MESSAGE_SET_FPS_LIMIT:
+				g_fpsLimit = int(m.m_x);
+				break;
+			
+			case OSMessage::MESSAGE_SET_VIDEO_MODE:
+			
+				SwapBuffers(g_hDC);
+				GetBaseApp()->Draw();
+
+				g_bHasFocus = true;
+				
+				if (g_bIsMinimized) goto skipRender; //we don't need to re-init anything, we're just minimized
+
+				GetBaseApp()->OnEnterBackground();
+				GetBaseApp()->m_sig_unloadSurfaces();
+#ifdef C_GL_MODE
+				DestroyVideo(false);
+			
+				g_bHasFocus = false;
+				if (!InitVideo(int(m.m_x), int(m.m_y), m.m_fullscreen, m.m_fontSize))
+				{
+					MessageBox(NULL, "Error changing video mode", "Error", NULL);
+					return true;
+				}
+#else
+				LogMsg("Ignoring SET_VIDEO_MODE, only setup to work with normal GL, not GLES");
+#endif
+				SetupOrtho();
+				GetBaseApp()->OnEnterForeground();
+				GetBaseApp()->m_sig_loadSurfaces();
+				
+				goto skipRender;
+				//continue;
+			}
+		}
+	
+		if (g_bHasFocus && !g_bIsMinimized)
+		{
+	#ifdef C_GL_MODE
+			SwapBuffers(g_hDC);
+	#else
+			eglSwapBuffers(g_eglDisplay, g_eglSurface);
+			if (!TestEGLError(g_hWnd, "eglSwapBuffers"))
+			{
+				return true;
+			}
+	#endif
+		}
+
+skipRender:
+		// Managing the window messages
+		CheckWindowsMessages();
+		Sleep(0);
+		return false;
+}
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLine, int nCmdShow)
 {
@@ -1661,158 +1804,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 #endif
 
 	//our main loop
-	static float fpsTimer=0;
 
-	while(1)
+	while(!MainUpdate(true))
 	{
 		
-		/*
-		if (GetAsyncKeyState('Q') && GetAsyncKeyState(VK_MENU))
-		{
-			SendMessage(g_hWnd, WM_CLOSE, 0, 0);
-		}
-		*/
 
-		if (g_winAllowFullscreenToggle)
-		{
-			if (GetAsyncKeyState(VK_RETURN) && GetAsyncKeyState(VK_MENU))
-			{
-				LogMsg("Toggle fullscreen");
-				GetMessageManager()->SendGUI(MESSAGE_TYPE_GUI_TOGGLE_FULLSCREEN, 0, 0);  //lParam holds a lot of random data about the press, look it up if
-				//return true;
-			}
-
-		}
-
-		if (g_bAppFinished) break;
-
-		if (g_bHasFocus)
-		{
-
-			CheckIfMouseLeftWindowArea();
-			GetBaseApp()->Update();
-			if (!g_bIsMinimized)
-				GetBaseApp()->Draw();
-		} else
-		{
-			//LogMsg("Sleeping");
-			Sleep(50);
-		}
-
-		if (g_fpsLimit != 0)
-		{
-			while (fpsTimer > GetSystemTimeAccurate())
-			{
-				Sleep(0);
-			}
-			fpsTimer = float(GetSystemTimeAccurate())+(1000.0f/ (float(g_fpsLimit)));
-		}
-
-		while (!GetBaseApp()->GetOSMessages()->empty())
-		{
-			OSMessage m = GetBaseApp()->GetOSMessages()->front();
-			GetBaseApp()->GetOSMessages()->pop_front();
-			//LogMsg("Got OS message %d, %s", m.m_type, m.m_string.c_str());
-
-			switch (m.m_type)
-			{
-			case OSMessage::MESSAGE_CHECK_CONNECTION:
-				//pretend we did it
-				GetMessageManager()->SendGUI(MESSAGE_TYPE_OS_CONNECTION_CHECKED, RT_kCFStreamEventOpenCompleted, 0);	
-				break;
-			case OSMessage::MESSAGE_OPEN_TEXT_BOX:
-				break;
-			case OSMessage::MESSAGE_CLOSE_TEXT_BOX:
-				SetIsUsingNativeUI(false);
-				break;
-			
-			case OSMessage::MESSAGE_FINISH_APP:
-			case OSMessage::MESSAGE_SUSPEND_TO_HOME_SCREEN:
-
-				PostMessage(g_hWnd, WM_CLOSE, 0, 0);
-				break;
-			
-			case OSMessage::MESSAGE_SET_FPS_LIMIT:
-				g_fpsLimit = int(m.m_x);
-				break;
-			
-			case OSMessage::MESSAGE_SET_VIDEO_MODE:
-			
-				SwapBuffers(g_hDC);
-				GetBaseApp()->Draw();
-
-				g_bHasFocus = true;
-				
-				if (g_bIsMinimized) goto skipRender; //we don't need to re-init anything, we're just minimized
-
-				GetBaseApp()->OnEnterBackground();
-				GetBaseApp()->m_sig_unloadSurfaces();
-#ifdef C_GL_MODE
-				DestroyVideo(false);
-			
-				g_bHasFocus = false;
-				if (!InitVideo(int(m.m_x), int(m.m_y), m.m_fullscreen, m.m_fontSize))
-				{
-					MessageBox(NULL, "Error changing video mode", "Error", NULL);
-					goto cleanup;
-				}
-#else
-				LogMsg("Ignoring SET_VIDEO_MODE, only setup to work with normal GL, not GLES");
-#endif
-				SetupOrtho();
-				GetBaseApp()->OnEnterForeground();
-				GetBaseApp()->m_sig_loadSurfaces();
-				
-				goto skipRender;
-				//continue;
-			}
-		}
-	
-		if (g_bHasFocus && !g_bIsMinimized)
-		{
-	#ifdef C_GL_MODE
-			SwapBuffers(g_hDC);
-	#else
-			eglSwapBuffers(g_eglDisplay, g_eglSurface);
-			if (!TestEGLError(g_hWnd, "eglSwapBuffers"))
-			{
-				goto cleanup;
-			}
-	#endif
-		}
-
-skipRender:
-		// Managing the window messages
-		MSG msg;
-		while (PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE) == TRUE)
-		{
-		
-			int ret = GetMessage(&msg, NULL, 0, 0);
-		
-#ifdef RT_DISABLE_WINDOWS_MENU
-			//if we don't like it when hitting alt or F10 pauses things.  It's a windows thing
-
-			if(msg.message == WM_SYSKEYDOWN && ! (msg.wParam == VK_F4))
-			{
-
-			if(msg.message == WM_SYSKEYDOWN && msg.wParam == VK_F10)
-				continue;
-			if(msg.message == WM_SYSKEYDOWN  )
-				continue;
-			}
-#endif
-
-			if (ret > 0)
-			{
-				TranslateMessage(&msg);
-				DispatchMessage(&msg);
-			}
-			else
-			{
-				LogMsg("Error?");
-			}
-		}
-		Sleep(0);
 	}
 
 cleanup:
@@ -1875,6 +1871,39 @@ void LogMsg ( const char* traceStr, ... )
 		AddText(buffer, (GetSavePath()+"log.txt").c_str());
 	}
 
+}
+
+void CheckWindowsMessages()
+{
+	MSG msg;
+	while (PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE) == TRUE)
+	{
+
+		int ret = GetMessage(&msg, NULL, 0, 0);
+
+#ifdef RT_DISABLE_WINDOWS_MENU
+		//if we don't like it when hitting alt or F10 pauses things.  It's a windows thing
+
+		if(msg.message == WM_SYSKEYDOWN && ! (msg.wParam == VK_F4))
+		{
+
+			if(msg.message == WM_SYSKEYDOWN && msg.wParam == VK_F10)
+				continue;
+			if(msg.message == WM_SYSKEYDOWN  )
+				continue;
+		}
+#endif
+
+		if (ret > 0)
+		{
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+		else
+		{
+			LogMsg("Error?");
+		}
+	}
 }
 
 #endif

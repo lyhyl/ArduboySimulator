@@ -28,6 +28,23 @@ import android.view.inputmethod.InputMethodManager;
 import android.opengl.GLSurfaceView;
 import android.graphics.PixelFormat;
 
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputConnection;
+import android.view.View.OnKeyListener;
+import android.text.InputType;
+import android.view.inputmethod.BaseInputConnection;
+import android.text.Editable;
+import android.text.Selection;
+import android.view.KeyCharacterMap;
+import android.view.ActionMode;
+import android.view.Menu;
+import android.text.InputFilter;
+import android.view.MenuItem;
+import android.text.TextWatcher;
+import android.view.View.OnFocusChangeListener;
+import android.graphics.Color;
+
+
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.view.MotionEvent;
@@ -165,6 +182,8 @@ import android.view.View.OnClickListener;
 	public static boolean m_limitAdTracking = false;
 
 	public static Inventory m_iap_inventory = null;
+	public static boolean m_focusOnKeyboard = false;
+	public static boolean m_focusOffKeyboard = false;
 	
 //#if defined(RT_FLURRY_SUPPORT)
 	public static String m_flurryAPIKey = "";	
@@ -188,6 +207,10 @@ import android.view.View.OnClickListener;
 	
 	public static View adView;
 	public static RelativeLayout adLinearLayout;
+	public static EditText m_editText;
+	public static String m_before="";
+	public static int m_text_max_length = 20;
+	public static String m_text_default = "";
 	public static boolean update_display_ad;
 	public static boolean run_hooked;
 	public static int tapjoy_ad_show; //0 for don't shot, 1 for show
@@ -419,14 +442,160 @@ import android.view.View.OnClickListener;
 	{
         app = this;
 		apiVersion = Build.VERSION.SDK_INT;
-		   Log.d(PackageName, "***********************************************************************");
-			
-		Log.d(PackageName, "SDK version: " + apiVersion);
+	    Log.d(PackageName, "***********************************************************************");
+		Log.d(PackageName, "API Level: " + apiVersion);
 				
 		super.onCreate(savedInstanceState);
         mGLView = new AppGLSurfaceView(this, this);
-     	
+    	
 		setContentView(mGLView);
+	  
+	  //if (apiVersion > 15) //use new input system because Google sucks.  Using on all not just newer now
+	  {
+	  
+	   Log.d(app.PackageName, "Setting up new input system");
+      
+	  m_editText = new EditText(this);
+	  m_editText.setText("");
+      m_editText.setImeOptions(EditorInfo.IME_FLAG_NO_FULLSCREEN|EditorInfo.IME_FLAG_NO_EXTRACT_UI| EditorInfo.IME_FLAG_FORCE_ASCII);
+	  
+    m_editText.setOnFocusChangeListener(new OnFocusChangeListener() {          
+ @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+            if(!hasFocus)
+            {
+              // Log.d(app.PackageName, "Edittext lost focus");
+            } else
+            {
+              // Log.d(app.PackageName, "Edittext got focus");
+      
+            }
+        }
+    });
+       
+   
+	m_editText.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+ 	
+	try
+		{
+        	m_editText.setCustomSelectionActionModeCallback(new ActionMode.Callback() {
+ @Override
+    public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+        return false;
+    }
+
+    public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+        return false;
+    }
+
+    public boolean onActionItemClicked(ActionMode actionMode, MenuItem item) {
+        return false;
+    }
+
+    public void onDestroyActionMode(ActionMode actionMode) {
+    }
+});
+	
+		} 
+		catch (NoClassDefFoundError ex) 
+		{
+           //	Log.d(PackageName, "setCustomSelectionActionModeCallback(> Avoided crash. "+ex);
+		}
+        	
+       	//Log.d(PackageName, "Passed setCustomSelectionActionModeCallback");
+	
+	try
+		{
+m_editText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE) 
+        {
+          	InputMethodManager mgr = (InputMethodManager)app.getSystemService(Context.INPUT_METHOD_SERVICE);
+		    mgr.hideSoftInputFromWindow (mGLView.getWindowToken(),0);
+      
+            Log.d(app.PackageName, "editor action says we're done editing text");
+           	SharedActivity.app.nativeOnKey(1, 13, 13); //fake enter key
+            
+        	mGLView.requestFocus();
+			m_editText.setText("");
+            return true;
+        }
+        return false;
+    }
+});
+
+	} 
+		catch (NoClassDefFoundError ex) 
+		{
+           	Log.d(PackageName, "setOnEditorActionListener(> Avoided crash. "+ex);
+		}
+		
+m_editText.addTextChangedListener(new TextWatcher() 
+{
+
+          public void afterTextChanged(Editable s) 
+          {
+          
+          
+          }
+
+          public void beforeTextChanged(CharSequence s, int start, int count, int after) 
+          {
+	       //  Log.d(app.PackageName, "beforeTextChanged: "+count+" chars changed. start is "+start+" and After: "+after+" String: "+s);
+      
+          }
+
+          public void onTextChanged(CharSequence s, int start, int before, int count) 
+          {
+          //grab the last char entered and send to Proton
+         // Log.d(app.PackageName, "onTextChanged: "+count+" chars changed. start is "+start+" and before is "+before+". String: "+s);
+          	
+          		if (m_before.length() > s.length())
+          		{
+          			//string is now smaller, either a cut, clear or delete.  Let's assume delete for Proton's simple native input
+          			SharedActivity.app.m_before = s.toString();
+		  			SharedActivity.app.nativeOnKey(1, 67, 0);
+          			return;
+          		} else
+          		
+          		if (s.length() > m_before.length())
+          		{
+          			if (s.length() > start)
+				  {
+          				char changedChar = s.charAt(start);
+          				SharedActivity.app.nativeOnKey(1, 0, changedChar);
+            			SharedActivity.app.nativeOnKey(0, 0, changedChar);
+          		  }
+          		} else
+          		{
+          			//nothing changed.  Must be del?
+          		}
+          		
+			SharedActivity.app.m_before = s.toString();
+			
+	
+          }
+       });
+	
+		m_editText.setLongClickable(false);
+		
+		try
+		{
+		m_editText.setTextIsSelectable(false);
+		} 
+		catch (NoSuchMethodError ex) 
+		{
+           	//Log.d(PackageName, "setTextIsSelectable(> Avoided crash. "+ex);
+		}
+		m_editText.setBackgroundColor(Color.TRANSPARENT);
+		m_editText.setTextColor(Color.TRANSPARENT);
+
+		addContentView(m_editText, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+		mGLView.requestFocus();
+	//end new input stuff
+  }
+	
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
 		if (securityEnabled) 
 			this.license_init();
@@ -448,6 +617,7 @@ import android.view.View.OnClickListener;
 		//#endif
 
 
+
 //#if defined(RT_TAPJOY_SUPPORT)
 			
 		//Create dummy tapjoy view overlay we'll show ads on
@@ -458,6 +628,8 @@ import android.view.View.OnClickListener;
 		addContentView(adLinearLayout, l);
 //#endif
 		
+		Log.d(PackageName, "Setting IAB...");
+
 		update_display_ad = false;
 		run_hooked = false;
 		tapjoy_ad_show = 0;
@@ -476,8 +648,6 @@ import android.view.View.OnClickListener;
 			 {
 				 public void onIabSetupFinished(IabResult result) 
 				 {
-				//	Log.d(PackageName, "Setup finished.");
-
 					if (!result.isSuccess()) 
 					{
 						// Oh noes, there was a problem.
@@ -494,9 +664,6 @@ import android.view.View.OnClickListener;
 		}
 //#endif
 		sendVersionDetails();
-		
-		
-		
     }
 
     // Listener that's called when we finish querying the items and subscriptions we own
@@ -504,7 +671,6 @@ import android.view.View.OnClickListener;
      {
         public void onQueryInventoryFinished(IabResult result, Inventory inventory)
          {
-           // Log.d(PackageName, "Query inventory finished.");
             
             // Have we been disposed of in the meantime? If so, quit.
             if (mHelper == null) return;
@@ -518,9 +684,7 @@ import android.view.View.OnClickListener;
             }
 
 			SharedActivity.app.m_iap_inventory = inventory; //cache for later
-			
-           // Log.d(PackageName, "Query inventory was successful.");
-            
+	        
             /*
              * Check for items we own. Notice that for each purchase, we check
              * the developer payload to see if it's correct! See
@@ -616,6 +780,7 @@ import android.view.View.OnClickListener;
     
 //#endif
 
+
     @Override
     protected synchronized void onPause()
 	{
@@ -682,7 +847,6 @@ import android.view.View.OnClickListener;
  
 	private void updateResultsInUi() 
 	{
-		//Log.d(PackageName, "Update");
 	
 		if (set_allow_dimming_asap)
 		{
@@ -696,6 +860,34 @@ import android.view.View.OnClickListener;
 			set_allow_dimming_asap = false;
 			Log.d(app.PackageName, "Disabling screen dimming.");
 			mGLView.setKeepScreenOn(true);
+		}
+		
+		if (m_focusOnKeyboard)
+		{
+			m_focusOnKeyboard = false;
+			int maxLength = m_text_max_length;
+		
+			if (m_editText != null)
+			{
+				/*
+				InputFilter[] FilterArray = new InputFilter[1];
+				FilterArray[0] = new InputFilter.LengthFilter(maxLength);
+				m_editText.setFilters(FilterArray);
+				*/
+				m_editText.setText(m_text_default);
+				m_editText.setSelection(m_editText.getText().length()); 
+				m_editText.requestFocus();
+			}
+		}
+		
+		if (m_focusOffKeyboard)
+		{
+			m_focusOffKeyboard = false;
+	
+			if (m_editText != null)
+			{
+				mGLView.requestFocus();
+			}
 		}
 
 //#if defined(RT_DISABLE_IAP_SUPPORT)
@@ -1061,18 +1253,21 @@ public static String get_advertisingIdentifier()
 
 	public void toggle_keyboard(boolean show) 
 	{
-  		InputMethodManager mgr = (InputMethodManager)app.getSystemService(Context.INPUT_METHOD_SERVICE);
+		InputMethodManager mgr = (InputMethodManager)app.getSystemService(Context.INPUT_METHOD_SERVICE);
         mgr.hideSoftInputFromWindow (mGLView.getWindowToken(),0);
         if (show) 
 		{
             Log.d("Msg","Enabling keyboard");
 			mgr.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+            m_focusOnKeyboard = true;
+             
             // On the Nexus One, SHOW_FORCED makes it impossible
             // to manually dismiss the keyboard.
             // On the Droid SHOW_IMPLICIT doesn't bring up the keyboard.
         } 
 		else
         {
+            m_focusOnKeyboard = false;
 			Log.d("Msg", "Disabling keyboard");
 	    }
     }
@@ -1232,10 +1427,24 @@ public static String get_advertisingIdentifier()
 		return false; 
 	}
 
+@Override
+		public boolean onKeyMultiple (int keyCode, 
+                int count, 
+                KeyEvent event)
+                {
+        			//Log.v("***** onKeyMultiple",count+" keys pressed! First was "+keyCode+" "+Character.toString(Character.toChars(event.getUnicodeChar())[0]));
+        			return super.onKeyMultiple(keyCode, count, event);
+                }
+@Override
 	public boolean onKeyDown(int keycode, KeyEvent e) 
 	{
 		//Log.v("onKeyDown","Keydown Got "+keycode+" "+Character.toString(Character.toChars(e.getUnicodeChar())[0]));
   
+		if (keycode == 67)
+		{
+			//Log.v("onKeyUp", "Detected delete, ignoring, we handle it a different way now");
+			return true;			
+		}
 		if (e.getRepeatCount() > 0) 
 			return super.onKeyDown(keycode, e);
 
@@ -1256,10 +1465,11 @@ public static String get_advertisingIdentifier()
 		{
 				//#if defined(RT_CHARTBOOST_SUPPORT)
 				// If an interstitial is on screen, close it. Otherwise continue as normal.
-					 Log.d("onKeyDown","Sending virtual back");
+				//	 Log.d("onKeyDown","Sending virtual back");
+				
 				if (this.cb.onBackPressed())
 				{
-					 Log.d("onKeyDown","CB handling back");
+				//	 Log.d("onKeyDown","CB handling back");
 					 return true; //ignore the key
 				}
 				//#endif
@@ -1273,11 +1483,16 @@ public static String get_advertisingIdentifier()
 		nativeOnKey(1, vKey, (char)e.getUnicodeChar()); //1  means keydown
         return super.onKeyDown(keycode, e);
     }
-
+@Override
     public boolean onKeyUp(int keycode, KeyEvent e)
 	{
 		//Log.v("onKeyUp","Keyup Got "+keycode+" "+Character.toString(Character.toChars(e.getUnicodeChar())[0]));
-       
+     	if (keycode == 67)
+		{
+			//Log.v("onKeyUp", "Detected delete, ignoring, we handle it a different way now");
+			return true;			
+		}
+
        	if(e.isAltPressed() && keycode == KeyEvent.KEYCODE_BACK) 
 		{
 			//XPeria's O button, not the back button!
@@ -1294,7 +1509,7 @@ public static String get_advertisingIdentifier()
 				// If an interstitial is on screen, close it. Otherwise continue as normal.
 				if (this.cb.onBackPressed()) 
 				{
-				    Log.d("onKeyUp","CB handling back");
+			//	    Log.d("onKeyUp","CB handling back");
 					return true; //ignore the key
 				}
 				//#endif
@@ -1307,8 +1522,9 @@ public static String get_advertisingIdentifier()
       	int vKey = TranslateKeycodeToProtonVirtualKey(keycode);
 	
       	nativeOnKey(0, vKey,(char)e.getUnicodeChar()); //0 is type keyup
-        return super.onKeyUp(keycode, e);
+		return super.onKeyUp(keycode, e);
     }
+   
 
 	// straight version
 	public void sendVersionDetails()
@@ -1765,19 +1981,27 @@ public static String get_advertisingIdentifier()
     }
 }
 
-
 class AppGLSurfaceView extends GLSurfaceView
 {
+
     public AppGLSurfaceView(Context context, SharedActivity _app) 
 	{
     	super(context);
         app = _app;
-	
+		
+		if (app.m_editText != null)
+		{
+			Log.d(app.PackageName, "Setting focus options...");
+			this.setFocusable(true);
+			this.setFocusableInTouchMode(true);
+			this.requestFocus();
+		}
+		//Log.d(app.PackageName, "Setup focus");
+
 		//setEGLConfigChooser(8, 8, 8, 8, 16, 0);
 		//getHolder().setFormat(PixelFormat.TRANSLUCENT);
 		
 		mRenderer = new AppRenderer(_app);
-   
 		setRenderer(mRenderer);
 	
 		/* establish whether the "new" class is available to us */
@@ -2030,11 +2254,18 @@ Thread thr = new Thread(new Runnable() {
 			switch (type)
 			{
 				case MESSAGE_OPEN_TEXT_BOX: //open text box
+					
+					app.m_text_max_length = nativeGetLastOSMessageParm1();
+					app.m_text_default = nativeGetLastOSMessageString();
+					app.m_before =  nativeGetLastOSMessageString();
 					app.toggle_keyboard(true);
+					app.mMainThreadHandler.post(app.mUpdateMainThread);
 					break;
 
 				case MESSAGE_CLOSE_TEXT_BOX: //close text box
 					app.toggle_keyboard(false);
+					app.mMainThreadHandler.post(app.mUpdateMainThread);
+
 					break;
 		
 				case MESSAGE_SET_ACCELEROMETER_UPDATE_HZ: 

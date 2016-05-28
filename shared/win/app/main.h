@@ -9,6 +9,7 @@ extern int g_winVideoScreenX;
 extern int g_winVideoScreenY;
 extern string g_videoModeNameForce; //if set, video mode will be forced to this instead of what is set in main.cpp
 extern bool g_bIsFullScreen;
+void CheckWindowsMessages();
 
 class VideoModeEntry
 {
