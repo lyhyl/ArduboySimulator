@@ -1212,7 +1212,7 @@ bool Surface::InitFromSoftSurface( SoftSurface *pSurf, bool bCreateSurface, int 
 
 #endif
 
-		assert(colorFormat == GL_RGB);
+		//assert(colorFormat == GL_RGB);
 		glTexImage2D( GL_TEXTURE_2D, mipLevel, internalColorFormat, pSurf->GetWidth(), pSurf->GetHeight(), 0, colorFormat, pixelFormat, pSurf->GetPixelData() );
 	
 	} else
