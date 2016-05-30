@@ -14,6 +14,12 @@ long random(long minNum, long maxNum)
 	return RandomRange(minNum, maxNum);
 }
 
+long random(long num)
+{
+	return Random(num);
+}
+
+
 Arduboy::Arduboy()
 {
 	// frame management
@@ -45,11 +51,21 @@ void Arduboy::begin()
 		flashlight();
 	}
 */
+	bootLogo();
+	audio.begin();
+}
 
+void Arduboy::beginNoLogo()
+{
+	boot();         // raw hardware init
+	audio.begin();
+}
 
+void Arduboy::GLBlit()
+{
+	
 	if (!m_arduScreen.IsActive())
 	{
-
 		//set it up
 		m_arduScreen.Init(128,64, SoftSurface::SURFACE_RGBA);
 		m_arduScreen.FillColor(glColorBytes(255,0,0,255));
@@ -57,13 +73,6 @@ void Arduboy::begin()
 		m_arduGL.InitFromSoftSurface(&m_arduScreen);
 	}
 
-	bootLogo();
-	audio.begin();
-}
-
-void Arduboy::GLBlit()
-{
-	
 	m_arduScreen.FillColor(glColorBytes(0,0,0,255));
 	glColorBytes white(255,255,255,255);
 

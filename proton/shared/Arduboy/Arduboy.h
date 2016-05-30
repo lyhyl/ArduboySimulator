@@ -98,6 +98,7 @@ public:
   /// Initialize hardware, boot logo, boot utilities, etc.
   void begin();
 
+  void beginNoLogo();
   /// Init just hardware, no logo, no boot utilities.
   /**
    * Look at the source for `begin()` and just rip out what you do not
@@ -244,8 +245,8 @@ public:
   /// useful for getting raw approximate voltage values
   uint16_t rawADC(byte adc_bits);
   
-  void GLBlit();
   void end();
+  void GLBlit();
   SoftSurface m_arduScreen;
   Surface m_arduGL;
 
