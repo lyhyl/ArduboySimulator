@@ -11,9 +11,25 @@
 #include "Entity/ArcadeInputComponent.h" 
 #include "Entity/EntityUtils.h"
 #include "Renderer/SoftSurface.h"
+
+#ifdef RT_USE_SDL_AUDIO
+#include "Audio/AudioManagerSDL.h"
+AudioManagerSDL g_audioManager; //to disable sound, this is a dummy
+
+#else
+//no audio
+#include "Audio/AudioManager.h"
+AudioManager g_audioManager; //to disable sound, this is a dummy
+
+#endif
+
+
 #include "Arduboy.h"
+#include "Entity/TouchHandlerArcadeComponent.h"
+#include "Entity/EmitVirtualKeyComponentAdvanced.h"
 
-
+const float C_ARDUBOY_SCALE_MULT= 1.0f; //1 = normal (which is actually 2x scale), 2 for double, 0.5 for half (which is 1.x scale)
+int C_ARDUBOY_SIDE_PADDING=0; //0 for none, otherwise it adds black strips on the left and right side
 void main_setup();
 void main_loop();
 
@@ -25,8 +41,7 @@ MessageManager * GetMessageManager() {return &g_messageManager;}
 FileManager g_fileManager;
 FileManager * GetFileManager() {return &g_fileManager;}
 
-#include "Audio/AudioManager.h"
-AudioManager g_audioManager; //to disable sound, this is a dummy
+
 
 AudioManager * GetAudioManager(){return &g_audioManager;}
 
@@ -85,6 +100,7 @@ bool App::Init()
 	//fonts need zlib to decompress.  When porting a new platform I define C_NO_ZLIB and add zlib support later sometimes
 	if (!GetFont(FONT_SMALL)->Load("interface/font_trajan.rtfont")) return false;
 #endif
+	//SetDefaultButtonStyle(Button2DComponent::BUTTON_STYLE_CLICK_ON_TOUCH_RELEASE);
 
 	
 	//GetBaseApp()->SetFPSVisible(true); //can show FPS, but it's not the arduboy fps, it's our own update
@@ -93,16 +109,15 @@ bool App::Init()
 
 	//scale screen up?
 
-	/*
-	int scaleToX = 128;
-	int scaleToY = 64;
+if (C_ARDUBOY_SCALE_MULT != 1)
+{
+	int scaleToX = (C_ARDUBOY_SIDE_PADDING*2)+414;
+	int scaleToY = 661;
 	
 	SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(), ORIENTATION_PORTRAIT);
 
 	SetupFakePrimaryScreenSize(scaleToX,scaleToY); //game will think it's this size, and will be scaled up
-*/
-
-
+}
 	return true;
 }
 
@@ -234,22 +249,37 @@ void AppInput(VariantList *pVList)
 		break;
 	}	
 
-	
+}
+
+EntityComponent * MakeButtonEmitVirtualGameKeyAdvanced(Entity *pEnt, uint32 keycode)
+{
+	if (!pEnt)
+	{
+		assert(!"Serious error");
+		return NULL;
+	}
+	EntityComponent *pComp = pEnt->AddComponent(new EmitVirtualKeyComponentAdvanced);
+	pComp->GetVar("keycode")->Set(keycode);
+	return pComp;
 }
 
 void SetupButtonOverlay(Entity *pParent, CL_Vec2f vPos, CL_Vec2f vBounds, string name, uint32 virtualKey)
 {
 	//add some overlay buttons
-	uint32 color = MAKE_RGBA(255,255,255,100);
-	Entity * pButton = CreateButtonHotspot(pParent, name, vPos, vBounds );
-	pButton->GetVar("color")->Set(color);
-	SetButtonRepeatDelayMS(pButton, 1);
-	MakeButtonEmitVirtualGameKey(pButton, virtualKey);
+	vPos += CL_Vec2f(C_ARDUBOY_SIDE_PADDING,0);
+	uint32 color = MAKE_RGBA(255,255,255,0);
+	//Entity * pButton = CreateButtonHotspot(pParent, name, vPos, vBounds, Button2DComponent::BUTTON_STYLE_CLICK_ON_TOUCH);
+	Entity *pButton = CreateOverlayRectEntity(pParent, vPos, vBounds, color);
+	//Entity *pButton = CreateOverlayEntity(pParent, "Name", "interface/test.rttex", vPos.x, vPos.y);
+	pButton->AddComponent(new TouchHandlerArcadeComponent);
+	pButton->GetVar("touchPadding")->Set(CL_Rectf(0,0,0,0));
+	//pButton->GetVar("color")->Set(color);
+	MakeButtonEmitVirtualGameKeyAdvanced(pButton, virtualKey);
+	pParent->MoveEntityToTopByAddress(pButton);
 }
 
 void App::Update()
 {
-	
 	//game can think here.  The baseApp::Update() will run Update() on all entities, if any are added.  The only one
 	//we use in this example is one that is watching for the Back (android) or Escape key to quit that we setup earlier.
 
@@ -262,27 +292,30 @@ void App::Update()
 		
 		//for android, so the back key (or escape on windows) will quit out of the game
 		Entity *pEnt = GetEntityRoot()->AddEntity(new Entity("Gamelogic"));
+		//give focus to the entire entity tree
+		AddFocusIfNeeded(GetApp()->GetEntityRoot());
+	
 		EntityComponent *pComp = pEnt->AddComponent(new CustomInputComponent);
 		//tell the component which key has to be hit for it to be activated
 		pComp->GetVar("keycode")->Set(uint32(VIRTUAL_KEY_BACK));
 		//attach our function so it is called when the back key is hit
 		pComp->GetFunction("OnActivated")->sig_function.connect(1, boost::bind(&App::OnExitApp, this, _1));
 
-		//nothing will happen unless we give it input focus
-		pEnt->AddComponent(new FocusInputComponent);
-
+		
 		pComp = pEnt->AddComponent(new ArcadeInputComponent);
+		
+
 		GetBaseApp()->m_sig_arcade_input.connect(1, boost::bind(&App::OnArcadeInput, this, _1));
 	
 		//these arrow keys will be triggered by the keyboard, if applicable
+		
 		AddKeyBinding(pComp, "Left", VIRTUAL_KEY_DIR_LEFT, VIRTUAL_KEY_DIR_LEFT);
 		AddKeyBinding(pComp, "Right", VIRTUAL_KEY_DIR_RIGHT, VIRTUAL_KEY_DIR_RIGHT);
 		AddKeyBinding(pComp, "Up", VIRTUAL_KEY_DIR_UP, VIRTUAL_KEY_DIR_UP);
 		AddKeyBinding(pComp, "Down", VIRTUAL_KEY_DIR_DOWN, VIRTUAL_KEY_DIR_DOWN);
 		AddKeyBinding(pComp, "Fire", VIRTUAL_KEY_CONTROL, VIRTUAL_KEY_GAME_FIRE);
 		AddKeyBinding(pComp, "FireB", 'Z', VIRTUAL_KEY_GAME_TALK);
-
-		
+	
 		//INPUT TEST - wire up input to some functions to manually handle.  AppInput will use LogMsg to
 		//send them to the log.  (Each device has a way to view a debug log in real-time)
 		GetBaseApp()->m_sig_input.connect(&AppInput);
@@ -298,9 +331,8 @@ void App::Update()
 		{
 			LogMsg("Can't load font 1");
 		}
-		
-
-		CreateOverlayEntity(pEnt, "background", "interface/arduboy2x.rttex", 0,0);
+	
+		CreateOverlayEntity(pEnt, "background", "interface/arduboy2x.rttex", C_ARDUBOY_SIDE_PADDING,0);
 
 		//arduboy hotspots on the above image
 
@@ -317,10 +349,14 @@ void App::Update()
 		//variables so it's pretty useless unless you wrote your sketch code to allow this and reset your vars in the main_setup() part.
 		//SetupButtonOverlay(pEnt, CL_Vec2f(178,610), CL_Vec2f(59,34), "reset", VIRTUAL_KEY_GAME_INVENTORY);
 
+		//oh, let's pop up a message telling them about the hardware keys
 
-		//give focus to the entire entity tree
-		AddFocusIfNeeded(GetApp()->GetEntityRoot());
+		Entity *pTextEnt = CreateTextLabelEntity(pEnt, "Help", 15+C_ARDUBOY_SIDE_PADDING, 277, "`bCan use Ctrl, Z, & Arrow keys too!");
+		SetAlphaEntity(pTextEnt, 0.0f);
+		FadeInEntity(pTextEnt, 800,2000);
+		FadeOutAndKillEntity(pTextEnt, false, 1000, 7000);
 
+	
 		main_setup(); //hook into our arduboy code
 
 	}
@@ -400,8 +436,9 @@ bool App::OnPreInitVideo()
 	//extern these vars from main.cpp to change them...
 
 	//SetEmulatedPlatformID(PLATFORM_ID_WINDOWS);
-	g_winVideoScreenX = 414;
-	g_winVideoScreenY = 661;
+	
+	g_winVideoScreenX = (414+(C_ARDUBOY_SIDE_PADDING*2))*C_ARDUBOY_SCALE_MULT;
+	g_winVideoScreenY = 661*C_ARDUBOY_SCALE_MULT;
 	return true; //no error
 }
 
