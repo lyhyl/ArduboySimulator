@@ -123,7 +123,7 @@
 
 #ifndef __ASSEMBLER__
 /* These only work in C programs.  */
-#include <inttypes.h>
+//#include <inttypes.h>
 
 #define _MMIO_BYTE(mem_addr) (*(volatile uint8_t *)(mem_addr))
 #define _MMIO_WORD(mem_addr) (*(volatile uint16_t *)(mem_addr))

@@ -105,7 +105,7 @@ void ArduboyPlaytune::playNote(byte chan, byte note)
 
 
  
-  //******  16-bit timer  *********
+  // ******  16-bit timer  *********
   // two choices for the 16 bit timers: ck/1 or ck/64
   ocr = F_CPU / frequency2 - 1;
   prescalar_bits = 0b001;
@@ -241,8 +241,21 @@ void ArduboyPlaytune::tone(unsigned int frequency, unsigned long duration)
   uint8_t prescalarbits = 0x0b001;
   int32_t toggle_count = 0;
   uint32_t ocr = 0;
-
+  //LogMsg("Playing freq: %d", frequency);
+  
+  //world's worst audio simulation
+  if (frequency > 1000)
+  {
+	  GetAudioManager()->Play("audio/tone_high.wav");
+  } else if (frequency > 180)
+  {
+	  GetAudioManager()->Play("audio/tone_quick.wav");
+  } else
+  {
+	  GetAudioManager()->Play("audio/tone_low.wav");
+  }
   return;
+
   // two choices for the 16 bit timers: ck/1 or ck/64
   ocr = F_CPU / frequency / 2 - 1;
   prescalarbits = 0x0b001;

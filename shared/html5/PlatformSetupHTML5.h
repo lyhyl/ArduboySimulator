@@ -13,6 +13,7 @@
 #include <cassert>
 #include <sys/time.h>
 
+
 #ifndef _CONSOLE
 
 	#ifdef C_GL_MODE
@@ -128,4 +129,5 @@ typedef  __int64            int64;       /* Signed 64 bit value */
 typedef uint8_t byte;
 #define _BYTE
 #endif
+
 #endif // PlatformSetupHTML5_h__

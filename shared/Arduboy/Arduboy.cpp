@@ -1,4 +1,14 @@
 #include "PlatformPrecomp.h"
+
+#ifndef WINAPI
+#include "html5/HTML5Utils.h"
+//#include <SDL.h>
+//#include <GL/glfw.h>
+#include <emscripten/html5.h>
+#include <emscripten/emscripten.h>
+#endif
+extern int C_ARDUBOY_SIDE_PADDING;
+
 #include "Arduboy.h"
 
 #include "glcdfont.c"
@@ -9,15 +19,21 @@
 MyEEPROM EEPROM;
 GameKeys g_gameKeys;
 
+
+#ifdef WINAPI
 long random(long minNum, long maxNum)
 {
 	return RandomRange(minNum, maxNum);
 }
 
+
 long random(long num)
 {
 	return Random(num);
 }
+#else
+void UpdateHTML5Screen();
+#endif
 
 
 Arduboy::Arduboy()
@@ -90,7 +106,7 @@ void Arduboy::GLBlit()
 	m_arduScreen.FlipY();
 	m_arduGL.InitFromSoftSurface(&m_arduScreen, true);
 	m_arduGL.SetSmoothing(false);
-	m_arduGL.BlitScaled(77,63,CL_Vec2f(2,2), ALIGNMENT_UPPER_LEFT);
+	m_arduGL.BlitScaled(77+C_ARDUBOY_SIDE_PADDING,63,CL_Vec2f(2,2), ALIGNMENT_UPPER_LEFT);
 
 }
 void Arduboy::end()
@@ -115,29 +131,48 @@ void Arduboy::flashlight()
 bool MainUpdate(bool bNormalUpdate);
 bool extern g_bAppFinished;
 void CheckWindowsMessages();
-extern uint32 g_windowLagTimer;
+
+#ifdef WINAPI
 extern HDC	g_hDC;
+#else
+void Sleep(long ms);
+
+#endif
 
 void delay(long time)
 {
+	GetBaseApp()->Draw();
+
+#ifdef WINAPI
+	SwapBuffers(g_hDC);
+#else
+	//UpdateHTML5Screen();
+#endif
+
 	unsigned int timer = (uint32)GetSystemTimeAccurate()+time;
 	while (GetSystemTimeAccurate() < timer && !g_bAppFinished)
 	{
 
+		//LogMsg("Doing delay, clock is %d", (uint32)GetSystemTimeAccurate());
 		Sleep(1);
 		
 		CheckWindowsMessages();
 		GetApp()->FakeUpdate();
-		
 		//MainUpdate(false);
-		GetBaseApp()->Draw();
-		SwapBuffers(g_hDC);
+	
 
 		if (g_bAppFinished)
 		{
 			exit(0);
 		}
 	}
+	GetBaseApp()->Draw();
+
+#ifdef WINAPI
+	SwapBuffers(g_hDC);
+#else
+	//UpdateHTML5Screen();
+#endif
 }
 
 unsigned long millis()
@@ -292,6 +327,7 @@ void Arduboy::drawPixel(int x, int y, uint8_t color)
 
 uint8_t Arduboy::getPixel(uint8_t x, uint8_t y)
 {
+	assert(x >= 0 && y >= 0 && x <= WIDTH && y <= HEIGHT && "Illegal getPixel coords!");
 	uint8_t row = y / 8;
 	uint8_t bit_position = y % 8;
 	return (sBuffer[(row*WIDTH) + x] & _BV(bit_position)) >> bit_position;
@@ -856,3 +892,138 @@ void Arduboy::swap(int16_t& a, int16_t& b)
 	b = temp;
 }
 
+#ifndef WINAPI
+//hack for emscripten
+
+/* A utility function to reverse a string  */
+void reverseString(char str[], int length)
+{
+	int start = 0;
+	int end = length -1;
+	while (start < end)
+	{
+		swap(*(str+start), *(str+end));
+		start++;
+		end--;
+	}
+}
+
+
+// Implementation of itoa() from http://www.geeksforgeeks.org/implement-itoa/
+char* itoa(int num, char* str, int base)
+{
+	int i = 0;
+	bool isNegative = false;
+
+	/* Handle 0 explicitely, otherwise empty string is printed for 0 */
+	if (num == 0)
+	{
+		str[i++] = '0';
+		str[i] = '\0';
+		return str;
+	}
+
+	// In standard itoa(), negative numbers are handled only with 
+	// base 10. Otherwise numbers are considered unsigned.
+	if (num < 0 && base == 10)
+	{
+		isNegative = true;
+		num = -num;
+	}
+
+	// Process individual digits
+	while (num != 0)
+	{
+		int rem = num % base;
+		str[i++] = (rem > 9)? (rem-10) + 'a' : rem + '0';
+		num = num/base;
+	}
+
+	// If number is negative, append '-'
+	if (isNegative)
+		str[i++] = '-';
+
+	str[i] = '\0'; // Append string terminator
+
+	// Reverse the string
+	reverseString(str, i);
+
+	return str;
+}
+
+#define FBUFSIZE (sizeof(long) * 8 + 1)
+
+char *ltoa(long N, char *str, int base)
+{
+	register int i = 2;
+	long uarg;
+	char *tail, *head = str, buf[FBUFSIZE];
+
+	if (36 < base || 2 > base)
+		base = 10;                    /* can only use 0-9, A-Z        */
+	tail = &buf[FBUFSIZE - 1];           /* last character position      */
+	*tail-- = '\0';
+
+	if (10 == base && N < 0L)
+	{
+		*head++ = '-';
+		uarg    = -N;
+	}
+	else  uarg = N;
+
+	if (uarg)
+	{
+		for (i = 1; uarg; ++i)
+		{
+			register ldiv_t r;
+
+			r       = ldiv(uarg, base);
+			*tail-- = (char)(r.rem + ((9L < r.rem) ?
+				('A' - 10L) : '0'));
+			uarg    = r.quot;
+		}
+	}
+	else  *tail-- = '0';
+
+	memcpy(head, ++tail, i);
+	return str;
+}
+
+
+char *ultoa(long N, char *str, int base)
+{
+	assert(!"Untested, change the long to unsigned long and test it");
+	register int i = 2;
+	long uarg;
+	char *tail, *head = str, buf[FBUFSIZE];
+
+	if (36 < base || 2 > base)
+		base = 10;                    /* can only use 0-9, A-Z        */
+	tail = &buf[FBUFSIZE - 1];           /* last character position      */
+	*tail-- = '\0';
+
+	if (10 == base && N < 0L)
+	{
+		*head++ = '-';
+		uarg    = -N;
+	}
+	else  uarg = N;
+
+	if (uarg)
+	{
+		for (i = 1; uarg; ++i)
+		{
+			register ldiv_t r;
+
+			r       = ldiv(uarg, base);
+			*tail-- = (char)(r.rem + ((9L < r.rem) ?
+				('A' - 10L) : '0'));
+			uarg    = r.quot;
+		}
+	}
+	else  *tail-- = '0';
+
+	memcpy(head, ++tail, i);
+	return str;
+}
+#endif
