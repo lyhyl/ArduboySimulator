@@ -84,27 +84,11 @@ void Arduboy::GLBlit()
 	{
 		//set it up
 		m_arduScreen.Init(128,64, SoftSurface::SURFACE_RGBA);
-		m_arduScreen.FillColor(glColorBytes(255,0,0,255));
+		m_arduScreen.FillColor(glColorBytes(0,0,0,255));
 		m_arduGL.SetSmoothing(false);
 		m_arduGL.InitFromSoftSurface(&m_arduScreen);
 	}
 
-	m_arduScreen.FillColor(glColorBytes(0,0,0,255));
-	glColorBytes white(255,255,255,255);
-
-	
-	for (int x = 0; x < WIDTH; x++)
-		for (int y = 0; y < HEIGHT; y++)
-		{
-			glColorBytes col = glColorBytes(0,0,0,255);
-
-			if (getPixel(x, y))
-				m_arduScreen.SetPixel(x,y, white);
-		}
-
-
-	m_arduScreen.FlipY();
-	m_arduGL.InitFromSoftSurface(&m_arduScreen, true);
 	m_arduGL.SetSmoothing(false);
 	m_arduGL.BlitScaled(77+C_ARDUBOY_SIDE_PADDING,63,CL_Vec2f(2,2), ALIGNMENT_UPPER_LEFT);
 
@@ -273,6 +257,15 @@ void Arduboy::initRandomSeed()
 	randomSeed(~rawADC(ADC_TEMP) * ~rawADC(ADC_VOLTAGE) * ~micros() + micros());
 	power_adc_disable(); // ADC off
 	*/
+	
+#ifdef WINAPI
+ srand( (unsigned)GetTickCount() );
+#else
+	//LogMsg("Setting seed to %u  (%d) (%d)", GetSystemTimeAccurate(), millis(), (int)millis());
+	//srand doesn't work on emscripten?!
+	srand( (int)millis() );
+
+#endif
 }
 
 /*
@@ -865,7 +858,31 @@ void Arduboy::drawChar
 
 void Arduboy::display()
 {
+	if (m_arduScreen.IsActive())
+	{
+
+		m_arduScreen.FillColor(glColorBytes(0,0,0,255));
+		glColorBytes white(255,255,255,255);
+
+
+		for (int x = 0; x < WIDTH; x++)
+			for (int y = 0; y < HEIGHT; y++)
+			{
+				glColorBytes col = glColorBytes(0,0,0,255);
+
+				if (getPixel(x, y))
+					m_arduScreen.SetPixel(x,y, white);
+			}
+
+			m_arduScreen.FlipY();
+			m_arduGL.InitFromSoftSurface(&m_arduScreen, true);
+	}
+
 	this->paintScreen(sBuffer);
+	
+	
+
+
 	//GetBaseApp()->Draw();
 	//SwapBuffers(g_hDC);
 }

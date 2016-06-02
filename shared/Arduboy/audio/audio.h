@@ -10,7 +10,7 @@ public:
   void static saveOnOff();
   bool static enabled();
 
-protected:
+
   bool static audio_enabled;
 };
 
