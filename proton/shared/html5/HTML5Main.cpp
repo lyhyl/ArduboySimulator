@@ -216,6 +216,7 @@ int ConvertSDLKeycodeToProtonVirtualKey(SDLKey sdlkey)
 	return keycode;
 }
 
+
 void SDLEventLoop()
 {
 	// we'll be using this for event polling
@@ -372,6 +373,12 @@ void SDLEventLoop()
 		}
 	}
 }
+void Sleep(long ms)
+{
+	#ifdef RT_EMTERPRETER_ENABLED
+	emscripten_sleep(ms);
+	#endif
+}
 
 
 void MainEventLoop()
@@ -391,8 +398,6 @@ void MainEventLoop()
 
 		g_winVideoScreenX = width;
 		g_winVideoScreenY = height;
-		//InitSDLScreen();
-	//	emscripten_set_canvas_size(width, height);
 	}
 
 	if (g_bAppFinished)
@@ -402,9 +407,6 @@ void MainEventLoop()
 
 	SDLEventLoop();
 
-	
-//	SDL_LockSurface(g_screen);
-	
 	GetBaseApp()->Update();
 	GetBaseApp()->Draw();
 
@@ -460,17 +462,6 @@ void MainEventLoop()
 					bIsSoftFullscreen = true;
 				}
 
-				/*
-	#if SDL_VERSION_ATLEAST(2,0,0)
-				SDL_SetWindowFullscreen(g_screen, SDL_WINDOW_FULLSCREEN);
-	#else
-				SDL_WM_ToggleFullScreen(g_screen);
-	#endif
-				*/
-			
-
-
-				
 				LogMsg("Post setting: Is full screen is %d - Width: %d Height: %d", isFullscreen, width, height);
 
 				}
@@ -500,35 +491,20 @@ void MainEventLoop()
 		}
 	}
 
-	//glFlush();
-	//glFinish();
+	
 	SDL_GL_SwapBuffers();
 
-	// Tell SDL to update the whole screen
-//	SDL_UpdateRect(g_screen, 0, 0, GetPrimaryGLX(), GetPrimaryGLY());    
-	
-	//SDL_UnlockSurface(g_screen);
+}
 
-	//SDL_Flip(g_screen);
+void CheckWindowsMessages()
+{
+	SDLEventLoop();
+}
 
-	/*
-	// Control FPS and give some time for other processes too
-	Uint32 sleepTime = 1;
-
-	if (g_frameDelayMS != 0)
-	{
-		Uint32 ticksNow = SDL_GetTicks();
-
-		if (g_nextFrameTick != 0 && g_nextFrameTick > ticksNow)
-		{
-			sleepTime = g_nextFrameTick - ticksNow;
-		}
-	}
-
-	SDL_Delay(sleepTime);
-	g_nextFrameTick = SDL_GetTicks() + g_frameDelayMS;
-	*/
-
+void UpdateHTML5Screen()
+{
+	SDL_GL_SwapBuffers();
+	LogMsg("Did SDL_GL_SwapBuffers()");
 }
 
 int main(int argc, char *argv[])
@@ -572,11 +548,17 @@ int main(int argc, char *argv[])
 	double cssW, cssH;
 	emscripten_get_element_css_size(0, &cssW, &cssH);
 	LogMsg("Init: RTT size: %dx%d, CS: %02gx%02g\n", w, h, cssW, cssH);
-
-
-	LogMsg("Starting main loop");
-	emscripten_set_main_loop(MainEventLoop, 0, 1);
 	
+
+#ifndef RT_EMTERPRETER_ENABLED
+	emscripten_set_main_loop(MainEventLoop, 0, 1);
+#else
+	while(1)
+	{
+		MainEventLoop();
+		emscripten_sleep(1);
+	}
+#endif
 
 	LogMsg("Finished running");
 	GetBaseApp()->Kill();

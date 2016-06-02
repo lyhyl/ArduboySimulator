@@ -278,7 +278,7 @@ AudioHandle AudioManagerSDL::Play( string fName, bool bLooping /*= false*/, bool
 
 
 #ifdef _DEBUG
-	LogMsg("********** AudioSDL: Thinking of playing %s, music=%d", fName.c_str(), int(bIsMusic));
+	//LogMsg("********** AudioSDL: Thinking of playing %s, music=%d", fName.c_str(), int(bIsMusic));
 #endif
 
 	if (!GetSoundEnabled() && !bIsMusic) return AUDIO_HANDLE_BLANK;

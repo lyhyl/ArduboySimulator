@@ -33,7 +33,7 @@
 #define _AVR_POWER_H_   1
 
 #include <avr/io.h>
-#include <stdint.h>
+//#include <stdint.h>
 
 
 /** \file */

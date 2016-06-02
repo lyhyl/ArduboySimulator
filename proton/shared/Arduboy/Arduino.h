@@ -27,10 +27,14 @@
 #include <math.h>
 
 #include <avr/pgmspace.h>
+#include <stdlib.h>
 //#include <avr/io.h>
 //#include <avr/interrupt.h>
 
 //#include "binary.h"
+
+//fix issue caused by "int pause" being defined in unistd.h in the html5 build (conflict with void pause used in the breakout example)
+#define pause arduPause
 
 #define PROGMEM
 
@@ -160,14 +164,20 @@ void initVariant(void);
 
 
 //SDL typedefs:
-typedef signed __int8 int8_t;
-typedef unsigned __int8 uint8_t;
-typedef signed __int16 int16_t;
-typedef unsigned __int16 uint16_t;
-typedef signed __int32 int32_t;
-typedef unsigned __int32 uint32_t;
-typedef signed __int64 int64_t;
-typedef unsigned __int64 uint64_t;
+
+typedef int8 int8_t;
+typedef uint8 uint8_t;
+typedef int16 int16_t;
+typedef uint16 uint16_t;
+//typedef int32 int32_t;
+#ifndef _SDL_stdinc_h
+typedef uint32 uint32_t;
+#endif
+typedef int64 int64_t;
+typedef uint64 uint64_t;
+
+typedef unsigned char boolean;
+
 
 #define __attribute__ {}
 #define always_inline
@@ -298,7 +308,21 @@ long random(long);
 long random(long, long);
 void randomSeed(unsigned long);
 long map(long, long, long, long, long);
+#ifndef max
+#define max rt_max
+#endif
 
+#ifndef min
+#define min rt_min
+#endif
+
+#endif
+
+#ifndef WINAPI
+//for emscripten compile
+char* itoa(int num, char* str, int base);
+char *ltoa(long N, char *str, int base);
+char *ultoa(long N, char *str, int base);
 #endif
 
 #include "pins_arduino.h"
