@@ -1,5 +1,6 @@
 #include "ArduboyPlaytune.h"
 #include <avr/power.h>
+#include "audio/audio.h"
 
 const byte PROGMEM tune_pin_to_timer_PGM[] = { 3, 1 };
 volatile byte *_tunes_timer1_pin_port;
@@ -149,6 +150,8 @@ void ArduboyPlaytune::stopNote(byte chan)
 
 void ArduboyPlaytune::playScore(const byte *score)
 {
+ if (!ArduboyAudio::audio_enabled) return;
+
   score_start = score;
   score_cursor = score_start;
   step();  /* execute initial commands */
@@ -237,6 +240,8 @@ void ArduboyPlaytune::soundOutput()
 
 void ArduboyPlaytune::tone(unsigned int frequency, unsigned long duration)
 {
+	
+	if (!ArduboyAudio::audio_enabled) return;
   tonePlaying = true;
   uint8_t prescalarbits = 0x0b001;
   int32_t toggle_count = 0;
