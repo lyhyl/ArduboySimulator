@@ -322,6 +322,7 @@ void App::Update()
 
 		//proton fonts
 
+		/*
 		if (!g_big_font.Load("interface/font_century_gothic_bigx2.rtfont", false)) 
 		{
 			LogMsg("Can't load font 2");
@@ -331,6 +332,7 @@ void App::Update()
 		{
 			LogMsg("Can't load font 1");
 		}
+		*/
 	
 		CreateOverlayEntity(pEnt, "background", "interface/arduboy2x.rttex", C_ARDUBOY_SIDE_PADDING,0);
 
