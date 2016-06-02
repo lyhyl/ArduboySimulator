@@ -37,6 +37,9 @@ REM copy the stuff we care about
 mkdir ..\bin\interface
 xcopy interface ..\bin\interface /E /F /Y /EXCLUDE:exclude.txt
 
+mkdir ..\bin\audio
+xcopy audio ..\bin\audio /E /F /Y /EXCLUDE:exclude.txt
+
 :Special case, delete the .rttex, for this one example, we only want a .bmp there
 del ..\bin\interface\test.rttex
 

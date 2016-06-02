@@ -179,6 +179,89 @@
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
+		<Configuration
+			Name="SDL Debug GL|Win32"
+			OutputDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="1"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="..\source;..\..\shared;..\..\shared\util\boost;&quot;..\..\shared\ClanLib-2.0\Sources&quot;;..\..\shared\win\include;..\..\shared\win\;..\..\shared\Arduboy"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;BOOST_ALL_NO_LIB;_USE_32BIT_TIME_T;C_GL_MODE;_HAS_ITERATOR_DEBUGGING=0;_SECURE_SCL=0;_NO_DEBUG_HEAP=1;ARDUBOY_10;RT_ARDUDEV;RT_RUNS_IN_BACKGROUND;__AVR_ATmega32U4__;C_DONT_ALLOW_WINDOW_RESIZE;RT_DISABLE_WINDOWS_MENU;RT_DONT_DO_MOVE_TIMER_TRICK;RT_USE_SDL_AUDIO"
+				MinimalRebuild="true"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="1"
+				BufferSecurityCheck="true"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="PlatformPrecomp.h"
+				WarningLevel="3"
+				Detect64BitPortabilityProblems="false"
+				DebugInformationFormat="4"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="opengl32.lib zdll.lib wsock32.lib SDL2_mixer.lib SDL2.lib"
+				OutputFile="../bin/winArduboySim.exe"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="..\..\shared\win\lib;..\..\shared\win\lib\x86"
+				GenerateDebugInformation="true"
+				ProgramDatabaseFile="$(OutDir)/ArduboySim.pdb"
+				SubSystem="2"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
 	</Configurations>
 	<References>
 	</References>
@@ -238,6 +321,16 @@
 							XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
 						/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="SDL Debug GL|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+							ObjectFile="$(IntDir)\$(InputName)2.obj"
+							XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\Arduboy\ardu_main.h"
@@ -266,9 +359,33 @@
 							UsePrecompiledHeader="0"
 						/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="SDL Debug GL|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\Arduboy\breakout_bitmaps.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="html5"
+				>
+				<File
+					RelativePath="..\html5\build_release.bat"
+					>
+				</File>
+				<File
+					RelativePath="..\html5\BuildAndUpload.bat"
+					>
+				</File>
+				<File
+					RelativePath="..\html5\UploadToWebsite.bat"
 					>
 				</File>
 			</Filter>
@@ -301,6 +418,14 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release GL|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="SDL Debug GL|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -343,6 +468,15 @@
 							Name="VCCLCompilerTool"
 						/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="SDL Debug GL|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\shared\win\MemMgr.h"
@@ -365,6 +499,14 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Release GL|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="SDL Debug GL|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -482,6 +624,14 @@
 								UsePrecompiledHeader="0"
 							/>
 						</FileConfiguration>
+						<FileConfiguration
+							Name="SDL Debug GL|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
 					</File>
 					<File
 						RelativePath="..\..\shared\util\boost\libs\signals\src\named_slot_map.cpp"
@@ -496,6 +646,14 @@
 						</FileConfiguration>
 						<FileConfiguration
 							Name="Release GL|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="SDL Debug GL|Win32"
 							>
 							<Tool
 								Name="VCCLCompilerTool"
@@ -522,6 +680,14 @@
 								UsePrecompiledHeader="0"
 							/>
 						</FileConfiguration>
+						<FileConfiguration
+							Name="SDL Debug GL|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
 					</File>
 					<File
 						RelativePath="..\..\shared\util\boost\libs\signals\src\slot.cpp"
@@ -542,6 +708,14 @@
 								UsePrecompiledHeader="0"
 							/>
 						</FileConfiguration>
+						<FileConfiguration
+							Name="SDL Debug GL|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
 					</File>
 					<File
 						RelativePath="..\..\shared\util\boost\libs\signals\src\trackable.cpp"
@@ -556,6 +730,14 @@
 						</FileConfiguration>
 						<FileConfiguration
 							Name="Release GL|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="SDL Debug GL|Win32"
 							>
 							<Tool
 								Name="VCCLCompilerTool"
@@ -772,6 +954,14 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\shared\Entity\EmitVirtualKeyComponentAdvanced.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\shared\Entity\EmitVirtualKeyComponentAdvanced.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\shared\Entity\FilterComponent.cpp"
 						>
 					</File>
@@ -844,7 +1034,19 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\shared\Entity\TouchHandlerArcadeComponent.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\shared\Entity\TouchHandlerArcadeComponent.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\shared\Entity\TouchHandlerComponent.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\shared\Entity\TouchHandlerComponent.h"
 						>
 					</File>
 					<File
@@ -897,6 +1099,14 @@
 									UsePrecompiledHeader="0"
 								/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="SDL Debug GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\..\shared\ClanLib-2.0\Sources\Core\Math\mat3.cpp"
@@ -911,6 +1121,14 @@
 							</FileConfiguration>
 							<FileConfiguration
 								Name="Release GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="SDL Debug GL|Win32"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -937,6 +1155,14 @@
 									UsePrecompiledHeader="0"
 								/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="SDL Debug GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\..\shared\ClanLib-2.0\Sources\Core\Math\rect.cpp"
@@ -951,6 +1177,14 @@
 							</FileConfiguration>
 							<FileConfiguration
 								Name="Release GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="SDL Debug GL|Win32"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -977,6 +1211,14 @@
 									UsePrecompiledHeader="0"
 								/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="SDL Debug GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\..\shared\ClanLib-2.0\Sources\Core\Math\vec3.cpp"
@@ -997,6 +1239,14 @@
 									UsePrecompiledHeader="0"
 								/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="SDL Debug GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\..\shared\ClanLib-2.0\Sources\Core\Math\vec4.cpp"
@@ -1011,6 +1261,14 @@
 							</FileConfiguration>
 							<FileConfiguration
 								Name="Release GL|Win32"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									UsePrecompiledHeader="0"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="SDL Debug GL|Win32"
 								>
 								<Tool
 									Name="VCCLCompilerTool"
@@ -1058,6 +1316,14 @@
 				</File>
 				<File
 					RelativePath="..\..\shared\Audio\AudioManager.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\Audio\AudioManagerSDL.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\shared\Audio\AudioManagerSDL.h"
 					>
 				</File>
 			</Filter>
@@ -1115,6 +1381,14 @@
 							UsePrecompiledHeader="0"
 						/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="SDL Debug GL|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\shared\WebOS\WebOSUtils.h"
@@ -1137,6 +1411,14 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Release GL|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="SDL Debug GL|Win32"
 						ExcludedFromBuild="true"
 						>
 						<Tool
@@ -1168,6 +1450,14 @@
 						</FileConfiguration>
 						<FileConfiguration
 							Name="Release GL|Win32"
+							ExcludedFromBuild="true"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="SDL Debug GL|Win32"
 							ExcludedFromBuild="true"
 							>
 							<Tool
@@ -1331,6 +1621,14 @@
 							Name="VCCLCompilerTool"
 						/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="SDL Debug GL|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\shared\bbx\bbutil.h"
@@ -1355,6 +1653,14 @@
 							Name="VCCLCompilerTool"
 						/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="SDL Debug GL|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\shared\bbx\BBXUtils.cpp"
@@ -1369,6 +1675,14 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Release GL|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="SDL Debug GL|Win32"
 						ExcludedFromBuild="true"
 						>
 						<Tool
@@ -1401,6 +1715,14 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Release GL|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="SDL Debug GL|Win32"
 						ExcludedFromBuild="true"
 						>
 						<Tool
@@ -1441,6 +1763,14 @@
 									Name="VCCLCompilerTool"
 								/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="SDL Debug GL|Win32"
+								ExcludedFromBuild="true"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+								/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\..\shared\flash\app\cpp\GLFlashAdaptor.h"
@@ -1461,6 +1791,16 @@
 							</FileConfiguration>
 							<FileConfiguration
 								Name="Release GL|Win32"
+								ExcludedFromBuild="true"
+								>
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)\$(InputName)1.obj"
+									XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+								/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="SDL Debug GL|Win32"
 								ExcludedFromBuild="true"
 								>
 								<Tool
@@ -1515,6 +1855,14 @@
 							Name="VCCLCompilerTool"
 						/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="SDL Debug GL|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\shared\html5\HTML5Utils.cpp"
@@ -1529,6 +1877,14 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Release GL|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="SDL Debug GL|Win32"
 						ExcludedFromBuild="true"
 						>
 						<Tool
@@ -1553,6 +1909,14 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Release GL|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="SDL Debug GL|Win32"
 						ExcludedFromBuild="true"
 						>
 						<Tool
@@ -1615,6 +1979,14 @@
 							UsePrecompiledHeader="0"
 						/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="SDL Debug GL|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\shared\Arduboy\ab_printer.cpp"
@@ -1629,6 +2001,14 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Release GL|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="SDL Debug GL|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1667,6 +2047,14 @@
 							UsePrecompiledHeader="0"
 						/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="SDL Debug GL|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\shared\Arduboy\ArduboyPlaytune.h"
@@ -1689,6 +2077,14 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Release GL|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="SDL Debug GL|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1721,6 +2117,14 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="Release GL|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="SDL Debug GL|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1763,6 +2167,14 @@
 							UsePrecompiledHeader="0"
 						/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="SDL Debug GL|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\shared\Arduboy\wstring.h"
@@ -1784,6 +2196,14 @@
 						</FileConfiguration>
 						<FileConfiguration
 							Name="Release GL|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="SDL Debug GL|Win32"
 							>
 							<Tool
 								Name="VCCLCompilerTool"
@@ -1812,6 +2232,14 @@
 						</FileConfiguration>
 						<FileConfiguration
 							Name="Release GL|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="SDL Debug GL|Win32"
 							>
 							<Tool
 								Name="VCCLCompilerTool"

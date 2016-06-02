@@ -72,6 +72,11 @@ boolean titleScreen();
 void main_setup()
 {
   arduboy.begin();
+
+  //for no arduboy logo, comment out the abve and uncomment below
+  //arduboy.boot();
+  //arduboy.audio.begin();
+
   arduboy.setFrameRate(40);
 
   tunes.initChannel(PIN_SPEAKER_1);
