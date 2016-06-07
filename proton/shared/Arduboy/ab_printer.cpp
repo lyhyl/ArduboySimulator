@@ -12,6 +12,17 @@ AbPrinter::AbPrinter(Arduboy &ab)
   size = 1;
 }
 
+//seths hack, for compatibility with 1.1
+AbPrinter::AbPrinter()
+{
+	arduboy = NULL;
+
+	// font rendering  
+	cursor_x = 0;
+	cursor_y = 0;
+	size = 1;
+}
+
 size_t AbPrinter::write(uint8_t c)
 {
   if (c == '\n')

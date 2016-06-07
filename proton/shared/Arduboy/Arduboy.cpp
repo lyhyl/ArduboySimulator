@@ -19,13 +19,11 @@ extern int C_ARDUBOY_SIDE_PADDING;
 MyEEPROM EEPROM;
 GameKeys g_gameKeys;
 
-
 #ifdef WINAPI
 long random(long minNum, long maxNum)
 {
 	return RandomRange(minNum, maxNum);
 }
-
 
 long random(long num)
 {
@@ -60,15 +58,17 @@ void Arduboy::start() // deprecated
 void Arduboy::begin()
 {
 	boot(); // raw hardware
-
-	/*
-	// utils
-	if(pressed(UP_BUTTON)) {
-		flashlight();
-	}
-*/
 	bootLogo();
 	audio.begin();
+}
+
+void Arduboy::boot()
+{
+	#ifndef RT_ARDU_DEV_BRANCH
+	arduboy = this; //fix for font drawing
+	#endif
+
+	ArduboyCore::boot();
 }
 
 void Arduboy::beginNoLogo()
@@ -189,6 +189,9 @@ void Arduboy::bootLogo()
 
 void Arduboy::setFrameRate(uint8_t rate)
 {
+#ifndef RT_ARDU_DEV_BRANCH
+rate /= 2;  //speed mod needed to match real 1.1 code
+#endif
 	frameRate = rate;
 	eachFrameMillis = 1000/rate;
 }
