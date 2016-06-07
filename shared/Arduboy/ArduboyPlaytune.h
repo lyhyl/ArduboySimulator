@@ -27,7 +27,7 @@ public:
   void stopScore();
 
   /// Delay in milliseconds.
-  void delay(unsigned msec);
+  //void delay(unsigned msec);
 
   /// Stop all timers.
   void closeChannels();

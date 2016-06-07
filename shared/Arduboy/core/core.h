@@ -289,7 +289,7 @@ public:
      * - kicks CPU down to 8Mhz if needed
      * - allows Safe mode to be entered
      */
-    void static boot();
+    virtual void boot();
 
 protected:
 

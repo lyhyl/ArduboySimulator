@@ -7,6 +7,8 @@
 //  Programmer(s):  Seth A. Robinson (seth@rtsoft.com)
 //  ***************************************************************
 
+//Define RT_ARDU_DEV_BRANCH if you need your ardu code to work with 1.2 instead of 1.1
+
 #ifndef Arduboy_h__
 #define Arduboy_h__
 
@@ -78,9 +80,23 @@ void delay(long timeMS);
 #define ADC_TEMP (_BV(REFS0) | _BV(REFS1) | _BV(MUX2) | _BV(MUX1) | _BV(MUX0))
 unsigned long millis();
 
+#ifndef RT_ARDU_DEV_BRANCH
 
+#include "ArduboyPlaytune.h"
+#include "ab_printer.h"
+class Arduboy : public ArduboyCore, public AbPrinter
+{
+public:
+	ArduboyPlaytune tunes;
+	void setTextSize(uint8_t s){setSize(s);}
+
+#else
 class Arduboy : public ArduboyCore
 {
+#endif
+
+
+
 public:
   Arduboy();
 
@@ -99,6 +115,9 @@ public:
   /// Initialize hardware, boot logo, boot utilities, etc.
   void begin();
 
+  //seth's hack for 1.1 compatibility, need to override it for something
+  virtual void boot();
+  
   void beginNoLogo();
   /// Init just hardware, no logo, no boot utilities.
   /**

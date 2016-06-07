@@ -9,27 +9,12 @@
  version 2.1 of the License, or (at your option) any later version.
  */
 
+#include <SPI.h>
+#include <EEPROM.h>
 #include <Arduboy.h>
-#include <ArduboyPlaytune.h>
 #include "breakout_bitmaps.h"
 
-//function declarations added by Seth because we're a real .cpp file now.  Also changed loop() to main_loop and setup() to
-//main_setup(), as our simple Arduboy.ino file calls them
-boolean displayHighScores(byte file);
-void newLevel();
-void pause();
-void drawBall();
-void newLevel();
-void drawGameOver();
-void enterHighScore(byte file);
-void drawPaddle();
-void Score();
-void drawLives();
-//***********************
-
 Arduboy arduboy;
-ArduboyPlaytune tunes;
-AbPrinter text(arduboy);
 
 const unsigned int COLUMNS = 13; //Columns of bricks
 const unsigned int ROWS = 4;     //Rows of bricks
@@ -48,7 +33,7 @@ unsigned int score=0;   //Score for the game
 unsigned int brickCount;  //Amount of bricks hit
 byte pad,pad2,pad3;     //Button press buffer used to stop pause repeating
 byte oldpad,oldpad2,oldpad3;
-char text_buffer[16];      //General string buffer
+char text[16];      //General string buffer
 boolean start=false;    //If in menu or in game
 boolean initialDraw=false;//If the inital draw has happened
 char initials[3];     //Initials used in high score
@@ -67,89 +52,36 @@ byte bottomBrick;
 
 byte tick;
 
-boolean titleScreen();
+#include "pins_arduino.h" // Arduino pre-1.0 needs this
 
-void main_setup()
+//function declarations added by Seth because we're a real .cpp file now.  Also changed loop() to main_loop and setup() to
+//main_setup(), as our simple Arduboy.ino file calls them
+boolean displayHighScores(byte file);
+void newLevel();
+void pause();
+void drawBall();
+void newLevel();
+void drawGameOver();
+void enterHighScore(byte file);
+void drawPaddle();
+void Score();
+void drawLives();
+//***********************
+
+void intro()
 {
-  arduboy.begin();
-
-  //for no arduboy logo, comment out the abve and uncomment below
-  //arduboy.boot();
-  //arduboy.audio.begin();
-
-  arduboy.setFrameRate(40);
-
-  tunes.initChannel(PIN_SPEAKER_1);
-  tunes.initChannel(PIN_SPEAKER_2);
-}
-
-void main_loop()
-{
-  // pause render until it's time for the next frame
- if (!(arduboy.nextFrame()))
-    return;
-
-  //Title screen loop switches from title screen
-  //and high scores until FIRE is pressed
-  while (!start)
+  for(int i = -8; i < 28; i = i + 2)
   {
-    start = titleScreen();
-    if (!start)
-    {
-      start = displayHighScores(2);
-    }
-  }
-
-  //Initial level draw
-  if (!initialDraw)
-  {
-    //Clears the screen
     arduboy.clear();
-    //Selects Font
-    //Draws the new level
-    newLevel();
-    initialDraw=true;
+    arduboy.setCursor(46, i);
+    arduboy.print("ARDUBOY");
+    arduboy.display();
   }
 
-  if (lives>0)
-  {
-    drawPaddle();
-
-    //Pause game if FIRE pressed
-    pad = arduboy.pressed(A_BUTTON) || arduboy.pressed(B_BUTTON);
-
-    if(pad >1 && oldpad==0 && released)
-    {
-      oldpad2=0; //Forces pad loop 2 to run once
-      pause();
-    }
-
-    oldpad=pad;
-    drawBall();
-
-    if(brickCount == ROWS * COLUMNS)
-    {
-      level++;
-      newLevel();
-    }
-  }
-  else
-  {
-    drawGameOver();
-    if (score > 0)
-    {
-      enterHighScore(2);
-    }
-
-    arduboy.clear();
-    initialDraw=false;
-    start=false;
-    lives=3;
-    score=0;
-    newLevel();
-  }
-
-  arduboy.display();
+  arduboy.tunes.tone(987, 160);
+  delay(160);
+  arduboy.tunes.tone(1318, 400);
+  delay(2000);
 }
 
 void movePaddle()
@@ -200,7 +132,7 @@ void moveBall()
     {
       yb = 2;
       dy = -dy;
-      tunes.tone(523, 250);
+      arduboy.tunes.tone(523, 250);
     }
 
     //Lose a life if bottom edge hit
@@ -212,7 +144,7 @@ void moveBall()
       released = false;
       lives--;
       drawLives();
-      tunes.tone(175, 250);
+      arduboy.tunes.tone(175, 250);
       if (random(0, 2) == 0)
       {
         dx = 1;
@@ -228,7 +160,7 @@ void moveBall()
     {
       xb = 2;
       dx = -dx;
-      tunes.tone(523, 250);
+      arduboy.tunes.tone(523, 250);
     }
 
     //Bounce off right side
@@ -236,7 +168,7 @@ void moveBall()
     {
       xb = WIDTH - 4;
       dx = -dx;
-      tunes.tone(523, 250);
+      arduboy.tunes.tone(523, 250);
     }
 
     //Bounce off paddle
@@ -248,7 +180,7 @@ void moveBall()
       if (dx == 0) {
         dx = (random(0,2) == 1) ? 1 : -1;
       }
-      tunes.tone(200, 250);
+      arduboy.tunes.tone(200, 250);
     }
 
     //Bounce off Bricks
@@ -282,7 +214,7 @@ void moveBall()
                 dy =- dy;
                 yb += dy;
                 bounced = true;
-                tunes.tone(261, 250);
+                arduboy.tunes.tone(261, 250);
               }
             }
 
@@ -295,7 +227,7 @@ void moveBall()
                 dx =- dx;
                 xb += dx;
                 bounced = true;
-                tunes.tone(261, 250);
+                arduboy.tunes.tone(261, 250);
               }
             }
           }
@@ -334,9 +266,9 @@ void moveBall()
 
 void drawBall()
 {
-  // text.setCursor(0,0);
-  // text.print(arduboy.cpuLoad());
-  // text.print("  ");
+  // arduboy.setCursor(0,0);
+  // arduboy.print(arduboy.cpuLoad());
+  // arduboy.print("  ");
   arduboy.drawPixel(xb,   yb,   0);
   arduboy.drawPixel(xb+1, yb,   0);
   arduboy.drawPixel(xb,   yb+1, 0);
@@ -359,9 +291,9 @@ void drawPaddle()
 
 void drawLives()
 {
-  sprintf(text_buffer, "LIVES:%u", lives);
-  text.setCursor(0, 90);
-  text.print(text_buffer);
+  sprintf(text, "LIVES:%u", lives);
+  arduboy.setCursor(0, 90);
+  arduboy.print(text);
 }
 
 void drawGameOver()
@@ -370,10 +302,10 @@ void drawGameOver()
   arduboy.drawPixel(xb+1, yb,   0);
   arduboy.drawPixel(xb,   yb+1, 0);
   arduboy.drawPixel(xb+1, yb+1, 0);
-  text.setCursor(52, 42);
-  text.print( "Game");
-  text.setCursor(52, 54);
-  text.print("Over");
+  arduboy.setCursor(52, 42);
+  arduboy.print( "Game");
+  arduboy.setCursor(52, 54);
+  arduboy.print("Over");
   arduboy.display();
   delay(4000);
 }
@@ -382,8 +314,8 @@ void pause()
 {
   paused = true;
   //Draw pause to the screen
-  text.setCursor(52, 45);
-  text.print("PAUSE");
+  arduboy.setCursor(52, 45);
+  arduboy.print("PAUSE");
   arduboy.display();
   while (paused)
   {
@@ -403,9 +335,9 @@ void pause()
 void Score()
 {
   score += (level*10);
-  sprintf(text_buffer, "SCORE:%u", score);
-  text.setCursor(80, 90);
-  text.print(text_buffer);
+  sprintf(text, "SCORE:%u", score);
+  arduboy.setCursor(80, 90);
+  arduboy.print(text);
 }
 
 void newLevel(){
@@ -437,9 +369,9 @@ void newLevel(){
   drawLives();
 
   //Draws the initial score
-  sprintf(text_buffer, "SCORE:%u", score);
-  text.setCursor(80, 90);
-  text.print(text_buffer);
+  sprintf(text, "SCORE:%u", score);
+  arduboy.setCursor(80, 90);
+  arduboy.print(text);
 }
 
 //Used to delay images while reading button input
@@ -469,15 +401,15 @@ boolean displayHighScores(byte file)
   int address = file*10*5;
   byte hi, lo;
   arduboy.clear();
-  text.setCursor(32, 0);
-  text.print("HIGH SCORES");
+  arduboy.setCursor(32, 0);
+  arduboy.print("HIGH SCORES");
   arduboy.display();
 
   for(int i = 0; i < 10; i++)
   {
-    sprintf(text_buffer, "%2d", i+1);
-    text.setCursor(x,y+(i*8));
-    text.print(text_buffer);
+    sprintf(text, "%2d", i+1);
+    arduboy.setCursor(x,y+(i*8));
+    arduboy.print( text);
     arduboy.display();
     hi = EEPROM.read(address + (5*i));
     lo = EEPROM.read(address + (5*i) + 1);
@@ -497,9 +429,9 @@ boolean displayHighScores(byte file)
 
     if (score > 0)
     {
-      sprintf(text_buffer, "%c%c%c %u", initials[0], initials[1], initials[2], score);
-      text.setCursor(x + 24, y + (i*8));
-      text.print(text_buffer);
+      sprintf(text, "%c%c%c %u", initials[0], initials[1], initials[2], score);
+      arduboy.setCursor(x + 24, y + (i*8));
+      arduboy.print(text);
       arduboy.display();
     }
   }
@@ -513,47 +445,47 @@ boolean displayHighScores(byte file)
 
 boolean titleScreen()
 {
-	//Clears the screen
-	arduboy.clear();
-	text.setCursor(16,22);
-	text.setSize(2);
-	text.print("ARAKNOID");
-	text.setSize(1);
-	arduboy.display();
-	if (pollFireButton(25))
-	{
-		return true;
-	}
+  //Clears the screen
+  arduboy.clear();
+  arduboy.setCursor(16,22);
+  arduboy.setTextSize(2);
+  arduboy.print("ARAKNOID");
+  arduboy.setTextSize(1);
+  arduboy.display();
+  if (pollFireButton(25))
+  {
+    return true;
+  }
 
-	//Flash "Press FIRE" 5 times
-	for(byte i = 0; i < 5; i++)
-	{
-		//Draws "Press FIRE"
-		//arduboy.bitmap(31, 53, fire);  arduboy.display();
-		text.setCursor(31, 53);
-		text.print("PRESS FIRE!");
-		arduboy.display();
+  //Flash "Press FIRE" 5 times
+  for(byte i = 0; i < 5; i++)
+  {
+    //Draws "Press FIRE"
+    //arduboy.bitmap(31, 53, fire);  arduboy.display();
+    arduboy.setCursor(31, 53);
+    arduboy.print("PRESS FIRE!");
+    arduboy.display();
 
-		if (pollFireButton(50))
-		{
-			return true;
-		}
-		//Removes "Press FIRE"
-		arduboy.clear();
-		text.setCursor(16,22);
-		text.setSize(2);
-		text.print("ARAKNOID");
-		text.setSize(1);
-		arduboy.display();
+    if (pollFireButton(50))
+    {
+      return true;
+    }
+    //Removes "Press FIRE"
+    arduboy.clear();
+    arduboy.setCursor(16,22);
+    arduboy.setTextSize(2);
+    arduboy.print("ARAKNOID");
+    arduboy.setTextSize(1);
+    arduboy.display();
 
-		arduboy.display();
-		if (pollFireButton(25))
-		{
-			return true;
-		}
-	}
+    arduboy.display();
+    if (pollFireButton(25))
+    {
+      return true;
+    }
+  }
 
-	return false;
+  return false;
 }
 
 //Function by nootropic design to add high scores
@@ -572,17 +504,17 @@ void enterInitials()
     arduboy.display();
     arduboy.clear();
 
-    text.setCursor(16,0);
-    text.print("HIGH SCORE");
-    sprintf(text_buffer, "%u", score);
-    text.setCursor(88, 0);
-    text.print(text_buffer);
-    text.setCursor(56, 20);
-    text.print(initials[0]);
-    text.setCursor(64, 20);
-    text.print(initials[1]);
-    text.setCursor(72, 20);
-    text.print(initials[2]);
+    arduboy.setCursor(16,0);
+    arduboy.print("HIGH SCORE");
+    sprintf(text, "%u", score);
+    arduboy.setCursor(88, 0);
+    arduboy.print(text);
+    arduboy.setCursor(56, 20);
+    arduboy.print(initials[0]);
+    arduboy.setCursor(64, 20);
+    arduboy.print(initials[1]);
+    arduboy.setCursor(72, 20);
+    arduboy.print(initials[2]);
     for(byte i = 0; i < 3; i++)
     {
       arduboy.drawLine(56 + (i*8), 27, 56 + (i*8) + 6, 27, 1);
@@ -599,7 +531,7 @@ void enterInitials()
         index = 0;
       } else
       {
-        tunes.tone(1046, 250);
+        arduboy.tunes.tone(1046, 250);
       }
     }
 
@@ -610,14 +542,14 @@ void enterInitials()
       {
         index = 2;
       }  else {
-        tunes.tone(1046, 250);
+        arduboy.tunes.tone(1046, 250);
       }
     }
 
     if (arduboy.pressed(DOWN_BUTTON))
     {
       initials[index]++;
-      tunes.tone(523, 250);
+      arduboy.tunes.tone(523, 250);
       // A-Z 0-9 :-? !-/ ' '
       if (initials[index] == '0')
       {
@@ -640,7 +572,7 @@ void enterInitials()
     if (arduboy.pressed(UP_BUTTON))
     {
       initials[index]--;
-      tunes.tone(523, 250);
+      arduboy.tunes.tone(523, 250);
       if (initials[index] == ' ') {
         initials[index] = '?';
       }
@@ -660,9 +592,9 @@ void enterInitials()
       if (index < 2)
       {
         index++;
-        tunes.tone(1046, 250);
+        arduboy.tunes.tone(1046, 250);
       } else {
-        tunes.tone(1046, 250);
+        arduboy.tunes.tone(1046, 250);
         return;
       }
     }
@@ -738,4 +670,86 @@ void enterHighScore(byte file)
     }
   }
 }
+
+
+void main_setup()
+{
+  arduboy.begin();
+  arduboy.setFrameRate(60);
+  arduboy.print("Hello World!");
+  arduboy.display();
+  intro();
+}
+
+
+void main_loop()
+{
+  // pause render until it's time for the next frame
+  if (!(arduboy.nextFrame()))
+    return;
+
+  //Title screen loop switches from title screen
+  //and high scores until FIRE is pressed
+  while (!start)
+  {
+    start = titleScreen();
+    if (!start)
+    {
+      start = displayHighScores(2);
+    }
+  }
+
+  //Initial level draw
+  if (!initialDraw)
+  {
+    //Clears the screen
+    arduboy.display();
+    arduboy.clear();
+    //Selects Font
+    //Draws the new level
+    newLevel();
+    initialDraw=true;
+  }
+
+  if (lives>0)
+  {
+    drawPaddle();
+
+    //Pause game if FIRE pressed
+    pad = arduboy.pressed(A_BUTTON) || arduboy.pressed(B_BUTTON);
+
+    if(pad >1 && oldpad==0 && released)
+    {
+      oldpad2=0; //Forces pad loop 2 to run once
+      pause();
+    }
+
+    oldpad=pad;
+    drawBall();
+
+    if(brickCount == ROWS * COLUMNS)
+    {
+      level++;
+      newLevel();
+    }
+  }
+  else
+  {
+    drawGameOver();
+    if (score > 0)
+    {
+      enterHighScore(2);
+    }
+
+    arduboy.clear();
+    initialDraw=false;
+    start=false;
+    lives=3;
+    score=0;
+    newLevel();
+  }
+
+  arduboy.display();
+}
+
 

@@ -1611,10 +1611,7 @@ bool MainUpdate(bool bNormalUpdate)
 
 		}
 
-		if (g_bAppFinished)
-		{
-			return true;
-		}
+		if (g_bAppFinished) return true;
 
 		if (g_bHasFocus)
 		{

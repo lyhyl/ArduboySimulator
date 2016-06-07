@@ -31,6 +31,7 @@ class AbPrinter : public Print
 {
 public:
   AbPrinter(Arduboy &ab);
+  AbPrinter();
 
   /// Writes a single ASCII character to the screen.
   virtual size_t write(uint8_t);
@@ -49,7 +50,8 @@ public:
   /// Sets whether text will wrap at screen edges.
   void setWrap(boolean w);
 	
-private:
+//seth's hack for a 1.1 compatibility trick
+
 	Arduboy *arduboy;
 
 protected:
