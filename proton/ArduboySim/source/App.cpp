@@ -12,6 +12,11 @@
 #include "Entity/EntityUtils.h"
 #include "Renderer/SoftSurface.h"
 
+
+//uncomment below if you want the device turned sideways
+//#define RT_ARDU_LANDSCAPE
+
+
 #ifdef RT_USE_SDL_AUDIO
 #include "Audio/AudioManagerSDL.h"
 AudioManagerSDL g_audioManager; //to disable sound, this is a dummy
@@ -20,9 +25,7 @@ AudioManagerSDL g_audioManager; //to disable sound, this is a dummy
 //no audio
 #include "Audio/AudioManager.h"
 AudioManager g_audioManager; //to disable sound, this is a dummy
-
 #endif
-
 
 #include "Arduboy.h"
 #include "Entity/TouchHandlerArcadeComponent.h"
@@ -102,6 +105,7 @@ bool App::Init()
 #endif
 	//SetDefaultButtonStyle(Button2DComponent::BUTTON_STYLE_CLICK_ON_TOUCH_RELEASE);
 
+
 	
 	//GetBaseApp()->SetFPSVisible(true); //can show FPS, but it's not the arduboy fps, it's our own update
 	GetBaseApp()->SetFPSLimit(0); //let arduboy code do the limiting
@@ -109,15 +113,24 @@ bool App::Init()
 
 	//scale screen up?
 
-if (C_ARDUBOY_SCALE_MULT != 1)
-{
-	int scaleToX = (C_ARDUBOY_SIDE_PADDING*2)+414;
-	int scaleToY = 661;
-	
+
+
+	SetManualRotationMode(true);
+	SetForcedOrientation(ORIENTATION_DONT_CARE);
 	SetupScreenInfo(GetPrimaryGLX(), GetPrimaryGLY(), ORIENTATION_PORTRAIT);
 
-	SetupFakePrimaryScreenSize(scaleToX,scaleToY); //game will think it's this size, and will be scaled up
-}
+	#ifdef RT_ARDU_LANDSCAPE
+	SetupScreenInfo(GetPrimaryGLY(), GetPrimaryGLX(), ORIENTATION_LANDSCAPE_RIGHT); //it's actually left, I don't know why this is reversed
+	#endif
+
+	if (C_ARDUBOY_SCALE_MULT != 1)
+	{
+		int scaleToX = (C_ARDUBOY_SIDE_PADDING*2)+414;
+		int scaleToY = 661;
+
+		SetupFakePrimaryScreenSize(scaleToX,scaleToY); //game will think it's this size, and will be scaled up
+	}
+
 	return true;
 }
 
@@ -358,7 +371,6 @@ void App::Update()
 		FadeInEntity(pTextEnt, 800,2000);
 		FadeOutAndKillEntity(pTextEnt, false, 1000, 7000);
 
-	
 		main_setup(); //hook into our arduboy code
 
 	}
@@ -370,6 +382,14 @@ void App::Update()
 		main_setup();
 	}
 	main_loop();
+
+#ifdef RT_ARDU_LANDSCAPE
+	static int timer = GetTick()+500;
+
+	if (timer != 0 && timer < GetTick())
+	{
+	}
+#endif
 }
 
 
@@ -441,6 +461,10 @@ bool App::OnPreInitVideo()
 	
 	g_winVideoScreenX = (414+(C_ARDUBOY_SIDE_PADDING*2))*C_ARDUBOY_SCALE_MULT;
 	g_winVideoScreenY = 661*C_ARDUBOY_SCALE_MULT;
+	
+#ifdef RT_ARDU_LANDSCAPE
+swap(g_winVideoScreenX, g_winVideoScreenY);
+#endif
 	return true; //no error
 }
 
