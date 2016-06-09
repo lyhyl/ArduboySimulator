@@ -883,9 +883,6 @@ void Arduboy::display()
 
 	this->paintScreen(sBuffer);
 	
-	
-
-
 	//GetBaseApp()->Draw();
 	//SwapBuffers(g_hDC);
 }

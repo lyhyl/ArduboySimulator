@@ -170,9 +170,14 @@ typedef uint8 uint8_t;
 typedef int16 int16_t;
 typedef uint16 uint16_t;
 //typedef int32 int32_t;
+
+//modified so msvc2015 will compile, from hisadg123 
 #ifndef _SDL_stdinc_h
+#ifndef _STDINT
 typedef uint32 uint32_t;
 #endif
+#endif
+
 typedef int64 int64_t;
 typedef uint64 uint64_t;
 
