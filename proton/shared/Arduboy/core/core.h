@@ -78,10 +78,13 @@ extern MySPI SPI;
 #define PIN_B_BUTTON 8
 
 // bit values for button states
+
 #define LEFT_BUTTON _BV(5)
 #define RIGHT_BUTTON _BV(6)
 #define UP_BUTTON _BV(7)
 #define DOWN_BUTTON _BV(4)
+
+
 #define A_BUTTON _BV(3)
 #define B_BUTTON _BV(2)
 
