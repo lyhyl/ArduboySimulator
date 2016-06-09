@@ -11,6 +11,10 @@
 #define VariantDB_h__
 #include "util/Variant.h"
 
+//modified so msvc2015 will compile, from hisadg123 
+#if _MSC_VER >= 1700
+#define _SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS
+#endif
 class Variant;
 
 
