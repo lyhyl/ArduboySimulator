@@ -1,5 +1,5 @@
 call app_info_setup.bat
-call ../SetupVars.bat
+call ..\SetupVars.bat
 cd ..
 :START
 call CopyStuffToPi.bat
