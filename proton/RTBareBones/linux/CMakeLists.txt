@@ -3,11 +3,17 @@ cmake_minimum_required(VERSION 2.6)
 include(CheckIncludeFile)
 CHECK_INCLUDE_FILE(/opt/vc/include/bcm_host.h ISRASPBERRYPIE)
 
-if(ISRASPBERRYPIE)
+#if(ISRASPBERRYPIE)
 OPTION(RASPBERRYPI_GLES11 "Compile for Raspberry PI 2" ON)
-endif(ISRASPBERRYPIE)
+#endif(ISRASPBERRYPIE)
+
+#OPTION(RASPBERRYPI_OPENGL "Compile for Raspi 3 OpenGL" ON)
+
 
 set(CMAKE_BUILD_TYPE "Release") #use Release or Debug
+
+#for raspberry directory
+#link_directories("/usr/lib/arm-linux-gnueabihf")
 
 project(rtbarebones)
 include(../../shared/linux/Proton.cmake)

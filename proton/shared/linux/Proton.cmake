@@ -15,8 +15,19 @@ if(RASPBERRYPI_GLES11)
 	include_directories("/opt/vc/include/interface/vmcs_host/linux")
 else(RASPBERRYPI_GLES11)
 #not gles1, so let's do full on GL
+
 add_definitions(-DC_GL_MODE)
+
+	if(RASPBERRYPI_OPENGL)
+	link_directories("/usr/local/lib")
+	link_directories("/opt/vc/lib")
+	endif(RASPBERRYPI_OPENGL)
+
+
 endif(RASPBERRYPI_GLES11)
+
+
+
 
 set(PROTON_SHARED "${PROTON_ROOT}/shared")
 set(PROTON_AD "${PROTON_SHARED}/Ad")
@@ -280,9 +291,17 @@ endif(PROTON_USE_SDL_AUDIO)
 
 
 if(RASPBERRYPI_GLES11)
-	target_link_libraries(${PROJECT_NAME} GLESv1_CM EGL pthread bcm_host SDL2)
+#note: GLESv2 has the v1.1 and v2 libraries on rasberry pi, you don't use GLESv1_CM!
+	target_link_libraries(${PROJECT_NAME} GLESv2 EGL pthread bcm_host SDL2)
 else(RASPBERRYPI_GLES11)
+	
+	
+	if(RASPBERRYPI_OPENGL)
+	target_link_libraries(${PROJECT_NAME} GL pthread bcm_host SDL2)
+	else(RASPBERRYPI_OPENGL)
 	target_link_libraries(${PROJECT_NAME} gl)
+	endif(RASPBERRYPI_OPENGL)
+	
 endif(RASPBERRYPI_GLES11)
 
 target_link_libraries(${PROJECT_NAME} rt)
