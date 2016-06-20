@@ -4,7 +4,7 @@
 
 #if defined RT_WEBOS || defined RT_USE_SDL_AUDIO
 
-#include "SDL_mixer.h"
+#include "SDL2/SDL_mixer.h"
 
 #define NUM_CHANNELS 16
 

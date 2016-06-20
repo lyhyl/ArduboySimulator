@@ -8,6 +8,9 @@ string(REPLACE "/shared/linux/Proton.cmake" "" PROTON_ROOT "${CMAKE_CURRENT_LIST
 #for raspberry pi's gles1
 if(RASPBERRYPI_GLES11)
 	link_directories("/opt/vc/lib")
+	
+	#this is for SDL_mixer
+	link_directories("/usr/lib/arm-linux-gnueabihf")
 	#don't why, but raspi needs this to include egl.h without errors
 	include_directories("/opt/vc/include")
 	include_directories("/opt/vc/include/interface/vcos/pthreads")
