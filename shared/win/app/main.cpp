@@ -1012,9 +1012,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_ENTERSIZEMOVE:
 		//LogMsg("Entersize move");
 		
+#ifndef RT_DONT_DO_MOVE_TIMER_TRICK
 		
-		//if (g_timerID == 0)
-		//	g_timerID = SetTimer(NULL, 0, 33, (TIMERPROC) TimerProc);
+		if (g_timerID == 0)
+			g_timerID = SetTimer(NULL, 0, 33, (TIMERPROC) TimerProc);
+#endif
+
 		break;
 
 	case WM_WINDOWPOSCHANGING:
