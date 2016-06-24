@@ -281,7 +281,7 @@ int MySQLManager::AddSelectResults(vector<VariantDB> &vdb)
 					db.GetVar(fieldNames[i])->Set("");
 				} else
 				{
-					if (maxLength[i] == 16 && fieldNames[i][0] == 'U' || fieldNames[i][0] == 'S' || fieldNames[i][0] == 'R' || fieldNames[i][0] == 'G' || fieldNames[i][0] == 'A')
+					if (maxLength[i] == 16 && (fieldNames[i][0] == 'U' || fieldNames[i][0] == 'S' || fieldNames[i][0] == 'R' || fieldNames[i][0] == 'G' || fieldNames[i][0] == 'A'))
 					{
 						//why does FIELD_TYPE_STRING trigger for BINARY(16) data?!  We can't get our data right without
 						//this hack.  I'm sorry to the world for this as it's pretty much the worst hack I've ever done - Unsigned

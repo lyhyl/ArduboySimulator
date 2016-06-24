@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 2.6)
 
-if(ISRASPBERRYPIE)
-OPTION(RASPBERRYPI_GLES11 "Compile for Raspberry PI 2" ON)
-endif(ISRASPBERRYPIE)
+#if(ISRASPBERRYPIE)
+OPTION(RASPBERRYPI_GLES11 "Compile for Raspberry PI GLES" ON)
+#endif(ISRASPBERRYPIE)
 
 set(CMAKE_BUILD_TYPE "Release") #use Release or Debug
 project(rtsimpleapp)

@@ -4,10 +4,10 @@ include(CheckIncludeFile)
 CHECK_INCLUDE_FILE(/opt/vc/include/bcm_host.h ISRASPBERRYPIE)
 
 #if(ISRASPBERRYPIE)
-OPTION(RASPBERRYPI_GLES11 "Compile for Raspberry PI 2" ON)
+OPTION(RASPBERRYPI_GLES11 "Compile for Raspberry PI GLES" ON)
 #endif(ISRASPBERRYPIE)
 
-#OPTION(RASPBERRYPI_OPENGL "Compile for Raspi 3 OpenGL" ON)
+#OPTION(RASPBERRYPI_OPENGL "Compile for Rasperry PI OpenGL" ON)
 
 
 set(CMAKE_BUILD_TYPE "Release") #use Release or Debug
