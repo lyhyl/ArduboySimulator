@@ -559,7 +559,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opengl32.lib zdll.lib wsock32.lib SDL2_mixer.lib opengl32.lib zdll.lib wsock32.lib SDL2.lib SDL2main.lib"
+				AdditionalDependencies="opengl32.lib zdll.lib wsock32.lib SDL2_mixer.lib SDL2.lib SDL2main.lib"
 				OutputFile="../bin/winRTSimpleApp.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\..\shared\win\lib;..\..\shared\win\lib\x86;..\..\shared\win\fmod\api\lib;..\..\shared\win\audiere\lib"
@@ -5870,13 +5870,6 @@
 					<FileConfiguration
 						Name="Flash GLES Debug Test|Win32"
 						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="GL SDL Debug|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
