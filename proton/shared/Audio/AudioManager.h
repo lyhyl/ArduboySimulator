@@ -141,6 +141,8 @@ public:
 	
 	void ForceAudioExtension(const string extension); //ONLY implemented for FMOD and AudioSDL! if "ogg", all waves will actually be changed to oggs when finding the files.  Set to "" to disable
 	string ModifiedFileName(string fName);
+	bool PreferOGG() {return m_bPreferOGG;}
+	void SetPreferOGG(bool bNew) {m_bPreferOGG = bNew;}
 
 protected:
 	
@@ -154,6 +156,7 @@ protected:
 	bool m_bSoundEnabled;
 	bool m_bStreamMusic;
 	string m_forcedAudioExtension;
+	bool m_bPreferOGG; //will replace mp3's with oggs in filename texts
 };
 
 bool CheckIfOtherAudioIsPlaying(); //are they playing ipod stuff before the app was run?  Should call this before playing your own.
