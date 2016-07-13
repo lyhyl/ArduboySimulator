@@ -65,12 +65,18 @@ AudioHandle AudioManagerSDL::Play( const string fileName )
 	return AUDIO_HANDLE_BLANK;
 }
 
+#include <SDL2/SDL.h>
+
 bool AudioManagerSDL::Init()
 {
 
-	//these two lines were added for HTML5, but don't seem to be needed for other stuff?
 	//SDL_Init(SDL_INIT_AUDIO);
-	Mix_Init(MIX_INIT_OGG);
+
+	//these two lines were added for HTML5, but don't seem to be needed for other stuff?
+	if (Mix_Init(MIX_INIT_OGG) == -1)
+	{
+		LogMsg(Mix_GetError());
+	}
 	Mix_ReserveChannels(1);
 
 	// we'll use SDL_Mixer to do all our sound playback. 
@@ -323,8 +329,20 @@ AudioHandle AudioManagerSDL::Play( string fName, bool bLooping /*= false*/, bool
 		LogMsg("Stopped music, now playing as %s", (basePath+fName).c_str());
 #endif
 
+		if (GetFileExtension(fName) == "mp3")
+		{
+			fName = ModifyFileExtension(fName, "ogg");
+			StringReplace("/mp3", "/ogg", fName);
+		}
+
 		m_pMusicChannel = Mix_LoadMUS( (basePath+fName).c_str());
 
+#ifdef _DEBUG
+if (!m_pMusicChannel)
+{
+	LogMsg(Mix_GetError());
+}
+#endif
 		if (!m_pMusicChannel && !bAddBasePath)
 		{
 			LogError("Couldn't load %s, trying again with full path", (basePath+fName).c_str());

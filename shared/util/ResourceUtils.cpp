@@ -536,7 +536,14 @@ string ReplaceMP3( const string &fName)
 {
 	if (GetEmulatedPlatformID() != PLATFORM_ID_ANDROID && GetEmulatedPlatformID() != PLATFORM_ID_HTML5)
 	{
+#ifndef _CONSOLE
+		if (!GetAudioManager() || !GetAudioManager()->PreferOGG())
+			return fName; //leave it as mp3
+#else
 		return fName; //leave it as mp3
+#endif
+		
+			
 	}
 	
 	string final = fName;

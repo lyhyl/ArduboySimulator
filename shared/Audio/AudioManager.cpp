@@ -10,6 +10,7 @@ AudioManager::AudioManager()
 	m_bVibrationDisabled = false;
 	m_musicVol = 1.0f;
 	m_bStreamMusic = true;
+	m_bPreferOGG = false;
 }
 
 AudioManager::~AudioManager()
