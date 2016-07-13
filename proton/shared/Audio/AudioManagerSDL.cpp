@@ -172,7 +172,8 @@ void AudioManagerSDL::KillCachedSounds(bool bKillMusic, bool bKillLooping, int i
 
 	if (bKillMusic)
 	{
-		m_pMusicChannel = NULL;
+		StopMusic();
+		//m_pMusicChannel = NULL;
 	}
 }
 
@@ -401,7 +402,7 @@ if (!m_pMusicChannel)
 	pObject->m_pLastChannelToUse = channel + C_CHANNEL_OFFSET_SO_ZERO_ISNT_USED;
 
 	//need this because sometimes it's set to nothing by default??
-	SetVol(pObject->m_pLastChannelToUse, 1.0f);
+	SetVol(pObject->m_pLastChannelToUse, m_defaultVol);
 
 	return (AudioHandle)pObject->m_pLastChannelToUse ;
 }
@@ -541,7 +542,7 @@ void AudioManagerSDL::SetPos( AudioHandle soundID, uint32 posMS )
 
 void AudioManagerSDL::SetVol( AudioHandle soundID, float vol )
 {
-	int ivol =  int(vol*128.0f);
+	int ivol =  int(vol*MIX_MAX_VOLUME);
 
 	if (soundID == AUDIO_HANDLE_BLANK) return;
 #ifdef _DEBUG
@@ -556,7 +557,7 @@ void AudioManagerSDL::SetVol( AudioHandle soundID, float vol )
 
 void AudioManagerSDL::SetMusicVol(float vol )
 {
-	int ivol =  int(vol*128.0f);
+	int ivol =  int(vol*MIX_MAX_VOLUME);
 	if (m_pMusicChannel)
 	{
 		Mix_VolumeMusic(ivol);

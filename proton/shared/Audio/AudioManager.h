@@ -143,6 +143,7 @@ public:
 	string ModifiedFileName(string fName);
 	bool PreferOGG() {return m_bPreferOGG;}
 	void SetPreferOGG(bool bNew) {m_bPreferOGG = bNew;}
+	void SetDefaultVol(float vol){m_defaultVol = vol;}
 
 protected:
 	
@@ -157,6 +158,7 @@ protected:
 	bool m_bStreamMusic;
 	string m_forcedAudioExtension;
 	bool m_bPreferOGG; //will replace mp3's with oggs in filename texts
+	float m_defaultVol; //non music will be played at this vol to start with
 };
 
 bool CheckIfOtherAudioIsPlaying(); //are they playing ipod stuff before the app was run?  Should call this before playing your own.
