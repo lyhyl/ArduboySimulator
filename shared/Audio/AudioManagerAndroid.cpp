@@ -294,7 +294,7 @@ AudioHandle AudioManagerAndroid::Play( string fName, bool bLooping /*= false*/, 
 			"sound_play",
 			"(IFFIIF)I");
 
-		int streamID = env->CallStaticIntMethod(cls, mid, pObject->m_soundID, jfloat(m_globalVol), jfloat(m_globalVol), jint(0), jint(loops), jfloat(1.0f));
+		int streamID = env->CallStaticIntMethod(cls, mid, pObject->m_soundID, jfloat(m_globalVol*m_defaultVol), jfloat(m_globalVol*m_defaultVol), jint(0), jint(loops), jfloat(1.0f));
 		if (streamID == 0)
 		{
 			//something is wrong... probably not loaded.  Reschedule

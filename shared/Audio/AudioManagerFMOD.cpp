@@ -355,6 +355,11 @@ AudioHandle AudioManagerFMOD::Play( string fName, bool bLooping /*= false*/, boo
 			pChannel->setLoopCount(0);
 
 		}
+
+		if (m_defaultVol != 1.0f)
+		{
+			SetVol((AudioHandle)pChannel, m_defaultVol);
+		}
 	}
 	pObject->m_pLastChannelToUse = pChannel;
 	return (AudioHandle)pChannel;

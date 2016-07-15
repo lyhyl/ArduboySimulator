@@ -6,7 +6,7 @@
 
 #include "SDL2/SDL_mixer.h"
 
-#define NUM_CHANNELS 16
+#define NUM_CHANNELS 32
 
 #include "AudioManagerSDL.h"
 #include "util/MiscUtils.h"
@@ -71,13 +71,15 @@ bool AudioManagerSDL::Init()
 {
 
 	//SDL_Init(SDL_INIT_AUDIO);
+	SDL_InitSubSystem(SDL_INIT_AUDIO);
 
 	//these two lines were added for HTML5, but don't seem to be needed for other stuff?
 	if (Mix_Init(MIX_INIT_OGG) == -1)
 	{
 		LogMsg(Mix_GetError());
 	}
-	Mix_ReserveChannels(1);
+	
+	//Mix_ReserveChannels(1);
 
 	// we'll use SDL_Mixer to do all our sound playback. 
 	// It's a simple system that's easy to use. The most 
@@ -99,8 +101,9 @@ bool AudioManagerSDL::Init()
 	// 
 	// this example has the recommended settings for initting the mixer:
 
+	
 	int rate = 44100;
-	Uint16 format = AUDIO_S16;
+	Uint16 format = AUDIO_F32;
 	int channels = 2;
 	int bufferSize = 1024;
 	
@@ -118,6 +121,33 @@ bool AudioManagerSDL::Init()
 
 	}
 #endif
+
+	/*
+
+
+	SDL_AudioSpec want, have;
+	SDL_AudioDeviceID dev;
+
+	SDL_memset(&want, 0, sizeof(want));
+	want.freq = 22050;
+	want.format = AUDIO_S16LSB;
+	want.channels = 2;
+	want.samples = 4096;
+	//want.callback = MyAudioCallback;  // you wrote this function elsewhere.
+
+	dev = SDL_OpenAudioDevice(NULL, 0, &want, &have, SDL_AUDIO_ALLOW_ANY_CHANGE);
+	if (dev == 0)
+	{
+		LogMsg("Failed to open audio: %s\n", SDL_GetError());
+	} else 
+	{
+		if (have.format != want.format) 
+		{ // we let this one thing change.
+			LogMsg("We didn't get Float32 audio format.\n");
+		}
+	}
+*/
+
 	// SDL mixer requires that you specify the maximum number of simultaneous
 	// sounds you will have. This is done through the function Mix_AllocateChannels. 
 	// We'll need an answer for that. A channel has very little overhead,
@@ -131,6 +161,9 @@ bool AudioManagerSDL::Init()
 	Mix_AllocateChannels(NUM_CHANNELS);
 
 	Mix_HookMusicFinished(musicFinishedCallback);
+
+	//SDL_PauseAudioDevice(dev, 0); // start audio playing.
+	SDL_PauseAudio(0);
 
 	return true;
 }
@@ -366,6 +399,7 @@ if (!m_pMusicChannel)
 		{
 			LogError("Unable to play music file %s. %s", (GetBaseAppPath()+fName).c_str(), Mix_GetError());
 		}
+		SetMusicVol(m_musicVol);
 
 		return (AudioHandle) m_pMusicChannel;
 	}

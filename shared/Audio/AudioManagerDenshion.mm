@@ -220,7 +220,7 @@ AudioHandle AudioManagerDenshion::Play( string fName, bool bLooping /*= false*/,
 
 	NSString *soundFile =  [NSString stringWithCString:  (basePath+fName).c_str() encoding: [NSString defaultCStringEncoding]];
 	
-	soundId = [[SimpleAudioEngine sharedEngine] playEffect: soundFile pitch:1.0f pan:0.0f gain:1.0f loop:bLooping];
+	soundId = [[SimpleAudioEngine sharedEngine] playEffect: soundFile pitch:1.0f pan:0.0f gain:m_defaultVol loop:bLooping];
 	return soundId;
 }
 
