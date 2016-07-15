@@ -228,9 +228,9 @@ AudioHandle AudioManagerAudiere::Play( string fName, bool bLooping /*= false*/, 
 		SetMusicVol(m_musicVol);
 	} else
 	{
-		if (m_globalVol != 1.0f)
+		if (m_globalVol != 1.0f || m_defaultVol != 1.0f)
 		{
-			SetVol( (AudioHandle)pObject, 1.0f);
+			SetVol( (AudioHandle)pObject, m_defaultVol*m_globalVol);
 		}
 	}
 	return (AudioHandle)pObject;
