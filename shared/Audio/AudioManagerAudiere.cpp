@@ -10,7 +10,7 @@ AudioManagerAudiere::AudioManagerAudiere()
 	m_pDevice = NULL;
 	m_globalVol = 1.0f;
 }
-
+ 
 AudioManagerAudiere::~AudioManagerAudiere()
 {
 	Kill();
