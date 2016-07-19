@@ -85,6 +85,31 @@ void NetSocket::Kill()
 	m_writeBuffer.clear();
 
 }
+
+
+//Convert a struct sockaddr address to a string, IPv4 and IPv6:
+
+char *get_ip_str(const struct sockaddr *sa, char *s, size_t maxlen)
+{
+	switch(sa->sa_family) {
+		case AF_INET:
+			inet_ntop(AF_INET, &(((struct sockaddr_in *)sa)->sin_addr),
+				s, maxlen);
+			break;
+
+		case AF_INET6:
+			inet_ntop(AF_INET6, &(((struct sockaddr_in6 *)sa)->sin6_addr),
+				s, maxlen);
+			break;
+
+		default:
+			strncpy(s, "Unknown AF", maxlen);
+			return NULL;
+	}
+
+	return s;
+}
+
 bool NetSocket::Init( string url, int port )
 {
 	Kill();
@@ -93,6 +118,7 @@ bool NetSocket::Init( string url, int port )
 	m_idleTimer = m_idleReadTimer = GetSystemTimeTick();
 
 	//ipv6 way
+#ifdef RT_IPV6
 
 	struct addrinfo hints, *servinfo, *p;
 	int rv;
@@ -103,22 +129,58 @@ bool NetSocket::Init( string url, int port )
 	hints.ai_family = AF_UNSPEC; // use AF_INET6 to force IPv6
 	hints.ai_socktype = SOCK_STREAM;
 
-	
-	if ((rv = getaddrinfo(url.c_str(), stPort.c_str(), &hints, &servinfo)) != 0) {
-		LogMsg("getaddrinfo: %s", gai_strerror(rv));
+	if ((rv = getaddrinfo(url.c_str(), stPort.c_str(), &hints, &servinfo)) != 0) 
+	{
+		//LogMsg("getaddrinfo: %s", gai_strerror(rv));
 		return false;
 	}
 
 	// loop through all the results and connect to the first we can
+	int typeCount = 0;
+	
+	bool bPreferipv4 = true;
+	
+	
+	bool bipv4Exists = false;
+	
 	for(p = servinfo; p != NULL; p = p->ai_next)
 	{
+		typeCount++;
+		if (p->ai_addr->sa_family == AF_INET)
+			{
+				bipv4Exists = true;
+			}
+		char str[INET6_ADDRSTRLEN];
+		get_ip_str(p->ai_addr, str,INET6_ADDRSTRLEN);
+		//LogMsg("(%s) IP %d: %s", url.c_str(), typeCount, str);
+	}
+	
+	
+	for(p = servinfo; p != NULL; p = p->ai_next)
+	{
+		
+		if (bPreferipv4 && bipv4Exists)
+			{
+					if (p->ai_addr->sa_family != AF_INET)
+						{
+							//ignore ipv6 addresses
+							continue;
+						}
+			}
+		
+		
+		char str[INET6_ADDRSTRLEN];
+		get_ip_str(p->ai_addr, str,INET6_ADDRSTRLEN);
+		//LogMsg("Connecting to %s",  str);
+		
 		if ((m_socket = socket(p->ai_family, p->ai_socktype,
 			p->ai_protocol)) == -1) 
 		{
-			LogMsg("Skipping socket...");
+			//LogMsg("Skipping socket...");
 			continue;
 		}
 		
+
 
 #ifdef WINAPI
 
@@ -151,7 +213,11 @@ bool NetSocket::Init( string url, int port )
 
 		if (connect(m_socket, p->ai_addr, p->ai_addrlen) == -1) 
 		{
+#ifdef WINAPI
 			LogError("Socket connect error: %d?", WSAGetLastError());
+#else
+			LogMsg("Socket connect error on socket %d, error %d", m_socket, errno);
+#endif
 			rt_closesocket(m_socket);
 			continue;
 		}
@@ -165,10 +231,10 @@ bool NetSocket::Init( string url, int port )
 		return false;
 	}
 
-
+#else
 	//old ipv4 way
 
-	/*
+	
 	struct sockaddr_in sa;
 	struct hostent     *hp;
 	
@@ -214,7 +280,7 @@ bool NetSocket::Init( string url, int port )
       //  return false;
     }
 
-	*/
+#endif
 
 	return true;
 }
