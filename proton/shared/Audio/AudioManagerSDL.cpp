@@ -6,7 +6,7 @@
 
 #include "SDL2/SDL_mixer.h"
 
-#define NUM_CHANNELS 32
+#define NUM_CHANNELS 64
 
 #include "AudioManagerSDL.h"
 #include "util/MiscUtils.h"
@@ -71,15 +71,34 @@ bool AudioManagerSDL::Init()
 {
 
 	//SDL_Init(SDL_INIT_AUDIO);
+
 	SDL_InitSubSystem(SDL_INIT_AUDIO);
 
+	
+	int i;
+
+	for (i = 0; i < SDL_GetNumAudioDrivers(); ++i) {
+		LogMsg("Audio driver %d: %s\n", i, SDL_GetAudioDriver(i));
+	}
+
+	//valid is directsound or winmm
+	if (SDL_AudioInit("directsound") != 0)
+	{
+		LogMsg("Error setting audio driver: %s", SDL_GetError());
+	}
+	
+
 	//these two lines were added for HTML5, but don't seem to be needed for other stuff?
-	if (Mix_Init(MIX_INIT_OGG) == -1)
+
+	int inittedFlags = Mix_Init(MIX_INIT_OGG);
+
+	 if (inittedFlags != MIX_INIT_OGG)
 	{
 		LogMsg(Mix_GetError());
 	}
 	
-	//Mix_ReserveChannels(1);
+	
+	Mix_ReserveChannels(2);
 
 	// we'll use SDL_Mixer to do all our sound playback. 
 	// It's a simple system that's easy to use. The most 
@@ -101,19 +120,21 @@ bool AudioManagerSDL::Init()
 	// 
 	// this example has the recommended settings for initting the mixer:
 
-	
+
+//44100 or  22050
 	int rate = 44100;
-	Uint16 format = AUDIO_F32;
+	Uint16 format = AUDIO_S16LSB;
 	int channels = 2;
-	int bufferSize = 1024;
+	int bufferSize = 2048;
 	
 #ifdef PLATFORM_HTML5
 	int ret = Mix_OpenAudio(0, 0, 0, 0); // we ignore all these..
 	assert(ret == 0);
 #else
 
+	
 
-	if ( Mix_OpenAudio(rate, format, channels, bufferSize) )
+	if ( Mix_OpenAudio(rate, format, channels, bufferSize) == -1 )
 	{
 		// we had an error opening the audio
 		LogMsg("unable to open Audio! Reason: %s\n", Mix_GetError());
@@ -148,23 +169,16 @@ bool AudioManagerSDL::Init()
 	}
 */
 
-	// SDL mixer requires that you specify the maximum number of simultaneous
-	// sounds you will have. This is done through the function Mix_AllocateChannels. 
-	// We'll need an answer for that. A channel has very little overhead,
-	// so we'll arbitrarily allocate 16 channels (even though we're only using
-	// 1 actual sound channel). Among other things, we need a channel per unique
-	// simultaneous sound playback. So if we play the same sound 4 times, and have
-	// 4 copies of the sound playing from different start times, we need four channels.
-	// Note - streamed music does not consume a channel. Only sound playback does.
-	// So why allocate more than we need? Because it's such a small overhead, and
-	// later we don't need to come and revisit this every time we add a new sound. 
-	Mix_AllocateChannels(NUM_CHANNELS);
-
+	if (Mix_AllocateChannels(NUM_CHANNELS) == -1)
+	{
+		LogMsg(Mix_GetError());
+	}
 	Mix_HookMusicFinished(musicFinishedCallback);
 
 	//SDL_PauseAudioDevice(dev, 0); // start audio playing.
 	SDL_PauseAudio(0);
 
+	LogMsg("SDL2_mixer initted using %s", SDL_GetCurrentAudioDriver());
 	return true;
 }
 
