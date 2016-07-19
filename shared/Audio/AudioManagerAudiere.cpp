@@ -4,7 +4,7 @@
 
 #include "AudioManagerAudiere.h"
 #include "util/MiscUtils.h"
-  
+   
 AudioManagerAudiere::AudioManagerAudiere()
 {
 	m_pDevice = NULL;
