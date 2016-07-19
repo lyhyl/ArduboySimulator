@@ -1,5 +1,6 @@
 #pragma once
 #include <winsock2.h>
+#include <ws2tcpip.h> //needed for ipv6 stuff
 #include <windows.h>
 #include <TCHAR.h>
 #include "time.h"

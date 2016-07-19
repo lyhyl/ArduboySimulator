@@ -1,5 +1,6 @@
 #include "PlatformPrecomp.h"
 #include "NetSocket.h"
+#include "util/MiscUtils.h"
 
 #ifndef WINAPI
 	#include <sys/types.h> 
@@ -44,6 +45,7 @@
 
 
 #else
+
 
 #ifndef ECONNREFUSED
 	#define ECONNREFUSED            WSAECONNREFUSED
@@ -90,25 +92,102 @@ bool NetSocket::Init( string url, int port )
 
 	m_idleTimer = m_idleReadTimer = GetSystemTimeTick();
 
+	//ipv6 way
+
+	struct addrinfo hints, *servinfo, *p;
+	int rv;
+
+	string stPort = toString(port);
+
+	memset(&hints, 0, sizeof hints);
+	hints.ai_family = AF_UNSPEC; // use AF_INET6 to force IPv6
+	hints.ai_socktype = SOCK_STREAM;
+
+	
+	if ((rv = getaddrinfo(url.c_str(), stPort.c_str(), &hints, &servinfo)) != 0) {
+		LogMsg("getaddrinfo: %s", gai_strerror(rv));
+		return false;
+	}
+
+	// loop through all the results and connect to the first we can
+	for(p = servinfo; p != NULL; p = p->ai_next)
+	{
+		if ((m_socket = socket(p->ai_family, p->ai_socktype,
+			p->ai_protocol)) == -1) 
+		{
+			LogMsg("Skipping socket...");
+			continue;
+		}
+		
+
+#ifdef WINAPI
+
+		//u_long iMode = 0;
+		//ioctlsocket(m_socket, FIOASYNC, &iMode);
+/*
+		if (WSAAsyncSelect(m_socket, GetForegroundWindow(), WM_USER+1, FD_READ) == SOCKET_ERROR)
+		{
+			LogMsg("Error setting socket FD_READ: %d", WSAGetLastError());
+		}
+
+		if (WSAAsyncSelect(m_socket, GetForegroundWindow(), WM_USER+1, FD_WRITE) == SOCKET_ERROR)
+		{
+			LogMsg("Error setting socket FD_WRITE: %d", WSAGetLastError());
+		}
+		if (WSAAsyncSelect(m_socket, GetForegroundWindow(), WM_USER+1, FD_CONNECT) == SOCKET_ERROR)
+		{
+			LogMsg("Error setting socket FD_CONNECT: %d", WSAGetLastError());
+		}
+		if (WSAAsyncSelect(m_socket, GetForegroundWindow(), WM_USER+1, FD_OOB) == SOCKET_ERROR)
+		{
+			LogMsg("Error setting socket FD_OOB: %d", WSAGetLastError());
+		} 
+		*/
+
+#else
+		fcntl (m_socket, F_SETFL, O_NONBLOCK);
+
+#endif
+
+		if (connect(m_socket, p->ai_addr, p->ai_addrlen) == -1) 
+		{
+			LogError("Socket connect error: %d?", WSAGetLastError());
+			rt_closesocket(m_socket);
+			continue;
+		}
+
+		break; // if we get here, we must have connected successfully
+	}
+	if (p == NULL) 
+	{
+		// looped off the end of the list with no connection
+		LogError("Failed to connect");
+		return false;
+	}
+
+
+	//old ipv4 way
+
+	/*
 	struct sockaddr_in sa;
 	struct hostent     *hp;
 	
 	if ((hp= gethostbyname(url.c_str())) == NULL) 
 	{
-		/* do we know the host's */
+		
 #ifndef PLATFORM_BBX
 		//no errno on bbx.  Wait, why am I even setting this?  Does this matter?
-		errno= ECONNREFUSED;                       /* address? */
+		errno= ECONNREFUSED;                       
 #endif
-		return false;                                /* no */
+		return false;                             
 	}
 
 	memset(&sa,0,sizeof(sa));
-	memcpy((char *)&sa.sin_addr,hp->h_addr,hp->h_length);     /* set address */
+	memcpy((char *)&sa.sin_addr,hp->h_addr,hp->h_length);    
 	sa.sin_family= hp->h_addrtype;
 	sa.sin_port= htons((u_short)port);
 
-	if ((m_socket= (int)socket(hp->h_addrtype,SOCK_STREAM,0)) < 0)     /* get socket */
+	if ((m_socket= (int)socket(hp->h_addrtype,SOCK_STREAM,0)) < 0)    
 		return false;
 
 #ifdef WINAPI
@@ -134,6 +213,9 @@ bool NetSocket::Init( string url, int port )
       //  LogError("Couldn't open socket.");
       //  return false;
     }
+
+	*/
+
 	return true;
 }
 
