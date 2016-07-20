@@ -15,7 +15,7 @@
 #include "errno.h"
 #include "util/MiscUtils.h"
 #include <shlobj.h>
-
+ 
 using namespace std;
 
 void StringReplace(const std::string& what, const std::string& with, std::string& in);
