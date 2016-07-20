@@ -128,6 +128,7 @@ bool NetSocket::Init( string url, int port )
 	memset(&hints, 0, sizeof hints);
 	hints.ai_family = AF_UNSPEC; // use AF_INET6 to force IPv6
 	hints.ai_socktype = SOCK_STREAM;
+	hints.ai_protocol = IPPROTO_TCP;
 
 	if ((rv = getaddrinfo(url.c_str(), stPort.c_str(), &hints, &servinfo)) != 0) 
 	{
@@ -155,24 +156,31 @@ bool NetSocket::Init( string url, int port )
 		//LogMsg("(%s) IP %d: %s", url.c_str(), typeCount, str);
 	}
 	
-	
 	for(p = servinfo; p != NULL; p = p->ai_next)
 	{
 		
 		if (bPreferipv4 && bipv4Exists)
 			{
-					if (p->ai_addr->sa_family != AF_INET)
-						{
-							//ignore ipv6 addresses
-							continue;
-						}
+				if (p->ai_addr->sa_family != AF_INET)
+				{
+					//ignore ipv6 addresses
+					continue;
+				}
 			}
-		
 		
 		char str[INET6_ADDRSTRLEN];
 		get_ip_str(p->ai_addr, str,INET6_ADDRSTRLEN);
 		//LogMsg("Connecting to %s",  str);
 		
+	
+		if (p->ai_protocol == IPPROTO_TCP)
+		{
+			//LogMsg("Protocol is TCP");
+		} else
+		{
+			//LogMsg("Protocol is %d",p->ai_protocol );
+		}
+
 		if ((m_socket = socket(p->ai_family, p->ai_socktype,
 			p->ai_protocol)) == -1) 
 		{
@@ -218,8 +226,14 @@ bool NetSocket::Init( string url, int port )
 #else
 			LogMsg("Socket connect error on socket %d, error %d", m_socket, errno);
 #endif
-			rt_closesocket(m_socket);
-			continue;
+			if (errno != 115) //EINPROGRESS but not defined on some platforms so doing it manually
+			{
+				rt_closesocket(m_socket);
+				continue;
+			} else
+			{
+				//it's not ready, but that's to be expected as we aren't blocking
+			}
 		}
 
 		break; // if we get here, we must have connected successfully
