@@ -17,11 +17,12 @@
 
 
 
-@interface TapjoyManager : NSObject <TJCViewDelegate, TJCVideoAdDelegate>
+@interface TapjoyManager : NSObject <TJPlacementDelegate,TJCVideoAdDelegate>
 {
     MyViewController *m_viewController;
    // TJCAdView* m_adView;
     UIWindow *window;
+    TJPlacement *m_offerWallPlacement;
 	UINavigationController *navCtrl_;
 
 	int m_adBannerWidth;
