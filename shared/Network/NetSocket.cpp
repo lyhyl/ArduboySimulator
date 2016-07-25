@@ -139,7 +139,7 @@ bool NetSocket::Init( string url, int port )
 	// loop through all the results and connect to the first we can
 	int typeCount = 0;
 	
-	bool bPreferipv4 = true;
+    bool bPreferipv4 =false; //very bad idea if you want ipv6 support
 	
 	
 	bool bipv4Exists = false;

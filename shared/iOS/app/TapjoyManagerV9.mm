@@ -7,7 +7,7 @@
 #import "EAGLView.h"
 #import <Tapjoy/TJPlacement.h>
 
-@interface TapjoyManager () <TJCViewDelegate, TJCVideoAdDelegate>
+@interface TapjoyManager () <TJPlacementDelegate,TJCVideoAdDelegate>
 @property (nonatomic, strong) TJDirectPlayPlacementDelegate *dpDelegate;
 @property (strong, nonatomic) TJPlacement *m_addPlacement;
 
@@ -112,6 +112,10 @@
         
         [_m_addPlacement requestContent];
 
+        m_offerWallPlacement = [TJPlacement placementWithName:@"Earn Gems" delegate:self];
+        [m_offerWallPlacement requestContent];
+
+        
 	  return true; //we handled it
 	}
 	break;
@@ -203,20 +207,27 @@
 
 	case OSMessage::MESSAGE_TAPJOY_SHOW_OFFERS:
 		{
-            // This method returns the offers view that you can add it in your required view. Initialize its bounds depending on the main window bounds.
-		//[Tapjoy showOffers];
-
-		// This method takes a view controller and sets its bounds according to viewController's and depend on the orientation of the view controller sent as an argument
-            MyAppDelegate * appDelegate = [[UIApplication sharedApplication] delegate];
             
-          
-            [Tapjoy showOffersWithViewController:appDelegate.viewController];
+            if(m_offerWallPlacement.isContentReady)
+            {
+                [m_offerWallPlacement showContentWithViewController: m_viewController];
+            }
+            else
+            {
+                //handle situation where there is no content to show, or it has not yet downloaded.
+                 LogMsg("No offer wall content to present");
+                GetMessageManager()->SendGUIEx( MESSAGE_TYPE_TAPJOY_NO_CONTENT_TO_PRESENT, 1,0,0);
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No offers to display"
+                                                                message:@"Please try again later, there are no Tapjoy offers to show you right now."
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"OK"
+                                                      otherButtonTitles:nil];
+                [alert show];
+                [alert release];
 
-		// OR
-
-		// This method adds the offers view without the library's Navigation Bar, so you can add this view into your view which already has a navigation bar
-		//[TapjoyConnect showOffersWithViewController:vController withInternalNavBar:NO];			break;
-		}
+                
+                }
+       }
             return true; //we handled it
 	
 		break;
@@ -225,32 +236,7 @@
         {
 		
 		int showAd = (int)pMsg->m_x;
-	//	LogMsg("Showing tapjoy ad, parm is: %d" + showAd);
-		
-            //TODO, add the button to our view controller?
-            
-            /*
-        if (m_adView)
-        {
-            if (showAd)
-            {
-                m_adView.hidden = NO;
-            } else
-            {
-                m_adView.hidden = YES;
-            }
-            
-        } else
-        {
-           LogMsg("Can't set status of ad, its view doesn't exist yet");
-                
-        }
-             */
-            
-		//[TapjoyConnect getDisplayAdWithDelegate:self];
-		
-		//TapjoyConnect.getTapjoyConnectInstance().enableBannerAdAutoRefresh(app.tapjoy_ad_show != 0);
-
+	
 		return true; //we handled it
         }
 	break;
@@ -280,9 +266,8 @@
 - (void)contentDidDisappear:(TJPlacement *)placement
 {
     
-  //  LogMsg("Caching another Tapjoy ad");
-   // m_addPlacement = [TJPlacement placementWithName:@"WatchAd" delegate:self];
-   // [m_addPlacement requestContent];
+    NSLog(@"contentDidDisappear Getting data");
+    [m_offerWallPlacement requestContent];
   
 }
 
@@ -294,11 +279,6 @@
 - (void)getFeaturedApp:(NSNotification*)notifyObj
 {
 	LogMsg("Got tapjoy featured app");
-    // Displays a full screen ad, showing the current featured app. 
-    //[TapjoyConnect showFeaturedAppFullScreenAd]; 
-    // OR 
-    // This is used when you want to add the full screen ad to an existing view controller. 
-    //[TapjoyConnect showFeaturedAppFullScreenAdWithViewController:self];
 	GetMessageManager()->SendGUIEx(MESSAGE_TYPE_TAPJOY_FEATURED_APP_READY, 1,0,0);
 
 }
@@ -309,18 +289,7 @@
 		LogMsg("Got ad");
 		GetMessageManager()->SendGUIEx(MESSAGE_TYPE_TAPJOY_AD_READY, (int)1,0,0);
     
-    //TODO:
-   /*
-    if (!m_adView)
-    {
-        //setup our view controller, we'll keep the same one for the rest of the app
-      
-        m_adView = adView;
-        [m_viewController.view addSubview:adView];
-        m_adView.hidden = YES;
-        
-    }
-    */
+   
 }
 
 // This method is called if an error has occurred while requesting Ad data.
@@ -340,20 +309,11 @@
 
 - (void)showFullscreenAd:(NSNotification*)notifyObj
 {
-    LogMsg("Got fullscreen ad, showing");
-
-    //[TJPlacement placementWithName:@"WatchAd" delegate:nil];
-    //[TapjoyConnect showFullScreenAd];
-   
-    /*
-    MyAppDelegate * appDelegate = [[UIApplication sharedApplication] delegate];
-    
-    [Tapjoy showFullScreenAdWithViewController: appDelegate.viewController];
-    
-     */
+    LogMsg("Got fullscreen ad, showing (outdated version)");
 }
 
 // This method must return a boolean indicating whether the Ad will automatically refresh itself.
+
 - (BOOL)shouldRefreshAd
 {
 	return NO;
@@ -412,7 +372,8 @@
 
 -(void)tjcConnectSuccess:(NSNotification*)notifyObj
 {
-	NSLog(@"Tapjoy connect Succeeded");
+	NSLog(@"Tapjoy connect Succeeded.  Getting data");
+  
 }
 
 -(void)offerwallClosed:(NSNotification*)notifyObj
@@ -442,60 +403,32 @@
     GetMessageManager()->SendGUIStringEx(MESSAGE_TYPE_TAPJOY_EARNED_TAP_POINTS, earnedNum,0,0, "");
 }
 
-             
+
+
+- (void)requestDidSucceed:(TJPlacement*)placement
+{
+    NSLog(@"Tapjoy request did succeed, contentIsAvailable:%d", placement.isContentAvailable);
+}
+
+- (void)contentIsReady:(TJPlacement*)placement
+{
+    NSLog(@"Tapjoy placement content is ready to display");
+}
+
+
+
 -(void)tjcConnectFail:(NSNotification*)notifyObj
 {
 	NSLog(@"Tapjoy connect Failed");	
 }
 
 
-/*
-
-
-- (void)virtualGoodsUpdated:(NSNotification*)notifyObj
+- (void)contentDidAppear:(TJPlacement*)placement
 {
-	// Example on how to access the downloaded virtual goods.
-	StoreItem * strItem;
-	
-	NSMutableArray* vgStoreItemArray = [TapjoyConnect getPurchasedVGStoreItems];
-	
-	for (int i = 0; i < [vgStoreItemArray count]; ++i) 
-	{
-		NSLog(@"VG Item %d Start================================================================================================", i);
-		strItem = [vgStoreItemArray objectAtIndex:i];
-		
-		NSLog(@"Item Name:					%@", [strItem title]);
-		NSLog(@"Item Type:					%@", [strItem storeItemType]);
-		NSLog(@"Item Description:			%@", [strItem description]);
-		NSLog(@"Item Price:					%d", [strItem price]);
-		NSLog(@"Item Currency Name:			%@", [strItem currencyName]);
-		NSLog(@"Item Data File Location:	%@", [strItem datafileLocation]);
-		
-		// Print out contents of data file.
-		if(![[strItem datafileLocation] isEqualToString:@""])
-		{
-			NSError *error;
-			NSArray *contentsArray = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[strItem datafileLocation] error:&error];
-			for (int j = 0; j < [contentsArray count]; ++j) 
-			{
-				NSLog(@"     %d Data File Contents: %@", j, [contentsArray objectAtIndex:j]);
-			}
-		}
-		
-		NSMutableDictionary *dict = [strItem attributeValues];
-		
-		for (id key in dict)
-		{
-			id value = [dict objectForKey:key];
-			NSLog(@"     Attribute:%@ Value:%@", key, value);
-		}
-		NSLog(@"VG Item %d End==================================================================================================", i);
-	}
-	
-	[vgStoreItemArray release];
+    NSLog(@"Content did appear for %@ placement", [placement placementName]);
 }
 
-*/
+
 
 @end
 
@@ -537,19 +470,7 @@
 
 - (void)contentDidDisappear:(TJPlacement*)placement
 {
-    //[_tjViewController enableButton:_tjViewController.getDirectPlayVideoAdButton enable:YES];
-    
-    LogMsg("Showed ad or thing, reinitting");
-    // Request next placement after the previous one is dismissed
-   // _tjManager.m_addPlacement = [TJPlacement placementWithName:@"WatchAd" delegate:self];
    [_tjManager.m_addPlacement requestContent];
-   // [_tjManager retain];
-  //  LogMsg("retain count is %d", [_tjManager retainCount]);
-    //_tjManager.m_addPlacement = nil;
-    
-    // Best Practice: We recommend calling getCurrencyBalance as often as possible so the user’s balance is always up-to-date.
-     // [Tapjoy getCurrencyBalance];
-
     NSLog(@"Content did disappear for %@ placement", [placement placementName]);
 }
 @end
