@@ -221,13 +221,15 @@ bool NetSocket::Init( string url, int port )
 
 		if (connect(m_socket, p->ai_addr, p->ai_addrlen) == -1) 
 		{
-#ifdef WINAPI
-			LogError("Socket connect error: %d?", WSAGetLastError());
-#else
-			LogMsg("Socket connect error on socket %d, error %d", m_socket, errno);
-#endif
-			if (errno != 115) //EINPROGRESS but not defined on some platforms so doing it manually
+
+			if (errno != 115 && errno != 36) //EINPROGRESS is 115 or 36, depending.   but not defined on some platforms so doing it manually
 			{
+#ifdef WINAPI
+				LogError("Socket connect error: %d?", WSAGetLastError());
+#else
+				LogMsg("Socket connect error on socket %d, error %d", m_socket, errno);
+#endif
+
 				rt_closesocket(m_socket);
 				continue;
 			} else
