@@ -1,6 +1,6 @@
 #include "PlatformPrecomp.h"
 #include "NetSocket.h"
-#include "util/MiscUtils.h"
+//#include "util/MiscUtils.h"
 
 #ifndef WINAPI
 	#include <sys/types.h> 
@@ -88,7 +88,7 @@ void NetSocket::Kill()
 
 
 //Convert a struct sockaddr address to a string, IPv4 and IPv6:
-
+#ifdef RT_IPV6
 char *get_ip_str(const struct sockaddr *sa, char *s, size_t maxlen)
 {
 	switch(sa->sa_family) {
@@ -109,6 +109,7 @@ char *get_ip_str(const struct sockaddr *sa, char *s, size_t maxlen)
 
 	return s;
 }
+#endif
 
 bool NetSocket::Init( string url, int port )
 {
