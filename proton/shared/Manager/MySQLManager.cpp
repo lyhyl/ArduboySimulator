@@ -161,7 +161,7 @@ int MySQLManager::AddSelectResults(vector<VariantDB> &vdb)
 
 			switch(fieldType[i])
 			{
-
+			case FIELD_TYPE_NEWDECIMAL:
 			case FIELD_TYPE_DECIMAL:
 			case FIELD_TYPE_FLOAT:
 			case FIELD_TYPE_DOUBLE:
