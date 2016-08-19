@@ -134,6 +134,7 @@ int MySQLManager::AddSelectResults(vector<VariantDB> &vdb)
 	vector<string> fieldNames;
 	vector<enum_field_types> fieldType;
 	vector<int> maxLength;
+	vector<bool> isBinary;
 
 	int curRow = (int)vdb.size();
 	vdb.resize(curRow+rows);
@@ -154,6 +155,7 @@ int MySQLManager::AddSelectResults(vector<VariantDB> &vdb)
 			  fieldNames.push_back(field->name);
 			  fieldType.push_back(field->type);
 			  maxLength.push_back(field->max_length);
+			  isBinary.push_back((field->flags&BINARY_FLAG)!=0);
 		  }
 	  }
 	  for(int i = 0; i < num_fields; i++)
@@ -256,40 +258,41 @@ int MySQLManager::AddSelectResults(vector<VariantDB> &vdb)
 				}
 				break;
 
-			case FIELD_TYPE_VAR_STRING:
+			/*case FIELD_TYPE_VAR_STRING:
 				{
-
-					//don't change this, even if you think you should!
-
-					//first we'll get the size of the data in here
-					db.GetVar(fieldNames[i])->Set(string()); //we need to register it as a string, the mega hack we do in a
-					string &s = db.GetVar(fieldNames[i])->GetString();
-					//second won't do it..
-					if (maxLength[i] > 0)
+					if(isBinary[i])	// this is actually a VARBINARY
 					{
-						//now put it into the string, keeping things like nulls and such.  (up to you to pull it out right though)
-						s.resize(maxLength[i]);
+						//first we'll get the size of the data in here
+						db.GetVar(fieldNames[i])->Set(string()); //we need to register it as a string, the mega hack we do in a
+						string &s = db.GetVar(fieldNames[i])->GetString();
+						//second won't do it..
+						if (maxLength[i] > 0)
+						{
+							//now put it into the string, keeping things like nulls and such.  (up to you to pull it out right though)
+							s.resize(maxLength[i]);
 
-						if (row[i])
-							memcpy((void*)s.c_str(), &row[i][0], maxLength[i]);
+							if (row[i])
+								memcpy((void*)s.c_str(), &row[i][0], maxLength[i]);
+						}
 					}
-					
-
+					else	// this is a VARCHAR
+					{
+						
+					}
 				}
 				break;
-
+			*/
 			case FIELD_TYPE_STRING:
+			case FIELD_TYPE_VAR_STRING:
 				if (!row[i])
 				{
 					//well, it's null.  Just pretend it's a blank string
 					db.GetVar(fieldNames[i])->Set("");
 				} else
 				{
-					if (maxLength[i] == 16 && (fieldNames[i][0] == 'U' || fieldNames[i][0] == 'S' || fieldNames[i][0] == 'R' || fieldNames[i][0] == 'G' || fieldNames[i][0] == 'A'))
+					if(isBinary[i])
 					{
-						//why does FIELD_TYPE_STRING trigger for BINARY(16) data?!  We can't get our data right without
-						//this hack.  I'm sorry to the world for this as it's pretty much the worst hack I've ever done - Unsigned
-						db.GetVar(fieldNames[i])->Set(string()); //we need to register it as a string, the mega hack we do in a
+						db.GetVar(fieldNames[i])->Set(string());
 						string &s = db.GetVar(fieldNames[i])->GetString();
 						if (maxLength[i] > 0)
 						{
@@ -299,12 +302,13 @@ int MySQLManager::AddSelectResults(vector<VariantDB> &vdb)
 							if (row[i])
 								memcpy((void*)s.c_str(), &row[i][0], maxLength[i]);
 						}
-					} else
+					} 
+					else
 					{
 						db.GetVar(fieldNames[i])->Set(string(row[i]));
 					}
 				}
-			break;
+				break;
 
 			case FIELD_TYPE_BLOB:
 				if (!row[i])
