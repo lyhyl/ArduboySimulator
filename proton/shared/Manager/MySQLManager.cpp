@@ -190,6 +190,12 @@ int MySQLManager::AddSelectResults(vector<VariantDB> &vdb)
 
 			case FIELD_TYPE_DATETIME:
 				{
+					if (!row[i])
+					{
+						//it's null, no date set. Guess we'll just call that a 0.
+						db.GetVar(fieldNames[i])->Set(uint32(0));
+					} else
+					{
 						uint	y, m, d, h, mn, s;
 						uint nbScanned = sscanf(row[i], "%u-%u-%u %u:%u:%u", &y, &m, &d, &h, &mn, &s);
 						assert(nbScanned == 6);
@@ -208,28 +214,36 @@ int MySQLManager::AddSelectResults(vector<VariantDB> &vdb)
 						uint32 t = (uint32)mktime(&myTm);
 						db.GetVar(fieldNames[i])->Set(t);
 					}
+				}
 				break;
 
 			case FIELD_TYPE_DATE:
 				{
 					//convert the sql style date ('YYYY-MM-DD') into a unix style date with string processing
-					uint	y, m, d;
-					uint nbScanned = sscanf(row[i], "%u-%u-%u", &y, &m, &d);
-					assert(nbScanned == 3);
-					tm	myTm;
-					myTm.tm_year = y-1900;
-					myTm.tm_mon = m-1;
-					myTm.tm_mday = d;
-					myTm.tm_hour = 0;
-					myTm.tm_min = 0;
-					myTm.tm_sec = 0;
-					
-					myTm.tm_isdst = -1; 
-					myTm.tm_wday = -1;
-					myTm.tm_yday = -1;
-					//assert( sizeof(time_t) == 4 && "Uh oh.. define _USE_32BIT_TIME_T somewhere for MSVC");
-					uint32 t = (uint32) mktime(&myTm);
-					db.GetVar(fieldNames[i])->Set(t);
+					if (!row[i])
+					{
+						//it's null, no date set. Guess we'll just call that a 0.
+						db.GetVar(fieldNames[i])->Set(uint32(0));
+					} else
+					{
+						uint	y, m, d;
+						uint nbScanned = sscanf(row[i], "%u-%u-%u", &y, &m, &d);
+						assert(nbScanned == 3);
+						tm	myTm;
+						myTm.tm_year = y-1900;
+						myTm.tm_mon = m-1;
+						myTm.tm_mday = d;
+						myTm.tm_hour = 0;
+						myTm.tm_min = 0;
+						myTm.tm_sec = 0;
+
+						myTm.tm_isdst = -1; 
+						myTm.tm_wday = -1;
+						myTm.tm_yday = -1;
+						//assert( sizeof(time_t) == 4 && "Uh oh.. define _USE_32BIT_TIME_T somewhere for MSVC");
+						uint32 t = (uint32) mktime(&myTm);
+						db.GetVar(fieldNames[i])->Set(t);
+					}
 				}
 				break;
 
