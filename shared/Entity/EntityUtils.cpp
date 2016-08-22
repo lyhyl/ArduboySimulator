@@ -2163,7 +2163,7 @@ void OnCheckboxToggle(VariantList *pVList)
 	SetCheckBoxChecked(pEntClicked, !IsCheckboxChecked(pEntClicked));
 }
 
-Entity * CreateCheckbox(Entity *pBG, string name, string text, float x, float y, bool bChecked, eFont fontID, float fontScale)
+Entity * CreateCheckbox(Entity *pBG, string name, string text, float x, float y, bool bChecked, eFont fontID, float fontScale,bool unclickable)
 {
 	//harcoded a checkbox image here, it's 2 frames, horizontally.  First frame is unchecked
 
@@ -2176,7 +2176,12 @@ Entity * CreateCheckbox(Entity *pBG, string name, string text, float x, float y,
 	{
 		LogError("Um, the couldn't be loaded.  Rebuild resources?  Filename is hardcoded to be interface/checkbox.rttex right now.");
 	}
-	Entity *pEnt = CreateOverlayButtonEntity(pBG, name, "interface/checkbox.rttex", x, y);
+
+	Entity *pEnt;
+	if(!unclickable)
+		pEnt = CreateOverlayButtonEntity(pBG, name, "interface/checkbox.rttex", x, y);
+	else
+		pEnt = CreateOverlayEntity(pBG, name, "interface/checkbox.rttex", x, y);
 	SetupAnimEntity(pEnt, 2); //let it know its two frames, will default to showing the first one
 	pEnt->GetVar("checked")->Set(uint32(bChecked)); //default unchecked
 	RemovePaddingEntity(pEnt); //have to click exactly in the image to do anything
@@ -2191,7 +2196,8 @@ Entity * CreateCheckbox(Entity *pBG, string name, string text, float x, float y,
 	}
 
 	//if someone clicks it, toggle it...
-	pEnt->GetFunction("OnButtonSelected")->sig_function.connect(&OnCheckboxToggle);
+	if(!unclickable)
+		pEnt->GetFunction("OnButtonSelected")->sig_function.connect(&OnCheckboxToggle);
 
 	//add the text off to the right
 	CL_Vec2f vImageSize = pEnt->GetVar("size2d")->GetVector2();
@@ -2200,7 +2206,6 @@ Entity * CreateCheckbox(Entity *pBG, string name, string text, float x, float y,
 	//pEnt->GetVar("scale2d")->Set(pEnt->GetVar("scale2d")->GetVector2()*fontScale);
 	return pEnt;
 }
-
 
 Entity * SetTextEntityByName(const string &entityName, string text, Entity *pRootEntity)
 {
