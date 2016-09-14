@@ -24,9 +24,9 @@ class MySQLManager
 public:
 	MySQLManager();
 	virtual ~MySQLManager();
-	bool Init(string name, string password, string host = "localhost");
+	bool Init(string name, string password, string host = "127.0.0.1");
 	void Kill();
-	int ShowError(); //also returns the error number
+	int ShowError(string optionalLabel); //also returns the error number
 	bool Query(string query, bool bShowError = true);
 	bool DoesTableExist(string tableName, bool bShowErrors);
 	int GetLastAutoIncrementInsertID();
@@ -49,6 +49,7 @@ private:
 	uint32 m_pingTimer; //do a query every 4 hours to avoid being disconnected
 	bool m_bLostServerConnection;
 	unsigned int m_opsDone; //how many SQL things we've done so far
+	string m_lastSQLUsed; //used in error reporting
 };
 
 #endif // MySQLManager_h__

@@ -74,7 +74,7 @@ SET CUSTOM_FLAGS=%CUSTOM_FLAGS% -D_DEBUG -s GL_UNSAFE_OPTS=0 -s WARN_ON_UNDEFINE
 )
 
 SET INCLUDE_DIRS=-I%SHARED% -I%SHARED_ARDUBOY% -I%APP% -I%ARDUBOY% -I../../shared/util/boost -I../../shared/ClanLib-2.0/Sources -I../../shared/Network/enet/include ^
--I%ZLIBPATH%
+-I%ZLIBPATH% -I../../shared/win/include
 
 del %APP_NAME%.js
 del %APP_NAME%.html
