@@ -50,13 +50,23 @@ std::string MySQLManager::GetLastError()
 	return string(" SQL Error: ")+toString(error)+": "+string(mysql_error(m_conn));
 }
 
-int MySQLManager::ShowError()
+//sorry, you need to implement this somewhere.
+void LogMsgChat ( const string s );
+
+int MySQLManager::ShowError(string optionalLabel)
 {
 	if (!m_conn) return 0;
 
 	int error = mysql_errno(m_conn);
 
-	LogError("MySQLManager error: %u: %s", error, mysql_error(m_conn));
+	//label could contain %s and such, so let's log it a safer way to avoid a possible crash
+
+	if (optionalLabel.length() > 128)
+	{
+	   TruncateString(optionalLabel, 128);
+	}
+
+	LogMsgChat("MySQLManager error: "+toString(error)+" "+mysql_error(m_conn)+" ("+optionalLabel+")");
 	return error;
 }
 
@@ -361,7 +371,7 @@ bool MySQLManager::Init(string name, string password, string host)
 	
 	if (!m_conn)
 	{
-		ShowError();
+		ShowError("");
 		return false;
 	}
 
@@ -369,7 +379,7 @@ bool MySQLManager::Init(string name, string password, string host)
 
 	if (!mysql_real_connect(m_conn, host.c_str(), name.c_str(), password.c_str(), NULL, 0, NULL, 0))
 	{
-		ShowError();
+		ShowError("");
 		Kill(); //this will make m_conn null again
 		return false;
 	}
@@ -397,7 +407,7 @@ bool MySQLManager::Query( string query, bool bShowError )
 	{
 		if (bShowError)
 		{
-			int error = ShowError();
+			int error = ShowError(query);
 			if (error == 2006) //this should be CR_SERVER_GONE_ERROR, but I can't find the define..
 			{
 				//let our user know something is desperately wrong.  mysql service probably died, requiring a restart

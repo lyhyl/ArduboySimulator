@@ -82,10 +82,14 @@ bool AudioManagerSDL::Init()
 	}
 
 	//valid is directsound or winmm
+	
+#ifndef PLATFORM_HTML5 
+	//emscripten doesn't handle this
 	if (SDL_AudioInit("directsound") != 0)
 	{
 		LogMsg("Error setting audio driver: %s", SDL_GetError());
 	}
+#endif
 	
 
 	//these two lines were added for HTML5, but don't seem to be needed for other stuff?
