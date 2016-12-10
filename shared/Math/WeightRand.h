@@ -51,4 +51,37 @@ private:
 	vector<float> a_computed_odds; 
 	bool m_b_needs_computation; //true if we've never computed or a new number was added
 };
+
+class MiniRandElement
+{
+	public:
+		MiniRandElement(int n,int o) {num=n; odds=o; computed_odds=0;}
+		int num;
+		int odds;
+		float computed_odds;
+};
+// use this instead when you have huge gaps - i.e. your list of choices includes #10, #938, and #8498. A regular CWeightRand will include zeroes for all the inbetweens,
+// a CMiniWeightRand only has entries for the ones you include. It is slower, but much more memory efficient.
+class CMiniWeightRand
+{
+public:
+	CMiniWeightRand();
+	void AddChoice(int i_index, int i_odds);
+	int GetRandom();
+	int GetRandom(CRandom &rng);
+	void Clear(); //start over
+	int GetOdds(int i_choice); //in case you want to know what the odds were on something
+	int GetItemByPos(int pos);
+	unsigned int GetCount(){return (unsigned int)m_elements.size();}
+	std::string TestRun(int runs=100000);
+	long GetTotalOdds();
+private:
+
+	void ComputeOdds();
+	int CalcNumber(float f_rand);
+
+	vector<MiniRandElement> m_elements;
+	bool m_b_needs_computation; //true if we've never computed or a new number was added
+};
+
 #endif // WeightRand_h__
