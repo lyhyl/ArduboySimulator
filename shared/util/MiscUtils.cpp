@@ -280,6 +280,39 @@ string FloatToMoney(float f, int decimalsOfCents)
 	return string(buf);
 }
 
+string IntToMoneyBillions(int bil,int n)
+{
+	while(n>1000000000)
+	{
+		bil++;
+		n-=1000000000;
+	}
+	;
+	if(bil>0)
+	{
+		string s;
+		int commaSteps=0;
+		for(int i=1;i<1000000000;i*=10)
+		{
+			if(n<i) s="0"+s;
+			else
+				s=toString((n/i)%10)+s;
+			commaSteps++;
+			if(commaSteps==3)
+			{
+				commaSteps=0;
+				s=","+s;
+			}
+		}
+		return toString(bil)+s;
+	}
+	else
+	{
+		char buf[256];
+		float_to_money(double(n), buf, 0);
+		return string(buf);
+	}
+}
 
 string PrefixLeading(const string input, unsigned int leadingCount, string leadingChar, string insertAfterPrefix)
 {
