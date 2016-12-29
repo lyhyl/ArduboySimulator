@@ -28,13 +28,21 @@ void LogMsg(const char *lpFormat, ...)
 {
 	std::va_list argPtr ;
 	va_start( argPtr, lpFormat ) ;
-	NSLogv([NSString stringWithCString:lpFormat], argPtr) ;
+	
+    //NSLogv([NSString stringWithCString:lpFormat], argPtr) ;
+    
+    //well, we could use NSLogv, but xcode 8 seems to have a bug where it won't show sometimes unless
+    //OS_ACTIVITY_MODE is set to false or something.. so let's use our own method..
+    
 	
 	const int logSize = 4096;
 	char buffer[logSize];
 	memset ( (void*)buffer, 0, logSize );
 	vsnprintf( buffer, logSize,  lpFormat, argPtr );
 	
+    printf(buffer);
+    printf("\n");
+    
 	if (IsBaseAppInitted())
 	GetBaseApp()->GetConsole()->AddLine(buffer);
 	
@@ -264,16 +272,21 @@ void SetPrimaryScreenSize(int width, int height)
     g_primaryGLY = height;
 }
 
-//Below snippet by Joe Booth - http://stackoverflow.com/questions/24150359/is-uiscreen-mainscreen-bounds-size-becoming-orientation-dependent-in-ios8
+
+//Below based on snippet by Joe Booth - http://stackoverflow.com/questions/24150359/is-uiscreen-mainscreen-bounds-size-becoming-orientation-dependent-in-ios8 and modified by Seth A. Robinson ( rtsoft.com )
 CGRect iOS7StyleScreenBounds()
 {
     CGRect bounds = [UIScreen mainScreen].bounds;
     if (([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0) && UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation))
     {
-        bounds.size = CGSizeMake(bounds.size.height, bounds.size.width);
+        //old way, didn't work properly after returning from a lock screen in iOS 10.  Fixed it, but does it work with every case...
+        //bounds.size = CGSizeMake(bounds.size.height, bounds.size.width);
+        bounds.size = CGSizeMake(MIN(bounds.size.width, bounds.size.height), MAX(bounds.size.width, bounds.size.height));
     }
     return bounds;
 }
+
+
 
 //this doesn't change even if you rotate, for speed
 int GetPrimaryGLX() {return g_primaryGLX;}
