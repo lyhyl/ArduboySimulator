@@ -125,7 +125,7 @@ void InitVideoSize()
 
 	//WORK: Change device emulation here
 	//string desiredVideoMode = "iPhone5 Landscape"; //name needs to match one of the ones defined above
-	string desiredVideoMode = "iPad Landscape"; 
+	string desiredVideoMode = "iPhone5 Landscape"; 
  	SetVideoModeByName(desiredVideoMode);
 	GetBaseApp()->OnPreInitVideo(); //gives the app level code a chance to override any of these parms if it wants to
 }
@@ -495,7 +495,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				BeginPaint(g_hWnd, &paint);
 				EndPaint(g_hWnd, &paint);
 			}
-			//LogMsg("PAINT!");
+			
+#ifdef _DEBUG
+		//	LogMsg("PAINT!");
+#endif
   		   return true;
 		}
 	case WM_ACTIVATE:
@@ -1589,7 +1592,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLin
 #ifdef WIN32
 	
 	//I don't *think* we need this...
-	::SetProcessAffinityMask( ::GetCurrentProcess(), 1 );
+	//::SetProcessAffinityMask( ::GetCurrentProcess(), 1 );
+	
 	SetDoubleClickTime(0);
 #endif
 
