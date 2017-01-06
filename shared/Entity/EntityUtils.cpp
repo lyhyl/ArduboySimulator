@@ -1251,6 +1251,7 @@ void GetFontAndScaleToFitThisPixelHeight(eFont *pFontIDOut, float *pFontScaleOut
 }
 
 
+
 //if you have a giant font that you are afraid is going to be too big on some phone
 //sizes, this is a way to auto-scale it so it works out
 //Example: float fontScale = EnforceMinimumFontLineToScreenRatio(FONT_LARGE, 1.0f, 6.6f);
@@ -1266,6 +1267,13 @@ float EnforceMinimumFontLineToScreenRatio(eFont fontID, float fontScale, float m
 	}
 
 	return fontScale;
+}
+
+float EnforceMinimumFontLineToScreenRatioAllowBig(eFont fontID, float fontScale, float minLineToScreenRatio)
+{
+	float sizeY = GetBaseApp()->GetFont(fontID)->GetLineHeight(1.0f);
+
+	return (GetScreenSizeYf()/minLineToScreenRatio)/sizeY;
 }
 
 

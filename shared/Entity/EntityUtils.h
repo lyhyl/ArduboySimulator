@@ -379,6 +379,7 @@ CL_Vec2f GetScreenPos2DEntity(Entity *pEnt, CL_Vec2f vRecursivePosToAdd = CL_Vec
 void SetProgressBarPercent(Entity *pEnt, float progressPercent);
 float EnforceMinimumFontLineToScreenRatio(eFont fontID, float fontScale, float minLineToScreenRatio);
 
+float EnforceMinimumFontLineToScreenRatioAllowBig(eFont fontID, float fontScale, float minLineToScreenRatio);
 //Copies one or more properties by name from one entity to another
 void CopyPropertiesToEntity(Entity *pToEnt, Entity *pFromEnt, const string varName1, const string varName2="", const string varName3="");
 
