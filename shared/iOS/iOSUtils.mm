@@ -284,9 +284,7 @@ CGRect iOS7StyleScreenBounds()
         bounds.size = CGSizeMake(MIN(bounds.size.width, bounds.size.height), MAX(bounds.size.width, bounds.size.height));
     }
     return bounds;
-}+
--
-
+}
 
 
 //this doesn't change even if you rotate, for speed
