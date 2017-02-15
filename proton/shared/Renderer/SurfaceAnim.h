@@ -28,6 +28,9 @@ public:
 	void BlitRotatedAnim( float x, float y,  int frameX, int frameY, CL_Vec2f vScale, eAlignment alignment = ALIGNMENT_CENTER, unsigned int rgba  = MAKE_RGBA(255,255,255,255), float rotation=0, CL_Vec2f vRotationPtLocalCoords =  CL_Vec2f(0,0),
 		bool flipX = false, bool flipY = false, RenderBatcher *pBatcher = NULL);
 
+	void BlitArbitrarySection( float x, float y, CL_Rectf regionToDraw, CL_Vec2f vScale, eAlignment alignment = ALIGNMENT_CENTER,
+								 unsigned int rgba = MAKE_RGBA(255,255,255,255), bool flipX=false, bool flipY=false, RenderBatcher *pBatcher=NULL);
+
 	int GetFramesX() {return m_framesX;}
 	int GetFramesY() {return m_framesY;}
 	int GetFrameXByInt(int frame) {return frame%m_framesX;}
