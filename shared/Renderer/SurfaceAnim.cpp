@@ -115,6 +115,40 @@ void SurfaceAnim::BlitScaledAnim( float x, float y, int frameX , int frameY, CL_
 	}
 }
 
+void SurfaceAnim::BlitArbitrarySection( float x, float y, CL_Rectf regionToDraw, CL_Vec2f vScale, eAlignment alignment /*= ALIGNMENT_CENTER*/,
+								 unsigned int rgba /*= MAKE_RGBA(255,255,255,255)*/, bool flipX, bool flipY, RenderBatcher *pBatcher)
+{
+	if (vScale.x == 0 && vScale.y == 0) return;
+
+	CL_Vec2f vStart = CL_Vec2f(x,y);
+	rtRectf src;
+	src.left = regionToDraw.left;
+	src.top = regionToDraw.top;
+	src.right = regionToDraw.right;
+	src.bottom = regionToDraw.bottom;
+	
+	rtRectf dst(0,0, src.GetWidth(), src.GetHeight());
+	
+	if (flipX)
+		swap(src.left, src.right);
+	
+	if (flipY)
+		swap(src.top, src.bottom);
+	
+	if (alignment != ALIGNMENT_UPPER_LEFT)
+	{
+		vStart -= GetAlignmentOffset(CL_Vec2f(src.GetWidth(), src.GetHeight()), alignment);
+	}
+
+	dst.AdjustPosition(vStart.x, vStart.y);
+	dst.Scale(alignment, vScale);
+	
+	if (pBatcher)
+		pBatcher->BlitEx(this, dst, src, rgba);
+	else
+		BlitEx(dst, src, rgba);
+}
+
 void SurfaceAnim::ReloadImage()
 {
 	int framesX = m_framesX;
