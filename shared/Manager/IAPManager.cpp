@@ -41,7 +41,7 @@ bool IAPManager::IsItemPurchased(const string &item) const
 
 void IAPManager::HandlePurchaseListReply(Message &m)
 {
-	//we must have asked for a list of purchased the user has made on android
+	//we must have asked for a list of purchases the user has made on android
 	switch (ItemStateCode((int)m.GetParm1()))
 	{
 	case END_OF_LIST:
@@ -53,26 +53,16 @@ void IAPManager::HandlePurchaseListReply(Message &m)
 			VariantList vList;
 			m_sig_purchased_list_updated(&vList);
 			
-			//we want to buy an item as soon as this is done
 			if (!m_itemToBuy.empty())
 			{
 				//now buy the item
-				
-				//but wait, do we already own it?
-				if (IsItemPurchased(m_itemToBuy))
-				{
-					//just fake a yes to the purchase request now
-					endPurchaseProcessWithResult(RETURN_STATE_ALREADY_PURCHASED);
-					m_itemToBuy.clear();
-					m_itemDeveloperData.clear();
-					break;
-				}
-				
+
 #ifdef SHOW_DEBUG_IAP_MESSAGES
-				LogMsg("Well, we don't already own it.  Sending buy request for %s", m_itemToBuy.c_str());
+			LogMsg("Well, we don't already own it.  Sending buy request for %s", m_itemToBuy.c_str());
 #endif
-				sendPurchaseMessage();
-			} 
+			sendPurchaseMessage();
+			}
+
 
 			if (!m_itemToConsume.empty())
 			{
@@ -83,9 +73,21 @@ void IAPManager::HandlePurchaseListReply(Message &m)
 
 	case PURCHASED:
 		{
+
 #ifdef SHOW_DEBUG_IAP_MESSAGES
-			LogMsg("Has purchased %s", m.GetStringParm().c_str());
+			LogMsg("Already purchased %s", m.GetStringParm().c_str());
 #endif
+
+			string orderData;
+			//If there is a | in the result, assume it's the newer format that breaks down the data, name, then actual order data
+			if (IsInString(m.GetStringParm(), "|"))
+			{
+				orderData = m.GetStringParm();
+				string itemName = SeparateStringSTL(m.GetStringParm(), 0,'|');
+				//Yes, we're making a pretty big assumption that "gems_bag_etc|" only exists once at the start, but that should be safe
+				StringReplace(itemName+"|", "", orderData);
+				m.SetStringParm(itemName);
+			}
 
 			bool added = m_items.insert(m.GetStringParm()).second;
 #ifdef SHOW_DEBUG_IAP_MESSAGES
@@ -94,6 +96,32 @@ void IAPManager::HandlePurchaseListReply(Message &m)
 				LogMsg("Added %s, now has %d purchased items", m.GetStringParm().c_str(), m_items.size());
 			}
 #endif
+
+			if (!m_itemToBuy.empty())
+			{
+				//now buy the item
+
+				//but wait, do we already own it?
+				if (m_itemToBuy == m.GetStringParm())
+				{
+
+#ifdef SHOW_DEBUG_IAP_MESSAGES
+					LogMsg("Already bought but it wasn't processed properly? Buying %s again", m_itemToBuy.c_str());
+#endif
+					m_extraData = orderData; //the real order info
+					//just fake a yes to the purchase request now
+					endPurchaseProcessWithResult(RETURN_STATE_ALREADY_PURCHASED);
+					m_itemToBuy.clear();
+					m_itemDeveloperData.clear();
+					break;
+				}
+
+#ifdef SHOW_DEBUG_IAP_MESSAGES
+				LogMsg("Well, we don't already own it.  Sending buy request for %s", m_itemToBuy.c_str());
+#endif
+				sendPurchaseMessage();
+			} 
+
 		}
 
 		break;
