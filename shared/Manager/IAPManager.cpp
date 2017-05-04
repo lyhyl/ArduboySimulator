@@ -1,8 +1,9 @@
 #include "PlatformPrecomp.h"
 #include "IAPManager.h"
 
+
 #ifdef _DEBUG
-	//#define SHOW_DEBUG_IAP_MESSAGES
+	#define SHOW_DEBUG_IAP_MESSAGES
 #endif
 
 #if defined PLATFORM_WINDOWS || defined PLATFORM_LINUX
@@ -20,6 +21,7 @@
 
 IAPManager::IAPManager()
 {
+	m_bTreatAllItemsAsConsumable = false;
 	m_state = STATE_NONE;
 	m_returnState = RETURN_STATE_NONE;
 	m_failureReason = FAILURE_REASON_NONE;
@@ -46,6 +48,9 @@ void IAPManager::HandlePurchaseListReply(Message &m)
 	{
 	case END_OF_LIST:
 		{
+
+			
+			RestoreLostPurchases(false);
 #ifdef SHOW_DEBUG_IAP_MESSAGES
 			LogMsg("(finished receiving purchase history of managed items)");
 #endif
@@ -120,7 +125,28 @@ void IAPManager::HandlePurchaseListReply(Message &m)
 				LogMsg("Well, we don't already own it.  Sending buy request for %s", m_itemToBuy.c_str());
 #endif
 				sendPurchaseMessage();
-			} 
+			} else
+			{
+
+				 if (m_bTreatAllItemsAsConsumable)
+				 {
+					 //that's weird, why is this here?  It must be a half processed order on android.  Send it to be processed to the app, if they are listening
+#ifdef SHOW_DEBUG_IAP_MESSAGES
+					 LogMsg("SendUnexpectedPurchaseSignal -  Buying %s again because it's not consumed", m.GetStringParm().c_str());
+#endif
+					 m_extraData = orderData; //the real order info
+					 //just fake a yes to the purchase request now
+					
+					 SendUnexpectedPurchaseSignal(RETURN_STATE_ALREADY_PURCHASED, m.GetStringParm(), m_extraData);
+					 
+					 m_itemToConsume = m.GetStringParm();
+					 sendConsumeMessage();
+					 m_itemToConsume.clear(); //don't want this consumed again when this list finishes
+					 m_itemDeveloperData.clear();
+					 break;
+
+				 }
+			}
 
 		}
 

@@ -175,7 +175,7 @@ public:
 	void TestDelayedIAP(string itemID, string receipt, int delayMS, eReturnState returnState = RETURN_STATE_PURCHASED );
 
 	void ConsumeItem(string itemID); //"consumes" a previously bought item, only applicable to Android IAB, this is how their v3 billing stuff works
-
+	void RestoreLostPurchases(bool bNew) {m_bTreatAllItemsAsConsumable = bNew;}
 protected:
 	enum eState
 	{
@@ -208,6 +208,7 @@ protected:
 	std::string m_itemToConsume; //used by android
 	Entity m_entity; //used for scheduling
 	std::string m_itemDeveloperData;
+	bool m_bTreatAllItemsAsConsumable; //if true, any time we notice a "purchased item" on android, we'll report it as a new order to be handled by the server.  Only applicable to android, it helps catch missed orders
 };
 
 #endif // IAPManager_h__
