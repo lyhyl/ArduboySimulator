@@ -175,14 +175,12 @@ void SetPreferSDCardForStorage(bool bNew)
 string GetSavePath()
 {
 
-	LogMsg("Starting get save path..");
 
 	if (g_preferSDCardForUserStorage)
 	{
 		string storageDir = GetAppCachePath();
 		if (!storageDir.empty()) return storageDir;
 	}
-	LogMsg("continuing get save path..");
 
 	string retString = GetSavePathBasic();
 	
