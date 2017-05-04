@@ -5,6 +5,11 @@
 #include "util/CRandom.h"
 #include "util/MiscUtils.h"
 
+#ifdef WINAPI
+//MSVC20015 gets an error if we don't include this manually.  I guess we could just do this for everybody and not just Win?
+	#include <iterator>
+#endif
+
 //************ for base64 encoding, needed for http auth stuff *********
 
 
