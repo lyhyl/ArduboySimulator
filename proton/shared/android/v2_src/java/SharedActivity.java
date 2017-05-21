@@ -153,6 +153,8 @@ import ${PACKAGE_NAME}.util.Purchase;
 //#endif
 
 import android.view.View.OnClickListener;
+import android.net.ConnectivityManager;
+
 
 //#if defined(RT_TAPJOY_SUPPORT)
 	public class SharedActivity extends Activity implements SensorEventListener,  TapjoyNotifier, TapjoyFullScreenAdNotifier, TapjoySpendPointsNotifier, TapjoyDisplayAdNotifier, TapjoyAwardPointsNotifier, TapjoyEarnedPointsNotifier, TapjoyVideoNotifier 
@@ -694,10 +696,9 @@ m_editText.addTextChangedListener(new TextWatcher()
   
 			   for(Purchase purchase : inventory.getAllPurchases())
 				{
-					//Log.d(PackageName, "Get all purchases Purchase: " + purchase.getSku());
+					//Log.d(PackageName, "Purchase: " + purchase.getSku());
 					//Log.d(PackageName, "json: " + purchase.getOriginalJson());
-					//Log.d(PackageName, "json: " + purchase.getSignature());
-					nativeSendGUIStringEx(SharedActivity.app.MESSAGE_TYPE_IAP_PURCHASED_LIST_STATE, 0,0,0, purchase.getSku()+"|"+purchase.getOriginalJson()+"|"+purchase.getSignature()); //0 means PURCHASED
+					nativeSendGUIStringEx(SharedActivity.app.MESSAGE_TYPE_IAP_PURCHASED_LIST_STATE, 0,0,0, purchase.getSku()); //0 means PURCHASED
 				}
     
             //Log.d(PackageName, "Initial inventory query finished; enabling main UI.");
@@ -718,7 +719,6 @@ m_editText.addTextChangedListener(new TextWatcher()
 
             if (result.isFailure()) 
             {
-			   //Log.d(PackageName, "Purchase is fail: "+purchase.getOriginalJson());
                nativeSendGUIEx(MESSAGE_TYPE_IAP_RESULT, result.getResponse() ,0,0);
 		       return;
             }
@@ -1179,6 +1179,28 @@ public static String get_advertisingIdentifier()
 		
 		) return "0";
 		return "4322";
+	}
+
+public static String get_getNetworkType()
+	{
+		ConnectivityManager connManager = (ConnectivityManager)app.getSystemService(Context.CONNECTIVITY_SERVICE);
+		try{
+			if (connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected()) {
+			    // Wifi is connected
+				return "wifi";
+			}
+			else if(connManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnected()){
+				// Mobile connection available
+				return "mobile";
+			}else{
+				// No connection available
+				return "none";
+			}	
+		}
+		catch(Exception e){
+			Log.d("DeviceNetwork", e.getMessage());
+		}
+		return "none";
 	}
 	
   @Override
@@ -2228,6 +2250,8 @@ Thread thr = new Thread(new Runnable() {
 
 	static long m_gameTimer = 0;
 	static int m_timerLoopMS = 0; //every this MS, the loop runs.  0 for no fps limit
+	final static int MESSAGE_FLURRY_START_TIMED_EVENT = 1001;
+	final static int MESSAGE_FLURRY_STOP_TIMED_EVENT = 1002;
 
     public synchronized void onDrawFrame(GL10 gl)
     {
@@ -2363,19 +2387,98 @@ Thread thr = new Thread(new Runnable() {
 					String event = nativeGetLastOSMessageString();
 					String key = nativeGetLastOSMessageString2();
 					String data = nativeGetLastOSMessageString3();
-					
-					if (!key.isEmpty())
+
+					Log.v(app.PackageName, "MESSAGE_FLURRY_LOG_EVENT: Event + key/data: "+event+" key: "+key+", data: "+data);
+
+					if (!data.isEmpty())
 					{
+						// Event with parameters
 						//Log.v(app.PackageName, "MESSAGE_FLURRY_LOG_EVENT: Event + key/data: "+event+" key: "+key+", data: "+data);
-					
-						Map<String,String> m=new HashMap<String, String>();
-						m.put(key, data);
-						FlurryAgent.logEvent(event, m, true);
+						// data contains pipe seperated string. split it into HashMap
+
+						//String text2 = "numsession|5\ntimeplayed|3\nIAP|5000\nLastWorld|START";
+						Map<String, String> map = new HashMap<String, String>();
+	
+						for(String keyValue : data.split("\n")) {
+   							String[] pairs = keyValue.split("\\|", 2);
+   							map.put(pairs[0], pairs.length == 1 ? "" : pairs[1]);
+						}
+
+						//Map<String,String> m=new HashMap<String, String>();
+						//m.put(key, data);
+						FlurryAgent.logEvent(event, map);
+					} 
+					else
+					{
+						//Log.v(app.PackageName, "MESSAGE_FLURRY_LOG_EVENT: Event: "+event);
+						FlurryAgent.logEvent(event);
+					}
+				}
+					break;
+				case MESSAGE_FLURRY_START_TIMED_EVENT:
+				{
+					String event = nativeGetLastOSMessageString();
+					String key = nativeGetLastOSMessageString2();
+					String data = nativeGetLastOSMessageString3();
+
+					Log.v(app.PackageName, "MESSAGE_FLURRY_START_TIMED_EVENT: Event + key/data: "+event+" key: "+key+", data: "+data);
+
+					if (!data.isEmpty())
+					{
+						// Timed event with parameters
+						//Log.v(app.PackageName, "MESSAGE_FLURRY_LOG_EVENT: Event + key/data: "+event+" key: "+key+", data: "+data);
+						// data contains pipe seperated string. split it into HashMap
+
+						//String text2 = "numsession|5\ntimeplayed|3\nIAP|5000\nLastWorld|START";
+						Map<String, String> map = new HashMap<String, String>();
+	
+						for(String keyValue : data.split("\n")) {
+   							String[] pairs = keyValue.split("\\|", 2);
+   							map.put(pairs[0], pairs.length == 1 ? "" : pairs[1]);
+						}
+
+						//Map<String,String> m=new HashMap<String, String>();
+						//m.put(key, data);
+						FlurryAgent.logEvent(event, map, true);
 					} 
 					else
 					{
 						//Log.v(app.PackageName, "MESSAGE_FLURRY_LOG_EVENT: Event: "+event);
 						FlurryAgent.logEvent(event, true);
+					}
+				}
+					break;
+				case MESSAGE_FLURRY_STOP_TIMED_EVENT:
+				{
+					String event = nativeGetLastOSMessageString();
+					String key = nativeGetLastOSMessageString2();
+					String data = nativeGetLastOSMessageString3();
+
+					Log.v(app.PackageName, "MESSAGE_FLURRY_STOP_TIMED_EVENT: Event + key/data: "+event+" key: "+key+", data: "+data);
+
+					if (!data.isEmpty())
+					{
+						// STOP Timed event with parameters
+						//Log.v(app.PackageName, "MESSAGE_FLURRY_LOG_EVENT: Event + key/data: "+event+" key: "+key+", data: "+data);
+						// data contains pipe seperated string. split it into HashMap
+
+						//String text2 = "numsession|5\ntimeplayed|3\nIAP|5000\nLastWorld|START";
+						Map<String, String> map = new HashMap<String, String>();
+	
+						for(String keyValue : data.split("\n")) {
+   							String[] pairs = keyValue.split("\\|", 2);
+   							map.put(pairs[0], pairs.length == 1 ? "" : pairs[1]);
+						}
+
+						//Map<String,String> m=new HashMap<String, String>();
+						//m.put(key, data);
+						FlurryAgent.endTimedEvent(event, map);
+
+					} 
+					else
+					{
+						//Log.v(app.PackageName, "MESSAGE_FLURRY_LOG_EVENT: Event: "+event);
+						FlurryAgent.endTimedEvent(event);
 					}
 				}
 					break;

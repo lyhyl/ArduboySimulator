@@ -18,6 +18,9 @@
 #include <netinet/in.h>
 #include <net/if.h>
 #include <net/if_dl.h>
+#import "Reachability.h"
+
+
 #ifdef RT_IAP_SUPPORT
     //otherwise we have to add the lib even if we don't use it
     #import <AdSupport/ASIdentifierManager.h>
@@ -49,7 +52,6 @@ void LogMsg(const char *lpFormat, ...)
 	va_end(argPtr) ;
 	
 } 
-
 
 
 void LaunchURL(string url)
@@ -477,6 +479,32 @@ string GetAdvertisingIdentifier()
     return "ERROR: Compile with RT_IAP_SUPPORT defined and the AdSupport.framework added";
     #endif
 }
+
+string GetNetworkType()
+{
+    Reachability *reachability = [Reachability reachabilityForInternetConnection];
+    [reachability startNotifier];
+    
+    NetworkStatus status = [reachability currentReachabilityStatus];
+    string response= "NULL";
+    
+    if(status == NotReachable)
+    {
+        response = "none";
+        
+    }
+    else if (status == ReachableViaWiFi)
+    {
+        //WiFi
+        response = "wifi";
+    }
+    else if (status == ReachableViaWWAN)
+    {
+        response = "mobile";
+    }
+    return response;
+}
+
 
 
 //Code taken from http://www.mobiledev.nl/udid-usage-rejected-by-apple-for-ios-apps

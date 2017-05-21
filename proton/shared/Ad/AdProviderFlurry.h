@@ -26,9 +26,13 @@ public:
 
 	virtual void TrackingOnPageView();
 	virtual void TrackingLog(string eventName, string optionalKey = "", string optionalValue = "");
+	virtual void StartTimedEvent(string eventName, string optionalKey /*= ""*/, string optionalValue /*= ""*/);
+	virtual void StopTimedEvent(string eventName, string optionalKey /*= ""*/, string optionalValue /*= ""*/);
 
 	//custom functions chartboost specific
 	void SetupInfo(const string flurryAPIkey);
+
+
 
 
 private:

@@ -9,7 +9,6 @@
 #import "EAGLView.h"
 #import "InAppPurchaseManager.h"
 
-
 #ifdef RT_FLURRY_ENABLED
 #import "Flurry.h"
 #endif
@@ -79,7 +78,11 @@
         //if you get an error here, it's because you need to define RT_FLURRY_KEY="your flurry key" in your compile build systems, or even the top of this file.
         string flurryKey = RT_FLURRY_KEY;
         //LogMsg("Flurry Key is %s", RT_FLURRY_KEY); //uncomment to make sure your stuff is set right
+    
         NSString *flurryStr =  [NSString stringWithCString: flurryKey.c_str() encoding: [NSString defaultCStringEncoding]];
+        NSString * version = nil;
+        version = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+        [Flurry setAppVersion:version];
         [Flurry startSession:flurryStr];
 #endif
     
@@ -292,6 +295,59 @@
 		}
 		break;
 
+        case OSMessage::MESSAGE_FLURRY_LOG_EVENT:{
+
+			 NSString* eventName = [NSString stringWithCString: pMsg->m_string.c_str() encoding:[NSString defaultCStringEncoding]];
+			// NSString* optionalKey = pMsg->m_string2; //No use to us
+            
+            if( pMsg->m_string3.empty()){
+                [Flurry logEvent:eventName];
+            }
+            else{
+                NSString* trackingData = [NSString stringWithCString: pMsg->m_string3.c_str() encoding:[NSString defaultCStringEncoding]];
+                
+                // Convert to NSDict
+                NSMutableDictionary* params = stringToDict(trackingData);
+                [Flurry logEvent:eventName withParameters:params];
+            }
+        }break;
+            
+        case OSMessage::MESSAGE_FLURRY_START_TIMED_EVENT:{
+            
+            NSString* eventName = [NSString stringWithCString: pMsg->m_string.c_str() encoding:[NSString defaultCStringEncoding]];
+            // NSString* optionalKey = pMsg->m_string2; //No use to us
+            
+            if( pMsg->m_string3.empty()){
+                [Flurry logEvent:eventName timed:YES];
+            }
+            else{
+                NSString* trackingData = [NSString stringWithCString: pMsg->m_string3.c_str() encoding:[NSString defaultCStringEncoding]];
+                
+                // Convert to NSDict
+                NSMutableDictionary* params = stringToDict(trackingData);
+                [Flurry logEvent:eventName withParameters:params timed:YES];
+            }
+            
+        }break;
+        
+        case OSMessage::MESSAGE_FLURRY_STOP_TIMED_EVENT:{
+            
+            NSString* eventName = [NSString stringWithCString: pMsg->m_string.c_str() encoding:[NSString defaultCStringEncoding]];
+            // NSString* optionalKey = pMsg->m_string2; //No use to us
+            
+            if( pMsg->m_string3.empty()){
+                [Flurry endTimedEvent:eventName withParameters:nil];
+            }
+            else{
+                NSString* trackingData = [NSString stringWithCString: pMsg->m_string3.c_str() encoding:[NSString defaultCStringEncoding]];
+                
+                // Convert to NSDict
+                NSMutableDictionary* params = stringToDict(trackingData);
+                [Flurry endTimedEvent:eventName withParameters:params];
+            }
+            
+        }break;
+        
 		case OSMessage::MESSAGE_IAP_GET_PURCHASED_LIST:
 			[m_IOSIAPManager GetPurchasedList];
 		break;
@@ -494,5 +550,19 @@ static void MyWriteStreamCallback(CFWriteStreamRef streamRef,
     [v KillNetInit];
 	GetMessageManager()->SendGUI(MESSAGE_TYPE_OS_CONNECTION_CHECKED, (float)eventType, 0.0f);		
     CFRunLoopStop(CFRunLoopGetCurrent());
+}
+
+NSMutableDictionary* stringToDict (NSString* str) {
+    NSMutableDictionary *pairs = [NSMutableDictionary dictionary];
+    
+    for (NSString *pairString in [str componentsSeparatedByString:@"\n"]) {
+        NSArray *pair = [pairString componentsSeparatedByString:@"|"];
+        
+        if ([pair count] != 2)
+            continue;
+        
+        [pairs setObject:[pair objectAtIndex:1] forKey:[pair objectAtIndex:0]];
+    }
+    return pairs;
 }
 

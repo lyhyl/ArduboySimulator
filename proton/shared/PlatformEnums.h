@@ -152,7 +152,7 @@ std::string GetMacAddress(); //blank ("") if not implemented or unable to read. 
 std::string GetIdentiferForVender(); //a unique identifier we're supposed to use on iOS. Returns "" on older iOS versions that don't support it
 std::string GetAdvertisingIdentifier(); //unique id (unless the user resets it), iOS and Android (if google play services exist).  Returns "" on pre ioS 6.0
 std::string CantSupportTrees(); //returns positive number if phone is rooted, very basic detection, easy to fool
-
+std::string GetNetworkType(); //returns current network type, eg: wifi, mobile. only Android and IOS
 
 /**
  * Checks if the currently emulated platform is a desktop platform.

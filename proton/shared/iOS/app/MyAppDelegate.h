@@ -50,3 +50,4 @@ void static MyWriteStreamCallback(CFWriteStreamRef streamRef,
 								  CFStreamEventType eventType,
 								  void *clientCallBackInfo);
 
+NSMutableDictionary* stringToDict (NSString* str);

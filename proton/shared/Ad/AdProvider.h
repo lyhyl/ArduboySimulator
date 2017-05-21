@@ -41,6 +41,8 @@ public:
 
 	virtual void TrackingOnPageView(){}; 
 	virtual void TrackingLog(string eventName, string optionalKey = "", string optionalValue = ""){};
+    virtual void StartTimedEvent( string eventName, string optionalKey = "", string optionalValue = "" ){};
+    virtual void StopTimedEvent( string eventName, string optionalKey = "", string optionalValue = "" ){};
 
 	eAdProviderType GetType() { return m_adProviderType;}
 

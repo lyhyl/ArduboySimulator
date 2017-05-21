@@ -169,6 +169,11 @@ void SetLastStringInput(string s)
 	g_stringInput = s;
 }
 
+string GetNetworkType()
+{
+	return "none"; //faking response for OSX
+}
+
 string GetLastStringInput()
 {
 	return g_stringInput; //g_string?? heh. heh. hehe.	almost makes using globals a good thing.
