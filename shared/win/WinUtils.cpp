@@ -677,6 +677,10 @@ return ""; //not valid on windows
 return "fa39ed5c-0c5d-4de2-96d7-ebf40f2d65e1"; //for testing, it's an ANDROID gid
 }
 
+string GetNetworkType()
+{
+	return "none"; //not supported for this OS
+}
 
 void CreateAppCacheDirIfNeeded()
 {
@@ -711,6 +715,7 @@ bool GetLastWriteDateOfFile(int *monthOut, int *dayOut, int *yearOut, int *hourO
 
 	return true;
 }
+
 
 
 #endif

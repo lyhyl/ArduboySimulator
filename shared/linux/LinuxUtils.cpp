@@ -488,3 +488,8 @@ bool HasVibration()
 {
 	return true;
 }
+
+string GetNetworkType()
+{
+	return "none"; // not supported for this OS
+}

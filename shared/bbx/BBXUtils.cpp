@@ -576,3 +576,7 @@ string GetDeviceID()
 	*/
 
 }
+string GetNetworkType()
+{
+	return "none"; // not supported for this OS
+}

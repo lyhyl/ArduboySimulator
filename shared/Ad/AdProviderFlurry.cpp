@@ -1,6 +1,7 @@
 #include "PlatformPrecomp.h"
 #include "AdProviderFlurry.h"
 #include "Manager/MessageManager.h"
+#include "GUI/GenericDialogMenu.h"
 
 AdProviderFlurry::AdProviderFlurry()
 {
@@ -57,4 +58,26 @@ void AdProviderFlurry::TrackingLog( string eventName, string optionalKey /*= ""*
 	o.m_string3 = optionalValue;
 	GetBaseApp()->AddOSMessage(o);
 	
+}
+
+void AdProviderFlurry::StartTimedEvent( string eventName, string optionalKey /*= ""*/, string optionalValue /*= ""*/ )
+{
+    OSMessage o;
+    o.m_type = OSMessage::MESSAGE_FLURRY_START_TIMED_EVENT;
+    o.m_string = eventName;
+    o.m_string2 = optionalKey;
+    o.m_string3 = optionalValue;
+    GetBaseApp()->AddOSMessage(o);
+    
+}
+
+void AdProviderFlurry::StopTimedEvent( string eventName, string optionalKey /*= ""*/, string optionalValue /*= ""*/ )
+{
+    OSMessage o;
+    o.m_type = OSMessage::MESSAGE_FLURRY_STOP_TIMED_EVENT;
+    o.m_string = eventName;
+    o.m_string2 = optionalKey;
+    o.m_string3 = optionalValue;
+    GetBaseApp()->AddOSMessage(o);
+    
 }

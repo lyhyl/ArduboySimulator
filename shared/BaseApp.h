@@ -115,7 +115,9 @@ struct OSMessage
 		MESSAGE_TAPJOY_SET_USERID, //used with un-managed currency, this is what it will send on  the cb to server
 		MESSAGE_IAP_CONSUME_ITEM, //used with android's IAB by IAPManager
 
-		MESSAGE_USER = 1000
+		MESSAGE_USER = 1000,
+        MESSAGE_FLURRY_START_TIMED_EVENT,
+        MESSAGE_FLURRY_STOP_TIMED_EVENT
 	};
 
 	enum eParmKeyboardType

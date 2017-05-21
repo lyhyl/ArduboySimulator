@@ -701,5 +701,8 @@ string GetMacAddress()
 	//TODO
 	return ""; //unimplemented
 }
-
+string GetNetworkType()
+{
+	return "none"; // not supported for this OS
+}
 #endif
