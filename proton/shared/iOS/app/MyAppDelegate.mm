@@ -255,7 +255,9 @@
 			break;
 		
 		case OSMessage::MESSAGE_CHECK_CONNECTION:
-			[self ActivateNetworkConnection];
+			//[self ActivateNetworkConnection];
+			//it's weird to check if google.com is available, let's just assume the network works
+			GetMessageManager()->SendGUI(MESSAGE_TYPE_OS_CONNECTION_CHECKED, (float)RT_kCFStreamEventOpenCompleted, 0.0f);	
 			break;
 		
 		case OSMessage::MESSAGE_CLOSE_TEXT_BOX:
