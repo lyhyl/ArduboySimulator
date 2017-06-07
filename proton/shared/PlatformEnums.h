@@ -5,6 +5,7 @@
 
 #ifdef __cplusplus
 
+#define BOOST_SIGNALS_NO_DEPRECATION_WARNING
 
 #include <string>
 #include <vector>
