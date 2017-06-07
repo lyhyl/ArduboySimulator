@@ -13,7 +13,7 @@
 
 #include <boost/algorithm/string/config.hpp>
 
-#include <boost/range/iterator_range.hpp>
+#include <boost/range/iterator_range_core.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
 #include <boost/range/iterator.hpp>
@@ -53,7 +53,7 @@ namespace boost {
             RangeT& Input, 
             const FinderT& Finder)
         {
-            iterator_range<BOOST_STRING_TYPENAME range_iterator<RangeT>::type> lit_input(as_literal(Input));
+            iterator_range<BOOST_STRING_TYPENAME range_iterator<RangeT>::type> lit_input(::boost::as_literal(Input));
 
             return Finder(::boost::begin(lit_input),::boost::end(lit_input));
         }
@@ -81,12 +81,12 @@ namespace boost {
             Range1T& Input, 
             const Range2T& Search)
         {
-            return find(Input, first_finder(Search));
+            return ::boost::algorithm::find(Input, ::boost::algorithm::first_finder(Search));
         }
 
         //! Find first algorithm ( case insensitive )
         /*!
-            Search for the first occurence of the substring in the input. 
+            Search for the first occurrence of the substring in the input. 
             Searching is case insensitive.
             
             \param Input A string which will be searched.
@@ -108,7 +108,7 @@ namespace boost {
             const Range2T& Search,
             const std::locale& Loc=std::locale())
         {
-            return find(Input, first_finder(Search,is_iequal(Loc)));
+            return ::boost::algorithm::find(Input, ::boost::algorithm::first_finder(Search,is_iequal(Loc)));
         }
 
 //  find_last  -----------------------------------------------//
@@ -134,7 +134,7 @@ namespace boost {
             Range1T& Input, 
             const Range2T& Search)
         {
-            return find(Input, last_finder(Search));
+            return ::boost::algorithm::find(Input, ::boost::algorithm::last_finder(Search));
         }
 
         //! Find last algorithm ( case insensitive )
@@ -161,7 +161,7 @@ namespace boost {
             const Range2T& Search,
             const std::locale& Loc=std::locale())
         {
-            return find(Input, last_finder(Search, is_iequal(Loc)));
+            return ::boost::algorithm::find(Input, ::boost::algorithm::last_finder(Search, is_iequal(Loc)));
         }
 
 //  find_nth ----------------------------------------------------------------------//
@@ -189,7 +189,7 @@ namespace boost {
             const Range2T& Search,
             int Nth)
         {
-            return find(Input, nth_finder(Search,Nth));
+            return ::boost::algorithm::find(Input, ::boost::algorithm::nth_finder(Search,Nth));
         }
 
         //! Find n-th algorithm ( case insensitive ).
@@ -220,7 +220,7 @@ namespace boost {
             int Nth,
             const std::locale& Loc=std::locale())
         {
-            return find(Input, nth_finder(Search,Nth,is_iequal(Loc)));
+            return ::boost::algorithm::find(Input, ::boost::algorithm::nth_finder(Search,Nth,is_iequal(Loc)));
         }
 
 //  find_head ----------------------------------------------------------------------//
@@ -228,13 +228,13 @@ namespace boost {
         //! Find head algorithm
         /*!
             Get the head of the input. Head is a prefix of the string of the 
-            given size. If the input is shorter then required, whole input if considered 
+            given size. If the input is shorter then required, whole input is considered 
             to be the head.
 
             \param Input An input string
             \param N Length of the head
                 For N>=0, at most N characters are extracted.
-                For N<0, size(Input)-|N| characters are extracted.
+                For N<0, at most size(Input)-|N| characters are extracted.
             \return 
                 An \c iterator_range delimiting the match. 
                 Returned iterator is either \c Range1T::iterator or 
@@ -250,21 +250,21 @@ namespace boost {
             RangeT& Input, 
             int N)
         {
-            return find(Input, head_finder(N));
+            return ::boost::algorithm::find(Input, ::boost::algorithm::head_finder(N));
         }
 
 //  find_tail ----------------------------------------------------------------------//
 
         //! Find tail algorithm
         /*!
-            Get the head of the input. Head is a suffix of the string of the 
-            given size. If the input is shorter then required, whole input if considered 
+            Get the tail of the input. Tail is a suffix of the string of the 
+            given size. If the input is shorter then required, whole input is considered 
             to be the tail.
 
             \param Input An input string
             \param N Length of the tail. 
                 For N>=0, at most N characters are extracted.
-                For N<0, size(Input)-|N| characters are extracted.
+                For N<0, at most size(Input)-|N| characters are extracted.
             \return 
                 An \c iterator_range delimiting the match. 
                 Returned iterator is either \c RangeT::iterator or 
@@ -281,7 +281,7 @@ namespace boost {
             RangeT& Input, 
             int N)
         {
-            return find(Input, tail_finder(N));
+            return ::boost::algorithm::find(Input, ::boost::algorithm::tail_finder(N));
         }
 
 //  find_token --------------------------------------------------------------------//
@@ -293,7 +293,7 @@ namespace boost {
             If the "token compress mode" is enabled, adjacent tokens are considered to be one match.
             
             \param Input A input string.
-            \param Pred An unary predicate to identify a token
+            \param Pred A unary predicate to identify a token
             \param eCompress Enable/Disable compressing of adjacent tokens
             \return 
                 An \c iterator_range delimiting the match. 
@@ -311,7 +311,7 @@ namespace boost {
             PredicateT Pred,
             token_compress_mode_type eCompress=token_compress_off)
         {
-            return find(Input, token_finder(Pred, eCompress));
+            return ::boost::algorithm::find(Input, ::boost::algorithm::token_finder(Pred, eCompress));
         }
 
     } // namespace algorithm

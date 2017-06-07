@@ -9,6 +9,7 @@
 #ifndef BOOST_MATH_FWD_HPP
 #define BOOST_MATH_FWD_HPP
 
+#include <boost/cstdint.hpp>
 
 namespace boost
 {
@@ -78,21 +79,16 @@ template < >
 
 //  From <boost/math/common_factor_ct.hpp>  ----------------------------------//
 
-template < unsigned long Value1, unsigned long Value2 >
+#ifdef BOOST_NO_INTEGRAL_INT64_T
+     typedef unsigned long static_gcd_type;
+#else
+     typedef boost::uintmax_t static_gcd_type;
+#endif
+
+template < static_gcd_type Value1, static_gcd_type Value2 >
     struct static_gcd;
-template < unsigned long Value1, unsigned long Value2 >
+template < static_gcd_type Value1, static_gcd_type Value2 >
     struct static_lcm;
-
-
-//  From <boost/math/common_factor_rt.hpp>  ----------------------------------//
-
-template < typename IntegerType >
-    class gcd_evaluator;
-template < typename IntegerType >
-    class lcm_evaluator;
-
-// Also has a couple of function templates
-
 
 }  // namespace math
 }  // namespace boost
