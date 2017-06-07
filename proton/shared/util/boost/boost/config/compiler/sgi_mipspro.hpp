@@ -9,7 +9,7 @@
 
 #define BOOST_COMPILER "SGI Irix compiler version " BOOST_STRINGIZE(_COMPILER_VERSION)
 
-#include "boost/config/compiler/common_edg.hpp"
+#include <boost/config/compiler/common_edg.hpp>
 
 //
 // Threading support:
@@ -22,7 +22,6 @@
 #undef BOOST_NO_SWPRINTF
 #undef BOOST_DEDUCED_TYPENAME
 
-#define BOOST_NO_INITIALIZER_LISTS
 //
 // version check:
 // probably nothing to do here?

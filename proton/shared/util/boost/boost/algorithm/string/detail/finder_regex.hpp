@@ -14,7 +14,7 @@
 #include <boost/algorithm/string/config.hpp>
 #include <boost/regex.hpp>
 
-#include <boost/range/iterator_range.hpp>
+#include <boost/range/iterator_range_core.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
 
@@ -60,14 +60,14 @@ namespace boost {
                     return *this;
                 }
 
-                // Match result retrival
+                // Match result retrieval
                 const match_results_type& match_results() const
                 {
                     return m_MatchResults;
                 }
 
             private:
-                // Saved matchresult
+                // Saved match result
                 match_results_type m_MatchResults;
             };
 
@@ -98,7 +98,7 @@ namespace boost {
                     // instantiate match result
                     match_results<input_iterator_type> result;
                     // search for a match
-                    if ( regex_search( Begin, End, result, m_Rx, m_MatchFlags ) )
+                    if ( ::boost::regex_search( Begin, End, result, m_Rx, m_MatchFlags ) )
                     {
                         // construct a result
                         return result_type( result );

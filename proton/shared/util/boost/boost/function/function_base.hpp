@@ -15,14 +15,16 @@
 #include <string>
 #include <memory>
 #include <new>
-#include <typeinfo>
 #include <boost/config.hpp>
 #include <boost/assert.hpp>
+#include <boost/integer.hpp>
+#include <boost/type_index.hpp>
+#include <boost/type_traits/has_trivial_copy.hpp>
+#include <boost/type_traits/has_trivial_destructor.hpp>
 #include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/is_integral.hpp>
 #include <boost/type_traits/is_volatile.hpp>
 #include <boost/type_traits/composite_traits.hpp>
-#include <boost/type_traits/ice.hpp>
 #include <boost/ref.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/detail/workaround.hpp>
@@ -39,47 +41,18 @@
 #   pragma warning( push )
 #   pragma warning( disable : 4793 ) // complaint about native code generation
 #   pragma warning( disable : 4127 ) // "conditional expression is constant"
-#endif       
-
-// Define BOOST_FUNCTION_STD_NS to the namespace that contains type_info.
-#ifdef BOOST_NO_EXCEPTION_STD_NAMESPACE
-// Embedded VC++ does not have type_info in namespace std
-#  define BOOST_FUNCTION_STD_NS
-#else
-#  define BOOST_FUNCTION_STD_NS std
 #endif
 
-// Borrowed from Boost.Python library: determines the cases where we
-// need to use std::type_info::name to compare instead of operator==.
-# if (defined(__GNUC__) && __GNUC__ >= 3) \
- || defined(_AIX) \
- || (   defined(__sgi) && defined(__host_mips))
-#  include <cstring>
-#  define BOOST_FUNCTION_COMPARE_TYPE_ID(X,Y) \
-     (std::strcmp((X).name(),(Y).name()) == 0)
-# else
-#  define BOOST_FUNCTION_COMPARE_TYPE_ID(X,Y) ((X)==(Y))
-#endif
-
-#if defined(BOOST_MSVC) && BOOST_MSVC <= 1300 || defined(__ICL) && __ICL <= 600 || defined(__MWERKS__) && __MWERKS__ < 0x2406 && !defined(BOOST_STRICT_CONFIG)
+#if defined(__ICL) && __ICL <= 600 || defined(__MWERKS__) && __MWERKS__ < 0x2406 && !defined(BOOST_STRICT_CONFIG)
 #  define BOOST_FUNCTION_TARGET_FIX(x) x
 #else
 #  define BOOST_FUNCTION_TARGET_FIX(x)
-#endif // not MSVC
+#endif // __ICL etc
 
-#if !BOOST_WORKAROUND(__BORLANDC__, < 0x5A0)
 #  define BOOST_FUNCTION_ENABLE_IF_NOT_INTEGRAL(Functor,Type)              \
-      typename ::boost::enable_if_c<(::boost::type_traits::ice_not<          \
-                            (::boost::is_integral<Functor>::value)>::value), \
+      typename ::boost::enable_if_c<          \
+                           !(::boost::is_integral<Functor>::value), \
                            Type>::type
-#else
-// BCC doesn't recognize this depends on a template argument and complains
-// about the use of 'typename'
-#  define BOOST_FUNCTION_ENABLE_IF_NOT_INTEGRAL(Functor,Type)     \
-      ::boost::enable_if_c<(::boost::type_traits::ice_not<          \
-                   (::boost::is_integral<Functor>::value)>::value), \
-                       Type>::type
-#endif
 
 namespace boost {
   namespace detail {
@@ -92,15 +65,16 @@ namespace boost {
        * object pointers, and a structure that resembles a bound
        * member function pointer.
        */
-      union function_buffer
+      union function_buffer_members
       {
         // For pointers to function objects
-        mutable void* obj_ptr;
+        typedef void* obj_ptr_t;
+        mutable obj_ptr_t obj_ptr;
 
         // For pointers to std::type_info objects
         struct type_t {
           // (get_functor_type_tag, check_functor_type_tag).
-          const BOOST_FUNCTION_STD_NS::type_info* type;
+          const boost::typeindex::type_info* type;
 
           // Whether the type is const-qualified.
           bool const_qualified;
@@ -109,7 +83,8 @@ namespace boost {
         } type;
 
         // For function pointers of all kinds
-        mutable void (*func_ptr)();
+        typedef void (*func_ptr_t)();
+        mutable func_ptr_t func_ptr;
 
         // For bound member pointers
         struct bound_memfunc_ptr_t {
@@ -124,9 +99,15 @@ namespace boost {
           bool is_const_qualified;
           bool is_volatile_qualified;
         } obj_ref;
+      };
+
+      union function_buffer
+      {
+        // Type-specific union members
+        mutable function_buffer_members members;
 
         // To relax aliasing constraints
-        mutable char data;
+        mutable char data[sizeof(function_buffer_members)];
       };
 
       /**
@@ -193,45 +174,42 @@ namespace boost {
       struct reference_manager
       {
         static inline void
-        manage(const function_buffer& in_buffer, function_buffer& out_buffer, 
+        manage(const function_buffer& in_buffer, function_buffer& out_buffer,
                functor_manager_operation_type op)
         {
           switch (op) {
-          case clone_functor_tag: 
-            out_buffer.obj_ref.obj_ptr = in_buffer.obj_ref.obj_ptr;
+          case clone_functor_tag:
+            out_buffer.members.obj_ref = in_buffer.members.obj_ref;
             return;
 
           case move_functor_tag:
-            out_buffer.obj_ref.obj_ptr = in_buffer.obj_ref.obj_ptr;
-            in_buffer.obj_ref.obj_ptr = 0;
+            out_buffer.members.obj_ref = in_buffer.members.obj_ref;
+            in_buffer.members.obj_ref.obj_ptr = 0;
             return;
 
           case destroy_functor_tag:
-            out_buffer.obj_ref.obj_ptr = 0;
+            out_buffer.members.obj_ref.obj_ptr = 0;
             return;
 
           case check_functor_type_tag:
             {
-              const BOOST_FUNCTION_STD_NS::type_info& check_type 
-                = *out_buffer.type.type;
-
               // Check whether we have the same type. We can add
               // cv-qualifiers, but we can't take them away.
-              if (BOOST_FUNCTION_COMPARE_TYPE_ID(check_type, typeid(F))
-                  && (!in_buffer.obj_ref.is_const_qualified 
-                      || out_buffer.type.const_qualified)
-                  && (!in_buffer.obj_ref.is_volatile_qualified
-                      || out_buffer.type.volatile_qualified))
-                out_buffer.obj_ptr = in_buffer.obj_ref.obj_ptr;
+              if (*out_buffer.members.type.type == boost::typeindex::type_id<F>()
+                  && (!in_buffer.members.obj_ref.is_const_qualified
+                      || out_buffer.members.type.const_qualified)
+                  && (!in_buffer.members.obj_ref.is_volatile_qualified
+                      || out_buffer.members.type.volatile_qualified))
+                out_buffer.members.obj_ptr = in_buffer.members.obj_ref.obj_ptr;
               else
-                out_buffer.obj_ptr = 0;
+                out_buffer.members.obj_ptr = 0;
             }
             return;
 
           case get_functor_type_tag:
-            out_buffer.type.type = &typeid(F);
-            out_buffer.type.const_qualified = in_buffer.obj_ref.is_const_qualified;
-            out_buffer.type.volatile_qualified = in_buffer.obj_ref.is_volatile_qualified;
+            out_buffer.members.type.type = &boost::typeindex::type_id<F>().type_info();
+            out_buffer.members.type.const_qualified = in_buffer.members.obj_ref.is_const_qualified;
+            out_buffer.members.type.volatile_qualified = in_buffer.members.obj_ref.is_volatile_qualified;
             return;
           }
         }
@@ -245,9 +223,9 @@ namespace boost {
       struct function_allows_small_object_optimization
       {
         BOOST_STATIC_CONSTANT
-          (bool, 
+          (bool,
            value = ((sizeof(F) <= sizeof(function_buffer) &&
-                     (alignment_of<function_buffer>::value 
+                     (alignment_of<function_buffer>::value
                       % alignment_of<F>::value == 0))));
       };
 
@@ -257,6 +235,12 @@ namespace boost {
         functor_wrapper( F f, A a ):
           F(f),
           A(a)
+        {
+        }
+
+        functor_wrapper(const functor_wrapper& f) :
+          F(static_cast<const F&>(f)),
+          A(static_cast<const A&>(f))
         {
         }
       };
@@ -272,57 +256,57 @@ namespace boost {
 
         // Function pointers
         static inline void
-        manage_ptr(const function_buffer& in_buffer, function_buffer& out_buffer, 
+        manage_ptr(const function_buffer& in_buffer, function_buffer& out_buffer,
                 functor_manager_operation_type op)
         {
           if (op == clone_functor_tag)
-            out_buffer.func_ptr = in_buffer.func_ptr;
+            out_buffer.members.func_ptr = in_buffer.members.func_ptr;
           else if (op == move_functor_tag) {
-            out_buffer.func_ptr = in_buffer.func_ptr;
-            in_buffer.func_ptr = 0;
+            out_buffer.members.func_ptr = in_buffer.members.func_ptr;
+            in_buffer.members.func_ptr = 0;
           } else if (op == destroy_functor_tag)
-            out_buffer.func_ptr = 0;
+            out_buffer.members.func_ptr = 0;
           else if (op == check_functor_type_tag) {
-            const BOOST_FUNCTION_STD_NS::type_info& check_type 
-              = *out_buffer.type.type;
-            if (BOOST_FUNCTION_COMPARE_TYPE_ID(check_type, typeid(Functor)))
-              out_buffer.obj_ptr = &in_buffer.func_ptr;
+            if (*out_buffer.members.type.type == boost::typeindex::type_id<Functor>())
+              out_buffer.members.obj_ptr = &in_buffer.members.func_ptr;
             else
-              out_buffer.obj_ptr = 0;
+              out_buffer.members.obj_ptr = 0;
           } else /* op == get_functor_type_tag */ {
-            out_buffer.type.type = &typeid(Functor);
-            out_buffer.type.const_qualified = false;
-            out_buffer.type.volatile_qualified = false;
+            out_buffer.members.type.type = &boost::typeindex::type_id<Functor>().type_info();
+            out_buffer.members.type.const_qualified = false;
+            out_buffer.members.type.volatile_qualified = false;
           }
         }
 
         // Function objects that fit in the small-object buffer.
         static inline void
-        manage_small(const function_buffer& in_buffer, function_buffer& out_buffer, 
+        manage_small(const function_buffer& in_buffer, function_buffer& out_buffer,
                 functor_manager_operation_type op)
         {
           if (op == clone_functor_tag || op == move_functor_tag) {
-            const functor_type* in_functor = 
-              reinterpret_cast<const functor_type*>(&in_buffer.data);
-            new ((void*)&out_buffer.data) functor_type(*in_functor);
+            const functor_type* in_functor =
+              reinterpret_cast<const functor_type*>(in_buffer.data);
+            new (reinterpret_cast<void*>(out_buffer.data)) functor_type(*in_functor);
 
             if (op == move_functor_tag) {
-              reinterpret_cast<functor_type*>(&in_buffer.data)->~Functor();
+              functor_type* f = reinterpret_cast<functor_type*>(in_buffer.data);
+              (void)f; // suppress warning about the value of f not being used (MSVC)
+              f->~Functor();
             }
           } else if (op == destroy_functor_tag) {
             // Some compilers (Borland, vc6, ...) are unhappy with ~functor_type.
-            reinterpret_cast<functor_type*>(&out_buffer.data)->~Functor();
+             functor_type* f = reinterpret_cast<functor_type*>(out_buffer.data);
+             (void)f; // suppress warning about the value of f not being used (MSVC)
+             f->~Functor();
           } else if (op == check_functor_type_tag) {
-            const BOOST_FUNCTION_STD_NS::type_info& check_type 
-              = *out_buffer.type.type;
-            if (BOOST_FUNCTION_COMPARE_TYPE_ID(check_type, typeid(Functor)))
-              out_buffer.obj_ptr = &in_buffer.data;
+             if (*out_buffer.members.type.type == boost::typeindex::type_id<Functor>())
+              out_buffer.members.obj_ptr = in_buffer.data;
             else
-              out_buffer.obj_ptr = 0;
+              out_buffer.members.obj_ptr = 0;
           } else /* op == get_functor_type_tag */ {
-            out_buffer.type.type = &typeid(Functor);
-            out_buffer.type.const_qualified = false;
-            out_buffer.type.volatile_qualified = false;            
+            out_buffer.members.type.type = &boost::typeindex::type_id<Functor>().type_info();
+            out_buffer.members.type.const_qualified = false;
+            out_buffer.members.type.volatile_qualified = false;
           }
         }
       };
@@ -335,7 +319,7 @@ namespace boost {
 
         // Function pointers
         static inline void
-        manager(const function_buffer& in_buffer, function_buffer& out_buffer, 
+        manager(const function_buffer& in_buffer, function_buffer& out_buffer,
                 functor_manager_operation_type op, function_ptr_tag)
         {
           functor_manager_common<Functor>::manage_ptr(in_buffer,out_buffer,op);
@@ -343,45 +327,45 @@ namespace boost {
 
         // Function objects that fit in the small-object buffer.
         static inline void
-        manager(const function_buffer& in_buffer, function_buffer& out_buffer, 
+        manager(const function_buffer& in_buffer, function_buffer& out_buffer,
                 functor_manager_operation_type op, mpl::true_)
         {
           functor_manager_common<Functor>::manage_small(in_buffer,out_buffer,op);
         }
-        
+
         // Function objects that require heap allocation
         static inline void
-        manager(const function_buffer& in_buffer, function_buffer& out_buffer, 
+        manager(const function_buffer& in_buffer, function_buffer& out_buffer,
                 functor_manager_operation_type op, mpl::false_)
         {
           if (op == clone_functor_tag) {
             // Clone the functor
             // GCC 2.95.3 gets the CV qualifiers wrong here, so we
             // can't do the static_cast that we should do.
+            // jewillco: Changing this to static_cast because GCC 2.95.3 is
+            // obsolete.
             const functor_type* f =
-              (const functor_type*)(in_buffer.obj_ptr);
+              static_cast<const functor_type*>(in_buffer.members.obj_ptr);
             functor_type* new_f = new functor_type(*f);
-            out_buffer.obj_ptr = new_f;
+            out_buffer.members.obj_ptr = new_f;
           } else if (op == move_functor_tag) {
-            out_buffer.obj_ptr = in_buffer.obj_ptr;
-            in_buffer.obj_ptr = 0;
+            out_buffer.members.obj_ptr = in_buffer.members.obj_ptr;
+            in_buffer.members.obj_ptr = 0;
           } else if (op == destroy_functor_tag) {
             /* Cast from the void pointer to the functor pointer type */
             functor_type* f =
-              static_cast<functor_type*>(out_buffer.obj_ptr);
+              static_cast<functor_type*>(out_buffer.members.obj_ptr);
             delete f;
-            out_buffer.obj_ptr = 0;
+            out_buffer.members.obj_ptr = 0;
           } else if (op == check_functor_type_tag) {
-            const BOOST_FUNCTION_STD_NS::type_info& check_type
-              = *out_buffer.type.type;
-            if (BOOST_FUNCTION_COMPARE_TYPE_ID(check_type, typeid(Functor)))
-              out_buffer.obj_ptr = in_buffer.obj_ptr;
+            if (*out_buffer.members.type.type == boost::typeindex::type_id<Functor>())
+              out_buffer.members.obj_ptr = in_buffer.members.obj_ptr;
             else
-              out_buffer.obj_ptr = 0;
+              out_buffer.members.obj_ptr = 0;
           } else /* op == get_functor_type_tag */ {
-            out_buffer.type.type = &typeid(Functor);
-            out_buffer.type.const_qualified = false;
-            out_buffer.type.volatile_qualified = false;
+            out_buffer.members.type.type = &boost::typeindex::type_id<Functor>().type_info();
+            out_buffer.members.type.const_qualified = false;
+            out_buffer.members.type.volatile_qualified = false;
           }
         }
 
@@ -389,7 +373,7 @@ namespace boost {
         // object can use the small-object optimization buffer or
         // whether we need to allocate it on the heap.
         static inline void
-        manager(const function_buffer& in_buffer, function_buffer& out_buffer, 
+        manager(const function_buffer& in_buffer, function_buffer& out_buffer,
                 functor_manager_operation_type op, function_obj_tag)
         {
           manager(in_buffer, out_buffer, op,
@@ -398,7 +382,7 @@ namespace boost {
 
         // For member pointers, we use the small-object optimization buffer.
         static inline void
-        manager(const function_buffer& in_buffer, function_buffer& out_buffer, 
+        manager(const function_buffer& in_buffer, function_buffer& out_buffer,
                 functor_manager_operation_type op, member_ptr_tag)
         {
           manager(in_buffer, out_buffer, op, mpl::true_());
@@ -408,15 +392,15 @@ namespace boost {
         /* Dispatch to an appropriate manager based on whether we have a
            function pointer or a function object pointer. */
         static inline void
-        manage(const function_buffer& in_buffer, function_buffer& out_buffer, 
+        manage(const function_buffer& in_buffer, function_buffer& out_buffer,
                functor_manager_operation_type op)
         {
           typedef typename get_function_tag<functor_type>::type tag_type;
           switch (op) {
           case get_functor_type_tag:
-            out_buffer.type.type = &typeid(functor_type);
-            out_buffer.type.const_qualified = false;
-            out_buffer.type.volatile_qualified = false;
+            out_buffer.members.type.type = &boost::typeindex::type_id<functor_type>().type_info();
+            out_buffer.members.type.const_qualified = false;
+            out_buffer.members.type.volatile_qualified = false;
             return;
 
           default:
@@ -434,7 +418,7 @@ namespace boost {
 
         // Function pointers
         static inline void
-        manager(const function_buffer& in_buffer, function_buffer& out_buffer, 
+        manager(const function_buffer& in_buffer, function_buffer& out_buffer,
                 functor_manager_operation_type op, function_ptr_tag)
         {
           functor_manager_common<Functor>::manage_ptr(in_buffer,out_buffer,op);
@@ -442,15 +426,15 @@ namespace boost {
 
         // Function objects that fit in the small-object buffer.
         static inline void
-        manager(const function_buffer& in_buffer, function_buffer& out_buffer, 
+        manager(const function_buffer& in_buffer, function_buffer& out_buffer,
                 functor_manager_operation_type op, mpl::true_)
         {
           functor_manager_common<Functor>::manage_small(in_buffer,out_buffer,op);
         }
-        
+
         // Function objects that require heap allocation
         static inline void
-        manager(const function_buffer& in_buffer, function_buffer& out_buffer, 
+        manager(const function_buffer& in_buffer, function_buffer& out_buffer,
                 functor_manager_operation_type op, mpl::false_)
         {
           typedef functor_wrapper<Functor,Allocator> functor_wrapper_type;
@@ -463,36 +447,34 @@ namespace boost {
             // GCC 2.95.3 gets the CV qualifiers wrong here, so we
             // can't do the static_cast that we should do.
             const functor_wrapper_type* f =
-              (const functor_wrapper_type*)(in_buffer.obj_ptr);
+              static_cast<const functor_wrapper_type*>(in_buffer.members.obj_ptr);
             wrapper_allocator_type wrapper_allocator(static_cast<Allocator const &>(*f));
             wrapper_allocator_pointer_type copy = wrapper_allocator.allocate(1);
             wrapper_allocator.construct(copy, *f);
 
             // Get back to the original pointer type
             functor_wrapper_type* new_f = static_cast<functor_wrapper_type*>(copy);
-            out_buffer.obj_ptr = new_f;
+            out_buffer.members.obj_ptr = new_f;
           } else if (op == move_functor_tag) {
-            out_buffer.obj_ptr = in_buffer.obj_ptr;
-            in_buffer.obj_ptr = 0;
+            out_buffer.members.obj_ptr = in_buffer.members.obj_ptr;
+            in_buffer.members.obj_ptr = 0;
           } else if (op == destroy_functor_tag) {
             /* Cast from the void pointer to the functor_wrapper_type */
             functor_wrapper_type* victim =
-              static_cast<functor_wrapper_type*>(in_buffer.obj_ptr);
+              static_cast<functor_wrapper_type*>(in_buffer.members.obj_ptr);
             wrapper_allocator_type wrapper_allocator(static_cast<Allocator const &>(*victim));
             wrapper_allocator.destroy(victim);
             wrapper_allocator.deallocate(victim,1);
-            out_buffer.obj_ptr = 0;
+            out_buffer.members.obj_ptr = 0;
           } else if (op == check_functor_type_tag) {
-            const BOOST_FUNCTION_STD_NS::type_info& check_type 
-              = *out_buffer.type.type;
-            if (BOOST_FUNCTION_COMPARE_TYPE_ID(check_type, typeid(Functor)))
-              out_buffer.obj_ptr = in_buffer.obj_ptr;
+            if (*out_buffer.members.type.type == boost::typeindex::type_id<Functor>())
+              out_buffer.members.obj_ptr = in_buffer.members.obj_ptr;
             else
-              out_buffer.obj_ptr = 0;
+              out_buffer.members.obj_ptr = 0;
           } else /* op == get_functor_type_tag */ {
-            out_buffer.type.type = &typeid(Functor);
-            out_buffer.type.const_qualified = false;
-            out_buffer.type.volatile_qualified = false;
+            out_buffer.members.type.type = &boost::typeindex::type_id<Functor>().type_info();
+            out_buffer.members.type.const_qualified = false;
+            out_buffer.members.type.volatile_qualified = false;
           }
         }
 
@@ -500,7 +482,7 @@ namespace boost {
         // object can use the small-object optimization buffer or
         // whether we need to allocate it on the heap.
         static inline void
-        manager(const function_buffer& in_buffer, function_buffer& out_buffer, 
+        manager(const function_buffer& in_buffer, function_buffer& out_buffer,
                 functor_manager_operation_type op, function_obj_tag)
         {
           manager(in_buffer, out_buffer, op,
@@ -511,15 +493,15 @@ namespace boost {
         /* Dispatch to an appropriate manager based on whether we have a
            function pointer or a function object pointer. */
         static inline void
-        manage(const function_buffer& in_buffer, function_buffer& out_buffer, 
+        manage(const function_buffer& in_buffer, function_buffer& out_buffer,
                functor_manager_operation_type op)
         {
           typedef typename get_function_tag<functor_type>::type tag_type;
           switch (op) {
           case get_functor_type_tag:
-            out_buffer.type.type = &typeid(functor_type);
-            out_buffer.type.const_qualified = false;
-            out_buffer.type.volatile_qualified = false;
+            out_buffer.members.type.type = &boost::typeindex::type_id<functor_type>().type_info();
+            out_buffer.members.type.const_qualified = false;
+            out_buffer.members.type.volatile_qualified = false;
             return;
 
           default:
@@ -597,8 +579,8 @@ namespace boost {
        */
       struct vtable_base
       {
-        void (*manager)(const function_buffer& in_buffer, 
-                        function_buffer& out_buffer, 
+        void (*manager)(const function_buffer& in_buffer,
+                        function_buffer& out_buffer,
                         functor_manager_operation_type op);
       };
     } // end namespace function
@@ -618,15 +600,15 @@ public:
   /** Determine if the function is empty (i.e., has no target). */
   bool empty() const { return !vtable; }
 
-  /** Retrieve the type of the stored function object, or typeid(void)
+  /** Retrieve the type of the stored function object, or type_id<void>()
       if this is empty. */
-  const BOOST_FUNCTION_STD_NS::type_info& target_type() const
+  const boost::typeindex::type_info& target_type() const
   {
-    if (!vtable) return typeid(void);
+    if (!vtable) return boost::typeindex::type_id<void>().type_info();
 
     detail::function::function_buffer type;
-    vtable->manager(functor, type, detail::function::get_functor_type_tag);
-    return *type.type.type;
+    get_vtable()->manager(functor, type, detail::function::get_functor_type_tag);
+    return *type.members.type.type;
   }
 
   template<typename Functor>
@@ -635,42 +617,34 @@ public:
       if (!vtable) return 0;
 
       detail::function::function_buffer type_result;
-      type_result.type.type = &typeid(Functor);
-      type_result.type.const_qualified = is_const<Functor>::value;
-      type_result.type.volatile_qualified = is_volatile<Functor>::value;
-      vtable->manager(functor, type_result, 
+      type_result.members.type.type = &boost::typeindex::type_id<Functor>().type_info();
+      type_result.members.type.const_qualified = is_const<Functor>::value;
+      type_result.members.type.volatile_qualified = is_volatile<Functor>::value;
+      get_vtable()->manager(functor, type_result,
                       detail::function::check_functor_type_tag);
-      return static_cast<Functor*>(type_result.obj_ptr);
+      return static_cast<Functor*>(type_result.members.obj_ptr);
     }
 
   template<typename Functor>
-#if defined(BOOST_MSVC) && BOOST_WORKAROUND(BOOST_MSVC, < 1300)
-    const Functor* target( Functor * = 0 ) const
-#else
     const Functor* target() const
-#endif
     {
       if (!vtable) return 0;
 
       detail::function::function_buffer type_result;
-      type_result.type.type = &typeid(Functor);
-      type_result.type.const_qualified = true;
-      type_result.type.volatile_qualified = is_volatile<Functor>::value;
-      vtable->manager(functor, type_result, 
+      type_result.members.type.type = &boost::typeindex::type_id<Functor>().type_info();
+      type_result.members.type.const_qualified = true;
+      type_result.members.type.volatile_qualified = is_volatile<Functor>::value;
+      get_vtable()->manager(functor, type_result,
                       detail::function::check_functor_type_tag);
       // GCC 2.95.3 gets the CV qualifiers wrong here, so we
       // can't do the static_cast that we should do.
-      return (const Functor*)(type_result.obj_ptr);
+      return static_cast<const Functor*>(type_result.members.obj_ptr);
     }
 
   template<typename F>
     bool contains(const F& f) const
     {
-#if defined(BOOST_MSVC) && BOOST_WORKAROUND(BOOST_MSVC, < 1300)
-      if (const F* fp = this->target( (F*)0 ))
-#else
       if (const F* fp = this->template target<F>())
-#endif
       {
         return function_equal(*fp, f);
       } else {
@@ -702,6 +676,15 @@ public:
 #endif
 
 public: // should be protected, but GCC 2.95.3 will fail to allow access
+  detail::function::vtable_base* get_vtable() const {
+    return reinterpret_cast<detail::function::vtable_base*>(
+             reinterpret_cast<std::size_t>(vtable) & ~static_cast<std::size_t>(0x01));
+  }
+
+  bool has_trivial_copy_and_destroy() const {
+    return reinterpret_cast<std::size_t>(vtable) & 0x01;
+  }
+
   detail::function::vtable_base* vtable;
   mutable detail::function::function_buffer functor;
 };
@@ -875,6 +858,9 @@ namespace detail {
 } // end namespace boost
 
 #undef BOOST_FUNCTION_ENABLE_IF_NOT_INTEGRAL
-#undef BOOST_FUNCTION_COMPARE_TYPE_ID
+
+#if defined(BOOST_MSVC)
+#   pragma warning( pop )
+#endif
 
 #endif // BOOST_FUNCTION_BASE_HEADER
