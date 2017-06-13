@@ -156,17 +156,17 @@ string NetHTTP::BuildHTTPHeader()
 	queryEncoded = m_query;
 	StringReplace(" ", "+", queryEncoded);
 
-	header = stCommand + " /"+queryEncoded+" HTTP/1.0\n";
-	header += "Accept: */*\n";
-	header += "Host: "+m_serverName+"\n";
+	header = stCommand + " /" + queryEncoded + " HTTP/1.0\r\n";
+	header += "Accept: */*\r\n";
+	header += "Host: " + m_serverName + "\r\n";
 
 	if (m_postData.length() > 0)
 	{
-		header += "Content-Type: application/x-www-form-urlencoded\n";
-		header += "Content-Length: "+toString(m_postData.length())+"\n";
+		header += "Content-Type: application/x-www-form-urlencoded\r\n";
+		header += "Content-Length: "+toString(m_postData.length())+"\r\n";
 	}
 
-	header +="\n"; //add the final CR to indicate we're done with the header
+	header +="\r\n"; //add the final CR to indicate we're done with the header
 
 	return header;
 }
@@ -181,7 +181,7 @@ bool NetHTTP::Start()
 	string header = BuildHTTPHeader();
 
 #ifdef _DEBUG
-//	LogMsg(header.c_str());
+	LogMsg(header.c_str());
 #endif
 	//take on the post data if applicable
 	
