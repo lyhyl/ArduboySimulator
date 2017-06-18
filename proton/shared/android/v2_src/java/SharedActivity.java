@@ -696,9 +696,10 @@ m_editText.addTextChangedListener(new TextWatcher()
   
 			   for(Purchase purchase : inventory.getAllPurchases())
 				{
-					//Log.d(PackageName, "Purchase: " + purchase.getSku());
+										//Log.d(PackageName, "Get all purchases Purchase: " + purchase.getSku());
 					//Log.d(PackageName, "json: " + purchase.getOriginalJson());
-					nativeSendGUIStringEx(SharedActivity.app.MESSAGE_TYPE_IAP_PURCHASED_LIST_STATE, 0,0,0, purchase.getSku()); //0 means PURCHASED
+					//Log.d(PackageName, "json: " + purchase.getSignature());
+					nativeSendGUIStringEx(SharedActivity.app.MESSAGE_TYPE_IAP_PURCHASED_LIST_STATE, 0,0,0, purchase.getSku()+"|"+purchase.getOriginalJson()+"|"+purchase.getSignature()); //0 means PURCHASED
 				}
     
             //Log.d(PackageName, "Initial inventory query finished; enabling main UI.");
