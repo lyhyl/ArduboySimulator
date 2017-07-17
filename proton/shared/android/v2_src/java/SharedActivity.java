@@ -632,7 +632,7 @@ m_editText.addTextChangedListener(new TextWatcher()
 			Log.d("Appsflyer", "Starting Appsflyer Tracking");
 			AppsFlyerLib.getInstance().setCollectIMEI(false);
 			AppsFlyerLib.getInstance().setCollectAndroidID(false);
-			AppsFlyerLib.getInstance().startTracking(this.getApplication(),"m2TXzMjM53e5MCwGasukoW");
+			AppsFlyerLib.getInstance().startTracking(this.getApplication(),"");
 			Log.d("Appsflyer", "Appsflyer Tracking Successfull!");
 		}
 		catch(Exception e){
