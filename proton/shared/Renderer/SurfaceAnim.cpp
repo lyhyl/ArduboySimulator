@@ -70,7 +70,7 @@ bool SurfaceAnim::LoadFileFromMemory( byte *pMem, int inputSize )
 
 
 void SurfaceAnim::BlitScaledAnim( float x, float y, int frameX , int frameY, CL_Vec2f vScale, eAlignment alignment /*= ALIGNMENT_CENTER*/,
-								 unsigned int rgba /*= MAKE_RGBA(255,255,255,255)*/, float rotation, CL_Vec2f vRotationPt, bool flipX, bool flipY, RenderBatcher *pBatcher)
+								 unsigned int rgba /*= MAKE_RGBA(255,255,255,255)*/, float rotation, CL_Vec2f vRotationPt, bool flipX, bool flipY, RenderBatcher *pBatcher, int padding)
 {
 	if (vScale.x == 0 && vScale.y == 0) return;
 
@@ -82,10 +82,10 @@ void SurfaceAnim::BlitScaledAnim( float x, float y, int frameX , int frameY, CL_
 
 	CL_Vec2f vStart = CL_Vec2f(x,y);
 	rtRectf src;
-	src.left = m_frameWidth*frameX;
-	src.top = m_frameHeight*frameY;
-	src.right = src.left+m_frameWidth;
-	src.bottom = src.top + m_frameHeight;
+	src.left = m_frameWidth*frameX + (float)padding;
+	src.top = m_frameHeight*frameY + (float)padding;
+	src.right = src.left+m_frameWidth - (float)(padding * 2);
+	src.bottom = src.top + m_frameHeight - (float)(padding * 2);
 	
 	rtRectf dst(0,0, m_frameWidth, m_frameHeight);
 	

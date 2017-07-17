@@ -992,4 +992,9 @@ public class IabHelper {
     void logWarn(String msg) {
         Log.w(mDebugTag, "In-app billing warning: " + msg);
     }
+			
+	// Method added to get IAB service
+	public IInAppBillingService getIInAppBillingService(){
+		return mService;
+	}
 }
