@@ -126,8 +126,8 @@
     
 #ifdef RT_APPSFLYER_ENABLED
     // Appsflyer
-    [AppsFlyerTracker sharedTracker].appsFlyerDevKey    = @"m2TXzMjM53e5MCwGasukoW";
-    [AppsFlyerTracker sharedTracker].appleAppID         = @"590495115";
+    [AppsFlyerTracker sharedTracker].appsFlyerDevKey    = @"";
+    [AppsFlyerTracker sharedTracker].appleAppID         = @"";
 #endif
 }
 
