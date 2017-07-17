@@ -16,6 +16,8 @@ import android.os.Build;
 import android.os.Environment;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.ArrayList;
+import org.json.JSONObject;
 import android.content.DialogInterface;
 import android.widget.Button;
 import android.widget.TextView;
@@ -154,6 +156,11 @@ import ${PACKAGE_NAME}.util.Purchase;
 
 import android.view.View.OnClickListener;
 import android.net.ConnectivityManager;
+
+// Adding appsflyer support.
+import com.appsflyer.AppsFlyerLib;
+import com.appsflyer.AFInAppEventParameterName;
+import com.appsflyer.AFInAppEventType;
 
 
 //#if defined(RT_TAPJOY_SUPPORT)
@@ -618,6 +625,21 @@ m_editText.addTextChangedListener(new TextWatcher()
         FlurryAgent.init(this, m_flurryAPIKey);
 		//#endif
 
+		
+		// Adding Appsflyer Support
+//#_if defined(RT_APPSFLYER_ENABLED)
+		try{
+			Log.d("Appsflyer", "Starting Appsflyer Tracking");
+			AppsFlyerLib.getInstance().setCollectIMEI(false);
+			AppsFlyerLib.getInstance().setCollectAndroidID(false);
+			AppsFlyerLib.getInstance().startTracking(this.getApplication(),"m2TXzMjM53e5MCwGasukoW");
+			Log.d("Appsflyer", "Appsflyer Tracking Successfull!");
+		}
+		catch(Exception e){
+			Log.e("Appsflyer", "Couldn't initialize appsflyer!");
+			Log.e("Appsflyer", e.getMessage());
+		}
+//#_endif
 
 
 //#if defined(RT_TAPJOY_SUPPORT)
@@ -1354,6 +1376,7 @@ public static String get_getNetworkType()
 	//GOOGLE BILLING
 	final static int MESSAGE_TYPE_IAP_RESULT = 26;
 	final static int MESSAGE_TYPE_IAP_ITEM_STATE = 27;
+	final static int MESSAGE_TYPE_IAP_ITEM_INFO_RESULT = 52;
 	
 	//more tapjoy stuff
 	final static int MESSAGE_TYPE_TAPJOY_TAP_POINTS_RETURN = 28;
@@ -2214,6 +2237,7 @@ Thread thr = new Thread(new Runnable() {
 	
 	final static int MESSAGE_IAP_PURCHASE = 14;
 	final static int MESSAGE_IAP_GET_PURCHASED_LIST = 15;
+	final static int MESSAGE_IAP_ITEM_DETAILS = 39;
 	
 	final static int MESSAGE_TAPJOY_GET_TAP_POINTS = 16;
 	final static int MESSAGE_TAPJOY_SPEND_TAP_POINTS = 17;
@@ -2254,6 +2278,9 @@ Thread thr = new Thread(new Runnable() {
 	final static int MESSAGE_FLURRY_START_TIMED_EVENT = 1001;
 	final static int MESSAGE_FLURRY_STOP_TIMED_EVENT = 1002;
 
+	// Appsflyer logging puchase
+	final static int MESSAGE_APPSFLYER_LOG_PURCHASE = 40;
+	
     public synchronized void onDrawFrame(GL10 gl)
     {
 		if (m_timerLoopMS != 0)
@@ -2644,10 +2671,53 @@ Thread thr = new Thread(new Runnable() {
 					break;
 					
 				case MESSAGE_IAP_CONSUME_ITEM:
-				   Log.d(app.PackageName, "Consume");
-				   app.m_iap_consume_asap = nativeGetLastOSMessageString();
+					Log.d(app.PackageName, "Consume");
+					app.m_iap_consume_asap = nativeGetLastOSMessageString();
 					app.mMainThreadHandler.post(app.mUpdateMainThread);
-					
+					break;
+				
+				case MESSAGE_IAP_ITEM_DETAILS:
+					// Call the IAP currency info result
+					try{
+						Log.d("Appsflyer", "Trying to get item info");
+						String item = "rt_grope_gem_bag"/*nativeGetLastOSMessageString()*/;
+						Log.d("Appsflyer", "Getting item info for : " + item);
+						if(item != null && item != ""){
+							String info = "";
+							
+							// Get the information we need about the SKU
+							ArrayList skuList = new ArrayList();
+							skuList.add(itemId);
+							Bundle querySkus = new Bundle();
+							querySkus.putStringArrayList("ITEM_ID_LIST", skuList);
+
+							Bundle skuDetails = app.mHelper.getIInAppBillingService().getSkuDetails(3, mContext.getPackageName(), "inapp", querySkus);
+
+							int response = skuDetails.getInt("RESPONSE_CODE");
+							if (response == 0) {
+								ArrayList<String> responseList = skuDetails.getStringArrayList("DETAILS_LIST");
+
+								for (String thisResponse : responseList) {
+									JSONObject object 	= new JSONObject(thisResponse);
+									String currency 	= object.getString("price_currency_code");
+									String price 		= object.getString("price").substring(3, object.getString("price").length());
+									info 				= itemId+","+currency+","+price;
+								}
+							}
+							
+							Log.d("Appsflyer", "Got item info : " + info);
+							if(info != null && info != ""){
+								SharedActivity.nativeSendGUIStringEx(app.MESSAGE_TYPE_IAP_ITEM_INFO_RESULT, 0,0,0, info);								
+								Log.d("Appsflyer", "Sent OS Message for Item Info");	
+							}
+							else{
+								Log.d("Appsflyer", "Item info is not right : "+info);	
+							}
+						}						
+					}
+					catch(Exception e){
+						Log.d("Get Item Info", "Failed : "+e.getMessage());
+					}				
 					break;
 //#endif			
 				case MESSAGE_HOOKED_SHOW_RATE_DIALOG:
@@ -2656,6 +2726,29 @@ Thread thr = new Thread(new Runnable() {
 					app.mMainThreadHandler.post(app.mUpdateMainThread);
 					break;
 				
+				case MESSAGE_APPSFLYER_LOG_PURCHASE:
+					// Send tracking to Appsflyer
+					try{
+						// Get the information we need about the SKU
+						String sku 		 	= nativeGetLastOSMessageString();
+						String currency 	= nativeGetLastOSMessageString3();
+						String price 		= nativeGetLastOSMessageString2();
+						
+						Log.d("Appsflyer", "Starting purchase tracking.");
+						Log.d("Appsflyer", "SKU : "+sku);
+						Log.d("Appsflyer", "Currency :"+currency);
+						Log.d("Appsflyer", "Price : "+price);
+						Map<String, Object> eventValue = new HashMap<String, Object>();
+						eventValue.put(AFInAppEventParameterName.CONTENT_ID, sku);
+						eventValue.put(AFInAppEventParameterName.REVENUE, price);
+						eventValue.put(AFInAppEventParameterName.CURRENCY, currency);
+						AppsFlyerLib.getInstance().trackEvent(app.getApplicationContext(),AFInAppEventType.PURCHASE,eventValue);
+						Log.d("Appsflyer", "Tracking sent successfully.");
+					}
+					catch(Exception e){
+						Log.d("Appsflyer", "Tracking failed : "+e.getMessage());
+					}
+					break;
 				default:
 					Log.v("Unhandled","Unhandled OS message");
 			}
