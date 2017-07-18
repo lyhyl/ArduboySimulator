@@ -1252,7 +1252,7 @@ bool InitVideo(int width, int height, bool bFullscreen, float aspectRatio)
 		PFD_SUPPORT_OPENGL |						// Format Must Support OpenGL
 		PFD_DOUBLEBUFFER,							// Must Support Double Buffering
 		PFD_TYPE_RGBA,								// Request An RGBA Format
-		bits,										// Select Our Color Depth
+		(BYTE)bits,									// Select Our Color Depth
 		0, 0, 0, 0, 0, 0,							// Color Bits Ignored
 		0,											// No Alpha Buffer
 		0,											// Shift Bit Ignored
