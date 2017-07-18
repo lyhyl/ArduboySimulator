@@ -2679,19 +2679,19 @@ Thread thr = new Thread(new Runnable() {
 				case MESSAGE_IAP_ITEM_DETAILS:
 					// Call the IAP currency info result
 					try{
-						Log.d("Appsflyer", "Trying to get item info");
-						String item = "rt_grope_gem_bag"/*nativeGetLastOSMessageString()*/;
-						Log.d("Appsflyer", "Getting item info for : " + item);
+						//Log.d("Appsflyer", "Trying to get item info");
+						String item = /*"rt_grope_gem_bag"*/nativeGetLastOSMessageString();
+						//Log.d("Appsflyer", "Getting item info for : " + item);
 						if(item != null && item != ""){
 							String info = "";
 							
 							// Get the information we need about the SKU
 							ArrayList skuList = new ArrayList();
-							skuList.add(itemId);
+							skuList.add(item);
 							Bundle querySkus = new Bundle();
 							querySkus.putStringArrayList("ITEM_ID_LIST", skuList);
 
-							Bundle skuDetails = app.mHelper.getIInAppBillingService().getSkuDetails(3, mContext.getPackageName(), "inapp", querySkus);
+							Bundle skuDetails = app.mHelper.getIInAppBillingService().getSkuDetails(3, app.getPackageName(), "inapp", querySkus);
 
 							int response = skuDetails.getInt("RESPONSE_CODE");
 							if (response == 0) {
@@ -2701,22 +2701,22 @@ Thread thr = new Thread(new Runnable() {
 									JSONObject object 	= new JSONObject(thisResponse);
 									String currency 	= object.getString("price_currency_code");
 									String price 		= object.getString("price").substring(3, object.getString("price").length());
-									info 				= itemId+","+currency+","+price;
+									info 				= item+","+currency+","+price;
 								}
 							}
 							
-							Log.d("Appsflyer", "Got item info : " + info);
+							//Log.d("Appsflyer", "Got item info : " + info);
 							if(info != null && info != ""){
 								SharedActivity.nativeSendGUIStringEx(app.MESSAGE_TYPE_IAP_ITEM_INFO_RESULT, 0,0,0, info);								
-								Log.d("Appsflyer", "Sent OS Message for Item Info");	
+								//Log.d("Appsflyer", "Sent OS Message for Item Info");	
 							}
 							else{
-								Log.d("Appsflyer", "Item info is not right : "+info);	
+								//Log.d("Appsflyer", "Item info is not right : "+info);	
 							}
 						}						
 					}
 					catch(Exception e){
-						Log.d("Get Item Info", "Failed : "+e.getMessage());
+						//Log.d("Get Item Info", "Failed : "+e.getMessage());
 					}				
 					break;
 //#endif			
@@ -2734,19 +2734,19 @@ Thread thr = new Thread(new Runnable() {
 						String currency 	= nativeGetLastOSMessageString3();
 						String price 		= nativeGetLastOSMessageString2();
 						
-						Log.d("Appsflyer", "Starting purchase tracking.");
-						Log.d("Appsflyer", "SKU : "+sku);
-						Log.d("Appsflyer", "Currency :"+currency);
-						Log.d("Appsflyer", "Price : "+price);
+						//Log.d("Appsflyer", "Starting purchase tracking.");
+						//Log.d("Appsflyer", "SKU : "+sku);
+						//Log.d("Appsflyer", "Currency :"+currency);
+						//Log.d("Appsflyer", "Price : "+price);
 						Map<String, Object> eventValue = new HashMap<String, Object>();
 						eventValue.put(AFInAppEventParameterName.CONTENT_ID, sku);
 						eventValue.put(AFInAppEventParameterName.REVENUE, price);
 						eventValue.put(AFInAppEventParameterName.CURRENCY, currency);
 						AppsFlyerLib.getInstance().trackEvent(app.getApplicationContext(),AFInAppEventType.PURCHASE,eventValue);
-						Log.d("Appsflyer", "Tracking sent successfully.");
+						//Log.d("Appsflyer", "Tracking sent successfully.");
 					}
 					catch(Exception e){
-						Log.d("Appsflyer", "Tracking failed : "+e.getMessage());
+						//Log.d("Appsflyer", "Tracking failed : "+e.getMessage());
 					}
 					break;
 				default:
