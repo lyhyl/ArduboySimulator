@@ -9,17 +9,35 @@
 #import "InAppPurchaseManager.h"
 #include "Manager/IAPManager.h"
 
+#ifdef RT_APPSFLYER_ENABLED
+#import <AppsFlyerLib/AppsFlyerTracker.h>
+#endif
+
 @implementation InAppPurchaseManager
 
- //we'd only need this stuff to scan the store and get names and prices... Not implemented yet! 
+//we'd only need this stuff to scan the store and get names and prices... Not implemented yet!
 - (void)GetProductData: (string)itemID
 {
     NSString *str =  [NSString stringWithCString: itemID.c_str() encoding: [NSString defaultCStringEncoding]];
-
+    
     LogMsg("Requesting product data for %s", itemID.c_str());
-    NSSet *productIdentifiers = [NSSet setWithObject:str ];
-    productsRequest = [[SKProductsRequest alloc] initWithProductIdentifiers:productIdentifiers];
-    productsRequest.delegate = self;
+    NSSet *productIdentifiers   = [NSSet setWithObject:str ];
+    productsRequest             = [[SKProductsRequest alloc] initWithProductIdentifiers:productIdentifiers];
+    productsRequest.delegate    = self;
+    [productsRequest start];
+    
+    // we will release the request object in the delegate callback
+}
+
+//we'd only need this stuff to scan the store and get names and prices... Not implemented yet!
+- (void)GetProductDataForTracking: (string)itemID
+{
+    NSString *str =  [NSString stringWithCString: itemID.c_str() encoding: [NSString defaultCStringEncoding]];
+    
+    LogMsg("Requesting product data for %s", itemID.c_str());
+    NSSet *productIdentifiers   = [NSSet setWithObject:str ];
+    productsRequest             = [[SKProductsRequest alloc] initWithProductIdentifiers:productIdentifiers];
+    productsRequest.delegate    = self;
     [productsRequest start];
     
     // we will release the request object in the delegate callback
@@ -42,10 +60,24 @@
     proUpgradeProduct = [products count] == 1 ? [[products objectAtIndex:0] retain] : nil;
     if (proUpgradeProduct)
     {
-        NSLog(@"Product title: %@" , proUpgradeProduct.localizedTitle);
-        NSLog(@"Product description: %@" , proUpgradeProduct.localizedDescription);
-        NSLog(@"Product price: %@" , proUpgradeProduct.price);
-        NSLog(@"Product id: %@" , proUpgradeProduct.productIdentifier);
+        string itemInfo           = std::string([
+                                                 [
+                                                  NSString stringWithFormat:@"%@,%@,%@",
+                                                  proUpgradeProduct.productIdentifier,
+                                                  [proUpgradeProduct.priceLocale objectForKey:NSLocaleCurrencyCode],
+                                                  proUpgradeProduct.price
+                                                  ]
+                                                 UTF8String
+                                                 ]);
+        
+        NSLog(@"Product title: %@" ,        proUpgradeProduct.localizedTitle);
+        NSLog(@"Product description: %@" ,  proUpgradeProduct.localizedDescription);
+        NSLog(@"Product price: %@" ,        proUpgradeProduct.price);
+        NSLog(@"Product id: %@" ,           proUpgradeProduct.productIdentifier);
+        NSLog(@"Product currency: %s" ,     [[proUpgradeProduct.priceLocale objectForKey:NSLocaleCurrencyCode] UTF8String]);
+        
+        // Send the message to  C++
+        GetMessageManager()->SendGUIStringEx(MESSAGE_TYPE_IAP_ITEM_INFO_RESULT,(float)IAPManager::RESULT_OK,0.0f,0,itemInfo.c_str());
     }
     
     for (NSString *invalidProductId in response.invalidProductIdentifiers)
@@ -53,11 +85,8 @@
         NSLog(@"Invalid product id: %@" , invalidProductId);
     }
     
-    // finally release the reqest we alloc/init’ed in requestProUpgradeProductData
-    [productsRequest release];
-    
     [[NSNotificationCenter defaultCenter] postNotificationName:kInAppPurchaseManagerProductsFetchedNotification object:self userInfo:nil];
-} 
+}
 
 
 //
@@ -90,11 +119,11 @@
         return;
     }
     NSString *str =  [NSString stringWithCString: itemID.c_str() encoding: [NSString defaultCStringEncoding]];
-
+    
     SKPayment *payment = [SKPayment paymentWithProductIdentifier:str];
     [[SKPaymentQueue defaultQueue] addPayment:payment];
 }
- 
+
 //
 // called when the transaction was successful
 //
@@ -103,8 +132,8 @@
     LogMsg("Transaction complete");
     
     //get the receipt..
-    NSString *receiptStr = [[NSString alloc] initWithData:transaction.transactionReceipt encoding:NSUTF8StringEncoding];     
-
+    NSString *receiptStr = [[NSString alloc] initWithData:transaction.transactionReceipt encoding:NSUTF8StringEncoding];
+    
     string receipt = string([receiptStr cStringUsingEncoding:NSUTF8StringEncoding]);
     
     [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
@@ -141,7 +170,7 @@
         GetMessageManager()->SendGUIStringEx(MESSAGE_TYPE_IAP_RESULT,(float)IAPManager::RESULT_USER_CANCELED,0.0f,0, "Canceled");
         LogMsg("Transaction failed, user canceled");
     }
-
+    
     [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
 }
 

@@ -192,6 +192,8 @@ protected:
     void HandlePurchaseListReply(Message &m);
     void HandleIAPBuyResult(Message &m);
     void HandleItemUpdateState(Message &m);
+	void HandleItemInfo(Message &m);
+
     void SendUnexpectedPurchaseSignal(eReturnState returnState, string itemID, string extra);
     void sendConsumeMessage();
     public: void getItemDetailsForTracking(string item);
@@ -215,6 +217,7 @@ protected:
     Entity m_entity; //used for scheduling
     std::string m_itemDeveloperData;
     bool m_bTreatAllItemsAsConsumable; //if true, any time we notice a "purchased item" on android, we'll report it as a new order to be handled by the server.  Only applicable to android, it helps catch missed orders
+	std::vector<std::string> item_info_vector;
 };
 
 #endif // IAPManager_h__
