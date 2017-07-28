@@ -196,6 +196,29 @@ void IAPManager::HandleIAPBuyResult(Message &m)
     m_itemDeveloperData.clear();
 }
 
+void IAPManager::HandleItemInfo(class Message& m)
+{
+	std::string infoStream = m.GetStringParm().c_str();
+	LogMsg(infoStream.c_str());
+	std::istringstream ss(infoStream);
+	std::string token;
+	std::vector<std::string> info;
+
+	while (std::getline(ss, token, ',')) {
+		info.push_back(token);
+	}
+#ifdef _DEBUG
+	for (int i = 0; i < 3; i++) {
+		LogMsg(info.at(i).c_str());
+	}
+#endif;
+
+	// info.at(0) = itemId, info.at(1) = currency, info.at(2) = price
+	// set current product info
+	item_info_vector = info;
+}
+
+
 void IAPManager::HandleItemUpdateState(Message &m)
 {
     
@@ -278,22 +301,11 @@ void IAPManager::OnMessage( Message &m )
             
         case MESSAGE_TYPE_IAP_ITEM_INFO_RESULT:
         {
-            std::string infoStream        = m.GetStringParm().c_str();
-            LogMsg(infoStream.c_str());
-            std::istringstream ss(infoStream);
-            std::string token;
-            std::vector<std::string> info;
-            
-            while(std::getline(ss, token, ',')) {
-                info.push_back(token);
-            }
-            
-            for(int i = 0; i < 3; i++){
-                LogMsg(info.at(i).c_str());
-            }
-            
             // Send Appsflyer informartion
-            IAPManager::sendAppsflyerPurchaseTracking(info.at(0), info.at(1),info.at(2));
+         //   IAPManager::sendAppsflyerPurchaseTracking(info.at(0), info.at(1),info.at(2));
+			
+        	HandleItemInfo(m);
+			break;
         }
             
         case MESSAGE_TYPE_IAP_ITEM_STATE:

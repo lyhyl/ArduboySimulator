@@ -2700,7 +2700,9 @@ Thread thr = new Thread(new Runnable() {
 								for (String thisResponse : responseList) {
 									JSONObject object 	= new JSONObject(thisResponse);
 									String currency 	= object.getString("price_currency_code");
-									String price 		= object.getString("price").substring(3, object.getString("price").length());
+									
+									// Replace all non numeric characters from price and get the price
+									String price 		= object.getString("price").replaceAll("[A-Za-z]", "");
 									info 				= item+","+currency+","+price;
 								}
 							}
@@ -2716,7 +2718,7 @@ Thread thr = new Thread(new Runnable() {
 						}						
 					}
 					catch(Exception e){
-						//Log.d("Get Item Info", "Failed : "+e.getMessage());
+						Log.d("Get Item Info", "Failed : "+e.getMessage());
 					}				
 					break;
 //#endif			
@@ -2730,23 +2732,23 @@ Thread thr = new Thread(new Runnable() {
 					// Send tracking to Appsflyer
 					try{
 						// Get the information we need about the SKU
-						String sku 		 	= nativeGetLastOSMessageString();
-						String currency 	= nativeGetLastOSMessageString3();
-						String price 		= nativeGetLastOSMessageString2();
+						String item 		= nativeGetLastOSMessageString();
+						String currency 	= nativeGetLastOSMessageString2();
+						String price 		= nativeGetLastOSMessageString3();
 						
 						//Log.d("Appsflyer", "Starting purchase tracking.");
-						//Log.d("Appsflyer", "SKU : "+sku);
+						//Log.d("Appsflyer", "Item : "+item);
 						//Log.d("Appsflyer", "Currency :"+currency);
 						//Log.d("Appsflyer", "Price : "+price);
 						Map<String, Object> eventValue = new HashMap<String, Object>();
-						eventValue.put(AFInAppEventParameterName.CONTENT_ID, sku);
-						eventValue.put(AFInAppEventParameterName.REVENUE, price);
+						eventValue.put(AFInAppEventParameterName.CONTENT_ID, item);
 						eventValue.put(AFInAppEventParameterName.CURRENCY, currency);
+						eventValue.put(AFInAppEventParameterName.REVENUE, price);
 						AppsFlyerLib.getInstance().trackEvent(app.getApplicationContext(),AFInAppEventType.PURCHASE,eventValue);
 						//Log.d("Appsflyer", "Tracking sent successfully.");
 					}
 					catch(Exception e){
-						//Log.d("Appsflyer", "Tracking failed : "+e.getMessage());
+						Log.d("Appsflyer", "Tracking failed : "+e.getMessage());
 					}
 					break;
 				default:
