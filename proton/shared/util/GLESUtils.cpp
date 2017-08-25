@@ -576,6 +576,8 @@ void SetupOrtho()
 	CHECK_GL_ERROR();
 	RotateGLIfNeeded();
 
+
+	
 	//Note:  We could setup our projection matrix upside down so the upper left would be 0,0, but.. then you have to wind your
 	//triangles backwards (or keep switching to front face culling) which I find even more confusing than dealing with the y offsets.
 
