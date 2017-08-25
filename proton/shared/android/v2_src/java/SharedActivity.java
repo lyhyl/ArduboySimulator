@@ -157,10 +157,13 @@ import ${PACKAGE_NAME}.util.Purchase;
 import android.view.View.OnClickListener;
 import android.net.ConnectivityManager;
 
+
+//#if defined(RT_APPSFLYER_ENABLED)
 // Adding appsflyer support.
 import com.appsflyer.AppsFlyerLib;
 import com.appsflyer.AFInAppEventParameterName;
 import com.appsflyer.AFInAppEventType;
+//#endif
 
 
 //#if defined(RT_TAPJOY_SUPPORT)
@@ -627,7 +630,7 @@ m_editText.addTextChangedListener(new TextWatcher()
 
 		
 		// Adding Appsflyer Support
-//#_if defined(RT_APPSFLYER_ENABLED)
+//#if defined(RT_APPSFLYER_ENABLED)
 		try{
 			Log.d("Appsflyer", "Starting Appsflyer Tracking");
 			AppsFlyerLib.getInstance().setCollectIMEI(false);
@@ -639,7 +642,7 @@ m_editText.addTextChangedListener(new TextWatcher()
 			Log.e("Appsflyer", "Couldn't initialize appsflyer!");
 			Log.e("Appsflyer", e.getMessage());
 		}
-//#_endif
+//#endif
 
 
 //#if defined(RT_TAPJOY_SUPPORT)
@@ -2731,6 +2734,10 @@ Thread thr = new Thread(new Runnable() {
 				case MESSAGE_APPSFLYER_LOG_PURCHASE:
 					// Send tracking to Appsflyer
 					try{
+						
+
+						//#if defined(RT_APPSFLYER_ENABLED)
+
 						// Get the information we need about the SKU
 						String item 		= nativeGetLastOSMessageString();
 						String currency 	= nativeGetLastOSMessageString2();
@@ -2746,6 +2753,7 @@ Thread thr = new Thread(new Runnable() {
 						eventValue.put(AFInAppEventParameterName.REVENUE, price);
 						AppsFlyerLib.getInstance().trackEvent(app.getApplicationContext(),AFInAppEventType.PURCHASE,eventValue);
 						//Log.d("Appsflyer", "Tracking sent successfully.");
+						//#endif
 					}
 					catch(Exception e){
 						Log.d("Appsflyer", "Tracking failed : "+e.getMessage());
