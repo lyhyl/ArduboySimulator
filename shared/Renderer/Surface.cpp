@@ -396,7 +396,7 @@ CHECK_GL_ERROR();
 				}
 				
 #ifdef _DEBUG
-				LogMsg("Loading surface: miplevel %d, colortype 0x%02lX, x%d y%d, format type: 0x%02lX", nMipLevel, colorType, pMipSection->width, pMipSection->height, pTexHeader->format );
+				//LogMsg("Loading surface: miplevel %d, colortype 0x%02lX, x%d y%d, format type: 0x%02lX", nMipLevel, colorType, pMipSection->width, pMipSection->height, pTexHeader->format );
 #endif
 				
 				int internalColorFormat = colorType;
@@ -565,7 +565,7 @@ bool Surface::LoadFile( string fName, bool bAddBasePath )
 	}
 	
 #ifdef _DEBUG
-	LogMsg("Loading texture %s", fName.c_str());
+	//LogMsg("Loading texture %s", fName.c_str());
 #endif
 
 	m_bAddBasePath = bAddBasePath;
@@ -670,6 +670,13 @@ void Surface::RemoveBlendingMode(uint32 rgba)
 	}
 
 }
+
+void Surface::HardKill()
+{
+	Kill();
+	m_originalHeight = m_originalWidth = 0; //this means it won't auto recreate the surface if surfaces are lost
+}
+
 void Surface::EndRender(const float rotationDegrees,  const uint32 rgba)
 {
 
@@ -943,6 +950,7 @@ void Surface::CopyFromScreen()
 
 	//rotate it before we copy it
 	int srcY = 0;
+	CHECK_GL_ERROR();
 
 	glReadPixels(0, srcY, readX, readY, GL_RGBA, GL_UNSIGNED_BYTE, pBuff);
 	CHECK_GL_ERROR();
@@ -1131,10 +1139,16 @@ void Surface::OnLoadSurfaces()
 			break;
 
 		case TEXTURE_CREATION_BLANK:
-#ifdef _DEBUG		
-			LogMsg("Recreating surface of %d, %d", m_originalWidth, m_originalHeight);
-#endif
-			InitBlankSurface(m_originalWidth, m_originalHeight);
+
+			if (m_originalWidth != 0)
+			{
+			//if m_originalWidth != 0 then HardKill was probably used, which means it doesn't want us to do this
+				
+	#ifdef _DEBUG		
+				LogMsg("Recreating surface of %d, %d", m_originalWidth, m_originalHeight);
+	#endif
+				InitBlankSurface(m_originalWidth, m_originalHeight);
+			}
 			break;
                 
             default: ;

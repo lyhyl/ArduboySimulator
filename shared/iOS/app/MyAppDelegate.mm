@@ -306,23 +306,27 @@
             }
         }
             break;
+#ifdef RT_FLURRY_ENABLED
             
-            case OSMessage::MESSAGE_FLURRY_LOG_EVENT:{
-             
+            case OSMessage::MESSAGE_FLURRY_LOG_EVENT:
+            {
              NSString* eventName = [NSString stringWithCString: pMsg->m_string.c_str() encoding:[NSString defaultCStringEncoding]];
              // NSString* optionalKey = pMsg->m_string2; //No use to us
              
-             if( pMsg->m_string3.empty()){
+             if( pMsg->m_string3.empty())
+             {
 				[Flurry logEvent:eventName];
              }
-             else{
+             else
+             {
 				NSString* trackingData = [NSString stringWithCString: pMsg->m_string3.c_str() encoding:[NSString defaultCStringEncoding]];
              
                 // Convert to NSDict
 				NSMutableDictionary* params = stringToDict(trackingData);
 				[Flurry logEvent:eventName withParameters:params];
+              }
              }
-             }break;
+            break;
              
              case OSMessage::MESSAGE_FLURRY_START_TIMED_EVENT:{
              
@@ -358,8 +362,11 @@
              [Flurry endTimedEvent:eventName withParameters:params];
              }
              
-             }break;
-             
+             }
+            break;
+#endif
+            
+            
         case OSMessage::MESSAGE_IAP_GET_PURCHASED_LIST:
             [m_IOSIAPManager GetPurchasedList];
             break;

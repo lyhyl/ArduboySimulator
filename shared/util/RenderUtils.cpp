@@ -874,22 +874,30 @@ CL_Vec3f GetOGLPos(int x, int y, float z, CL_Vec3f *pNormalOut, CL_Mat4f *pModel
 	
 	//convert back into real screen coordinates if needed
 
+
+	
 	if (GetFakePrimaryScreenSizeX() != 0)
 	{
 		//remap to correct values
 		x = (int) (float(x) * xmod);
 		y = (int) (float(y) * ymod);
 
-		switch (GetOrientation())
+		if (GetBaseApp()->GetManualRotationMode())
 		{
-		case ORIENTATION_LANDSCAPE_LEFT:
-		case ORIENTATION_LANDSCAPE_RIGHT:
-			//I have no idea what I'm doing but this fixes a problem with fake scaling and rotation
-			swap(x,y);
-			break;
+
+			switch (GetOrientation())
+			{
+			case ORIENTATION_LANDSCAPE_LEFT:
+			case ORIENTATION_LANDSCAPE_RIGHT:
+				//I have no idea what I'm doing but this fixes a problem with fake scaling and rotation
+				swap(x,y);
+				break;
+			}
 		}
 
 	}
+	
+
 
 	GLint viewport[4];
 	GLfloat modelview[16];
@@ -1062,6 +1070,40 @@ rtRectf ConvertFakeScreenRectToReal(rtRectf r)
 
 	return r;
 }
+
+rtRectf ConvertFakeScreenRectToReal(rtRectf r, float aspectRatioModX, float aspectRatioModY)
+{
+	if (GetFakePrimaryScreenSizeX() == 0) return r;
+
+	float primaryY = (float)GetPrimaryGLY();
+	float primaryX = (float)GetPrimaryGLX();
+
+	float fakeX = (float)GetFakePrimaryScreenSizeX();
+	float fakeY = (float)GetFakePrimaryScreenSizeY();
+
+	if(GetBaseApp()->GetManualRotationMode() && InLandscapeGUIMode())
+	{
+		swap(primaryX , primaryY);
+	}
+
+	float ratiox = (primaryX/fakeX);
+	float ratioy = (primaryY/fakeY);
+
+	float widthHold = r.GetWidth();
+	float heightHold = r.GetHeight();
+
+	r.top *= ratioy;
+	r.left *= ratiox;
+
+	r.right = widthHold*ratiox+r.left;
+	r.bottom = heightHold*ratioy+r.top;
+
+
+	r.right *= aspectRatioModX;
+	r.bottom *= aspectRatioModY;
+	return r;
+}
+
 
 //a helper for calculating fadein/fadeout times
 

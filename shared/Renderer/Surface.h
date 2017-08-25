@@ -115,6 +115,8 @@ public:
 	void ApplyBlendingMode(uint32 rgba); //does the GL blending states on the active texture, used in renderbatcher
 	void RemoveBlendingMode(uint32 rgba); //undoes the above, used in renderbatcher
 
+	void HardKill(); //like kill, but also forces the texture to forget things about itself so it won't auto reinit if surfaces are lost
+
 protected:
 
 	
