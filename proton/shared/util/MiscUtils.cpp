@@ -569,6 +569,12 @@ bool IsInString(const string &s, const char *search)
 	return false;
 }
 
+bool StartsWith(const std::string& text, const std::string& token)
+{
+	if (text.length() < token.length())
+		return false;
+	return (text.compare(0, token.length(), token) == 0);
+}
 
 void RotationToXYMod(float rotation, float *pXMod ,float *pYMod)
 {
@@ -655,7 +661,7 @@ bool CaseInsensitiveCompare( const char*a, const char*b )
 	return true;
 }
 
-string IntToTimeSeconds(uint32 seconds, bool bTextFormat) //converts 180 (seconds) to 3:00, suitable for a game "time left" display.  if bTextformat, it would say "3 min" instead.
+string IntToTimeSeconds(uint32 seconds, bool bTextFormat, bool showDays) //converts 180 (seconds) to 3:00, suitable for a game "time left" display.  if bTextformat, it would say "3 min" instead.
 {
 	uint32 originalSeconds = seconds;
 
@@ -676,7 +682,10 @@ string IntToTimeSeconds(uint32 seconds, bool bTextFormat) //converts 180 (second
 		
 		if (hours > 0 || days > 0)
 		{
-			sprintf(temp, "%d:%02d:%02d", hours+(days*24), minutes, seconds);
+			if(showDays)
+				sprintf(temp, "%d:%02d:%02d", days , hours, minutes);
+			else
+				sprintf(temp, "%d:%02d:%02d", hours+(days*24), minutes, seconds);
 
 		} else
 		{
