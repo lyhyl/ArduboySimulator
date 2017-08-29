@@ -53,7 +53,7 @@ char *float_to_money( double num, char *buf, int dec); //for legacy code..
 std::string FloatToMoney(float f, int decimalsOfCents = 0);
 std::string IntToMoneyBillions(int bil,int n);
 std::string IntToTime(uint32 ms, bool bTextFormat = false); //converts 18000 (ms) to 3:00, suitable for a game "time left" display.  if bTextformat, it would say "3 min" instead.
-std::string IntToTimeSeconds(uint32 seconds, bool bTextFormat = false); //converts 180 (seconds) to 3:00, suitable for a game "time left" display.  if bTextformat, it would say "3 min" instead.
+std::string IntToTimeSeconds(uint32 seconds, bool bTextFormat = false , bool showDays = false); //converts 180 (seconds) to 3:00, suitable for a game "time left" display.  if bTextformat, it would say "3 min" instead.
 
 /**
  * Splits \a str into multiple parts delimited by \a delimiter.
@@ -107,6 +107,7 @@ std::string GetFileExtension(std::string fileName);
 std::string ModifyFileExtension(const std::string fileName, const std::string extension);
 void TruncateString(std::string &input, size_t len);
 bool IsInString(const std::string &s, const char *search);
+bool StartsWith(const std::string& text, const std::string& token);
 void RotationToXYMod(float rotation, float *pXMod ,float *pYMod); //given a rotation in degrees, tells you what to flip
 void SetFloatWithTarget(float *p_out_dest, float r_target, float r_amount);
 std::string FilterToValidAscii(const std::string &input, bool bStrict);
