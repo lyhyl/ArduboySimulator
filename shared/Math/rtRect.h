@@ -9,6 +9,8 @@
 
 #ifndef rtRect_h__
 #define rtRect_h__
+
+#include "PlatformSetup.h"
 #include "ClanLib-2.0/Sources/API/Core/Math/vec2.h"
 
 //this alignment naming below suffers from "add as you go with no plan".  They aren't really clear.. -Seth
