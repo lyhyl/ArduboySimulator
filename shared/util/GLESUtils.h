@@ -15,10 +15,12 @@ void DrawRect(float x, float y, float width, float height, uint32 color = MAKE_R
 void DrawRect(CL_Vec2f &vPos, CL_Vec2f &vSize, uint32 color= MAKE_RGBA(255,255,255,255), float lineWidth=1);
 void DrawRect(const CL_Rectf &r, uint32 color = MAKE_RGBA(255,255,255,255), float lineWidth = 1.0f);
 void DrawRect(const rtRect &r, uint32 color  = MAKE_RGBA(255,255,255,255), float lineWidth  = 1.0f);
+void DrawRect(const rtRect32 &r, uint32 color = MAKE_RGBA(255, 255, 255, 255), float lineWidth = 1.0f);
 void DrawRect(const rtRectf &r, uint32 color  = MAKE_RGBA(255,255,255,255), float lineWidth = 1.0f);
 void DrawFilledRect(const CL_Rectf &r, uint32 color);
 void DrawFilledRect(rtRectf &r, uint32 color);
 void DrawFilledRect(rtRect &r, uint32 color);
+void DrawFilledRect(const rtRect32 &r, uint32 color);
 void DrawFilledRect(CL_Vec2f vPos, CL_Vec2f vSize, uint32 color);
 void DrawFilledBitmapRect(const CL_Rectf &r, uint32 middleColor, uint32 borderColor, SurfaceAnim *pSurf, bool bFillMiddleCloserToEdges = false );
 void DrawFilledBitmapRect(rtRect &r, uint32 middleColor, uint32 borderColor, SurfaceAnim *pSurf, bool bFillMiddleCloserToEdges = false );

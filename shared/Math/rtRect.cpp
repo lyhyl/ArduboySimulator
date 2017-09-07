@@ -36,16 +36,17 @@ void rtRect::Inflate( int x, int y )
 	bottom += y;
 }
 
-void rtRectf::AdjustPosition( float x, float y )
+
+rtRectf::rtRectf()
+{
+}
+
+void rtRectf::AdjustPosition(float x, float y)
 {
 	left += x;
 	right += x;
 	top += y;
 	bottom += y;
-}
-
-rtRectf::rtRectf()
-{
 }
 
 void rtRectf::Scale( eAlignment alignment, CL_Vec2f vScale )
@@ -135,4 +136,40 @@ bool rtRectf::IsInside( float x, float y )
 	}
 
 	return false;
+}
+
+ 
+
+void rtRect32::ScaleCentered(float f)
+{
+	f -= 1.0f;
+	int32 changeX = (int32)(float(GetWidth())*f) / 2;
+	int32 changeY = (int32)(float(GetHeight())*f) / 2;
+
+	left -= changeX;
+	right += changeX;
+
+	top -= changeY;
+	bottom += changeY;
+}
+
+rtRect32::rtRect32()
+{
+
+}
+
+void rtRect32::AdjustPosition(int32 x, int32 y)
+{
+	left += x;
+	right += x;
+	top += y;
+	bottom += y;
+}
+
+void rtRect32::Inflate(int32 x, int32 y)
+{
+	left -= x;
+	right += x;
+	top -= y;
+	bottom += y;
 }
