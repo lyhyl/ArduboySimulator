@@ -35,7 +35,13 @@ bool LoadFromFile(int32 &num, FILE *fp);
 bool LoadFromFile(uint32 &num, FILE *fp);
 bool LoadFromFile(bool &num, FILE *fp);
 bool SaveToFile(float num, FILE *fp);
+
+//being careful not to break things in older apps that may depend on saving INT as 64 bit
+#ifdef RT_FORCE_32BIT_INTS_FOR_FILES
+bool SaveToFile(int32 num, FILE *fp);
+#else
 bool SaveToFile(int num, FILE *fp);
+#endif
 bool SaveToFile(uint32 num, FILE *fp);
 bool SaveToFile(const std::string &str, FILE *fp);
 

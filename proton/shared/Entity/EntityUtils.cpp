@@ -707,12 +707,14 @@ void FadeEntity(Entity *pEnt, bool bRecursive, float alpha, int timeMS, int dela
 	EntityComponent* pComp = SetupInterpolateComponent(pEnt, "", "alpha", alpha, timeMS, delayBeforeFadingMS);
 	if (!pComp)
 	{
-		//entity doesn't have an "alpha" variable, so it probably isn't something we can actually fade!
-		return;
+		//entity doesn't have an "alpha" variable, so it probably isn't something we can actually fade!  However, it's children may have something...
+		
+	}
+	else
+	{
+		pComp->SetName("ic_fade");
 	}
 	
-	pComp->SetName("ic_fade");
-
 	if (!bRecursive) return;
 
 	//also run this on all children

@@ -10,9 +10,17 @@ bool IsPowerOf2(int n) { return (!(n & (n - 1))); }
 
 bool SaveToFile(const string &str, FILE *fp)
 {
-	int size = (int)str.size();
 
+#ifdef RT_FORCE_32BIT_INTS_FOR_FILES
+	int32 size = (int32)str.size();
+	fwrite(&size, sizeof(int32), 1, fp);
+
+#else
+	int size = (int)str.size();
 	fwrite(&size, sizeof(int), 1, fp);
+
+#endif
+	
 	if (size> 0)
 	{
 		fwrite(str.c_str(), size, 1, fp);
@@ -22,14 +30,22 @@ bool SaveToFile(const string &str, FILE *fp)
 
 bool LoadFromFile(string &str, FILE *fp)
 {
+
+#ifdef RT_FORCE_32BIT_INTS_FOR_FILES
+	int32 size;
+	fread(&size, sizeof(int32), 1, fp);
+
+#else
 	int size;
 	fread(&size, sizeof(int), 1, fp);
+#endif
 
 	if (size > 0)
 	{
-		str.resize(size,' ');
+		str.resize(size, ' ');
 		fread(&str[0], size, 1, fp);
-	} else
+	}
+	else
 	{
 		str.clear();
 	}
@@ -37,12 +53,28 @@ bool LoadFromFile(string &str, FILE *fp)
 	return true;
 }
 
+#ifdef RT_FORCE_32BIT_INTS_FOR_FILES
 
+bool SaveToFile(int32 num, FILE *fp)
+{
+	fwrite(&num, sizeof(int32), 1, fp);
+	return true;
+}
+
+
+#else
 bool SaveToFile(int num, FILE *fp)
 {
+	//assert(!"Did you mean to pass in int32?  This is unsafe if you're loading/saving things as int, because of 32/64 bit issues");
+
 	fwrite(&num, sizeof(int), 1, fp);
 	return true;
 }
+
+#endif
+
+
+
 
 bool SaveToFile(uint32 num, FILE *fp)
 {
@@ -61,6 +93,7 @@ bool LoadFromFile(int32 &num, FILE *fp)
 	fread(&num, sizeof(int32), 1, fp);
 	return true;
 }
+
 bool LoadFromFile(float &num, FILE *fp)
 {
 	fread(&num, sizeof(float), 1, fp);

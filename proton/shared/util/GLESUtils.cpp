@@ -210,6 +210,11 @@ void DrawFilledRect(rtRect &r, uint32 color)
 {
 	GenerateFillRect(color, (float)r.left, (float)r.top, (float)r.GetWidth(), (float)r.GetHeight());
 }
+void DrawFilledRect(const rtRect32 &r, uint32 color)
+{
+    GenerateFillRect(color, (float)r.left, (float)r.top, (float)r.GetWidth(), (float)r.GetHeight());
+}
+
 
 void DrawFilledRect(float x, float y, float sizeX, float sizeY, uint32 color)
 {
@@ -268,6 +273,12 @@ void DrawRect(const rtRect &r, uint32 color, float lineWidth)
 {
 	DrawRect((float)r.left, (float)r.top, (float)r.GetWidth(), (float)r.GetHeight(), color, lineWidth);
 }
+
+void DrawRect(const rtRect32 &r, uint32 color, float lineWidth)
+{
+	DrawRect((float)r.left, (float)r.top, (float)r.GetWidth(), (float)r.GetHeight(), color, lineWidth);
+}
+
 void DrawRect(const rtRectf &r, uint32 color, float lineWidth)
 {
 	DrawRect((float)r.left, (float)r.top, (float)r.GetWidth(), (float)r.GetHeight(), color, lineWidth);
