@@ -58,6 +58,7 @@ public:
 	//the texture caching system completely
 
 	void SetSurface(SurfaceAnim *pSurf, bool bDeleteSurface);
+	SurfaceAnim * GetSurfaceAnim() { return m_pTex; } //normally you wouldn't use this, but useful to check if something didn't properly load
 
 private:
 
