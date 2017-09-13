@@ -213,7 +213,7 @@ void BaseApp::OnScreenSizeChange()
 {
 	
 #ifdef _DEBUG
-	//LogMsg("Changing screen-size to %d, %d, %d", GetScreenSizeX(), GetScreenSizeY(), GetOrientation());
+	LogMsg("Changing screen-size to %d, %d, %d", GetScreenSizeX(), GetScreenSizeY(), GetOrientation());
 #endif
 	
 	GenerateSetPerspectiveFOV(C_APP_FOV, GetScreenSizeXf()/ GetScreenSizeYf(),0.1f,500.0f);
@@ -266,12 +266,15 @@ void BaseApp::OnMessage(Message &m)
 			case MESSAGE_TYPE_GUI_CLICK_MOVE_RAW:
 				{
 				
+				if (!IsDesktop())
+				{
 					if (!m_touchTracker[m.GetParm3()].IsDown())
 					{
 						//ignore this, we don't want a move message from something that isn't fricken' down.  At least
 						//one known HP device is known to do this...
 						break;
 					}
+				}
 
 					v.Get(0).Set(float(m.GetType()));
 					v.Get(1).Set(float(m.GetParm1()), float(m.GetParm2()) );
