@@ -378,7 +378,7 @@ bool SoftSurface::LoadBMPTexture(byte *pMem)
 	}else if (srcBytesPerPixel == 2)
 	{
 		//convert 16 bit to 32
-		LogMsg("16 bit");
+		//LogMsg("16 bit");
 
 		glColorBytes *pImg = (glColorBytes*)m_pPixels;
 
@@ -416,7 +416,7 @@ bool SoftSurface::LoadBMPTexture(byte *pMem)
 	{
 		//convert 24 bit bmp to 32 bit rgba
 #ifdef _DEBUG
-LogMsg("24 bit");
+//LogMsg("24 bit");
 #endif
 
 		glColorBytes *pImg = (glColorBytes*)m_pPixels;
